@@ -1,5 +1,5 @@
 import React from "react";
-import { FloatingButton } from "fiorde-fe-components";
+import { FloatingButton, FloatingMenu } from "fiorde-fe-components";
 const Proposal = () => {
   const items = [
     {
@@ -21,7 +21,7 @@ const Proposal = () => {
       iconType: "approved",
       label: "Definir como aprovada",
       onClick: () => console.log("click"),
-    }
+    },
   ];
   return (
     <div
@@ -40,7 +40,9 @@ const Proposal = () => {
           height: "100%",
         }}
       >
-        <FloatingButton menuItems={items} label="Novo item" />
+        <FloatingButton label="Novo item">
+          <FloatingMenu menuItems={items} />
+        </FloatingButton>
       </div>
     </div>
   );
