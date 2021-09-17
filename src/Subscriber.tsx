@@ -21,12 +21,10 @@ const startSubscriber = () => {
   };
 
   useEffect(() => {
-    console.log('useEffect')
     window.addEventListener(EVENTS.locale, handleLocale);
     window.addEventListener(EVENTS.theme, handleTheme);
 
     return () => {
-    console.log('useEffect remove')
       window.removeEventListener(EVENTS.locale, handleLocale);
       window.addEventListener(EVENTS.theme, handleTheme);
     };
