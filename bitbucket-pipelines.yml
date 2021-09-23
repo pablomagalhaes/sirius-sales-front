@@ -1,0 +1,106 @@
+image: node:12.18.4
+
+pipelines:
+  branches:
+    qa:
+      - step:
+          name: Build Artifact
+          caches:
+            - node
+          script:
+            - CI=false && yarn install && yarn build
+          artifacts:
+            - dist/**
+      - step:
+          name: Deploy Artifact
+          deployment: qa
+          script:
+            - apt-get update -y && apt-get install ssh -y
+            # sending artifact to server
+            - scp -r dist/ app@$HOST_IP:/home/app/sales/
+            - ssh app@$HOST_IP << 'EOF'
+            # creating backup of current deployment
+            - cd /usr/share/nginx/html/sales && zip -r /home/fiorde/backup/sales/sales-bkp-${LAST_DEPLOY}-$(date +%Y-%m-%d-%H:%M).zip *
+            # removing the current deployment
+            - sudo rm -rf /usr/share/nginx/html/sales/*
+            # deploying the new artifact
+            - sudo cp -r /home/app/sales/dist/* /usr/share/nginx/html/sales/
+            # changing files permission
+            - sudo chown -R app:app /usr/share/nginx/html/sales/
+            # removing the artifact folder after it's deployed
+            - rm -r /home/app/sales/dist
+            - cd /home/fiorde/backup/sales/
+            - shopt -s nullglob && export BACKUPS=( sales-bkp-* )
+            - export BACKUPS=( $(printf "%s\n" ${BACKUPS[@]} | sort -r ) )
+            # removing old backups, preserving the last 3
+            - if [ ${#BACKUPS[@]} -gt 3 ]; then export OLD_BACKUPS=( ${BACKUPS[@]:3} ) && rm ${OLD_BACKUPS[@]}; fi
+            - "EOF"
+
+    uat:
+      - step:
+          name: Build Artifact
+          caches:
+            - node
+          script:
+            - CI=false && yarn install && yarn build:uat
+          artifacts:
+            - dist/**
+      - step:
+          name: Deploy Artifact
+          deployment: uat
+          script:
+            - apt-get update -y && apt-get install ssh -y
+            # sending artifact to server
+            - scp -r dist/ app@$HOST_IP:/home/app/sales/
+            - ssh app@$HOST_IP << 'EOF'
+            # creating backup of current deployment
+            - cd /usr/share/nginx/html/sales && zip -r /home/fiorde/backup/sales/sales-bkp-${LAST_DEPLOY}-$(date +%Y-%m-%d-%H:%M).zip *
+            # removing the current deployment
+            - sudo rm -rf /usr/share/nginx/html/sales/*
+            # deploying the new artifact
+            - sudo cp -r /home/app/sales/dist/* /usr/share/nginx/html/sales/
+            # changing files permission
+            - sudo chown -R app:app /usr/share/nginx/html/sales/
+            # removing the artifact folder after it's deployed
+            - rm -r /home/app/sales/dist
+            - cd /home/fiorde/backup/sales/
+            - shopt -s nullglob && export BACKUPS=( sales-bkp-* )
+            - export BACKUPS=( $(printf "%s\n" ${BACKUPS[@]} | sort -r ) )
+            # removing old backups, preserving the last 3
+            - if [ ${#BACKUPS[@]} -gt 3 ]; then export OLD_BACKUPS=( ${BACKUPS[@]:3} ) && rm ${OLD_BACKUPS[@]}; fi
+            - "EOF"
+
+  custom:
+    build-deploy-prod:
+      - step:
+          name: Build Artifact
+          caches:
+            - node
+          script:
+            - CI=false && yarn install && yarn build:production
+          artifacts:
+            - dist/**
+      - step:
+          name: Deploy Artifact
+          deployment: prod
+          script:
+            - apt-get update -y && apt-get install ssh -y
+            # sending artifact to server
+            - scp -r dist/ app@$HOST_IP:/home/app/sales/
+            - ssh app@$HOST_IP << 'EOF'
+            # creating backup of current deployment
+            - cd /usr/share/nginx/html/sales && zip -r /home/fiorde/backup/sales/sales-bkp-${LAST_DEPLOY}-$(date +%Y-%m-%d-%H:%M).zip *
+            # removing the current deployment
+            - sudo rm -rf /usr/share/nginx/html/sales/*
+            # deploying the new artifact
+            - sudo cp -r /home/app/sales/dist/* /usr/share/nginx/html/sales/
+            # changing files permission
+            - sudo chown -R app:app /usr/share/nginx/html/sales/
+            # removing the artifact folder after it's deployed
+            - rm -r /home/app/sales/dist
+            - cd /home/fiorde/backup/sales/
+            - shopt -s nullglob && export BACKUPS=( sales-bkp-* )
+            - export BACKUPS=( $(printf "%s\n" ${BACKUPS[@]} | sort -r ) )
+            # removing old backups, preserving the last 3
+            - if [ ${#BACKUPS[@]} -gt 3 ]; then export OLD_BACKUPS=( ${BACKUPS[@]:3} ) && rm ${OLD_BACKUPS[@]}; fi
+            - "EOF"
