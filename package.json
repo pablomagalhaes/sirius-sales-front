@@ -1,10 +1,20 @@
 {
   "name": "@sirius/sales-fe",
   "scripts": {
-    "start": "webpack serve",
+    "start": "webpack serve --port 8600 --env isLocal",
+    "start:qa": "webpack serve --port 8600 --env isQA",
+    "start:uat": "webpack serve --port 8600 --env isUAT",
+    "start:production": "webpack serve --port 8600 --env isProd",
     "start:standalone": "webpack serve --env standalone",
-    "build": "concurrently npm:build:*",
-    "build:webpack": "webpack --mode=production",
+    "build": "concurrently npm:build:production:*",
+    "build:production:tsc": "tsc",
+    "build:production:main": "cross-env NODE_ENV=production webpack --mode=production",
+    "build:qa": "concurrently npm:build:qa:*",
+    "build:qa:tsc": "tsc",
+    "build:qa:main": "cross-env NODE_ENV=qa webpack",
+    "build:uat": "concurrently npm:build:uat:*",
+    "build:uat:tsc": "tsc",
+    "build:uat:main": "cross-env NODE_ENV=uat webpack",
     "analyze": "webpack --mode=production --env analyze",
     "lint": "eslint src --ext js,ts,tsx",
     "format": "prettier --write .",
@@ -49,7 +59,7 @@
     "eslint-config-ts-react-important-stuff": "3.0.0",
     "webpack-config-single-spa-react-ts": "4.0.0",
     "styled-components": "5.3.0",
-    "fiorde-fe-components": "git+ssh://git@bitbucket.org:fiorde/fiorde-fe-components.git#develop"
+    "fiorde-fe-components": "git+ssh://git@bitbucket.org:fiorde/fiorde-fe-components.git#feature/SIRPLT-568"
   },
   "dependencies": {
     "@material-ui/core": "4.11.0",
@@ -66,10 +76,11 @@
     "react-redux": "7.2.5",
     "react-redux-i18n": "1.9.3",
     "react-router-dom": "5.2.1",
-    "redux-devtools-extension": "^2.13.9",
+    "redux-devtools-extension": "2.13.9",
     "redux-thunk": "^2.3.0",
     "single-spa": "5.9.3",
-    "single-spa-react": "4.3.1"
+    "single-spa-react": "4.3.1",
+    "dotenv": "10.0.0"
   },
   "types": "dist/sirius-sales-fe.d.ts"
 }
