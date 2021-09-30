@@ -8,7 +8,7 @@ pipelines:
           caches:
             - node
           script:
-            - CI=false && yarn install && yarn build
+            - CI=false && npm install && npm run build:qa
           artifacts:
             - dist/**
       - step:
@@ -42,7 +42,7 @@ pipelines:
           caches:
             - node
           script:
-            - CI=false && yarn install && yarn build:uat
+            - CI=false && npm install && npm run build:uat
           artifacts:
             - dist/**
       - step:
@@ -77,7 +77,7 @@ pipelines:
           caches:
             - node
           script:
-            - CI=false && yarn install && yarn build:production
+            - CI=false && npm install && npm run build
           artifacts:
             - dist/**
       - step:
