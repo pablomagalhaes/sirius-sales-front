@@ -5,7 +5,7 @@ import { Home, Proposal } from "../pages";
 import Wrapper from "./Wrapper";
 
 const Routes = () => (
-  <BrowserRouter basename="/comercial">
+  <BrowserRouter basename="/plataformasirius/comercial">
     <Switch>
       <Route exact path="/">
         <Wrapper>
