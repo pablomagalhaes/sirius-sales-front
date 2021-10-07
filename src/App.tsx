@@ -6,11 +6,9 @@ import Routes from "./components/Routes";
 import { useSelector } from "react-redux";
 import startSubscriber from './Subscriber';
 
-
 const App = () => {
   const state = useSelector((state: any) => state);
   const { theme } = state.app;
-
   startSubscriber();
   return (
     <ThemeProvider theme={theme === "light" ? light : dark}>
