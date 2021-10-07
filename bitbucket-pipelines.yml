@@ -24,7 +24,7 @@ pipelines:
             # removing the current deployment
             - sudo rm -rf /usr/share/nginx/html/sales/*
             # deploying the new artifact
-            - sudo cp -r /home/app/sales/build/* /usr/share/nginx/html/sales/
+            - sudo cp -r /home/app/sales/build/* /usr/share/nginx/html/plataformasirius/sales/
             # changing files permission
             - sudo chown -R app:app /usr/share/nginx/html/sales/
             # removing the artifact folder after it's deployed
@@ -58,7 +58,7 @@ pipelines:
             # removing the current deployment
             - sudo rm -rf /usr/share/nginx/html/sales/*
             # deploying the new artifact
-            - sudo cp -r /home/app/sales/build/* /usr/share/nginx/html/sales/
+            - sudo cp -r /home/app/sales/build/* /usr/share/nginx/html/plataformasirius/sales/
             # changing files permission
             - sudo chown -R app:app /usr/share/nginx/html/sales/
             # removing the artifact folder after it's deployed
@@ -93,7 +93,7 @@ pipelines:
             # removing the current deployment
             - sudo rm -rf /usr/share/nginx/html/sales/*
             # deploying the new artifact
-            - sudo cp -r /home/app/sales/build/* /usr/share/nginx/html/sales/
+            - sudo cp -r /home/app/sales/build/* /usr/share/nginx/html/plataformasirius/sales/
             # changing files permission
             - sudo chown -R app:app /usr/share/nginx/html/sales/
             # removing the artifact folder after it's deployed
