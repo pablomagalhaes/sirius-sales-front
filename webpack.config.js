@@ -2,17 +2,18 @@ const { merge } = require("webpack-merge");
 const singleSpaDefaults = require("webpack-config-single-spa-react-ts");
 const webpack = require("webpack");
 const dotenv = require('dotenv');
+const path = require('path');
 
 module.exports = (webpackConfigEnv, argv) => {
-  let path = '';
+  let pathEnv = '';
   if (webpackConfigEnv.isLocal) {
-    path = './env/.env.dev';
+    pathEnv = './env/.env.dev';
   } else if (webpackConfigEnv.isQA) {
-    path = './env/.env.qa';
+    pathEnv = './env/.env.qa';
   } else if (webpackConfigEnv.isUAT) {
-    path = './env/.env.uat';
+    pathEnv = './env/.env.uat';
   }else if (webpackConfigEnv.isProduction) {
-    path = './env/.env.production';
+    pathEnv = './env/.env.production';
   }
 
   const defaultConfig = singleSpaDefaults({
@@ -29,12 +30,15 @@ module.exports = (webpackConfigEnv, argv) => {
       maxEntrypointSize: 512000,
       maxAssetSize: 512000
   },
+  output: {
+    path: path.join(process.cwd(), 'build')
+  },
    plugins: [
     new webpack.ProvidePlugin({
       process: 'process/browser'
   }),
     new webpack.DefinePlugin({
-      'process.env': JSON.stringify(dotenv.config({ path: path }).parsed),
+      'process.env': JSON.stringify(dotenv.config({ path: pathEnv }).parsed),
     }),
   ]
   });
