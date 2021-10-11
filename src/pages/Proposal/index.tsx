@@ -1,6 +1,7 @@
 import React from "react";
 import { FloatingButton, FloatingMenu } from "fiorde-fe-components";
 const Proposal = () => {
+  console.log('proposal component');
   const items = [
     {
       iconType: "edit",
