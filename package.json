@@ -1,5 +1,6 @@
 {
   "name": "@sirius/sales-fe",
+  "homepage": "/plataformasirius",
   "scripts": {
     "start": "webpack serve --port 8600 --env isLocal",
     "start:qa": "webpack serve --port 8600 --env isQA",
