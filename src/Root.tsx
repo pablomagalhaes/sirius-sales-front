@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { Provider } from "react-redux";
-import App from "./App";
-import store from "./redux/store";
+import App from "./presentation/App";
+import store from "./application/redux/store";
 const Root = () => {
   return (
     <Provider store={store}>
