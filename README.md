@@ -35,3 +35,30 @@ the build files will be found in dist folder.
 `./sirius-sales-fe$` npm start -- --port=8600
 
 Access:  http://localhost:9000/
+## architecture
+```
+app
+├── node_modules
+├── package.json
+├── .eslintrc
+├── .gitignore
+├── .prettierrc
+├── jest.config.js
+├── tsconfig.json
+├── webpack.config.js
+├── env
+├── src
+|    │── application
+|    │   ├── i18n
+|    │   ├── redux
+|    │   ├── theme
+|    ├── infrastructure
+|    │   ├── api
+|    ├── presentation
+|    │   ├── components
+|    │   ├── pages
+|    │   ├── App.tsx
+├── sirius-platform-core-fe.tsx      
+├── Root.tsx
+└── README.md      
+```
