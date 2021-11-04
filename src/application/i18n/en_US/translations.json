@@ -1,0 +1,12 @@
+{
+  "pages": {
+  },
+  "components": {
+    "header": {
+      "home": "Home",
+      "proposal": "Proposal",
+      "tariff": "Tariff",
+      "indicators": "Indicators"
+    }
+  }
+}
