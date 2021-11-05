@@ -1,26 +1,29 @@
 import styled from 'styled-components'
-
+interface WrapperProps {
+  isOpen: boolean
+}
 const Root = styled.div`
   width: 100%;
-  height: 100%;
+  height: auto;
   display: flex;
-  background-color: ${(props: any) => props.theme?.commercial?.pages?.home?.mainColor};
+  background-color: ${(props: any) =>
+    props.theme?.commercial?.pages?.home?.mainColor};
   color: ${(props: any) => props.theme?.commercial?.fontColor};
   #extension_root_container {
-  div {
-    div.MuiDrawer-paper {
-      left: 88px;
-      top: 64px;
+    div {
+      div.MuiDrawer-paper {
+        left: 88px;
+        top: 64px;
+      }
     }
   }
-}
 `
 const ExtensionMenuContainer = styled.div`
   position: fixed;
 `
 
 const ChildrenContainer = styled.div`
-  padding-left: ${(props) => (props.isOpen === true) ? '200px' : '58px'};
+  padding-left: ${(props: WrapperProps) => (props.isOpen ? '200px' : '58px')};
   width: 100%;
   height: 100%;
   box-sizing: border-box;
