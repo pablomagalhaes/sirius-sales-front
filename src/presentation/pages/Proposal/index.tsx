@@ -1,111 +1,109 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import {
   FloatingButton,
   FloatingMenu,
   GroupedCardFilters,
   InfiniteScroll,
   Table,
-  RowFilter,
-} from 'fiorde-fe-components';
-import { Breadcrumbs, Link, Typography, Popover } from '@material-ui/core/';
+  RowFilter
+} from 'fiorde-fe-components'
+import { Breadcrumbs, Link, Popover } from '@material-ui/core/'
 import {
   RootContainer,
   ListHeader,
   LeftSideListHeader,
   RightSideListHeader,
   InfiniteScrollContainer,
-  BottomSideContainer,
-} from './style';
-import { ExitToApp, Warning, ArrowDropDown } from '@material-ui/icons/';
+  BottomSideContainer
+} from './style'
+import { ExitToApp, Warning, ArrowDropDown } from '@material-ui/icons/'
 import {
   cardFilters,
   infiniteScrollRows,
   infiniteScrollColumns,
   floatingButtonMenuItems,
-  menuItemsSelector,
-} from './constants';
+  menuItemsSelector
+} from './constants'
 
-const Proposal = () => {
-  const [orderBy, setOrderBy] = useState('Dt. validade');
-  const [anchorEl, setAnchorEl] = useState(null);
+const Proposal = (): JSX.Element => {
+  const [orderBy, setOrderBy] = useState('Dt. validade')
+  const [anchorEl, setAnchorEl] = useState(null)
 
   const orderButtonMenuItems = [
     {
       iconType: '',
       label: 'Ref. proposta',
-      onClick: () => setOrderBy('Ref. proposta'),
+      onClick: () => setOrderBy('Ref. proposta')
     },
     {
       iconType: '',
       label: 'Nome do cliente',
-      onClick: () => setOrderBy('Nome do cliente'),
+      onClick: () => setOrderBy('Nome do cliente')
     },
     {
       iconType: '',
       label: 'Responsável',
-      onClick: () => setOrderBy('Responsável'),
+      onClick: () => setOrderBy('Responsável')
     },
     {
       iconType: '',
       label: 'Modal',
-      onClick: () => setOrderBy('Modal'),
+      onClick: () => setOrderBy('Modal')
     },
     {
       iconType: '',
       label: 'Origem',
-      onClick: () => setOrderBy('Origem'),
+      onClick: () => setOrderBy('Origem')
     },
     {
       iconType: '',
       label: 'Destino',
-      onClick: () => setOrderBy('Destino'),
+      onClick: () => setOrderBy('Destino')
     },
     {
       iconType: '',
       label: 'Dt. abertura',
-      onClick: () => setOrderBy('Dt. abertura'),
+      onClick: () => setOrderBy('Dt. abertura')
     },
     {
       iconType: '',
       label: 'Dt. validade',
-      onClick: () => setOrderBy('Dt. validade'),
-    },
-  ];
+      onClick: () => setOrderBy('Dt. validade')
+    }
+  ]
 
-  const handleClickBreadcrumbs = (
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-  ) => {
-    event.preventDefault();
-    console.info('You clicked a breadcrumb.');
-  };
+  const handleClickBreadcrumbs = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void => {
+    event.preventDefault()
+    console.info('You clicked a breadcrumb.')
+  }
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const handleClose = (): void => {
+    setAnchorEl(null)
+  }
 
-  const handleClickOrder = (event: any) => {
-    setAnchorEl(event.currentTarget);
-    if (anchorEl) handleClose();
-  };
+  const handleClickOrder = (event: any): void => {
+    setAnchorEl(event.currentTarget)
+    if (anchorEl !== null) handleClose()
+  }
 
-  const handleExportList = () => {
-    alert('export list');
-  };
+  const handleExportList = (): void => {
+    alert('export list')
+  }
 
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const open = Boolean(anchorEl)
+  const id = open ? 'simple-popover' : undefined
 
-  const handleCardFiltersClick = (selectedCardFilters: any) => {
-    console.log(selectedCardFilters);
-  };
+  const handleCardFiltersClick = (selectedCardFilters: any): void => {
+    console.log(selectedCardFilters)
+  }
 
-  const handleLoadMoreItems = () => {
-    alert('loading more items');
-  };
+  const handleLoadMoreItems = (): void => {
+    alert('loading more items')
+  }
 
-  const handleSelectedRowFilter = (selectedFiltersRowFilter: any) => {
-    console.log(selectedFiltersRowFilter);
-  };
+  const handleSelectedRowFilter = (selectedFiltersRowFilter: any): void => {
+    console.log(selectedFiltersRowFilter)
+  }
 
   return (
     <RootContainer>
@@ -159,11 +157,11 @@ const Proposal = () => {
                 id={id}
                 anchorOrigin={{
                   vertical: 'bottom',
-                  horizontal: 'right',
+                  horizontal: 'right'
                 }}
                 transformOrigin={{
                   vertical: 'top',
-                  horizontal: 'right',
+                  horizontal: 'right'
                 }}
                 open={open}
                 anchorEl={anchorEl}
@@ -193,7 +191,7 @@ const Proposal = () => {
         </InfiniteScrollContainer>
       </BottomSideContainer>
     </RootContainer>
-  );
-};
+  )
+}
 
-export default Proposal;
+export default Proposal

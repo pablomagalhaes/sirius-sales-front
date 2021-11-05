@@ -1,27 +1,27 @@
-import { createStore, applyMiddleware } from "redux";
+import { createStore, applyMiddleware } from 'redux'
 import {
   loadTranslations,
   setLocale,
-  syncTranslationWithStore,
-} from "react-redux-i18n";
-import { composeWithDevTools } from "redux-devtools-extension";
-import translations from "../i18n";
-import thunk from "redux-thunk";
-import rootReducer from "./reducers";
+  syncTranslationWithStore
+} from 'react-redux-i18n'
+import { composeWithDevTools } from 'redux-devtools-extension'
+import translations from '../i18n'
+import thunk from 'redux-thunk'
+import rootReducer from './reducers'
 
 const store = createStore(
   rootReducer,
   composeWithDevTools(applyMiddleware(thunk))
-);
+)
 
-syncTranslationWithStore(store);
-store.dispatch(loadTranslations(translations));
+syncTranslationWithStore(store)
+store.dispatch(loadTranslations(translations))
 
-const locale = localStorage.getItem("locale");
-if (locale) {
-  store.dispatch(setLocale(locale));
+const locale = localStorage.getItem('locale')
+if (locale != null) {
+  store.dispatch(setLocale(locale))
 } else {
-  store.dispatch(setLocale("pt"));
+  store.dispatch(setLocale('pt'))
 }
 
-export default store;
+export default store
