@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 const RootContainer = styled.div`
   display: flex;
@@ -14,13 +14,13 @@ const RootContainer = styled.div`
     color: ${(props: any) => props.theme?.proposal?.breadcrumbEnd};
     font-weight: bold;
   }
-`;
+`
 
 const ListHeader = styled.div`
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid #e3e5eb;
-`;
+`
 
 const LeftSideListHeader = styled.div`
   margin: 15px 0;
@@ -50,7 +50,7 @@ const LeftSideListHeader = styled.div`
       }
     }
   }
-`;
+`
 
 const RightSideListHeader = styled.div`
   margin: 15px 0;
@@ -95,14 +95,14 @@ const RightSideListHeader = styled.div`
       }
     }
   }
-`;
+`
 
 const InfiniteScrollContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: auto;
   justify-content: flex-start;
-`;
+`
 
 const BottomSideContainer = styled.div`
   display: flex;
@@ -114,7 +114,7 @@ const BottomSideContainer = styled.div`
     right: 40px;
     bottom: 40px;
   }
-`;
+`
 
 export {
   RootContainer,
@@ -122,5 +122,5 @@ export {
   LeftSideListHeader,
   RightSideListHeader,
   InfiniteScrollContainer,
-  BottomSideContainer,
-};
+  BottomSideContainer
+}

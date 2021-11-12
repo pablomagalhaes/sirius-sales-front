@@ -1,4 +1,4 @@
-import Home from './Home';
-import Proposal from './Proposal';
+import Home from './Home'
+import Proposal from './Proposal'
 
-export { Home, Proposal };
+export { Home, Proposal }

@@ -1,5 +1,7 @@
-import styled from 'styled-components';
-
+import styled from 'styled-components'
+interface WrapperProps {
+  isOpen: boolean
+}
 const Root = styled.div`
   width: 100%;
   height: auto;
@@ -15,13 +17,13 @@ const Root = styled.div`
       }
     }
   }
-`;
+`
 const ExtensionMenuContainer = styled.div`
   position: fixed;
-`;
+`
 
 const ChildrenContainer = styled.div`
-  padding-left: ${(props) => (props.isOpen ? '200px' : '58px')};
+  padding-left: ${(props: WrapperProps) => (props.isOpen ? '200px' : '58px')};
   width: 100%;
   height: 100%;
   box-sizing: border-box;
@@ -29,6 +31,6 @@ const ChildrenContainer = styled.div`
   flex-direction: column;
   transition: padding-left 0.2s;
   transition-timing-function: linear;
-`;
+`
 
-export { Root, ChildrenContainer, ExtensionMenuContainer };
+export { Root, ChildrenContainer, ExtensionMenuContainer }
