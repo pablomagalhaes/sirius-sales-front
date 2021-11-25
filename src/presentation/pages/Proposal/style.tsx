@@ -97,7 +97,7 @@ const RightSideListHeader = styled.div`
   }
 `
 
-const InfiniteScrollContainer = styled.div`
+const TableContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: auto;
@@ -121,6 +121,6 @@ export {
   ListHeader,
   LeftSideListHeader,
   RightSideListHeader,
-  InfiniteScrollContainer,
+  TableContainer,
   BottomSideContainer
 }
