@@ -80,8 +80,6 @@ export const Default = styled.span`
   font-weight: bold;
   font-size: 14px;
   line-height: 150%;
-  display: flex;
-  align-items: center;
   letter-spacing: 0.02em;
   color: #222222;
 `
@@ -92,9 +90,6 @@ export const Empty = styled.span`
   font-weight: normal;
   font-size: 12px;
   line-height: 150%;
-  display: flex;
-  align-items: center;
-  text-align: center;
   letter-spacing: 0.02em;
   color: #999dac;
 `
