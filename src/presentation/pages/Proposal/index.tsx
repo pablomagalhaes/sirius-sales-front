@@ -3,7 +3,6 @@ import {
   FloatingButton,
   FloatingMenu,
   GroupedCardFilters,
-  InfiniteScroll,
   Table,
   RowFilter
 } from 'fiorde-fe-components'
@@ -13,17 +12,11 @@ import {
   ListHeader,
   LeftSideListHeader,
   RightSideListHeader,
-  InfiniteScrollContainer,
+  TableContainer,
   BottomSideContainer
 } from './style'
 import { ExitToApp, Warning, ArrowDropDown } from '@material-ui/icons/'
-import {
-  cardFilters,
-  infiniteScrollRows,
-  infiniteScrollColumns,
-  floatingButtonMenuItems,
-  menuItemsSelector
-} from './constants'
+import { cardFilters, TableRows, floatingButtonMenuItems, menuItemsSelector } from './constants'
 
 const Proposal = (): JSX.Element => {
   const [orderBy, setOrderBy] = useState('Dt. validade')
@@ -97,10 +90,6 @@ const Proposal = (): JSX.Element => {
     console.log(selectedCardFilters)
   }
 
-  const handleLoadMoreItems = (): void => {
-    alert('loading more items')
-  }
-
   const handleSelectedRowFilter = (selectedFiltersRowFilter: any): void => {
     console.log(selectedFiltersRowFilter)
   }
@@ -108,49 +97,46 @@ const Proposal = (): JSX.Element => {
   return (
     <RootContainer>
       <div style={{ margin: '25px 0' }}>
-        <Breadcrumbs separator='>' aria-label='breadcrumb'>
+        <Breadcrumbs separator=">" aria-label="breadcrumb">
           <Link
-            color='inherit'
-            href='/'
+            color="inherit"
+            href="/"
             onClick={handleClickBreadcrumbs}
-            className='breadcrumbInitial'
+            className="breadcrumbInitial"
           >
             Home
           </Link>
-          <span className='breadcrumbEnd'>Propostas</span>
+          <span className="breadcrumbEnd">Propostas</span>
         </Breadcrumbs>
       </div>
-      <GroupedCardFilters
-        cardFilters={cardFilters}
-        onFilterClick={handleCardFiltersClick}
-      />
+      <GroupedCardFilters cardFilters={cardFilters} onFilterClick={handleCardFiltersClick} />
       <div style={{ margin: '25px 0' }}>
         <RowFilter
           menuItemsSelector={menuItemsSelector}
-          cleanLabel='Limpar'
-          myFilterLabel='Meus Filtros'
-          applyLabel='Aplicar'
-          approveLabel='Salvar Filtro'
-          addFilterLabel='Aplicar filtros'
+          cleanLabel="Limpar"
+          myFilterLabel="Meus Filtros"
+          applyLabel="Aplicar"
+          approveLabel="Salvar Filtro"
+          addFilterLabel="Aplicar filtros"
           handleSelectedFilters={handleSelectedRowFilter}
         />
       </div>
       <ListHeader>
         <LeftSideListHeader>
-          <span className='main-title'>Propostas em andamento (210)</span>
-          <div className='export-list-class' onClick={handleExportList}>
+          <span className="main-title">Propostas em andamento (210)</span>
+          <div className="export-list-class" onClick={handleExportList}>
             <ExitToApp />
             <span>Exportar lista</span>
           </div>
         </LeftSideListHeader>
         <RightSideListHeader>
-          <div className='warning-content'>
+          <div className="warning-content">
             <Warning />
             <div>1 com vencimento proximo</div>
           </div>
-          <div className='order-content'>
+          <div className="order-content">
             <div>Ordenar por:</div>
-            <div className='dropdown-menu-content' onClick={handleClickOrder}>
+            <div className="dropdown-menu-content" onClick={handleClickOrder}>
               <span>{orderBy}</span>
               <ArrowDropDown />
               <Popover
@@ -173,22 +159,14 @@ const Proposal = (): JSX.Element => {
         </RightSideListHeader>
       </ListHeader>
       <BottomSideContainer>
-        <div className='floating-button-style'>
-          <FloatingButton label='Novo item'>
+        <div className="floating-button-style">
+          <FloatingButton label="Novo item">
             <FloatingMenu menuItems={floatingButtonMenuItems} />
           </FloatingButton>
         </div>
-        <InfiniteScrollContainer>
-          <InfiniteScroll
-            isLoading={false}
-            onLoadMoreItems={handleLoadMoreItems}
-          >
-            <Table
-              columns={infiniteScrollColumns}
-              rows={infiniteScrollRows()}
-            />
-          </InfiniteScroll>
-        </InfiniteScrollContainer>
+        <TableContainer>
+          <Table rows={TableRows()} />
+        </TableContainer>
       </BottomSideContainer>
     </RootContainer>
   )
