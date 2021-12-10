@@ -73,29 +73,6 @@ const TableRows = (): any => {
   return array
 }
 
-const floatingButtonMenuItems = [
-  {
-    iconType: 'edit',
-    label: 'Editar',
-    onClick: () => console.log('click')
-  },
-  {
-    iconType: 'duplicate',
-    label: 'Duplicar',
-    onClick: () => console.log('click')
-  },
-  {
-    iconType: 'cancel',
-    label: 'Cancelar',
-    onClick: () => console.log('click')
-  },
-  {
-    iconType: 'approved',
-    label: 'Definir como aprovada',
-    onClick: () => console.log('click')
-  }
-]
-
 const menuItemsSelector = [
   {
     label: 'Etapa',
@@ -188,4 +165,4 @@ const menuItemsSelector = [
   }
 ]
 
-export { cardFilters, TableRows, floatingButtonMenuItems, menuItemsSelector }
+export { cardFilters, TableRows, menuItemsSelector }
