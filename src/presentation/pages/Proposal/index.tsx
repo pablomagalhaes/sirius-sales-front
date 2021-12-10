@@ -16,11 +16,21 @@ import {
   BottomSideContainer
 } from './style'
 import { ExitToApp, Warning, ArrowDropDown } from '@material-ui/icons/'
-import { cardFilters, TableRows, floatingButtonMenuItems, menuItemsSelector } from './constants'
+import { cardFilters, TableRows, menuItemsSelector } from './constants'
+import { useHistory } from 'react-router-dom'
 
 const Proposal = (): JSX.Element => {
   const [orderBy, setOrderBy] = useState('Dt. validade')
   const [anchorEl, setAnchorEl] = useState(null)
+  const history = useHistory()
+
+  const floatingButtonMenuItems = [
+    {
+      iconType: '',
+      label: 'Nova Proposta',
+      onClick: () => history.push('/novaProposta')
+    }
+  ]
 
   const orderButtonMenuItems = [
     {
@@ -165,7 +175,7 @@ const Proposal = (): JSX.Element => {
           </FloatingButton>
         </div>
         <TableContainer>
-          <Table rows={TableRows()} />
+          <Table rows={TableRows()}/>
         </TableContainer>
       </BottomSideContainer>
     </RootContainer>
