@@ -1,11 +1,13 @@
 import React from 'react'
 import CostTable from '../../components/CostTable/CostTable'
+import { MainDiv } from './style'
 
 const NewProposal = (): JSX.Element => {
   return (
-    <div style={{ background: 'white' }}>
+    <MainDiv>
       <CostTable title={'Origem'} totalCostLabel={'Total custos origem:'} />
-    </div>
+      <CostTable title={'Destino'} totalCostLabel={'Total custos destino:'} />
+    </MainDiv>
   )
 }
 
