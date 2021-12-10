@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { Table, TableCell, TableRow } from '@material-ui/core'
+import { Table, TableCell, TableRow, Select } from '@material-ui/core'
 
 export const MainDiv = styled.div`
   width: 95%;
@@ -29,9 +29,41 @@ export const Title = styled.span`
   margin-left: 45px;
   margin-top: 30px;
 `
+export const CurrencyLabel = styled.span`
+font-weight: normal;
+font-size: 12px;
+color: #545454;
+margin-top: 34px;
+`
+export const StyledSelect = styled(Select)`
+padding: 0px 10px 0px 16px;
+background: #FFFFFF;
+border: 1px solid #D9DCE6;
+box-sizing: border-box;
+border-radius: 4px;
+width: 86px;
+margin-top: 30px;
+margin-right:50px;
+margin-left:15px;
+
+& .MuiSelect-root {
+  font-weight: normal;
+  font-size: 14px;
+  color: #222222;
+  letter-spacing: 0.02em;
+  font-family: DM Sans;
+  font-style: normal;
+  line-height: 150%;
+}
+
+& .MuiSvgIcon-root {
+  color: #545454;
+  margin-right:5px;
+}
+`
 
 export const StyledTable = styled(Table)`
-  max-width: 93%;
+  max-width: 94%;
   margin-top: 20px;
   margin-left: 30px;
 `
@@ -102,7 +134,7 @@ export const RowReverseDiv = styled.div`
 `
 
 export const Footer = styled.div`
-  max-width: 93%;
+  max-width: 94%;
   margin-top: 30px;
   margin-left: 30px;
   padding-bottom: 30px;

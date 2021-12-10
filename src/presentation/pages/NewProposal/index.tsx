@@ -5,8 +5,8 @@ import { MainDiv } from './style'
 const NewProposal = (): JSX.Element => {
   return (
     <MainDiv>
-      <CostTable title={'Origem'} totalCostLabel={'Total custos origem:'} />
-      <CostTable title={'Destino'} totalCostLabel={'Total custos destino:'} />
+      <CostTable currencyLabel={'Definir essa moeda para custos de origem:'} title={'Origem'} totalCostLabel={'Total custos origem:'} />
+      <CostTable currencyLabel={'Definir essa moeda para custos destino:'} title={'Destino'} totalCostLabel={'Total custos destino:'} />
     </MainDiv>
   )
 }
