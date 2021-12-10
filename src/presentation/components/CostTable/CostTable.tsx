@@ -19,9 +19,7 @@ import {
   Title,
   TotalCostLabel,
   Type,
-  ValueLabel,
-  CurrencyLabel,
-  StyledSelect
+  ValueLabel
 } from './CostTableStyles'
 import EditIcon from '../../../application/icons/EditIcon'
 import RemoveIcon from '../../../application/icons/RemoveIcon'
@@ -68,9 +66,7 @@ const CostTable = ({ title, totalCostLabel, currencyLabel }: CostTableProps): JS
     }
   ]
 
-  const currencyList = ['BRL', 'USD']
   const [data, setData] = useState(mock)
-  const [currency, setCurrency] = useState('BRL')
   const [buyValue] = useState(0)
   const [saleValue] = useState(0)
   const formatter = new Intl.NumberFormat('pt-BR', {
@@ -93,26 +89,10 @@ const CostTable = ({ title, totalCostLabel, currencyLabel }: CostTableProps): JS
     console.log('adicionado')
   }
 
-  const handleCurrencyChange = (e): void => {
-    setCurrency(e.target.value)
-  }
-
   return (
     <MainDiv>
       <Header>
         <Title>{title}</Title>
-        <RowReverseDiv>
-          <StyledSelect onChange={handleCurrencyChange} value={currency} disableUnderline>
-            {currencyList.map((currency) => {
-              return (
-                <MenuItem key={`${currency}_currency`} value={currency}>
-                  {currency}
-                </MenuItem>
-              )
-            })}
-          </StyledSelect>
-          <CurrencyLabel>{currencyLabel}</CurrencyLabel>
-        </RowReverseDiv>
       </Header>
       <StyledTable>
         <TableHead>
@@ -182,7 +162,7 @@ const CostTable = ({ title, totalCostLabel, currencyLabel }: CostTableProps): JS
                   </RowReverseDiv>
                 </StyledTableCell>
               </TableRow>
-            );
+            )
           })}
         </TableBody>
       </StyledTable>
@@ -202,7 +182,7 @@ const CostTable = ({ title, totalCostLabel, currencyLabel }: CostTableProps): JS
         </RowReverseDiv>
       </Footer>
     </MainDiv>
-  );
+  )
 }
 
 export default CostTable
