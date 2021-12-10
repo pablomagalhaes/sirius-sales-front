@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { TableBody, TableHead, TableRow, MenuItem } from '@material-ui/core'
+import { TableBody, TableHead, TableRow } from '@material-ui/core'
 
 import {
   CostLabel,
@@ -40,10 +40,9 @@ interface CostTableItem {
 interface CostTableProps {
   title: string
   totalCostLabel: string
-  currencyLabel: string
 }
 
-const CostTable = ({ title, totalCostLabel, currencyLabel }: CostTableProps): JSX.Element => {
+const CostTable = ({ title, totalCostLabel }: CostTableProps): JSX.Element => {
   const mock: CostTableItem[] = [
     {
       agent: '-',

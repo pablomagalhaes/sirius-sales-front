@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { Table, TableCell, TableRow, Select } from '@material-ui/core'
+import { Table, TableCell, TableRow } from '@material-ui/core'
 
 export const MainDiv = styled.div`
   width: 95%;
