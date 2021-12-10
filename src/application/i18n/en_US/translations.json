@@ -11,12 +11,12 @@
     "costTable": {
       "addCost": "Add cost",
       "agent": "Agent",
-      "buy": "Buy",
+      "buy": "Buy:",
       "description": "Description",
       "inform": "To inform",
       "minBuy": "Min - Buy",
       "minSale": "Min - Sale",
-      "sale": "Sale",
+      "sale": "Sale:",
       "type":"Type"
     }
   }

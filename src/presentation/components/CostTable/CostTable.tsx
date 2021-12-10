@@ -68,6 +68,11 @@ const CostTable = ({ title, totalCostLabel }: CostTableProps): JSX.Element => {
   const [data, setData] = useState(mock)
   const [buyValue] = useState(0)
   const [saleValue] = useState(0)
+  const formatter = new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    minimumFractionDigits: 2
+  })
 
   const editClickHandler = (tableData: CostTableItem): void => {
     console.log(tableData)
@@ -91,24 +96,26 @@ const CostTable = ({ title, totalCostLabel }: CostTableProps): JSX.Element => {
       <StyledTable>
         <TableHead>
           <TableHeadRow>
-            <StyledTableCell width="14%">{I18n.t('components.costTable.description')}</StyledTableCell>
+            <StyledTableCell width="14%">
+              {I18n.t('components.costTable.description')}
+            </StyledTableCell>
             <StyledTableCell width="11%" align="left">
               {I18n.t('components.costTable.type')}
             </StyledTableCell>
             <StyledTableCell width="11%" align="left">
-            {I18n.t('components.costTable.buy')}
+              {I18n.t('components.costTable.buy')}
             </StyledTableCell>
             <StyledTableCell width="12%" align="left">
-            {I18n.t('components.costTable.minBuy')}
+              {I18n.t('components.costTable.minBuy')}
             </StyledTableCell>
             <StyledTableCell width="11%" align="left">
-            {I18n.t('components.costTable.sale')}
+              {I18n.t('components.costTable.sale')}
             </StyledTableCell>
             <StyledTableCell width="11%" align="left">
-            {I18n.t('components.costTable.minSale')}
+              {I18n.t('components.costTable.minSale')}
             </StyledTableCell>
             <StyledTableCell width="11%" align="left">
-            {I18n.t('components.costTable.agent')}
+              {I18n.t('components.costTable.agent')}
             </StyledTableCell>
           </TableHeadRow>
         </TableHead>
@@ -123,27 +130,27 @@ const CostTable = ({ title, totalCostLabel }: CostTableProps): JSX.Element => {
                   <Type>{dataMap.type}</Type>
                 </StyledTableCell>
                 <StyledTableCell width="11%" align="left">
-                  {(dataMap.buy != null) ? <Default>{dataMap.buy}</Default> : <Empty>{I18n.t('components.costTable.inform')}</Empty>}
+                  {dataMap.buy != null ? (<Default>{dataMap.buy}</Default>) : (<Empty>{I18n.t('components.costTable.inform')}</Empty>)}
                 </StyledTableCell>
                 <StyledTableCell width="12%" align="left">
-                  {(dataMap.minBuy != null) ? <Default>{dataMap.minBuy}</Default> : <Empty>{I18n.t('components.costTable.inform')}</Empty>}
+                  {dataMap.minBuy != null ? (<Default>{dataMap.minBuy}</Default>) : (<Empty>{I18n.t('components.costTable.inform')}</Empty>)}
                 </StyledTableCell>
                 <StyledTableCell width="11%" align="left">
-                  {(dataMap.sale != null) ? <Default>{dataMap.sale}</Default> : <Empty>{I18n.t('components.costTable.inform')}</Empty>}
+                  {dataMap.sale != null ? (<Default>{dataMap.sale}</Default>) : (<Empty>{I18n.t('components.costTable.inform')}</Empty>)}
                 </StyledTableCell>
                 <StyledTableCell width="11%" align="left">
-                  {(dataMap.minSale != null) ? <Default>{dataMap.minSale}</Default> : <Empty>{I18n.t('components.costTable.inform')}</Empty>}
+                  {dataMap.minSale != null ? (<Default>{dataMap.minSale}</Default>) : (<Empty>{I18n.t('components.costTable.inform')}</Empty>)}
                 </StyledTableCell>
                 <StyledTableCell width="11%" align="left">
-                  {(dataMap.agent != null) ? <Default>{dataMap.agent}</Default> : <Empty>{I18n.t('components.costTable.inform')}</Empty>}
+                  {dataMap.agent != null ? (<Default>{dataMap.agent}</Default>) : (<Empty>{I18n.t('components.costTable.inform')}</Empty>)}
                 </StyledTableCell>
-                <StyledTableCell width="19%" >
+                <StyledTableCell width="19%">
                   <RowReverseDiv>
-                      <RemoveIcon
-                        onClick={() => {
-                          removeClickHandler(dataMap.id)
-                        }}
-                      />
+                    <RemoveIcon
+                      onClick={() => {
+                        removeClickHandler(dataMap.id)
+                      }}
+                    />
                     <RemoveIconDiv>
                       <EditIcon
                         onClick={() => {
@@ -159,11 +166,16 @@ const CostTable = ({ title, totalCostLabel }: CostTableProps): JSX.Element => {
         </TableBody>
       </StyledTable>
       <Footer>
-        <Button text={I18n.t('components.costTable.addCost')} backgroundGreen={false} icon={'add'} onAction={addClickHandler}/>
+        <Button
+          text={I18n.t('components.costTable.addCost')}
+          backgroundGreen={false}
+          icon={'add'}
+          onAction={addClickHandler}
+        />
         <RowReverseDiv>
-          <EndValueLabel>{`R$ ${saleValue.toFixed(2)}`}</EndValueLabel>
+          <EndValueLabel>{formatter.format(saleValue)}</EndValueLabel>
           <CostLabel>{I18n.t('components.costTable.sale')}</CostLabel>
-          <ValueLabel>{`R$ ${buyValue.toFixed(2)}`}</ValueLabel>
+          <ValueLabel>{formatter.format(buyValue)}</ValueLabel>
           <CostLabel>{I18n.t('components.costTable.buy')}</CostLabel>
           <TotalCostLabel>{totalCostLabel}</TotalCostLabel>
         </RowReverseDiv>

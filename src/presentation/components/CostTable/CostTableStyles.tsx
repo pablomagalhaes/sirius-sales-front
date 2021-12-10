@@ -31,7 +31,7 @@ export const Title = styled.span`
 `
 
 export const StyledTable = styled(Table)`
-  max-width: 93%;
+  max-width: 94%;
   margin-top: 20px;
   margin-left: 30px;
 `
@@ -102,7 +102,7 @@ export const RowReverseDiv = styled.div`
 `
 
 export const Footer = styled.div`
-  max-width: 93%;
+  max-width: 94%;
   margin-top: 30px;
   margin-left: 30px;
   padding-bottom: 30px;
