@@ -18,6 +18,20 @@
       "minSale": "Min - Sale",
       "sale": "Sale:",
       "type":"Type"
+    },
+    "itemModal":{
+      "amount":"Amount:",
+      "type":"Type:",
+      "rawWeight":"Raw Weight (kg):",
+      "hwl": "H x W x L:",
+      "diameter": "Diameter:",
+      "cubage": "Cubage:",
+      "imo": "IMO:",
+      "codUn": "Cod. Un:",
+      "choose": "Choose ...",
+      "yes": "Yes",
+      "hazardous": "Hazardous?",
+      "save": "Save"
     }
   }
 }
