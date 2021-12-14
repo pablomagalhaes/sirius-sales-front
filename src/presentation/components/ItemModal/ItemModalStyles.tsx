@@ -121,12 +121,26 @@ font-family: DM Sans;
     etter-spacing: 0.02em;
     color: #222222;
 `
-export const CheckBox = styled.input`
+export const CheckBox = styled.input.attrs({ type: 'checkbox' })`
+appearance: none;
 border: 2px solid #B5B8C2;
 box-sizing: border-box;
 border-radius: 2px;
 margin-right:11px;
 margin-top:15px;
+  width: 18px;
+  height: 18px;
+  display:flex;
+  text-align:center;
+&:checked:after {
+  padding-bottom:6px;
+  width: 16px;
+  height: 9px;
+  font-size:14px;
+  content: '✓';
+  color: white;
+  background-color: #43BFB5;
+}
 `
 export const CheckBoxLabel = styled.span`
 color: #000000;

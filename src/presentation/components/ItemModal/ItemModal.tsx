@@ -189,7 +189,6 @@ const ItemModal = ({ title, open, setOpen, setClose, handleAdd }: ItemModalProps
             <CheckBox
               onChange={handleDangerousChange}
               checked={data.dangerous}
-              type="checkbox"
             />
             <CheckBoxLabel>{I18n.t('components.itemModal.yes')}</CheckBoxLabel>
             <AlertIconDiv>
