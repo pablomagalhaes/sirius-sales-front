@@ -22,7 +22,7 @@
     "itemModal":{
       "amount": "Qtd:",
       "type": "Tipo:",
-      "rawWeight":"Peso Bruto (kg):",
+      "rawWeight":"Peso bruto (kg):",
       "hwl": "A x L x C:",
       "diameter": "Diâmetro:",
       "cubage": "Cubagem:",

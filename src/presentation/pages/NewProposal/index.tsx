@@ -11,7 +11,7 @@ const NewProposal = (): JSX.Element => {
   return (
     <MainDiv>
       <button onClick={handleOpen}>Abrir Modal </button>
-       <ItemModal handleAdd={handleAdd} setOpen={handleOpen} open={open} setClose={handleClose} title='Editar Item'/>
+       <ItemModal handleAdd={handleAdd} setOpen={handleOpen} open={open} setClose={handleClose} title='Adicionar item à carga'/>
       <CostTable title={'Origem'} totalCostLabel={'Total custos origem:'} />
       <CostTable title={'Destino'} totalCostLabel={'Total custos destino:'} />
     </MainDiv>

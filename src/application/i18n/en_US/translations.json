@@ -22,7 +22,7 @@
     "itemModal":{
       "amount":"Amount:",
       "type":"Type:",
-      "rawWeight":"Raw Weight (kg):",
+      "rawWeight":"Raw weight (kg):",
       "hwl": "H x W x L:",
       "diameter": "Diameter:",
       "cubage": "Cubage:",

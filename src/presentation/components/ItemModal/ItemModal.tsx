@@ -17,7 +17,8 @@ import {
   CheckBox,
   CheckBoxLabel,
   AlertIconDiv,
-  ButtonDiv
+  ButtonDiv,
+  NotNull
 } from './ItemModalStyles'
 import { I18n } from 'react-redux-i18n'
 import CheckIcon from '../../../application/icons/CheckIcon'
@@ -53,9 +54,29 @@ const ItemModal = ({ title, open, setOpen, setClose, handleAdd }: ItemModalProps
     setClose()
   }
 
+  const validateData = (): boolean => {
+    if (
+      data.type.length === 0 ||
+      data.amount.length === 0 ||
+      data.rawWeight.length === 0 ||
+      data.height.length === 0 ||
+      data.width.length === 0 ||
+      data.length.length === 0 ||
+      data.cubage.length === 0
+    ) {
+      return false
+    } else {
+      return true
+    }
+  }
+
   const handleOnAdd = (): void => {
-    handleAdd(data)
-    handleOnClose()
+    if (validateData()) {
+      handleAdd(data)
+      handleOnClose()
+    } else {
+      alert('preencher campos obrigatórios')
+    }
   }
 
   const handleTypeChange = (e): void => {
@@ -135,10 +156,14 @@ const ItemModal = ({ title, open, setOpen, setClose, handleAdd }: ItemModalProps
         </HeaderDiv>
         <Form>
           <RowDiv>
-            <Label width="44%">{I18n.t('components.itemModal.type')}</Label>
-            <Label width="29%">{I18n.t('components.itemModal.amount')}</Label>
+            <Label width="44%">
+              {I18n.t('components.itemModal.type')} <NotNull> *</NotNull>
+            </Label>
+            <Label width="29%">
+              {I18n.t('components.itemModal.amount')} <NotNull> *</NotNull>
+            </Label>
             <Label width="27%">
-              {I18n.t('components.itemModal.rawWeight')}
+              {I18n.t('components.itemModal.rawWeight')} <NotNull> *</NotNull>
             </Label>
           </RowDiv>
           <RowDiv margin={true}>
@@ -150,7 +175,7 @@ const ItemModal = ({ title, open, setOpen, setClose, handleAdd }: ItemModalProps
               placeholder={data.type}
             >
               <MenuItem disabled value="">
-              {I18n.t('components.itemModal.choose')}
+                {I18n.t('components.itemModal.choose')}
               </MenuItem>
               {typeList.map((type) => {
                 return (
@@ -164,9 +189,13 @@ const ItemModal = ({ title, open, setOpen, setClose, handleAdd }: ItemModalProps
             <Input value={data.rawWeight} onChange={handleRawWeightChange} />
           </RowDiv>
           <RowDiv>
-            <Label width="44%">{I18n.t('components.itemModal.hwl')}:</Label>
+            <Label width="44%">
+              {I18n.t('components.itemModal.hwl')} <NotNull> *</NotNull>
+            </Label>
             <Label width="29%">{I18n.t('components.itemModal.diameter')}</Label>
-            <Label width="27%">{I18n.t('components.itemModal.cubage')}</Label>
+            <Label width="27%">
+              {I18n.t('components.itemModal.cubage')} <NotNull> *</NotNull>
+            </Label>
           </RowDiv>
           <RowDiv margin={true}>
             <MeasureInput
@@ -184,10 +213,10 @@ const ItemModal = ({ title, open, setOpen, setClose, handleAdd }: ItemModalProps
             <Input value={data.cubage} onChange={handleCubageChange} />
           </RowDiv>
           <RowDiv>
-            <Label width="29%">
+            <Label width="30%">
               {I18n.t('components.itemModal.hazardous')}
             </Label>
-            <Label width="44%">{I18n.t('components.itemModal.imo')}</Label>
+            <Label width="43%">{I18n.t('components.itemModal.imo')}</Label>
             <Label width="27%">{I18n.t('components.itemModal.codUn')}</Label>
           </RowDiv>
           <RowDiv>

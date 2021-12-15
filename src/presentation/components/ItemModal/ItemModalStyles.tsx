@@ -12,11 +12,11 @@ transform: translate(-50%, -50%);
 outline: none;
 `
 export const RowReverseDiv = styled.div`
-  display: flex;
-  flex-direction: row-reverse;
-  justify-self: flex-end;
-  width: 100%;
-  margin-right:35px;
+display: flex;
+flex-direction: row-reverse;
+justify-self: flex-end;
+width: 100%;
+margin-right:35px;
 `
 
 export const Form = styled.div`
@@ -143,14 +143,18 @@ margin-right:11px;
 margin-top:18px;
 `
 export const AlertIconDiv = styled.span`
-margin-right:59px;
-margin-top:18px;
+margin-right:62px;
+margin-top:20px;
 `
 export const ButtonDiv = styled.div`
 margin-top:40px;
-margin-bottom:20px;
+margin-bottom:25px;
 display: flex;
 flex-direction: row;
 justify-content: center;
 width: 100%;
+`
+export const NotNull = styled.span`
+color:red;
+font-size: 12px;
 `
