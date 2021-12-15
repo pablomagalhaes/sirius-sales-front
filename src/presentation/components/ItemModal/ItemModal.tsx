@@ -20,6 +20,7 @@ import {
   ButtonDiv
 } from './ItemModalStyles'
 import { I18n } from 'react-redux-i18n'
+import CheckIcon from '../../../application/icons/CheckIcon'
 
 interface ItemModalProps {
   title: string
@@ -107,7 +108,7 @@ const ItemModal = ({ title, open, setOpen, setClose, handleAdd }: ItemModalProps
 
   const handleDangerousChange = (e): void => {
     setData((currentState) => {
-      return { ...currentState, dangerous: e.target.checked }
+      return { ...currentState, dangerous: !currentState.dangerous }
     })
   }
 
@@ -136,7 +137,9 @@ const ItemModal = ({ title, open, setOpen, setClose, handleAdd }: ItemModalProps
           <RowDiv>
             <Label width="44%">{I18n.t('components.itemModal.type')}</Label>
             <Label width="29%">{I18n.t('components.itemModal.amount')}</Label>
-            <Label width="27%">{I18n.t('components.itemModal.rawWeight')}</Label>
+            <Label width="27%">
+              {I18n.t('components.itemModal.rawWeight')}
+            </Label>
           </RowDiv>
           <RowDiv margin={true}>
             <StyledSelect
@@ -147,7 +150,7 @@ const ItemModal = ({ title, open, setOpen, setClose, handleAdd }: ItemModalProps
               placeholder={data.type}
             >
               <MenuItem disabled value="">
-                Escolha ...
+              {I18n.t('components.itemModal.choose')}
               </MenuItem>
               {typeList.map((type) => {
                 return (
@@ -181,15 +184,16 @@ const ItemModal = ({ title, open, setOpen, setClose, handleAdd }: ItemModalProps
             <Input value={data.cubage} onChange={handleCubageChange} />
           </RowDiv>
           <RowDiv>
-            <Label width="29%">{I18n.t('components.itemModal.hazardous')}</Label>
+            <Label width="29%">
+              {I18n.t('components.itemModal.hazardous')}
+            </Label>
             <Label width="44%">{I18n.t('components.itemModal.imo')}</Label>
             <Label width="27%">{I18n.t('components.itemModal.codUn')}</Label>
           </RowDiv>
           <RowDiv>
-            <CheckBox
-              onChange={handleDangerousChange}
-              checked={data.dangerous}
-            />
+            <CheckBox checked={data.dangerous} onClick={handleDangerousChange}>
+              {data.dangerous && <CheckIcon />}
+            </CheckBox>
             <CheckBoxLabel>{I18n.t('components.itemModal.yes')}</CheckBoxLabel>
             <AlertIconDiv>
               <AlertIcon />
@@ -202,7 +206,7 @@ const ItemModal = ({ title, open, setOpen, setClose, handleAdd }: ItemModalProps
               displayEmpty
             >
               <MenuItem disabled value="">
-              {I18n.t('components.itemModal.choose')}
+                {I18n.t('components.itemModal.choose')}
               </MenuItem>
               {imoList.map((imo) => {
                 return (

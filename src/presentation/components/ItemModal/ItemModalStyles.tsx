@@ -80,7 +80,7 @@ margin-top:12px;
     font-weight: normal;
     font-size: 14px;
     line-height: 150%;
-    etter-spacing: 0.02em;
+    letter-spacing: 0.02em;
     color: ${props => (props.placeholder) === '' ? '#999DAC' : '#222222'};
 }
 
@@ -98,12 +98,12 @@ width:126px;
 height:32px;
 margin-left:21px;
 font-family: DM Sans;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 150%;
-    etter-spacing: 0.02em;
-    color: #222222;
+font-style: normal;
+font-weight: normal;
+font-size: 14px;
+line-height: 150%;
+letter-spacing: 0.02em;
+color: #222222;
 `
 export const MeasureInput = styled.input`
 border: 1px solid #E5E5E5;
@@ -114,33 +114,28 @@ width:50px;
 height:32px;
 margin-right:${(props: { margin: boolean }) => (props.margin) ? '21px' : '0px'};
 font-family: DM Sans;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 150%;
-    etter-spacing: 0.02em;
-    color: #222222;
+font-style: normal;
+font-weight: normal;
+font-size: 14px;
+line-height: 150%;
+letter-spacing: 0.02em;
+color: #222222;
 `
-export const CheckBox = styled.input.attrs({ type: 'checkbox' })`
-appearance: none;
-border: 2px solid #B5B8C2;
+export const CheckBox = styled.div`
+border: ${(props: { checked: boolean }) => (props.checked) ? '0px' : '2px solid #B5B8C2'};
 box-sizing: border-box;
 border-radius: 2px;
 margin-right:11px;
-margin-top:15px;
-  width: 18px;
-  height: 18px;
-  display:flex;
-  text-align:center;
-&:checked:after {
-  padding-bottom:6px;
-  width: 16px;
-  height: 9px;
-  font-size:14px;
-  content: '✓';
-  color: white;
-  background-color: #43BFB5;
-}
+margin-top:18px;
+width: 18px;
+height: 18px;
+background: blue;
+text-align:center;
+display:flex;
+flex-direction:column;
+justify-content:center;
+padding-left:1px;
+background-color:${(props: { checked: boolean }) => (props.checked) ? '#43BFB5' : '#FFFFFF'};
 `
 export const CheckBoxLabel = styled.span`
 color: #000000;
@@ -153,5 +148,9 @@ margin-top:18px;
 `
 export const ButtonDiv = styled.div`
 margin-top:40px;
-margin-bottom:40px;
+margin-bottom:20px;
+display: flex;
+flex-direction: row;
+justify-content: center;
+width: 100%;
 `
