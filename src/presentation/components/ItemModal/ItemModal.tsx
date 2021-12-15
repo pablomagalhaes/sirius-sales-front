@@ -23,15 +23,29 @@ import {
 import { I18n } from 'react-redux-i18n'
 import CheckIcon from '../../../application/icons/CheckIcon'
 
+interface ItemModalData {
+  type: string
+  amount: string
+  rawWeight: string
+  height: string
+  width: string
+  length: string
+  diameter: string
+  cubage: string
+  dangerous: boolean
+  imo: string
+  codUn: string
+}
 interface ItemModalProps {
   title: string
   open: boolean
   setOpen: () => void
   setClose: () => void
   handleAdd: (item) => void
+  dataProp?: ItemModalData
 }
 
-const ItemModal = ({ title, open, setOpen, setClose, handleAdd }: ItemModalProps): JSX.Element => {
+const ItemModal = ({ title, open, setOpen, setClose, handleAdd, dataProp }: ItemModalProps): JSX.Element => {
   const typeList = ['Caixas', 'Bacias']
   const imoList = ['1', '2', '3']
   const initialState = {
@@ -47,7 +61,7 @@ const ItemModal = ({ title, open, setOpen, setClose, handleAdd }: ItemModalProps
     imo: '',
     codUn: ''
   }
-  const [data, setData] = useState(initialState)
+  const [data, setData] = useState((dataProp != null) ? dataProp : initialState)
 
   const handleOnClose = (): void => {
     setData(initialState)
