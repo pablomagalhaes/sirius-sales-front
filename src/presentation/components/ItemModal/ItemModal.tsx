@@ -4,21 +4,21 @@ import React, { useState } from 'react'
 import AlertIcon from '../../../application/icons/AlertIcon'
 import CloseIcon from '../../../application/icons/CloseIcon'
 import {
-  Form,
-  HeaderDiv,
-  ModalDiv,
-  RowReverseDiv,
-  Label,
-  Title,
-  RowDiv,
-  StyledSelect,
-  Input,
-  MeasureInput,
-  CheckBox,
-  CheckBoxLabel,
   AlertIconDiv,
   ButtonDiv,
-  NotNull
+  CheckBox,
+  CheckBoxLabel,
+  Form,
+  HeaderDiv,
+  Input,
+  Label,
+  MeasureInput,
+  ModalDiv,
+  RedColorSpan,
+  RowDiv,
+  RowReverseDiv,
+  StyledSelect,
+  Title
 } from './ItemModalStyles'
 import { I18n } from 'react-redux-i18n'
 import CheckIcon from '../../../application/icons/CheckIcon'
@@ -30,11 +30,11 @@ interface ItemModalData {
   height: string
   width: string
   length: string
-  diameter: string
+  diameter: string | null
   cubage: string
   dangerous: boolean
-  imo: string
-  codUn: string
+  imo: string | null
+  codUn: string | null
 }
 interface ItemModalProps {
   title: string
@@ -46,7 +46,9 @@ interface ItemModalProps {
 }
 
 const ItemModal = ({ title, open, setOpen, setClose, handleAdd, dataProp }: ItemModalProps): JSX.Element => {
+  // Mock de tipos, valores serão especificados posteriormente
   const typeList = ['Caixas', 'Bacias']
+  // Mock de imo, valores serão especificados posteriormente
   const imoList = ['1', '2', '3']
   const initialState = {
     type: '',
@@ -69,19 +71,13 @@ const ItemModal = ({ title, open, setOpen, setClose, handleAdd, dataProp }: Item
   }
 
   const validateData = (): boolean => {
-    if (
-      data.type.length === 0 ||
+    return !(data.type.length === 0 ||
       data.amount.length === 0 ||
       data.rawWeight.length === 0 ||
       data.height.length === 0 ||
       data.width.length === 0 ||
       data.length.length === 0 ||
-      data.cubage.length === 0
-    ) {
-      return false
-    } else {
-      return true
-    }
+      data.cubage.length === 0)
   }
 
   const handleOnAdd = (): void => {
@@ -141,7 +137,7 @@ const ItemModal = ({ title, open, setOpen, setClose, handleAdd, dataProp }: Item
     })
   }
 
-  const handleDangerousChange = (e): void => {
+  const handleDangerousChange = (): void => {
     setData((currentState) => {
       return { ...currentState, dangerous: !currentState.dangerous }
     })
@@ -171,13 +167,13 @@ const ItemModal = ({ title, open, setOpen, setClose, handleAdd, dataProp }: Item
         <Form>
           <RowDiv>
             <Label width="44%">
-              {I18n.t('components.itemModal.type')} <NotNull> *</NotNull>
+              {I18n.t('components.itemModal.type')} <RedColorSpan> *</RedColorSpan>
             </Label>
             <Label width="29%">
-              {I18n.t('components.itemModal.amount')} <NotNull> *</NotNull>
+              {I18n.t('components.itemModal.amount')} <RedColorSpan> *</RedColorSpan>
             </Label>
             <Label width="27%">
-              {I18n.t('components.itemModal.rawWeight')} <NotNull> *</NotNull>
+              {I18n.t('components.itemModal.rawWeight')} <RedColorSpan> *</RedColorSpan>
             </Label>
           </RowDiv>
           <RowDiv margin={true}>
@@ -186,7 +182,6 @@ const ItemModal = ({ title, open, setOpen, setClose, handleAdd, dataProp }: Item
               displayEmpty
               value={data.type}
               disableUnderline
-              placeholder={data.type}
             >
               <MenuItem disabled value="">
                 {I18n.t('components.itemModal.choose')}
@@ -204,15 +199,16 @@ const ItemModal = ({ title, open, setOpen, setClose, handleAdd, dataProp }: Item
           </RowDiv>
           <RowDiv>
             <Label width="44%">
-              {I18n.t('components.itemModal.hwl')} <NotNull> *</NotNull>
+              {I18n.t('components.itemModal.hwl')} <RedColorSpan> *</RedColorSpan>
             </Label>
             <Label width="29%">{I18n.t('components.itemModal.diameter')}</Label>
             <Label width="27%">
-              {I18n.t('components.itemModal.cubage')} <NotNull> *</NotNull>
+              {I18n.t('components.itemModal.cubage')} <RedColorSpan> *</RedColorSpan>
             </Label>
           </RowDiv>
           <RowDiv margin={true}>
             <MeasureInput
+              aria-label="height"
               value={data.height}
               onChange={handleHeightChange}
               margin={true}
@@ -223,7 +219,7 @@ const ItemModal = ({ title, open, setOpen, setClose, handleAdd, dataProp }: Item
               margin={true}
             />
             <MeasureInput value={data.length} onChange={handleLengthChange} />
-            <Input value={data.diameter} onChange={handleDiameterChange} />
+            <Input value={(data.diameter != null) ? data.diameter : ''} onChange={handleDiameterChange} />
             <Input value={data.cubage} onChange={handleCubageChange} />
           </RowDiv>
           <RowDiv>
@@ -242,10 +238,9 @@ const ItemModal = ({ title, open, setOpen, setClose, handleAdd, dataProp }: Item
               <AlertIcon />
             </AlertIconDiv>
             <StyledSelect
-              value={data.imo}
+              value={(data.imo != null) ? data.imo : ''}
               onChange={handleImoChange}
               disableUnderline
-              placeholder={data.imo}
               displayEmpty
             >
               <MenuItem disabled value="">
@@ -259,7 +254,7 @@ const ItemModal = ({ title, open, setOpen, setClose, handleAdd, dataProp }: Item
                 )
               })}
             </StyledSelect>
-            <Input value={data.codUn} onChange={handleCodUnChange} />
+            <Input value={(data.codUn != null) ? data.codUn : ''} onChange={handleCodUnChange} />
           </RowDiv>
           <RowDiv>
             <ButtonDiv>
