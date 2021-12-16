@@ -4,17 +4,17 @@ import ItemModal from './ItemModal'
 import '@testing-library/jest-dom'
 const props = {
   dataProp: {
-    type: 'Caixas',
     amount: '12',
-    rawWeight: '125.6',
-    height: '12',
-    width: '36',
-    length: '10',
-    diameter: '',
+    codUn: '',
     cubage: '12',
     dangerous: false,
+    diameter: '',
+    height: '12',
     imo: '',
-    codUn: ''
+    length: '10',
+    rawWeight: '125.6',
+    type: 'Caixas',
+    width: '36'
   },
   title: 'Editar item',
   handleAdd: () => {},

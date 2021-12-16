@@ -24,50 +24,60 @@ import { I18n } from 'react-redux-i18n'
 import CheckIcon from '../../../application/icons/CheckIcon'
 
 interface ItemModalData {
-  type: string
   amount: string
-  rawWeight: string
-  height: string
-  width: string
-  length: string
-  diameter: string | null
+  codUn: string | null
   cubage: string
   dangerous: boolean
+  diameter: string | null
+  height: string
   imo: string | null
-  codUn: string | null
+  length: string
+  rawWeight: string
+  type: string
+  width: string
 }
 interface ItemModalProps {
-  title: string
-  open: boolean
-  setOpen: () => void
-  setClose: () => void
-  handleAdd: (item) => void
   dataProp?: ItemModalData
+  handleAdd: (item) => void
+  open: boolean
+  setClose: () => void
+  setOpen: () => void
+  title: string
 }
 
-const ItemModal = ({ title, open, setOpen, setClose, handleAdd, dataProp }: ItemModalProps): JSX.Element => {
+const ItemModal = ({ dataProp, handleAdd, open, setClose, setOpen, title }: ItemModalProps): JSX.Element => {
   // Mock de tipos, valores serão especificados posteriormente
   const typeList = ['Caixas', 'Bacias']
   // Mock de imo, valores serão especificados posteriormente
   const imoList = ['1', '2', '3']
+  const rgxFloat = /^[0-9]*,?[0-9]*$/
+  const rgxInt = /^[0-9]*$/
   const initialState = {
-    type: '',
     amount: '',
-    rawWeight: '',
-    height: '',
-    width: '',
-    length: '',
-    diameter: '',
+    codUn: '',
     cubage: '',
     dangerous: false,
+    diameter: '',
+    height: '',
     imo: '',
-    codUn: ''
+    length: '',
+    rawWeight: '',
+    type: '',
+    width: ''
   }
   const [data, setData] = useState((dataProp != null) ? dataProp : initialState)
 
   const handleOnClose = (): void => {
     setData(initialState)
     setClose()
+  }
+
+  const validateFloatInput = (value: string): RegExpMatchArray | null => {
+    return value.match(rgxFloat)
+  }
+
+  const validateIntInput = (value: string): RegExpMatchArray | null => {
+    return value.match(rgxInt)
   }
 
   const validateData = (): boolean => {
@@ -96,45 +106,66 @@ const ItemModal = ({ title, open, setOpen, setClose, handleAdd, dataProp }: Item
   }
 
   const handleAmountChange = (e): void => {
-    setData((currentState) => {
-      return { ...currentState, amount: e.target.value }
-    })
+    const validatedInput = validateIntInput(e.target.value)
+    if (validatedInput !== null) {
+      setData((currentState) => {
+        return { ...currentState, amount: validatedInput[0] }
+      })
+    }
   }
 
   const handleRawWeightChange = (e): void => {
-    setData((currentState) => {
-      return { ...currentState, rawWeight: e.target.value }
-    })
+    const validatedInput = validateFloatInput(e.target.value)
+    if (validatedInput !== null) {
+      setData((currentState) => {
+        return { ...currentState, rawWeight: validatedInput[0] }
+      })
+    }
   }
 
   const handleWidthChange = (e): void => {
-    setData((currentState) => {
-      return { ...currentState, width: e.target.value }
-    })
+    const validatedInput = validateFloatInput(e.target.value)
+    if (validatedInput !== null) {
+      setData((currentState) => {
+        return { ...currentState, width: validatedInput[0] }
+      })
+    }
   }
 
   const handleHeightChange = (e): void => {
-    setData((currentState) => {
-      return { ...currentState, height: e.target.value }
-    })
+    const validatedInput = validateFloatInput(e.target.value)
+    if (validatedInput !== null) {
+      setData((currentState) => {
+        return { ...currentState, height: validatedInput[0] }
+      })
+    }
   }
 
   const handleLengthChange = (e): void => {
-    setData((currentState) => {
-      return { ...currentState, length: e.target.value }
-    })
+    const validatedInput = validateFloatInput(e.target.value)
+    if (validatedInput !== null) {
+      setData((currentState) => {
+        return { ...currentState, length: validatedInput[0] }
+      })
+    }
   }
 
   const handleDiameterChange = (e): void => {
-    setData((currentState) => {
-      return { ...currentState, diameter: e.target.value }
-    })
+    const validatedInput = validateFloatInput(e.target.value)
+    if (validatedInput !== null) {
+      setData((currentState) => {
+        return { ...currentState, diameter: validatedInput[0] }
+      })
+    }
   }
 
   const handleCubageChange = (e): void => {
-    setData((currentState) => {
-      return { ...currentState, cubage: e.target.value }
-    })
+    const validatedInput = validateFloatInput(e.target.value)
+    if (validatedInput !== null) {
+      setData((currentState) => {
+        return { ...currentState, cubage: validatedInput[0] }
+      })
+    }
   }
 
   const handleDangerousChange = (): void => {
