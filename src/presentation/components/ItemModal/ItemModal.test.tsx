@@ -6,7 +6,7 @@ const props = {
   dataProp: {
     type: 'Caixas',
     amount: '12',
-    rawWeight: '125.5',
+    rawWeight: '125.6',
     height: '12',
     width: '36',
     length: '10',
