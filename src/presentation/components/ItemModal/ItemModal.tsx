@@ -213,6 +213,7 @@ const ItemModal = ({ dataProp, handleAdd, open, setClose, setOpen, title }: Item
               displayEmpty
               value={data.type}
               disableUnderline
+              placeholder={data.type}
             >
               <MenuItem disabled value="">
                 {I18n.t('components.itemModal.choose')}
@@ -273,6 +274,7 @@ const ItemModal = ({ dataProp, handleAdd, open, setClose, setOpen, title }: Item
               onChange={handleImoChange}
               disableUnderline
               displayEmpty
+              placeholder={(data.imo != null) ? data.imo : ''}
             >
               <MenuItem disabled value="">
                 {I18n.t('components.itemModal.choose')}
