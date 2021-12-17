@@ -25,6 +25,7 @@ import EditIcon from '../../../application/icons/EditIcon'
 import RemoveIcon from '../../../application/icons/RemoveIcon'
 import { I18n } from 'react-redux-i18n'
 import { Button } from 'fiorde-fe-components'
+import CostModal from '../CostModal/CostModal'
 
 interface CostTableItem {
   agent?: string
@@ -64,7 +65,10 @@ const CostTable = ({ title, totalCostLabel }: CostTableProps): JSX.Element => {
       type: 'container'
     }
   ]
-
+  const [open, setOpen] = useState(false)
+  const handleOpen = (): void => setOpen(true)
+  const handleClose = (): void => setOpen(false)
+  const handleAdd = (item): void => console.log(item)
   const [data, setData] = useState(mock)
   const [buyValue] = useState(0)
   const [saleValue] = useState(0)
@@ -85,11 +89,12 @@ const CostTable = ({ title, totalCostLabel }: CostTableProps): JSX.Element => {
   }
 
   const addClickHandler = (): void => {
-    console.log('adicionado')
+    handleOpen()
   }
 
   return (
     <MainDiv>
+      <CostModal handleAdd={handleAdd} setOpen={handleOpen} open={open} setClose={handleClose} title='Adicionar item à carga'/>
       <Header>
         <Title>{title}</Title>
       </Header>

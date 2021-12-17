@@ -1,6 +1,13 @@
 const dark = {
   commercial: {
     fontColor: '#F2F3F7',
+    components: {
+      itemModal: {
+        backgroundColor: '#222E3E',
+        fontColor: '#F2F3F7',
+        iconColor: '#FFFFFF'
+      }
+    },
     pages: {
       home: {
         mainColor: '#151D28'
@@ -18,6 +25,13 @@ const dark = {
 const light = {
   commercial: {
     fontColor: '#222222',
+    components: {
+      itemModal: {
+        backgroundColor: '#FFFFFF',
+        fontColor: '#545454',
+        iconColor: '#222222'
+      }
+    },
     pages: {
       home: {
         mainColor: '#F2F3F7'
