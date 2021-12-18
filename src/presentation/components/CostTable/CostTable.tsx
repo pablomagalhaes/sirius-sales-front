@@ -94,7 +94,7 @@ const CostTable = ({ title, totalCostLabel }: CostTableProps): JSX.Element => {
 
   return (
     <MainDiv>
-      <CostModal handleAdd={handleAdd} setOpen={handleOpen} open={open} setClose={handleClose} title='Adicionar item à carga'/>
+      <CostModal handleAdd={handleAdd} setOpen={handleOpen} open={open} setClose={handleClose} title='Novo custo de origem'/>
       <Header>
         <Title>{title}</Title>
       </Header>
