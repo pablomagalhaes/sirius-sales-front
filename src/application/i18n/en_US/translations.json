@@ -1,0 +1,23 @@
+{
+  "pages": {
+  },
+  "components": {
+    "header": {
+      "home": "Home",
+      "proposal": "Proposal",
+      "tariff": "Tariff",
+      "indicators": "Indicators"
+    },
+    "costTable": {
+      "addCost": "Add cost",
+      "agent": "Agent",
+      "buy": "Buy:",
+      "description": "Description",
+      "inform": "To inform",
+      "minBuy": "Min - Buy",
+      "minSale": "Min - Sale",
+      "sale": "Sale:",
+      "type":"Type"
+    }
+  }
+}

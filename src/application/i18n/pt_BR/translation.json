@@ -1,0 +1,23 @@
+{
+  "pages": {
+  },
+  "components": {
+    "header": {
+      "home": "Home",
+      "proposal": "Proposta",
+      "tariff": "Tarifário",
+      "indicators": "Indicadores"
+    },
+    "costTable": {
+      "addCost": "Adicionar custo",
+      "agent": "Agente",
+      "buy": "Compra:",
+      "description": "Descrição",
+      "inform": "A informar",
+      "minBuy": "Mín - Compra",
+      "minSale": "Mín - Venda",
+      "sale": "Venda:",
+      "type":"Tipo"
+    }
+  }
+}
