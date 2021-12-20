@@ -30,6 +30,20 @@
       "minimum": "Minimum",
       "value": "Value",
       "choose": "Choose..."
+    },
+    "itemModal":{
+      "amount":"Amount:",
+      "type":"Type:",
+      "rawWeight":"Raw weight (kg):",
+      "hwl": "H x W x L:",
+      "diameter": "Diameter:",
+      "cubage": "Cubage:",
+      "imo": "IMO:",
+      "codUn": "Cod. Un:",
+      "choose": "Choose ...",
+      "yes": "Yes",
+      "hazardous": "Hazardous?",
+      "save": "Save"
     }
   }
 }
