@@ -7,5 +7,5 @@
   },
   "files": ["src/sirius-sales-fe.tsx"],
   "include": ["src/**/*"],
-  "exclude": ["src/**/*.test*"]
+  "exclude": ["src/**/*.test"]
 }

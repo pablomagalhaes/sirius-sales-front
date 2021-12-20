@@ -18,6 +18,20 @@
       "minSale": "Mín - Venda",
       "sale": "Venda:",
       "type":"Tipo"
+    },
+    "itemModal":{
+      "amount": "Qtd:",
+      "type": "Tipo:",
+      "rawWeight":"Peso bruto (kg):",
+      "hwl": "A x L x C:",
+      "diameter": "Diâmetro:",
+      "cubage": "Cubagem:",
+      "imo": "IMO:",
+      "codUn": "Cód. Un:",
+      "choose": "Escolha ...",
+      "yes": "Sim",
+      "hazardous": "Perigoso?",
+      "save": "Salvar"
     }
   }
 }
