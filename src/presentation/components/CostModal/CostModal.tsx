@@ -130,7 +130,6 @@ const CostModal = ({
 
   const buyValueHandler = (e): void => {
     const validatedInput = validateFloatInput(e.target.value)
-    console.log(validatedInput)
     if (validatedInput !== null) {
       dispatch({ type: 'buyValue', value: validatedInput[0] })
     }
