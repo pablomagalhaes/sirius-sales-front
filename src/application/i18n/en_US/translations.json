@@ -19,6 +19,18 @@
       "sale": "Sale:",
       "type":"Type"
     },
+    "costModal": {
+      "type": "Type:",
+      "description": "Description:",
+      "agent": "Agent:",
+      "buyValue": "Buy value:",
+      "saleValue": "Sale value:",
+      "save": "Save",
+      "replyForSale": "Reply for sale",
+      "minimum": "Minimum",
+      "value": "Value",
+      "choose": "Choose..."
+    },
     "itemModal":{
       "amount":"Amount:",
       "type":"Type:",

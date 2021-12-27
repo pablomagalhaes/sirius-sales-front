@@ -35,6 +35,11 @@ the build files will be found in dist folder.
 `./sirius-sales-fe$` npm start -- --port=8600
 
 Access:  http://localhost:9000/
+
+## environment
+
+`QA` http://ec2-54-94-40-246.sa-east-1.compute.amazonaws.com/plataformasirius/#/comercial/
+
 ## architecture
 ```
 app
