@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import {
   FloatingButton,
   FloatingMenu,
-  GroupedCardFilters,
+  QuickFilters,
   Table,
   RowFilter
 } from 'fiorde-fe-components'
@@ -119,7 +119,7 @@ const Proposal = (): JSX.Element => {
           <span className="breadcrumbEnd">Propostas</span>
         </Breadcrumbs>
       </div>
-      <GroupedCardFilters cardFilters={cardFilters} onFilterClick={handleCardFiltersClick} />
+      <QuickFilters cardFilters={cardFilters} onFilterClick={handleCardFiltersClick} />
       <div style={{ margin: '25px 0' }}>
         <RowFilter
           menuItemsSelector={menuItemsSelector}
