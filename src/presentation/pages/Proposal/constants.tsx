@@ -1,54 +1,54 @@
 interface CardFilterProps {
-  iconType: 'warn' | 'import' | 'export' | 'plane' | 'ship' | 'truck' | ''
+  iconType: string
   status: string
   value: string
 }
 
 const cardFilters: CardFilterProps[] = [
   {
-    iconType: 'warn',
+    iconType: '',
+    value: '-',
+    status: 'Rascunhos'
+  },
+  {
+    iconType: '',
     value: '170',
-    status: 'aberta'
+    status: 'Abertas'
   },
   {
     iconType: '',
     value: '61',
-    status: 'ag. ret. cliente'
+    status: 'Ag. ret. cliente'
   },
   {
     iconType: '',
     value: '5',
-    status: 'renegociação'
-  },
-  {
-    iconType: '',
-    value: '80',
-    status: 'IO concluída'
+    status: 'Renegociação'
   },
   {
     iconType: '',
     value: '12',
-    status: 'rejeitada'
+    status: 'Rejeitadas'
   },
   {
     iconType: '',
     value: '28',
-    status: 'aprovada'
+    status: 'Aprovadas'
   },
   {
     iconType: 'truck',
     value: '10',
-    status: 'rodoviário'
+    status: 'Rodoviário'
   },
   {
     iconType: 'plane',
     value: '40',
-    status: 'aéreo'
+    status: 'Aéreo'
   },
   {
     iconType: 'ship',
     value: '160',
-    status: 'marítimo'
+    status: 'Marítimo'
   }
 ]
 
