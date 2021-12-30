@@ -101,7 +101,9 @@ const TableContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: auto;
+  width: 100%;
   justify-content: flex-start;
+  overflow-x: auto;
 `
 
 const BottomSideContainer = styled.div`
