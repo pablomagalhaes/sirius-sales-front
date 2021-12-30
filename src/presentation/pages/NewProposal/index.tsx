@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Button, FloatingMenu, Steps } from 'fiorde-fe-components'
 import { Breadcrumbs, Link } from '@material-ui/core/'
 import {
+  ButtonContainer,
   Header,
   MainContainer,
   RootContainer,
@@ -91,7 +92,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           onChange={handleStep}
           steps={steps}
         />
-        <div style={{ height: '36px' }}>
+        <ButtonContainer>
           <Button
             onAction={() => {}}
             text={I18n.t('pages.newProposal.buttonFinish')}
@@ -102,7 +103,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           >
             <FloatingMenu menuItems={floatingButtonMenuItems} />
           </Button>
-        </div>
+        </ButtonContainer>
       </TopContainer>
       <MainContainer>
         <Step1 />

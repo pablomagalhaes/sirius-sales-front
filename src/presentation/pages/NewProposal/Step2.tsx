@@ -5,11 +5,10 @@ import {
   Grid,
   InputAdornment,
   MenuItem,
-  Select,
   TextField
 } from '@material-ui/core/'
 import { I18n } from 'react-redux-i18n'
-import { Title, Subtitle, Separator, SelectPlaceholder } from './style'
+import { Title, Subtitle, Separator, SelectPlaceholder, StyledSelect } from './style'
 import IconComponent from '../../../application/icons/IconComponent'
 import { withTheme } from 'styled-components'
 
@@ -85,7 +84,7 @@ const Step2 = ({ theme }): JSX.Element => {
           </Grid>
           <Grid item xs={3}>
             <FormLabel component="legend">{I18n.t('pages.newProposal.step2.incoterm')}</FormLabel>
-            <Select
+            <StyledSelect
               labelId="select-label-incoterm"
               id="incoterm"
               value={incoterm}
@@ -100,7 +99,7 @@ const Step2 = ({ theme }): JSX.Element => {
                   {item.name}
                 </MenuItem>
               ))}
-            </Select>
+            </StyledSelect>
           </Grid>
         </Grid>
       </FormControl>

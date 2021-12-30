@@ -4,11 +4,10 @@ import {
   FormLabel,
   Grid,
   MenuItem,
-  Select,
   TextField
 } from '@material-ui/core/'
 import { I18n } from 'react-redux-i18n'
-import { Title, Subtitle, Separator, SelectPlaceholder } from './style'
+import { Title, Subtitle, Separator, SelectPlaceholder, StyledSelect } from './style'
 
 const Step4 = (): JSX.Element => {
   const [validity, setValidity] = useState('')
@@ -83,7 +82,7 @@ const Step4 = (): JSX.Element => {
         <Grid container spacing={2}>
           <Grid item xs={2}>
             <FormLabel component="legend">{I18n.t('pages.newProposal.step4.validity')}</FormLabel>
-            <Select
+            <StyledSelect
               labelId="validity-label"
               id="validity"
               value={validity}
@@ -98,7 +97,7 @@ const Step4 = (): JSX.Element => {
                   {item.name}
                 </MenuItem>
               ))}
-            </Select>
+            </StyledSelect>
           </Grid>
           <Grid item xs={2}>
             <FormLabel component="legend">&nbsp;</FormLabel>
@@ -118,7 +117,7 @@ const Step4 = (): JSX.Element => {
           </Grid>
           <Grid item xs={2}>
             <FormLabel component="legend">{I18n.t('pages.newProposal.step4.frequency')}</FormLabel>
-            <Select
+            <StyledSelect
               labelId="frequency-label"
               id="frequency"
               value={frequency}
@@ -133,7 +132,7 @@ const Step4 = (): JSX.Element => {
                   {item.name}
                 </MenuItem>
               ))}
-            </Select>
+            </StyledSelect>
           </Grid>
           <Grid item xs={3}>
             <FormLabel component="legend">{I18n.t('pages.newProposal.step4.route')}</FormLabel>
@@ -153,7 +152,7 @@ const Step4 = (): JSX.Element => {
           </Grid>
           <Grid item xs={4}>
             <FormLabel component="legend">{I18n.t('pages.newProposal.step4.currency')}</FormLabel>
-            <Select
+            <StyledSelect
               labelId="currency-label"
               id="currency"
               value={currency}
@@ -168,7 +167,7 @@ const Step4 = (): JSX.Element => {
                   {item.name}
                 </MenuItem>
               ))}
-            </Select>
+            </StyledSelect>
           </Grid>
           <Grid item xs={6}>
             <FormLabel component="legend">{I18n.t('pages.newProposal.step4.general')}</FormLabel>

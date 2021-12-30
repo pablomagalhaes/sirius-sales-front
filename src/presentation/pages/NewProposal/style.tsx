@@ -1,4 +1,6 @@
+import React from 'react'
 import styled from 'styled-components'
+import { Select } from '@material-ui/core/'
 import { primary } from '../../../application/themes'
 
 const RootContainer = styled.div`
@@ -127,13 +129,28 @@ const SelectPlaceholder = styled.span`
   color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.placeholder};
 `
 
+const ButtonContainer = styled.div`
+  height: 36px;
+`
+
+const StyledSelect = styled(({ className, ...props }) => (
+  <Select {...props} MenuProps={{ classes: { paper: className } }} />
+))`
+  && {
+    background-color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.background};
+    color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.subtitle};
+  }
+`
+
 export {
+  ButtonContainer,
   IconContainer,
   Header,
   MainContainer,
   RootContainer,
   SelectPlaceholder,
   Separator,
+  StyledSelect,
   Subtitle,
   Title,
   TopContainer,

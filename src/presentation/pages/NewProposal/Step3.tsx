@@ -8,11 +8,10 @@ import {
   MenuItem,
   Radio,
   RadioGroup,
-  Select,
   TextField
 } from '@material-ui/core/'
 import { I18n } from 'react-redux-i18n'
-import { Title, Subtitle, Separator, SelectPlaceholder } from './style'
+import { Title, Subtitle, Separator, SelectPlaceholder, StyledSelect } from './style'
 import ItemModal from '../../components/ItemModal/ItemModal'
 
 const Step3 = (): JSX.Element => {
@@ -58,7 +57,7 @@ const Step3 = (): JSX.Element => {
           </Grid>
           <Grid item xs={3}>
             <FormLabel component="legend">{I18n.t('pages.newProposal.step3.temperature')}</FormLabel>
-            <Select
+            <StyledSelect
               labelId="select-label-temperature"
               id="temperature"
               value={temperature}
@@ -73,7 +72,7 @@ const Step3 = (): JSX.Element => {
                   {item.name}
                 </MenuItem>
               ))}
-            </Select>
+            </StyledSelect>
           </Grid>
           <Grid item xs={12}>
             <Button
