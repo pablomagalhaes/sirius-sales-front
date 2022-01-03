@@ -4,7 +4,8 @@ import {
   FloatingMenu,
   QuickFilters,
   Table,
-  RowFilter
+  RowFilter,
+  Pagination
 } from 'fiorde-fe-components'
 import { Breadcrumbs, Link, Popover } from '@material-ui/core/'
 import {
@@ -175,8 +176,10 @@ const Proposal = (): JSX.Element => {
           </FloatingButton>
         </div>
         <TableContainer>
-          <Table rows={TableRows()}/>
+          <Table rows={TableRows()} />
         </TableContainer>
+        <Pagination count={100} labelRowsPerPage='Propostas por página' labelDisplayedRows='de' tooltipFirst='Primeira' tooltipBack='Anterior' tooltipNext='Próxima' tooltipLast='Última' />
+
       </BottomSideContainer>
     </RootContainer>
   )

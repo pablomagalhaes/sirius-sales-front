@@ -114,7 +114,8 @@ const BottomSideContainer = styled.div`
   .floating-button-style {
     position: fixed;
     right: 40px;
-    bottom: 40px;
+    bottom: 73px;
+    z-index: 99;
   }
 `
 
