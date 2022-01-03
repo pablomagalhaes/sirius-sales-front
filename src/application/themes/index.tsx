@@ -1,3 +1,5 @@
+const primary = '#43BFB5'
+
 const dark = {
   commercial: {
     fontColor: '#F2F3F7',
@@ -17,6 +19,14 @@ const dark = {
         dropdownColor: '#B5B8C2',
         breadcrumbInitial: '#B5B8C2',
         breadcrumbEnd: '#F2F3F7'
+      },
+      newProposal: {
+        background: '#222E3E',
+        title: '#F2F3F7',
+        subtitle: '#B5B8C2',
+        border: '#505F73',
+        font: '#F2F3F7',
+        placeholder: '#7B8A9E'
       }
     }
   }
@@ -41,9 +51,17 @@ const light = {
         dropdownColor: '#222222',
         breadcrumbInitial: '#222222',
         breadcrumbEnd: '#222222'
+      },
+      newProposal: {
+        background: '#FFFFFF',
+        title: '#000000',
+        subtitle: '#545454',
+        border: '#F0F1F5',
+        font: '#222222',
+        placeholder: '#999DAC'
       }
     }
   }
 }
 
-export { light, dark }
+export { light, dark, primary }

@@ -1,5 +1,70 @@
 {
   "pages": {
+    "newProposal": {
+      "encharged": "Encharged:",
+      "buttonFinish": "Finish proposal",
+      "save": "Save",
+      "view": "View",
+      "download": "Download",
+      "send": "Send by email",
+      "step1": {
+        "title": "Service",
+        "subtitle": "Choose the customer and inform the particularity of the service.",
+        "proposalType": "Proposal type:",
+        "client": "Client",
+        "routingOrder": "Routing Order",
+        "services": "Associated services:",
+        "transport": "Transport",
+        "readiness": "Readiness",
+        "agents": "Agents:",
+        "searchClient": "Search customer by code or name...",
+        "modal": "Modal:",
+        "air": "Air",
+        "marine": "Marine",
+        "road": "Road"
+      },
+      "step2": {
+        "title": "Section",
+        "subtitle": "Define the origin, destination and specifics of the section.",
+        "origin": "Port of origin:",
+        "searchPlaceholder": "Search by code/description of port OR country...",
+        "destiny": "Port of destiny:",
+        "agents": "Agents:",
+        "searchAgents": "Search by name...",
+        "incoterm": "INCOTERM:",
+        "choose": "Choose ..."
+      },
+      "step3": {
+        "title": "Cargo",
+        "subtitle": "Specify the items to be shipped.",
+        "description": "General cargo description:",
+        "specifications": "Specifications:",
+        "temperature": "Temperature:",
+        "choose": "Choose ...",
+        "buttonAdd": "Add item to cargo"
+      },
+      "step4": {
+        "title": "General",
+        "subtitle": "Inform general details of your commercial proposal.",
+        "validity": "Validity:",
+        "time": "Transit. time:",
+        "frequency": "Frequency:",
+        "route": "Route:",
+        "client": "Client ref.:",
+        "currency": "Currency for sending costs:",
+        "general": "General observations:",
+        "internal": "Internal observations (this text is NOT sent in the proposal):",
+        "choose": "Choose ..."
+      },
+      "step5": {
+        "title": "Costs",
+        "subtitle": "Compose the origin and destination costs.",
+        "origin": "Origin",
+        "totalOrigin": "Total origin costs:",
+        "destiny": "Destiny",
+        "totalDestiny": "Total destiny costs:"
+      }
+    }
   },
   "components": {
     "header": {
