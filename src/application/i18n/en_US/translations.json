@@ -7,6 +7,8 @@
       "view": "View",
       "download": "Download",
       "send": "Send by email",
+      "proposal": "Proposals",
+      "newProposal": "New proposal international freight - Import",
       "step1": {
         "title": "Service",
         "subtitle": "Choose the customer and inform the particularity of the service.",

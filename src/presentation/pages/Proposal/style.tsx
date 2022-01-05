@@ -7,12 +7,16 @@ const RootContainer = styled.div`
   margin: 0 24px;
 
   .breadcrumbInitial {
-    color: ${(props: any) => props.theme?.proposal?.breadcrumbInitial};
+    color: ${(props: any) => props.theme?.commercial?.pages?.proposal?.breadcrumbInitial};
   }
 
   .breadcrumbEnd {
-    color: ${(props: any) => props.theme?.proposal?.breadcrumbEnd};
+    color: ${(props: any) => props.theme?.commercial?.pages?.proposal?.breadcrumbEnd};
     font-weight: bold;
+  }
+
+  & .MuiBreadcrumbs-separator {
+    color: ${(props: any) => props.theme?.commercial?.pages?.proposal?.breadcrumbInitial};
   }
 `
 

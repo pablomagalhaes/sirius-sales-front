@@ -8,6 +8,12 @@ const dark = {
         backgroundColor: '#222E3E',
         fontColor: '#F2F3F7',
         iconColor: '#FFFFFF'
+      },
+      costTable: {
+        backgroundColor: '#151D28',
+        title: '#F2F3F7',
+        subtitle: '#B5B8C2',
+        emptyLabel: '#B5B8C2'
       }
     },
     pages: {
@@ -40,6 +46,12 @@ const light = {
         backgroundColor: '#FFFFFF',
         fontColor: '#545454',
         iconColor: '#222222'
+      },
+      costTable: {
+        backgroundColor: '#f0f1f5',
+        title: '#222222',
+        subtitle: '#545454',
+        emptyLabel: '#999DAC'
       }
     },
     pages: {
@@ -49,7 +61,7 @@ const light = {
       proposal: {
         tableHeader: '#545454',
         dropdownColor: '#222222',
-        breadcrumbInitial: '#222222',
+        breadcrumbInitial: '#545454',
         breadcrumbEnd: '#222222'
       },
       newProposal: {

@@ -36,12 +36,11 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   }
 
   const steps = [
-    'Serviço',
-    'Origem/Destino',
-    'Carga',
-    'Proposta',
-    'Custos origem e destino',
-    'Tarifas frete'
+    I18n.t('pages.newProposal.step1.title'),
+    I18n.t('pages.newProposal.step2.title'),
+    I18n.t('pages.newProposal.step3.title'),
+    I18n.t('pages.newProposal.step4.title'),
+    I18n.t('pages.newProposal.step5.title')
   ]
 
   const floatingButtonMenuItems = [
@@ -76,7 +75,15 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           >
             Home
           </Link>
-          <span className="breadcrumbEnd">Propostas</span>
+          <Link
+            color="inherit"
+            href="/"
+            onClick={handleClickBreadcrumbs}
+            className="breadcrumbInitial"
+          >
+            {I18n.t('pages.newProposal.proposal')}
+          </Link>
+          <span className="breadcrumbEnd">{I18n.t('pages.newProposal.newProposal')}</span>
         </Breadcrumbs>
         <UserContainer>
           {I18n.t('pages.newProposal.encharged')}
