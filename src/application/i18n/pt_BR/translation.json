@@ -7,6 +7,8 @@
       "view": "Visualizar",
       "download": "Fazer download",
       "send": "Enviar por e-mail",
+      "proposal": "Propostas",
+      "newProposal": "Nova proposta frete internacional - Importação",
       "step1": {
         "title": "Serviço",
         "subtitle": "Escolha o cliente e informe as particularidades do serviço.",

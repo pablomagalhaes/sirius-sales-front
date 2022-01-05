@@ -61,7 +61,7 @@ const light = {
       proposal: {
         tableHeader: '#545454',
         dropdownColor: '#222222',
-        breadcrumbInitial: '#222222',
+        breadcrumbInitial: '#545454',
         breadcrumbEnd: '#222222'
       },
       newProposal: {
