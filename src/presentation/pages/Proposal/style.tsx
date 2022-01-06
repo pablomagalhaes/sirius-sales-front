@@ -7,12 +7,16 @@ const RootContainer = styled.div`
   margin: 0 24px;
 
   .breadcrumbInitial {
-    color: ${(props: any) => props.theme?.proposal?.breadcrumbInitial};
+    color: ${(props: any) => props.theme?.commercial?.pages?.proposal?.breadcrumbInitial};
   }
 
   .breadcrumbEnd {
-    color: ${(props: any) => props.theme?.proposal?.breadcrumbEnd};
+    color: ${(props: any) => props.theme?.commercial?.pages?.proposal?.breadcrumbEnd};
     font-weight: bold;
+  }
+
+  & .MuiBreadcrumbs-separator {
+    color: ${(props: any) => props.theme?.commercial?.pages?.proposal?.breadcrumbInitial};
   }
 `
 
@@ -101,7 +105,9 @@ const TableContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: auto;
+  width: 100%;
   justify-content: flex-start;
+  overflow-x: auto;
 `
 
 const BottomSideContainer = styled.div`
@@ -112,7 +118,8 @@ const BottomSideContainer = styled.div`
   .floating-button-style {
     position: fixed;
     right: 40px;
-    bottom: 40px;
+    bottom: 73px;
+    z-index: 99;
   }
 `
 
