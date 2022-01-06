@@ -4,8 +4,20 @@ const dark = {
     components: {
       itemModal: {
         backgroundColor: '#222E3E',
-        fontColor: '#F2F3F7',
-        iconColor: '#FFFFFF'
+        border: '#364353',
+        fontColor: '#B5B8C2',
+        iconColor: '#FFFFFF',
+        inputFontColor: '#F2F3F7',
+        titleColor: '#F2F3F7',
+        disabledBackground: '#C2C5D1',
+        replyIconColor: '#43BFB5',
+        redAsterisk: '#FF7373'
+      },
+      costTable: {
+        backgroundColor: '#151D28',
+        title: '#F2F3F7',
+        subtitle: '#B5B8C2',
+        emptyLabel: '#B5B8C2'
       }
     },
     pages: {
@@ -28,8 +40,20 @@ const light = {
     components: {
       itemModal: {
         backgroundColor: '#FFFFFF',
+        border: '#E3E5EB',
         fontColor: '#545454',
-        iconColor: '#222222'
+        iconColor: '#222222',
+        inputFontColor: '#222222',
+        titleColor: '#222222',
+        disabledBackground: '#E3E5EB',
+        replyIconColor: '#1F6660',
+        redAsterisk: '#FF4D4D'
+      },
+      costTable: {
+        backgroundColor: '#f0f1f5',
+        title: '#222222',
+        subtitle: '#545454',
+        emptyLabel: '#999DAC'
       }
     },
     pages: {

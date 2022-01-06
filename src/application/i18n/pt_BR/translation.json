@@ -1,5 +1,74 @@
 {
   "pages": {
+    "newProposal": {
+      "encharged": "Responsável:",
+      "buttonFinish": "Concluir proposta",
+      "save": "Salvar",
+      "view": "Visualizar",
+      "download": "Fazer download",
+      "send": "Enviar por e-mail",
+      "proposal": "Propostas",
+      "newProposal": "Nova proposta frete internacional - Importação",
+      "step1": {
+        "title": "Serviço",
+        "subtitle": "Escolha o cliente e informe as particularidades do serviço.",
+        "proposalType": "Tipo de proposta:",
+        "client": "Cliente",
+        "routingOrder": "Routing Order",
+        "services": "Serviços associados:",
+        "transport": "Transporte",
+        "readiness": "Desembaraço",
+        "agents": "Agentes:",
+        "searchClient": "Procurar cliente por código ou nome...",
+        "modal": "Modal:",
+        "air": "Aéreo",
+        "marine": "Marítimo",
+        "road": "Rodoviário"
+      },
+      "step2": {
+        "title": "Trecho",
+        "subtitle": "Defina origem, destino e especificidades do trecho.",
+        "origin": "Porto de origem:",
+        "searchPlaceholder": "Procurar por código/descrição do porto OU país...",
+        "destiny": "Porto de destino:",
+        "agents": "Agentes:",
+        "searchAgents": "Procurar por nome...",
+        "incoterm": "INCOTERM:",
+        "choose": "Escolha ..."
+      },
+      "step3": {
+        "title": "Carga",
+        "subtitle": "Especifique os itens a serem embarcados.",
+        "description": "Descrição geral da carga:",
+        "specifications": "Especificações:",
+        "temperature": "Temperatura:",
+        "choose": "Escolha ...",
+        "buttonAdd": "Adicionar item à carga"
+      },
+      "step4": {
+        "title": "Geral",
+        "subtitle": "Informe detalhes gerais da sua proposta comercial.",
+        "validity": "Validade:",
+        "time": "Transit. time:",
+        "frequency": "Frequência:",
+        "route": "Rota:",
+        "client": "Ref. Cliente:",
+        "currency": "Moeda para envio dos custos:",
+        "general": "Observações gerais:",
+        "internal": "Observações internas (esse texto NÃO é enviado na proposta):",
+        "choose": "Escolha ..."
+      },
+      "step5": {
+        "title": "Custos",
+        "subtitle": "Faça a composição dos custos de origem e destino.",
+        "origin": "Origem",
+        "totalOrigin": "Total custos origem:",
+        "destiny": "Destino",
+        "totalDestiny": "Total custos destino:",
+        "originCost": "Novo custo de origem",
+        "destinyCost": "Novo custo de destino"
+      }
+    }
   },
   "components": {
     "header": {
@@ -29,21 +98,24 @@
       "replyForSale": "Replicar para venda",
       "minimum": "Mínimo",
       "value": "Valor",
-      "choose": "Escolha..."
+      "choose": "Escolha...",
+      "gotIt": "Entendi",
+      "popUpMessage": "Informe o \"Valor compra\" ou desmarque esse campo caso não seja necessário."
     },
     "itemModal":{
-      "amount": "Qtd:",
-      "type": "Tipo:",
-      "rawWeight":"Peso bruto (kg):",
-      "hwl": "A x L x C:",
+      "amount": "Qtd: ",
+      "type": "Tipo: ",
+      "rawWeight":"Peso bruto (kg): ",
+      "hwl": "A x L x C: ",
       "diameter": "Diâmetro:",
-      "cubage": "Cubagem:",
+      "cubage": "Cubagem: ",
       "imo": "IMO:",
       "codUn": "Cód. Un:",
       "choose": "Escolha ...",
       "yes": "Sim",
       "hazardous": "Perigoso?",
-      "save": "Salvar"
+      "save": "Salvar",
+      "requiredField": "Campo obrigatório"
     }
   }
 }

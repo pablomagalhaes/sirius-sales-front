@@ -41,9 +41,10 @@ interface CostTableItem {
 interface CostTableProps {
   title: string
   totalCostLabel: string
+  modalTitle: string
 }
 
-const CostTable = ({ title, totalCostLabel }: CostTableProps): JSX.Element => {
+const CostTable = ({ modalTitle, title, totalCostLabel }: CostTableProps): JSX.Element => {
   const mock: CostTableItem[] = [
     {
       agent: '-',
@@ -94,7 +95,7 @@ const CostTable = ({ title, totalCostLabel }: CostTableProps): JSX.Element => {
 
   return (
     <MainDiv>
-      <CostModal handleAdd={handleAdd} setOpen={handleOpen} open={open} setClose={handleClose} title='Novo custo de origem'/>
+      <CostModal handleAdd={handleAdd} setOpen={handleOpen} open={open} setClose={handleClose} title={modalTitle}/>
       <Header>
         <Title>{title}</Title>
       </Header>
@@ -179,9 +180,9 @@ const CostTable = ({ title, totalCostLabel }: CostTableProps): JSX.Element => {
         />
         <RowReverseDiv>
           <EndValueLabel>{formatter.format(saleValue)}</EndValueLabel>
-          <CostLabel>{I18n.t('components.costTable.sale')}</CostLabel>
+          <CostLabel>{I18n.t('components.costTable.sale')}:</CostLabel>
           <ValueLabel>{formatter.format(buyValue)}</ValueLabel>
-          <CostLabel>{I18n.t('components.costTable.buy')}</CostLabel>
+          <CostLabel>{I18n.t('components.costTable.buy')}:</CostLabel>
           <TotalCostLabel>{totalCostLabel}</TotalCostLabel>
         </RowReverseDiv>
       </Footer>
