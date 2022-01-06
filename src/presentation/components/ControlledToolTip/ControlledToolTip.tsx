@@ -14,7 +14,7 @@ const ControlledToolTip = (props: {title: string, open: boolean, children: React
 
   return (
     <div onClick={mouseLeaveHandler} onMouseEnter={mouseEnterHandler} onMouseLeave={mouseLeaveHandler}>
-      <StyledTooltip title={props.title} open={mouseOn && props.open}>
+      <StyledTooltip aria-label="toolTip" title={props.title} open={mouseOn && props.open}>
         {props.children}
       </StyledTooltip>
     </div>
