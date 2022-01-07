@@ -95,7 +95,7 @@ const CostTable = ({ modalTitle, title, totalCostLabel }: CostTableProps): JSX.E
 
   return (
     <MainDiv>
-      <CostModal handleAdd={handleAdd} setOpen={handleOpen} open={open} setClose={handleClose} title={modalTitle}/>
+      <CostModal handleAdd={handleAdd} open={open} setClose={handleClose} title={modalTitle}/>
       <Header>
         <Title>{title}</Title>
       </Header>

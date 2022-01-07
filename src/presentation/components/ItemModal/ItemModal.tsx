@@ -42,7 +42,6 @@ interface ItemModalProps {
   handleAdd: (item) => void
   open: boolean
   setClose: () => void
-  setOpen: () => void
   title: string
 }
 
@@ -51,7 +50,6 @@ const ItemModal = ({
   handleAdd,
   open,
   setClose,
-  setOpen,
   title
 }: ItemModalProps): JSX.Element => {
   // Mock de tipos, valores serão especificados posteriormente

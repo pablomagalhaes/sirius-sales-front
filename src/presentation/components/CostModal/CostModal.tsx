@@ -46,7 +46,6 @@ interface CostModalProps {
   handleAdd: (item) => void
   open: boolean
   setClose: () => void
-  setOpen: () => void
   title: string
 }
 
@@ -55,7 +54,6 @@ const CostModal = ({
   handleAdd,
   open,
   setClose,
-  setOpen,
   title
 }: CostModalProps): JSX.Element => {
   const initialState = {
