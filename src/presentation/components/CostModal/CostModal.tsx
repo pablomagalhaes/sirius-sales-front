@@ -1,6 +1,6 @@
 import { MenuItem, Modal } from '@material-ui/core'
 import { Button } from 'fiorde-fe-components'
-import React, { useEffect, useReducer, useState } from 'react'
+import React, { useReducer, useState } from 'react'
 import CloseIcon from '../../../application/icons/CloseIcon'
 import {
   Form,
@@ -9,7 +9,7 @@ import {
   ModalContainer,
   RowDiv,
   RowReverseDiv,
-  StyledSelect,
+  StyledMenuSelect,
   Title,
   CheckBox,
   CheckBoxLabel,
@@ -19,11 +19,15 @@ import {
   RedColorSpan,
   ReplyDiv,
   ReplyIconDiv,
-  ButtonDiv
+  ButtonDiv,
+  WarningPopUp,
+  WarningPopUpMessage,
+  WarningPopUpButtonDiv
 } from './CostModalStyles'
 import { I18n } from 'react-redux-i18n'
 import CheckIcon from '../../../application/icons/CheckItem'
 import ReplyIcon from '../../../application/icons/ReplyIcon'
+import ControlledToolTip from '../ControlledToolTip/ControlledToolTip'
 
 interface ItemModalData {
   agent: string
@@ -42,7 +46,6 @@ interface CostModalProps {
   handleAdd: (item) => void
   open: boolean
   setClose: () => void
-  setOpen: () => void
   title: string
 }
 
@@ -51,7 +54,6 @@ const CostModal = ({
   handleAdd,
   open,
   setClose,
-  setOpen,
   title
 }: CostModalProps): JSX.Element => {
   const initialState = {
@@ -93,6 +95,8 @@ const CostModal = ({
           saleValue: state.buyValue,
           saleCurrency: state.buyCurrency
         }
+      case 'reset':
+        return initialState
       default:
         return state
     }
@@ -110,6 +114,22 @@ const CostModal = ({
   const descriptionList = ['Descrição1', 'Descrição2', 'Descrição3']
   const [buyCheckbox, setBuyCheckBox] = useState(state.buyValue != null)
   const [saleCheckbox, setSaleCheckBox] = useState(state.saleValue != null)
+  const [invalidInput, setInvalidInput] = useState(false)
+  const [invalidValueInput, setInvalidValueInput] = useState(false)
+
+  const handleOnClose = (): void => {
+    dispatch({ type: 'reset' })
+    setInvalidInput(false)
+    setInvalidValueInput(false)
+    setBuyCheckBox(false)
+    setSaleCheckBox(false)
+    setClose()
+  }
+
+  const handleClickWarningButton = (): void => {
+    setInvalidValueInput(false)
+  }
+
   const validateFloatInput = (value: string): RegExpMatchArray | null => {
     return value.match(rgxFloat)
   }
@@ -124,6 +144,7 @@ const CostModal = ({
 
   const replyForSaleHandler = (): void => {
     if (buyCheckbox) {
+      setSaleCheckBox(true)
       dispatch({ type: 'replyForSale' })
     }
   }
@@ -161,16 +182,16 @@ const CostModal = ({
     let item = state
     if (buyCheckbox) {
       if (item.buyValue === null || item.buyValue.length === 0) {
-        alert('Preencher valor de Compra')
         invalid = true
+        setInvalidValueInput(true)
       }
     } else {
       item = { ...item, buyMin: '', buyCurrency: '', buyValue: '' }
     }
     if (saleCheckbox) {
       if (item.saleValue === null || item.saleValue.length === 0) {
-        alert('Preencher valor de venda')
         invalid = true
+        setInvalidValueInput(true)
       }
     } else {
       item = { ...item, saleMin: '', saleCurrency: '', saleValue: '' }
@@ -181,25 +202,22 @@ const CostModal = ({
       item.description.length === 0
     ) {
       invalid = true
-      alert('Preencher campos obrigatórios')
     }
     if (!invalid) {
       handleAdd(item)
-      setClose()
+      handleOnClose()
+    } else {
+      setInvalidInput(true)
     }
   }
 
-  useEffect(() => {
-    setSaleCheckBox(state.saleValue != null)
-  }, [state.saleMin, state.saleValue])
-
   return (
-    <Modal open={open} onClose={setClose}>
+    <Modal open={open} onClose={handleOnClose}>
       <ModalContainer>
         <HeaderDiv>
           <Title>{title}</Title>
           <RowReverseDiv>
-            <CloseIcon onClick={setClose} />
+            <CloseIcon onClick={handleOnClose} />
           </RowReverseDiv>
         </HeaderDiv>
         <Form>
@@ -214,7 +232,7 @@ const CostModal = ({
             </Label>
           </RowDiv>
           <RowDiv margin={true}>
-            <StyledSelect
+            <StyledMenuSelect
               width="122px"
               onChange={(e) =>
                 dispatch({ type: 'type', value: e.target.value })
@@ -225,6 +243,11 @@ const CostModal = ({
               placeholder={state.type}
               large={1}
               aria-label="type"
+              filled={state.type}
+              toolTipTitle={I18n.t('components.itemModal.requiredField')}
+              invalid={
+                invalidInput && (state.type === null || state.type.length === 0)
+              }
             >
               <MenuItem disabled value="">
                 {I18n.t('components.costModal.choose')}
@@ -236,9 +259,9 @@ const CostModal = ({
                   </MenuItem>
                 )
               })}
-            </StyledSelect>
-            <StyledSelect
-              width="342px"
+            </StyledMenuSelect>
+            <StyledMenuSelect
+              width="368px"
               onChange={(e) =>
                 dispatch({ type: 'description', value: e.target.value })
               }
@@ -246,6 +269,12 @@ const CostModal = ({
               value={state.description}
               placeholder={state.description}
               disableUnderline
+              filled={state.description}
+              toolTipTitle={I18n.t('components.itemModal.requiredField')}
+              invalid={
+                invalidInput &&
+                (state.description === null || state.description.length === 0)
+              }
             >
               <MenuItem disabled value="">
                 {I18n.t('components.costModal.choose')}
@@ -257,7 +286,7 @@ const CostModal = ({
                   </MenuItem>
                 )
               })}
-            </StyledSelect>
+            </StyledMenuSelect>
           </RowDiv>
           <RowDiv>
             <Label width="100%">
@@ -266,8 +295,8 @@ const CostModal = ({
             </Label>
           </RowDiv>
           <RowDiv>
-            <StyledSelect
-              width="485px"
+            <StyledMenuSelect
+              width="513px"
               onChange={(e) =>
                 dispatch({ type: 'agent', value: e.target.value })
               }
@@ -275,6 +304,12 @@ const CostModal = ({
               value={state.agent}
               disableUnderline
               placeholder={state.agent}
+              filled={state.agent}
+              toolTipTitle={I18n.t('components.itemModal.requiredField')}
+              invalid={
+                invalidInput &&
+                (state.agent === null || state.agent.length === 0)
+              }
             >
               <MenuItem disabled value="">
                 {I18n.t('components.costModal.choose')}
@@ -286,18 +321,28 @@ const CostModal = ({
                   </MenuItem>
                 )
               })}
-            </StyledSelect>
+            </StyledMenuSelect>
           </RowDiv>
           <RowDiv>
-            <CheckBox aria-label="checkbox" checked={buyCheckbox} onClick={buyCheckboxHandler}>
+            <CheckBox
+              aria-label="checkbox"
+              checked={buyCheckbox}
+              onClick={buyCheckboxHandler}
+            >
               {buyCheckbox && <CheckIcon />}
             </CheckBox>
-            <CheckBoxLabel>
+            <CheckBoxLabel
+              invalid={
+                buyCheckbox &&
+                invalidInput &&
+                (state.buyValue === null || state.buyValue.length === 0)
+              }
+            >
               {I18n.t('components.costModal.buyValue')}
             </CheckBoxLabel>
           </RowDiv>
           <RowDiv>
-            <StyledSelect
+            <StyledMenuSelect
               width="84px"
               onChange={(e) =>
                 dispatch({ type: 'buyCurrency', value: e.target.value })
@@ -306,6 +351,13 @@ const CostModal = ({
               value={state.buyCurrency}
               disableUnderline
               disabled={!buyCheckbox}
+              filled={buyCheckbox ? state.buyCurrency : null}
+              toolTipTitle={I18n.t('components.itemModal.requiredField')}
+              invalid={
+                buyCheckbox &&
+                invalidInput &&
+                (state.buyCurrency === null || state.buyCurrency.length === 0)
+              }
             >
               {currencyList.map((currencyList) => {
                 return (
@@ -314,28 +366,44 @@ const CostModal = ({
                   </MenuItem>
                 )
               })}
-            </StyledSelect>
-            <PlaceholderDiv>
-              <label>
-                {(state.buyValue === null || state.buyValue.length === 0) && (
-                  <PlaceholderSpan>
-                    {I18n.t('components.costModal.value')}
-                    <RedColorSpan> *</RedColorSpan>
-                  </PlaceholderSpan>
-                )}
-                <Input
-                  value={state.buyValue != null ? state.buyValue : ''}
-                  onChange={buyValueHandler}
-                  disabled={!buyCheckbox}
-                />
-              </label>
-            </PlaceholderDiv>
+            </StyledMenuSelect>
+            <ControlledToolTip
+              title={I18n.t('components.itemModal.requiredField')}
+              open={
+                buyCheckbox &&
+                invalidInput &&
+                (state.buyValue === null || state.buyValue.length === 0)
+              }
+            >
+              <PlaceholderDiv>
+                <label>
+                  {(state.buyValue === null || state.buyValue.length === 0) && (
+                    <PlaceholderSpan>
+                      {I18n.t('components.costModal.value')}
+                      <RedColorSpan> *</RedColorSpan>
+                    </PlaceholderSpan>
+                  )}
+                  <Input
+                    value={state.buyValue != null ? state.buyValue : ''}
+                    onChange={buyValueHandler}
+                    disabled={!buyCheckbox}
+                    invalid={
+                      buyCheckbox &&
+                      invalidInput &&
+                      (state.buyValue === null || state.buyValue.length === 0)
+                    }
+                    filled={buyCheckbox ? state.buyValue : null}
+                  />
+                </label>
+              </PlaceholderDiv>
+            </ControlledToolTip>
             <Input
               aria-label="minimum"
               value={state.buyMin != null ? state.buyMin : ''}
               onChange={buyMinHandler}
               placeholder={I18n.t('components.costModal.minimum')}
               disabled={!buyCheckbox}
+              filled={buyCheckbox ? state.buyMin : null}
             />
             <ReplyDiv disabled={!buyCheckbox} onClick={replyForSaleHandler}>
               <ReplyIconDiv>
@@ -348,12 +416,19 @@ const CostModal = ({
             <CheckBox checked={saleCheckbox} onClick={saleCheckboxHandler}>
               {saleCheckbox && <CheckIcon />}
             </CheckBox>
-            <CheckBoxLabel>
+            <CheckBoxLabel
+              checked={true}
+              invalid={
+                saleCheckbox &&
+                invalidInput &&
+                (state.saleValue === null || state.saleValue.length === 0)
+              }
+            >
               {I18n.t('components.costModal.saleValue')}
             </CheckBoxLabel>
           </RowDiv>
           <RowDiv>
-            <StyledSelect
+            <StyledMenuSelect
               width="84px"
               onChange={(e) =>
                 dispatch({ type: 'saleCurrency', value: e.target.value })
@@ -362,6 +437,13 @@ const CostModal = ({
               value={state.saleCurrency}
               disableUnderline
               disabled={!saleCheckbox}
+              filled={saleCheckbox ? state.saleCurrency : null}
+              toolTipTitle={I18n.t('components.itemModal.requiredField')}
+              invalid={
+                saleCheckbox &&
+                invalidInput &&
+                (state.saleCurrency === null || state.saleCurrency.length === 0)
+              }
             >
               {currencyList.map((currencyList) => {
                 return (
@@ -370,38 +452,72 @@ const CostModal = ({
                   </MenuItem>
                 )
               })}
-            </StyledSelect>
-            <PlaceholderDiv>
-              <label>
-                {(state.saleValue === null || state.saleValue.length === 0) && (
-                  <PlaceholderSpan>
-                    {I18n.t('components.costModal.value')}
-                    <RedColorSpan> *</RedColorSpan>
-                  </PlaceholderSpan>
-                )}
-                <Input
-                  value={state.saleValue != null ? state.saleValue : ''}
-                  onChange={saleValueHandler}
-                  disabled={!saleCheckbox}
-                />
-              </label>
-            </PlaceholderDiv>
+            </StyledMenuSelect>
+            <ControlledToolTip
+              title={I18n.t('components.itemModal.requiredField')}
+              open={
+                saleCheckbox &&
+                invalidInput &&
+                (state.saleValue === null || state.saleValue.length === 0)
+              }
+            >
+              <PlaceholderDiv>
+                <label>
+                  {(state.saleValue === null ||
+                    state.saleValue.length === 0) && (
+                    <PlaceholderSpan>
+                      {I18n.t('components.costModal.value')}
+                      <RedColorSpan> *</RedColorSpan>
+                    </PlaceholderSpan>
+                  )}
+                  <Input
+                    value={state.saleValue != null ? state.saleValue : ''}
+                    onChange={saleValueHandler}
+                    disabled={!saleCheckbox}
+                    invalid={
+                      saleCheckbox &&
+                      invalidInput &&
+                      (state.saleValue === null || state.saleValue.length === 0)
+                    }
+                    filled={saleCheckbox ? state.saleValue : null}
+                  />
+                </label>
+              </PlaceholderDiv>
+            </ControlledToolTip>
             <Input
               placeholder={I18n.t('components.costModal.minimum')}
               value={state.saleMin != null ? state.saleMin : ''}
               onChange={saleMinHandler}
               disabled={!saleCheckbox}
+              filled={saleCheckbox ? state.saleMin : null}
             />
           </RowDiv>
-          <ButtonDiv>
-            <Button
-              backgroundGreen={true}
-              icon={''}
-              onAction={addHandler}
-              text={I18n.t('components.costModal.save')}
-            />
-          </ButtonDiv>
+          {!invalidValueInput && (
+            <ButtonDiv>
+              <Button
+                backgroundGreen={true}
+                icon={''}
+                onAction={addHandler}
+                text={I18n.t('components.costModal.save')}
+              />
+            </ButtonDiv>
+          )}
         </Form>
+        {invalidValueInput && (
+          <WarningPopUp>
+            <WarningPopUpMessage>
+              {I18n.t('components.costModal.popUpMessage')}
+            </WarningPopUpMessage>
+            <WarningPopUpButtonDiv>
+              <Button
+                backgroundGreen={false}
+                icon={''}
+                onAction={handleClickWarningButton}
+                text={I18n.t('components.costModal.gotIt')}
+              />
+            </WarningPopUpButtonDiv>
+          </WarningPopUp>
+        )}
       </ModalContainer>
     </Modal>
   )

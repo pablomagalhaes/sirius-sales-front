@@ -64,7 +64,9 @@
         "origin": "Origem",
         "totalOrigin": "Total custos origem:",
         "destiny": "Destino",
-        "totalDestiny": "Total custos destino:"
+        "totalDestiny": "Total custos destino:",
+        "originCost": "Novo custo de origem",
+        "destinyCost": "Novo custo de destino"
       }
     }
   },
@@ -96,21 +98,24 @@
       "replyForSale": "Replicar para venda",
       "minimum": "Mínimo",
       "value": "Valor",
-      "choose": "Escolha..."
+      "choose": "Escolha...",
+      "gotIt": "Entendi",
+      "popUpMessage": "Informe o \"Valor compra\" ou desmarque esse campo caso não seja necessário."
     },
     "itemModal":{
-      "amount": "Qtd:",
-      "type": "Tipo:",
-      "rawWeight":"Peso bruto (kg):",
-      "hwl": "A x L x C:",
+      "amount": "Qtd: ",
+      "type": "Tipo: ",
+      "rawWeight":"Peso bruto (kg): ",
+      "hwl": "A x L x C: ",
       "diameter": "Diâmetro:",
-      "cubage": "Cubagem:",
+      "cubage": "Cubagem: ",
       "imo": "IMO:",
       "codUn": "Cód. Un:",
       "choose": "Escolha ...",
       "yes": "Sim",
       "hazardous": "Perigoso?",
-      "save": "Salvar"
+      "save": "Salvar",
+      "requiredField": "Campo obrigatório"
     }
   }
 }
