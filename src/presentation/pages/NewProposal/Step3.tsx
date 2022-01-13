@@ -83,7 +83,6 @@ const Step3 = (): JSX.Element => {
             />
             <ItemModal
               handleAdd={handleAdd}
-              setOpen={handleOpen}
               open={open}
               setClose={handleClose}
               title={I18n.t('pages.newProposal.step3.buttonAdd')}

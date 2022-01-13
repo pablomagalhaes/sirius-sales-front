@@ -17,11 +17,12 @@ import {
   RedColorSpan,
   RowDiv,
   RowReverseDiv,
-  StyledSelect,
+  StyledMenuSelect,
   Title
 } from './ItemModalStyles'
 import { I18n } from 'react-redux-i18n'
 import CheckIcon from '../../../application/icons/CheckIcon'
+import ControlledToolTip from '../ControlledToolTip/ControlledToolTip'
 
 interface ItemModalData {
   amount: string
@@ -41,11 +42,16 @@ interface ItemModalProps {
   handleAdd: (item) => void
   open: boolean
   setClose: () => void
-  setOpen: () => void
   title: string
 }
 
-const ItemModal = ({ dataProp, handleAdd, open, setClose, setOpen, title }: ItemModalProps): JSX.Element => {
+const ItemModal = ({
+  dataProp,
+  handleAdd,
+  open,
+  setClose,
+  title
+}: ItemModalProps): JSX.Element => {
   // Mock de tipos, valores serão especificados posteriormente
   const typeList = ['Caixas', 'Bacias']
   // Mock de imo, valores serão especificados posteriormente
@@ -65,10 +71,12 @@ const ItemModal = ({ dataProp, handleAdd, open, setClose, setOpen, title }: Item
     type: '',
     width: ''
   }
-  const [data, setData] = useState((dataProp != null) ? dataProp : initialState)
+  const [data, setData] = useState(dataProp != null ? dataProp : initialState)
+  const [invalidInput, setInvalidInput] = useState(false)
 
   const handleOnClose = (): void => {
     setData(initialState)
+    setInvalidInput(false)
     setClose()
   }
 
@@ -81,21 +89,24 @@ const ItemModal = ({ dataProp, handleAdd, open, setClose, setOpen, title }: Item
   }
 
   const validateData = (): boolean => {
-    return !(data.type.length === 0 ||
+    return !(
+      data.type.length === 0 ||
       data.amount.length === 0 ||
       data.rawWeight.length === 0 ||
       data.height.length === 0 ||
       data.width.length === 0 ||
       data.length.length === 0 ||
-      data.cubage.length === 0)
+      data.cubage.length === 0
+    )
   }
 
   const handleOnAdd = (): void => {
     if (validateData()) {
       handleAdd(data)
+      setInvalidInput(false)
       handleOnClose()
     } else {
-      alert('preencher campos obrigatórios')
+      setInvalidInput(true)
     }
   }
 
@@ -197,23 +208,31 @@ const ItemModal = ({ dataProp, handleAdd, open, setClose, setOpen, title }: Item
         </HeaderDiv>
         <Form>
           <RowDiv>
-            <Label width="44%">
-              {I18n.t('components.itemModal.type')} <RedColorSpan> *</RedColorSpan>
+            <Label width="43.6%">
+              {I18n.t('components.itemModal.type')}
+              <RedColorSpan> *</RedColorSpan>
             </Label>
             <Label width="29%">
-              {I18n.t('components.itemModal.amount')} <RedColorSpan> *</RedColorSpan>
+              {I18n.t('components.itemModal.amount')}
+              <RedColorSpan> *</RedColorSpan>
             </Label>
-            <Label width="27%">
-              {I18n.t('components.itemModal.rawWeight')} <RedColorSpan> *</RedColorSpan>
+            <Label width="27.4%">
+              {I18n.t('components.itemModal.rawWeight')}
+              <RedColorSpan> *</RedColorSpan>
             </Label>
           </RowDiv>
           <RowDiv margin={true}>
-            <StyledSelect
+            <StyledMenuSelect
               onChange={handleTypeChange}
               displayEmpty
               value={data.type}
               disableUnderline
               placeholder={data.type}
+              filled={data.type}
+              toolTipTitle={I18n.t('components.itemModal.requiredField')}
+              invalid={
+                invalidInput && (data.type === null || data.type.length === 0)
+              }
             >
               <MenuItem disabled value="">
                 {I18n.t('components.itemModal.choose')}
@@ -225,40 +244,135 @@ const ItemModal = ({ dataProp, handleAdd, open, setClose, setOpen, title }: Item
                   </MenuItem>
                 )
               })}
-            </StyledSelect>
-            <Input value={data.amount} onChange={handleAmountChange} />
-            <Input value={data.rawWeight} onChange={handleRawWeightChange} />
+            </StyledMenuSelect>
+            <ControlledToolTip
+              title={I18n.t('components.itemModal.requiredField')}
+              open={
+                invalidInput &&
+                (data.amount === null || data.amount.length === 0)
+              }
+            >
+              <Input
+                invalid={
+                  invalidInput &&
+                  (data.amount === null || data.amount.length === 0)
+                }
+                filled={data.amount}
+                value={data.amount}
+                onChange={handleAmountChange}
+              />
+            </ControlledToolTip>
+            <ControlledToolTip
+              title={I18n.t('components.itemModal.requiredField')}
+              open={
+                invalidInput &&
+                (data.rawWeight === null || data.rawWeight.length === 0)
+              }
+            >
+              <Input
+                invalid={
+                  invalidInput &&
+                  (data.rawWeight === null || data.rawWeight.length === 0)
+                }
+                filled={data.rawWeight}
+                value={data.rawWeight}
+                onChange={handleRawWeightChange}
+              />
+            </ControlledToolTip>
           </RowDiv>
           <RowDiv>
             <Label width="44%">
-              {I18n.t('components.itemModal.hwl')} <RedColorSpan> *</RedColorSpan>
+              {I18n.t('components.itemModal.hwl')}
+              <RedColorSpan> *</RedColorSpan>
             </Label>
             <Label width="29%">{I18n.t('components.itemModal.diameter')}</Label>
             <Label width="27%">
-              {I18n.t('components.itemModal.cubage')} <RedColorSpan> *</RedColorSpan>
+              {I18n.t('components.itemModal.cubage')}
+              <RedColorSpan> *</RedColorSpan>
             </Label>
           </RowDiv>
           <RowDiv margin={true}>
-            <MeasureInput
-              aria-label="height"
-              value={data.height}
-              onChange={handleHeightChange}
-              margin={true}
+            <ControlledToolTip
+              title={I18n.t('components.itemModal.requiredField')}
+              open={
+                invalidInput &&
+                (data.height === null || data.height.length === 0)
+              }
+            >
+              <MeasureInput
+                aria-label="height"
+                value={data.height}
+                onChange={handleHeightChange}
+                margin={true}
+                filled={data.height}
+                invalid={
+                  invalidInput &&
+                  (data.height === null || data.height.length === 0)
+                }
+              />
+            </ControlledToolTip>
+            <ControlledToolTip
+              title={I18n.t('components.itemModal.requiredField')}
+              open={
+                invalidInput && (data.width === null || data.width.length === 0)
+              }
+            >
+              <MeasureInput
+                value={data.width}
+                onChange={handleWidthChange}
+                margin={true}
+                filled={data.width}
+                invalid={
+                  invalidInput &&
+                  (data.width === null || data.width.length === 0)
+                }
+              />
+            </ControlledToolTip>
+            <ControlledToolTip
+              title={I18n.t('components.itemModal.requiredField')}
+              open={
+                invalidInput &&
+                (data.length === null || data.length.length === 0)
+              }
+            >
+              <MeasureInput
+                invalid={
+                  invalidInput &&
+                  (data.length === null || data.length.length === 0)
+                }
+                filled={data.length}
+                value={data.length}
+                onChange={handleLengthChange}
+              />
+            </ControlledToolTip>
+            <Input
+              filled={data.diameter}
+              value={data.diameter != null ? data.diameter : ''}
+              onChange={handleDiameterChange}
             />
-            <MeasureInput
-              value={data.width}
-              onChange={handleWidthChange}
-              margin={true}
-            />
-            <MeasureInput value={data.length} onChange={handleLengthChange} />
-            <Input value={(data.diameter != null) ? data.diameter : ''} onChange={handleDiameterChange} />
-            <Input value={data.cubage} onChange={handleCubageChange} />
+            <ControlledToolTip
+              title={I18n.t('components.itemModal.requiredField')}
+              open={
+                invalidInput &&
+                (data.cubage === null || data.cubage.length === 0)
+              }
+            >
+              <Input
+                invalid={
+                  invalidInput &&
+                  (data.cubage === null || data.cubage.length === 0)
+                }
+                filled={data.cubage}
+                value={data.cubage}
+                onChange={handleCubageChange}
+              />
+            </ControlledToolTip>
           </RowDiv>
           <RowDiv>
-            <Label width="30%">
+            <Label width="29%">
               {I18n.t('components.itemModal.hazardous')}
             </Label>
-            <Label width="43%">{I18n.t('components.itemModal.imo')}</Label>
+            <Label width="44%">{I18n.t('components.itemModal.imo')}</Label>
             <Label width="27%">{I18n.t('components.itemModal.codUn')}</Label>
           </RowDiv>
           <RowDiv>
@@ -269,12 +383,15 @@ const ItemModal = ({ dataProp, handleAdd, open, setClose, setOpen, title }: Item
             <AlertIconDiv>
               <AlertIcon />
             </AlertIconDiv>
-            <StyledSelect
-              value={(data.imo != null) ? data.imo : ''}
+            <StyledMenuSelect
+              value={data.imo != null ? data.imo : ''}
               onChange={handleImoChange}
               disableUnderline
               displayEmpty
-              placeholder={(data.imo != null) ? data.imo : ''}
+              placeholder={data.imo != null ? data.imo : ''}
+              filled={data.imo}
+              invalid={false}
+              toolTipTitle={I18n.t('components.itemModal.requiredField')}
             >
               <MenuItem disabled value="">
                 {I18n.t('components.itemModal.choose')}
@@ -286,8 +403,11 @@ const ItemModal = ({ dataProp, handleAdd, open, setClose, setOpen, title }: Item
                   </MenuItem>
                 )
               })}
-            </StyledSelect>
-            <Input value={(data.codUn != null) ? data.codUn : ''} onChange={handleCodUnChange} />
+            </StyledMenuSelect>
+            <Input
+              value={data.codUn != null ? data.codUn : ''}
+              onChange={handleCodUnChange}
+            />
           </RowDiv>
           <RowDiv>
             <ButtonDiv>
