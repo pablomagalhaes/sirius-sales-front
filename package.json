@@ -47,7 +47,7 @@
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-prettier": "3.4.1",
     "eslint-plugin-promise": "5.1.1",
-    "fiorde-fe-components": "git+ssh://git@bitbucket.org:fiorde/fiorde-fe-components.git#1.5.0",
+    "fiorde-fe-components": "git+ssh://git@bitbucket.org:fiorde/fiorde-fe-components.git#feature/SIRPLT-790",
     "husky": "7.0.2",
     "identity-obj-proxy": "3.0.0",
     "jest": "27.0.6",
@@ -75,16 +75,18 @@
     "@types/react-dom": "17.0.9",
     "@types/systemjs": "6.1.1",
     "@types/webpack-env": "1.16.2",
+    "dotenv": "10.0.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-redux": "7.2.5",
     "react-redux-i18n": "1.9.3",
     "react-router-dom": "5.2.1",
+    "react-router-hash-link": "^2.4.3",
+    "react-scrollable-anchor": "^0.6.1",
     "redux-devtools-extension": "2.13.9",
     "redux-thunk": "2.3.0",
     "single-spa": "5.9.3",
-    "single-spa-react": "4.3.1",
-    "dotenv": "10.0.0"
+    "single-spa-react": "4.3.1"
   },
   "types": "dist/sirius-sales-fe.d.ts"
 }
