@@ -3,16 +3,14 @@ import {
   FormControl,
   FormLabel,
   Grid,
-  MenuItem,
-  TextField
+  MenuItem
 } from '@material-ui/core/'
 import { I18n } from 'react-redux-i18n'
-import { Title, Subtitle, Separator, SelectPlaceholder, StyledSelect } from './style'
+import { Title, Subtitle, Separator, SelectSpan } from './style'
+import ControlledSelect from '../../components/ControlledSelect'
+import ControlledInput from '../../components/ControlledInput'
 
 const Step4 = (): JSX.Element => {
-  const [validity, setValidity] = useState('')
-  const [frequency, setFrequency] = useState('')
-  const [currency, setCurrency] = useState('')
   // mock para os selects
   const validityList = [
     {
@@ -60,17 +58,17 @@ const Step4 = (): JSX.Element => {
     }
   ]
 
-  const handleChangeValidity = (event): void => {
-    setValidity(event.target.value)
-  }
-
-  const handleChangeFrequency = (event): void => {
-    setFrequency(event.target.value)
-  }
-
-  const handleChangeCurrency = (event): void => {
-    setCurrency(event.target.value)
-  }
+  const [data, setData] = useState({
+    validity: '',
+    validityDate: '',
+    transitTime: '',
+    frequency: '',
+    route: '',
+    client: '',
+    currency: '',
+    generalObs: '',
+    internalObs: ''
+  })
 
   return (
     <Separator>
@@ -82,98 +80,127 @@ const Step4 = (): JSX.Element => {
         <Grid container spacing={2}>
           <Grid item xs={2}>
             <FormLabel component="legend">{I18n.t('pages.newProposal.step4.validity')}</FormLabel>
-            <StyledSelect
+            <ControlledSelect
               labelId="validity-label"
               id="validity"
-              value={validity}
-              onChange={handleChangeValidity}
+              value={data.validity}
+              onChange={e => setData({ ...data, validity: e.target.value })}
               displayEmpty
+              disableUnderline
+              invalid={false}
+              toolTipTitle={I18n.t('components.itemModal.requiredField')}
             >
-              <MenuItem disabled value="">
-                <SelectPlaceholder>{I18n.t('pages.newProposal.step4.choose')}</SelectPlaceholder>
+              <MenuItem disabled value={data.validity}>
+                <SelectSpan placeholder>{I18n.t('pages.newProposal.step4.choose')}</SelectSpan>
               </MenuItem>
               {validityList.map((item) => (
                 <MenuItem key={item.value} value={item.value}>
-                  {item.name}
+                  <SelectSpan>{item.name}</SelectSpan>
                 </MenuItem>
               ))}
-            </StyledSelect>
+            </ControlledSelect>
           </Grid>
           <Grid item xs={2}>
             <FormLabel component="legend">&nbsp;</FormLabel>
-            <TextField
+            <ControlledInput
               id="no-label-field"
+              toolTipTitle={I18n.t('components.itemModal.requiredField')}
+              invalid={false}
               variant="outlined"
+              onChange={e => setData({ ...data, validityDate: e.target.value })}
+              value={data.validityDate}
               size="small"
             />
           </Grid>
           <Grid item xs={2}>
             <FormLabel component="legend">{I18n.t('pages.newProposal.step4.time')}</FormLabel>
-            <TextField
+            <ControlledInput
               id="time"
+              toolTipTitle={I18n.t('components.itemModal.requiredField')}
+              invalid={false}
               variant="outlined"
+              onChange={e => setData({ ...data, transitTime: e.target.value })}
+              value={data.transitTime}
               size="small"
             />
           </Grid>
           <Grid item xs={2}>
             <FormLabel component="legend">{I18n.t('pages.newProposal.step4.frequency')}</FormLabel>
-            <StyledSelect
+            <ControlledSelect
               labelId="frequency-label"
               id="frequency"
-              value={frequency}
-              onChange={handleChangeFrequency}
+              value={data.frequency}
+              onChange={e => setData({ ...data, frequency: e.target.value })}
               displayEmpty
+              disableUnderline
+              invalid={false}
+              toolTipTitle={I18n.t('components.itemModal.requiredField')}
             >
-              <MenuItem disabled value="">
-                <SelectPlaceholder>{I18n.t('pages.newProposal.step4.choose')}</SelectPlaceholder>
+              <MenuItem disabled value={data.frequency}>
+                <SelectSpan placeholder>{I18n.t('pages.newProposal.step4.choose')}</SelectSpan>
               </MenuItem>
               {frequencyList.map((item) => (
                 <MenuItem key={item.value} value={item.value}>
-                  {item.name}
+                  <SelectSpan>{item.name}</SelectSpan>
                 </MenuItem>
               ))}
-            </StyledSelect>
+            </ControlledSelect>
           </Grid>
           <Grid item xs={3}>
             <FormLabel component="legend">{I18n.t('pages.newProposal.step4.route')}</FormLabel>
-            <TextField
+            <ControlledInput
               id="route"
+              toolTipTitle={I18n.t('components.itemModal.requiredField')}
+              invalid={false}
               variant="outlined"
+              onChange={e => setData({ ...data, route: e.target.value })}
+              value={data.route}
               size="small"
             />
           </Grid>
           <Grid item xs={3}>
             <FormLabel component="legend">{I18n.t('pages.newProposal.step4.client')}</FormLabel>
-            <TextField
+            <ControlledInput
               id="client"
+              toolTipTitle={I18n.t('components.itemModal.requiredField')}
+              invalid={false}
               variant="outlined"
+              onChange={e => setData({ ...data, client: e.target.value })}
+              value={data.client}
               size="small"
             />
           </Grid>
           <Grid item xs={4}>
             <FormLabel component="legend">{I18n.t('pages.newProposal.step4.currency')}</FormLabel>
-            <StyledSelect
+            <ControlledSelect
               labelId="currency-label"
               id="currency"
-              value={currency}
-              onChange={handleChangeCurrency}
+              value={data.currency}
+              onChange={e => setData({ ...data, currency: e.target.value })}
               displayEmpty
+              disableUnderline
+              invalid={false}
+              toolTipTitle={I18n.t('components.itemModal.requiredField')}
             >
-              <MenuItem disabled value="">
-                <SelectPlaceholder>{I18n.t('pages.newProposal.step4.choose')}</SelectPlaceholder>
+              <MenuItem disabled value={data.currency}>
+                <SelectSpan placeholder>{I18n.t('pages.newProposal.step4.choose')}</SelectSpan>
               </MenuItem>
               {currencyList.map((item) => (
                 <MenuItem key={item.value} value={item.value}>
-                  {item.name}
+                  <SelectSpan>{item.name}</SelectSpan>
                 </MenuItem>
               ))}
-            </StyledSelect>
+            </ControlledSelect>
           </Grid>
           <Grid item xs={6}>
             <FormLabel component="legend">{I18n.t('pages.newProposal.step4.general')}</FormLabel>
-            <TextField
+            <ControlledInput
               id="general"
+              toolTipTitle={I18n.t('components.itemModal.requiredField')}
+              invalid={false}
               variant="outlined"
+              onChange={e => setData({ ...data, generalObs: e.target.value })}
+              value={data.generalObs}
               size="small"
               multiline
               rows={4}
@@ -181,9 +208,13 @@ const Step4 = (): JSX.Element => {
           </Grid>
           <Grid item xs={6}>
             <FormLabel component="legend">{I18n.t('pages.newProposal.step4.internal')}</FormLabel>
-            <TextField
+            <ControlledInput
               id="internal"
+              toolTipTitle={I18n.t('components.itemModal.requiredField')}
+              invalid={false}
               variant="outlined"
+              onChange={e => setData({ ...data, internalObs: e.target.value })}
+              value={data.internalObs}
               size="small"
               multiline
               rows={4}

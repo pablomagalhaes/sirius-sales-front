@@ -4,16 +4,16 @@ import {
   FormLabel,
   Grid,
   InputAdornment,
-  MenuItem,
-  TextField
+  MenuItem
 } from '@material-ui/core/'
 import { I18n } from 'react-redux-i18n'
-import { Title, Subtitle, Separator, SelectPlaceholder, StyledSelect } from './style'
+import { Title, Subtitle, Separator, SelectSpan } from './style'
 import IconComponent from '../../../application/icons/IconComponent'
 import { withTheme } from 'styled-components'
+import ControlledSelect from '../../components/ControlledSelect'
+import ControlledInput from '../../components/ControlledInput'
 
 const Step2 = ({ theme }): JSX.Element => {
-  const [incoterm, setIncoterm] = useState('')
   // mock
   const incotermList = [
     {
@@ -22,9 +22,12 @@ const Step2 = ({ theme }): JSX.Element => {
     }
   ]
 
-  const handleChange = (event): void => {
-    setIncoterm(event.target.value)
-  }
+  const [data, setData] = useState({
+    origin: '',
+    destiny: '',
+    agents: '',
+    incoterm: ''
+  })
 
   return (
     <Separator>
@@ -36,8 +39,12 @@ const Step2 = ({ theme }): JSX.Element => {
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <FormLabel component="legend">{I18n.t('pages.newProposal.step2.origin')}</FormLabel>
-            <TextField
+            <ControlledInput
               id="search-origin"
+              toolTipTitle={I18n.t('components.itemModal.requiredField')}
+              invalid={false}
+              onChange={e => setData({ ...data, origin: e.target.value })}
+              value={data.origin}
               variant="outlined"
               size="small"
               placeholder={I18n.t('pages.newProposal.step2.searchPlaceholder')}
@@ -52,8 +59,12 @@ const Step2 = ({ theme }): JSX.Element => {
           </Grid>
           <Grid item xs={6}>
             <FormLabel component="legend">{I18n.t('pages.newProposal.step2.destiny')}</FormLabel>
-            <TextField
+            <ControlledInput
               id="search-destiny"
+              toolTipTitle={I18n.t('components.itemModal.requiredField')}
+              invalid={false}
+              onChange={e => setData({ ...data, destiny: e.target.value })}
+              value={data.destiny}
               variant="outlined"
               size="small"
               placeholder={I18n.t('pages.newProposal.step2.searchPlaceholder')}
@@ -68,8 +79,12 @@ const Step2 = ({ theme }): JSX.Element => {
           </Grid>
           <Grid item xs={6}>
             <FormLabel component="legend">{I18n.t('pages.newProposal.step2.agents')}</FormLabel>
-            <TextField
+            <ControlledInput
               id="search-name"
+              toolTipTitle={I18n.t('components.itemModal.requiredField')}
+              invalid={false}
+              onChange={e => setData({ ...data, agents: e.target.value })}
+              value={data.agents}
               variant="outlined"
               size="small"
               placeholder={I18n.t('pages.newProposal.step2.searchAgents')}
@@ -84,22 +99,25 @@ const Step2 = ({ theme }): JSX.Element => {
           </Grid>
           <Grid item xs={3}>
             <FormLabel component="legend">{I18n.t('pages.newProposal.step2.incoterm')}</FormLabel>
-            <StyledSelect
+            <ControlledSelect
               labelId="select-label-incoterm"
               id="incoterm"
-              value={incoterm}
-              onChange={handleChange}
+              value={data.incoterm}
+              onChange={e => { console.log(e.target.value); setData({ ...data, incoterm: e.target.value }) }}
               displayEmpty
+              disableUnderline
+              invalid={false}
+              toolTipTitle={I18n.t('components.itemModal.requiredField')}
             >
-              <MenuItem disabled value="">
-                <SelectPlaceholder>{I18n.t('pages.newProposal.step2.choose')}</SelectPlaceholder>
+              <MenuItem disabled value={data.incoterm}>
+                <SelectSpan placeholder>{I18n.t('pages.newProposal.step2.choose')}</SelectSpan>
               </MenuItem>
               {incotermList.map((item) => (
                 <MenuItem key={item.value} value={item.value}>
-                  {item.name}
+                  <SelectSpan>{item.name}</SelectSpan>
                 </MenuItem>
               ))}
-            </StyledSelect>
+            </ControlledSelect>
           </Grid>
         </Grid>
       </FormControl>
