@@ -24,6 +24,8 @@ import Step2 from './Step2'
 import Step3 from './Step3'
 import Step4 from './Step4'
 import Step5 from './Step5'
+import "./index.css";
+
 
 const Container = styled.div`
   width: 100%;
@@ -156,6 +158,21 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     // align-items: center;
     cursor: pointer;
     border: 1px solid red;
+    &:after {
+      // content: '';
+      // position: absolute;
+      // left: -50px;
+      // top: '50px';
+      width: 50px;
+      border: 5px solid black;
+  }
+`;
+
+const StyledSpan = styled.span`
+  border: 1px solid purple;
+  visibility: hidden;
+  font-Weight: normal;
+}
 `;
 
    // {/* <Stepper id="stepper" alternativeLabel nonLinear activeStep={activeStep}>
@@ -191,14 +208,19 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
             <Item
               // isSticky={true}
               to={step.id}
-              offset={-85}
+              offset={-184}
               key={step.id}
               smooth={true}
-              duration={500}
+              // duration={500}
               spy={true}
+              activeClass="active2"
               onClick={() => {
                 setClicked({ id: step.id, clicked: true })
                 console.log('Clicked = ', step.id);
+              }}
+              onSetActive={() => {
+                // setClicked({ id: step.id, clicked: true })
+                console.log('Going to set Active')
               }}
               onMouseEnter={() => {
                 setHover({ id: step.id, hover: true })
@@ -221,13 +243,17 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                 // onClick={() => setClicked(true)}
                 >
                 </div>
-                <span style={{
+                <StyledSpan>{step.label}</StyledSpan>
+                {/* <span style={{
                   border: '1px solid purple',
-                  visibility: (clicked.clicked && clicked.id === step.id) || (hover.hover && hover.id === step.id) ? 'visible' : 'hidden',
+                  visibility: 'hidden',
+                  fontWeight: 'normal'
+                  // visibility: (clicked.clicked && clicked.id === step.id) || (hover.hover && hover.id === step.id) ? 'visible' : 'hidden',
+                  // fontWeight: clicked.clicked && clicked.id === step.id ? 'bold' : 'normal',
                 }}
                   >
                     {step.label}
-                  </span>
+                  </span> */}
             </Item>
             
           // </div>
