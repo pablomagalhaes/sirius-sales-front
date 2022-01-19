@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { primary } from '../../../application/themes'
 
 const RootContainer = styled.div`
+  position: relative;
   .breadcrumbInitial {
     color: ${(props: any) => props.theme?.commercial?.pages?.proposal?.breadcrumbInitial};
   }
@@ -60,14 +61,19 @@ const RootContainer = styled.div`
 `
 
 const TopContainer = styled.div`
-background: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.background};
-display: flex;
-justify-content: space-between;
-align-items: center;
-margin: 3px 20px;
-padding: 24px 24px 0 0;
-border-radius: 16px 16px 0 0;
-box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+  background: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.background};
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 3px 20px;
+  // padding: 24px 24px 0 0;
+  padding: 24px;
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid black;
+  top: 0;
+  // bottom:0;
+  position:sticky;
 `
 
 const MainContainer = styled.div`
