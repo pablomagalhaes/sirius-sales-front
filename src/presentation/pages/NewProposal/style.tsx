@@ -69,9 +69,10 @@ const TopContainer = styled.div`
   border-radius: 16px 16px 0 0;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
   border: 1px solid black;
-  top: 0;
+  top: 76px;
   // bottom:0;
   position:sticky;
+  z-index: 1;
 `
 
 const MainContainer = styled.div`
