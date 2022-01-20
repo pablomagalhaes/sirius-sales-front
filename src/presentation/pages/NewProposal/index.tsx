@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, FloatingMenu } from 'fiorde-fe-components'
-import { Breadcrumbs, Link } from '@material-ui/core/'
+import { Breadcrumbs, Link, LinkBaseProps } from '@material-ui/core/'
 import {
   ButtonContainer,
   Header,
@@ -16,7 +16,7 @@ import IconComponent from '../../../application/icons/IconComponent'
 import ScrollableAnchor, { goToAnchor } from 'react-scrollable-anchor'
 import { Stepper, Step, StepButton } from '@material-ui/core';
 import { HashLink } from 'react-router-hash-link';
-import { Link as LinkS } from 'react-scroll';
+import { Link as LinkS, scrollSpy, Events } from 'react-scroll';
 import styled from 'styled-components';
 import { StepLabel } from '@material-ui/core';
 import Step1 from './Step1'
@@ -128,8 +128,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
 
   interface StepsProps {
     steps: any[];
-    activeStep: number;
-    onChange(args: any): void;
+    activeStep?: number;
+    onChange?(args: any): void;
   }
 
   const RootContainer2 = styled.div`
@@ -168,6 +168,121 @@ const StyledSpan = styled.span`
   font-weight: normal;
 }
 `;
+
+useEffect(() => {
+  Events.scrollEvent.register("begin", function(to, element) {
+    console.log("begin", arguments);
+  });
+
+  Events.scrollEvent.register("end", function(to, element) {
+    console.log("end", arguments);
+  });
+
+  scrollSpy.update();
+  return () => {
+    Events.scrollEvent.remove("begin");
+    Events.scrollEvent.remove("end");
+  };
+});
+
+const Steps2 = ({ steps }: StepsProps): JSX.Element => {
+  return (
+    <div>
+      <nav className="navbar navbar-default navbar-fixed-top">
+        <div className="container-fluid">
+          <div
+            className="collapse navbar-collapse"
+            id="bs-example-navbar-collapse-1"
+          >
+            <ul style={{ listStyle: "none" }}>
+              {/* {steps.map(step =>
+                <li style={{ float: "left", marginLeft: "10px" }}>
+                  <LinkS
+                    // className="step1"
+                    to={step.id}
+                    spy={true}
+                    smooth={true}
+                    duration={500}
+                    offset={-98}
+                    activeClass="active3"
+                  >
+                    {step.label}
+                  </LinkS>
+                </li>
+              )} */}
+              <li style={{ float: "left", marginLeft: "10px" }}>
+                  <LinkS
+                    // className="step1"
+                    to="step1"
+                    spy={true}
+                    smooth={true}
+                    duration={500}
+                    offset={-98}
+                    activeClass="active3"
+                  >
+                    Teste 1
+                  </LinkS>
+                </li>
+              <li style={{ float: "left", marginLeft: "10px" }}>
+                <LinkS
+                  to="step2"
+                  spy={true}
+                  smooth={true}
+                  duration={500}
+                  offset={-58}
+                  activeClass="active3"
+                >
+                  Test 2
+                </LinkS>
+              </li>
+              <li style={{ float: "left", marginLeft: "10px" }}>
+                <LinkS
+                  // className="step3"
+                  to="step3"
+                  spy={true}
+                  smooth={true}
+                  duration={500}
+                  offset={-98}
+                  activeClass="active3"
+                >
+                  Test 3
+                </LinkS>
+              </li>
+              <li style={{ float: "left", marginLeft: "10px" }}>
+                <LinkS
+                  // activeClass="active3"
+                  // className="step4"
+                  to="step4"
+                  spy={true}
+                  smooth={true}
+                  duration={500}
+                  offset={-98}
+                  activeClass="active3"
+                >
+                  Test 4
+                </LinkS>
+              </li>
+              <li style={{ float: "left", marginLeft: "10px" }}>
+                <LinkS
+                  // activeClass="active3"
+                  // className="step5"
+                  to="step5"
+                  spy={true}
+                  smooth={true}
+                  duration={500}
+                  offset={-98}
+                  activeClass="active3"
+                >
+                  Test 5
+                </LinkS>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+  );
+};
 
   const Steps = ({ steps, activeStep, onChange }: StepsProps): JSX.Element => {
     return (
@@ -285,9 +400,9 @@ const StyledSpan = styled.span`
         </UserContainer>
       </Header>
       <TopContainer>
-        <Steps
-          activeStep={activeStep}
-          onChange={handleStep}
+        <Steps2
+          // activeStep={activeStep}
+          // onChange={handleStep}
           steps={steps}
         />
         <ButtonContainer>
@@ -304,11 +419,11 @@ const StyledSpan = styled.span`
         </ButtonContainer>
       </TopContainer>
       <MainContainer>
-        <div id="step1" style={{border: '1px solid pink'}}><Step1 /></div>
-        <div id="step2" style={{border: '1px solid yellow'}}><Step2 /></div>
-        <div id="step3" style={{border: '1px solid red'}}><Step3 /></div>
-        <div id="step4" style={{border: '1px solid blue'}}><Step4 /></div>
-        <div id="step5" style={{border: '1px solid green'}}><Step5 /></div>
+        <div id="step1" style={{border: '1px solid pink', height: '3000px'}}><Step1 /></div>
+        <div id="step2" style={{border: '1px solid yellow', height: '3000px'}}><Step2 /></div>
+        <div id="step3" style={{border: '1px solid red', height: '3000px'}}><Step3 /></div>
+        <div id="step4" style={{border: '1px solid blue', height: '3000px'}}><Step4 /></div>
+        <div id="step5" style={{border: '1px solid green', height: '3000px'}}><Step5 /></div>
       </MainContainer>
     </RootContainer>
   )
