@@ -10,19 +10,17 @@ import {
   CheckBoxLabel,
   Form,
   HeaderDiv,
-  Input,
   Label,
-  MeasureInput,
   ModalDiv,
   RedColorSpan,
   RowDiv,
   RowReverseDiv,
-  StyledMenuSelect,
   Title
 } from './ItemModalStyles'
 import { I18n } from 'react-redux-i18n'
 import CheckIcon from '../../../application/icons/CheckIcon'
-import ControlledToolTip from '../ControlledToolTip/ControlledToolTip'
+import ControlledSelect from '../ControlledSelect'
+import ControlledInput from '../ControlledInput'
 
 interface ItemModalData {
   amount: string
@@ -110,93 +108,6 @@ const ItemModal = ({
     }
   }
 
-  const handleTypeChange = (e): void => {
-    setData((currentState) => {
-      return { ...currentState, type: e.target.value }
-    })
-  }
-
-  const handleAmountChange = (e): void => {
-    const validatedInput = validateIntInput(e.target.value)
-    if (validatedInput !== null) {
-      setData((currentState) => {
-        return { ...currentState, amount: validatedInput[0] }
-      })
-    }
-  }
-
-  const handleRawWeightChange = (e): void => {
-    const validatedInput = validateFloatInput(e.target.value)
-    if (validatedInput !== null) {
-      setData((currentState) => {
-        return { ...currentState, rawWeight: validatedInput[0] }
-      })
-    }
-  }
-
-  const handleWidthChange = (e): void => {
-    const validatedInput = validateFloatInput(e.target.value)
-    if (validatedInput !== null) {
-      setData((currentState) => {
-        return { ...currentState, width: validatedInput[0] }
-      })
-    }
-  }
-
-  const handleHeightChange = (e): void => {
-    const validatedInput = validateFloatInput(e.target.value)
-    if (validatedInput !== null) {
-      setData((currentState) => {
-        return { ...currentState, height: validatedInput[0] }
-      })
-    }
-  }
-
-  const handleLengthChange = (e): void => {
-    const validatedInput = validateFloatInput(e.target.value)
-    if (validatedInput !== null) {
-      setData((currentState) => {
-        return { ...currentState, length: validatedInput[0] }
-      })
-    }
-  }
-
-  const handleDiameterChange = (e): void => {
-    const validatedInput = validateFloatInput(e.target.value)
-    if (validatedInput !== null) {
-      setData((currentState) => {
-        return { ...currentState, diameter: validatedInput[0] }
-      })
-    }
-  }
-
-  const handleCubageChange = (e): void => {
-    const validatedInput = validateFloatInput(e.target.value)
-    if (validatedInput !== null) {
-      setData((currentState) => {
-        return { ...currentState, cubage: validatedInput[0] }
-      })
-    }
-  }
-
-  const handleDangerousChange = (): void => {
-    setData((currentState) => {
-      return { ...currentState, dangerous: !currentState.dangerous }
-    })
-  }
-
-  const handleImoChange = (e): void => {
-    setData((currentState) => {
-      return { ...currentState, imo: e.target.value }
-    })
-  }
-
-  const handleCodUnChange = (e): void => {
-    setData((currentState) => {
-      return { ...currentState, codUn: e.target.value }
-    })
-  }
-
   return (
     <Modal open={open} onClose={handleOnClose}>
       <ModalDiv>
@@ -222,63 +133,58 @@ const ItemModal = ({
             </Label>
           </RowDiv>
           <RowDiv margin={true}>
-            <StyledMenuSelect
-              onChange={handleTypeChange}
-              displayEmpty
-              value={data.type}
-              disableUnderline
-              placeholder={data.type}
-              filled={data.type}
-              toolTipTitle={I18n.t('components.itemModal.requiredField')}
-              invalid={
-                invalidInput && (data.type === null || data.type.length === 0)
-              }
-            >
-              <MenuItem disabled value="">
-                {I18n.t('components.itemModal.choose')}
-              </MenuItem>
-              {typeList.map((type) => {
-                return (
-                  <MenuItem key={`${type}_key`} value={type}>
-                    {type}
-                  </MenuItem>
-                )
-              })}
-            </StyledMenuSelect>
-            <ControlledToolTip
-              title={I18n.t('components.itemModal.requiredField')}
-              open={
-                invalidInput &&
-                (data.amount === null || data.amount.length === 0)
-              }
-            >
-              <Input
+            <div style={{ width: '198px', height: '32px', margin: '12px 0 5px 0' }}>
+              <ControlledSelect
+                onChange={e => (setData({ ...data, type: e.target.value }))}
+                displayEmpty
+                value={data.type}
+                disableUnderline
+                placeholder={data.type}
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                invalid={
+                  invalidInput && (data.type === null || data.type.length === 0)
+                }
+              >
+                <MenuItem disabled value="">
+                  <span style={{ marginLeft: '10px' }}>{I18n.t('components.itemModal.choose')}</span>
+                </MenuItem>
+                {typeList.map((type) => {
+                  return (
+                    <MenuItem key={`${type}_key`} value={type}>
+                      <span style={{ marginLeft: '10px' }}>{type}</span>
+                    </MenuItem>
+                  )
+                })}
+              </ControlledSelect>
+            </div>
+            <div style={{ width: '126px', height: '30px', marginLeft: '18px', marginTop: '12px' }}>
+              <ControlledInput
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 invalid={
                   invalidInput &&
                   (data.amount === null || data.amount.length === 0)
                 }
-                filled={data.amount}
                 value={data.amount}
-                onChange={handleAmountChange}
+                onChange={e => { validateIntInput(e.target.value) !== null && (setData({ ...data, amount: e.target.value })) }}
+                variant="outlined"
+                size="small"
+                modal
               />
-            </ControlledToolTip>
-            <ControlledToolTip
-              title={I18n.t('components.itemModal.requiredField')}
-              open={
-                invalidInput &&
-                (data.rawWeight === null || data.rawWeight.length === 0)
-              }
-            >
-              <Input
+            </div>
+            <div style={{ width: '126px', height: '30px', marginLeft: '18px', marginTop: '12px' }}>
+              <ControlledInput
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 invalid={
                   invalidInput &&
                   (data.rawWeight === null || data.rawWeight.length === 0)
                 }
-                filled={data.rawWeight}
                 value={data.rawWeight}
-                onChange={handleRawWeightChange}
+                onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, rawWeight: e.target.value })) }}
+                variant="outlined"
+                size="small"
+                modal
               />
-            </ControlledToolTip>
+            </div>
           </RowDiv>
           <RowDiv>
             <Label width="44%">
@@ -292,81 +198,74 @@ const ItemModal = ({
             </Label>
           </RowDiv>
           <RowDiv margin={true}>
-            <ControlledToolTip
-              title={I18n.t('components.itemModal.requiredField')}
-              open={
-                invalidInput &&
-                (data.height === null || data.height.length === 0)
-              }
-            >
-              <MeasureInput
+            <div style={{ width: '60px', height: '30px', marginRight: '8px', marginTop: '12px' }}>
+              <ControlledInput
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 aria-label="height"
                 value={data.height}
-                onChange={handleHeightChange}
-                margin={true}
-                filled={data.height}
+                onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, height: e.target.value })) }}
                 invalid={
                   invalidInput &&
                   (data.height === null || data.height.length === 0)
                 }
+                variant="outlined"
+                size="small"
+                modal
               />
-            </ControlledToolTip>
-            <ControlledToolTip
-              title={I18n.t('components.itemModal.requiredField')}
-              open={
-                invalidInput && (data.width === null || data.width.length === 0)
-              }
-            >
-              <MeasureInput
+            </div>
+            <div style={{ width: '60px', height: '30px', marginRight: '8px', marginTop: '12px' }}>
+              <ControlledInput
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 value={data.width}
-                onChange={handleWidthChange}
-                margin={true}
-                filled={data.width}
+                onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, width: e.target.value })) }}
                 invalid={
                   invalidInput &&
                   (data.width === null || data.width.length === 0)
                 }
+                variant="outlined"
+                size="small"
+                modal
               />
-            </ControlledToolTip>
-            <ControlledToolTip
-              title={I18n.t('components.itemModal.requiredField')}
-              open={
-                invalidInput &&
-                (data.length === null || data.length.length === 0)
-              }
-            >
-              <MeasureInput
+            </div>
+            <div style={{ width: '60px', height: '30px', marginRight: '8px', marginTop: '12px' }}>
+              <ControlledInput
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 invalid={
                   invalidInput &&
                   (data.length === null || data.length.length === 0)
                 }
-                filled={data.length}
                 value={data.length}
-                onChange={handleLengthChange}
+                onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, length: e.target.value })) }}
+                variant="outlined"
+                size="small"
+                modal
               />
-            </ControlledToolTip>
-            <Input
-              filled={data.diameter}
-              value={data.diameter != null ? data.diameter : ''}
-              onChange={handleDiameterChange}
-            />
-            <ControlledToolTip
-              title={I18n.t('components.itemModal.requiredField')}
-              open={
-                invalidInput &&
-                (data.cubage === null || data.cubage.length === 0)
-              }
-            >
-              <Input
+            </div>
+            <div style={{ width: '126px', height: '30px', marginLeft: '15px', marginTop: '12px' }}>
+              <ControlledInput
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                invalid={false}
+                value={data.diameter != null ? data.diameter : ''}
+                onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, diameter: e.target.value })) }}
+                variant="outlined"
+                size="small"
+                modal
+              />
+            </div>
+            <div style={{ width: '126px', height: '30px', marginLeft: '18px', marginTop: '12px' }}>
+              <ControlledInput
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 invalid={
                   invalidInput &&
                   (data.cubage === null || data.cubage.length === 0)
                 }
-                filled={data.cubage}
                 value={data.cubage}
-                onChange={handleCubageChange}
+                onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, cubage: e.target.value })) }}
+                variant="outlined"
+                size="small"
+                modal
               />
-            </ControlledToolTip>
+            </div>
           </RowDiv>
           <RowDiv>
             <Label width="29%">
@@ -376,38 +275,46 @@ const ItemModal = ({
             <Label width="27%">{I18n.t('components.itemModal.codUn')}</Label>
           </RowDiv>
           <RowDiv>
-            <CheckBox checked={data.dangerous} onClick={handleDangerousChange}>
+            <CheckBox checked={data.dangerous} onClick={() => (setData({ ...data, dangerous: !data.dangerous }))}>
               {data.dangerous && <CheckIcon />}
             </CheckBox>
             <CheckBoxLabel>{I18n.t('components.itemModal.yes')}</CheckBoxLabel>
             <AlertIconDiv>
               <AlertIcon />
             </AlertIconDiv>
-            <StyledMenuSelect
-              value={data.imo != null ? data.imo : ''}
-              onChange={handleImoChange}
-              disableUnderline
-              displayEmpty
-              placeholder={data.imo != null ? data.imo : ''}
-              filled={data.imo}
-              invalid={false}
-              toolTipTitle={I18n.t('components.itemModal.requiredField')}
-            >
-              <MenuItem disabled value="">
-                {I18n.t('components.itemModal.choose')}
-              </MenuItem>
-              {imoList.map((imo) => {
-                return (
-                  <MenuItem key={`${imo}_key`} value={imo}>
-                    {imo}
-                  </MenuItem>
-                )
-              })}
-            </StyledMenuSelect>
-            <Input
-              value={data.codUn != null ? data.codUn : ''}
-              onChange={handleCodUnChange}
-            />
+            <div style={{ width: '198px', height: '32px', margin: '12px 0 5px 0' }}>
+              <ControlledSelect
+                value={data.imo != null ? data.imo : ''}
+                onChange={e => (setData({ ...data, imo: e.target.value }))}
+                disableUnderline
+                displayEmpty
+                placeholder={data.imo != null ? data.imo : ''}
+                invalid={false}
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+              >
+                <MenuItem disabled value="">
+                  <span style={{ marginLeft: '10px' }}>{I18n.t('components.itemModal.choose')}</span>
+                </MenuItem>
+                {imoList.map((imo) => {
+                  return (
+                    <MenuItem key={`${imo}_key`} value={imo}>
+                      <span style={{ marginLeft: '10px' }}>{imo}</span>
+                    </MenuItem>
+                  )
+                })}
+              </ControlledSelect>
+            </div>
+            <div style={{ width: '126px', height: '30px', marginLeft: '18px', marginTop: '12px' }}>
+              <ControlledInput
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                invalid={false}
+                value={data.codUn != null ? data.codUn : ''}
+                onChange={e => (setData({ ...data, codUn: e.target.value }))}
+                variant="outlined"
+                size="small"
+                modal
+              />
+            </div>
           </RowDiv>
           <RowDiv>
             <ButtonDiv>

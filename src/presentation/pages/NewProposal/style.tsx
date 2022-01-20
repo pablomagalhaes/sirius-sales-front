@@ -1,6 +1,4 @@
-import React from 'react'
 import styled from 'styled-components'
-import { Select } from '@material-ui/core/'
 import { primary } from '../../../application/themes'
 
 const RootContainer = styled.div`
@@ -23,6 +21,11 @@ const RootContainer = styled.div`
   & .MuiTextField-root, .MuiOutlinedInput-root {
     width: 100%;
   }
+  & .MuiSelect-select {
+    display: flex;
+    align-items: center;
+    height: 24px;
+  }
   & .MuiFormControlLabel-root {
     margin-right: 10px;
   }
@@ -42,107 +45,98 @@ const RootContainer = styled.div`
   & .MuiRadio-colorSecondary.Mui-checked, .MuiCheckbox-colorSecondary.Mui-checked {
     color: ${primary};
   }
-  & .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline, 
-  .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
-    border: 1px solid ${primary};
-  }
   & .MuiStepper-root {
     padding-left: 0;
   }
-  & .MuiOutlinedInput-notchedOutline {
-    border-color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.border};
-  }
-  & .MuiFormLabel-root.Mui-focused, .MuiSelect-icon {
+  & .MuiSelect-icon {
     color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.font};
   }
+  & .MuiFormLabel-root.Mui-focused {
+    color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.subtitle};
+  }
+  & .MuiSvgIcon-root {
+    margin-right: 5px;
+  }}
 `
 
 const TopContainer = styled.div`
-  background: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.background};
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 3px 20px;
-  padding: 24px 24px 0 0;
-  border-radius: 16px 16px 0 0;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+background: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.background};
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin: 3px 20px;
+padding: 24px 24px 0 0;
+border-radius: 16px 16px 0 0;
+box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
 `
 
 const MainContainer = styled.div`
-  background: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.background};
-  margin: 0 20px;
-  border-radius: 0 0 16px 16px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
-  padding: 44px 24px;
+background: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.background};
+margin: 0 20px;
+border-radius: 0 0 16px 16px;
+box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+padding: 44px 24px;
 
 `
 
 const Title = styled.div`
-  color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.title};
-  font-size: 16px;
-  font-weight: bold;
-  line-height: 150%;
-  letter-spacing: 0.02em;
-  border-bottom: 1px solid ${(props: any) => props.theme?.commercial?.pages?.newProposal?.border};
-  padding-bottom: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.title};
+font-size: 16px;
+font-weight: bold;
+line-height: 150 %;
+letter-spacing: 0.02em;
+border-bottom: 1px solid ${(props: any) => props.theme?.commercial?.pages?.newProposal?.border};
+padding-bottom: 10px;
+display: flex;
+justify-content: space-between;
+align-items: center;
 `
 const Subtitle = styled.div`
-  color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.subtitle};
-  font-size: 12px;
-  line-height: 150%;
-  letter-spacing: 0.02em;
-  font-weight: normal;
+color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.subtitle};
+font-size: 12px;
+line-height: 150 %;
+letter-spacing: 0.02em;
+font-weight: normal;
 `
 const IconContainer = styled.div`
-  align-self: center;
-  margin-right: 40px;
+align-self: center;
+margin-right: 40px;
 `
 
 const UserContainer = styled.div`
-  font-size: 14px;
-  color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.subtitle};
-  line-height: 150%;
-  letter-spacing: 0.02em;
-  display: flex;
+font-size: 14px;
+color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.subtitle};
+line-height: 150 %;
+letter-spacing: 0.02em;
+display: flex;
   svg {
-    margin-left: 18px;
-  }
+  margin-left: 18px;
+}
 `
 
 const Username = styled.span`
-  color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.font};
-  font-weight: 500;
-  margin-left: 6px;
+color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.font};
+font-weight: 500;
+margin-left: 6px;
 `
 
 const Header = styled.div`
-  margin: 25px 20px;
-  display: flex;
-  justify-content: space-between;
+margin: 25px 20px;
+display: flex;
+justify-content: space-between;
 `
 
 const Separator = styled.div`
-  margin-bottom: 100px;
+margin-bottom: 100px;
 `
 
-const SelectPlaceholder = styled.span`
-  color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.placeholder};
+const SelectSpan = styled.span`
+color: ${(props: { placeholder: boolean, theme: any }) => props?.placeholder && props.theme?.commercial?.pages?.newProposal?.placeholder};
+margin: 0 10px;
 `
 
 const ButtonContainer = styled.div`
-  height: 36px;
-`
-
-const StyledSelect = styled(({ className, ...props }) => (
-  <Select {...props} MenuProps={{ classes: { paper: className } }} />
-))`
-  && {
-    background-color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.background};
-    color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.subtitle};
-  }
+height: 36px;
 `
 
 export {
@@ -151,9 +145,8 @@ export {
   Header,
   MainContainer,
   RootContainer,
-  SelectPlaceholder,
+  SelectSpan,
   Separator,
-  StyledSelect,
   Subtitle,
   Title,
   TopContainer,
