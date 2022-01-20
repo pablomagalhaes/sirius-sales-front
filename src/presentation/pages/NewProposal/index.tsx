@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Button, FloatingMenu } from 'fiorde-fe-components'
-import { Breadcrumbs, Link, LinkBaseProps } from '@material-ui/core/'
+import { Breadcrumbs, Link, LinkBaseProps, Stepper, Step, StepButton, StepLabel } from '@material-ui/core/'
 import {
   ButtonContainer,
   Header,
@@ -10,31 +10,27 @@ import {
   UserContainer,
   Username
 } from './style'
-import { withTheme } from 'styled-components'
+import styled, { withTheme } from 'styled-components'
 import { I18n } from 'react-redux-i18n'
 import IconComponent from '../../../application/icons/IconComponent'
 import ScrollableAnchor, { goToAnchor } from 'react-scrollable-anchor'
-import { Stepper, Step, StepButton } from '@material-ui/core';
-import { HashLink } from 'react-router-hash-link';
-import { Link as LinkS, scrollSpy, Events } from 'react-scroll';
-import styled from 'styled-components';
-import { StepLabel } from '@material-ui/core';
+import { HashLink } from 'react-router-hash-link'
+import { Link as LinkS, scrollSpy, Events } from 'react-scroll'
 import Step1 from './Step1'
 import Step2 from './Step2'
 import Step3 from './Step3'
 import Step4 from './Step4'
 import Step5 from './Step5'
-import "./index.css";
-
+import './index.css'
 
 const Container = styled.div`
   width: 100%;
   margin-top: 100px;
-`;
+`
 
 const Progressbar = styled.ul`
   counter-reset: step;
-`;
+`
 
 const ProgressbarLi = styled.li`
   list-style-type: none;
@@ -81,7 +77,7 @@ const ProgressbarLi = styled.li`
       border-color:#27ae60;
     }
   }
-`;
+`
 
 const Label = styled(StepLabel)`
     &.step-label-root {
@@ -100,13 +96,13 @@ const Label = styled(StepLabel)`
     & .MuiStepLabel-label.MuiStepLabel-alternativeLabel {
         color: ${(props: any) => props.theme?.fiorde?.stepper?.fontColor};
     }
-`;
+`
 
 export interface NewProposalProps {
   theme: any
 }
 
-const Section = ({label}) => {
+const Section = ({ label }) => {
   return (
     <div>
       <div>
@@ -118,18 +114,18 @@ const Section = ({label}) => {
 
 const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [activeStep, setActiveStep] = useState(0)
-  const [clicked, setClicked] = useState({ id: '', clicked: false });
-  const [hover, setHover] = useState({ id: '', hover: false });
+  const [clicked, setClicked] = useState({ id: '', clicked: false })
+  const [hover, setHover] = useState({ id: '', hover: false })
 
   const handleStep = (step): void => {
     setActiveStep(step)
-    console.log('handleStep step.id = ', step);
+    console.log('handleStep step.id = ', step)
   }
 
   interface StepsProps {
-    steps: any[];
-    activeStep?: number;
-    onChange?(args: any): void;
+    steps: any[]
+    activeStep?: number
+    onChange?: (args: any) => void
   }
 
   const RootContainer2 = styled.div`
@@ -141,7 +137,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     display: flex;
     justify-content: space-around;
     // height: 100px;
-  `;
+  `
 
   const Item = styled(LinkS)`
     // width: 10px;
@@ -160,42 +156,42 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       width: 50px;
       border: 5px solid black;
   }
-`;
+`
 
-const StyledSpan = styled.span`
+  const StyledSpan = styled.span`
   border: 1px solid purple;
   visibility: ${({ clicked, hover, step }) => clicked.clicked && clicked.id === step.id || hover.hover && hover.id === step.id ? 'visible' : 'hidden'};
   font-weight: normal;
 }
-`;
+`
 
-useEffect(() => {
-  Events.scrollEvent.register("begin", function(to, element) {
-    console.log("begin", arguments);
-  });
+  useEffect(() => {
+    Events.scrollEvent.register('begin', function (to, element) {
+      console.log('begin', arguments)
+    })
 
-  Events.scrollEvent.register("end", function(to, element) {
-    console.log("end", arguments);
-  });
+    Events.scrollEvent.register('end', function (to, element) {
+      console.log('end', arguments)
+    })
 
-  scrollSpy.update();
-  return () => {
-    Events.scrollEvent.remove("begin");
-    Events.scrollEvent.remove("end");
-  };
-});
+    scrollSpy.update()
+    return () => {
+      Events.scrollEvent.remove('begin')
+      Events.scrollEvent.remove('end')
+    }
+  })
 
-const Steps2 = ({ steps }: StepsProps): JSX.Element => {
-  return (
-    <div>
-      <nav className="navbar navbar-default navbar-fixed-top">
-        <div className="container-fluid">
-          <div
-            className="collapse navbar-collapse"
-            id="bs-example-navbar-collapse-1"
-          >
-            <ul style={{ listStyle: "none" }}>
-              {/* {steps.map(step =>
+  const Steps2 = ({ steps }: StepsProps): JSX.Element => {
+    return (
+      <div>
+        <nav className="navbar navbar-default navbar-fixed-top">
+          <div className="container-fluid">
+            <div
+              className="collapse navbar-collapse"
+              id="bs-example-navbar-collapse-1"
+            >
+              <ul style={{ listStyle: 'none' }}>
+                {/* {steps.map(step =>
                 <li style={{ float: "left", marginLeft: "10px" }}>
                   <LinkS
                     // className="step1"
@@ -210,131 +206,131 @@ const Steps2 = ({ steps }: StepsProps): JSX.Element => {
                   </LinkS>
                 </li>
               )} */}
-              <li style={{ float: "left", marginLeft: "10px" }}>
+                <li style={{ float: 'left', marginLeft: '10px' }}>
                   <LinkS
                     // className="step1"
                     to="step1"
                     spy={true}
                     smooth={true}
                     duration={500}
-                    offset={-98}
+                    offset={-150}
                     activeClass="active3"
                   >
                     Teste 1
                   </LinkS>
                 </li>
-              <li style={{ float: "left", marginLeft: "10px" }}>
-                <LinkS
-                  to="step2"
-                  spy={true}
-                  smooth={true}
-                  duration={500}
-                  offset={-58}
-                  activeClass="active3"
-                >
-                  Test 2
-                </LinkS>
-              </li>
-              <li style={{ float: "left", marginLeft: "10px" }}>
-                <LinkS
-                  // className="step3"
-                  to="step3"
-                  spy={true}
-                  smooth={true}
-                  duration={500}
-                  offset={-98}
-                  activeClass="active3"
-                >
-                  Test 3
-                </LinkS>
-              </li>
-              <li style={{ float: "left", marginLeft: "10px" }}>
-                <LinkS
-                  // activeClass="active3"
-                  // className="step4"
-                  to="step4"
-                  spy={true}
-                  smooth={true}
-                  duration={500}
-                  offset={-98}
-                  activeClass="active3"
-                >
-                  Test 4
-                </LinkS>
-              </li>
-              <li style={{ float: "left", marginLeft: "10px" }}>
-                <LinkS
-                  // activeClass="active3"
-                  // className="step5"
-                  to="step5"
-                  spy={true}
-                  smooth={true}
-                  duration={500}
-                  offset={-98}
-                  activeClass="active3"
-                >
-                  Test 5
-                </LinkS>
-              </li>
-            </ul>
+                <li style={{ float: 'left', marginLeft: '10px' }}>
+                  <LinkS
+                    to="step2"
+                    spy={true}
+                    smooth={true}
+                    duration={500}
+                    offset={-150}
+                    activeClass="active3"
+                  >
+                    Test 2
+                  </LinkS>
+                </li>
+                <li style={{ float: 'left', marginLeft: '10px' }}>
+                  <LinkS
+                    // className="step3"
+                    to="step3"
+                    spy={true}
+                    smooth={true}
+                    duration={500}
+                    offset={-150}
+                    activeClass="active3"
+                  >
+                    Test 3
+                  </LinkS>
+                </li>
+                <li style={{ float: 'left', marginLeft: '10px' }}>
+                  <LinkS
+                    // activeClass="active3"
+                    // className="step4"
+                    to="step4"
+                    spy={true}
+                    smooth={true}
+                    duration={500}
+                    offset={-150}
+                    activeClass="active3"
+                  >
+                    Test 4
+                  </LinkS>
+                </li>
+                <li style={{ float: 'left', marginLeft: '10px' }}>
+                  <LinkS
+                    // activeClass="active3"
+                    // className="step5"
+                    to="step5"
+                    spy={true}
+                    smooth={true}
+                    duration={500}
+                    offset={-150}
+                    activeClass="active3"
+                  >
+                    Test 5
+                  </LinkS>
+                </li>
+              </ul>
+            </div>
           </div>
-        </div>
-      </nav>
-    </div>
-  );
-};
+        </nav>
+      </div>
+    )
+  }
 
   const Steps = ({ steps, activeStep, onChange }: StepsProps): JSX.Element => {
     return (
-        <RootContainer2>
-          {steps?.map((step, index) => (
-            <Item
-              // isSticky={true}
-              to={step.id}
-              offset={-178}
-              key={step.id}
-              smooth={true}
-              // duration={500}
-              spy={true}
-              activeClass="active2"
-              onClick={() => {
-                setClicked({ id: step.id, clicked: true })
-                console.log('Clicked = ', step.id);
-              }}
-              onSetActive={() => {
-                console.log('Going to set Active')
-              }}
-              onSetInactive={() => {
-                setClicked({ id: step.id, clicked: false })
-                setHover({ id: step.id, hover: false })
-                console.log('Going to set Inactive')
-              }}
-              onMouseEnter={() => {
-                setHover({ id: step.id, hover: true })
-                console.log('mouse enter')
-              }}
-              onMouseLeave={() => {
-                setHover({ id: '', hover: false })
-                console.log('mouse leave')
-              }}
+      <RootContainer2>
+        {steps?.map((step, index) => (
+          <Item
+            // isSticky={true}
+            to={step.id}
+            offset={-178}
+            key={step.id}
+            smooth={true}
+            // duration={500}
+            spy={true}
+            activeClass="active2"
+            onClick={() => {
+              setClicked({ id: step.id, clicked: true })
+              console.log('Clicked = ', step.id)
+            }}
+            onSetActive={() => {
+              console.log('Going to set Active')
+            }}
+            onSetInactive={() => {
+              setClicked({ id: step.id, clicked: false })
+              setHover({ id: step.id, hover: false })
+              console.log('Going to set Inactive')
+            }}
+            onMouseEnter={() => {
+              setHover({ id: step.id, hover: true })
+              console.log('mouse enter')
+            }}
+            onMouseLeave={() => {
+              setHover({ id: '', hover: false })
+              console.log('mouse leave')
+            }}
+          >
+            <div style={{
+              border: clicked.clicked && clicked.id === step.id ? '1px solid #1470CC' : '1px solid #C2C5D1',
+              backgroundColor: clicked.clicked && clicked.id === step.id ? '#1470CC' : hover.hover && hover.id === step.id ? '#C2C5D1' : '',
+              width: clicked.clicked && clicked.id === step.id ? '24px' : '10px',
+              height: clicked.clicked && clicked.id === step.id ? '24px' : '10px',
+              display: 'flex',
+              borderRadius: '50%',
+              margin: '0 auto 10px auto'
+            }}
             >
-              <div style={{
-                border: clicked.clicked && clicked.id === step.id ? '1px solid #1470CC' : '1px solid #C2C5D1',
-                backgroundColor: clicked.clicked && clicked.id === step.id ? '#1470CC' : hover.hover && hover.id === step.id ? '#C2C5D1' : '',
-                width: clicked.clicked && clicked.id === step.id ? '24px' : '10px',
-                height: clicked.clicked && clicked.id === step.id ? '24px' : '10px',
-                display: 'flex',
-                borderRadius: '50%',
-                margin: '0 auto 10px auto'
-                }}
-                >
-                </div>
-                <StyledSpan clicked={clicked} hover={hover} step={step}>{step.label}</StyledSpan>
-            </Item>
+            </div>
+            <StyledSpan clicked={clicked} hover={hover} step={step}>{step.label}</StyledSpan>
+          </Item>
         ))}
-        </RootContainer2>
-    );
-};
+      </RootContainer2>
+    )
+  }
 
   const handleClickBreadcrumbs = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void => {
     event.preventDefault()
@@ -342,30 +338,30 @@ const Steps2 = ({ steps }: StepsProps): JSX.Element => {
   }
 
   const steps = [
-    { id: 'step1', label: I18n.t('pages.newProposal.step1.title')},
-    { id: 'step2', label: I18n.t('pages.newProposal.step2.title')},
-    { id: 'step3', label: I18n.t('pages.newProposal.step3.title')},
-    { id: 'step4', label: I18n.t('pages.newProposal.step4.title')},
-    { id: 'step5', label: I18n.t('pages.newProposal.step5.title')}
+    { id: 'step1', label: I18n.t('pages.newProposal.step1.title') },
+    { id: 'step2', label: I18n.t('pages.newProposal.step2.title') },
+    { id: 'step3', label: I18n.t('pages.newProposal.step3.title') },
+    { id: 'step4', label: I18n.t('pages.newProposal.step4.title') },
+    { id: 'step5', label: I18n.t('pages.newProposal.step5.title') }
   ]
 
   const floatingButtonMenuItems = [
     {
       iconType: 'save',
       label: I18n.t('pages.newProposal.save'),
-      onClick: () => {}
+      onClick: () => { }
     }, {
       iconType: 'file',
       label: I18n.t('pages.newProposal.view'),
-      onClick: () => {}
+      onClick: () => { }
     }, {
       iconType: 'download',
       label: I18n.t('pages.newProposal.download'),
-      onClick: () => {}
+      onClick: () => { }
     }, {
       iconType: 'send',
       label: I18n.t('pages.newProposal.send'),
-      onClick: () => {}
+      onClick: () => { }
     }
   ]
 
@@ -407,7 +403,7 @@ const Steps2 = ({ steps }: StepsProps): JSX.Element => {
         />
         <ButtonContainer>
           <Button
-            onAction={() => {}}
+            onAction={() => { }}
             text={I18n.t('pages.newProposal.buttonFinish')}
             icon="arrow"
             position="right"
@@ -419,11 +415,14 @@ const Steps2 = ({ steps }: StepsProps): JSX.Element => {
         </ButtonContainer>
       </TopContainer>
       <MainContainer>
-        <div id="step1" style={{border: '1px solid pink', height: '3000px'}}><Step1 /></div>
-        <div id="step2" style={{border: '1px solid yellow', height: '3000px'}}><Step2 /></div>
-        <div id="step3" style={{border: '1px solid red', height: '3000px'}}><Step3 /></div>
-        <div id="step4" style={{border: '1px solid blue', height: '3000px'}}><Step4 /></div>
-        <div id="step5" style={{border: '1px solid green', height: '3000px'}}><Step5 /></div>
+        <div id="step1" style={{ border: '1px solid pink' }}><Step1 /></div>
+        {/* <div style={{ border: '1px solid green', height: '10px' }}></div> */}
+        <div id="step2" style={{ border: '1px solid yellow' }}><Step2 /></div>
+        {/* <div style={{ border: '1px solid green', height: '10px' }}></div> */}
+        <div id="step3" style={{ border: '1px solid red' }}><Step3 /></div>
+        {/* <div style={{ border: '1px solid green', height: '10px' }}></div> */}
+        <div id="step4" style={{ border: '1px solid blue' }}><Step4 /></div>
+        <div id="step5" style={{ border: '1px solid green' }}><Step5 /></div>
       </MainContainer>
     </RootContainer>
   )
