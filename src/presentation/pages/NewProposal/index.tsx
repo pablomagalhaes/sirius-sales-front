@@ -124,12 +124,6 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const handleStep = (step): void => {
     setActiveStep(step)
     console.log('handleStep step.id = ', step);
-    // <HashLink to='#step1' scroll={el => scrollWithOffset(el, 130)} > Step 1 </HashLink>
-    // <HashLink to='#step2' scroll={el => scrollWithOffset(el, 565)} > Step 2 </HashLink>
-    // <HashLink to='#step3' scroll={el => scrollWithOffset(el, 905)} > Step 3 </HashLink>
-    // <HashLink to='#step4' scroll={el => scrollWithOffset(el, 0)} > Step 4 </HashLink>
-    // <HashLink to='#step5' scroll={el => scrollWithOffset(el, 0)} > Step 5 </HashLink>
-    // goToAnchor(step)
   }
 
   interface StepsProps {
@@ -170,45 +164,19 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
 
 const StyledSpan = styled.span`
   border: 1px solid purple;
-  visibility: hidden;
-  font-Weight: normal;
+  visibility: ${({ clicked, hover, step }) => clicked.clicked && clicked.id === step.id || hover.hover && hover.id === step.id ? 'visible' : 'hidden'};
+  font-weight: normal;
 }
 `;
-
-   // {/* <Stepper id="stepper" alternativeLabel nonLinear activeStep={activeStep}>
-            //     {steps?.map((step, index) => (
-            //         // <Step id={step.id} key={step.label}>
-            //           <LinkS
-            //           to={step.id}
-            //           offset={-65}
-            //           key={'step3'}
-            //           smooth={true}
-            //           duration={500}
-            //           spy={true}
-            //           >
-            //               <StepButton id={`step-button-${index}`} onClick={() => onChange(step.id)}>
-            //                   <Label id={`step-label-${index}`} classes={{ root: 'step-label-root' }}>
-            //                       {step.label}
-            //                   </Label>
-            //               </StepButton>
-            //             </LinkS>
-            //         // </Step>
-            //     ))}
-            // </Stepper> */}
 
   const Steps = ({ steps, activeStep, onChange }: StepsProps): JSX.Element => {
     return (
         <RootContainer2>
           {steps?.map((step, index) => (
-          // <div style={{border: '1px solid purple', textAlign: 'center',
-          // alignItems: 'center',
-          // justifyContent: 'center',
-
-          // }}>
             <Item
               // isSticky={true}
               to={step.id}
-              offset={-184}
+              offset={-178}
               key={step.id}
               smooth={true}
               // duration={500}
@@ -219,8 +187,12 @@ const StyledSpan = styled.span`
                 console.log('Clicked = ', step.id);
               }}
               onSetActive={() => {
-                // setClicked({ id: step.id, clicked: true })
                 console.log('Going to set Active')
+              }}
+              onSetInactive={() => {
+                setClicked({ id: step.id, clicked: false })
+                setHover({ id: step.id, hover: false })
+                console.log('Going to set Inactive')
               }}
               onMouseEnter={() => {
                 setHover({ id: step.id, hover: true })
@@ -240,23 +212,10 @@ const StyledSpan = styled.span`
                 borderRadius: '50%',
                 margin: '0 auto 10px auto'
                 }}
-                // onClick={() => setClicked(true)}
                 >
                 </div>
-                <StyledSpan>{step.label}</StyledSpan>
-                {/* <span style={{
-                  border: '1px solid purple',
-                  visibility: 'hidden',
-                  fontWeight: 'normal'
-                  // visibility: (clicked.clicked && clicked.id === step.id) || (hover.hover && hover.id === step.id) ? 'visible' : 'hidden',
-                  // fontWeight: clicked.clicked && clicked.id === step.id ? 'bold' : 'normal',
-                }}
-                  >
-                    {step.label}
-                  </span> */}
+                <StyledSpan clicked={clicked} hover={hover} step={step}>{step.label}</StyledSpan>
             </Item>
-            
-          // </div>
         ))}
         </RootContainer2>
     );
@@ -267,29 +226,12 @@ const StyledSpan = styled.span`
     console.info('You clicked a breadcrumb.')
   }
 
-  const scrollWithOffset = (el: any, offset: any) => {
-    const elementPosition = el.offsetTop + offset;
-    window.scroll({
-      top: elementPosition,
-      left: 0,
-      behavior: "smooth"
-    })
-  }
-
-  // const steps = [
-  //   I18n.t('pages.newProposal.step1.title'),
-  //   I18n.t('pages.newProposal.step2.title'),
-  //   I18n.t('pages.newProposal.step3.title'),
-  //   I18n.t('pages.newProposal.step4.title'),
-  //   I18n.t('pages.newProposal.step5.title')
-  // ]
-
   const steps = [
-    { id: 'step1', label: I18n.t('pages.newProposal.step1.title'), renderStep: <Step1 /> },
-    { id: 'step2', label: I18n.t('pages.newProposal.step2.title'), renderStep: <Step2 /> },
-    { id: 'step3', label: I18n.t('pages.newProposal.step3.title'), renderStep: <Step3 /> },
-    { id: 'step4', label: I18n.t('pages.newProposal.step4.title'), renderStep: <Step4 /> },
-    { id: 'step5', label: I18n.t('pages.newProposal.step5.title'), renderStep: <Step5 /> }
+    { id: 'step1', label: I18n.t('pages.newProposal.step1.title')},
+    { id: 'step2', label: I18n.t('pages.newProposal.step2.title')},
+    { id: 'step3', label: I18n.t('pages.newProposal.step3.title')},
+    { id: 'step4', label: I18n.t('pages.newProposal.step4.title')},
+    { id: 'step5', label: I18n.t('pages.newProposal.step5.title')}
   ]
 
   const floatingButtonMenuItems = [
@@ -311,37 +253,6 @@ const StyledSpan = styled.span`
       onClick: () => {}
     }
   ]
-
-  const renderSection = (step) => {
-    // const props = {...section, sections}
-
-    return (
-      <div key={step.id}>
-        <ScrollableAnchor id={step.id}>
-          <Section label={step.label}/>
-        </ScrollableAnchor>
-        <div style={{height: '200px', backgroundColor: 'white'}}/>
-      </div>
-    )
-  }
-
-  const renderSectionNav = (section) => {
-    return (
-      <div key={section.id}>
-        <a href={`#${section.id}`}> {section.label} </a>
-      </div>
-    )
-  }
-
-  const renderHeader = (sections) => {
-    return (
-      <div>
-        <div>
-          { sections.map(section => renderSectionNav(section)) }
-        </div>
-      </div>
-    )
-  }
 
   return (
     <RootContainer>
@@ -379,38 +290,6 @@ const StyledSpan = styled.span`
           onChange={handleStep}
           steps={steps}
         />
-        {/* <div>
-          <HashLink to='#step1' scroll={el => scrollWithOffset(el, 130)} > Step 1 </HashLink>
-          <HashLink to='#step2' scroll={el => scrollWithOffset(el, 565)} > Step 2 </HashLink>
-          <HashLink to='#step3' scroll={el => scrollWithOffset(el, 905)} > Step 3 </HashLink>
-          <HashLink to='#step4' scroll={el => scrollWithOffset(el, 0)} > Step 4 </HashLink>
-          <HashLink to='#step5' scroll={el => scrollWithOffset(el, 0)} > Step 5 </HashLink>
-        </div> */}
-        {/* <div>
-          { steps.map(step => renderSection(step)) }
-        </div> */}
-        {/* <LinkS
-            // isSticky={isSticky}
-            key={'step2'}
-            to={'step2'}
-            smooth={true}
-            duration={500}
-            spy={true}
-            offset={-65}
-        >
-           Step 2
-        </LinkS>
-        <LinkS
-            // isSticky={isSticky}
-            key={'step3'}
-            to={'step3'}
-            smooth={true}
-            duration={500}
-            spy={true}
-            offset={-65}
-        >
-           Step 3
-        </LinkS> */}
         <ButtonContainer>
           <Button
             onAction={() => {}}
@@ -425,44 +304,11 @@ const StyledSpan = styled.span`
         </ButtonContainer>
       </TopContainer>
       <MainContainer>
-      {/* <div>
-        { renderHeader(steps) }
-        <div style={{marginTop: '60px'}}>
-          { steps.map(step => renderSection(step)) }
-        </div>
-      </div> */}
-        {/* {
-          steps.map(step =>
-            <ScrollableAnchor id={step.id}>
-              {step.renderStep}
-            </ScrollableAnchor>)
-        } */}
-        
         <div id="step1" style={{border: '1px solid pink'}}><Step1 /></div>
         <div id="step2" style={{border: '1px solid yellow'}}><Step2 /></div>
         <div id="step3" style={{border: '1px solid red'}}><Step3 /></div>
         <div id="step4" style={{border: '1px solid blue'}}><Step4 /></div>
         <div id="step5" style={{border: '1px solid green'}}><Step5 /></div>
-        {/* <Step1 />
-        <Step2 />
-        <Step3 />
-        <Step4 />
-        <Step5 /> */}
-          {/* <ScrollableAnchor id={'step1'}>
-          <div style={{ height: 600 }}>HOME</div>
-          </ScrollableAnchor>
-          <ScrollableAnchor id={'step2'}>
-          <div style={{ height: 600 }}>HOME</div>
-          </ScrollableAnchor> */}
-          {/* <ScrollableAnchor id={'step3'}>
-            <div id='step3'><Step3 /></div>
-          </ScrollableAnchor>
-          <ScrollableAnchor id={'step4'}>
-            <Step4 />
-          </ScrollableAnchor>
-          <ScrollableAnchor id={'step5'}>
-            <Step5 />
-          </ScrollableAnchor> */}
       </MainContainer>
     </RootContainer>
   )
