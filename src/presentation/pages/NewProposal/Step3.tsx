@@ -7,15 +7,15 @@ import {
   Grid,
   MenuItem,
   Radio,
-  RadioGroup,
-  TextField
+  RadioGroup
 } from '@material-ui/core/'
 import { I18n } from 'react-redux-i18n'
-import { Title, Subtitle, Separator, SelectPlaceholder, StyledSelect } from './style'
+import { Title, Subtitle, Separator, SelectSpan } from './style'
 import ItemModal from '../../components/ItemModal/ItemModal'
+import ControlledSelect from '../../components/ControlledSelect'
+import ControlledInput from '../../components/ControlledInput'
 
 const Step3 = (): JSX.Element => {
-  const [temperature, setTemperature] = useState('')
   const [open, setOpen] = useState(false)
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
@@ -28,9 +28,11 @@ const Step3 = (): JSX.Element => {
     }
   ]
 
-  const handleChange = (event): void => {
-    setTemperature(event.target.value)
-  }
+  const [data, setData] = useState({
+    description: '',
+    specifications: '',
+    temperature: ''
+  })
 
   return (
     <Separator>
@@ -42,37 +44,44 @@ const Step3 = (): JSX.Element => {
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <FormLabel component="legend">{I18n.t('pages.newProposal.step3.description')}</FormLabel>
-            <TextField
+            <ControlledInput
               id="description"
+              toolTipTitle={I18n.t('components.itemModal.requiredField')}
+              invalid={false}
+              onChange={e => setData({ ...data, description: e.target.value })}
+              value={data.description}
               variant="outlined"
               size="small"
             />
           </Grid>
           <Grid item xs={3}>
             <FormLabel component="legend">{I18n.t('pages.newProposal.step3.specifications')}</FormLabel>
-            <RadioGroup row aria-label="specifications" name="row-radio-buttons-group">
+            <RadioGroup row aria-label="specifications" name="row-radio-buttons-group" onChange={e => setData({ ...data, specifications: e.target.value })}>
               <FormControlLabel value="flc" control={<Radio />} label="FLC" />
               <FormControlLabel value="lcl" control={<Radio />} label="LCL" />
             </RadioGroup>
           </Grid>
           <Grid item xs={3}>
             <FormLabel component="legend">{I18n.t('pages.newProposal.step3.temperature')}</FormLabel>
-            <StyledSelect
+            <ControlledSelect
               labelId="select-label-temperature"
               id="temperature"
-              value={temperature}
-              onChange={handleChange}
+              value={data.temperature}
+              onChange={e => setData({ ...data, temperature: e.target.value })}
               displayEmpty
+              disableUnderline
+              invalid={false}
+              toolTipTitle={I18n.t('components.itemModal.requiredField')}
             >
               <MenuItem disabled value="">
-                <SelectPlaceholder>{I18n.t('pages.newProposal.step3.choose')}</SelectPlaceholder>
+                <SelectSpan placeholder>{I18n.t('pages.newProposal.step3.choose')}</SelectSpan>
               </MenuItem>
               {temperatureList.map((item) => (
                 <MenuItem key={item.value} value={item.value}>
-                  {item.name}
+                  <SelectSpan>{item.name}</SelectSpan>
                 </MenuItem>
               ))}
-            </StyledSelect>
+            </ControlledSelect>
           </Grid>
           <Grid item xs={12}>
             <Button

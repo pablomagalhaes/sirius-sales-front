@@ -1,7 +1,4 @@
 import styled from 'styled-components'
-import React from 'react'
-import { Select } from '@material-ui/core'
-import ControlledToolTip from '../ControlledToolTip/ControlledToolTip'
 
 export const ModalDiv = styled.div`
   background-color: ${(props: any) =>
@@ -15,7 +12,7 @@ export const ModalDiv = styled.div`
   outline: none;
   svg {
     fill: ${(props: any) =>
-      props.theme?.commercial?.components?.itemModal?.iconColor};
+    props.theme?.commercial?.components?.itemModal?.iconColor};
   }
 `
 export const RowReverseDiv = styled.div`
@@ -41,7 +38,6 @@ export const Form = styled.div`
 `
 export const RowDiv = styled.div`
   display: flex;
-  flex-direction: row;
   margin-bottom: ${(props: { margin: boolean }) =>
     props.margin ? '24px' : '0px'};
 `
@@ -74,135 +70,6 @@ export const Title = styled.span`
   width: 70%;
 `
 
-export const StyledMenuSelect = styled(({ className, toolTipTitle, invalid, ...props }) => {
-  return (
-    <ControlledToolTip title={toolTipTitle} open={invalid}>
-      <StyledSelect
-        {...props}
-        invalid={invalid === true ? 1 : 0}
-        MenuProps={{ classes: { paper: className } }}
-      />
-    </ControlledToolTip>
-  )
-})`
-  && {
-    background-color: ${(props: any) =>
-      props.theme?.commercial?.components?.itemModal?.backgroundColor};
-    font-family: DM Sans;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 150%;
-    max-height:300px;
-    color: ${(props: any) =>
-      props.theme?.commercial?.components?.itemModal?.fontColor};
-  }
-`
-
-const StyledSelect = styled(Select)`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 6px 8px 5px 16px;
-  background: ${(props: any) =>
-    props.theme?.commercial?.components?.itemModal?.backgroundColor};
-  border: 1px solid;
-  border-color: ${(props: {invalid: boolean, filled: string | null, theme: any}) =>
-    props.invalid
-      ? '#FF4D4D'
-      : props.filled != null && props.filled.length > 0
-      ? '#43BFB5'
-      : props.theme?.commercial?.components?.itemModal?.border};
-  box-sizing: border-box;
-  border-radius: 4px;
-  width: 198px;
-  height: 32px;
-  margin-top: 12px;
-
-  &:hover {
-    border: 1px solid;
-    border-color: #43bfb5;
-  }
-
-  & .MuiSelect-root {
-    font-family: DM Sans;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 150%;
-    letter-spacing: 0.02em;
-    color: ${(props) =>
-      props.placeholder === ''
-        ? '#999DAC'
-        : props.theme?.commercial?.components?.itemModal?.inputFontColor};
-  }
-
-  & .MuiSvgIcon-root {
-    margin-right: 5px;
-  }
-`
-
-export const Input = styled.input`
-  text-indent: 10px;
-  border: 1px solid;
-  border-color: ${(props: {invalid: boolean, filled: string | null, theme: any}) =>
-    props.invalid
-      ? '#FF4D4D'
-      : props.filled != null && props.filled.length > 0
-      ? '#43BFB5'
-      : props.theme?.commercial?.components?.itemModal?.border};
-  background: ${(props: any) =>
-    props.theme?.commercial?.components?.itemModal?.backgroundColor};
-  margin-top: 12px;
-  box-sizing: border-box;
-  border-radius: 4px;
-  width: 126px;
-  height: 32px;
-  margin-left: 21px;
-  font-family: DM Sans;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 150%;
-  letter-spacing: 0.02em;
-  color: ${(props: any) =>
-    props.theme?.commercial?.components?.itemModal?.inputFontColor};
-  :focus {
-    outline: none;
-    border-color: #43bfb5;
-  }
-`
-export const MeasureInput = styled.input`
-  text-indent: 8px;
-  border: 1px solid;
-  border-color: ${(props: {invalid: boolean, filled: string | null, theme: any}) =>
-    props.invalid
-      ? '#FF4D4D'
-      : props.filled != null && props.filled.length > 0
-      ? '#43BFB5'
-      : props.theme?.commercial?.components?.itemModal?.border};
-  margin-top: 12px;
-  box-sizing: border-box;
-  border-radius: 4px;
-  width: 60px;
-  height: 32px;
-  background: ${(props: any) =>
-    props.theme?.commercial?.components?.itemModal?.backgroundColor};
-  margin-right: ${(props: { margin: boolean }) =>
-    props.margin ? '8px' : '0px'};
-  font-family: DM Sans;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 150%;
-  letter-spacing: 0.02em;
-  color: ${(props: any) =>
-    props.theme?.commercial?.components?.itemModal?.inputFontColor};
-  :focus {
-    outline: none;
-    border-color: #43bfb5;
-  }
-`
 export const CheckBox = styled.div`
   border: ${(props: { checked: boolean }) =>
     props.checked ? '0px' : '2px solid #B5B8C2'};
@@ -245,4 +112,10 @@ export const RedColorSpan = styled.span`
   color:${(props: any) =>
     props.theme?.commercial?.components?.itemModal?.redAsterisk};
   font-size: 12px;
+`
+
+export const FieldsContainer = styled.div`
+  width: ${(props: any) => props.widtht}
+  height: ${(props: any) => props.heigtht}
+  margin: ${(props: any) => props.margint}
 `
