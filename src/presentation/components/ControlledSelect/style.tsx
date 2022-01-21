@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Select } from '@material-ui/core'
 import { primary } from '../../../application/themes'
 
-const StyledField = styled(Select)`
+export const StyledField = styled(Select)`
     border: 1px solid ${(props: { invalid: boolean, value: string | null, theme: any }) =>
     props.invalid
       ? '#FF4D4D'
@@ -30,7 +30,7 @@ const StyledField = styled(Select)`
     }
   `
 
-export const StyledSelect = styled(({ className, ...props }) => (<StyledField {...props} MenuProps={{ classes: { paper: className } }} />))`
+export const StyledSelect = styled(({ className, toolTipTitle, title, ...props }) => (<StyledField {...props} MenuProps={{ classes: { paper: className } }} />))`
   && {
     background-color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.background};
     color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.subtitle};
