@@ -129,11 +129,13 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   }
 
   const RootContainer2 = styled.div`
-    width: 100%;
+    width: 50%;
+    position: relative;
+    overflow: auto;
     #stepper {
         background: ${(props: any) => props.theme?.fiorde?.stepper?.backgroundColor};
     }
-    border: 1px solid green;
+    // border: 1px solid green;
     display: flex;
     justify-content: space-around;
     // height: 100px;
@@ -143,11 +145,14 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     // width: 10px;
     height: 54px;
     // transition: 500ms;
-    display: inline-block;
-    justify-content: flex-end;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
     // align-items: center;
     cursor: pointer;
-    border: 1px solid red;
+    // border: 1px solid red;
+    position: relative;
+    overflow: hidden;
     &:after {
       // content: '';
       // position: absolute;
@@ -159,11 +164,27 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
 `
 
   const StyledSpan = styled.span`
-  border: 1px solid purple;
+  // border: 1px solid purple;
   visibility: ${({ clicked, hover, step }) => clicked.clicked && clicked.id === step.id || hover.hover && hover.id === step.id ? 'visible' : 'hidden'};
   font-weight: normal;
-}
-`
+  }`;
+
+  const Circle = styled.div`
+  // border: clicked.clicked && clicked.id === step.id ? '1px solid #1470CC' : '1px solid #C2C5D1',
+    border: 1px solid #C2C5D1;
+    // backgroundColor: clicked.clicked && clicked.id === step.id ? '#1470CC' : hover.hover && hover.id === step.id ? '#C2C5D1' : '',
+    background-color: ${({ hover, step }) => hover.hover && hover.id === step.id ? '#C2C5D1' : ''};
+    // width: clicked.clicked && clicked.id === step.id ? '24px' : '10px',
+    // height: clicked.clicked && clicked.id === step.id ? '24px' : '10px',
+    width: 10px;
+    height: 10px;
+    display: flex;
+    border-radius: 50%;
+    margin: 0 auto 10px 30px;
+    @media (max-width: 1366px) {
+      margin-left: auto;
+    }
+  `;
 
   useEffect(() => {
     Events.scrollEvent.register('begin', function (to, element) {
@@ -280,53 +301,93 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     )
   }
 
+  const Connector = styled.div`
+    width: 100px;
+    left: 120%;
+    color: gray;
+    border: 1px solid gray;
+    position: absolute;
+    overflow: hidden;
+    bottom: 45px;
+    z-index: -10;
+    margin-left: 10px;
+
+    @media (max-width: 1700px) {
+      width: 65px;
+      left: 85%;
+    }
+
+    @media (max-width: 1200px) {
+      width: 50px;
+      left: 65%;
+    }
+  `;
+
+  const Container = styled.div`
+    position: relative;
+    // overflow: hidden;
+    // :after {
+    //   width: 100%;
+    //   height: 2px;
+    //   content: '';
+    //   position: absolute;
+    //   background-color: #7d7d7d;
+    //   bottom: 45px;
+    //   left: 85%;
+    //   z-index: -1;
+    // }
+  `;
+
   const Steps = ({ steps, activeStep, onChange }: StepsProps): JSX.Element => {
     return (
       <RootContainer2>
         {steps?.map((step, index) => (
-          <Item
-            // isSticky={true}
-            to={step.id}
-            offset={-178}
-            key={step.id}
-            smooth={true}
-            // duration={500}
-            spy={true}
-            activeClass="active2"
-            onClick={() => {
-              setClicked({ id: step.id, clicked: true })
-              console.log('Clicked = ', step.id)
-            }}
-            onSetActive={() => {
-              console.log('Going to set Active')
-            }}
-            onSetInactive={() => {
-              setClicked({ id: step.id, clicked: false })
-              setHover({ id: step.id, hover: false })
-              console.log('Going to set Inactive')
-            }}
-            onMouseEnter={() => {
-              setHover({ id: step.id, hover: true })
-              console.log('mouse enter')
-            }}
-            onMouseLeave={() => {
-              setHover({ id: '', hover: false })
-              console.log('mouse leave')
-            }}
-          >
-            <div style={{
-              border: clicked.clicked && clicked.id === step.id ? '1px solid #1470CC' : '1px solid #C2C5D1',
-              backgroundColor: clicked.clicked && clicked.id === step.id ? '#1470CC' : hover.hover && hover.id === step.id ? '#C2C5D1' : '',
-              width: clicked.clicked && clicked.id === step.id ? '24px' : '10px',
-              height: clicked.clicked && clicked.id === step.id ? '24px' : '10px',
-              display: 'flex',
-              borderRadius: '50%',
-              margin: '0 auto 10px auto'
-            }}
+          <Container>
+            <Item
+              // isSticky={true}
+              to={step.id}
+              offset={-184}
+              key={step.id}
+              smooth={true}
+              // duration={500}
+              spy={true}
+              activeClass="active2"
+              onClick={() => {
+                setClicked({ id: step.id, clicked: true })
+                console.log('Clicked = ', step.id)
+              }}
+              onSetActive={() => {
+                console.log('Going to set Active')
+              }}
+              onSetInactive={() => {
+                setClicked({ id: step.id, clicked: false })
+                setHover({ id: step.id, hover: false })
+                console.log('Going to set Inactive')
+              }}
+              onMouseEnter={() => {
+                setHover({ id: step.id, hover: true })
+                console.log('mouse enter')
+              }}
+              onMouseLeave={() => {
+                setHover({ id: '', hover: false })
+                console.log('mouse leave')
+              }}
             >
-            </div>
-            <StyledSpan clicked={clicked} hover={hover} step={step}>{step.label}</StyledSpan>
-          </Item>
+              <Circle hover={hover} step={step} />
+              <StyledSpan clicked={clicked} hover={hover} step={step}>{step.label}</StyledSpan>
+            </Item>
+            {index !== steps.length-1 ? <Connector /> : null}
+            {/* <div style={{
+              width: '100px',
+              left: '120%',
+              color: 'gray',
+              border: '1px solid gray',
+              position: 'absolute',
+              overflow: 'hidden',
+              bottom: '45px',
+              zIndex: -10,
+            }}></div> */}
+            </Container>
         ))}
       </RootContainer2>
     )
@@ -396,7 +457,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         </UserContainer>
       </Header>
       <TopContainer>
-        <Steps2
+        <Steps
           // activeStep={activeStep}
           // onChange={handleStep}
           steps={steps}
