@@ -66,14 +66,12 @@ const TopContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   margin: 3px 20px;
-  // padding: 24px 24px 0 0;
   padding: 24px;
   border-radius: 16px 16px 0 0;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
-  border: 1px solid black;
+  // border: 1px solid black;
+  position: sticky;
   top: 76px;
-  // bottom:0;
-  position:sticky;
   z-index: 1;
 `
 
