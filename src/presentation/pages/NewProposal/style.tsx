@@ -67,7 +67,6 @@ const TopContainer = styled.div`
   padding: 24px;
   border-radius: 16px 16px 0 0;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
-  // border: 1px solid black;
   position: sticky;
   top: 76px;
   z-index: 1;
