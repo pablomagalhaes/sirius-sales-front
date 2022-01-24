@@ -142,31 +142,37 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   `
 
   const Item = styled(LinkS)`
-    // width: 10px;
+    padding-top: 10px; //era 10px
+    width: 100px;
     height: 54px;
     // transition: 500ms;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: space-between;
     // align-items: center;
     cursor: pointer;
     // border: 1px solid red;
     position: relative;
     overflow: hidden;
-    &:after {
-      // content: '';
-      // position: absolute;
-      // left: -50px;
-      // top: '50px';
-      width: 50px;
-      border: 5px solid black;
-  }
+    // margin-left: 30px;
+    // @media (max-width: 1366px) {
+    //     margin-left: auto;
+    // }
+  //   &:after {
+  //     // content: '';
+  //     // position: absolute;
+  //     // left: -50px;
+  //     // top: '50px';
+  //     width: 50px;
+  //     border: 5px solid black;
+  // }
 `
 
   const StyledSpan = styled.span`
   // border: 1px solid purple;
   visibility: ${({ clicked, hover, step }) => clicked.clicked && clicked.id === step.id || hover.hover && hover.id === step.id ? 'visible' : 'hidden'};
   font-weight: normal;
+  text-align: center;
   }`;
 
   const Circle = styled.div`
@@ -180,10 +186,10 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     height: 10px;
     display: flex;
     border-radius: 50%;
-    margin: 0 auto 10px 30px;
-    @media (max-width: 1366px) {
-      margin-left: auto;
-    }
+    margin: 0 auto 10px auto; //era 30px no left
+    // @media (max-width: 1366px) {
+    //   margin-left: auto;
+    // }
   `;
 
   useEffect(() => {
@@ -302,24 +308,28 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   }
 
   const Connector = styled.div`
-    width: 100px;
-    left: 120%;
-    color: gray;
-    border: 1px solid gray;
+    width: 140%;
+    left: 50%;
+    border: 1px solid #C2C5D1;
     position: absolute;
     overflow: hidden;
-    bottom: 45px;
+    bottom: 48px;
     z-index: -10;
     margin-left: 10px;
 
     @media (max-width: 1700px) {
-      width: 65px;
-      left: 85%;
+      width: 105%;
+      left: 50%;
     }
 
-    @media (max-width: 1200px) {
-      width: 50px;
-      left: 65%;
+    @media (max-width: 1500px) {
+      width: 90%;
+      left: 50%;
+    }
+
+    @media (max-width: 1300px) {
+      width: 80%;
+      left: 50%;
     }
   `;
 
@@ -376,7 +386,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
               <Circle hover={hover} step={step} />
               <StyledSpan clicked={clicked} hover={hover} step={step}>{step.label}</StyledSpan>
             </Item>
-            {index !== steps.length-1 ? <Connector /> : null}
+            {index !== steps.length-1 ? <Connector clicked={clicked} step={step} /> : null}
             {/* <div style={{
               width: '100px',
               left: '120%',
