@@ -3,7 +3,7 @@ import React from 'react'
 import { Tooltip } from '@material-ui/core'
 
 export const StyledTooltip = styled(({ className, ...props }) => (
-    <Tooltip title={props.title} arrow {...props} classes={{ popper: className }} >{props.children}</Tooltip>
+  <Tooltip title={props.title} arrow {...props} classes={{ popper: className }} >{props.children}</Tooltip>
 ))`
     z-index: 1300 !important;
     & .MuiTooltip-tooltip {
