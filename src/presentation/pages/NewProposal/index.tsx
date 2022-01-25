@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Button, FloatingMenu, Steps } from 'fiorde-fe-components'
 import { Breadcrumbs, Link } from '@material-ui/core/'
 import {
@@ -34,12 +34,12 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     { id: 'step5', label: I18n.t('pages.newProposal.step5.title'), completed: false }
   ]
 
-  const handleClick = (clickState) => {
-    setClicked(clickState);
+  const handleClick = (clickState): void => {
+    setClicked(clickState)
   }
 
-  const handleHover = (hoverState) => {
-    setHover(hoverState);
+  const handleHover = (hoverState): void => {
+    setHover(hoverState)
   }
 
   const handleClickBreadcrumbs = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void => {
