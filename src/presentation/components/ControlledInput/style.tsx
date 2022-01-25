@@ -21,6 +21,7 @@ export const StyledInput = styled(TextField)`
     }
     input {
       height: ${(props: { modal: boolean }) => (props.modal && '12px')};
+      color: ${(props: any) => props.theme?.commercial?.components?.itemModal?.inputFontColor};
     }
   }
   & .MuiInputBase-input {
