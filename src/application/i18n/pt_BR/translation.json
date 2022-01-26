@@ -80,12 +80,12 @@
     "costTable": {
       "addCost": "Adicionar custo",
       "agent": "Agente",
-      "buy": "Compra:",
+      "buy": "Compra",
       "description": "Descrição",
       "inform": "A informar",
       "minBuy": "Mín - Compra",
       "minSale": "Mín - Venda",
-      "sale": "Venda:",
+      "sale": "Venda",
       "type":"Tipo"
     },
     "costModal": {
