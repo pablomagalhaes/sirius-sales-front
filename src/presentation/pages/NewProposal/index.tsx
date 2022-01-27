@@ -24,10 +24,22 @@ export interface NewProposalProps {
 }
 
 const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
-  const [activeStep, setActiveStep] = useState(0)
+  const [clicked, setClicked] = useState({ id: '', clicked: false })
+  const [hover, setHover] = useState({ id: '', hover: false })
+  const steps = [
+    { id: 'step1', label: I18n.t('pages.newProposal.step1.title'), completed: true },
+    { id: 'step2', label: I18n.t('pages.newProposal.step2.title'), completed: true },
+    { id: 'step3', label: I18n.t('pages.newProposal.step3.title'), completed: true },
+    { id: 'step4', label: I18n.t('pages.newProposal.step4.title'), completed: false },
+    { id: 'step5', label: I18n.t('pages.newProposal.step5.title'), completed: false }
+  ]
 
-  const handleStep = (step): void => {
-    setActiveStep(step)
+  const handleClick = (clickState): void => {
+    setClicked(clickState)
+  }
+
+  const handleHover = (hoverState): void => {
+    setHover(hoverState)
   }
 
   const handleClickBreadcrumbs = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void => {
@@ -35,31 +47,23 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     console.info('You clicked a breadcrumb.')
   }
 
-  const steps = [
-    I18n.t('pages.newProposal.step1.title'),
-    I18n.t('pages.newProposal.step2.title'),
-    I18n.t('pages.newProposal.step3.title'),
-    I18n.t('pages.newProposal.step4.title'),
-    I18n.t('pages.newProposal.step5.title')
-  ]
-
   const floatingButtonMenuItems = [
     {
       iconType: 'save',
       label: I18n.t('pages.newProposal.save'),
-      onClick: () => {}
+      onClick: () => { }
     }, {
       iconType: 'file',
       label: I18n.t('pages.newProposal.view'),
-      onClick: () => {}
+      onClick: () => { }
     }, {
       iconType: 'download',
       label: I18n.t('pages.newProposal.download'),
-      onClick: () => {}
+      onClick: () => { }
     }, {
       iconType: 'send',
       label: I18n.t('pages.newProposal.send'),
-      onClick: () => {}
+      onClick: () => { }
     }
   ]
 
@@ -95,13 +99,16 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       </Header>
       <TopContainer>
         <Steps
-          activeStep={activeStep}
-          onChange={handleStep}
           steps={steps}
+          offset={-190}
+          clicked={clicked}
+          hover={hover}
+          handleClick={handleClick}
+          handleHover={handleHover}
         />
         <ButtonContainer>
           <Button
-            onAction={() => {}}
+            onAction={() => { }}
             text={I18n.t('pages.newProposal.buttonFinish')}
             icon="arrow"
             position="right"
@@ -113,11 +120,11 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         </ButtonContainer>
       </TopContainer>
       <MainContainer>
-        <Step1 />
-        <Step2 />
-        <Step3 />
-        <Step4 />
-        <Step5 />
+        <div id="step1"><Step1 /></div>
+        <div id="step2"><Step2 /></div>
+        <div id="step3"><Step3 /></div>
+        <div id="step4"><Step4 /></div>
+        <div id="step5"><Step5 /></div>
       </MainContainer>
     </RootContainer>
   )
