@@ -75,19 +75,21 @@ const TopContainer = styled.div`
 `
 
 const MainContainer = styled.div`
+display: flex;
+justify-content: space-evenly;
+flex-direction: column;
 background: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.background};
 margin: 0 20px;
 border-radius: 0 0 16px 16px;
 box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
 padding: 44px 24px;
-
 `
 
 const Title = styled.div`
 color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.title};
 font-size: 16px;
 font-weight: bold;
-line-height: 150 %;
+line-height: 150%;
 letter-spacing: 0.02em;
 border-bottom: 1px solid ${(props: any) => props.theme?.commercial?.pages?.newProposal?.border};
 padding-bottom: 10px;
