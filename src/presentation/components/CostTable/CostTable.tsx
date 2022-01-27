@@ -7,6 +7,7 @@ import {
   Default,
   Description,
   Empty,
+  EmptyTableCost,
   EndValueLabel,
   Footer,
   Header,
@@ -99,78 +100,80 @@ const CostTable = ({ modalTitle, title, totalCostLabel }: CostTableProps): JSX.E
       <Header>
         <Title>{title}</Title>
       </Header>
-      <StyledTable>
-        <TableHead>
-          <TableHeadRow>
-            <StyledTableCell width="14%">
-              {I18n.t('components.costTable.description')}
-            </StyledTableCell>
-            <StyledTableCell width="11%" align="left">
-              {I18n.t('components.costTable.type')}
-            </StyledTableCell>
-            <StyledTableCell width="11%" align="left">
-              {I18n.t('components.costTable.buy')}
-            </StyledTableCell>
-            <StyledTableCell width="12%" align="left">
-              {I18n.t('components.costTable.minBuy')}
-            </StyledTableCell>
-            <StyledTableCell width="11%" align="left">
-              {I18n.t('components.costTable.sale')}
-            </StyledTableCell>
-            <StyledTableCell width="11%" align="left">
-              {I18n.t('components.costTable.minSale')}
-            </StyledTableCell>
-            <StyledTableCell width="11%" align="left">
-              {I18n.t('components.costTable.agent')}
-            </StyledTableCell>
-          </TableHeadRow>
-        </TableHead>
-        <TableBody>
-          {data.map((dataMap) => {
-            return (
-              <TableRow key={`${dataMap.id}_row`}>
-                <StyledTableCell width="14%" component="th" scope="row">
-                  <Description>{dataMap.desc}</Description>
-                </StyledTableCell>
-                <StyledTableCell width="11%" align="left">
-                  <Type>{dataMap.type}</Type>
-                </StyledTableCell>
-                <StyledTableCell width="11%" align="left">
-                  {dataMap.buy != null ? (<Default>{dataMap.buy}</Default>) : (<Empty>{I18n.t('components.costTable.inform')}</Empty>)}
-                </StyledTableCell>
-                <StyledTableCell width="12%" align="left">
-                  {dataMap.minBuy != null ? (<Default>{dataMap.minBuy}</Default>) : (<Empty>{I18n.t('components.costTable.inform')}</Empty>)}
-                </StyledTableCell>
-                <StyledTableCell width="11%" align="left">
-                  {dataMap.sale != null ? (<Default>{dataMap.sale}</Default>) : (<Empty>{I18n.t('components.costTable.inform')}</Empty>)}
-                </StyledTableCell>
-                <StyledTableCell width="11%" align="left">
-                  {dataMap.minSale != null ? (<Default>{dataMap.minSale}</Default>) : (<Empty>{I18n.t('components.costTable.inform')}</Empty>)}
-                </StyledTableCell>
-                <StyledTableCell width="11%" align="left">
-                  {dataMap.agent != null ? (<Default>{dataMap.agent}</Default>) : (<Empty>{I18n.t('components.costTable.inform')}</Empty>)}
-                </StyledTableCell>
-                <StyledTableCell width="19%">
-                  <RowReverseDiv>
-                    <RemoveIcon
-                      onClick={() => {
-                        removeClickHandler(dataMap.id)
-                      }}
-                    />
-                    <RemoveIconDiv>
-                      <EditIcon
+      {data?.length > 0 &&
+        <StyledTable>
+          <TableHead>
+            <TableHeadRow>
+              <StyledTableCell width="14%">
+                {I18n.t('components.costTable.description')}
+              </StyledTableCell>
+              <StyledTableCell width="11%" align="left">
+                {I18n.t('components.costTable.type')}
+              </StyledTableCell>
+              <StyledTableCell width="11%" align="left">
+                {I18n.t('components.costTable.buy')}
+              </StyledTableCell>
+              <StyledTableCell width="12%" align="left">
+                {I18n.t('components.costTable.minBuy')}
+              </StyledTableCell>
+              <StyledTableCell width="11%" align="left">
+                {I18n.t('components.costTable.sale')}
+              </StyledTableCell>
+              <StyledTableCell width="11%" align="left">
+                {I18n.t('components.costTable.minSale')}
+              </StyledTableCell>
+              <StyledTableCell width="11%" align="left">
+                {I18n.t('components.costTable.agent')}
+              </StyledTableCell>
+            </TableHeadRow>
+          </TableHead>
+          <TableBody>
+            {data.map((dataMap) => {
+              return (
+                <TableRow key={`${dataMap.id}_row`}>
+                  <StyledTableCell width="14%" component="th" scope="row">
+                    <Description>{dataMap.desc}</Description>
+                  </StyledTableCell>
+                  <StyledTableCell width="11%" align="left">
+                    <Type>{dataMap.type}</Type>
+                  </StyledTableCell>
+                  <StyledTableCell width="11%" align="left">
+                    {dataMap.buy != null ? (<Default>{dataMap.buy}</Default>) : (<Empty>{I18n.t('components.costTable.inform')}</Empty>)}
+                  </StyledTableCell>
+                  <StyledTableCell width="12%" align="left">
+                    {dataMap.minBuy != null ? (<Default>{dataMap.minBuy}</Default>) : (<Empty>{I18n.t('components.costTable.inform')}</Empty>)}
+                  </StyledTableCell>
+                  <StyledTableCell width="11%" align="left">
+                    {dataMap.sale != null ? (<Default>{dataMap.sale}</Default>) : (<Empty>{I18n.t('components.costTable.inform')}</Empty>)}
+                  </StyledTableCell>
+                  <StyledTableCell width="11%" align="left">
+                    {dataMap.minSale != null ? (<Default>{dataMap.minSale}</Default>) : (<Empty>{I18n.t('components.costTable.inform')}</Empty>)}
+                  </StyledTableCell>
+                  <StyledTableCell width="11%" align="left">
+                    {dataMap.agent != null ? (<Default>{dataMap.agent}</Default>) : (<Empty>{I18n.t('components.costTable.inform')}</Empty>)}
+                  </StyledTableCell>
+                  <StyledTableCell width="19%">
+                    <RowReverseDiv>
+                      <RemoveIcon
                         onClick={() => {
-                          editClickHandler(dataMap)
+                          removeClickHandler(dataMap.id)
                         }}
                       />
-                    </RemoveIconDiv>
-                  </RowReverseDiv>
-                </StyledTableCell>
-              </TableRow>
-            )
-          })}
-        </TableBody>
-      </StyledTable>
+                      <RemoveIconDiv>
+                        <EditIcon
+                          onClick={() => {
+                            editClickHandler(dataMap)
+                          }}
+                        />
+                      </RemoveIconDiv>
+                    </RowReverseDiv>
+                  </StyledTableCell>
+                </TableRow>
+              )
+            })}
+          </TableBody>
+        </StyledTable>
+      }
       <Footer>
         <Button
           text={I18n.t('components.costTable.addCost')}
@@ -179,9 +182,9 @@ const CostTable = ({ modalTitle, title, totalCostLabel }: CostTableProps): JSX.E
           onAction={addClickHandler}
         />
         <RowReverseDiv>
-          <EndValueLabel>{formatter.format(saleValue)}</EndValueLabel>
+          <EndValueLabel>{data?.length > 0 ? formatter.format(saleValue) : <EmptyTableCost>-</EmptyTableCost> }</EndValueLabel>
           <CostLabel>{I18n.t('components.costTable.sale')}:</CostLabel>
-          <ValueLabel>{formatter.format(buyValue)}</ValueLabel>
+          <ValueLabel>{data?.length > 0 ? formatter.format(buyValue) : <EmptyTableCost>-</EmptyTableCost> }</ValueLabel>
           <CostLabel>{I18n.t('components.costTable.buy')}:</CostLabel>
           <TotalCostLabel>{totalCostLabel}</TotalCostLabel>
         </RowReverseDiv>
