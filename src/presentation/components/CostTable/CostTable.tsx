@@ -6,13 +6,13 @@ import {
   CostLabel,
   Default,
   Description,
+  EditIconDiv,
   Empty,
   EmptyTableCost,
   EndValueLabel,
   Footer,
   Header,
   MainDiv,
-  RemoveIconDiv,
   RowReverseDiv,
   StyledTable,
   StyledTableCell,
@@ -159,13 +159,13 @@ const CostTable = ({ modalTitle, title, totalCostLabel }: CostTableProps): JSX.E
                           removeClickHandler(dataMap.id)
                         }}
                       />
-                      <RemoveIconDiv>
+                      <EditIconDiv>
                         <EditIcon
                           onClick={() => {
                             editClickHandler(dataMap)
                           }}
                         />
-                      </RemoveIconDiv>
+                      </EditIconDiv>
                     </RowReverseDiv>
                   </StyledTableCell>
                 </TableRow>

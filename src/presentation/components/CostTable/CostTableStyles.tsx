@@ -144,7 +144,7 @@ export const TotalCostLabel = styled.span`
   font-size: 16px;
   margin-right: 35px;
 `
-export const RemoveIconDiv = styled.div`
+export const EditIconDiv = styled.div`
   margin-right: 20px; 
 `
 export const EmptyTableCost = styled.span`
