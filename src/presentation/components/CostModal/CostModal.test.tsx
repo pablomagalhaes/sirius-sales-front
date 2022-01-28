@@ -17,7 +17,8 @@ const props = {
     buyMin: null,
     saleCurrency: 'BRL',
     saleValue: null,
-    saleMin: null
+    saleMin: null,
+    id: 5
   },
 
   title: 'Editar item',
