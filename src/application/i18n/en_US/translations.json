@@ -46,7 +46,7 @@
         "buttonAdd": "Add item to cargo"
       },
       "step4": {
-        "title": "General",
+        "title": "General data",
         "subtitle": "Inform general details of your commercial proposal.",
         "validity": "Validity:",
         "time": "Transit. time:",
