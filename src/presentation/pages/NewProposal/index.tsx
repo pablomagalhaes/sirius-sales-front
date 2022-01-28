@@ -130,19 +130,19 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         <div id="step3"><Step3 /></div>
         <div id="step4"><Step4 /></div>
         <div id="step5"><Step5 /></div>
+        <Button
+          onAction={handleOpen}
+          text={'abrir modal de tarifa'}
+          icon="add"
+          backgroundGreen={false}
+            />
       </MainContainer>
-      <Button
-              onAction={handleOpen}
-              text={I18n.t('pages.newProposal.step3.buttonAdd')}
-              icon="add"
-              backgroundGreen={false}
-            />
-            <FareModal
-              action={handleAdd}
-              open={open}
-              setClose={handleClose}
-              title={I18n.t('pages.newProposal.step3.buttonAdd')}
-            />
+      <FareModal
+        action={handleAdd}
+        open={open}
+        setClose={handleClose}
+        title={'Nova tarifa'}
+      />
     </RootContainer>
   )
 }

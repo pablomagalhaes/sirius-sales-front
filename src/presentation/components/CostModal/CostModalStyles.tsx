@@ -56,7 +56,7 @@ const StyledSelect = styled(Select)`
     line-height: 150%;
     letter-spacing: 0.02em;
     color: ${(props: {placeholder: string, disabled: boolean, theme: any}) =>
-      props.placeholder === '' || props.disabled ? '#999DAC' : props.theme?.commercial?.components?.itemModal?.inputFontColor};
+      props.placeholder === '' || props.disabled ? props.theme?.commercial?.pages?.newProposal?.placeholder : props.theme?.commercial?.components?.itemModal?.inputFontColor};
   }
   & .MuiSvgIcon-root {
     color:${(props: any) =>
@@ -127,7 +127,7 @@ export const Input = styled.input`
   line-height: 150%;
   letter-spacing: 0.02em;
   color: ${(props: { disabled: boolean, theme: any }) =>
-    props.disabled ? '#999DAC' : props.theme?.commercial?.components?.itemModal?.inputFontColor};
+    props.disabled ? props.theme?.commercial?.pages?.newProposal?.placeholder : props.theme?.commercial?.components?.itemModal?.inputFontColor};
   background: ${(props: {disabled: boolean, theme: any}) =>
     props.disabled ? props.theme?.commercial?.components?.itemModal?.disabledBackground : props.theme?.commercial?.components?.itemModal?.backgroundColor};
     

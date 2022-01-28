@@ -116,6 +116,13 @@
       "hazardous": "Perigoso?",
       "save": "Salvar",
       "requiredField": "Campo obrigatório"
+    },
+    "fareModal":{
+      "type": "Tipo:",
+      "expense":"Despesa:",
+      "saleValue": "Valor venda:",
+      "choose": "Escolha...",
+      "value": "Valor"
     }
   }
 }

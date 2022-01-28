@@ -13,7 +13,16 @@ import { I18n } from 'react-redux-i18n'
 import CheckIcon from '../../../application/icons/CheckIcon'
 import ControlledSelect from '../ControlledSelect'
 import ControlledInput from '../ControlledInput'
-import { ButtonDiv, Form, HeaderDiv, Label, RedColorSpan, RowDiv, RowReverseDiv, Title } from '../StyledComponents/modalStyles'
+import {
+  ButtonDiv,
+  Form,
+  HeaderDiv,
+  Label,
+  RedColorSpan,
+  RowDiv,
+  RowReverseDiv,
+  Title
+} from '../StyledComponents/modalStyles'
 
 interface ItemModalData {
   amount: string
@@ -96,7 +105,6 @@ const ItemModal = ({
   const handleOnAdd = (): void => {
     if (validateData()) {
       handleAdd(data)
-      setInvalidInput(false)
       handleOnClose()
     } else {
       setInvalidInput(true)

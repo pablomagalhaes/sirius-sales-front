@@ -17,7 +17,19 @@ import { I18n } from 'react-redux-i18n'
 import CheckIcon from '../../../application/icons/CheckItem'
 import ReplyIcon from '../../../application/icons/ReplyIcon'
 import ControlledToolTip from '../ControlledToolTip/ControlledToolTip'
-import { ButtonDiv, Form, HeaderDiv, Label, ModalContainer, PlaceholderDiv, PlaceholderSpan, RedColorSpan, RowDiv, RowReverseDiv, Title } from '../StyledComponents/modalStyles'
+import {
+  ButtonDiv,
+  Form,
+  HeaderDiv,
+  Label,
+  ModalContainer,
+  PlaceholderDiv,
+  PlaceholderSpan,
+  RedColorSpan,
+  RowDiv,
+  RowReverseDiv,
+  Title
+} from '../StyledComponents/modalStyles'
 
 interface ItemModalData {
   agent: string

@@ -86,7 +86,7 @@ export const PlaceholderSpan = styled.span`
   color: gray;
   position: absolute;
   text-indent: 10px;
-  top: 3px;
+  top: 4px;
   margin-top: -4px;
   z-index: 1;
   color: #999dac;

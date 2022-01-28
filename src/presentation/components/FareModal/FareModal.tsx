@@ -2,10 +2,24 @@ import { MenuItem, Modal } from '@material-ui/core'
 import React, { useState } from 'react'
 import CloseIcon from '../../../application/icons/CloseIcon'
 import { I18n } from 'react-redux-i18n'
-import { ButtonDiv, Form, HeaderDiv, Label, ModalContainer, PlaceholderDiv, PlaceholderSpan, RedColorSpan, RowDiv, RowReverseDiv, Title } from '../StyledComponents/modalStyles'
+import {
+  ButtonDiv,
+  Form,
+  HeaderDiv,
+  Label,
+  ModalContainer,
+  PlaceholderDiv,
+  PlaceholderSpan,
+  RedColorSpan,
+  RowDiv,
+  RowReverseDiv,
+  Title
+} from '../StyledComponents/modalStyles'
 import ControlledSelect from '../ControlledSelect'
 import { Input } from '../CostModal/CostModalStyles'
 import { Button } from 'fiorde-fe-components'
+import ControlledToolTip from '../ControlledToolTip/ControlledToolTip'
+import { Container, MenuItemContent } from './FareModalStyles'
 
 interface FareModalData {
   id: number | null
@@ -30,59 +44,107 @@ const FareModal = ({
   setClose,
   title
 }: FareModalProps): JSX.Element => {
-  const handleOnClose = (): void => {
-    setClose()
-  }
-
   const initialState = {
     type: '',
     expense: '',
     saleValue: '',
-    saleCurrency: '',
+    saleCurrency: 'EUR',
     id: null
   }
   const [data, setData] = useState(dataProp != null ? dataProp : initialState)
-  const [invalidInput] = useState(false)
+  const [invalidInput, setInvalidInput] = useState(false)
+  // Mock de tipos, valores serão especificados posteriormente
+  const typeList = ['CW', 'CM']
+  // Mock de despesas, valores serão especificados posteriormente
+  const expensesList = ['Fuel - Security1', 'Fuel - Security2', 'Fuel - Security3']
+  // Mock de moedas, valores serão especificados posteriormente
+  const currencyList = ['EUR', 'USD']
+
+  const rgxFloat = /^[0-9]*,?[0-9]*$/
+
+  const validateFloatInput = (value: string): RegExpMatchArray | null => {
+    return value.match(rgxFloat)
+  }
+
+  const validateData = (): boolean => {
+    return !(
+      data.type.length === 0 ||
+      data.expense.length === 0 ||
+      data.saleValue.length === 0 ||
+      data.saleCurrency.length === 0
+    )
+  }
+
+  const saleValueHandler = (e): void => {
+    const validatedInput = validateFloatInput(e.target.value)
+    if (validatedInput !== null) {
+      setData({ ...data, saleValue: validatedInput[0] })
+    }
+  }
+
+  const handleOnClose = (): void => {
+    setData(initialState)
+    setInvalidInput(false)
+    setClose()
+  }
+
+  const handleAction = (): void => {
+    if (validateData()) {
+      action(data)
+      handleOnClose()
+    } else {
+      setInvalidInput(true)
+    }
+  }
 
   return (
     <Modal open={open} onClose={handleOnClose}>
-    <ModalContainer>
-      <HeaderDiv>
-        <Title>{title}</Title>
-        <RowReverseDiv>
-          <CloseIcon onClick={handleOnClose} />
-        </RowReverseDiv>
-      </HeaderDiv>
-      <Form fontSize='12px' marginRight='0px' >
+      <ModalContainer>
+        <HeaderDiv>
+          <Title>{title}</Title>
+          <RowReverseDiv>
+            <CloseIcon onClick={handleOnClose} />
+          </RowReverseDiv>
+        </HeaderDiv>
+        <Form fontSize="12px" marginRight="0px">
           <RowDiv>
             <Label width="25%">
-              {I18n.t('components.costModal.type')}
+              {I18n.t('components.fareModal.type')}
               <RedColorSpan> *</RedColorSpan>
             </Label>
             <Label width="75%">
-              {I18n.t('components.costModal.description')}
+              {I18n.t('components.fareModal.expense')}
               <RedColorSpan> *</RedColorSpan>
             </Label>
           </RowDiv>
           <RowDiv margin={true}>
-            <div style={{ width: '113px', height: '32px', margin: '12px 0 5px 0' }}>
+            <Container width="113px" height="32px" margin="12px 0 5px 0">
               <ControlledSelect
-                onChange={e => (setData({ ...data, type: e.target.value }))}
+                onChange={(e) => setData({ ...data, type: e.target.value })}
                 displayEmpty
                 value={data.type}
                 disableUnderline
                 placeholder={data.type}
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                invalid={ invalidInput && data.type.length === 0}
+                invalid={invalidInput && data.type.length === 0}
               >
                 <MenuItem disabled value="">
-                  <span style={{ marginLeft: '10px' }}>{I18n.t('components.itemModal.choose')}</span>
+                  <MenuItemContent>
+                    {I18n.t('components.fareModal.choose')}
+                  </MenuItemContent>
                 </MenuItem>
+                {typeList.map((type) => {
+                  return (
+                    <MenuItem key={`${type}_key`} value={type}>
+                      <MenuItemContent>{type}</MenuItemContent>
+                    </MenuItem>
+                  )
+                })}
               </ControlledSelect>
-            </div>
-            <div style={{ width: '350px', height: '32px', margin: '12px 0 5px 23px' }}>
+            </Container>
+            <Container width="350px" height="32px" margin="12px 0 5px 23px">
               <ControlledSelect
-                onChange={e => (setData({ ...data, expense: e.target.value }))}
+                onChange={(e) => setData({ ...data, expense: e.target.value })}
                 displayEmpty
                 value={data.expense}
                 disableUnderline
@@ -91,65 +153,82 @@ const FareModal = ({
                 invalid={invalidInput && data.expense.length === 0}
               >
                 <MenuItem disabled value="">
-                  <span style={{ marginLeft: '10px' }}>{I18n.t('components.itemModal.choose')}</span>
+                  <MenuItemContent>
+                    {I18n.t('components.fareModal.choose')}
+                  </MenuItemContent>
                 </MenuItem>
+                {expensesList.map((expenses) => {
+                  return (
+                    <MenuItem key={`${expenses}_key`} value={expenses}>
+                      <MenuItemContent>{expenses}</MenuItemContent>
+                    </MenuItem>
+                  )
+                })}
               </ControlledSelect>
-            </div>
-            </RowDiv>
-            <RowDiv>
+            </Container>
+          </RowDiv>
+          <RowDiv>
             <Label width="100%">
-              {I18n.t('components.costModal.type')}
-              <RedColorSpan> *</RedColorSpan>
+              {I18n.t('components.fareModal.saleValue')}
             </Label>
           </RowDiv>
           <RowDiv margin={false}>
-            <div style={{ width: '84px', height: '32px', margin: '12px 14px 5px 0' }}>
+            <Container width="84px" height="32px" margin="12px 14px 5px 0">
               <ControlledSelect
-                onChange={e => e}
+                onChange={(e) =>
+                  setData({ ...data, saleCurrency: e.target.value })
+                }
                 displayEmpty
-                value={'1'}
+                value={data.saleCurrency}
                 disableUnderline
-                placeholder={'1'}
+                placeholder={data.saleCurrency}
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                invalid={1}
+                invalid={invalidInput && data.saleCurrency.length === 0}
               >
-                <MenuItem disabled value="">
-                  <span style={{ marginLeft: '10px' }}>{I18n.t('components.itemModal.choose')}</span>
-                </MenuItem>
+                {currencyList.map((currency) => {
+                  return (
+                    <MenuItem key={`${currency}_key`} value={currency}>
+                      <MenuItemContent>{currency}</MenuItemContent>
+                    </MenuItem>
+                  )
+                })}
               </ControlledSelect>
-            </div>
+            </Container>
+            <ControlledToolTip
+              title={I18n.t('components.itemModal.requiredField')}
+              open={invalidInput && data.saleValue.length === 0}
+            >
               <PlaceholderDiv>
                 <label>
-                  {true && (
+                  {data.saleValue.length === 0 && (
                     <PlaceholderSpan>
-                      {I18n.t('components.costModal.value')}
+                      {I18n.t('components.fareModal.value')}
                       <RedColorSpan> *</RedColorSpan>
                     </PlaceholderSpan>
                   )}
                   <Input
-                    value={''}
-                    onChange={e => e}
-                    disabled={false}
-                    invalid={
-                        true
-                    }
-                    filled={true}
+                    value={data.saleValue}
+                    onChange={saleValueHandler}
+                    invalid={invalidInput && data.saleValue.length === 0}
+                    filled={data.saleValue}
+                    aria-label="value"
                   />
                 </label>
               </PlaceholderDiv>
-            </RowDiv>
-            <RowDiv>
+            </ControlledToolTip>
+          </RowDiv>
+          <RowDiv>
             <ButtonDiv>
               <Button
                 text={I18n.t('components.itemModal.save')}
                 backgroundGreen={true}
                 icon=""
-                onAction={() => 1}
+                onAction={handleAction}
               />
             </ButtonDiv>
           </RowDiv>
         </Form>
-    </ModalContainer>
+      </ModalContainer>
     </Modal>
   )
 }
