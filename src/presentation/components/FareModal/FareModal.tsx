@@ -66,7 +66,7 @@ const FareModal = ({
     return value.match(rgxFloat)
   }
 
-  const validateData = (): boolean => {
+  const isValid = (): boolean => {
     return !(
       data.type.length === 0 ||
       data.expense.length === 0 ||
@@ -89,7 +89,7 @@ const FareModal = ({
   }
 
   const handleAction = (): void => {
-    if (validateData()) {
+    if (isValid()) {
       action(data)
       handleOnClose()
     } else {
