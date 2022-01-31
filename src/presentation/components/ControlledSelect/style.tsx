@@ -22,7 +22,7 @@ export const StyledField = styled(Select)`
       font-size: 14px;
       color: ${(props) =>
     props.placeholder === ''
-      ? props.theme?.commercial?.pages?.newProposal?.subtitle
+      ? props.theme?.commercial?.pages?.newProposal?.placeholder
       : props.theme?.commercial?.components?.itemModal?.inputFontColor};
     }
 

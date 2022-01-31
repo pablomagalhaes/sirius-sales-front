@@ -3,23 +3,12 @@ import { Button } from 'fiorde-fe-components'
 import React, { useReducer, useState } from 'react'
 import CloseIcon from '../../../application/icons/CloseIcon'
 import {
-  Form,
-  HeaderDiv,
-  Label,
-  ModalContainer,
-  RowDiv,
-  RowReverseDiv,
   StyledMenuSelect,
-  Title,
   CheckBox,
   CheckBoxLabel,
   Input,
-  PlaceholderDiv,
-  PlaceholderSpan,
-  RedColorSpan,
   ReplyDiv,
   ReplyIconDiv,
-  ButtonDiv,
   WarningPopUp,
   WarningPopUpMessage,
   WarningPopUpButtonDiv
@@ -28,6 +17,19 @@ import { I18n } from 'react-redux-i18n'
 import CheckIcon from '../../../application/icons/CheckItem'
 import ReplyIcon from '../../../application/icons/ReplyIcon'
 import ControlledToolTip from '../ControlledToolTip/ControlledToolTip'
+import {
+  ButtonDiv,
+  Form,
+  HeaderDiv,
+  Label,
+  ModalContainer,
+  PlaceholderDiv,
+  PlaceholderSpan,
+  RedColorSpan,
+  RowDiv,
+  RowReverseDiv,
+  Title
+} from '../StyledComponents/modalStyles'
 
 interface ItemModalData {
   agent: string
@@ -35,6 +37,7 @@ interface ItemModalData {
   buyMin: string | null
   buyValue: string | null
   description: string
+  id: number | null
   saleCurrency: string | null
   saleMin: string | null
   saleValue: string | null
@@ -65,7 +68,8 @@ const CostModal = ({
     buyMin: null,
     saleCurrency: 'BRL',
     saleValue: null,
-    saleMin: null
+    saleMin: null,
+    id: null
   }
 
   const reducer = (state, action): ItemModalData => {

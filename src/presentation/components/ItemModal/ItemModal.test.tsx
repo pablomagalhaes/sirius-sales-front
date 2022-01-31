@@ -14,7 +14,8 @@ const props = {
     length: '10',
     rawWeight: '125.6',
     type: 'Caixas',
-    width: '36'
+    width: '36',
+    id: 5
   },
   title: 'Editar item',
   handleAdd: () => {},
@@ -47,7 +48,7 @@ test('should click on the save button and should not trigger handleAdd due inval
   window.alert = () => {}
   const handleAdd = jest.fn()
   render(<ItemModal {...props} handleAdd={handleAdd} />)
-  const input = screen.getByLabelText('height')
+  const input = screen.getByTestId('height')
   fireEvent.change(input, { target: { value: '' } })
   fireEvent.click(screen.getByText(/save/))
   expect(handleAdd).toBeCalledTimes(0)

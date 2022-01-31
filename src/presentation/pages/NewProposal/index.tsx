@@ -18,12 +18,17 @@ import Step2 from './Step2'
 import Step3 from './Step3'
 import Step4 from './Step4'
 import Step5 from './Step5'
+import FareModal from '../../components/FareModal/FareModal'
 
 export interface NewProposalProps {
   theme: any
 }
 
 const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
+  const [open, setOpen] = useState(false)
+  const handleOpen = (): void => setOpen(true)
+  const handleClose = (): void => setOpen(false)
+  const handleAdd = (item): void => console.log(item)
   const [clicked, setClicked] = useState({ id: '', clicked: false })
   const [hover, setHover] = useState({ id: '', hover: false })
   const steps = [
@@ -125,7 +130,19 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         <div id="step3"><Step3 /></div>
         <div id="step4"><Step4 /></div>
         <div id="step5"><Step5 /></div>
+        <Button
+          onAction={handleOpen}
+          text={'abrir modal de tarifa'}
+          icon="add"
+          backgroundGreen={false}
+            />
       </MainContainer>
+      <FareModal
+        action={handleAdd}
+        open={open}
+        setClose={handleClose}
+        title={'Nova tarifa'}
+      />
     </RootContainer>
   )
 }
