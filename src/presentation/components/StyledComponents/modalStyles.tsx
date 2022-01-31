@@ -63,16 +63,21 @@ export const RowDiv = styled.div`
 export const Form = styled.div`
   margin-top: 26px;
   margin-left: 24px;
-  margin-right: ${(props: {marginRight: string }) => props.marginRight};
+  margin-right: 0px;
   font-family: DM Sans;
   font-style: normal;
   font-weight: normal;
-  font-size: ${(props: {fontSize: string }) => props.fontSize};
+  font-size: 12px;
   line-height: 150%;
   letter-spacing: 0.02em;
   color: ${(props: any) =>
     props.theme?.commercial?.components?.itemModal?.fontColor};
 `
+export const ItemModalForm = styled(Form)`
+margin-right: 24px;
+font-size: 14px;
+`
+
 export const PlaceholderDiv = styled.div`
   label {
     position: relative;

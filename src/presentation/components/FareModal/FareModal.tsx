@@ -106,7 +106,7 @@ const FareModal = ({
             <CloseIcon onClick={handleOnClose} />
           </RowReverseDiv>
         </HeaderDiv>
-        <Form fontSize="12px" marginRight="0px">
+        <Form>
           <RowDiv>
             <Label width="25%">
               {I18n.t('components.fareModal.type')}

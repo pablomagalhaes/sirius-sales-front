@@ -224,7 +224,7 @@ const CostModal = ({
             <CloseIcon onClick={handleOnClose} />
           </RowReverseDiv>
         </HeaderDiv>
-        <Form fontSize='12px' marginRight='0px' >
+        <Form>
           <RowDiv>
             <Label width="27%">
               {I18n.t('components.costModal.type')}

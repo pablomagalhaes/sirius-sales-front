@@ -15,7 +15,7 @@ import ControlledSelect from '../ControlledSelect'
 import ControlledInput from '../ControlledInput'
 import {
   ButtonDiv,
-  Form,
+  ItemModalForm,
   HeaderDiv,
   Label,
   RedColorSpan,
@@ -120,7 +120,7 @@ const ItemModal = ({
             <CloseIcon onClick={handleOnClose} />
           </RowReverseDiv>
         </HeaderDiv>
-        <Form marginRight='24px' fontSize='14px'>
+        <ItemModalForm>
           <RowDiv>
             <Label width="43.6%">
               {I18n.t('components.itemModal.type')}
@@ -329,7 +329,7 @@ const ItemModal = ({
               />
             </ButtonDiv>
           </RowDiv>
-        </Form>
+        </ItemModalForm>
       </ModalDiv>
     </Modal>
   )
