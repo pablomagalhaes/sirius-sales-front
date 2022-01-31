@@ -19,6 +19,7 @@ import Step3 from './Step3'
 import Step4 from './Step4'
 import Step5 from './Step5'
 import FareModal from '../../components/FareModal/FareModal'
+import Step6 from './Step6'
 
 export interface NewProposalProps {
   theme: any
@@ -36,7 +37,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     { id: 'step2', label: I18n.t('pages.newProposal.step2.title'), completed: true },
     { id: 'step3', label: I18n.t('pages.newProposal.step3.title'), completed: true },
     { id: 'step4', label: I18n.t('pages.newProposal.step4.title'), completed: false },
-    { id: 'step5', label: I18n.t('pages.newProposal.step5.title'), completed: false }
+    { id: 'step5', label: I18n.t('pages.newProposal.step5.title'), completed: false },
+    { id: 'step6', label: I18n.t('pages.newProposal.step6.title'), completed: false }
   ]
 
   const handleClick = (clickState): void => {
@@ -130,6 +132,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         <div id="step3"><Step3 /></div>
         <div id="step4"><Step4 /></div>
         <div id="step5"><Step5 /></div>
+        <div id="step6"><Step6 /></div>
         <Button
           onAction={handleOpen}
           text={'abrir modal de tarifa'}

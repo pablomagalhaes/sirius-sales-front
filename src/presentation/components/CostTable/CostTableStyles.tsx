@@ -3,10 +3,10 @@ import styled from 'styled-components'
 import { Table, TableCell, TableRow } from '@material-ui/core'
 
 export const MainDiv = styled.div`
-  width: 95%;
+  width: auto;
   border-radius: 8px;
   background: ${(props: any) => props.theme?.commercial?.components?.costTable?.backgroundColor};
-  margin-left: 20px;
+  // margin-left: 20px;
   margin-top: 30px;
 `
 

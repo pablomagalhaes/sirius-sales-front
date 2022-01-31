@@ -67,6 +67,16 @@
         "totalDestiny": "Total custos destino:",
         "originCost": "Novo custo de origem",
         "destinationCost": "Novo custo de destino"
+      },
+      "step6": {
+        "title": "Frete",
+        "subtitle": "Informe as tarifas para o serviço de frete",
+        "origin": "Origin",
+        "totalOrigin": "Total origin costs:",
+        "destiny": "Destiny",
+        "totalDestiny": "Total destiny costs:",
+        "originCost": "New origin cost",
+        "destinationCost": "New destiny cost"
       }
     }
   },
