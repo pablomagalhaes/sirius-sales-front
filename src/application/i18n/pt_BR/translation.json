@@ -46,7 +46,7 @@
         "buttonAdd": "Adicionar item à carga"
       },
       "step4": {
-        "title": "Geral",
+        "title": "Dados Gerais",
         "subtitle": "Informe detalhes gerais da sua proposta comercial.",
         "validity": "Validade:",
         "time": "Transit. time:",

@@ -72,6 +72,7 @@ const TopContainer = styled.div`
   position: sticky;
   top: 76px;
   z-index: 1;
+  font-size: 0.900rem;
 `
 
 const MainContainer = styled.div`
