@@ -5,22 +5,24 @@ import AlertIcon from '../../../application/icons/AlertIcon'
 import CloseIcon from '../../../application/icons/CloseIcon'
 import {
   AlertIconDiv,
-  ButtonDiv,
   CheckBox,
   CheckBoxLabel,
-  Form,
-  HeaderDiv,
-  Label,
-  ModalDiv,
-  RedColorSpan,
-  RowDiv,
-  RowReverseDiv,
-  Title
+  ModalDiv
 } from './ItemModalStyles'
 import { I18n } from 'react-redux-i18n'
 import CheckIcon from '../../../application/icons/CheckIcon'
 import ControlledSelect from '../ControlledSelect'
 import ControlledInput from '../ControlledInput'
+import {
+  ButtonDiv,
+  ItemModalForm,
+  HeaderDiv,
+  Label,
+  RedColorSpan,
+  RowDiv,
+  RowReverseDiv,
+  Title
+} from '../StyledComponents/modalStyles'
 
 interface ItemModalData {
   amount: string
@@ -34,6 +36,7 @@ interface ItemModalData {
   rawWeight: string
   type: string
   width: string
+  id: number | null
 }
 interface ItemModalProps {
   dataProp?: ItemModalData
@@ -67,7 +70,8 @@ const ItemModal = ({
     length: '',
     rawWeight: '',
     type: '',
-    width: ''
+    width: '',
+    id: null
   }
   const [data, setData] = useState(dataProp != null ? dataProp : initialState)
   const [invalidInput, setInvalidInput] = useState(false)
@@ -101,7 +105,6 @@ const ItemModal = ({
   const handleOnAdd = (): void => {
     if (validateData()) {
       handleAdd(data)
-      setInvalidInput(false)
       handleOnClose()
     } else {
       setInvalidInput(true)
@@ -117,7 +120,7 @@ const ItemModal = ({
             <CloseIcon onClick={handleOnClose} />
           </RowReverseDiv>
         </HeaderDiv>
-        <Form>
+        <ItemModalForm>
           <RowDiv>
             <Label width="43.6%">
               {I18n.t('components.itemModal.type')}
@@ -201,7 +204,7 @@ const ItemModal = ({
             <div style={{ width: '60px', height: '30px', marginRight: '8px', marginTop: '12px' }}>
               <ControlledInput
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                aria-label="height"
+                inputProps={{ 'data-testid': 'height' }}
                 value={data.height}
                 onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, height: e.target.value })) }}
                 invalid={
@@ -326,7 +329,7 @@ const ItemModal = ({
               />
             </ButtonDiv>
           </RowDiv>
-        </Form>
+        </ItemModalForm>
       </ModalDiv>
     </Modal>
   )
