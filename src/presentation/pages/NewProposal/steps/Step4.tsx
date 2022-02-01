@@ -6,9 +6,9 @@ import {
   MenuItem
 } from '@material-ui/core/'
 import { I18n } from 'react-redux-i18n'
-import { Title, Subtitle, Separator, SelectSpan } from './style'
-import ControlledSelect from '../../components/ControlledSelect'
-import ControlledInput from '../../components/ControlledInput'
+import { Title, Subtitle, Separator, SelectSpan } from '../style'
+import ControlledSelect from '../../../components/ControlledSelect'
+import ControlledInput from '../../../components/ControlledInput'
 
 const Step4 = (): JSX.Element => {
   // mock para os selects

@@ -3,10 +3,9 @@ import styled from 'styled-components'
 import { Table, TableCell, TableRow } from '@material-ui/core'
 
 export const MainDiv = styled.div`
-  width: 95%;
+  width: auto;
   border-radius: 8px;
   background: ${(props: any) => props.theme?.commercial?.components?.costTable?.backgroundColor};
-  margin-left: 20px;
   margin-top: 30px;
 `
 
@@ -51,7 +50,10 @@ export const TableHeadRow = styled(TableRow)`
 `
 
 export const StyledTableCell = styled(TableCell)`
-  width: ${(props) => props.width};
+  width: ${(props: any) => props.width};
+  color: ${(props: any) => props.color === true
+    ? `${props.theme?.commercial?.pages?.newProposal?.steps?.stepFare} !important`
+    : `${props.theme?.commercial?.pages?.newProposal?.font} !important`};
 `
 
 export const Description = styled.span`
