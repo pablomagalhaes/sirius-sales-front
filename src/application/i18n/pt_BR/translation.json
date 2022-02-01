@@ -41,6 +41,7 @@
         "subtitle": "Especifique os itens a serem embarcados.",
         "description": "Descrição geral da carga:",
         "specifications": "Especificações:",
+        "refrigerated": "Refrigerada",
         "temperature": "Temperatura:",
         "choose": "Escolha ...",
         "buttonAdd": "Adicionar item à carga"
