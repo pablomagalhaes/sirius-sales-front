@@ -6,7 +6,6 @@ export const MainDiv = styled.div`
   width: auto;
   border-radius: 8px;
   background: ${(props: any) => props.theme?.commercial?.components?.costTable?.backgroundColor};
-  // margin-left: 20px;
   margin-top: 30px;
 `
 
