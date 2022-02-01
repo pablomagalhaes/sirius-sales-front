@@ -9,10 +9,10 @@ import {
   RadioGroup
 } from '@material-ui/core/'
 import { I18n } from 'react-redux-i18n'
-import { Title, Subtitle, IconContainer, Separator } from './style'
-import IconComponent from '../../../application/icons/IconComponent'
+import { Title, Subtitle, IconContainer, Separator } from '../style'
+import IconComponent from '../../../../application/icons/IconComponent'
 import { withTheme } from 'styled-components'
-import ControlledInput from '../../components/ControlledInput'
+import ControlledInput from '../../../components/ControlledInput'
 
 export interface Step1Props {
   theme: any

@@ -10,10 +10,10 @@ import {
   RadioGroup
 } from '@material-ui/core/'
 import { I18n } from 'react-redux-i18n'
-import { Title, Subtitle, Separator, SelectSpan } from './style'
-import ItemModal from '../../components/ItemModal/ItemModal'
-import ControlledSelect from '../../components/ControlledSelect'
-import ControlledInput from '../../components/ControlledInput'
+import { Title, Subtitle, Separator, SelectSpan } from '../style'
+import ItemModal from '../../../components/ItemModal/ItemModal'
+import ControlledSelect from '../../../components/ControlledSelect'
+import ControlledInput from '../../../components/ControlledInput'
 
 const Step3 = (): JSX.Element => {
   const [open, setOpen] = useState(false)

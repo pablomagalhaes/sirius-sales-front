@@ -76,7 +76,9 @@
         "destiny": "Destiny",
         "totalDestiny": "Total destiny costs:",
         "originCost": "New origin cost",
-        "destinationCost": "New destiny cost"
+        "destinationCost": "New destiny cost",
+        "addFare": "Adicionar tarifa",
+        "totalFares": "Total Tarifas:"
       }
     }
   },
@@ -132,7 +134,8 @@
       "expense":"Despesa:",
       "saleValue": "Valor venda:",
       "choose": "Escolha...",
-      "value": "Valor"
+      "value": "Valor",
+      "newFare": "Nova tarifa"
     }
   }
 }

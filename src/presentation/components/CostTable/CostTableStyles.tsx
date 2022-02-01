@@ -51,9 +51,10 @@ export const TableHeadRow = styled(TableRow)`
 `
 
 export const StyledTableCell = styled(TableCell)`
-  width: ${(props) => props.width};
-  // padding: 0 ${(props) => props.padding};
-  // border: 1px solid green;
+  width: ${(props: any) => props.width};
+  color: ${(props: any) => props.color === true
+    ? `${props.theme?.commercial?.pages?.newProposal?.steps?.stepFare} !important`
+    : `${props.theme?.commercial?.pages?.newProposal?.font} !important`};
 `
 
 export const Description = styled.span`
