@@ -41,6 +41,7 @@
         "subtitle": "Specify the items to be shipped.",
         "description": "General cargo description:",
         "specifications": "Specifications:",
+        "refrigerated": "Refrigerated",
         "temperature": "Temperature:",
         "choose": "Choose ...",
         "buttonAdd": "Add item to cargo"
