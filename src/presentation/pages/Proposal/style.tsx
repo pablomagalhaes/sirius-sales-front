@@ -122,6 +122,16 @@ const BottomSideContainer = styled.div`
     z-index: 99;
   }
 `
+const TopContainer = styled.div`
+  margin: 25px 0;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+`
+const TopButtonContainer = styled.div`
+  margin-left: auto;
+`
 
 export {
   RootContainer,
@@ -129,5 +139,7 @@ export {
   LeftSideListHeader,
   RightSideListHeader,
   TableContainer,
-  BottomSideContainer
+  BottomSideContainer,
+  TopContainer,
+  TopButtonContainer
 }
