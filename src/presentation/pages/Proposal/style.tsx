@@ -122,6 +122,15 @@ const BottomSideContainer = styled.div`
     z-index: 99;
   }
 `
+const PaginationContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`
+const PaginationMainContainer = styled.div`
+  width: 60%;
+`
 
 export {
   RootContainer,
@@ -129,5 +138,7 @@ export {
   LeftSideListHeader,
   RightSideListHeader,
   TableContainer,
-  BottomSideContainer
+  BottomSideContainer,
+  PaginationContainer,
+  PaginationMainContainer
 }

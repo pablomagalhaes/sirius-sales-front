@@ -14,7 +14,9 @@ import {
   LeftSideListHeader,
   RightSideListHeader,
   TableContainer,
-  BottomSideContainer
+  BottomSideContainer,
+  PaginationContainer,
+  PaginationMainContainer
 } from './style'
 import { ExitToApp, Warning, ArrowDropDown } from '@material-ui/icons/'
 import { cardFilters, TableRows, menuItemsSelector } from './constants'
@@ -178,8 +180,11 @@ const Proposal = (): JSX.Element => {
         <TableContainer>
           <Table rows={TableRows()} />
         </TableContainer>
-        <Pagination count={100} labelRowsPerPage='Propostas por página' labelDisplayedRows='de' tooltipFirst='Primeira' tooltipBack='Anterior' tooltipNext='Próxima' tooltipLast='Última' />
-
+        <PaginationContainer>
+          <PaginationMainContainer>
+            <Pagination labelDisplay='exibindo' count={100} labelRowsPerPage='Propostas por página' labelDisplayedRows='de' tooltipFirst='Primeira' tooltipBack='Anterior' tooltipNext='Próxima' tooltipLast='Última' />
+          </PaginationMainContainer>
+        </PaginationContainer>        
       </BottomSideContainer>
     </RootContainer>
   )
