@@ -52,6 +52,8 @@ export const TableHeadRow = styled(TableRow)`
 
 export const StyledTableCell = styled(TableCell)`
   width: ${(props) => props.width};
+  // padding: 0 ${(props) => props.padding};
+  // border: 1px solid green;
 `
 
 export const Description = styled.span`
