@@ -1,7 +1,7 @@
 import React from 'react'
-import CostTable from '../../components/CostTable/CostTable'
+import CostTable from '../../../components/CostTable/CostTable'
 import { I18n } from 'react-redux-i18n'
-import { Title, Subtitle, Separator } from './style'
+import { Title, Subtitle, Separator } from '../style'
 
 const Step5 = (): JSX.Element => {
   return (

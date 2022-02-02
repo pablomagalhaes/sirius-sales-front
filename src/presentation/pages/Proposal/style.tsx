@@ -123,11 +123,38 @@ const BottomSideContainer = styled.div`
   }
 `
 
+const PaginationContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`
+
+const PaginationMainContainer = styled.div`
+  width: 60%;
+`
+
+const TopContainer = styled.div`
+  margin: 25px 0;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+`
+
+const TopButtonContainer = styled.div`
+  margin-left: auto;
+`
+
 export {
   RootContainer,
   ListHeader,
   LeftSideListHeader,
   RightSideListHeader,
   TableContainer,
-  BottomSideContainer
+  BottomSideContainer,
+  PaginationContainer,
+  PaginationMainContainer,
+  TopContainer,
+  TopButtonContainer
 }
