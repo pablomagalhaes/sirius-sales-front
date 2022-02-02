@@ -57,7 +57,7 @@ const RootContainer = styled.div`
   }
   & .MuiSvgIcon-root {
     margin-right: 5px;
-  }}
+  }
 `
 
 const TopContainer = styled.div`
@@ -76,74 +76,83 @@ const TopContainer = styled.div`
 `
 
 const MainContainer = styled.div`
-display: flex;
-justify-content: space-evenly;
-flex-direction: column;
-background: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.background};
-margin: 0 20px;
-border-radius: 0 0 16px 16px;
-box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
-padding: 44px 24px;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+  background: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.background};
+  margin: 0 20px;
+  border-radius: 0 0 16px 16px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+  padding: 44px 24px;
 `
 
 const Title = styled.div`
-color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.title};
-font-size: 16px;
-font-weight: bold;
-line-height: 150%;
-letter-spacing: 0.02em;
-border-bottom: 1px solid ${(props: any) => props.theme?.commercial?.pages?.newProposal?.border};
-padding-bottom: 10px;
-display: flex;
-justify-content: space-between;
-align-items: center;
+  color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.title};
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 150%;
+  letter-spacing: 0.02em;
+  border-bottom: 1px solid ${(props: any) => props.theme?.commercial?.pages?.newProposal?.border};
+  padding-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `
 const Subtitle = styled.div`
-color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.subtitle};
-font-size: 12px;
-line-height: 150 %;
-letter-spacing: 0.02em;
-font-weight: normal;
+  color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.subtitle};
+  font-size: 12px;
+  line-height: 150%;
+  letter-spacing: 0.02em;
+  font-weight: normal;
 `
 const IconContainer = styled.div`
-align-self: center;
-margin-right: 40px;
+  align-self: center;
+  margin-right: 40px;
 `
 
 const UserContainer = styled.div`
-font-size: 14px;
-color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.subtitle};
-line-height: 150 %;
-letter-spacing: 0.02em;
-display: flex;
+  font-size: 14px;
+  color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.subtitle};
+  line-height: 150%;
+  letter-spacing: 0.02em;
+  display: flex;
   svg {
-  margin-left: 18px;
+    margin-left: 18px;
 }
 `
 
 const Username = styled.span`
-color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.font};
-font-weight: 500;
-margin-left: 6px;
+  color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.font};
+  font-weight: 500;
+  margin-left: 6px;
 `
 
 const Header = styled.div`
-margin: 25px 20px;
-display: flex;
-justify-content: space-between;
+  margin: 25px 20px;
+  display: flex;
+  justify-content: space-between;
 `
 
 const Separator = styled.div`
-margin-bottom: 100px;
+  margin-bottom: 100px;
+  .form-size {
+    width: 75%
+  }
+  .radio-spacement {
+    margin-left: 30px;
+  }
 `
 
 const SelectSpan = styled.span`
-color: ${(props: { placeholder: boolean, theme: any }) => props?.placeholder && props.theme?.commercial?.pages?.newProposal?.placeholder};
-margin: 0 10px;
+  color: ${(props: { placeholder: boolean, theme: any }) => props?.placeholder && props.theme?.commercial?.pages?.newProposal?.placeholder};
+  margin: 0 10px;
 `
 
 const ButtonContainer = styled.div`
-height: 36px;
+  height: 36px;
+`
+const BoldSpan = styled.span`
+  font-weight: ${(props: { checked: boolean }) => props.checked ? '600' : 'normal'};
 `
 
 export {
@@ -158,5 +167,6 @@ export {
   Title,
   TopContainer,
   UserContainer,
-  Username
+  Username,
+  BoldSpan
 }

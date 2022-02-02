@@ -37,7 +37,16 @@ const mock = [
   }
 ]
 
-const Table = ({ data }): JSX.Element => {
+interface Cell {
+  fare: string
+  type: string
+  value: string
+}
+interface TableData {
+  data: Cell[]
+}
+
+const Table = ({ data }: TableData): JSX.Element => {
   return (
     <StyledTable>
       <TableBody>
