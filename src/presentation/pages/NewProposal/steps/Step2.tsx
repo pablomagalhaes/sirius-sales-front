@@ -7,11 +7,11 @@ import {
   MenuItem
 } from '@material-ui/core/'
 import { I18n } from 'react-redux-i18n'
-import { Title, Subtitle, Separator, SelectSpan } from './style'
-import IconComponent from '../../../application/icons/IconComponent'
+import { Title, Subtitle, Separator, SelectSpan } from '../style'
+import IconComponent from '../../../../application/icons/IconComponent'
 import { withTheme } from 'styled-components'
-import ControlledSelect from '../../components/ControlledSelect'
-import ControlledInput from '../../components/ControlledInput'
+import ControlledSelect from '../../../components/ControlledSelect'
+import ControlledInput from '../../../components/ControlledInput'
 
 const Step2 = ({ theme }): JSX.Element => {
   // mock

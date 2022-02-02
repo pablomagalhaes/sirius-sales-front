@@ -67,6 +67,18 @@
         "totalDestiny": "Total destiny costs:",
         "originCost": "New origin cost",
         "destinationCost": "New destiny cost"
+      },
+      "step6": {
+        "title": "Freight",
+        "subtitle": "Inform the rates for the freight service",
+        "origin": "Origin",
+        "totalOrigin": "Total origin costs:",
+        "destiny": "Destiny",
+        "totalDestiny": "Total destiny costs:",
+        "originCost": "New origin cost",
+        "destinationCost": "New destiny cost",
+        "addFare": "Add surcharge",
+        "totalFares": "Total Surcharges:"
       }
     }
   },
@@ -122,7 +134,8 @@
       "expense":"Expense:",
       "saleValue": "Sale value:",
       "choose": "Choose...",
-      "value": "Value"
+      "value": "Value",
+      "newFare": "New surcharge"
     }
   }
 }

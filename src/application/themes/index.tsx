@@ -38,7 +38,10 @@ const dark = {
         subtitle: '#B5B8C2',
         border: '#505F73',
         font: '#F2F3F7',
-        placeholder: '#7B8A9E'
+        placeholder: '#7B8A9E',
+        steps: {
+          stepFare: '#B5B8C2'
+        }
       }
     }
   }
@@ -82,7 +85,10 @@ const light = {
         subtitle: '#545454',
         border: '#F0F1F5',
         font: '#222222',
-        placeholder: '#999DAC'
+        placeholder: '#999DAC',
+        steps: {
+          stepFare: '#545454'
+        }
       }
     }
   }

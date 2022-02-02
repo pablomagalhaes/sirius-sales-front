@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import {
-  FloatingButton,
   FloatingMenu,
   QuickFilters,
   Table,
   RowFilter,
-  Pagination
+  Pagination,
+  Button
 } from 'fiorde-fe-components'
 import { Breadcrumbs, Link, Popover } from '@material-ui/core/'
 import {
@@ -16,7 +16,9 @@ import {
   TableContainer,
   BottomSideContainer,
   PaginationContainer,
-  PaginationMainContainer
+  PaginationMainContainer,
+  TopContainer,
+  TopButtonContainer
 } from './style'
 import { ExitToApp, Warning, ArrowDropDown } from '@material-ui/icons/'
 import { cardFilters, TableRows, menuItemsSelector } from './constants'
@@ -26,14 +28,6 @@ const Proposal = (): JSX.Element => {
   const [orderBy, setOrderBy] = useState('Dt. validade')
   const [anchorEl, setAnchorEl] = useState(null)
   const history = useHistory()
-
-  const floatingButtonMenuItems = [
-    {
-      iconType: '',
-      label: 'Nova Proposta',
-      onClick: () => history.push('/novaProposta')
-    }
-  ]
 
   const orderButtonMenuItems = [
     {
@@ -109,7 +103,7 @@ const Proposal = (): JSX.Element => {
 
   return (
     <RootContainer>
-      <div style={{ margin: '25px 0' }}>
+       <TopContainer>
         <Breadcrumbs separator=">" aria-label="breadcrumb">
           <Link
             color="inherit"
@@ -121,7 +115,15 @@ const Proposal = (): JSX.Element => {
           </Link>
           <span className="breadcrumbEnd">Propostas</span>
         </Breadcrumbs>
-      </div>
+        <TopButtonContainer>
+          <Button
+            text={'Criar nova proposta...'}
+            backgroundGreen={true}
+            icon="add"
+            onAction={() => history.push('/novaProposta')}
+          />
+        </TopButtonContainer>
+      </TopContainer>
       <QuickFilters cardFilters={cardFilters} onFilterClick={handleCardFiltersClick} />
       <div style={{ margin: '25px 0' }}>
         <RowFilter
@@ -172,11 +174,6 @@ const Proposal = (): JSX.Element => {
         </RightSideListHeader>
       </ListHeader>
       <BottomSideContainer>
-        <div className="floating-button-style">
-          <FloatingButton label="Novo item">
-            <FloatingMenu menuItems={floatingButtonMenuItems} />
-          </FloatingButton>
-        </div>
         <TableContainer>
           <Table rows={TableRows()} />
         </TableContainer>
