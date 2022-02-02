@@ -15,6 +15,8 @@ import {
   RightSideListHeader,
   TableContainer,
   BottomSideContainer,
+  PaginationContainer,
+  PaginationMainContainer,
   TopContainer,
   TopButtonContainer
 } from './style'
@@ -175,8 +177,11 @@ const Proposal = (): JSX.Element => {
         <TableContainer>
           <Table rows={TableRows()} />
         </TableContainer>
-        <Pagination count={100} labelRowsPerPage='Propostas por página' labelDisplayedRows='de' tooltipFirst='Primeira' tooltipBack='Anterior' tooltipNext='Próxima' tooltipLast='Última' />
-
+        <PaginationContainer>
+          <PaginationMainContainer>
+            <Pagination labelDisplay='exibindo' count={100} labelRowsPerPage='Propostas por página' labelDisplayedRows='de' tooltipFirst='Primeira' tooltipBack='Anterior' tooltipNext='Próxima' tooltipLast='Última' />
+          </PaginationMainContainer>
+        </PaginationContainer>        
       </BottomSideContainer>
     </RootContainer>
   )

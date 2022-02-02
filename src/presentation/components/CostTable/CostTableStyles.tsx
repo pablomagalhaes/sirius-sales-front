@@ -52,8 +52,8 @@ export const TableHeadRow = styled(TableRow)`
 export const StyledTableCell = styled(TableCell)`
   width: ${(props: any) => props.width};
   color: ${(props: any) => props.color === true
-    ? `${props.theme?.commercial?.pages?.newProposal?.steps?.stepFare} !important`
-    : `${props.theme?.commercial?.pages?.newProposal?.font} !important`};
+    ? `${String(props.theme?.commercial?.pages?.newProposal?.steps?.stepFare)} !important`
+    : `${String(props.theme?.commercial?.pages?.newProposal?.font)} !important`};
 `
 
 export const Description = styled.span`

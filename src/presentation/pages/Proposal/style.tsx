@@ -122,6 +122,18 @@ const BottomSideContainer = styled.div`
     z-index: 99;
   }
 `
+
+const PaginationContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`
+
+const PaginationMainContainer = styled.div`
+  width: 60%;
+`
+
 const TopContainer = styled.div`
   margin: 25px 0;
   display: flex;
@@ -129,6 +141,7 @@ const TopContainer = styled.div`
   width: 100%;
   align-items: center;
 `
+
 const TopButtonContainer = styled.div`
   margin-left: auto;
 `
@@ -140,6 +153,8 @@ export {
   RightSideListHeader,
   TableContainer,
   BottomSideContainer,
+  PaginationContainer,
+  PaginationMainContainer,
   TopContainer,
   TopButtonContainer
 }
