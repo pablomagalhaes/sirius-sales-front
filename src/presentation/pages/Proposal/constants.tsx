@@ -57,7 +57,7 @@ const TableRows = (): any => {
   Array.from(Array(20), (value, i: number) => {
     const item = {
       key: i,
-      reference: 'Ref. PC-000004/20',
+      reference: 'PC-000004/20',
       client: 'EUROFARMA LABORATORIOS',
       origin: 'GUARULHOS',
       destination: 'MANAUS',
@@ -66,7 +66,8 @@ const TableRows = (): any => {
       iconterm: 'CFR',
       numio: '000001/20',
       responsible: 'Cristina A.',
-      status: 'aberto'
+      status: 'aberto',
+      type: 'importation'
     }
     return array.push(item)
   })
