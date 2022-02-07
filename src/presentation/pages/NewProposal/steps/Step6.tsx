@@ -50,7 +50,7 @@ const Table = ({ data }: TableData): JSX.Element => {
   return (
     <StyledTable>
       <TableBody>
-        {data.map((item: any) => {
+        {data?.map((item: Cell) => {
           return (
             <StyledRow id="styled_row">
               <StyledTableCell width="100%" component="th" scope="row" color>
