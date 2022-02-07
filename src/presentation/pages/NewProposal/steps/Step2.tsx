@@ -143,7 +143,7 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted }: Step2Props):
               onChange={e => { console.log(e.target.value); setData({ ...data, incoterm: e.target.value }) }}
               displayEmpty
               disableUnderline
-              invalid={invalidInput && data.agents.length === 0}
+              invalid={invalidInput && data.incoterm.length === 0}
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
             >
               <MenuItem disabled value={data.incoterm}>
