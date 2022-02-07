@@ -13,12 +13,14 @@ import { Title, Subtitle, IconContainer, Separator } from '../style'
 import IconComponent from '../../../../application/icons/IconComponent'
 import { withTheme } from 'styled-components'
 import ControlledInput from '../../../components/ControlledInput'
-
+import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 export interface Step1Props {
-  theme: any
+  theme: any,
+  completed: boolean,
+  invalidInput: boolean
 }
 
-const Step1 = ({ theme }: Step1Props): JSX.Element => {
+const Step1 = ({ theme, completed, invalidInput }: Step1Props): JSX.Element => {
   const [data, setData] = useState({
     proposal: '',
     services: '',
@@ -34,7 +36,7 @@ const Step1 = ({ theme }: Step1Props): JSX.Element => {
       </Title>
       <Grid container spacing={2}>
         <Grid item xs={6}>
-          <FormLabel component="legend">{I18n.t('pages.newProposal.step1.proposalType')}</FormLabel>
+          <FormLabel component="legend">{I18n.t('pages.newProposal.step1.proposalType')}<RedColorSpan> *</RedColorSpan></FormLabel>
           <RadioGroup
             row aria-label="proposal type"
             name="row-radio-buttons-group"
@@ -59,8 +61,8 @@ const Step1 = ({ theme }: Step1Props): JSX.Element => {
         <Grid item xs={6}>
           {
             data.proposal === 'routing'
-              ? <FormLabel component="legend">{I18n.t('pages.newProposal.step1.agents')}</FormLabel>
-              : <FormLabel component="legend">{I18n.t('pages.newProposal.step1.client')}:</FormLabel>
+              ? <FormLabel component="legend">{I18n.t('pages.newProposal.step1.agents')}<RedColorSpan> *</RedColorSpan></FormLabel>
+              : <FormLabel component="legend">{I18n.t('pages.newProposal.step1.client')}:<RedColorSpan> *</RedColorSpan></FormLabel>
           }
           <ControlledInput
             id="search-client"
@@ -81,7 +83,7 @@ const Step1 = ({ theme }: Step1Props): JSX.Element => {
           />
         </Grid>
       </Grid>
-      <FormLabel component="legend">{I18n.t('pages.newProposal.step1.modal')}</FormLabel>
+      <FormLabel component="legend">{I18n.t('pages.newProposal.step1.modal')}<RedColorSpan> *</RedColorSpan></FormLabel>
       <RadioGroup row aria-label="modal" name="row-radio-buttons-group" onChange={e => setData({ ...data, modal: e.target.value })}>
         <FormControlLabel value="1" control={<Radio />} label={I18n.t('pages.newProposal.step1.air')} />
         <IconContainer>

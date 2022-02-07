@@ -27,13 +27,24 @@ export interface NewProposalProps {
 const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [clicked, setClicked] = useState({ id: '', clicked: false })
   const [hover, setHover] = useState({ id: '', hover: false })
+  const [invalidInput, setInvalidInput] = useState(false);
+
+  const [completed, setCompleted] = useState({
+    step1: false,
+    step2: false,
+    step3: false,
+    step4: false,
+    step5: false,
+    step6: false
+  })
+
   const steps = [
-    { id: 'step1', label: I18n.t('pages.newProposal.step1.title'), completed: true },
-    { id: 'step2', label: I18n.t('pages.newProposal.step2.title'), completed: true },
-    { id: 'step3', label: I18n.t('pages.newProposal.step3.title'), completed: true },
-    { id: 'step4', label: I18n.t('pages.newProposal.step4.title'), completed: false },
-    { id: 'step5', label: I18n.t('pages.newProposal.step5.title'), completed: false },
-    { id: 'step6', label: I18n.t('pages.newProposal.step6.title'), completed: false }
+    { id: 'step1', label: I18n.t('pages.newProposal.step1.title'), completed: completed.step1},
+    { id: 'step2', label: I18n.t('pages.newProposal.step2.title'), completed: completed.step2},
+    { id: 'step3', label: I18n.t('pages.newProposal.step3.title'), completed: completed.step3},
+    { id: 'step4', label: I18n.t('pages.newProposal.step4.title'), completed: completed.step4},
+    { id: 'step5', label: I18n.t('pages.newProposal.step5.title'), completed: completed.step5},
+    { id: 'step6', label: I18n.t('pages.newProposal.step6.title'), completed: completed.step6}
   ]
 
   const handleClick = (clickState): void => {
@@ -49,11 +60,26 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     console.info('You clicked a breadcrumb.')
   }
 
+  const handleSave = () => {
+    //validar todos os steps
+    if (completed.step1 && 
+        completed.step2 && 
+        completed.step3 && 
+        completed.step4 && 
+        completed.step5 && 
+        completed.step6) {
+          setInvalidInput(false);
+        } else {
+          setInvalidInput(true);
+        }
+      console.log('Clicked save');
+  }
+
   const floatingButtonMenuItems = [
     {
       iconType: 'save',
       label: I18n.t('pages.newProposal.save'),
-      onClick: () => { }
+      onClick: () => handleSave()
     }, {
       iconType: 'file',
       label: I18n.t('pages.newProposal.view'),
@@ -122,8 +148,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         </ButtonContainer>
       </TopContainer>
       <MainContainer>
-        <div id="step1"><Step1 /></div>
-        <div id="step2"><Step2 /></div>
+        <div id="step1"><Step1 completed={setCompleted} invalidInput={invalidInput} /></div>
+        <div id="step2"><Step2/></div>
         <div id="step3"><Step3 /></div>
         <div id="step4"><Step4 /></div>
         <div id="step5"><Step5 /></div>
