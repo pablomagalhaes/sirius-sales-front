@@ -86,7 +86,6 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   }
 
   const handleSave = (): void => {
-    // validar todos os steps
     if (
       completed.step1 &&
       completed.step2 &&
@@ -174,7 +173,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         </ButtonContainer>
       </TopContainer>
       <MainContainer>
-        <div id="step1"><Step1 setProposalType={setProposalType} /></div>
+        <div id="step1"><Step1 setCompleted={setCompleted} invalidInput={invalidInput} setProposalType={setProposalType} /></div>
         <div id="step2"><Step2 proposalType={proposalType} setCompleted={setCompleted} invalidInput={invalidInput} /></div>
         <div id="step3"><Step3 /></div>
         <div id="step4"><Step4 /></div>
