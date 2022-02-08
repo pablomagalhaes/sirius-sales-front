@@ -43,44 +43,48 @@ interface Cell {
   value: string
 }
 interface TableData {
-  data: Cell[]
+  data?: Cell[]
 }
 
 const Table = ({ data }: TableData): JSX.Element => {
   return (
     <StyledTable>
       <TableBody>
-        {data?.map((item: Cell) => {
-          return (
-            <StyledRow id="styled_row">
-              <StyledTableCell width="100%" component="th" scope="row" color>
-                {item.fare}
-              </StyledTableCell>
-              <StyledTableCell width="100%" align="left">
-                {item.type}
-              </StyledTableCell>
-              <StyledTableCell width="100%" align="left">
-                {item.value}
-              </StyledTableCell>
-              <StyledTableCell width="100%">
-                <RowReverseDiv>
-                  <RemoveIcon
-                    onClick={() => {
-                      console.log('Remove')
-                    }}
-                  />
-                  <EditIconDiv>
-                    <EditIcon
+        {data !== null
+          ? data?.map((item: Cell, i) => {
+            return (
+              <StyledRow id="styled_row" key={i}>
+                <StyledTableCell color={1} width="100%" component="th" scope="row">
+                  {item.fare}
+                </StyledTableCell>
+                <StyledTableCell width="100%" align="left">
+                  {item.type}
+                </StyledTableCell>
+                <StyledTableCell width="100%" align="left">
+                  {item.value}
+                </StyledTableCell>
+                <StyledTableCell width="100%">
+                  <RowReverseDiv>
+                    <RemoveIcon
                       onClick={() => {
-                        console.log('Edit')
+                        console.log('Remove')
                       }}
                     />
-                  </EditIconDiv>
-                </RowReverseDiv>
-              </StyledTableCell>
-            </StyledRow>
-          )
-        })}
+                    <EditIconDiv>
+                      <EditIcon
+                        onClick={() => {
+                          console.log('Edit')
+                        }}
+                      />
+                    </EditIconDiv>
+                  </RowReverseDiv>
+                </StyledTableCell>
+              </StyledRow>
+            )
+          })
+          : (
+            <div />
+            )}
       </TableBody>
     </StyledTable>
   )
