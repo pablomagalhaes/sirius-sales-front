@@ -147,7 +147,7 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted }: Step2Props):
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
             >
               <MenuItem disabled value={data.incoterm}>
-                <SelectSpan placeholder>{I18n.t('pages.newProposal.step2.choose')}</SelectSpan>
+                <SelectSpan placeholder={1}>{I18n.t('pages.newProposal.step2.choose')}</SelectSpan>
               </MenuItem>
               {incotermList.map((item) => (
                 <MenuItem key={item.value} value={item.value}>

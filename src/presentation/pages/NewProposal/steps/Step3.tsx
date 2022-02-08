@@ -139,7 +139,7 @@ const Step3 = (): JSX.Element => {
                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 >
                   <MenuItem disabled value="">
-                    <SelectSpan placeholder>{I18n.t('pages.newProposal.step3.choose')}</SelectSpan>
+                    <SelectSpan placeholder={1}>{I18n.t('pages.newProposal.step3.choose')}</SelectSpan>
                   </MenuItem>
                   {temperatureList.map((item) => (
                     <MenuItem key={item.value} value={item.value}>

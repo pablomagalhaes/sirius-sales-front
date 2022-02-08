@@ -1,5 +1,10 @@
 import styled from 'styled-components'
+import { Radio } from '@material-ui/core/'
 import { primary } from '../../../application/themes'
+
+interface StyledRadioProps {
+  color?: string
+}
 
 const RootContainer = styled.div`
   position: relative;
@@ -155,6 +160,10 @@ const BoldSpan = styled.span`
   font-weight: ${(props: { checked: boolean }) => props.checked ? '600' : 'normal'};
 `
 
+const StyledRadio = styled(Radio)`
+  color: ${({ color }: StyledRadioProps) => color} !important;
+`
+
 export {
   ButtonContainer,
   IconContainer,
@@ -168,5 +177,6 @@ export {
   TopContainer,
   UserContainer,
   Username,
-  BoldSpan
+  BoldSpan,
+  StyledRadio
 }

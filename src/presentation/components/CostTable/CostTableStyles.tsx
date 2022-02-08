@@ -49,9 +49,15 @@ export const TableHeadRow = styled(TableRow)`
   }
 `
 
+interface StyledTableCellProps {
+  color: boolean
+  width: string
+  theme: any
+}
+
 export const StyledTableCell = styled(TableCell)`
-  width: ${(props: any) => props.width};
-  color: ${(props: any) => props.color === true
+  width: ${(props: StyledTableCellProps) => props.width};
+  color: ${(props: StyledTableCellProps) => props.color
     ? `${String(props.theme?.commercial?.pages?.newProposal?.steps?.stepFare)} !important`
     : `${String(props.theme?.commercial?.pages?.newProposal?.font)} !important`};
 `
