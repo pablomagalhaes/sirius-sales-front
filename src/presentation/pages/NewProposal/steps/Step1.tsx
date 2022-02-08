@@ -14,7 +14,6 @@ import { withTheme } from 'styled-components'
 import ControlledInput from '../../../components/ControlledInput'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import { useEffect } from 'react'
-
 export interface Step1Props {
   theme?: any
   invalidInput: boolean
@@ -22,7 +21,7 @@ export interface Step1Props {
   setProposalType: (proposal: string) => void
 }
 
-const Step1 = ({ theme, invalidInput, setCompleted }: Step1Props): JSX.Element => {
+const Step1 = ({ theme, invalidInput, setCompleted, setProposalType }: Step1Props): JSX.Element => {
   const [data, setData] = useState({
     proposal: '',
     services: '',
