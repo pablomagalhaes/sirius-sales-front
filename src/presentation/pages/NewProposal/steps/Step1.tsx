@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Checkbox,
   FormControlLabel,
@@ -13,18 +13,22 @@ import { Title, Subtitle, IconContainer, Separator } from '../style'
 import IconComponent from '../../../../application/icons/IconComponent'
 import { withTheme } from 'styled-components'
 import ControlledInput from '../../../components/ControlledInput'
-
 export interface Step1Props {
   theme: any
+  setProposalType: (proposal: string) => void
 }
 
-const Step1 = ({ theme }: Step1Props): JSX.Element => {
+const Step1 = ({ theme, setProposalType }: Step1Props): JSX.Element => {
   const [data, setData] = useState({
     proposal: '',
     services: '',
     client: '',
     modal: ''
   })
+
+  useEffect(() => {
+    setProposalType(data.proposal)
+  }, [data.proposal])
 
   return (
     <Separator>

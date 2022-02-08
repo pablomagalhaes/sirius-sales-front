@@ -119,7 +119,7 @@
       "amount": "Qtd: ",
       "type": "Tipo: ",
       "rawWeight":"Peso bruto (kg): ",
-      "hwl": "A x L x C: ",
+      "hwl": "C x L x A: ",
       "diameter": "Diâmetro:",
       "cubage": "Cubagem: ",
       "imo": "IMO:",
@@ -128,7 +128,9 @@
       "yes": "Sim",
       "hazardous": "Perigoso?",
       "save": "Salvar",
-      "requiredField": "Campo obrigatório"
+      "requiredField": "Campo obrigatório",
+      "cubageWeight": "Peso cubado (m3): ",
+      "qnt": "Qtd"
     },
     "fareModal":{
       "type": "Tipo:",

@@ -181,7 +181,7 @@ const Proposal = (): JSX.Element => {
           <PaginationMainContainer>
             <Pagination labelDisplay='exibindo' count={100} labelRowsPerPage='Propostas por página' labelDisplayedRows='de' tooltipFirst='Primeira' tooltipBack='Anterior' tooltipNext='Próxima' tooltipLast='Última' />
           </PaginationMainContainer>
-        </PaginationContainer>        
+        </PaginationContainer>
       </BottomSideContainer>
     </RootContainer>
   )
