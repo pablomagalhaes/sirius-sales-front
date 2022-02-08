@@ -91,7 +91,7 @@ const Step4 = (): JSX.Element => {
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
             >
               <MenuItem disabled value={data.validity}>
-                <SelectSpan placeholder>{I18n.t('pages.newProposal.step4.choose')}</SelectSpan>
+                <SelectSpan placeholder={1}>{I18n.t('pages.newProposal.step4.choose')}</SelectSpan>
               </MenuItem>
               {validityList.map((item) => (
                 <MenuItem key={item.value} value={item.value}>
@@ -137,7 +137,7 @@ const Step4 = (): JSX.Element => {
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
             >
               <MenuItem disabled value={data.frequency}>
-                <SelectSpan placeholder>{I18n.t('pages.newProposal.step4.choose')}</SelectSpan>
+                <SelectSpan placeholder={1}>{I18n.t('pages.newProposal.step4.choose')}</SelectSpan>
               </MenuItem>
               {frequencyList.map((item) => (
                 <MenuItem key={item.value} value={item.value}>
@@ -183,7 +183,7 @@ const Step4 = (): JSX.Element => {
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
             >
               <MenuItem disabled value={data.currency}>
-                <SelectSpan placeholder>{I18n.t('pages.newProposal.step4.choose')}</SelectSpan>
+                <SelectSpan placeholder={1}>{I18n.t('pages.newProposal.step4.choose')}</SelectSpan>
               </MenuItem>
               {currencyList.map((item) => (
                 <MenuItem key={item.value} value={item.value}>
