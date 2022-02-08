@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   FormControl,
   FormLabel,
@@ -12,8 +12,15 @@ import IconComponent from '../../../../application/icons/IconComponent'
 import { withTheme } from 'styled-components'
 import ControlledSelect from '../../../components/ControlledSelect'
 import ControlledInput from '../../../components/ControlledInput'
+import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
+interface Step2Props {
+  theme: any
+  proposalType: string
+  invalidInput: boolean
+  setCompleted: (completed: any) => void
+}
 
-const Step2 = ({ theme }): JSX.Element => {
+const Step2 = ({ theme, proposalType, invalidInput, setCompleted }: Step2Props): JSX.Element => {
   // mock
   const incotermList = [
     {
@@ -29,6 +36,24 @@ const Step2 = ({ theme }): JSX.Element => {
     incoterm: ''
   })
 
+  useEffect(() => {
+    if (
+      data.origin.length !== 0 &&
+      data.destiny.length !== 0 &&
+      ((proposalType === 'client' && data.agents.length !== 0) ||
+        proposalType !== 'client') &&
+      data.incoterm.length !== 0
+    ) {
+      setCompleted((currentState) => {
+        return { ...currentState, step2: true }
+      })
+    } else {
+      setCompleted((currentState) => {
+        return { ...currentState, step2: false }
+      })
+    }
+  }, [data, proposalType])
+
   return (
     <Separator>
       <Title>
@@ -38,11 +63,14 @@ const Step2 = ({ theme }): JSX.Element => {
       <FormControl variant="outlined" size="small">
         <Grid container spacing={2}>
           <Grid item xs={6}>
-            <FormLabel component="legend">{I18n.t('pages.newProposal.step2.origin')}</FormLabel>
+            <FormLabel component="legend">
+              {I18n.t('pages.newProposal.step2.origin')}
+              <RedColorSpan> *</RedColorSpan>
+            </FormLabel>
             <ControlledInput
               id="search-origin"
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
-              invalid={false}
+              invalid={invalidInput && data.origin.length === 0}
               onChange={e => setData({ ...data, origin: e.target.value })}
               value={data.origin}
               variant="outlined"
@@ -58,11 +86,14 @@ const Step2 = ({ theme }): JSX.Element => {
             />
           </Grid>
           <Grid item xs={6}>
-            <FormLabel component="legend">{I18n.t('pages.newProposal.step2.destiny')}</FormLabel>
+            <FormLabel component="legend">
+              {I18n.t('pages.newProposal.step2.destiny')}
+              <RedColorSpan> *</RedColorSpan>
+            </FormLabel>
             <ControlledInput
               id="search-destiny"
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
-              invalid={false}
+              invalid={invalidInput && data.destiny.length === 0}
               onChange={e => setData({ ...data, destiny: e.target.value })}
               value={data.destiny}
               variant="outlined"
@@ -78,11 +109,14 @@ const Step2 = ({ theme }): JSX.Element => {
             />
           </Grid>
           <Grid item xs={6}>
-            <FormLabel component="legend">{I18n.t('pages.newProposal.step2.agents')}</FormLabel>
+            <FormLabel component="legend">
+              {I18n.t('pages.newProposal.step2.agents')}
+              {proposalType === 'client' && <RedColorSpan> *</RedColorSpan>}
+            </FormLabel>
             <ControlledInput
               id="search-name"
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
-              invalid={false}
+              invalid={proposalType === 'client' && invalidInput && data.agents.length === 0}
               onChange={e => setData({ ...data, agents: e.target.value })}
               value={data.agents}
               variant="outlined"
@@ -98,7 +132,10 @@ const Step2 = ({ theme }): JSX.Element => {
             />
           </Grid>
           <Grid item xs={3}>
-            <FormLabel component="legend">{I18n.t('pages.newProposal.step2.incoterm')}</FormLabel>
+            <FormLabel component="legend">
+              {I18n.t('pages.newProposal.step2.incoterm')}
+              <RedColorSpan> *</RedColorSpan>
+            </FormLabel>
             <ControlledSelect
               labelId="select-label-incoterm"
               id="incoterm"
@@ -106,7 +143,7 @@ const Step2 = ({ theme }): JSX.Element => {
               onChange={e => { console.log(e.target.value); setData({ ...data, incoterm: e.target.value }) }}
               displayEmpty
               disableUnderline
-              invalid={false}
+              invalid={invalidInput && data.incoterm.length === 0}
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
             >
               <MenuItem disabled value={data.incoterm}>
