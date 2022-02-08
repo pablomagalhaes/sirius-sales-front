@@ -118,8 +118,8 @@
     "itemModal":{
       "amount":"Amount: ",
       "type":"Type: ",
-      "rawWeight":"Raw weight (kg):",
-      "hwl": "H x W x L: ",
+      "rawWeight":"Raw weight (kg): ",
+      "hwl": "L x W x H: ",
       "diameter": "Diameter:",
       "cubage": "Cubage: ",
       "imo": "IMO:",
@@ -128,7 +128,9 @@
       "yes": "Yes",
       "hazardous": "Hazardous?",
       "save": "Save",
-      "requiredField": "Required field"
+      "requiredField": "Required field",
+      "cubageWeight": "Cubage weight (m3): ",
+      "qnt": "Qnt"
     },
     "fareModal":{
       "type": "Type:",
