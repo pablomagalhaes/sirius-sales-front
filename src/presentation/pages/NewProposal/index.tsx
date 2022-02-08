@@ -99,7 +99,6 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     } else {
       setInvalidInput(true)
     }
-    console.log('Clicked save')
   }
 
   const floatingButtonMenuItems = [
