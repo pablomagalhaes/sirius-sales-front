@@ -12,42 +12,43 @@ import {
 } from '@material-ui/core/'
 import { I18n } from 'react-redux-i18n'
 import { Title, Subtitle, Separator, SelectSpan, BoldSpan } from '../style'
-import ItemModal from '../../../components/ItemModal/ItemModal'
+import ItemModal, { ItemModalData, initialState } from '../../../components/ItemModal/ItemModal'
 import ControlledSelect from '../../../components/ControlledSelect'
 import ControlledInput from '../../../components/ControlledInput'
+import ChargeTable from '../../../components/ChargeTable'
+
+// mock
+const temperatureList = [
+  {
+    name: 'Ambiente',
+    value: 1
+  },
+  {
+    name: 'Abaixo de -20',
+    value: 2
+  },
+  {
+    name: '-20',
+    value: 3
+  },
+  {
+    name: '-20 a -10',
+    value: 4
+  },
+  {
+    name: '-18 a 0',
+    value: 5
+  },
+  {
+    name: '-10',
+    value: 6
+  }
+]
 
 const Step3 = (): JSX.Element => {
   const [open, setOpen] = useState(false)
-  const handleOpen = (): void => setOpen(true)
-  const handleClose = (): void => setOpen(false)
-  const handleAdd = (item): void => console.log(item)
-  // mock
-  const temperatureList = [
-    {
-      name: 'Ambiente',
-      value: 1
-    },
-    {
-      name: 'Abaixo de -20',
-      value: 2
-    },
-    {
-      name: '-20',
-      value: 3
-    },
-    {
-      name: '-20 a -10',
-      value: 4
-    },
-    {
-      name: '-18 a 0',
-      value: 5
-    },
-    {
-      name: '-10',
-      value: 6
-    }
-  ]
+  const [tableRows, setTableRows] = useState<ItemModalData[]>([])
+  const [chargeData, setChargeData] = useState<ItemModalData>(initialState)
 
   const [data, setData] = useState({
     description: '',
@@ -55,6 +56,35 @@ const Step3 = (): JSX.Element => {
     refrigereted: false,
     temperature: ''
   })
+
+  const handleOpen = (): void => setOpen(true)
+
+  const handleClose = (): void => {
+    setOpen(false)
+    setChargeData(initialState)
+  }
+
+  const handleAdd = (item: ItemModalData): void => {
+    if (item.id !== null) {
+      const startTableRows = tableRows.slice(0, item.id)
+      const endTableRows = tableRows.slice(item.id + 1)
+      setTableRows([...startTableRows, item, ...endTableRows])
+    } else {
+      const newItem = { ...item, id: tableRows.length }
+      setTableRows([...tableRows, newItem])
+    }
+  }
+
+  const handleEdit = (row: ItemModalData): void => {
+    setChargeData(row)
+    setOpen(true)
+  }
+
+  const handleDelete = (index: number): void => {
+    const newTable = tableRows.slice(0)
+    newTable.splice(index, 1)
+    setTableRows(newTable)
+  }
 
   return (
     <Separator>
@@ -119,6 +149,12 @@ const Step3 = (): JSX.Element => {
                 </ControlledSelect>
               </Grid>)
           }
+          {
+            tableRows.length > 0 && (
+              <Grid item xs={12}>
+                <ChargeTable charges={tableRows} onEdit={handleEdit} onDelete={handleDelete} />
+              </Grid>)
+          }
           <Grid item xs={12}>
             <Button
               onAction={handleOpen}
@@ -127,6 +163,7 @@ const Step3 = (): JSX.Element => {
               backgroundGreen={false}
             />
             <ItemModal
+              dataProp={chargeData}
               handleAdd={handleAdd}
               open={open}
               setClose={handleClose}

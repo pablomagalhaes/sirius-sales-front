@@ -1,6 +1,6 @@
 import { MenuItem, Modal } from '@material-ui/core'
 import { Button } from 'fiorde-fe-components'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AlertIcon from '../../../application/icons/AlertIcon'
 import CloseIcon from '../../../application/icons/CloseIcon'
 import {
@@ -24,7 +24,7 @@ import {
   Title
 } from '../StyledComponents/modalStyles'
 
-interface ItemModalData {
+export interface ItemModalData {
   amount: string
   codUn: string | null
   cubage: string
@@ -39,11 +39,26 @@ interface ItemModalData {
   id: number | null
 }
 interface ItemModalProps {
-  dataProp?: ItemModalData
+  dataProp: ItemModalData
   handleAdd: (item) => void
   open: boolean
   setClose: () => void
   title: string
+}
+
+export const initialState = {
+  amount: '',
+  codUn: null,
+  cubage: '',
+  dangerous: false,
+  diameter: null,
+  height: '',
+  imo: null,
+  length: '',
+  rawWeight: '',
+  type: '',
+  width: '',
+  id: null
 }
 
 const ItemModal = ({
@@ -59,22 +74,14 @@ const ItemModal = ({
   const imoList = ['1', '2', '3']
   const rgxFloat = /^[0-9]*,?[0-9]*$/
   const rgxInt = /^[0-9]*$/
-  const initialState = {
-    amount: '',
-    codUn: '',
-    cubage: '',
-    dangerous: false,
-    diameter: '',
-    height: '',
-    imo: '',
-    length: '',
-    rawWeight: '',
-    type: '',
-    width: '',
-    id: null
-  }
-  const [data, setData] = useState(dataProp != null ? dataProp : initialState)
+  const [data, setData] = useState<ItemModalData>(initialState)
   const [invalidInput, setInvalidInput] = useState(false)
+
+  useEffect(() => {
+    if (dataProp !== initialState) {
+      setData(dataProp)
+    }
+  }, [open])
 
   const handleOnClose = (): void => {
     setData(initialState)
@@ -204,13 +211,12 @@ const ItemModal = ({
             <div style={{ width: '60px', height: '30px', marginRight: '8px', marginTop: '12px' }}>
               <ControlledInput
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                inputProps={{ 'data-testid': 'height' }}
-                value={data.height}
-                onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, height: e.target.value })) }}
                 invalid={
                   invalidInput &&
-                  (data.height === null || data.height.length === 0)
+                  (data.length === null || data.length.length === 0)
                 }
+                value={data.length}
+                onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, length: e.target.value })) }}
                 variant="outlined"
                 size="small"
                 modal
@@ -233,17 +239,19 @@ const ItemModal = ({
             <div style={{ width: '60px', height: '30px', marginRight: '8px', marginTop: '12px' }}>
               <ControlledInput
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                inputProps={{ 'data-testid': 'height' }}
+                value={data.height}
+                onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, height: e.target.value })) }}
                 invalid={
                   invalidInput &&
-                  (data.length === null || data.length.length === 0)
+                  (data.height === null || data.height.length === 0)
                 }
-                value={data.length}
-                onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, length: e.target.value })) }}
                 variant="outlined"
                 size="small"
                 modal
               />
             </div>
+
             <div style={{ width: '126px', height: '30px', marginLeft: '15px', marginTop: '12px' }}>
               <ControlledInput
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
