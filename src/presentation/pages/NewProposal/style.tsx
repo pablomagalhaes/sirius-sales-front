@@ -161,7 +161,7 @@ const BoldSpan = styled.span`
 `
 
 const StyledRadio = styled(Radio)`
-  color: ${({ color }: StyledRadioProps) => color } !important;
+  color: ${({ color }: StyledRadioProps) => color} !important;
 `
 
 export {
