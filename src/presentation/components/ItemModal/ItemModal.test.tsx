@@ -5,7 +5,7 @@ import '@testing-library/jest-dom'
 const props = {
   dataProp: {
     amount: '12',
-    codUn: '',
+    codUn: '12',
     cubage: '12',
     dangerous: false,
     diameter: '',
@@ -21,7 +21,9 @@ const props = {
   handleAdd: () => {},
   setOpen: () => {},
   open: true,
-  setClose: () => {}
+  setClose: () => {},
+  modal: '1',
+  specifications: 'lcl'
 }
 
 test('should show text Editar item', () => {

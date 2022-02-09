@@ -31,8 +31,8 @@ const ChargeTable = ({ charges, onEdit, onDelete }: ChargeTableProps): JSX.Eleme
         </TableHead>
         <TableBody>
           {charges.map((row: ItemModalData, i) => {
-            cubage += Number(row.cubage.replace(',', '.'))
-            weight += Number(row.rawWeight.replace(',', '.'))
+            cubage += Number(row.cubage?.replace(',', '.'))
+            weight += Number(row.rawWeight?.replace(',', '.'))
             return (
               <StyledTableRow key={i} noBorder={i + 1 === charges.length}>
                 <TableCell component="th" scope="row">
@@ -40,9 +40,9 @@ const ChargeTable = ({ charges, onEdit, onDelete }: ChargeTableProps): JSX.Eleme
                 </TableCell>
                 <TableCell>{row.amount}</TableCell>
                 <TableCell>{row.type.toUpperCase()}</TableCell>
-                <TableCell>{Number(row.rawWeight.replace(',', '.')).toFixed(2).replace('.', ',')}</TableCell>
-                <TableCell>{Number(row.cubage.replace(',', '.')).toFixed(3).replace('.', ',')}</TableCell>
-                <TableCell>{Number(row.length.replace(',', '.')).toFixed(2).replace('.', ',')} x {Number(row.width.replace(',', '.')).toFixed(2).replace('.', ',')} x {Number(row.height.replace(',', '.')).toFixed(2).replace('.', ',')} </TableCell>
+                <TableCell>{row.rawWeight !== null ? Number(row.rawWeight.replace(',', '.')).toFixed(2).replace('.', ',') : '-'}</TableCell>
+                <TableCell>{row.cubage !== null ? Number(row.cubage.replace(',', '.')).toFixed(3).replace('.', ',') : '-'}</TableCell>
+                <TableCell>{row.length !== null && row.width !== null && row.height !== null ? `${Number(row.length.replace(',', '.')).toFixed(2).replace('.', ',')} x ${Number(row.width.replace(',', '.')).toFixed(2).replace('.', ',')} x ${Number(row.height.replace(',', '.')).toFixed(2).replace('.', ',')}`: '-'}</TableCell>
                 <TableCell>{row.diameter !== null ? row.diameter : '-'}</TableCell>
                 <TableCell>{row.imo !== null ? row.imo : '-'}</TableCell>
                 <TableCell align="right">
