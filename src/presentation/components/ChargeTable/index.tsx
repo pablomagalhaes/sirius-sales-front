@@ -1,8 +1,8 @@
-import React from 'react'
-import { Table, TableBody, TableCell, TableContainer, TableHead } from '@material-ui/core/'
+import React, { useState } from 'react'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TextField } from '@material-ui/core/'
 import EditIcon from '../../../application/icons/EditIcon'
 import RemoveIcon from '../../../application/icons/RemoveIcon'
-import { IconsContainer, IndividualIconContainer, TableHeader, StyledTableRow, BottomRow, StyledTableCell } from './style'
+import { IconsContainer, IndividualIconContainer, TableHeader, StyledTableRow, BottomRow, StyledCwContainer } from './style'
 import { ItemModalData } from '../ItemModal/ItemModal'
 import { I18n } from 'react-redux-i18n'
 
@@ -16,6 +16,13 @@ const ChargeTable = ({ charges, onEdit, onDelete }: ChargeTableProps): JSX.Eleme
   const tableHeaders = ['Item #', `${String(I18n.t('components.itemModal.qnt'))}.`, String(I18n.t('components.itemModal.type')), String(I18n.t('components.itemModal.rawWeight')), String(I18n.t('components.itemModal.cubage')), String(I18n.t('components.itemModal.hwl')), String(I18n.t('components.itemModal.diameter')), String(I18n.t('components.itemModal.imo'))]
   let weight = 0
   let cubage = 0
+  let cubageWeight = 0
+
+  const [editCw, setEditCw] = useState(false)
+
+  const onEditCw = (): void => {
+    setEditCw(!editCw)
+  }
 
   return (
     <TableContainer>
@@ -31,8 +38,9 @@ const ChargeTable = ({ charges, onEdit, onDelete }: ChargeTableProps): JSX.Eleme
         </TableHead>
         <TableBody>
           {charges.map((row: ItemModalData, i) => {
-            cubage += Number(row.cubage.replace(',', '.'))
-            weight += Number(row.rawWeight.replace(',', '.'))
+            cubage += Number(row.cubage?.replace(',', '.'))
+            weight += Number(row.rawWeight?.replace(',', '.'))
+            cubageWeight += (Number(row.length?.replace(',', '.')) * Number(row.width?.replace(',', '.')) * Number(row.height?.replace(',', '.')))
             return (
               <StyledTableRow key={i} noBorder={i + 1 === charges.length}>
                 <TableCell component="th" scope="row">
@@ -40,9 +48,9 @@ const ChargeTable = ({ charges, onEdit, onDelete }: ChargeTableProps): JSX.Eleme
                 </TableCell>
                 <TableCell>{row.amount}</TableCell>
                 <TableCell>{row.type.toUpperCase()}</TableCell>
-                <TableCell>{Number(row.rawWeight.replace(',', '.')).toFixed(2).replace('.', ',')}</TableCell>
-                <TableCell>{Number(row.cubage.replace(',', '.')).toFixed(3).replace('.', ',')}</TableCell>
-                <TableCell>{Number(row.length.replace(',', '.')).toFixed(2).replace('.', ',')} x {Number(row.width.replace(',', '.')).toFixed(2).replace('.', ',')} x {Number(row.height.replace(',', '.')).toFixed(2).replace('.', ',')} </TableCell>
+                <TableCell>{row.rawWeight !== null ? Number(row.rawWeight.replace(',', '.')).toFixed(2).replace('.', ',') : '-'}</TableCell>
+                <TableCell>{row.cubage !== null ? Number(row.cubage.replace(',', '.')).toFixed(3).replace('.', ',') : '-'}</TableCell>
+                <TableCell>{row.length !== null && row.width !== null && row.height !== null ? `${Number(row.length.replace(',', '.')).toFixed(2).replace('.', ',')} x ${Number(row.width.replace(',', '.')).toFixed(2).replace('.', ',')} x ${Number(row.height.replace(',', '.')).toFixed(2).replace('.', ',')}` : '-'}</TableCell>
                 <TableCell>{row.diameter !== null ? row.diameter : '-'}</TableCell>
                 <TableCell>{row.imo !== null ? row.imo : '-'}</TableCell>
                 <TableCell align="right">
@@ -64,10 +72,24 @@ const ChargeTable = ({ charges, onEdit, onDelete }: ChargeTableProps): JSX.Eleme
             <TableCell />
             <TableCell><b>{I18n.t('components.itemModal.rawWeight')}</b>{Number(weight).toFixed(2).replace('.', ',')} kg</TableCell>
             <TableCell><b>{I18n.t('components.itemModal.cubage')}</b>{Number(cubage).toFixed(2).replace('.', ',')}</TableCell>
-            <TableCell><b>{I18n.t('components.itemModal.cubageWeight')}</b>400,86</TableCell>
+            <TableCell><b>{I18n.t('components.itemModal.cubageWeight')}</b>{Number(cubageWeight).toFixed(2).replace('.', ',')}</TableCell>
             <TableCell />
             <TableCell />
-            <StyledTableCell align="center"><b>CW: 5.76</b></StyledTableCell>
+            <TableCell align="center">
+              <StyledCwContainer>
+                <b>CW:&nbsp;</b>
+                {
+                  editCw
+                    ? (<TextField
+                      variant="outlined"
+                      style={{ width: '25px' }} />)
+                    : (<b>5.76</b>)
+                }
+                <IndividualIconContainer>
+                  <EditIcon onClick={onEditCw} />
+                </IndividualIconContainer>
+              </StyledCwContainer>
+            </TableCell>
           </BottomRow>
         </TableBody>
       </Table>

@@ -141,7 +141,7 @@ const Header = styled.div`
 const Separator = styled.div`
   margin-bottom: 100px;
   .form-size {
-    width: 75%
+    width: 100%
   }
   .radio-spacement {
     margin-left: 30px;

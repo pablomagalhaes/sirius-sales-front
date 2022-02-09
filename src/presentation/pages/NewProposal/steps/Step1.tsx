@@ -18,9 +18,10 @@ export interface Step1Props {
   invalidInput: boolean
   setCompleted: (completed: any) => void
   setProposalType: (proposal: string) => void
+  setModal: (modal: string) => void
 }
 
-const Step1 = ({ theme, invalidInput, setCompleted, setProposalType }: Step1Props): JSX.Element => {
+const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }: Step1Props): JSX.Element => {
   const [data, setData] = useState({
     proposal: '',
     services: '',
@@ -31,6 +32,10 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType }: Step1Prop
   useEffect(() => {
     setProposalType(data.proposal)
   }, [data.proposal])
+
+  useEffect(() => {
+    setModal(data.modal)
+  }, [data.modal])
 
   useEffect(() => {
     if (data.proposal !== '' && data.proposalValue !== '' && data.modal !== '') {
