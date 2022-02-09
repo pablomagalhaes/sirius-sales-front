@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { TableCell, TableRow } from '@material-ui/core'
+import { TableRow } from '@material-ui/core'
 
 export const IconsContainer = styled.div`
     display: flex;
@@ -8,7 +8,7 @@ export const IconsContainer = styled.div`
 `
 
 export const IndividualIconContainer = styled.div`
-    margin: 12px;
+    margin: 0 12px;
     cursor: pointer;
 `
 
@@ -16,8 +16,14 @@ export const TableHeader = styled.span`
     color: ${(props: any) => props.theme?.commercial?.components?.itemModal?.fontColor};
     font-size: 12px;
 `
-export const StyledTableCell = styled(TableCell)`
-    color: #1470CC !important;
+
+export const StyledCwContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    padding: 5px 0 5px 15px;
+    background-color: ${(props: any) => props.theme?.commercial?.components?.itemModal?.border};
 `
 
 export const StyledTableRow = styled(TableRow)`

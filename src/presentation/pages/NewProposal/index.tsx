@@ -29,6 +29,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [hover, setHover] = useState({ id: '', hover: false })
   const [invalidInput, setInvalidInput] = useState(false)
   const [proposalType, setProposalType] = useState('')
+  const [modal, setModal] = useState('')
 
   const [completed, setCompleted] = useState({
     step1: false,
@@ -173,9 +174,9 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         </ButtonContainer>
       </TopContainer>
       <MainContainer>
-        <div id="step1"><Step1 setCompleted={setCompleted} invalidInput={invalidInput} setProposalType={setProposalType} /></div>
+        <div id="step1"><Step1 setModal={setModal} setCompleted={setCompleted} invalidInput={invalidInput} setProposalType={setProposalType} /></div>
         <div id="step2"><Step2 proposalType={proposalType} setCompleted={setCompleted} invalidInput={invalidInput} /></div>
-        <div id="step3"><Step3 /></div>
+        <div id="step3"><Step3 setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} /></div>
         <div id="step4"><Step4 /></div>
         <div id="step5"><Step5 /></div>
         <div id="step6"><Step6 /></div>

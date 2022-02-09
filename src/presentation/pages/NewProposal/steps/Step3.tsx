@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from 'fiorde-fe-components'
 import {
   FormControl,
@@ -6,16 +6,17 @@ import {
   FormLabel,
   Grid,
   MenuItem,
-  Radio,
   RadioGroup,
   Checkbox
 } from '@material-ui/core/'
 import { I18n } from 'react-redux-i18n'
-import { Title, Subtitle, Separator, SelectSpan, BoldSpan } from '../style'
+import { Title, Subtitle, Separator, SelectSpan, BoldSpan, StyledRadio } from '../style'
 import ItemModal, { ItemModalData, initialState } from '../../../components/ItemModal/ItemModal'
 import ControlledSelect from '../../../components/ControlledSelect'
 import ControlledInput from '../../../components/ControlledInput'
 import ChargeTable from '../../../components/ChargeTable'
+import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
+import { withTheme } from 'styled-components'
 
 // mock
 const temperatureList = [
@@ -45,7 +46,14 @@ const temperatureList = [
   }
 ]
 
-const Step3 = (): JSX.Element => {
+interface Step3Props {
+  theme?: any
+  modal: string
+  invalidInput: boolean
+  setCompleted: (completed: any) => void
+}
+
+const Step3 = ({ modal, invalidInput, setCompleted, theme }: Step3Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [tableRows, setTableRows] = useState<ItemModalData[]>([])
   const [chargeData, setChargeData] = useState<ItemModalData>(initialState)
@@ -86,6 +94,30 @@ const Step3 = (): JSX.Element => {
     setTableRows(newTable)
   }
 
+  const getColor = (value): any => {
+    if (value === '' && invalidInput && modal === '2') {
+      console.log(theme?.commercial?.components?.itemModal?.redAsterisk)
+      return theme?.commercial?.components?.itemModal?.redAsterisk
+    }
+  }
+
+  useEffect(() => {
+    if (
+      data.description.length !== 0 &&
+      ((modal === '2' && data.specifications.length !== 0) || modal !== '2') &&
+      ((data.refrigereted && data.temperature.length !== 0) ||
+        !data.refrigereted)
+    ) {
+      setCompleted((currentState) => {
+        return { ...currentState, step3: true }
+      })
+    } else {
+      setCompleted((currentState) => {
+        return { ...currentState, step3: false }
+      })
+    }
+  }, [data])
+
   return (
     <Separator>
       <Title>
@@ -95,11 +127,14 @@ const Step3 = (): JSX.Element => {
       <FormControl variant="outlined" size="small" className='form-size'>
         <Grid container spacing={2}>
           <Grid item xs={4}>
-            <FormLabel component="legend">{I18n.t('pages.newProposal.step3.description')}</FormLabel>
+          <FormLabel component="legend">
+              {I18n.t('pages.newProposal.step3.description')}
+              {<RedColorSpan> *</RedColorSpan>}
+            </FormLabel>
             <ControlledInput
               id="description"
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
-              invalid={false}
+              invalid={ invalidInput && data.description.length === 0 }
               onChange={e => setData({ ...data, description: e.target.value })}
               value={data.description}
               variant="outlined"
@@ -107,10 +142,13 @@ const Step3 = (): JSX.Element => {
             />
           </Grid>
           <Grid item xs={4}>
-            <FormLabel component="legend">{I18n.t('pages.newProposal.step3.specifications')}</FormLabel>
+          <FormLabel component="legend">
+              {I18n.t('pages.newProposal.step3.specifications')}
+              {modal === '2' && <RedColorSpan> *</RedColorSpan>}
+            </FormLabel>
             <RadioGroup row aria-label="specifications" name="row-radio-buttons-group" onChange={e => setData({ ...data, specifications: e.target.value })}>
-              <FormControlLabel value="flc" control={<Radio />} label="FLC" />
-              <FormControlLabel value="lcl" control={<Radio className="radio-spacement" />} label="LCL" />
+              <FormControlLabel value="flc" control={<StyledRadio color={getColor(data.specifications)} />} label="FLC" />
+              <FormControlLabel value="lcl" control={<StyledRadio color={getColor(data.specifications)} className="radio-spacement" />} label="LCL" />
               <FormControlLabel
                 value="refrigereted"
                 control={
@@ -127,7 +165,10 @@ const Step3 = (): JSX.Element => {
           {
             data.refrigereted && (
               <Grid item xs={3}>
-                <FormLabel component="legend">{I18n.t('pages.newProposal.step3.temperature')}</FormLabel>
+                <FormLabel component="legend">
+                  {I18n.t('pages.newProposal.step3.temperature')}
+                  {data.refrigereted && <RedColorSpan> *</RedColorSpan>}
+                </FormLabel>
                 <ControlledSelect
                   labelId="select-label-temperature"
                   id="temperature"
@@ -135,7 +176,7 @@ const Step3 = (): JSX.Element => {
                   onChange={e => setData({ ...data, temperature: e.target.value })}
                   displayEmpty
                   disableUnderline
-                  invalid={false}
+                  invalid={ invalidInput && data.refrigereted && data.temperature.length === 0 }
                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 >
                   <MenuItem disabled value="">
@@ -161,6 +202,7 @@ const Step3 = (): JSX.Element => {
               text={I18n.t('pages.newProposal.step3.buttonAdd')}
               icon="add"
               backgroundGreen={false}
+              disabled={true}
             />
             <ItemModal
               dataProp={chargeData}
@@ -168,6 +210,8 @@ const Step3 = (): JSX.Element => {
               open={open}
               setClose={handleClose}
               title={I18n.t('pages.newProposal.step3.buttonAdd')}
+              modal={modal}
+              specifications={data.specifications}
             />
           </Grid>
         </Grid>
@@ -175,5 +219,4 @@ const Step3 = (): JSX.Element => {
     </Separator>
   )
 }
-
-export default Step3
+export default withTheme(Step3)

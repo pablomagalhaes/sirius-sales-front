@@ -26,16 +26,16 @@ import {
 
 export interface ItemModalData {
   amount: string
-  codUn: string | null
-  cubage: string
+  codUn: string
+  cubage: string | null
   dangerous: boolean
   diameter: string | null
-  height: string
+  height: string | null
   imo: string | null
-  length: string
-  rawWeight: string
+  length: string | null
+  rawWeight: string | null
   type: string
-  width: string
+  width: string | null
   id: number | null
 }
 interface ItemModalProps {
@@ -44,20 +44,22 @@ interface ItemModalProps {
   open: boolean
   setClose: () => void
   title: string
+  modal: string
+  specifications: string
 }
 
 export const initialState = {
   amount: '',
-  codUn: null,
-  cubage: '',
+  codUn: '',
+  cubage: null,
   dangerous: false,
   diameter: null,
-  height: '',
+  height: null,
   imo: null,
-  length: '',
-  rawWeight: '',
+  length: null,
+  rawWeight: null,
   type: '',
-  width: '',
+  width: null,
   id: null
 }
 
@@ -66,7 +68,9 @@ const ItemModal = ({
   handleAdd,
   open,
   setClose,
-  title
+  title,
+  modal,
+  specifications
 }: ItemModalProps): JSX.Element => {
   // Mock de tipos, valores serão especificados posteriormente
   const typeList = ['Caixas', 'Bacias']
@@ -98,15 +102,26 @@ const ItemModal = ({
   }
 
   const validateData = (): boolean => {
-    return !(
-      data.type.length === 0 ||
-      data.amount.length === 0 ||
-      data.rawWeight.length === 0 ||
-      data.height.length === 0 ||
-      data.width.length === 0 ||
-      data.length.length === 0 ||
-      data.cubage.length === 0
-    )
+    if (modal === '2' && specifications === 'flc') {
+      return !(
+        data.type.length === 0 ||
+        data.amount.length === 0 ||
+        (data.codUn === null || data.codUn?.length === 0) ||
+        (data.dangerous && (data.imo === null || data.imo?.length === 0))
+      )
+    } else {
+      return !(
+        data.type.length === 0 ||
+        data.amount.length === 0 ||
+        (data.rawWeight === null || data.rawWeight?.length === 0) ||
+        (data.height === null || data.height?.length === 0) ||
+        (data.width === null || data.width?.length === 0) ||
+        (data.length === null || data.length?.length === 0) ||
+        (data.cubage === null || data.cubage?.length === 0) ||
+        data.codUn.length === 0 ||
+        (data.dangerous && (data.imo === null || data.imo?.length === 0))
+      )
+    }
   }
 
   const handleOnAdd = (): void => {
@@ -139,7 +154,9 @@ const ItemModal = ({
             </Label>
             <Label width="27.4%">
               {I18n.t('components.itemModal.rawWeight')}
-              <RedColorSpan> *</RedColorSpan>
+              {(modal === '1' ||
+                (modal === '2' && specifications === 'lcl') ||
+                modal === '3') && <RedColorSpan> *</RedColorSpan>}
             </Label>
           </RowDiv>
           <RowDiv margin={true}>
@@ -185,10 +202,10 @@ const ItemModal = ({
               <ControlledInput
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 invalid={
-                  invalidInput &&
+                  invalidInput && !(specifications === 'flc' && modal === '2') &&
                   (data.rawWeight === null || data.rawWeight.length === 0)
                 }
-                value={data.rawWeight}
+                value={data.rawWeight != null ? data.rawWeight : ''}
                 onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, rawWeight: e.target.value })) }}
                 variant="outlined"
                 size="small"
@@ -197,14 +214,18 @@ const ItemModal = ({
             </div>
           </RowDiv>
           <RowDiv>
-            <Label width="44%">
+          <Label width="44%">
               {I18n.t('components.itemModal.hwl')}
-              <RedColorSpan> *</RedColorSpan>
+              {(modal === '1' ||
+                (modal === '2' && specifications === 'lcl') ||
+                modal === '3') && <RedColorSpan> *</RedColorSpan>}
             </Label>
             <Label width="29%">{I18n.t('components.itemModal.diameter')}</Label>
             <Label width="27%">
               {I18n.t('components.itemModal.cubage')}
-              <RedColorSpan> *</RedColorSpan>
+              {(modal === '1' ||
+                (modal === '2' && specifications === 'lcl') ||
+                modal === '3') && <RedColorSpan> *</RedColorSpan>}
             </Label>
           </RowDiv>
           <RowDiv margin={true}>
@@ -212,10 +233,10 @@ const ItemModal = ({
               <ControlledInput
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 invalid={
-                  invalidInput &&
+                  invalidInput && !(specifications === 'flc' && modal === '2') &&
                   (data.length === null || data.length.length === 0)
                 }
-                value={data.length}
+                value={data.length != null ? data.length : ''}
                 onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, length: e.target.value })) }}
                 variant="outlined"
                 size="small"
@@ -225,10 +246,10 @@ const ItemModal = ({
             <div style={{ width: '60px', height: '30px', marginRight: '8px', marginTop: '12px' }}>
               <ControlledInput
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                value={data.width}
+                value={data.width != null ? data.width : ''}
                 onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, width: e.target.value })) }}
                 invalid={
-                  invalidInput &&
+                  invalidInput && !(specifications === 'flc' && modal === '2') &&
                   (data.width === null || data.width.length === 0)
                 }
                 variant="outlined"
@@ -240,10 +261,10 @@ const ItemModal = ({
               <ControlledInput
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 inputProps={{ 'data-testid': 'height' }}
-                value={data.height}
+                value={data.height != null ? data.height : ''}
                 onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, height: e.target.value })) }}
                 invalid={
-                  invalidInput &&
+                  invalidInput && !(specifications === 'flc' && modal === '2') &&
                   (data.height === null || data.height.length === 0)
                 }
                 variant="outlined"
@@ -267,10 +288,10 @@ const ItemModal = ({
               <ControlledInput
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 invalid={
-                  invalidInput &&
+                  invalidInput && !(specifications === 'flc' && modal === '2') &&
                   (data.cubage === null || data.cubage.length === 0)
                 }
-                value={data.cubage}
+                value={data.cubage != null ? data.cubage : ''}
                 onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, cubage: e.target.value })) }}
                 variant="outlined"
                 size="small"
@@ -282,8 +303,14 @@ const ItemModal = ({
             <Label width="29%">
               {I18n.t('components.itemModal.hazardous')}
             </Label>
-            <Label width="44%">{I18n.t('components.itemModal.imo')}</Label>
-            <Label width="27%">{I18n.t('components.itemModal.codUn')}</Label>
+            <Label width="44%">
+              {I18n.t('components.itemModal.imo')}
+              {data.dangerous && <RedColorSpan> *</RedColorSpan>}
+            </Label>
+            <Label width="27%">
+              {I18n.t('components.itemModal.codUn')}
+              <RedColorSpan> *</RedColorSpan>
+            </Label>
           </RowDiv>
           <RowDiv>
             <CheckBox checked={data.dangerous} onClick={() => (setData({ ...data, dangerous: !data.dangerous }))}>
@@ -300,7 +327,10 @@ const ItemModal = ({
                 disableUnderline
                 displayEmpty
                 placeholder={data.imo != null ? data.imo : ''}
-                invalid={false}
+                invalid={
+                  invalidInput && data.dangerous &&
+                  (data.imo === null || data.imo.length === 0)
+                }
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
               >
                 <MenuItem disabled value="">
@@ -318,8 +348,11 @@ const ItemModal = ({
             <div style={{ width: '126px', height: '30px', marginLeft: '18px', marginTop: '12px' }}>
               <ControlledInput
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                invalid={false}
-                value={data.codUn != null ? data.codUn : ''}
+                invalid={
+                  invalidInput &&
+                  (data.codUn === null || data.codUn.length === 0)
+                }
+                value={data.codUn}
                 onChange={e => (setData({ ...data, codUn: e.target.value }))}
                 variant="outlined"
                 size="small"
