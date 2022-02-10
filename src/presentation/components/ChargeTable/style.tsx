@@ -17,15 +17,6 @@ export const TableHeader = styled.span`
     font-size: 12px;
 `
 
-export const StyledCwContainer = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 5px;
-    padding: 5px 0 5px 15px;
-    background-color: ${(props: any) => props.theme?.commercial?.components?.itemModal?.border};
-`
-
 export const StyledTableRow = styled(TableRow)`
     .MuiTableCell-root {
         border-bottom: ${(props: { noBorder: boolean }) => props.noBorder ? 0 : '1px solid'};
