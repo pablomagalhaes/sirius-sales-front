@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TextField } from '@material-ui/core/'
+import React from 'react'
+import { Table, TableBody, TableCell, TableContainer, TableHead } from '@material-ui/core/'
 import EditIcon from '../../../application/icons/EditIcon'
 import RemoveIcon from '../../../application/icons/RemoveIcon'
-import { IconsContainer, IndividualIconContainer, TableHeader, StyledTableRow, BottomRow, StyledCwContainer } from './style'
+import { IconsContainer, IndividualIconContainer, TableHeader, StyledTableRow, BottomRow } from './style'
 import { ItemModalData } from '../ItemModal/ItemModal'
 import { I18n } from 'react-redux-i18n'
 
@@ -14,15 +14,10 @@ interface ChargeTableProps {
 
 const ChargeTable = ({ charges, onEdit, onDelete }: ChargeTableProps): JSX.Element => {
   const tableHeaders = ['Item #', `${String(I18n.t('components.itemModal.qnt'))}.`, String(I18n.t('components.itemModal.type')), String(I18n.t('components.itemModal.rawWeight')), String(I18n.t('components.itemModal.cubage')), String(I18n.t('components.itemModal.hwl')), String(I18n.t('components.itemModal.diameter')), String(I18n.t('components.itemModal.imo'))]
+  let amount = 0
   let weight = 0
   let cubage = 0
   let cubageWeight = 0
-
-  const [editCw, setEditCw] = useState(false)
-
-  const onEditCw = (): void => {
-    setEditCw(!editCw)
-  }
 
   return (
     <TableContainer>
@@ -38,6 +33,7 @@ const ChargeTable = ({ charges, onEdit, onDelete }: ChargeTableProps): JSX.Eleme
         </TableHead>
         <TableBody>
           {charges.map((row: ItemModalData, i) => {
+            amount += Number(row.amount?.replace(',', '.'))
             cubage += Number(row.cubage?.replace(',', '.'))
             weight += Number(row.rawWeight?.replace(',', '.'))
             cubageWeight += (Number(row.length?.replace(',', '.')) * Number(row.width?.replace(',', '.')) * Number(row.height?.replace(',', '.')))
@@ -68,28 +64,14 @@ const ChargeTable = ({ charges, onEdit, onDelete }: ChargeTableProps): JSX.Eleme
           })}
           <BottomRow>
             <TableCell><b>Total:</b></TableCell>
-            <TableCell>{charges.length} volume(s)</TableCell>
+            <TableCell>{amount} volume(s)</TableCell>
             <TableCell />
             <TableCell><b>{I18n.t('components.itemModal.rawWeight')}</b>{Number(weight).toFixed(2).replace('.', ',')} kg</TableCell>
             <TableCell><b>{I18n.t('components.itemModal.cubage')}</b>{Number(cubage).toFixed(2).replace('.', ',')}</TableCell>
             <TableCell><b>{I18n.t('components.itemModal.cubageWeight')}</b>{Number(cubageWeight).toFixed(2).replace('.', ',')}</TableCell>
             <TableCell />
             <TableCell />
-            <TableCell align="center">
-              <StyledCwContainer>
-                <b>CW:&nbsp;</b>
-                {
-                  editCw
-                    ? (<TextField
-                      variant="outlined"
-                      style={{ width: '25px' }} />)
-                    : (<b>5.76</b>)
-                }
-                <IndividualIconContainer>
-                  <EditIcon onClick={onEditCw} />
-                </IndividualIconContainer>
-              </StyledCwContainer>
-            </TableCell>
+            <TableCell />
           </BottomRow>
         </TableBody>
       </Table>
