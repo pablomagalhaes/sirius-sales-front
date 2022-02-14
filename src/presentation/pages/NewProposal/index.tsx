@@ -177,7 +177,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         <div id="step1"><Step1 setModal={setModal} setCompleted={setCompleted} invalidInput={invalidInput} setProposalType={setProposalType} /></div>
         <div id="step2"><Step2 proposalType={proposalType} setCompleted={setCompleted} invalidInput={invalidInput} /></div>
         <div id="step3"><Step3 setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} /></div>
-        <div id="step4"><Step4 /></div>
+        <div id="step4"><Step4 setCompleted={setCompleted} invalidInput={invalidInput} /></div>
         <div id="step5"><Step5 /></div>
         <div id="step6"><Step6 /></div>
       </MainContainer>
