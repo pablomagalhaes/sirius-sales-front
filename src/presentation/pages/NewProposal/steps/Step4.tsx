@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   FormControl,
   FormLabel,
@@ -9,8 +9,14 @@ import { I18n } from 'react-redux-i18n'
 import { Title, Subtitle, Separator, SelectSpan } from '../style'
 import ControlledSelect from '../../../components/ControlledSelect'
 import ControlledInput from '../../../components/ControlledInput'
+import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 
-const Step4 = (): JSX.Element => {
+interface Step4Props {
+  invalidInput: boolean
+  setCompleted: (completed: any) => void
+}
+
+const Step4 = ({ invalidInput, setCompleted }: Step4Props): JSX.Element => {
   // mock para os selects
   const validityList = [
     {
@@ -70,6 +76,18 @@ const Step4 = (): JSX.Element => {
     internalObs: ''
   })
 
+  useEffect(() => {
+    if (data.validity.length !== 0 && data.validityDate.length !== 0 && data.transitTime.length !== 0 && data.frequency.length !== 0) {
+      setCompleted((currentState) => {
+        return { ...currentState, step4: true }
+      })
+    } else {
+      setCompleted((currentState) => {
+        return { ...currentState, step4: false }
+      })
+    }
+  }, [data])
+
   return (
     <Separator>
       <Title>
@@ -79,7 +97,10 @@ const Step4 = (): JSX.Element => {
       <FormControl variant="outlined" size="small">
         <Grid container spacing={2}>
           <Grid item xs={2}>
-            <FormLabel component="legend">{I18n.t('pages.newProposal.step4.validity')}</FormLabel>
+            <FormLabel component="legend">
+              {I18n.t('pages.newProposal.step4.validity')}
+              <RedColorSpan> *</RedColorSpan>
+            </FormLabel>
             <ControlledSelect
               labelId="validity-label"
               id="validity"
@@ -87,7 +108,7 @@ const Step4 = (): JSX.Element => {
               onChange={e => setData({ ...data, validity: e.target.value })}
               displayEmpty
               disableUnderline
-              invalid={false}
+              invalid={invalidInput && data.validity.length === 0}
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
             >
               <MenuItem disabled value={data.validity}>
@@ -105,7 +126,7 @@ const Step4 = (): JSX.Element => {
             <ControlledInput
               id="no-label-field"
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
-              invalid={false}
+              invalid={invalidInput && data.validityDate.length === 0}
               variant="outlined"
               onChange={e => setData({ ...data, validityDate: e.target.value })}
               value={data.validityDate}
@@ -113,11 +134,14 @@ const Step4 = (): JSX.Element => {
             />
           </Grid>
           <Grid item xs={2}>
-            <FormLabel component="legend">{I18n.t('pages.newProposal.step4.time')}</FormLabel>
+            <FormLabel component="legend">
+              {I18n.t('pages.newProposal.step4.time')}
+              <RedColorSpan> *</RedColorSpan>
+            </FormLabel>
             <ControlledInput
               id="time"
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
-              invalid={false}
+              invalid={invalidInput && data.transitTime.length === 0}
               variant="outlined"
               onChange={e => setData({ ...data, transitTime: e.target.value })}
               value={data.transitTime}
@@ -125,7 +149,10 @@ const Step4 = (): JSX.Element => {
             />
           </Grid>
           <Grid item xs={2}>
-            <FormLabel component="legend">{I18n.t('pages.newProposal.step4.frequency')}</FormLabel>
+            <FormLabel component="legend">
+              {I18n.t('pages.newProposal.step4.frequency')}
+              <RedColorSpan> *</RedColorSpan>
+            </FormLabel>
             <ControlledSelect
               labelId="frequency-label"
               id="frequency"
@@ -133,7 +160,7 @@ const Step4 = (): JSX.Element => {
               onChange={e => setData({ ...data, frequency: e.target.value })}
               displayEmpty
               disableUnderline
-              invalid={false}
+              invalid={invalidInput && data.frequency.length === 0}
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
             >
               <MenuItem disabled value={data.frequency}>
