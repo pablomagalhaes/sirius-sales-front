@@ -342,7 +342,7 @@ const CostModal = ({
                 (state.buyValue === null || state.buyValue.length === 0)
               }
             >
-              {I18n.t('components.costModal.buyValue')}
+              {I18n.t('components.costModal.buyValue')}:
             </CheckBoxLabel>
           </RowDiv>
           <RowDiv>
@@ -384,7 +384,7 @@ const CostModal = ({
                   {(state.buyValue === null || state.buyValue.length === 0) && (
                     <PlaceholderSpan>
                       {I18n.t('components.costModal.value')}
-                      <RedColorSpan> *</RedColorSpan>
+                      {buyCheckbox && <RedColorSpan> *</RedColorSpan>}
                     </PlaceholderSpan>
                   )}
                   <Input
@@ -428,7 +428,7 @@ const CostModal = ({
                 (state.saleValue === null || state.saleValue.length === 0)
               }
             >
-              {I18n.t('components.costModal.saleValue')}
+              {I18n.t('components.costModal.saleValue')}:
             </CheckBoxLabel>
           </RowDiv>
           <RowDiv>
@@ -471,7 +471,7 @@ const CostModal = ({
                     state.saleValue.length === 0) && (
                     <PlaceholderSpan>
                       {I18n.t('components.costModal.value')}
-                      <RedColorSpan> *</RedColorSpan>
+                      {saleCheckbox && <RedColorSpan> *</RedColorSpan>}
                     </PlaceholderSpan>
                   )}
                   <Input
@@ -510,7 +510,12 @@ const CostModal = ({
         {invalidValueInput && (
           <WarningPopUp>
             <WarningPopUpMessage>
-              {I18n.t('components.costModal.popUpMessage')}
+              {I18n.t('components.costModal.popUpMessageStart')}“
+              {buyCheckbox &&
+              (state.buyValue?.length === 0 || state.buyValue === null)
+                ? I18n.t('components.costModal.buyValue')
+                : I18n.t('components.costModal.saleValue')}
+              ”{I18n.t('components.costModal.popUpMessageEnd')}
             </WarningPopUpMessage>
             <WarningPopUpButtonDiv>
               <Button

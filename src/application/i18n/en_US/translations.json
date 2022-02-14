@@ -105,15 +105,16 @@
       "type": "Type:",
       "description": "Description:",
       "agent": "Agent:",
-      "buyValue": "Buy value:",
-      "saleValue": "Sale value:",
+      "buyValue": "Buy value",
+      "saleValue": "Sale value",
       "save": "Save",
       "replyForSale": "Reply for sale",
       "minimum": "Minimum",
       "value": "Value",
       "choose": "Choose...",
       "gotIt": "Got it",
-      "popUpMessage": "Inform \"buy value\" or unmark the field if it isn't necessary"
+      "popUpMessageStart": "Inform ",
+      "popUpMessageEnd": " or unmark the field if it isn't necessary"
     },
     "itemModal":{
       "amount":"Amount: ",
