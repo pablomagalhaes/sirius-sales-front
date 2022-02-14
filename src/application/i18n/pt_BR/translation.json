@@ -105,15 +105,16 @@
       "type": "Tipo:",
       "description": "Descrição:",
       "agent": "Agente:",
-      "buyValue": "Valor compra:",
-      "saleValue": "Valor Venda:",
+      "buyValue": "Valor compra",
+      "saleValue": "Valor Venda",
       "save": "Salvar",
       "replyForSale": "Replicar para venda",
       "minimum": "Mínimo",
       "value": "Valor",
       "choose": "Escolha...",
       "gotIt": "Entendi",
-      "popUpMessage": "Informe o \"Valor compra\" ou desmarque esse campo caso não seja necessário."
+      "popUpMessageStart": "Informe o ",
+      "popUpMessageEnd": " ou desmarque esse campo caso não seja necessário."
     },
     "itemModal":{
       "amount": "Qtd: ",
