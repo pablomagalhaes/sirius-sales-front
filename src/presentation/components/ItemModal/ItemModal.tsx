@@ -124,6 +124,10 @@ const ItemModal = ({
     }
   }
 
+  const hasDiameter = (): boolean => {
+    if (modal === '3') { return false } else { return true }
+  }
+
   const handleOnAdd = (): void => {
     if (validateData()) {
       handleAdd(data)
@@ -220,7 +224,9 @@ const ItemModal = ({
                 (modal === '2' && specifications === 'lcl') ||
                 modal === '3') && <RedColorSpan> *</RedColorSpan>}
             </Label>
-            <Label width="29%">{I18n.t('components.itemModal.diameter')}</Label>
+            { hasDiameter() && (
+                <Label width="29%">{I18n.t('components.itemModal.diameter')}</Label>
+            )}
             <Label width="27%">
               {I18n.t('components.itemModal.cubage')}
               {(modal === '1' ||
@@ -272,18 +278,20 @@ const ItemModal = ({
                 modal
               />
             </div>
+                { hasDiameter() && (
+                  <div style={{ width: '126px', height: '30px', marginLeft: '15px', marginTop: '12px' }}>
+                  <ControlledInput
+                    toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                    invalid={false}
+                    value={data.diameter != null ? data.diameter : ''}
+                    onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, diameter: e.target.value })) }}
+                    variant="outlined"
+                    size="small"
+                    modal
+                  />
+                </div>
 
-            <div style={{ width: '126px', height: '30px', marginLeft: '15px', marginTop: '12px' }}>
-              <ControlledInput
-                toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                invalid={false}
-                value={data.diameter != null ? data.diameter : ''}
-                onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, diameter: e.target.value })) }}
-                variant="outlined"
-                size="small"
-                modal
-              />
-            </div>
+                )}
             <div style={{ width: '126px', height: '30px', marginLeft: '18px', marginTop: '12px' }}>
               <ControlledInput
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
