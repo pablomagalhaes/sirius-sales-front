@@ -1,6 +1,7 @@
 {
   "pages": {
     "newProposal": {
+      "reference": "Referência:",
       "encharged": "Responsável:",
       "buttonFinish": "Concluir proposta",
       "save": "Salvar",

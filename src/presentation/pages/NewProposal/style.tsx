@@ -126,6 +126,13 @@ const UserContainer = styled.div`
 }
 `
 
+const ReferenceCode = styled.span`
+  color: #2E9990;
+  font-weight: bold;
+  padding-left: 8px; 
+  padding-right: 40px;  
+`
+
 const Username = styled.span`
   color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.font};
   font-weight: 500;
@@ -169,6 +176,7 @@ export {
   IconContainer,
   Header,
   MainContainer,
+  ReferenceCode,
   RootContainer,
   SelectSpan,
   Separator,
