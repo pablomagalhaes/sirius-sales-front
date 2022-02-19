@@ -5,6 +5,7 @@ import {
   ButtonContainer,
   Header,
   MainContainer,
+  ReferenceCode,
   RootContainer,
   TopContainer,
   UserContainer,
@@ -19,6 +20,7 @@ import Step3 from './steps/Step3'
 import Step4 from './steps/Step4'
 import Step5 from './steps/Step5'
 import Step6 from './steps/Step6'
+import { TableRows } from '../Proposal/constants'
 
 export interface NewProposalProps {
   theme: any
@@ -121,6 +123,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     }
   ]
 
+  const referenceCode = TableRows()
+
   return (
     <RootContainer>
       <Header>
@@ -144,6 +148,10 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           <span className="breadcrumbEnd">{I18n.t('pages.newProposal.newProposal')}</span>
         </Breadcrumbs>
         <UserContainer>
+          {I18n.t('pages.newProposal.reference')}
+          <ReferenceCode>
+            {referenceCode[0].reference}
+          </ReferenceCode>
           {I18n.t('pages.newProposal.encharged')}
           <IconComponent name="user" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
           <Username>

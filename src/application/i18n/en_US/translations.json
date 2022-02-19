@@ -1,6 +1,7 @@
 {
   "pages": {
     "newProposal": {
+      "reference": "Reference:",
       "encharged": "Encharged:",
       "buttonFinish": "Finish proposal",
       "save": "Save",
