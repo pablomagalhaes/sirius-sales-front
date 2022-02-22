@@ -21,6 +21,7 @@ import Step4 from './steps/Step4'
 import Step5 from './steps/Step5'
 import Step6 from './steps/Step6'
 import { TableRows } from '../Proposal/constants'
+import { useHistory } from 'react-router-dom'
 
 export interface NewProposalProps {
   theme: any
@@ -32,6 +33,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [invalidInput, setInvalidInput] = useState(false)
   const [proposalType, setProposalType] = useState('')
   const [modal, setModal] = useState('')
+
+  const history = useHistory()
 
   const [completed, setCompleted] = useState({
     step1: false,
@@ -83,11 +86,6 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     setHover(hoverState)
   }
 
-  const handleClickBreadcrumbs = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void => {
-    event.preventDefault()
-    console.info('You clicked a breadcrumb.')
-  }
-
   const handleSave = (): void => {
     if (
       completed.step1 &&
@@ -131,17 +129,17 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         <Breadcrumbs separator=">" aria-label="breadcrumb">
           <Link
             color="inherit"
-            href="/"
-            onClick={handleClickBreadcrumbs}
+            onClick={() => history.push('/')}
             className="breadcrumbInitial"
+            style={{ cursor: 'pointer' }}
           >
             Home
           </Link>
           <Link
             color="inherit"
-            href="/"
-            onClick={handleClickBreadcrumbs}
+            onClick={() => history.push('/proposta')}
             className="breadcrumbInitial"
+            style={{ cursor: 'pointer' }}
           >
             {I18n.t('pages.newProposal.proposal')}
           </Link>

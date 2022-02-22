@@ -33,6 +33,7 @@ import {
   Title
 } from '../StyledComponents/modalStyles'
 import newProposal from '../../../infrastructure/api/newProposalService'
+import { CheckBoxArea } from '../ItemModal/ItemModalStyles'
 
 interface ItemModalData {
   agent: string
@@ -339,22 +340,23 @@ const CostModal = ({
             </StyledMenuSelect>
           </RowDiv>
           <RowDiv>
-            <CheckBox
-              aria-label="checkbox"
-              checked={buyCheckbox}
-              onClick={buyCheckboxHandler}
-            >
-              {buyCheckbox && <CheckIcon />}
-            </CheckBox>
-            <CheckBoxLabel
-              invalid={
-                buyCheckbox &&
-                invalidInput &&
-                (state.buyValue === null || state.buyValue.length === 0)
-              }
-            >
-              {I18n.t('components.costModal.buyValue')}:
-            </CheckBoxLabel>
+            <CheckBoxArea onClick={buyCheckboxHandler}>
+              <CheckBox
+                aria-label="checkbox"
+                checked={buyCheckbox}
+              >
+                {buyCheckbox && <CheckIcon />}
+              </CheckBox>
+              <CheckBoxLabel
+                invalid={
+                  buyCheckbox &&
+                  invalidInput &&
+                  (state.buyValue === null || state.buyValue.length === 0)
+                }
+              >
+                {I18n.t('components.costModal.buyValue')}:
+              </CheckBoxLabel>
+            </CheckBoxArea>
           </RowDiv>
           <RowDiv style={{ position: 'relative' }}>
             <Autocomplete
@@ -429,22 +431,24 @@ const CostModal = ({
             </ReplyDiv>
           </RowDiv>
           <RowDiv>
-            <CheckBox checked={saleCheckbox} onClick={saleCheckboxHandler}>
-              {saleCheckbox && <CheckIcon />}
-            </CheckBox>
-            <CheckBoxLabel
-              checked={true}
-              invalid={
-                saleCheckbox &&
-                invalidInput &&
-                (state.saleValue === null || state.saleValue.length === 0)
-              }
-            >
-              {I18n.t('components.costModal.saleValue')}:
-            </CheckBoxLabel>
+            <CheckBoxArea onClick={saleCheckboxHandler}>
+              <CheckBox checked={saleCheckbox}>
+                {saleCheckbox && <CheckIcon />}
+              </CheckBox>
+              <CheckBoxLabel
+                checked={true}
+                invalid={
+                  saleCheckbox &&
+                  invalidInput &&
+                  (state.saleValue === null || state.saleValue.length === 0)
+                }
+              >
+                {I18n.t('components.costModal.saleValue')}:
+              </CheckBoxLabel>
+            </CheckBoxArea>
           </RowDiv>
           <RowDiv style={{ position: 'relative' }}>
-          <Autocomplete
+            <Autocomplete
               options={currencyList.map((option) => option.id)}
               value={state.saleCurrency}
               onChange={(event: any, newValue: string | null) => {
@@ -482,10 +486,10 @@ const CostModal = ({
                 <label>
                   {(state.saleValue === null ||
                     state.saleValue.length === 0) && (
-                    <PlaceholderSpan>
-                      {I18n.t('components.costModal.value')}
-                      {saleCheckbox && <RedColorSpan> *</RedColorSpan>}
-                    </PlaceholderSpan>
+                      <PlaceholderSpan>
+                        {I18n.t('components.costModal.value')}
+                        {saleCheckbox && <RedColorSpan> *</RedColorSpan>}
+                      </PlaceholderSpan>
                   )}
                   <Input
                     value={state.saleValue != null ? state.saleValue : ''}
@@ -525,7 +529,7 @@ const CostModal = ({
             <WarningPopUpMessage>
               {I18n.t('components.costModal.popUpMessageStart')}“
               {buyCheckbox &&
-              (state.buyValue?.length === 0 || state.buyValue === null)
+                (state.buyValue?.length === 0 || state.buyValue === null)
                 ? I18n.t('components.costModal.buyValue')
                 : I18n.t('components.costModal.saleValue')}
               ”{I18n.t('components.costModal.popUpMessageEnd')}

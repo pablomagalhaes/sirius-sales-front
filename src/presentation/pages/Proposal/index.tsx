@@ -1,97 +1,48 @@
 import React, { useState } from 'react'
 import {
-  FloatingMenu,
   QuickFilters,
   Table,
   RowFilter,
   Pagination,
   Button
 } from 'fiorde-fe-components'
-import { Breadcrumbs, Link, Popover } from '@material-ui/core/'
+import { Breadcrumbs, Link, Select, MenuItem } from '@material-ui/core/'
 import {
   RootContainer,
-  ListHeader,
-  LeftSideListHeader,
-  RightSideListHeader,
+  ListHeaderContainer,
+  LeftSideListHeaderContainer,
+  RightSideListHeaderContainer,
   TableContainer,
   BottomSideContainer,
   PaginationContainer,
   PaginationMainContainer,
   TopContainer,
-  TopButtonContainer
+  TopButtonContainer,
+  ListTextSpan,
+  ExportListSpan,
+  ListMainTitleSpan,
+  ExportListContainer,
+  CloseExpirationContainer,
+  OrderByContainer,
+  DropdownMenuContainer,
+  RowFilterContainer,
+  ArrowIconContainer
 } from './style'
-import { ExitToApp, Warning, ArrowDropDown } from '@material-ui/icons/'
-import { cardFilters, TableRows, menuItemsSelector } from './constants'
+import { ExitToApp } from '@material-ui/icons/'
+import Warning from '../../../application/icons/WarningIcon'
+import { cardFilters, TableRows, menuItemsSelector, orderButtonMenuItems } from './constants'
 import { useHistory } from 'react-router-dom'
+import UpArrow from '../../../application/icons/UpArrow'
 
 const Proposal = (): JSX.Element => {
-  const [orderBy, setOrderBy] = useState('Dt. validade')
-  const [anchorEl, setAnchorEl] = useState(null)
+  const [orderBy, setOrderBy] = useState<string>('Dt. validade')
+  const [orderAsc, setOrderAsc] = useState(true)
+  const [openedOrderSelect, setOpenedOrderSelect] = useState(false)
   const history = useHistory()
-
-  const orderButtonMenuItems = [
-    {
-      iconType: '',
-      label: 'Ref. proposta',
-      onClick: () => setOrderBy('Ref. proposta')
-    },
-    {
-      iconType: '',
-      label: 'Nome do cliente',
-      onClick: () => setOrderBy('Nome do cliente')
-    },
-    {
-      iconType: '',
-      label: 'Responsável',
-      onClick: () => setOrderBy('Responsável')
-    },
-    {
-      iconType: '',
-      label: 'Modal',
-      onClick: () => setOrderBy('Modal')
-    },
-    {
-      iconType: '',
-      label: 'Origem',
-      onClick: () => setOrderBy('Origem')
-    },
-    {
-      iconType: '',
-      label: 'Destino',
-      onClick: () => setOrderBy('Destino')
-    },
-    {
-      iconType: '',
-      label: 'Dt. abertura',
-      onClick: () => setOrderBy('Dt. abertura')
-    },
-    {
-      iconType: '',
-      label: 'Dt. validade',
-      onClick: () => setOrderBy('Dt. validade')
-    }
-  ]
-
-  const handleClickBreadcrumbs = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void => {
-    event.preventDefault()
-    console.info('You clicked a breadcrumb.')
-  }
-
-  const handleClose = (): void => {
-    setAnchorEl(null)
-  }
-
-  const handleClickOrder = (event: any): void => {
-    setAnchorEl(event.currentTarget)
-    if (anchorEl !== null) handleClose()
-  }
 
   const handleExportList = (): void => {
     alert('export list')
   }
-
-  const open = Boolean(anchorEl)
-  const id = open ? 'simple-popover' : undefined
 
   const handleCardFiltersClick = (selectedCardFilters: any): void => {
     console.log(selectedCardFilters)
@@ -101,15 +52,20 @@ const Proposal = (): JSX.Element => {
     console.log(selectedFiltersRowFilter)
   }
 
+  const handleOrderDirection = (): void => {
+    setOrderAsc(!orderAsc)
+    console.log('handleOrderDireciton')
+  }
+
   return (
     <RootContainer>
-       <TopContainer>
+      <TopContainer>
         <Breadcrumbs separator=">" aria-label="breadcrumb">
           <Link
             color="inherit"
-            href="/"
-            onClick={handleClickBreadcrumbs}
+            onClick={() => history.push('/')}
             className="breadcrumbInitial"
+            style={{ cursor: 'pointer' }}
           >
             Home
           </Link>
@@ -125,7 +81,7 @@ const Proposal = (): JSX.Element => {
         </TopButtonContainer>
       </TopContainer>
       <QuickFilters cardFilters={cardFilters} onFilterClick={handleCardFiltersClick} />
-      <div style={{ margin: '25px 0' }}>
+      <RowFilterContainer>
         <RowFilter
           menuItemsSelector={menuItemsSelector}
           cleanLabel="Limpar"
@@ -135,44 +91,43 @@ const Proposal = (): JSX.Element => {
           addFilterLabel="Aplicar filtros"
           handleSelectedFilters={handleSelectedRowFilter}
         />
-      </div>
-      <ListHeader>
-        <LeftSideListHeader>
-          <span className="main-title">Propostas em andamento (210)</span>
-          <div className="export-list-class" onClick={handleExportList}>
+      </RowFilterContainer>
+      <ListHeaderContainer>
+        <LeftSideListHeaderContainer>
+          <ListMainTitleSpan>Propostas em andamento (210)</ListMainTitleSpan>
+          <ExportListContainer onClick={handleExportList}>
             <ExitToApp />
-            <span>Exportar lista</span>
-          </div>
-        </LeftSideListHeader>
-        <RightSideListHeader>
-          <div className="warning-content">
+            <ExportListSpan>Exportar lista</ExportListSpan>
+          </ExportListContainer>
+        </LeftSideListHeaderContainer>
+        <RightSideListHeaderContainer>
+          <CloseExpirationContainer>
             <Warning />
-            <div>1 com vencimento proximo</div>
-          </div>
-          <div className="order-content">
-            <div>Ordenar por:</div>
-            <div className="dropdown-menu-content" onClick={handleClickOrder}>
-              <span>{orderBy}</span>
-              <ArrowDropDown />
-              <Popover
-                id={id}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right'
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right'
-                }}
-                open={open}
-                anchorEl={anchorEl}
-              >
-                <FloatingMenu menuItems={orderButtonMenuItems} />
-              </Popover>
-            </div>
-          </div>
-        </RightSideListHeader>
-      </ListHeader>
+            <ListTextSpan>1 com vencimento proximo</ListTextSpan>
+          </CloseExpirationContainer>
+          <OrderByContainer>
+            <ListTextSpan>Ordenar:</ListTextSpan>
+            <DropdownMenuContainer showArrow={openedOrderSelect}>
+              <Select
+                className='select-style'
+                onChange={(e) => setOrderBy(String(e.target.value))}
+                value={orderBy}
+                disableUnderline
+                placeholder={orderBy}
+                onOpen={() => setOpenedOrderSelect(!openedOrderSelect)}>
+                {orderButtonMenuItems.map((type) => (
+                  <MenuItem key={`${type}_key`} value={type}>
+                    <span>{type}</span>
+                  </MenuItem>)
+                )}
+              </Select>
+            </DropdownMenuContainer>
+            <ArrowIconContainer onClick={handleOrderDirection} rotate={orderAsc}>
+              <UpArrow />
+            </ArrowIconContainer>
+          </OrderByContainer>
+        </RightSideListHeaderContainer>
+      </ListHeaderContainer>
       <BottomSideContainer>
         <TableContainer>
           <Table rows={TableRows()} />
