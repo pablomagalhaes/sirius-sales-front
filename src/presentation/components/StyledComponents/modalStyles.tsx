@@ -59,6 +59,13 @@ export const RowDiv = styled.div`
   display: flex;
   margin-bottom: ${(props: { margin: boolean }) =>
     props.margin ? '24px' : '0px'};
+
+  .dropdown {
+    position: absolute;
+    top: 17px;
+    z-index: 10;
+    left: 78px;
+  }
 `
 export const Form = styled.div`
   margin-top: 26px;

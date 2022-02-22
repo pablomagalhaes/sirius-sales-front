@@ -51,18 +51,6 @@ const Step4 = ({ invalidInput, setCompleted }: Step4Props): JSX.Element => {
       value: 9
     }
   ]
-  const currencyList = [
-    {
-      name: '220 - DOLAR DOS EUA (USD)',
-      value: 10
-    }, {
-      name: '706 - PESO ARGENTINO',
-      value: 11
-    }, {
-      name: '790 - REAL/BRASIL (BRL)',
-      value: 12
-    }
-  ]
 
   const [data, setData] = useState({
     validity: '',
@@ -197,28 +185,7 @@ const Step4 = ({ invalidInput, setCompleted }: Step4Props): JSX.Element => {
               size="small"
             />
           </Grid>
-          <Grid item xs={4}>
-            <FormLabel component="legend">{I18n.t('pages.newProposal.step4.currency')}</FormLabel>
-            <ControlledSelect
-              labelId="currency-label"
-              id="currency"
-              value={data.currency}
-              onChange={e => setData({ ...data, currency: e.target.value })}
-              displayEmpty
-              disableUnderline
-              invalid={false}
-              toolTipTitle={I18n.t('components.itemModal.requiredField')}
-            >
-              <MenuItem disabled value={data.currency}>
-                <SelectSpan placeholder={1}>{I18n.t('pages.newProposal.step4.choose')}</SelectSpan>
-              </MenuItem>
-              {currencyList.map((item) => (
-                <MenuItem key={item.value} value={item.value}>
-                  <SelectSpan>{item.name}</SelectSpan>
-                </MenuItem>
-              ))}
-            </ControlledSelect>
-          </Grid>
+          <Grid item xs={4}></Grid>
           <Grid item xs={6}>
             <FormLabel component="legend">{I18n.t('pages.newProposal.step4.general')}</FormLabel>
             <ControlledInput

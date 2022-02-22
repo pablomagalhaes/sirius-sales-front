@@ -1,7 +1,9 @@
-import { MenuItem, Modal } from '@material-ui/core'
-import { Button } from 'fiorde-fe-components'
-import React, { useReducer, useState } from 'react'
+import React, { useReducer, useState, useEffect } from 'react'
+import { MenuItem, Modal, Box } from '@material-ui/core'
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import CloseIcon from '../../../application/icons/CloseIcon'
+import { Button } from 'fiorde-fe-components'
 import {
   StyledMenuSelect,
   CheckBox,
@@ -30,6 +32,7 @@ import {
   RowReverseDiv,
   Title
 } from '../StyledComponents/modalStyles'
+import newProposal from '../../../infrastructure/api/newProposalService'
 
 interface ItemModalData {
   agent: string
@@ -114,12 +117,20 @@ const CostModal = ({
   // Listas são mock, serão alteradas posteriormente
   const typeList = ['Tipo1', 'Tipo2', 'Tipo3']
   const agentList = ['Agente1', 'Agente2', 'Agente3']
-  const currencyList = ['BRL', 'USD']
   const descriptionList = ['Descrição1', 'Descrição2', 'Descrição3']
   const [buyCheckbox, setBuyCheckBox] = useState(state.buyValue != null)
   const [saleCheckbox, setSaleCheckBox] = useState(state.saleValue != null)
   const [invalidInput, setInvalidInput] = useState(false)
   const [invalidValueInput, setInvalidValueInput] = useState(false)
+  const [currencyList, setCurrencyList] = useState<any[]>([])
+
+  useEffect(() => {
+    void (async function () {
+      await newProposal.getCurrencies()
+        .then((response) => setCurrencyList(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
 
   const handleOnClose = (): void => {
     dispatch({ type: 'reset' })
@@ -345,32 +356,33 @@ const CostModal = ({
               {I18n.t('components.costModal.buyValue')}:
             </CheckBoxLabel>
           </RowDiv>
-          <RowDiv>
-            <StyledMenuSelect
-              width="84px"
-              onChange={(e) =>
-                dispatch({ type: 'buyCurrency', value: e.target.value })
-              }
-              displayEmpty
+          <RowDiv style={{ position: 'relative' }}>
+            <Autocomplete
+              options={currencyList.map((option) => option.id)}
               value={state.buyCurrency}
-              disableUnderline
-              disabled={!buyCheckbox}
-              filled={buyCheckbox ? state.buyCurrency : null}
-              toolTipTitle={I18n.t('components.itemModal.requiredField')}
-              invalid={
-                buyCheckbox &&
-                invalidInput &&
-                (state.buyCurrency === null || state.buyCurrency.length === 0)
-              }
-            >
-              {currencyList.map((currencyList) => {
-                return (
-                  <MenuItem key={`${currencyList}_key`} value={currencyList}>
-                    {currencyList}
-                  </MenuItem>
-                )
-              })}
-            </StyledMenuSelect>
+              onChange={(event: any, newValue: string | null) => {
+                dispatch({ type: 'buyCurrency', value: newValue })
+              }}
+              renderInput={(params) => (
+                <div ref={params.InputProps.ref}>
+                  <Input
+                    {...params.inputProps}
+                    width="84px"
+                    disabled={!buyCheckbox}
+                    filled={buyCheckbox ? state.buyCurrency : null}
+                    toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                    invalid={
+                      buyCheckbox &&
+                      invalidInput &&
+                      (state.buyCurrency === null || state.buyCurrency.length === 0)
+                    }
+                  />
+                  <Box {...params.inputProps} className="dropdown">
+                    <ArrowDropDownIcon />
+                  </Box>
+                </div>
+              )}
+            />
             <ControlledToolTip
               title={I18n.t('components.itemModal.requiredField')}
               open={
@@ -431,32 +443,33 @@ const CostModal = ({
               {I18n.t('components.costModal.saleValue')}:
             </CheckBoxLabel>
           </RowDiv>
-          <RowDiv>
-            <StyledMenuSelect
-              width="84px"
-              onChange={(e) =>
-                dispatch({ type: 'saleCurrency', value: e.target.value })
-              }
-              displayEmpty
+          <RowDiv style={{ position: 'relative' }}>
+          <Autocomplete
+              options={currencyList.map((option) => option.id)}
               value={state.saleCurrency}
-              disableUnderline
-              disabled={!saleCheckbox}
-              filled={saleCheckbox ? state.saleCurrency : null}
-              toolTipTitle={I18n.t('components.itemModal.requiredField')}
-              invalid={
-                saleCheckbox &&
-                invalidInput &&
-                (state.saleCurrency === null || state.saleCurrency.length === 0)
-              }
-            >
-              {currencyList.map((currencyList) => {
-                return (
-                  <MenuItem key={`${currencyList}_key`} value={currencyList}>
-                    {currencyList}
-                  </MenuItem>
-                )
-              })}
-            </StyledMenuSelect>
+              onChange={(event: any, newValue: string | null) => {
+                dispatch({ type: 'saleCurrency', value: newValue })
+              }}
+              renderInput={(params) => (
+                <div ref={params.InputProps.ref}>
+                  <Input
+                    {...params.inputProps}
+                    width="84px"
+                    disabled={!saleCheckbox}
+                    filled={saleCheckbox ? state.saleCurrency : null}
+                    toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                    invalid={
+                      saleCheckbox &&
+                      invalidInput &&
+                      (state.saleCurrency === null || state.saleCurrency.length === 0)
+                    }
+                  />
+                  <Box {...params.inputProps} className="dropdown">
+                    <ArrowDropDownIcon />
+                  </Box>
+                </div>
+              )}
+            />
             <ControlledToolTip
               title={I18n.t('components.itemModal.requiredField')}
               open={
