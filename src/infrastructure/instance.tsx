@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import axios from 'axios'
 
-export const URL = `${String(process.env.REACT_APP_API_URL)}/api`
+export const URL = process.env.BASE_URL_GATEWAY
 
 const instance = axios.create({
   baseURL: URL

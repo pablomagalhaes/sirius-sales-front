@@ -2,7 +2,7 @@ import instance from '../instance'
 
 const getCurrencies = async () => {
   try {
-    const res = await instance.get('http://qa.siriuslog.com/gateway/sirius-master-data-api/currencies/')
+    const res = await instance.get('/sirius-master-data-api/currencies/')
     return res.data
   } catch (error) {
     console.error(error)
@@ -11,7 +11,7 @@ const getCurrencies = async () => {
 
 const getIncoterm = async () => {
   try {
-    const res = await instance.get('http://qa.siriuslog.com/gateway/sirius-master-data-api/incoterms/')
+    const res = await instance.get('/sirius-master-data-api/incoterms/')
     return res.data
   } catch (error) {
     console.error(error)
@@ -20,7 +20,7 @@ const getIncoterm = async () => {
 
 const getTransport = async () => {
   try {
-    const res = await instance.get('http://qa.siriuslog.com/gateway/sirius-master-data-api/transport/')
+    const res = await instance.get('/sirius-master-data-api/transport/')
     return res.data
   } catch (error) {
     console.error(error)
@@ -29,7 +29,7 @@ const getTransport = async () => {
 
 const getOriginDestination = async () => {
   try {
-    const res = await instance.get('http://qa.siriuslog.com/gateway/sirius-master-data-api/origins/destinations/resumo')
+    const res = await instance.get('/sirius-master-data-api/origins/destinations/resumo')
     return res.data
   } catch (error) {
     console.error(error)
