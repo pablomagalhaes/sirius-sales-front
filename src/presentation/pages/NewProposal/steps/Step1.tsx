@@ -74,7 +74,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
           <RadioGroup
             row aria-label="proposal type"
             name="row-radio-buttons-group"
-            value={data.proposal}
+            value={data?.proposal}
             onChange={e => setData({ ...data, proposal: e.target.value })}
           >
             <FormControlLabel value="client" control={<StyledRadio color={getColor(data.proposal)} />} label={I18n.t('pages.newProposal.step1.client')} />
@@ -82,7 +82,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
           </RadioGroup>
         </Grid>
         {
-          data?.proposal === 'routing'
+          data.proposal === 'routing'
             ? <Grid item xs={6}>
               <FormLabel component="legend">{I18n.t('pages.newProposal.step1.services')}</FormLabel>
               <RadioGroup row aria-label="services" name="row-radio-buttons-group" onChange={e => setData({ ...data, services: e.target.value })}>
@@ -94,7 +94,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
         }
         <Grid item xs={6}>
           {
-            data?.proposal === 'routing'
+            data.proposal === 'routing'
               ? <FormLabel component="legend">{I18n.t('pages.newProposal.step1.agents')}<RedColorSpan> *</RedColorSpan></FormLabel>
               : <FormLabel component="legend">{I18n.t('pages.newProposal.step1.client')}:<RedColorSpan> *</RedColorSpan></FormLabel>
           }
@@ -119,7 +119,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
       </Grid>
       <FormLabel component="legend">{I18n.t('pages.newProposal.step1.modal')}<RedColorSpan> *</RedColorSpan></FormLabel>
       <RadioGroup row aria-label="modal" name="row-radio-buttons-group" onChange={e => setData({ ...data, modal: e.target.value })}>
-        {transportList?.map((item) => (
+        {transportList.map((item) => (
           <>
             <FormControlLabel
               value={item.id}
