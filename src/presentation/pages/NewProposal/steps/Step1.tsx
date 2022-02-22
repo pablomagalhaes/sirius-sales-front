@@ -74,7 +74,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
           <RadioGroup
             row aria-label="proposal type"
             name="row-radio-buttons-group"
-            value={data?.proposal}
+            value={data.proposal}
             onChange={e => setData({ ...data, proposal: e.target.value })}
           >
             <FormControlLabel value="client" control={<StyledRadio color={getColor(data.proposal)} />} label={I18n.t('pages.newProposal.step1.client')} />
