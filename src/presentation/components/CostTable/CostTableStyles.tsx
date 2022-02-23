@@ -58,8 +58,8 @@ interface StyledTableCellProps {
 export const StyledTableCell = styled(TableCell)`
   width: ${(props: StyledTableCellProps) => props.width};
   color: ${(props: StyledTableCellProps) => props.color
-    ? `${String(props.theme?.commercial?.pages?.newProposal?.steps?.stepFare)} !important`
-    : `${String(props.theme?.commercial?.pages?.newProposal?.font)} !important`};
+    ? `${String(props.theme?.commercial?.pages?.newProposal?.steps?.stepFare)}`
+    : `${String(props.theme?.commercial?.pages?.newProposal?.font)}`};
 `
 
 export const Description = styled.span`
@@ -69,7 +69,7 @@ export const Description = styled.span`
   font-size: 14px;
   line-height: 150%;
   letter-spacing: 0.02em;
-  color: ${(props: any) => props.theme?.commercial?.components?.costTable?.title};
+  color: ${(props: any) => props.theme?.commercial?.components?.costTable?.title} !important;
 `
 
 export const Type = styled.span`
@@ -152,8 +152,13 @@ export const TotalCostLabel = styled.span`
   font-size: 16px;
   margin-right: 35px;
 `
+export const DeleteIconDiv = styled.div`
+  cursor: pointer;
+`
+
 export const EditIconDiv = styled.div`
-  margin-right: 20px; 
+  margin-right: 20px;
+  cursor: pointer;
 `
 export const EmptyTableCost = styled.span`
 margin-left: 40px;

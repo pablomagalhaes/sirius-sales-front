@@ -5,6 +5,7 @@ import { TableBody, TableHead, TableRow } from '@material-ui/core'
 import {
   CostLabel,
   Default,
+  DeleteIconDiv,
   Description,
   EditIconDiv,
   Empty,
@@ -96,7 +97,7 @@ const CostTable = ({ modalTitle, title, totalCostLabel }: CostTableProps): JSX.E
 
   return (
     <MainDiv>
-      <CostModal handleAdd={handleAdd} open={open} setClose={handleClose} title={modalTitle}/>
+      <CostModal handleAdd={handleAdd} open={open} setClose={handleClose} title={modalTitle} />
       <Header>
         <Title>{title}</Title>
       </Header>
@@ -154,11 +155,13 @@ const CostTable = ({ modalTitle, title, totalCostLabel }: CostTableProps): JSX.E
                   </StyledTableCell>
                   <StyledTableCell width="19%">
                     <RowReverseDiv>
-                      <RemoveIcon
-                        onClick={() => {
-                          removeClickHandler(dataMap.id)
-                        }}
-                      />
+                      <DeleteIconDiv>
+                        <RemoveIcon
+                          onClick={() => {
+                            removeClickHandler(dataMap.id)
+                          }}
+                        />
+                      </DeleteIconDiv>
                       <EditIconDiv>
                         <EditIcon
                           onClick={() => {
@@ -182,9 +185,9 @@ const CostTable = ({ modalTitle, title, totalCostLabel }: CostTableProps): JSX.E
           onAction={addClickHandler}
         />
         <RowReverseDiv>
-          <EndValueLabel>{data?.length > 0 ? formatter.format(saleValue) : <EmptyTableCost>-</EmptyTableCost> }</EndValueLabel>
+          <EndValueLabel>{data?.length > 0 ? formatter.format(saleValue) : <EmptyTableCost>-</EmptyTableCost>}</EndValueLabel>
           <CostLabel>{I18n.t('components.costTable.sale')}:</CostLabel>
-          <ValueLabel>{data?.length > 0 ? formatter.format(buyValue) : <EmptyTableCost>-</EmptyTableCost> }</ValueLabel>
+          <ValueLabel>{data?.length > 0 ? formatter.format(buyValue) : <EmptyTableCost>-</EmptyTableCost>}</ValueLabel>
           <CostLabel>{I18n.t('components.costTable.buy')}:</CostLabel>
           <TotalCostLabel>{totalCostLabel}</TotalCostLabel>
         </RowReverseDiv>

@@ -11,7 +11,7 @@ const dark = {
         iconColor: '#FFFFFF',
         inputFontColor: '#F2F3F7',
         titleColor: '#F2F3F7',
-        disabledBackground: '#C2C5D1',
+        disabledBackground: '#364353 ',
         replyIconColor: '#43BFB5',
         redAsterisk: '#FF7373'
       },
@@ -29,8 +29,15 @@ const dark = {
       proposal: {
         tableHeader: '#B5B8C2',
         dropdownColor: '#B5B8C2',
+        lineDivisorColor: '#364353',
         breadcrumbInitial: '#B5B8C2',
-        breadcrumbEnd: '#F2F3F7'
+        breadcrumbEnd: '#F2F3F7',
+        listTextSpan: '#B5B8C2',
+        exportListSpan: '#43BFB5',
+        dropdownBackgroundColor: '#222E3E',
+        dropdownBorderColor: '#364353',
+        dropdownFontColor: '#F2F3F7',
+        dropdownIconColor: '#F2F3F7'
       },
       newProposal: {
         background: '#222E3E',
@@ -40,7 +47,8 @@ const dark = {
         font: '#F2F3F7',
         placeholder: '#7B8A9E',
         steps: {
-          stepFare: '#B5B8C2'
+          stepFare: '#B5B8C2',
+          stepsBoxShadow: 'rgba(0, 0, 0, 0.2)'
         }
       }
     }
@@ -58,7 +66,7 @@ const light = {
         iconColor: '#222222',
         inputFontColor: '#222222',
         titleColor: '#222222',
-        disabledBackground: '#E3E5EB',
+        disabledBackground: '#D9DCE6',
         replyIconColor: '#1F6660',
         redAsterisk: '#FF4D4D'
       },
@@ -76,8 +84,15 @@ const light = {
       proposal: {
         tableHeader: '#545454',
         dropdownColor: '#222222',
+        lineDivisorColor: '#e3e5eb',
         breadcrumbInitial: '#545454',
-        breadcrumbEnd: '#222222'
+        breadcrumbEnd: '#222222',
+        listTextSpan: '#545454',
+        exportListSpan: '#1F6660',
+        dropdownBackgroundColor: '#FFFFFF',
+        dropdownBorderColor: '#D9DCE6',
+        dropdownFontColor: '#222222',
+        dropdownIconColor: '#545454'
       },
       newProposal: {
         background: '#FFFFFF',
@@ -87,7 +102,8 @@ const light = {
         font: '#222222',
         placeholder: '#999DAC',
         steps: {
-          stepFare: '#545454'
+          stepFare: '#545454',
+          stepsBoxShadow: 'rgba(0, 0, 0, 0.05)'
         }
       }
     }
