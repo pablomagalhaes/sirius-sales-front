@@ -13,7 +13,7 @@ import IconComponent from '../../../../application/icons/IconComponent'
 import { withTheme } from 'styled-components'
 import ControlledInput from '../../../components/ControlledInput'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
-import api from '../../../../infrastructure/instance'
+import newProposal from '../../../../infrastructure/api/newProposalService'
 
 export interface Step1Props {
   theme?: any
@@ -34,8 +34,8 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
 
   useEffect(() => {
     void (async function () {
-      await api.getTransport()
-        .then((response) => setTransportList(response.data))
+      await newProposal.getTransport()
+        .then((response) => setTransportList(response))
         .catch((err) => console.log(err))
     })()
   }, [])
