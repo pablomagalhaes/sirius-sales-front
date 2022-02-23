@@ -95,7 +95,7 @@ const Step3 = ({ modal, invalidInput, setCompleted, theme }: Step3Props): JSX.El
   }
 
   const getColor = (value): any => {
-    if (value === '' && invalidInput && modal === '2') {
+    if (value === '' && invalidInput && modal === 'SEA') {
       console.log(theme?.commercial?.components?.itemModal?.redAsterisk)
       return theme?.commercial?.components?.itemModal?.redAsterisk
     }
@@ -104,7 +104,7 @@ const Step3 = ({ modal, invalidInput, setCompleted, theme }: Step3Props): JSX.El
   useEffect(() => {
     if (
       data.description.length !== 0 &&
-      ((modal === '2' && data.specifications.length !== 0) || modal !== '2') &&
+      ((modal === 'SEA' && data.specifications.length !== 0) || modal !== 'SEA') &&
       ((data.refrigereted && data.temperature.length !== 0) ||
         !data.refrigereted)
     ) {
@@ -116,7 +116,7 @@ const Step3 = ({ modal, invalidInput, setCompleted, theme }: Step3Props): JSX.El
         return { ...currentState, step3: false }
       })
     }
-  }, [data])
+  }, [data,modal])
 
   return (
     <Separator>
@@ -141,10 +141,13 @@ const Step3 = ({ modal, invalidInput, setCompleted, theme }: Step3Props): JSX.El
               size="small"
             />
           </Grid>
+          {
+          modal === 'SEA'
+            ? 
           <Grid item xs={4}>
             <FormLabel component="legend">
               {I18n.t('pages.newProposal.step3.specifications')}
-              {modal === '2' && <RedColorSpan> *</RedColorSpan>}
+              {modal === 'SEA' && <RedColorSpan> *</RedColorSpan>}
             </FormLabel>
             <RadioGroup row aria-label="specifications" name="row-radio-buttons-group" onChange={e => setData({ ...data, specifications: e.target.value })}>
               <FormControlLabel value="fcl" control={<StyledRadio color={getColor(data.specifications)} />} label="FCL" />
@@ -162,6 +165,8 @@ const Step3 = ({ modal, invalidInput, setCompleted, theme }: Step3Props): JSX.El
               />
             </RadioGroup>
           </Grid>
+          : <Grid item xs={4}> </Grid>
+          }
           {
             data.refrigereted && (
               <Grid item xs={3}>
