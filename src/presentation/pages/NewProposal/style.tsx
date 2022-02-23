@@ -73,9 +73,9 @@ const TopContainer = styled.div`
   margin: 3px 20px;
   padding: 24px;
   border-radius: 16px 16px 0 0;
-  box-shadow: 0px 4px 8px ${(props: any) => props.theme?.commercial?.pages?.newProposal?.steps?.stepsBoxShadow};
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
   position: sticky;
-  top: 65px;
+  top: 76px;
   z-index: 1;
   font-size: 0.900rem;
 `
@@ -112,7 +112,7 @@ const Subtitle = styled.div`
 `
 const IconContainer = styled.div`
   align-self: center;
-  margin-right: 30px;
+  margin-right: 40px;
 `
 
 const UserContainer = styled.div`
@@ -140,7 +140,7 @@ const Username = styled.span`
 `
 
 const Header = styled.div`
-  margin: 28px 24px;
+  margin: 25px 20px;
   display: flex;
   justify-content: space-between;
 `
@@ -148,10 +148,7 @@ const Header = styled.div`
 const Separator = styled.div`
   margin-bottom: 100px;
   .form-size {
-    width: 100%;
-  }
-  .form-size-half {
-    width: 50%;
+    width: 100%
   }
   .radio-spacement {
     margin-left: 30px;

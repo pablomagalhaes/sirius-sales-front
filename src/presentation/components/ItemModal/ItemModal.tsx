@@ -7,8 +7,7 @@ import {
   AlertIconDiv,
   CheckBox,
   CheckBoxLabel,
-  ModalDiv,
-  CheckBoxArea
+  ModalDiv
 } from './ItemModalStyles'
 import { I18n } from 'react-redux-i18n'
 import CheckIcon from '../../../application/icons/CheckIcon'
@@ -94,7 +93,7 @@ const ItemModal = ({
     setClose()
   }
   const marineFCL = (): boolean => {
-    return modal === '2' && specifications === 'fcl'
+    return modal === '2' && specifications === 'flc'
   }
 
   const validateFloatInput = (value: string): RegExpMatchArray | null => {
@@ -160,13 +159,13 @@ const ItemModal = ({
               {I18n.t('components.itemModal.amount')}
               <RedColorSpan> *</RedColorSpan>
             </Label>
-            {!(marineFCL()) && (
+            { !(marineFCL()) && (
               <Label width="27.4%">
-                {I18n.t('components.itemModal.rawWeight')}
-                {(modal === '1' ||
-                  (modal === '2' && specifications === 'lcl') ||
-                  modal === '3') && <RedColorSpan> *</RedColorSpan>}
-              </Label>
+              {I18n.t('components.itemModal.rawWeight')}
+              {(modal === '1' ||
+                (modal === '2' && specifications === 'lcl') ||
+                modal === '3') && <RedColorSpan> *</RedColorSpan>}
+            </Label>
             )}
           </RowDiv>
           <RowDiv margin={true}>
@@ -208,157 +207,155 @@ const ItemModal = ({
                 modal
               />
             </div>
-            {!(marineFCL()) && (
+            { !(marineFCL()) && (
               <div style={{ width: '126px', height: '30px', marginLeft: '18px', marginTop: '12px' }}>
-                <ControlledInput
-                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                  invalid={
-                    invalidInput && (!marineFCL()) &&
-                    (data.rawWeight === null || data.rawWeight.length === 0)
-                  }
-                  value={data.rawWeight != null ? data.rawWeight : ''}
-                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, rawWeight: e.target.value })) }}
-                  variant="outlined"
-                  size="small"
-                  modal
-                />
-              </div>
+              <ControlledInput
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                invalid={
+                  invalidInput && (!marineFCL()) &&
+                  (data.rawWeight === null || data.rawWeight.length === 0)
+                }
+                value={data.rawWeight != null ? data.rawWeight : ''}
+                onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, rawWeight: e.target.value })) }}
+                variant="outlined"
+                size="small"
+                modal
+              />
+            </div>
             )}
           </RowDiv>
           <RowDiv>
-            {!(marineFCL()) && (
-              <Label width="44%">
-                {I18n.t('components.itemModal.hwl')}
-                {(modal === '1' ||
-                  (modal === '2' && specifications === 'lcl') ||
-                  modal === '3') && <RedColorSpan> *</RedColorSpan>}
-              </Label>
+          { !(marineFCL()) && (
+          <Label width="44%">
+              {I18n.t('components.itemModal.hwl')}
+              {(modal === '1' ||
+                (modal === '2' && specifications === 'lcl') ||
+                modal === '3') && <RedColorSpan> *</RedColorSpan>}
+            </Label>
+          )}
+            { hasDiameter() && (
+                <Label width="29%">{I18n.t('components.itemModal.diameter')}</Label>
             )}
-            {hasDiameter() && (
-              <Label width="29%">{I18n.t('components.itemModal.diameter')}</Label>
-            )}
-            {!(marineFCL()) && (
-              <Label width="27%">
-                {I18n.t('components.itemModal.cubage')}
-                {(modal === '1' ||
-                  (modal === '2' && specifications === 'lcl') ||
-                  modal === '3') && <RedColorSpan> *</RedColorSpan>}
-              </Label>
+            { !(marineFCL()) && (
+               <Label width="27%">
+               {I18n.t('components.itemModal.cubage')}
+               {(modal === '1' ||
+                 (modal === '2' && specifications === 'lcl') ||
+                 modal === '3') && <RedColorSpan> *</RedColorSpan>}
+             </Label>
             )}
           </RowDiv>
           <RowDiv margin={true}>
-            {!(marineFCL()) && (
+            { !(marineFCL()) && (
               <>
                 <div style={{ width: '60px', height: '30px', marginRight: '8px', marginTop: '12px' }}>
-                  <ControlledInput
-                    toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                    invalid={
-                      invalidInput && !(marineFCL()) &&
-                      (data.length === null || data.length.length === 0)
-                    }
-                    value={data.length != null ? data.length : ''}
-                    onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, length: e.target.value })) }}
-                    variant="outlined"
-                    size="small"
-                    modal
-                  />
-                </div>
-                <div style={{ width: '60px', height: '30px', marginRight: '8px', marginTop: '12px' }}>
-                  <ControlledInput
-                    toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                    value={data.width != null ? data.width : ''}
-                    onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, width: e.target.value })) }}
-                    invalid={
-                      invalidInput && !(marineFCL()) &&
-                      (data.width === null || data.width.length === 0)
-                    }
-                    variant="outlined"
-                    size="small"
-                    modal
-                  />
-                </div>
-                <div style={{ width: '60px', height: '30px', marginRight: '8px', marginTop: '12px' }}>
-                  <ControlledInput
-                    toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                    inputProps={{ 'data-testid': 'height' }}
-                    value={data.height != null ? data.height : ''}
-                    onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, height: e.target.value })) }}
-                    invalid={
-                      invalidInput && !(marineFCL()) &&
-                      (data.height === null || data.height.length === 0)
-                    }
-                    variant="outlined"
-                    size="small"
-                    modal
-                  />
-                </div>
-              </>
-            )}
-            {hasDiameter() && !(marineFCL()) && (
-              <div style={{ width: '126px', height: '30px', marginLeft: '15px', marginTop: '12px' }}>
-                <ControlledInput
-                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                  invalid={false}
-                  value={data.diameter != null ? data.diameter : ''}
-                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, diameter: e.target.value })) }}
-                  variant="outlined"
-                  size="small"
-                  modal
-                />
-              </div>
-
-            )}
-            {hasDiameter() && marineFCL() && (
-              <div style={{ width: '197px', height: '30px', marginLeft: '1px', marginTop: '12px' }}>
-                <ControlledInput
-                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                  invalid={false}
-                  value={data.diameter != null ? data.diameter : ''}
-                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, diameter: e.target.value })) }}
-                  variant="outlined"
-                  size="small"
-                  modal
-                />
-              </div>
-
-            )}
-            {!(marineFCL()) && (
-              <div style={{ width: '126px', height: '30px', marginLeft: '18px', marginTop: '12px' }}>
                 <ControlledInput
                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
                   invalid={
                     invalidInput && !(marineFCL()) &&
-                    (data.cubage === null || data.cubage.length === 0)
+                    (data.length === null || data.length.length === 0)
                   }
-                  value={data.cubage != null ? data.cubage : ''}
-                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, cubage: e.target.value })) }}
+                  value={data.length != null ? data.length : ''}
+                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, length: e.target.value })) }}
                   variant="outlined"
                   size="small"
                   modal
                 />
               </div>
+              <div style={{ width: '60px', height: '30px', marginRight: '8px', marginTop: '12px' }}>
+                <ControlledInput
+                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                  value={data.width != null ? data.width : ''}
+                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, width: e.target.value })) }}
+                  invalid={
+                    invalidInput && !(marineFCL()) &&
+                    (data.width === null || data.width.length === 0)
+                  }
+                  variant="outlined"
+                  size="small"
+                  modal
+                />
+              </div>
+              <div style={{ width: '60px', height: '30px', marginRight: '8px', marginTop: '12px' }}>
+                <ControlledInput
+                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                  inputProps={{ 'data-testid': 'height' }}
+                  value={data.height != null ? data.height : ''}
+                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, height: e.target.value })) }}
+                  invalid={
+                    invalidInput && !(marineFCL()) &&
+                    (data.height === null || data.height.length === 0)
+                  }
+                  variant="outlined"
+                  size="small"
+                  modal
+                />
+              </div>
+            </>
+            )}
+            { hasDiameter() && !(marineFCL()) && (
+              <div style={{ width: '126px', height: '30px', marginLeft: '15px', marginTop: '12px' }}>
+              <ControlledInput
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                invalid={false}
+                value={data.diameter != null ? data.diameter : ''}
+                onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, diameter: e.target.value })) }}
+                variant="outlined"
+                size="small"
+                modal
+              />
+            </div>
+
+            )}
+            { hasDiameter() && marineFCL() && (
+              <div style={{ width: '197px', height: '30px', marginLeft: '1px', marginTop: '12px' }}>
+              <ControlledInput
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                invalid={false}
+                value={data.diameter != null ? data.diameter : ''}
+                onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, diameter: e.target.value })) }}
+                variant="outlined"
+                size="small"
+                modal
+              />
+            </div>
+
+            )}
+            { !(marineFCL()) && (
+              <div style={{ width: '126px', height: '30px', marginLeft: '18px', marginTop: '12px' }}>
+              <ControlledInput
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                invalid={
+                  invalidInput && !(marineFCL()) &&
+                  (data.cubage === null || data.cubage.length === 0)
+                }
+                value={data.cubage != null ? data.cubage : ''}
+                onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, cubage: e.target.value })) }}
+                variant="outlined"
+                size="small"
+                modal
+              />
+            </div>
             )}
           </RowDiv>
+            <RowDiv>
+              <Label width="29%">
+                {I18n.t('components.itemModal.hazardous')}
+              </Label>
+              <Label width="44%">
+                {I18n.t('components.itemModal.imo')}
+                {data.dangerous && <RedColorSpan> *</RedColorSpan>}
+              </Label>
+              <Label width="27%">
+                {I18n.t('components.itemModal.codUn')}
+                <RedColorSpan> *</RedColorSpan>
+              </Label>
+            </RowDiv>
           <RowDiv>
-            <Label width="29%">
-              {I18n.t('components.itemModal.hazardous')}
-            </Label>
-            <Label width="44%">
-              {I18n.t('components.itemModal.imo')}
-              {data.dangerous && <RedColorSpan> *</RedColorSpan>}
-            </Label>
-            <Label width="27%">
-              {I18n.t('components.itemModal.codUn')}
-              <RedColorSpan> *</RedColorSpan>
-            </Label>
-          </RowDiv>
-          <RowDiv>
-            <CheckBoxArea onClick={() => (setData({ ...data, dangerous: !data.dangerous }))}>
-              <CheckBox checked={data.dangerous}>
-                {data.dangerous && <CheckIcon />}
-              </CheckBox>
-              <CheckBoxLabel>{I18n.t('components.itemModal.yes')}</CheckBoxLabel>
-            </CheckBoxArea>
+            <CheckBox checked={data.dangerous} onClick={() => (setData({ ...data, dangerous: !data.dangerous }))}>
+              {data.dangerous && <CheckIcon />}
+            </CheckBox>
+            <CheckBoxLabel>{I18n.t('components.itemModal.yes')}</CheckBoxLabel>
             <AlertIconDiv>
               <AlertIcon />
             </AlertIconDiv>

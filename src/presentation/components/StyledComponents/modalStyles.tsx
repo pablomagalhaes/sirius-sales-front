@@ -18,7 +18,6 @@ export const RowReverseDiv = styled.div`
   justify-self: flex-end;
   width: 100%;
   margin-right: 35px;
-  cursor: pointer;
 `
 export const RedColorSpan = styled.span`
   color: ${(props: any) =>
@@ -53,7 +52,7 @@ export const HeaderDiv = styled.div`
     props.theme?.commercial?.components?.itemModal?.border};
   svg {
     fill: ${(props: any) =>
-    props.theme?.commercial?.components?.itemModal?.iconColor};
+      props.theme?.commercial?.components?.itemModal?.iconColor};
   }
 `
 export const RowDiv = styled.div`
