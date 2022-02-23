@@ -12,11 +12,11 @@ interface IconComponentProps {
 
 const IconComponent = ({ name, ...props }: IconComponentProps): JSX.Element => {
   switch (name) {
-    case 'plane':
+    case 'AIR':
       return <PlaneIcon {...props} />
-    case 'ship':
+    case 'SEA':
       return <ShipIcon {...props} />
-    case 'truck':
+    case 'LAND':
       return <TruckIcon {...props} />
     case 'user':
       return <UserIcon {...props} />

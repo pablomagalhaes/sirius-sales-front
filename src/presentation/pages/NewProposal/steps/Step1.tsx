@@ -13,6 +13,8 @@ import IconComponent from '../../../../application/icons/IconComponent'
 import { withTheme } from 'styled-components'
 import ControlledInput from '../../../components/ControlledInput'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
+import newProposal from '../../../../infrastructure/api/newProposalService'
+
 export interface Step1Props {
   theme?: any
   invalidInput: boolean
@@ -22,12 +24,21 @@ export interface Step1Props {
 }
 
 const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }: Step1Props): JSX.Element => {
+  const [transportList, setTransportList] = useState<any[]>([])
   const [data, setData] = useState({
     proposal: '',
     services: '',
     proposalValue: '',
     modal: ''
   })
+
+  useEffect(() => {
+    void (async function () {
+      await newProposal.getTransport()
+        .then((response) => setTransportList(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
 
   useEffect(() => {
     setProposalType(data.proposal)
@@ -71,7 +82,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
           </RadioGroup>
         </Grid>
         {
-          data.proposal === 'routing'
+          data?.proposal === 'routing'
             ? <Grid item xs={6}>
               <FormLabel component="legend">{I18n.t('pages.newProposal.step1.services')}</FormLabel>
               <RadioGroup row aria-label="services" name="row-radio-buttons-group" onChange={e => setData({ ...data, services: e.target.value })}>
@@ -83,7 +94,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
         }
         <Grid item xs={6}>
           {
-            data.proposal === 'routing'
+            data?.proposal === 'routing'
               ? <FormLabel component="legend">{I18n.t('pages.newProposal.step1.agents')}<RedColorSpan> *</RedColorSpan></FormLabel>
               : <FormLabel component="legend">{I18n.t('pages.newProposal.step1.client')}:<RedColorSpan> *</RedColorSpan></FormLabel>
           }
@@ -108,18 +119,18 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
       </Grid>
       <FormLabel component="legend">{I18n.t('pages.newProposal.step1.modal')}<RedColorSpan> *</RedColorSpan></FormLabel>
       <RadioGroup row aria-label="modal" name="row-radio-buttons-group" onChange={e => setData({ ...data, modal: e.target.value })}>
-        <FormControlLabel value="1" control={<StyledRadio color={getColor(data.modal)} />} label={I18n.t('pages.newProposal.step1.air')} />
-        <IconContainer>
-          <IconComponent name="plane" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
-        </IconContainer>
-        <FormControlLabel value="2" control={<StyledRadio color={getColor(data.modal)} />} label={I18n.t('pages.newProposal.step1.marine')} />
-        <IconContainer>
-          <IconComponent name="ship" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
-        </IconContainer>
-        <FormControlLabel value="3" control={<StyledRadio color={getColor(data.modal)} />} label={I18n.t('pages.newProposal.step1.road')} />
-        <IconContainer>
-          <IconComponent name="truck" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
-        </IconContainer>
+        {transportList?.map((item) => (
+          <>
+            <FormControlLabel
+              value={item.id}
+              control={<StyledRadio color={getColor(data.modal)} />}
+              label={item.description}
+            />
+            <IconContainer>
+              <IconComponent name={item.id} defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
+            </IconContainer>
+          </>
+        ))}
       </RadioGroup>
     </Separator>
   )
