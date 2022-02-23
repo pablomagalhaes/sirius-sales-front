@@ -75,7 +75,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
             row aria-label="proposal type"
             name="row-radio-buttons-group"
             value={data?.proposal}
-            onChange={e => setData({ ...data, proposal: e.target.value })}
+            onChange={e => setData({ data, proposal: e.target.value })}
           >
             <FormControlLabel value="client" control={<StyledRadio color={getColor(data?.proposal)} />} label={I18n.t('pages.newProposal.step1.client')} />
             <FormControlLabel value="routing" control={<StyledRadio color={getColor(data?.proposal)} />} label={I18n.t('pages.newProposal.step1.routingOrder')} />
@@ -85,7 +85,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
           data?.proposal === 'routing'
             ? <Grid item xs={6}>
               <FormLabel component="legend">{I18n.t('pages.newProposal.step1.services')}</FormLabel>
-              <RadioGroup row aria-label="services" name="row-radio-buttons-group" onChange={e => setData({ ...data, services: e.target.value })}>
+              <RadioGroup row aria-label="services" name="row-radio-buttons-group" onChange={e => setData({ data, services: e.target.value })}>
                 <FormControlLabel value="transport" control={<Checkbox />} label={I18n.t('pages.newProposal.step1.transport')} />
                 <FormControlLabel value="desemb" control={<Checkbox />} label={I18n.t('pages.newProposal.step1.readiness')} />
               </RadioGroup>
@@ -118,7 +118,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
         </Grid>
       </Grid>
       <FormLabel component="legend">{I18n.t('pages.newProposal.step1.modal')}<RedColorSpan> *</RedColorSpan></FormLabel>
-      <RadioGroup row aria-label="modal" name="row-radio-buttons-group" onChange={e => setData({ ...data, modal: e.target.value })}>
+      <RadioGroup row aria-label="modal" name="row-radio-buttons-group" onChange={e => setData({ data, modal: e.target.value })}>
         {transportList.map((item) => (
           <>
             <FormControlLabel
