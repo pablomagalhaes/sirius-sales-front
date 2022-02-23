@@ -32,7 +32,7 @@ import {
   RowReverseDiv,
   Title
 } from '../StyledComponents/modalStyles'
-import newProposal from '../../../infrastructure/api/newProposalService'
+import api from '../../../infrastructure/instance'
 
 interface ItemModalData {
   agent: string
@@ -126,8 +126,8 @@ const CostModal = ({
 
   useEffect(() => {
     void (async function () {
-      await newProposal.getCurrencies()
-        .then((response) => setCurrencyList(response))
+      await api.getCurrencies()
+        .then((response) => setCurrencyList(response.data))
         .catch((err) => console.log(err))
     })()
   }, [])
