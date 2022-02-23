@@ -37,7 +37,7 @@ export const StyledSelect = styled(
       <ControlledToolTip title={toolTipTitle} open={invalid}>
         <StyledField
           {...props}
-          invalid={invalid}
+          $invalid={invalid}
           MenuProps={{ classes: { paper: className } }}
         />
       </ControlledToolTip>
