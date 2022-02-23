@@ -160,14 +160,14 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         </UserContainer>
       </Header>
       <TopContainer>
-        <Steps
+        {/* <Steps
           steps={steps}
           offset={-270}
           clicked={clicked}
           hover={hover}
           handleClick={handleClick}
           handleHover={handleHover}
-        />
+        /> */}
         <ButtonContainer>
           <Button
             onAction={() => { }}
