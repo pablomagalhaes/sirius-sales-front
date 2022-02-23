@@ -14,7 +14,7 @@ import { withTheme } from 'styled-components'
 import ControlledSelect from '../../../components/ControlledSelect'
 import ControlledInput from '../../../components/ControlledInput'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
-import newProposal from '../../../../infrastructure/api/newProposalService'
+import api from '../../../../infrastructure/instance'
 
 interface Step2Props {
   theme: any
@@ -35,16 +35,16 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted }: Step2Props):
 
   useEffect(() => {
     void (async function () {
-      await newProposal.getIncoterm()
-        .then((response) => setIncotermList(response))
+      await api.getIncoterm()
+        .then((response) => setIncotermList(response.data))
         .catch((err) => console.log(err))
     })()
   }, [])
 
   useEffect(() => {
     void (async function () {
-      await newProposal.getOriginDestination()
-        .then((response) => setOriginDestinationList(response))
+      await api.getOriginDestination()
+        .then((response) => setOriginDestinationList(response.data))
         .catch((err) => console.log(err))
     })()
   }, [])
