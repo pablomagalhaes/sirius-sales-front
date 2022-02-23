@@ -119,17 +119,18 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
       </Grid>
       <FormLabel component="legend">{I18n.t('pages.newProposal.step1.modal')}<RedColorSpan> *</RedColorSpan></FormLabel>
       <RadioGroup row aria-label="modal" name="row-radio-buttons-group" onChange={e => setData({ ...data, modal: e.target.value })}>
-        {transportList.map((item) => (
-          <>
+        {transportList.map((item, i) => (
+          <div key={`div-${i}`} style={{ display: 'flex' }}>
             <FormControlLabel
               value={item.id}
-              control={<StyledRadio color={getColor(data.modal)} />}
+              control={<StyledRadio color={getColor(data.modal)} key={`radio-${i}`} />}
               label={item.description}
+              key={`label-${i}`}
             />
-            <IconContainer>
-              <IconComponent name={item.id} defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
+            <IconContainer key={`container-${i}`}>
+              <IconComponent name={item.id} defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} key={`icon-${i}`} />
             </IconContainer>
-          </>
+          </div>
         ))}
       </RadioGroup>
     </Separator>
