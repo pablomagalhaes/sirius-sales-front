@@ -37,10 +37,15 @@ export const CheckBox = styled.div`
       : props.theme?.commercial?.components?.itemModal?.backgroundColor};
   path  {
     fill: ${(props: any) =>
-      props.theme?.commercial?.components?.itemModal?.backgroundColor};
+    props.theme?.commercial?.components?.itemModal?.backgroundColor};
     stroke: ${(props: any) =>
-      props.theme?.commercial?.components?.itemModal?.backgroundColor};
+    props.theme?.commercial?.components?.itemModal?.backgroundColor};
   }
+`
+
+export const CheckBoxArea = styled.div`
+  display: flex;
+  cursor: pointer;
 `
 
 export const CheckBoxLabel = styled.span`

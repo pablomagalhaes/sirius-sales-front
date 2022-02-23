@@ -127,14 +127,14 @@ const Step3 = ({ modal, invalidInput, setCompleted, theme }: Step3Props): JSX.El
       <FormControl variant="outlined" size="small" className='form-size'>
         <Grid container spacing={2}>
           <Grid item xs={4}>
-          <FormLabel component="legend">
+            <FormLabel component="legend">
               {I18n.t('pages.newProposal.step3.description')}
               {<RedColorSpan> *</RedColorSpan>}
             </FormLabel>
             <ControlledInput
               id="description"
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
-              invalid={ invalidInput && data.description.length === 0 }
+              invalid={invalidInput && data.description.length === 0}
               onChange={e => setData({ ...data, description: e.target.value })}
               value={data.description}
               variant="outlined"
@@ -142,12 +142,12 @@ const Step3 = ({ modal, invalidInput, setCompleted, theme }: Step3Props): JSX.El
             />
           </Grid>
           <Grid item xs={4}>
-          <FormLabel component="legend">
+            <FormLabel component="legend">
               {I18n.t('pages.newProposal.step3.specifications')}
               {modal === '2' && <RedColorSpan> *</RedColorSpan>}
             </FormLabel>
             <RadioGroup row aria-label="specifications" name="row-radio-buttons-group" onChange={e => setData({ ...data, specifications: e.target.value })}>
-              <FormControlLabel value="flc" control={<StyledRadio color={getColor(data.specifications)} />} label="FLC" />
+              <FormControlLabel value="fcl" control={<StyledRadio color={getColor(data.specifications)} />} label="FCL" />
               <FormControlLabel value="lcl" control={<StyledRadio color={getColor(data.specifications)} className="radio-spacement" />} label="LCL" />
               <FormControlLabel
                 value="refrigereted"
@@ -176,7 +176,7 @@ const Step3 = ({ modal, invalidInput, setCompleted, theme }: Step3Props): JSX.El
                   onChange={e => setData({ ...data, temperature: e.target.value })}
                   displayEmpty
                   disableUnderline
-                  invalid={ invalidInput && data.refrigereted && data.temperature.length === 0 }
+                  invalid={invalidInput && data.refrigereted && data.temperature.length === 0}
                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 >
                   <MenuItem disabled value="">
