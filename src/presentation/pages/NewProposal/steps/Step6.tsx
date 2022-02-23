@@ -5,6 +5,7 @@ import FareModal from '../../../components/FareModal/FareModal'
 import { TableBody } from '@material-ui/core'
 
 import {
+  DeleteIconDiv,
   EditIconDiv,
   RowReverseDiv,
   StyledTableCell,
@@ -65,11 +66,13 @@ const Table = ({ data }: TableData): JSX.Element => {
                 </StyledTableCell>
                 <StyledTableCell width="100%">
                   <RowReverseDiv>
-                    <RemoveIcon
-                      onClick={() => {
-                        console.log('Remove')
-                      }}
-                    />
+                    <DeleteIconDiv>
+                      <RemoveIcon
+                        onClick={() => {
+                          console.log('Remove')
+                        }}
+                      />
+                    </DeleteIconDiv>
                     <EditIconDiv>
                       <EditIcon
                         onClick={() => {
