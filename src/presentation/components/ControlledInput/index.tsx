@@ -9,7 +9,7 @@ const ControlledInput = ({ toolTipTitle, invalid, ...props }): JSX.Element => {
       open={invalid}
     >
       <StyledInput
-        invalid={invalid}
+        $invalid={invalid}
         {...props}
       />
     </ControlledToolTip>

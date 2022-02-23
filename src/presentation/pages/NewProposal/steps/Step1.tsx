@@ -82,7 +82,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
           </RadioGroup>
         </Grid>
         {
-          data?.proposal === 'routing'
+          data.proposal === 'routing'
             ? <Grid item xs={6}>
               <FormLabel component="legend">{I18n.t('pages.newProposal.step1.services')}</FormLabel>
               <RadioGroup row aria-label="services" name="row-radio-buttons-group" onChange={e => setData({ ...data, services: e.target.value })}>
@@ -94,7 +94,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
         }
         <Grid item xs={6}>
           {
-            data?.proposal === 'routing'
+            data.proposal === 'routing'
               ? <FormLabel component="legend">{I18n.t('pages.newProposal.step1.agents')}<RedColorSpan> *</RedColorSpan></FormLabel>
               : <FormLabel component="legend">{I18n.t('pages.newProposal.step1.client')}:<RedColorSpan> *</RedColorSpan></FormLabel>
           }
@@ -119,17 +119,18 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
       </Grid>
       <FormLabel component="legend">{I18n.t('pages.newProposal.step1.modal')}<RedColorSpan> *</RedColorSpan></FormLabel>
       <RadioGroup row aria-label="modal" name="row-radio-buttons-group" onChange={e => setData({ ...data, modal: e.target.value })}>
-        {transportList?.map((item) => (
-          <>
+        {transportList.map((item, i) => (
+          <div key={`div-${i}`} style={{ display: 'flex' }}>
             <FormControlLabel
               value={item.id}
-              control={<StyledRadio color={getColor(data.modal)} />}
+              control={<StyledRadio color={getColor(data?.modal)} key={`radio-${i}`} />}
               label={item.description}
+              key={`label-${i}`}
             />
-            <IconContainer>
-              <IconComponent name={item.id} defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
+            <IconContainer key={`container-${i}`}>
+              <IconComponent name={item.id} defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} key={`icon-${i}`} />
             </IconContainer>
-          </>
+          </div>
         ))}
       </RadioGroup>
     </Separator>
