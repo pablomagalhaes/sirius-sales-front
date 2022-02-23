@@ -77,7 +77,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
             value={data.proposal}
             onChange={e => setData({ ...data, proposal: e.target.value })}
           >
-            <FormControlLabel value="client" control={<StyledRadio color={getColor(data.proposal)} />} label={I18n.t('pages.newProposal.step1.client')} />
+            <FormControlLabel value="client" control={<StyledRadio color={getColor(data.proposal)} />} label={I18n.t('pages.newProposal.step1.client')} style={{ marginRight: '30px' }} />
             <FormControlLabel value="routing" control={<StyledRadio color={getColor(data.proposal)} />} label={I18n.t('pages.newProposal.step1.routingOrder')} />
           </RadioGroup>
         </Grid>
