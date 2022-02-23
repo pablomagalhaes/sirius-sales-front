@@ -123,7 +123,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
           <div key={`div-${i}`} style={{ display: 'flex' }}>
             <FormControlLabel
               value={item.id}
-              control={<StyledRadio color={getColor(data?.modal)} key={`radio-${i}`} />}
+              control={<StyledRadio color={getColor(data.modal)} key={`radio-${i}`} />}
               label={item.description}
               key={`label-${i}`}
             />
