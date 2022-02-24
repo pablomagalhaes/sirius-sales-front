@@ -4,6 +4,8 @@ interface CardFilterProps {
   value: string
 }
 
+const orderButtonMenuItems = ['Ref. proposta', 'Nome do cliente', 'Responsável', 'Modal', 'Origem', 'Destino', 'Dt. abertura', 'Dt. validade']
+
 const cardFilters: CardFilterProps[] = [
   {
     iconType: '',
@@ -51,28 +53,6 @@ const cardFilters: CardFilterProps[] = [
     status: 'Marítimo'
   }
 ]
-
-const TableRows = (): any => {
-  const array: any = []
-  Array.from(Array(20), (value, i: number) => {
-    const item = {
-      key: i,
-      reference: 'PC-000004/20',
-      client: 'EUROFARMA LABORATORIOS',
-      origin: 'GUARULHOS',
-      destination: 'MANAUS',
-      opening: '26/01/2021',
-      shelfLife: '10/07/2023',
-      iconterm: 'CFR',
-      numio: '000001/20',
-      responsible: 'Cristina A.',
-      status: 'aberto',
-      type: 'importation'
-    }
-    return array.push(item)
-  })
-  return array
-}
 
 const menuItemsSelector = [
   {
@@ -166,4 +146,27 @@ const menuItemsSelector = [
   }
 ]
 
-export { cardFilters, TableRows, menuItemsSelector }
+// mock
+const TableRows = (): any => {
+  const array: any = []
+  Array.from(Array(20), (value, i: number) => {
+    const item = {
+      key: i,
+      reference: 'PC-000004/20',
+      client: 'EUROFARMA LABORATORIOS',
+      origin: 'GUARULHOS',
+      destination: 'MANAUS',
+      opening: '26/01/2021',
+      shelfLife: '10/07/2023',
+      iconterm: 'CFR',
+      numio: '000001/20',
+      responsible: 'Cristina A.',
+      status: 'aberto',
+      type: 'importation'
+    }
+    return array.push(item)
+  })
+  return array
+}
+
+export { cardFilters, TableRows, menuItemsSelector, orderButtonMenuItems }

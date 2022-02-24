@@ -16,7 +16,7 @@ export const StyledMenuSelect = styled(({ className, invalid, toolTipTitle, ...p
 })`
   && {
     background-color: ${(props: any) =>
-      props.theme?.commercial?.components?.itemModal?.backgroundColor};
+    props.theme?.commercial?.components?.itemModal?.backgroundColor};
     font-family: DM Sans;
     font-style: normal;
     font-weight: normal;
@@ -24,7 +24,7 @@ export const StyledMenuSelect = styled(({ className, invalid, toolTipTitle, ...p
     line-height: 150%;
     max-height:300px;
     color: ${(props: any) =>
-      props.theme?.commercial?.components?.itemModal?.fontColor};
+    props.theme?.commercial?.components?.itemModal?.fontColor};
   }
 `
 const StyledSelect = styled(Select)`
@@ -32,15 +32,15 @@ const StyledSelect = styled(Select)`
   flex-direction: row;
   align-items: center;
   padding: 6px 8px 5px 16px;
-  background: ${(props: {disabled: boolean, theme: any}) =>
+  background: ${(props: { disabled: boolean, theme: any }) =>
     props.disabled ? props.theme?.commercial?.components?.itemModal?.disabledBackground : props.theme?.commercial?.components?.itemModal?.backgroundColor};
   border: 1px solid;
-  border-color: ${(props: {invalid: boolean, filled: string | null, theme: any}) =>
+  border-color: ${(props: { invalid: boolean, filled: string | null, theme: any }) =>
     props.invalid
       ? '#FF4D4D'
       : props.filled != null && props.filled.length > 0
-      ? '#43BFB5'
-      : props.theme?.commercial?.components?.itemModal?.border};
+        ? '#43BFB5'
+        : props.theme?.commercial?.components?.itemModal?.border};
   box-sizing: border-box;
   border-radius: 4px;
   width: ${(props) => props.width};
@@ -55,22 +55,20 @@ const StyledSelect = styled(Select)`
     font-size: 14px;
     line-height: 150%;
     letter-spacing: 0.02em;
-    color: ${(props: {placeholder: string, disabled: boolean, theme: any}) =>
-      props.placeholder === '' || props.disabled ? props.theme?.commercial?.pages?.newProposal?.placeholder : props.theme?.commercial?.components?.itemModal?.inputFontColor};
+    color: ${(props: { placeholder: string, disabled: boolean, theme: any }) =>
+    props.placeholder === '' || props.disabled ? props.theme?.commercial?.pages?.newProposal?.placeholder : props.theme?.commercial?.components?.itemModal?.inputFontColor};
   }
   & .MuiSvgIcon-root {
     color:${(props: any) =>
-      props.theme?.commercial?.components?.itemModal?.iconColor};
+    props.theme?.commercial?.components?.itemModal?.iconColor};
   }
 
   &:hover {
     border: 1px solid;
     border-color: #43bfb5;
   }
-
-}
-
 `
+
 export const CheckBox = styled.div`
   border: ${(props: { checked: boolean }) =>
     props.checked ? '0px' : '2px solid #B5B8C2'};
@@ -90,17 +88,17 @@ export const CheckBox = styled.div`
     props.checked ? '#43BFB5' : props.theme?.commercial?.components?.itemModal?.backgroundColor};
   path  {
     fill: ${(props: any) =>
-      props.theme?.commercial?.components?.itemModal?.backgroundColor};
+    props.theme?.commercial?.components?.itemModal?.backgroundColor};
     stroke: ${(props: any) =>
-      props.theme?.commercial?.components?.itemModal?.backgroundColor};
+    props.theme?.commercial?.components?.itemModal?.backgroundColor};
   }
 `
 
 export const CheckBoxLabel = styled.span`
   font-size: 12px;
   margin-top: 28px;
-  color: ${(props: {invalid: boolean, theme: any}) =>
-  props.invalid
+  color: ${(props: { invalid: boolean, theme: any }) =>
+    props.invalid
       ? '#FF4D4D'
       : props.theme?.commercial?.components?.itemModal?.fontColor};
     
@@ -108,12 +106,12 @@ export const CheckBoxLabel = styled.span`
 export const Input = styled.input`
   text-indent: 10px;
   border: 1px solid;
-  border-color: ${(props: {invalid: boolean, filled: string | null, theme: any}) =>
+  border-color: ${(props: { invalid: boolean, filled: string | null, theme: any }) =>
     props.invalid
       ? '#FF4D4D'
       : props.filled != null && props.filled.length > 0
-      ? '#43BFB5'
-      : props.theme?.commercial?.components?.itemModal?.border};
+        ? '#43BFB5'
+        : props.theme?.commercial?.components?.itemModal?.border};
   margin-top: 12px;
   box-sizing: border-box;
   border-radius: 4px;
@@ -128,7 +126,7 @@ export const Input = styled.input`
   letter-spacing: 0.02em;
   color: ${(props: { disabled: boolean, theme: any }) =>
     props.disabled ? props.theme?.commercial?.pages?.newProposal?.placeholder : props.theme?.commercial?.components?.itemModal?.inputFontColor};
-  background: ${(props: {disabled: boolean, theme: any}) =>
+  background: ${(props: { disabled: boolean, theme: any }) =>
     props.disabled ? props.theme?.commercial?.components?.itemModal?.disabledBackground : props.theme?.commercial?.components?.itemModal?.backgroundColor};
     
   :focus {
@@ -158,7 +156,7 @@ export const ReplyDiv = styled.div`
 
   path {
     fill: ${(props: { disabled: boolean, theme: any }) =>
-      props.disabled ? '#999DAC' : props.disabled ? props.theme?.commercial?.components?.itemModal?.disabledBackground : props.theme?.commercial?.components?.itemModal?.replyIconColor};
+    props.disabled ? '#999DAC' : props.disabled ? props.theme?.commercial?.components?.itemModal?.disabledBackground : props.theme?.commercial?.components?.itemModal?.replyIconColor};
   }
 `
 export const ReplyIconDiv = styled.div`
