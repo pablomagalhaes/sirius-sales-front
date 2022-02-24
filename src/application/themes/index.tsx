@@ -48,7 +48,12 @@ const dark = {
         placeholder: '#7B8A9E',
         steps: {
           stepFare: '#B5B8C2',
-          stepsBoxShadow: 'rgba(0, 0, 0, 0.2)'
+          stepsBoxShadow: 'rgba(0, 0, 0, 0.2)',
+          chips: {
+            background: '#364353',
+            color: '#B5B8C2',
+            deleteBackground: '#B5B8C2'
+          }
         }
       }
     }
@@ -103,7 +108,12 @@ const light = {
         placeholder: '#999DAC',
         steps: {
           stepFare: '#545454',
-          stepsBoxShadow: 'rgba(0, 0, 0, 0.05)'
+          stepsBoxShadow: 'rgba(0, 0, 0, 0.05)',
+          chips: {
+            background: '#C2C5D1',
+            color: '#222222',
+            deleteBackground: '#FFFFFF'
+          }
         }
       }
     }

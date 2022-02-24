@@ -27,4 +27,8 @@ export const StyledInput = styled(TextField)`
   & .MuiInputBase-input {
     height: ${(props: { modal: boolean }) => (props.modal && '0')};
   }
+
+  svg path {
+    fill: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.subtitle}
+  }
 `
