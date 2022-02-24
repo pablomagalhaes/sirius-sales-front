@@ -1,5 +1,7 @@
-import { MenuItem, Modal } from '@material-ui/core'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { MenuItem, Modal, Box } from '@material-ui/core'
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import CloseIcon from '../../../application/icons/CloseIcon'
 import { I18n } from 'react-redux-i18n'
 import {
@@ -20,6 +22,7 @@ import { Input } from '../CostModal/CostModalStyles'
 import { Button } from 'fiorde-fe-components'
 import ControlledToolTip from '../ControlledToolTip/ControlledToolTip'
 import { Container, MenuItemContent } from './FareModalStyles'
+import newProposal from '../../../infrastructure/api/newProposalService'
 
 interface FareModalData {
   id: number | null
@@ -48,7 +51,7 @@ const FareModal = ({
     type: '',
     expense: '',
     saleValue: '',
-    saleCurrency: 'EUR',
+    saleCurrency: 'BRL',
     id: null
   }
   const [data, setData] = useState(dataProp != null ? dataProp : initialState)
@@ -57,8 +60,7 @@ const FareModal = ({
   const typeList = ['CW', 'CM']
   // Mock de despesas, valores serão especificados posteriormente
   const expensesList = ['Fuel - Security1', 'Fuel - Security2', 'Fuel - Security3']
-  // Mock de moedas, valores serão especificados posteriormente
-  const currencyList = ['EUR', 'USD']
+  const [currencyList, setCurrencyList] = useState<any[]>([])
 
   const rgxFloat = /^[0-9]*,?[0-9]*$/
 
@@ -96,6 +98,14 @@ const FareModal = ({
       setInvalidInput(true)
     }
   }
+
+  useEffect(() => {
+    void (async function () {
+      await newProposal.getCurrencies()
+        .then((response) => setCurrencyList(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
 
   return (
     <Modal open={open} onClose={handleOnClose}>
@@ -173,26 +183,26 @@ const FareModal = ({
             </Label>
           </RowDiv>
           <RowDiv margin={false}>
-            <Container width="84px" height="32px" margin="12px 14px 5px 0">
-              <ControlledSelect
-                onChange={(e) =>
-                  setData({ ...data, saleCurrency: e.target.value })
-                }
-                displayEmpty
+            <Container style={{ position: 'relative', marginRight: '14px' }}>
+              <Autocomplete
                 value={data.saleCurrency}
-                disableUnderline
-                placeholder={data.saleCurrency}
-                toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                invalid={invalidInput && data.saleCurrency.length === 0}
-              >
-                {currencyList.map((currency) => {
-                  return (
-                    <MenuItem key={`${currency}_key`} value={currency}>
-                      <MenuItemContent>{currency}</MenuItemContent>
-                    </MenuItem>
-                  )
-                })}
-              </ControlledSelect>
+                onChange={(e, newValue) => setData({ ...data, saleCurrency: newValue })}
+                options={currencyList.map((option) => option.id)}
+                renderInput={(params) => (
+                  <div ref={params.InputProps.ref}>
+                    <Input
+                      {...params.inputProps}
+                      width="84px"
+                      placeholder={data.saleCurrency}
+                      toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                      invalid={invalidInput && data.saleCurrency.length === 0}
+                    />
+                    <Box {...params.inputProps} className="dropdown">
+                      <ArrowDropDownIcon />
+                    </Box>
+                  </div>
+                )}
+              />
             </Container>
             <ControlledToolTip
               title={I18n.t('components.itemModal.requiredField')}
