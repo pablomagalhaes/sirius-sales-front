@@ -15,7 +15,10 @@ import ControlledSelect from '../../../components/ControlledSelect'
 import ControlledInput from '../../../components/ControlledInput'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import newProposal from '../../../../infrastructure/api/newProposalService'
+import { StyledPaper } from './StepsStyles'
 
+// mock
+const agentsList = ['agent 1', 'agent 2', 'agent 3']
 interface Step2Props {
   theme: any
   proposalType: string
@@ -23,13 +26,20 @@ interface Step2Props {
   setCompleted: (completed: any) => void
 }
 
+interface DataProps {
+  origin: string
+  destiny: string
+  agents: string[]
+  incoterm: string
+}
+
 const Step2 = ({ theme, proposalType, invalidInput, setCompleted }: Step2Props): JSX.Element => {
   const [incotermList, setIncotermList] = useState<any[]>([])
   const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
-  const [data, setData] = useState({
+  const [data, setData] = useState<DataProps>({
     origin: '',
     destiny: '',
-    agents: '',
+    agents: [],
     incoterm: ''
   })
 
@@ -139,29 +149,35 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted }: Step2Props):
               )}
             />
           </Grid>
-          <Grid item xs={6}>
-            <FormLabel component="legend">
-              {I18n.t('pages.newProposal.step2.agents')}
-              {proposalType === 'client' && <RedColorSpan> *</RedColorSpan>}
-            </FormLabel>
-            <ControlledInput
-              id="search-name"
-              toolTipTitle={I18n.t('components.itemModal.requiredField')}
-              invalid={proposalType === 'client' && invalidInput && data.agents.length === 0}
-              onChange={e => setData({ ...data, agents: e.target.value })}
-              value={data.agents}
-              variant="outlined"
-              size="small"
-              placeholder={I18n.t('pages.newProposal.step2.searchAgents')}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconComponent name="search" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
-                  </InputAdornment>
-                )
-              }}
-            />
-          </Grid>
+          {proposalType === 'client' &&
+            (<Grid item xs={6}>
+              <FormLabel component="legend">
+                {I18n.t('pages.newProposal.step2.agents')}
+                {proposalType === 'client' && <RedColorSpan> *</RedColorSpan>}
+              </FormLabel>
+              <Autocomplete
+                multiple
+                size="small"
+                options={agentsList}
+                onChange={(e, newValue) => setData({ ...data, agents: newValue })}
+                value={data.agents}
+                getOptionLabel={(option: string) => option}
+                renderOption={(option) => <span>{option}</span>}
+                renderInput={(params: any) => (
+                  <div ref={params.InputProps.ref}>
+                    <ControlledInput
+                      {...params}
+                      id="search-name"
+                      toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                      value={data.agents}
+                      invalid={proposalType === 'client' && invalidInput && data.agents.length === 0}
+                      variant="outlined"
+                      placeholder={data.agents.length === 0 && I18n.t('pages.newProposal.step2.searchAgents')}
+                    />
+                  </div>
+                )}
+                PaperComponent={(params: any) => <StyledPaper {...params} />} />
+            </Grid>)}
           <Grid item xs={3}>
             <FormLabel component="legend">
               {I18n.t('pages.newProposal.step2.incoterm')}
@@ -171,7 +187,7 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted }: Step2Props):
               labelId="select-label-incoterm"
               id="incoterm"
               value={data.incoterm}
-              onChange={e => setData({ ...data, incoterm: e.target.value }) }
+              onChange={e => setData({ ...data, incoterm: e.target.value })}
               displayEmpty
               disableUnderline
               invalid={invalidInput && data.incoterm.length === 0}

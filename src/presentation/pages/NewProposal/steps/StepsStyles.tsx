@@ -1,4 +1,4 @@
-import { TableRow, Table } from '@material-ui/core'
+import { TableRow, Table, Paper } from '@material-ui/core'
 import { MainDiv } from '../../../components/CostTable/CostTableStyles'
 import styled from 'styled-components'
 
@@ -30,10 +30,18 @@ const HeightDiv = styled.div`
   min-height: 650px; // Para que o stepper marque o Step 6 corretamente
 `
 
+const StyledPaper = styled(Paper)`
+    border: 1px solid ${(props: any) => props.theme?.commercial?.pages?.proposal?.dropdownBorderColor} !important;
+    background-color: ${(props: any) => props.theme?.commercial?.pages?.proposal?.dropdownBackgroundColor} !important;
+    color: ${(props: any) => props.theme?.commercial?.pages?.proposal?.dropdownFontColor} !important;
+    box-sizing: border-box;
+`
+
 export {
   TotalContainer,
   StyledTable,
   StyledRow,
   ButtonWrapper,
-  HeightDiv
+  HeightDiv,
+  StyledPaper
 }
