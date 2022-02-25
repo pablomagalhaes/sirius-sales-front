@@ -83,7 +83,7 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted }: Step2Props):
         2. {I18n.t('pages.newProposal.step2.title')}
         <Subtitle>{I18n.t('pages.newProposal.step2.subtitle')}</Subtitle>
       </Title>
-      <FormControl variant="outlined" size="small" className='form-size-half'>
+      <FormControl variant="outlined" size="small" className='form-size'>
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <FormLabel component="legend">
