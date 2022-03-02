@@ -116,7 +116,7 @@ const Step3 = ({ modal, invalidInput, setCompleted, theme }: Step3Props): JSX.El
         return { ...currentState, step3: false }
       })
     }
-  }, [data,modal])
+  }, [data, modal])
 
   return (
     <Separator>
@@ -142,30 +142,29 @@ const Step3 = ({ modal, invalidInput, setCompleted, theme }: Step3Props): JSX.El
             />
           </Grid>
           {
-          modal === 'SEA'
-            ? 
-          <Grid item xs={4}>
-            <FormLabel component="legend">
-              {I18n.t('pages.newProposal.step3.specifications')}
-              {modal === 'SEA' && <RedColorSpan> *</RedColorSpan>}
-            </FormLabel>
-            <RadioGroup row aria-label="specifications" name="row-radio-buttons-group" onChange={e => setData({ ...data, specifications: e.target.value })}>
-              <FormControlLabel value="fcl" control={<StyledRadio color={getColor(data.specifications)} />} label="FCL" />
-              <FormControlLabel value="lcl" control={<StyledRadio color={getColor(data.specifications)} className="radio-spacement" />} label="LCL" />
-              <FormControlLabel
-                value="refrigereted"
-                control={
-                  <Checkbox
-                    className="radio-spacement"
-                    onChange={() => setData({ ...data, refrigereted: !data.refrigereted })}
-                    checked={data.refrigereted}
+            modal === 'SEA'
+              ? <Grid item xs={4}>
+                <FormLabel component="legend">
+                  {I18n.t('pages.newProposal.step3.specifications')}
+                  {modal === 'SEA' && <RedColorSpan> *</RedColorSpan>}
+                </FormLabel>
+                <RadioGroup row aria-label="specifications" name="row-radio-buttons-group" onChange={e => setData({ ...data, specifications: e.target.value })}>
+                  <FormControlLabel value="fcl" control={<StyledRadio color={getColor(data.specifications)} />} label="FCL" />
+                  <FormControlLabel value="lcl" control={<StyledRadio color={getColor(data.specifications)} className="radio-spacement" />} label="LCL" />
+                  <FormControlLabel
+                    value="refrigereted"
+                    control={
+                      <Checkbox
+                        className="radio-spacement"
+                        onChange={() => setData({ ...data, refrigereted: !data.refrigereted })}
+                        checked={data.refrigereted}
+                      />
+                    }
+                    label={<BoldSpan checked={data.refrigereted}>{I18n.t('pages.newProposal.step3.refrigerated')}</BoldSpan>}
                   />
-                }
-                label={<BoldSpan checked={data.refrigereted}>{I18n.t('pages.newProposal.step3.refrigerated')}</BoldSpan>}
-              />
-            </RadioGroup>
-          </Grid>
-          : <Grid item xs={4}> </Grid>
+                </RadioGroup>
+              </Grid>
+              : <Grid item xs={4}> </Grid>
           }
           {
             data.refrigereted && (

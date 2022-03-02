@@ -24,6 +24,7 @@ interface Step2Props {
   proposalType: string
   invalidInput: boolean
   setCompleted: (completed: any) => void
+  modal: string
 }
 
 interface DataProps {
@@ -33,7 +34,7 @@ interface DataProps {
   incoterm: string
 }
 
-const Step2 = ({ theme, proposalType, invalidInput, setCompleted }: Step2Props): JSX.Element => {
+const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2Props): JSX.Element => {
   const [incotermList, setIncotermList] = useState<any[]>([])
   const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
   const [data, setData] = useState<DataProps>({
@@ -77,6 +78,58 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted }: Step2Props):
     }
   }, [data, proposalType])
 
+  useEffect(() => {
+    setData({ ...data, destiny: '', origin: '' })
+    console.log(data)
+  }, [modal])
+
+  const setOriginDestinyLabel = (type: string): string => {
+    switch (modal) {
+      case 'AIR':
+        if (type === 'origin') {
+          return String(I18n.t('pages.newProposal.step2.originAirport'))
+        } else {
+          return String(I18n.t('pages.newProposal.step2.destinyAirport'))
+        }
+      case 'SEA':
+        if (type === 'origin') {
+          return String(I18n.t('pages.newProposal.step2.originSeaport'))
+        } else {
+          return String(I18n.t('pages.newProposal.step2.destinySeaport'))
+        }
+      default:
+        if (type === 'origin') {
+          return String(I18n.t('pages.newProposal.step2.origin'))
+        } else {
+          return String(I18n.t('pages.newProposal.step2.destiny'))
+        }
+    }
+  }
+
+  const getOriginDestinyList = (): string[] => {
+    const actualList: string[] = []
+    let type = ''
+
+    switch (modal) {
+      case 'AIR':
+        type = 'AEROPORTO'
+        break
+      case 'SEA':
+        type = 'PORTO'
+        break
+      default:
+        break
+    }
+
+    originDestinationList?.forEach((option): void => {
+      if (option.type === type) {
+        actualList.push(option.name)
+      }
+    })
+
+    return actualList
+  }
+
   return (
     <Separator>
       <Title>
@@ -87,19 +140,19 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted }: Step2Props):
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <FormLabel component="legend">
-              {I18n.t('pages.newProposal.step2.origin')}
+              {setOriginDestinyLabel('origin')}
               <RedColorSpan> *</RedColorSpan>
             </FormLabel>
             <Autocomplete
               freeSolo
-              onChange={(e, newValue) => setData({ ...data, origin: newValue })}
-              options={originDestinationList.map((option) => option.name)}
+              onChange={(e, newValue) => setData({ ...data, origin: String(newValue) })}
+              options={getOriginDestinyList()}
+              value={data.origin}
               renderInput={(params) => (
                 <div ref={params.InputProps.ref}>
                   <ControlledInput
                     {...params}
                     id="search-origin"
-                    value={data.origin}
                     toolTipTitle={I18n.t('components.itemModal.requiredField')}
                     invalid={invalidInput && data.origin.length === 0}
                     variant="outlined"
@@ -119,19 +172,19 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted }: Step2Props):
           </Grid>
           <Grid item xs={6}>
             <FormLabel component="legend">
-              {I18n.t('pages.newProposal.step2.destiny')}
+              {setOriginDestinyLabel('destiny')}
               <RedColorSpan> *</RedColorSpan>
             </FormLabel>
             <Autocomplete
               freeSolo
-              onChange={(e, newValue) => setData({ ...data, destiny: newValue })}
-              options={originDestinationList.map((option) => option.name)}
+              onChange={(e, newValue) => setData({ ...data, destiny: String(newValue) })}
+              options={getOriginDestinyList()}
+              value={data.destiny}
               renderInput={(params) => (
                 <div ref={params.InputProps.ref}>
                   <ControlledInput
                     {...params}
                     id="search-destiny"
-                    value={data.destiny}
                     toolTipTitle={I18n.t('components.itemModal.requiredField')}
                     invalid={invalidInput && data.destiny.length === 0}
                     variant="outlined"
@@ -161,8 +214,6 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted }: Step2Props):
                 options={agentsList}
                 onChange={(e, newValue) => setData({ ...data, agents: newValue })}
                 value={data.agents}
-                getOptionLabel={(option: string) => option}
-                renderOption={(option) => <span>{option}</span>}
                 renderInput={(params: any) => (
                   <div ref={params.InputProps.ref}>
                     <ControlledInput
