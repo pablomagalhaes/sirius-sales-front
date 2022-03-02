@@ -206,7 +206,6 @@ const Step3 = ({ modal, invalidInput, setCompleted, theme }: Step3Props): JSX.El
               text={I18n.t('pages.newProposal.step3.buttonAdd')}
               icon="add"
               backgroundGreen={false}
-              disabled={true}
             />
             <ItemModal
               dataProp={chargeData}

@@ -1,6 +1,6 @@
 import instance from '../instance'
 
-const getCurrencies = async () => {
+const getCurrencies = async (): Promise<any> => {
   try {
     const res = await instance.get('/sirius-master-data-api/currencies/')
     return res.data
@@ -9,7 +9,7 @@ const getCurrencies = async () => {
   }
 }
 
-const getIncoterm = async () => {
+const getIncoterm = async (): Promise<any> => {
   try {
     const res = await instance.get('/sirius-master-data-api/incoterms/')
     return res.data
@@ -18,7 +18,7 @@ const getIncoterm = async () => {
   }
 }
 
-const getTransport = async () => {
+const getTransport = async (): Promise<any> => {
   try {
     const res = await instance.get('/sirius-master-data-api/transport/')
     return res.data
@@ -27,7 +27,7 @@ const getTransport = async () => {
   }
 }
 
-const getOriginDestination = async () => {
+const getOriginDestination = async (): Promise<any> => {
   try {
     const res = await instance.get('/sirius-master-data-api/origins/destinations/resumo')
     return res.data
