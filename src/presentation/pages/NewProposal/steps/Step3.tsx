@@ -10,8 +10,18 @@ import {
   Checkbox
 } from '@material-ui/core/'
 import { I18n } from 'react-redux-i18n'
-import { Title, Subtitle, Separator, SelectSpan, BoldSpan, StyledRadio } from '../style'
-import ItemModal, { ItemModalData, initialState } from '../../../components/ItemModal/ItemModal'
+import {
+  Title,
+  Subtitle,
+  Separator,
+  SelectSpan,
+  BoldSpan,
+  StyledRadio
+} from '../style'
+import ItemModal, {
+  ItemModalData,
+  initialState
+} from '../../../components/ItemModal/ItemModal'
 import ControlledSelect from '../../../components/ControlledSelect'
 import ControlledInput from '../../../components/ControlledInput'
 import ChargeTable from '../../../components/ChargeTable'
@@ -51,12 +61,23 @@ interface Step3Props {
   modal: string
   invalidInput: boolean
   setCompleted: (completed: any) => void
+  setCostData: any
 }
 
-const Step3 = ({ modal, invalidInput, setCompleted, theme }: Step3Props): JSX.Element => {
+const Step3 = ({
+  modal,
+  invalidInput,
+  setCompleted,
+  theme,
+  setCostData
+}: Step3Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [tableRows, setTableRows] = useState<ItemModalData[]>([])
   const [chargeData, setChargeData] = useState<ItemModalData>(initialState)
+
+  useEffect(() => {
+    setCostData(tableRows.length)
+  }, [tableRows.length])
 
   const [data, setData] = useState({
     description: '',
@@ -104,7 +125,8 @@ const Step3 = ({ modal, invalidInput, setCompleted, theme }: Step3Props): JSX.El
   useEffect(() => {
     if (
       data.description.length !== 0 &&
-      ((modal === 'SEA' && data.specifications.length !== 0) || modal !== 'SEA') &&
+      ((modal === 'SEA' && data.specifications.length !== 0) ||
+        modal !== 'SEA') &&
       ((data.refrigereted && data.temperature.length !== 0) ||
         !data.refrigereted)
     ) {
@@ -124,7 +146,7 @@ const Step3 = ({ modal, invalidInput, setCompleted, theme }: Step3Props): JSX.El
         3. {I18n.t('pages.newProposal.step3.title')}
         <Subtitle>{I18n.t('pages.newProposal.step3.subtitle')}</Subtitle>
       </Title>
-      <FormControl variant="outlined" size="small" className='form-size'>
+      <FormControl variant="outlined" size="small" className="form-size">
         <Grid container spacing={2}>
           <Grid item xs={4}>
             <FormLabel component="legend">
@@ -135,77 +157,131 @@ const Step3 = ({ modal, invalidInput, setCompleted, theme }: Step3Props): JSX.El
               id="description"
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
               invalid={invalidInput && data.description.length === 0}
-              onChange={e => setData({ ...data, description: e.target.value })}
+              onChange={(e) =>
+                setData({ ...data, description: e.target.value })
+              }
               value={data.description}
               variant="outlined"
               size="small"
             />
           </Grid>
-          {
-            modal === 'SEA'
-              ? <Grid item xs={4}>
-                <FormLabel component="legend">
-                  {I18n.t('pages.newProposal.step3.specifications')}
-                  {modal === 'SEA' && <RedColorSpan> *</RedColorSpan>}
-                </FormLabel>
-                <RadioGroup row aria-label="specifications" name="row-radio-buttons-group" onChange={e => setData({ ...data, specifications: e.target.value })}>
-                  <FormControlLabel value="fcl" control={<StyledRadio color={getColor(data.specifications)} />} label="FCL" />
-                  <FormControlLabel value="lcl" control={<StyledRadio color={getColor(data.specifications)} className="radio-spacement" />} label="LCL" />
-                  <FormControlLabel
-                    value="refrigereted"
-                    control={
-                      <Checkbox
-                        className="radio-spacement"
-                        onChange={() => setData({ ...data, refrigereted: !data.refrigereted })}
-                        checked={data.refrigereted}
-                      />
-                    }
-                    label={<BoldSpan checked={data.refrigereted}>{I18n.t('pages.newProposal.step3.refrigerated')}</BoldSpan>}
-                  />
-                </RadioGroup>
-              </Grid>
-              : <Grid item xs={4}> </Grid>
-          }
-          {
-            data.refrigereted && (
-              <Grid item xs={3}>
-                <FormLabel component="legend">
-                  {I18n.t('pages.newProposal.step3.temperature')}
-                  {data.refrigereted && <RedColorSpan> *</RedColorSpan>}
-                </FormLabel>
-                <ControlledSelect
-                  labelId="select-label-temperature"
-                  id="temperature"
-                  value={data.temperature}
-                  onChange={e => setData({ ...data, temperature: e.target.value })}
-                  displayEmpty
-                  disableUnderline
-                  invalid={invalidInput && data.refrigereted && data.temperature.length === 0}
-                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                >
-                  <MenuItem disabled value="">
-                    <SelectSpan placeholder={1}>{I18n.t('pages.newProposal.step3.choose')}</SelectSpan>
+          {modal === 'SEA'
+            ? (
+            <Grid item xs={4}>
+              <FormLabel component="legend">
+                {I18n.t('pages.newProposal.step3.specifications')}
+                {modal === 'SEA' && <RedColorSpan> *</RedColorSpan>}
+              </FormLabel>
+              <RadioGroup
+                row
+                aria-label="specifications"
+                name="row-radio-buttons-group"
+                onChange={(e) =>
+                  setData({ ...data, specifications: e.target.value })
+                }
+              >
+                <FormControlLabel
+                  value="fcl"
+                  control={
+                    <StyledRadio color={getColor(data.specifications)} />
+                  }
+                  label="FCL"
+                />
+                <FormControlLabel
+                  value="lcl"
+                  control={
+                    <StyledRadio
+                      color={getColor(data.specifications)}
+                      className="radio-spacement"
+                    />
+                  }
+                  label="LCL"
+                />
+                <FormControlLabel
+                  value="refrigereted"
+                  control={
+                    <Checkbox
+                      className="radio-spacement"
+                      onChange={() =>
+                        setData({ ...data, refrigereted: !data.refrigereted })
+                      }
+                      checked={data.refrigereted}
+                    />
+                  }
+                  label={
+                    <BoldSpan checked={data.refrigereted}>
+                      {I18n.t('pages.newProposal.step3.refrigerated')}
+                    </BoldSpan>
+                  }
+                />
+              </RadioGroup>
+            </Grid>
+              )
+            : (
+            <Grid item xs={4}>
+              {' '}
+            </Grid>
+              )}
+          {data.refrigereted && (
+            <Grid item xs={3}>
+              <FormLabel component="legend">
+                {I18n.t('pages.newProposal.step3.temperature')}
+                {data.refrigereted && <RedColorSpan> *</RedColorSpan>}
+              </FormLabel>
+              <ControlledSelect
+                labelId="select-label-temperature"
+                id="temperature"
+                value={data.temperature}
+                onChange={(e) =>
+                  setData({ ...data, temperature: e.target.value })
+                }
+                displayEmpty
+                disableUnderline
+                invalid={
+                  invalidInput &&
+                  data.refrigereted &&
+                  data.temperature.length === 0
+                }
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+              >
+                <MenuItem disabled value="">
+                  <SelectSpan placeholder={1}>
+                    {I18n.t('pages.newProposal.step3.choose')}
+                  </SelectSpan>
+                </MenuItem>
+                {temperatureList.map((item) => (
+                  <MenuItem key={item.value} value={item.value}>
+                    <SelectSpan>{item.name}</SelectSpan>
                   </MenuItem>
-                  {temperatureList.map((item) => (
-                    <MenuItem key={item.value} value={item.value}>
-                      <SelectSpan>{item.name}</SelectSpan>
-                    </MenuItem>
-                  ))}
-                </ControlledSelect>
-              </Grid>)
-          }
-          {
-            tableRows.length > 0 && (
-              <Grid item xs={12}>
-                <ChargeTable charges={tableRows} onEdit={handleEdit} onDelete={handleDelete} />
-              </Grid>)
-          }
+                ))}
+              </ControlledSelect>
+            </Grid>
+          )}
+          {tableRows.length > 0 && (
+            <Grid item xs={12}>
+              <ChargeTable
+                charges={tableRows}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Button
               onAction={handleOpen}
               text={I18n.t('pages.newProposal.step3.buttonAdd')}
               icon="add"
               backgroundGreen={false}
+              disabled={
+                modal === '' ||
+                (modal === 'SEA' && data.specifications.length === 0)
+              }
+              tooltip={
+                modal === '' ||
+                (modal === 'SEA' && data.specifications.length === 0)
+                  ? I18n.t('pages.newProposal.step3.buttonAddTooltip')
+                  : I18n.t('pages.newProposal.step3.buttonAdd')
+              }
             />
             <ItemModal
               dataProp={chargeData}
