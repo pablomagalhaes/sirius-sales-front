@@ -24,6 +24,7 @@ import {
   RowReverseDiv,
   Title
 } from '../StyledComponents/modalStyles'
+import NumberFormat from 'react-number-format'
 
 export interface ItemModalData {
   amount: string
@@ -103,6 +104,19 @@ const ItemModal = ({
 
   const validateIntInput = (value: string): RegExpMatchArray | null => {
     return value.match(rgxInt)
+  }
+
+  const rightToLeftFormatter = (value: string, decimal: number): string => {
+    if (Number(value) === 0) return ''
+
+    let amount = ''
+    if (amount.length > decimal) {
+      amount = parseInt(value).toFixed(decimal)
+    } else {
+      amount = (parseInt(value) / 10 ** decimal).toFixed(decimal)
+    }
+
+    return String(amount).replace('.', ',')
   }
 
   const validateData = (): boolean => {
@@ -210,14 +224,19 @@ const ItemModal = ({
             </div>
             {!(marineFCL()) && (
               <div style={{ width: '126px', height: '30px', marginLeft: '18px', marginTop: '12px' }}>
-                <ControlledInput
+                <NumberFormat
+                  decimalSeparator={','}
+                  thousandSeparator={'.'}
+                  decimalScale={2}
+                  format={(value: string) => rightToLeftFormatter(value, 2)}
+                  customInput={ControlledInput}
+                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, rawWeight: e.target.value })) }}
                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
                   invalid={
                     invalidInput && (!marineFCL()) &&
                     (data.rawWeight === null || data.rawWeight.length === 0)
                   }
                   value={data.rawWeight != null ? data.rawWeight : ''}
-                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, rawWeight: e.target.value })) }}
                   variant="outlined"
                   size="small"
                   modal
@@ -250,7 +269,12 @@ const ItemModal = ({
             {!(marineFCL()) && (
               <>
                 <div style={{ width: '60px', height: '30px', marginRight: '8px', marginTop: '12px' }}>
-                  <ControlledInput
+                  <NumberFormat
+                    decimalSeparator={','}
+                    thousandSeparator={'.'}
+                    decimalScale={2}
+                    format={(value: string) => rightToLeftFormatter(value, 2)}
+                    customInput={ControlledInput}
                     toolTipTitle={I18n.t('components.itemModal.requiredField')}
                     invalid={
                       invalidInput && !(marineFCL()) &&
@@ -264,7 +288,12 @@ const ItemModal = ({
                   />
                 </div>
                 <div style={{ width: '60px', height: '30px', marginRight: '8px', marginTop: '12px' }}>
-                  <ControlledInput
+                  <NumberFormat
+                    decimalSeparator={','}
+                    thousandSeparator={'.'}
+                    decimalScale={2}
+                    format={(value: string) => rightToLeftFormatter(value, 2)}
+                    customInput={ControlledInput}
                     toolTipTitle={I18n.t('components.itemModal.requiredField')}
                     value={data.width != null ? data.width : ''}
                     onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, width: e.target.value })) }}
@@ -278,9 +307,13 @@ const ItemModal = ({
                   />
                 </div>
                 <div style={{ width: '60px', height: '30px', marginRight: '8px', marginTop: '12px' }}>
-                  <ControlledInput
+                  <NumberFormat
+                    decimalSeparator={','}
+                    thousandSeparator={'.'}
+                    decimalScale={2}
+                    format={(value: string) => rightToLeftFormatter(value, 2)}
+                    customInput={ControlledInput}
                     toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                    inputProps={{ 'data-testid': 'height' }}
                     value={data.height != null ? data.height : ''}
                     onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, height: e.target.value })) }}
                     invalid={
@@ -296,7 +329,12 @@ const ItemModal = ({
             )}
             {hasDiameter() && !(marineFCL()) && (
               <div style={{ width: '126px', height: '30px', marginLeft: '15px', marginTop: '12px' }}>
-                <ControlledInput
+                <NumberFormat
+                  decimalSeparator={','}
+                  thousandSeparator={'.'}
+                  decimalScale={2}
+                  format={(value: string) => rightToLeftFormatter(value, 2)}
+                  customInput={ControlledInput}
                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
                   invalid={false}
                   value={data.diameter != null ? data.diameter : ''}
@@ -310,7 +348,12 @@ const ItemModal = ({
             )}
             {hasDiameter() && marineFCL() && (
               <div style={{ width: '197px', height: '30px', marginLeft: '1px', marginTop: '12px' }}>
-                <ControlledInput
+                <NumberFormat
+                  decimalSeparator={','}
+                  thousandSeparator={'.'}
+                  decimalScale={2}
+                  format={(value: string) => rightToLeftFormatter(value, 2)}
+                  customInput={ControlledInput}
                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
                   invalid={false}
                   value={data.diameter != null ? data.diameter : ''}
@@ -320,11 +363,15 @@ const ItemModal = ({
                   modal
                 />
               </div>
-
             )}
             {!(marineFCL()) && (
               <div style={{ width: '126px', height: '30px', marginLeft: '18px', marginTop: '12px' }}>
-                <ControlledInput
+                <NumberFormat
+                  decimalSeparator={','}
+                  thousandSeparator={'.'}
+                  decimalScale={3}
+                  format={(value: string) => rightToLeftFormatter(value, 3)}
+                  customInput={ControlledInput}
                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
                   invalid={
                     invalidInput && !(marineFCL()) &&
