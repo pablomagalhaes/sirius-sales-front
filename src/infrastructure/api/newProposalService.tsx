@@ -36,11 +36,21 @@ const getOriginDestination = async (): Promise<any> => {
   }
 }
 
+const getFrequency = async (): Promise<any> => {
+  try {
+    const res = await instance.get('/sirius-master-data-api/frequency')
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const newProposal = {
   getCurrencies,
   getIncoterm,
   getTransport,
-  getOriginDestination
+  getOriginDestination,
+  getFrequency
 }
 
 export default newProposal
