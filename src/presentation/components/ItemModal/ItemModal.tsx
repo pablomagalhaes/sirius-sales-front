@@ -95,7 +95,7 @@ const ItemModal = ({
     setClose()
   }
   const marineFCL = (): boolean => {
-    return modal === '2' && specifications === 'fcl'
+    return modal === 'SEA' && specifications === 'fcl'
   }
 
   const validateFloatInput = (value: string): RegExpMatchArray | null => {
@@ -143,7 +143,7 @@ const ItemModal = ({
   }
 
   const hasDiameter = (): boolean => {
-    return modal !== '3'
+    return modal !== 'LAND'
   }
 
   const handleOnAdd = (): void => {
@@ -177,9 +177,9 @@ const ItemModal = ({
             {!(marineFCL()) && (
               <Label width="27.4%">
                 {I18n.t('components.itemModal.rawWeight')}
-                {(modal === '1' ||
-                  (modal === '2' && specifications === 'lcl') ||
-                  modal === '3') && <RedColorSpan> *</RedColorSpan>}
+                {(modal === 'AIR' ||
+                  (modal === 'SEA' && specifications === 'lcl') ||
+                  modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}
               </Label>
             )}
           </RowDiv>
@@ -248,9 +248,9 @@ const ItemModal = ({
             {!(marineFCL()) && (
               <Label width="44%">
                 {I18n.t('components.itemModal.hwl')}
-                {(modal === '1' ||
-                  (modal === '2' && specifications === 'lcl') ||
-                  modal === '3') && <RedColorSpan> *</RedColorSpan>}
+                {(modal === 'AIR' ||
+                  (modal === 'SEA' && specifications === 'lcl') ||
+                  modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}
               </Label>
             )}
             {hasDiameter() && (
@@ -259,9 +259,9 @@ const ItemModal = ({
             {!(marineFCL()) && (
               <Label width="27%">
                 {I18n.t('components.itemModal.cubage')}
-                {(modal === '1' ||
-                  (modal === '2' && specifications === 'lcl') ||
-                  modal === '3') && <RedColorSpan> *</RedColorSpan>}
+                {(modal === 'AIR' ||
+                  (modal === 'SEA' && specifications === 'lcl') ||
+                  modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}
               </Label>
             )}
           </RowDiv>
