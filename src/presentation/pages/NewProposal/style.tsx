@@ -156,6 +156,17 @@ const Separator = styled.div`
   .radio-spacement {
     margin-left: 30px;
   }
+
+  .MuiChip-root {
+        background-color: ${(props: any) =>
+    props.theme?.commercial?.pages?.newProposal?.steps?.chips?.background};
+        color: ${(props: any) =>
+    props.theme?.commercial?.pages?.newProposal?.steps?.chips?.color};
+        svg path {
+            fill: ${(props: any) =>
+    props.theme?.commercial?.pages?.newProposal?.steps?.chips?.deleteBackground};
+        }
+    }
 `
 
 const SelectSpan = styled.span`

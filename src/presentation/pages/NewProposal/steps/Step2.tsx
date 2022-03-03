@@ -15,21 +15,32 @@ import ControlledSelect from '../../../components/ControlledSelect'
 import ControlledInput from '../../../components/ControlledInput'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import newProposal from '../../../../infrastructure/api/newProposalService'
+import { StyledPaper } from './StepsStyles'
 
+// mock
+const agentsList = ['agent 1', 'agent 2', 'agent 3']
 interface Step2Props {
   theme: any
   proposalType: string
   invalidInput: boolean
   setCompleted: (completed: any) => void
+  modal: string
 }
 
-const Step2 = ({ theme, proposalType, invalidInput, setCompleted }: Step2Props): JSX.Element => {
+interface DataProps {
+  origin: string
+  destiny: string
+  agents: string[]
+  incoterm: string
+}
+
+const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2Props): JSX.Element => {
   const [incotermList, setIncotermList] = useState<any[]>([])
   const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
-  const [data, setData] = useState({
+  const [data, setData] = useState<DataProps>({
     origin: '',
     destiny: '',
-    agents: '',
+    agents: [],
     incoterm: ''
   })
 
@@ -67,29 +78,81 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted }: Step2Props):
     }
   }, [data, proposalType])
 
+  useEffect(() => {
+    setData({ ...data, destiny: '', origin: '' })
+    console.log(data)
+  }, [modal])
+
+  const setOriginDestinyLabel = (type: string): string => {
+    switch (modal) {
+      case 'AIR':
+        if (type === 'origin') {
+          return String(I18n.t('pages.newProposal.step2.originAirport'))
+        } else {
+          return String(I18n.t('pages.newProposal.step2.destinyAirport'))
+        }
+      case 'SEA':
+        if (type === 'origin') {
+          return String(I18n.t('pages.newProposal.step2.originSeaport'))
+        } else {
+          return String(I18n.t('pages.newProposal.step2.destinySeaport'))
+        }
+      default:
+        if (type === 'origin') {
+          return String(I18n.t('pages.newProposal.step2.origin'))
+        } else {
+          return String(I18n.t('pages.newProposal.step2.destiny'))
+        }
+    }
+  }
+
+  const getOriginDestinyList = (): string[] => {
+    const actualList: string[] = []
+    let type = ''
+
+    switch (modal) {
+      case 'AIR':
+        type = 'AEROPORTO'
+        break
+      case 'SEA':
+        type = 'PORTO'
+        break
+      default:
+        break
+    }
+
+    originDestinationList?.forEach((option): void => {
+      if (option.type === type) {
+        actualList.push(option.name)
+      }
+    })
+
+    return actualList
+  }
+
   return (
     <Separator>
       <Title>
         2. {I18n.t('pages.newProposal.step2.title')}
         <Subtitle>{I18n.t('pages.newProposal.step2.subtitle')}</Subtitle>
       </Title>
-      <FormControl variant="outlined" size="small" className='form-size-half'>
+      <FormControl variant="outlined" size="small" className='form-size'>
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <FormLabel component="legend">
-              {I18n.t('pages.newProposal.step2.origin')}
+              {setOriginDestinyLabel('origin')}
               <RedColorSpan> *</RedColorSpan>
             </FormLabel>
             <Autocomplete
               freeSolo
-              onChange={(e, newValue) => setData({ ...data, origin: newValue })}
-              options={originDestinationList.map((option) => option.name)}
+              onChange={(e, newValue) => setData({ ...data, origin: String(newValue) })}
+              options={getOriginDestinyList()}
+              value={data.origin}
               renderInput={(params) => (
                 <div ref={params.InputProps.ref}>
                   <ControlledInput
                     {...params}
                     id="search-origin"
-                    value={data.origin}
                     toolTipTitle={I18n.t('components.itemModal.requiredField')}
                     invalid={invalidInput && data.origin.length === 0}
                     variant="outlined"
@@ -109,19 +172,19 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted }: Step2Props):
           </Grid>
           <Grid item xs={6}>
             <FormLabel component="legend">
-              {I18n.t('pages.newProposal.step2.destiny')}
+              {setOriginDestinyLabel('destiny')}
               <RedColorSpan> *</RedColorSpan>
             </FormLabel>
             <Autocomplete
               freeSolo
-              onChange={(e, newValue) => setData({ ...data, destiny: newValue })}
-              options={originDestinationList.map((option) => option.name)}
+              onChange={(e, newValue) => setData({ ...data, destiny: String(newValue) })}
+              options={getOriginDestinyList()}
+              value={data.destiny}
               renderInput={(params) => (
                 <div ref={params.InputProps.ref}>
                   <ControlledInput
                     {...params}
                     id="search-destiny"
-                    value={data.destiny}
                     toolTipTitle={I18n.t('components.itemModal.requiredField')}
                     invalid={invalidInput && data.destiny.length === 0}
                     variant="outlined"
@@ -139,29 +202,33 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted }: Step2Props):
               )}
             />
           </Grid>
-          <Grid item xs={6}>
-            <FormLabel component="legend">
-              {I18n.t('pages.newProposal.step2.agents')}
-              {proposalType === 'client' && <RedColorSpan> *</RedColorSpan>}
-            </FormLabel>
-            <ControlledInput
-              id="search-name"
-              toolTipTitle={I18n.t('components.itemModal.requiredField')}
-              invalid={proposalType === 'client' && invalidInput && data.agents.length === 0}
-              onChange={e => setData({ ...data, agents: e.target.value })}
-              value={data.agents}
-              variant="outlined"
-              size="small"
-              placeholder={I18n.t('pages.newProposal.step2.searchAgents')}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconComponent name="search" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
-                  </InputAdornment>
-                )
-              }}
-            />
-          </Grid>
+          {proposalType === 'client' &&
+            (<Grid item xs={6}>
+              <FormLabel component="legend">
+                {I18n.t('pages.newProposal.step2.agents')}
+                {proposalType === 'client' && <RedColorSpan> *</RedColorSpan>}
+              </FormLabel>
+              <Autocomplete
+                multiple
+                size="small"
+                options={agentsList}
+                onChange={(e, newValue) => setData({ ...data, agents: newValue })}
+                value={data.agents}
+                renderInput={(params: any) => (
+                  <div ref={params.InputProps.ref}>
+                    <ControlledInput
+                      {...params}
+                      id="search-name"
+                      toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                      value={data.agents}
+                      invalid={proposalType === 'client' && invalidInput && data.agents.length === 0}
+                      variant="outlined"
+                      placeholder={data.agents.length === 0 && I18n.t('pages.newProposal.step2.searchAgents')}
+                    />
+                  </div>
+                )}
+                PaperComponent={(params: any) => <StyledPaper {...params} />} />
+            </Grid>)}
           <Grid item xs={3}>
             <FormLabel component="legend">
               {I18n.t('pages.newProposal.step2.incoterm')}
@@ -171,7 +238,7 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted }: Step2Props):
               labelId="select-label-incoterm"
               id="incoterm"
               value={data.incoterm}
-              onChange={e => setData({ ...data, incoterm: e.target.value }) }
+              onChange={e => setData({ ...data, incoterm: e.target.value })}
               displayEmpty
               disableUnderline
               invalid={invalidInput && data.incoterm.length === 0}
