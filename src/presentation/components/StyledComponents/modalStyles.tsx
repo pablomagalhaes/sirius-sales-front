@@ -18,8 +18,11 @@ export const RowReverseDiv = styled.div`
   justify-self: flex-end;
   width: 100%;
   margin-right: 35px;
+`
+export const CloseIconContainer = styled.div`
   cursor: pointer;
 `
+
 export const RedColorSpan = styled.span`
   color: ${(props: any) =>
     props.theme?.commercial?.components?.itemModal?.redAsterisk};

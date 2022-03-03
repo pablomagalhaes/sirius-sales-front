@@ -21,6 +21,7 @@ import ReplyIcon from '../../../application/icons/ReplyIcon'
 import ControlledToolTip from '../ControlledToolTip/ControlledToolTip'
 import {
   ButtonDiv,
+  CloseIconContainer,
   Form,
   HeaderDiv,
   Label,
@@ -233,7 +234,9 @@ const CostModal = ({
         <HeaderDiv>
           <Title>{title}</Title>
           <RowReverseDiv>
-            <CloseIcon onClick={handleOnClose} />
+            <CloseIconContainer>
+              <CloseIcon onClick={handleOnClose} />
+            </CloseIconContainer>
           </RowReverseDiv>
         </HeaderDiv>
         <Form>
@@ -490,7 +493,7 @@ const CostModal = ({
                         {I18n.t('components.costModal.value')}
                         {saleCheckbox && <RedColorSpan> *</RedColorSpan>}
                       </PlaceholderSpan>
-                  )}
+                    )}
                   <Input
                     value={state.saleValue != null ? state.saleValue : ''}
                     onChange={saleValueHandler}
