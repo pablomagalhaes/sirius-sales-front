@@ -80,7 +80,6 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
 
   useEffect(() => {
     setData({ ...data, destiny: '', origin: '' })
-    console.log(data)
   }, [modal])
 
   const setOriginDestinyLabel = (type: string): string => {
