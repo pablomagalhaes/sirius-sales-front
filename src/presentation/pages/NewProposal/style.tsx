@@ -156,6 +156,9 @@ const Separator = styled.div`
   .radio-spacement {
     margin-left: 30px;
   }
+  .checkbox-div-spacement {
+    margin-top: 54px;
+  }
 
   .MuiChip-root {
         background-color: ${(props: any) =>
