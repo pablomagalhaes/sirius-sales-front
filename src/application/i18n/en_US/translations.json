@@ -49,7 +49,8 @@
         "refrigerated": "Refrigerated",
         "temperature": "Temperature:",
         "choose": "Choose ...",
-        "buttonAdd": "Add item to cargo"
+        "buttonAdd": "Add item to cargo",
+        "buttonAddTooltip": "To add, select the fields \"Modal\" in the step \"Service\" and \"Specification\" in the step \"Cargo\""
       },
       "step4": {
         "title": "General data",
@@ -84,6 +85,7 @@
         "originCost": "New origin cost",
         "destinationCost": "New destiny cost",
         "addFare": "Add surcharge",
+        "addFareTooltip": "To add, select agents in the \"Service\" step and include at least one item in the \"Cargo\" step",
         "totalFares": "Total Surcharges:"
       }
     }
@@ -97,6 +99,7 @@
     },
     "costTable": {
       "addCost": "Add cost",
+      "addCostTooltip": "To add, select agents in the \"Service\" step and include at least one item in the \"Cargo\" step",
       "agent": "Agent",
       "buy": "Buy",
       "description": "Description",

@@ -74,6 +74,7 @@ const Proposal = (): JSX.Element => {
         <TopButtonContainer>
           <Button
             text={'Criar nova proposta...'}
+            tooltip={'Criar nova proposta'}
             backgroundGreen={true}
             icon="add"
             onAction={() => history.push('/novaProposta')}

@@ -234,6 +234,7 @@ const FareModal = ({
                 backgroundGreen={true}
                 icon=""
                 onAction={handleAction}
+                tooltip={I18n.t('components.itemModal.save')}
               />
             </ButtonDiv>
           </RowDiv>

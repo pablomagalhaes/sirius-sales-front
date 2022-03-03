@@ -453,6 +453,7 @@ const ItemModal = ({
             <ButtonDiv>
               <Button
                 text={I18n.t('components.itemModal.save')}
+                tooltip={I18n.t('components.itemModal.save')}
                 backgroundGreen={true}
                 icon=""
                 onAction={handleOnAdd}
