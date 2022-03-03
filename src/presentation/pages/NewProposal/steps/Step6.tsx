@@ -45,6 +45,7 @@ interface Cell {
 }
 interface TableData {
   data?: Cell[]
+  costData: any
 }
 
 const Table = ({ data }: TableData): JSX.Element => {
@@ -52,10 +53,16 @@ const Table = ({ data }: TableData): JSX.Element => {
     <StyledTable>
       <TableBody>
         {data !== null
-          ? data?.map((item: Cell, i) => {
-            return (
+          ? (
+              data?.map((item: Cell, i) => {
+                return (
               <StyledRow id="styled_row" key={i}>
-                <StyledTableCell color={1} width="100%" component="th" scope="row">
+                <StyledTableCell
+                  color={1}
+                  width="100%"
+                  component="th"
+                  scope="row"
+                >
                   {item.fare}
                 </StyledTableCell>
                 <StyledTableCell width="100%" align="left">
@@ -83,17 +90,18 @@ const Table = ({ data }: TableData): JSX.Element => {
                   </RowReverseDiv>
                 </StyledTableCell>
               </StyledRow>
+                )
+              })
             )
-          })
           : (
-            <div />
+          <div />
             )}
       </TableBody>
     </StyledTable>
   )
 }
 
-const Step6 = (): JSX.Element => {
+const Step6 = ({ costData }: TableData): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [data] = useState(mock)
   const handleOpen = (): void => setOpen(true)
@@ -106,13 +114,19 @@ const Step6 = (): JSX.Element => {
           6. {I18n.t('pages.newProposal.step6.title')}
           <Subtitle>{I18n.t('pages.newProposal.step6.subtitle')}</Subtitle>
         </Title>
-        <Table data={data} />
+        <Table data={data} costData={costData} />
         <ButtonWrapper>
           <Button
             onAction={handleOpen}
             text={I18n.t('pages.newProposal.step6.addFare')}
             icon="add"
             backgroundGreen={false}
+            tooltip={
+              costData === 0
+                ? I18n.t('pages.newProposal.step6.addFareTooltip')
+                : I18n.t('pages.newProposal.step6.addFare')
+            }
+            disabled={costData === 0}
           />
         </ButtonWrapper>
         <FareModal
@@ -122,7 +136,9 @@ const Step6 = (): JSX.Element => {
           title={I18n.t('components.fareModal.newFare')}
         />
         <TotalContainer>
-          <TotalCostLabel>{I18n.t('pages.newProposal.step6.totalFares')}</TotalCostLabel>
+          <TotalCostLabel>
+            {I18n.t('pages.newProposal.step6.totalFares')}
+          </TotalCostLabel>
           <ValueLabel>USD 151,00</ValueLabel>
         </TotalContainer>
       </HeightDiv>

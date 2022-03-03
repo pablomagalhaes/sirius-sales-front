@@ -49,7 +49,8 @@
         "refrigerated": "Refrigerada",
         "temperature": "Temperatura:",
         "choose": "Escolha ...",
-        "buttonAdd": "Adicionar item à carga"
+        "buttonAdd": "Adicionar item à carga",
+        "buttonAddTooltip": "Para adicionar, selecione os campos \"Modal\" na etapa \"Serviço\" e \"Especificação\" na etapa \"Carga\""
       },
       "step4": {
         "title": "Dados Gerais",
@@ -84,6 +85,7 @@
         "originCost": "New origin cost",
         "destinationCost": "New destiny cost",
         "addFare": "Adicionar tarifa",
+        "addFareTooltip": "Para adicionar, selecione os agentes na etapa \"Serviço\" e inclua pelo menos um item na etapa \"Carga\"",
         "totalFares": "Total Tarifas:"
       }
     }
@@ -97,6 +99,7 @@
     },
     "costTable": {
       "addCost": "Adicionar custo",
+      "addCostTooltip": "Para adicionar, selecione os agentes na etapa \"Serviço\" e inclua pelo menos um item na etapa \"Carga\"",
       "agent": "Agente",
       "buy": "Compra",
       "description": "Descrição",

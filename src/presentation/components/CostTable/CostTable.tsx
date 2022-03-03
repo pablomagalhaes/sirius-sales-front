@@ -44,9 +44,15 @@ interface CostTableProps {
   title: string
   totalCostLabel: string
   modalTitle: string
+  costData: any
 }
 
-const CostTable = ({ modalTitle, title, totalCostLabel }: CostTableProps): JSX.Element => {
+const CostTable = ({
+  modalTitle,
+  title,
+  totalCostLabel,
+  costData
+}: CostTableProps): JSX.Element => {
   const mock: CostTableItem[] = [
     {
       agent: '-',
@@ -97,11 +103,16 @@ const CostTable = ({ modalTitle, title, totalCostLabel }: CostTableProps): JSX.E
 
   return (
     <MainDiv>
-      <CostModal handleAdd={handleAdd} open={open} setClose={handleClose} title={modalTitle} />
+      <CostModal
+        handleAdd={handleAdd}
+        open={open}
+        setClose={handleClose}
+        title={modalTitle}
+      />
       <Header>
         <Title>{title}</Title>
       </Header>
-      {data?.length > 0 &&
+      {data?.length > 0 && (
         <StyledTable>
           <TableHead>
             <TableHeadRow>
@@ -139,19 +150,49 @@ const CostTable = ({ modalTitle, title, totalCostLabel }: CostTableProps): JSX.E
                     <Type>{dataMap.type}</Type>
                   </StyledTableCell>
                   <StyledTableCell width="11%" align="left">
-                    {dataMap.buy != null ? (<Default>{dataMap.buy}</Default>) : (<Empty>{I18n.t('components.costTable.inform')}</Empty>)}
+                    {dataMap.buy != null
+                      ? (
+                      <Default>{dataMap.buy}</Default>
+                        )
+                      : (
+                      <Empty>{I18n.t('components.costTable.inform')}</Empty>
+                        )}
                   </StyledTableCell>
                   <StyledTableCell width="12%" align="left">
-                    {dataMap.minBuy != null ? (<Default>{dataMap.minBuy}</Default>) : (<Empty>{I18n.t('components.costTable.inform')}</Empty>)}
+                    {dataMap.minBuy != null
+                      ? (
+                      <Default>{dataMap.minBuy}</Default>
+                        )
+                      : (
+                      <Empty>{I18n.t('components.costTable.inform')}</Empty>
+                        )}
                   </StyledTableCell>
                   <StyledTableCell width="11%" align="left">
-                    {dataMap.sale != null ? (<Default>{dataMap.sale}</Default>) : (<Empty>{I18n.t('components.costTable.inform')}</Empty>)}
+                    {dataMap.sale != null
+                      ? (
+                      <Default>{dataMap.sale}</Default>
+                        )
+                      : (
+                      <Empty>{I18n.t('components.costTable.inform')}</Empty>
+                        )}
                   </StyledTableCell>
                   <StyledTableCell width="11%" align="left">
-                    {dataMap.minSale != null ? (<Default>{dataMap.minSale}</Default>) : (<Empty>{I18n.t('components.costTable.inform')}</Empty>)}
+                    {dataMap.minSale != null
+                      ? (
+                      <Default>{dataMap.minSale}</Default>
+                        )
+                      : (
+                      <Empty>{I18n.t('components.costTable.inform')}</Empty>
+                        )}
                   </StyledTableCell>
                   <StyledTableCell width="11%" align="left">
-                    {dataMap.agent != null ? (<Default>{dataMap.agent}</Default>) : (<Empty>{I18n.t('components.costTable.inform')}</Empty>)}
+                    {dataMap.agent != null
+                      ? (
+                      <Default>{dataMap.agent}</Default>
+                        )
+                      : (
+                      <Empty>{I18n.t('components.costTable.inform')}</Empty>
+                        )}
                   </StyledTableCell>
                   <StyledTableCell width="19%">
                     <RowReverseDiv>
@@ -176,18 +217,40 @@ const CostTable = ({ modalTitle, title, totalCostLabel }: CostTableProps): JSX.E
             })}
           </TableBody>
         </StyledTable>
-      }
+      )}
       <Footer>
         <Button
           text={I18n.t('components.costTable.addCost')}
           backgroundGreen={false}
           icon={'add'}
           onAction={addClickHandler}
+          disabled={costData === 0}
+          tooltip={
+            costData === 0
+              ? I18n.t('components.costTable.addCostTooltip')
+              : I18n.t('components.costTable.addCost')
+          }
         />
         <RowReverseDiv>
-          <EndValueLabel>{data?.length > 0 ? formatter.format(saleValue) : <EmptyTableCost>-</EmptyTableCost>}</EndValueLabel>
+          <EndValueLabel>
+            {data?.length > 0
+              ? (
+                  formatter.format(saleValue)
+                )
+              : (
+              <EmptyTableCost>-</EmptyTableCost>
+                )}
+          </EndValueLabel>
           <CostLabel>{I18n.t('components.costTable.sale')}:</CostLabel>
-          <ValueLabel>{data?.length > 0 ? formatter.format(buyValue) : <EmptyTableCost>-</EmptyTableCost>}</ValueLabel>
+          <ValueLabel>
+            {data?.length > 0
+              ? (
+                  formatter.format(buyValue)
+                )
+              : (
+              <EmptyTableCost>-</EmptyTableCost>
+                )}
+          </ValueLabel>
           <CostLabel>{I18n.t('components.costTable.buy')}:</CostLabel>
           <TotalCostLabel>{totalCostLabel}</TotalCostLabel>
         </RowReverseDiv>

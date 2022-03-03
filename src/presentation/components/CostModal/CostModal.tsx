@@ -520,6 +520,7 @@ const CostModal = ({
                 icon={''}
                 onAction={addHandler}
                 text={I18n.t('components.costModal.save')}
+                tooltip={I18n.t('components.costModal.save')}
               />
             </ButtonDiv>
           )}
@@ -540,6 +541,7 @@ const CostModal = ({
                 icon={''}
                 onAction={handleClickWarningButton}
                 text={I18n.t('components.costModal.gotIt')}
+                tooltip={I18n.t('components.costModal.gotIt')}
               />
             </WarningPopUpButtonDiv>
           </WarningPopUp>
