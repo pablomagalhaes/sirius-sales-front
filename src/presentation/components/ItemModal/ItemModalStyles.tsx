@@ -1,4 +1,18 @@
 import styled from 'styled-components'
+import { Box } from '@material-ui/core'
+
+export const AmountDiv = styled.div`
+  width: 126px;
+  height: 30px;
+  margin-left: 6px;
+  margin-top: 12px; 
+`
+
+export const StyledBox = styled(Box)`
+  position: absolute;
+  top: 17px;
+  left: 168px; 
+`
 
 export const ModalDiv = styled.div`
   background-color: ${(props: any) =>
