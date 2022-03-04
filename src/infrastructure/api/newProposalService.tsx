@@ -1,5 +1,14 @@
 import instance from '../instance'
 
+const getContainerType = async (): Promise<any> => {
+  try {
+    const res = await instance.get('/sirius-master-data-api/container/type/')
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const getCurrencies = async (): Promise<any> => {
   try {
     const res = await instance.get('/sirius-master-data-api/currencies/')
@@ -12,6 +21,15 @@ const getCurrencies = async (): Promise<any> => {
 const getIncoterm = async (): Promise<any> => {
   try {
     const res = await instance.get('/sirius-master-data-api/incoterms/')
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const getPackaging = async (): Promise<any> => {
+  try {
+    const res = await instance.get('/sirius-master-data-api/packaging/')
     return res.data
   } catch (error) {
     console.error(error)
@@ -55,8 +73,10 @@ const getAgents = async (): Promise<any> => {
 }
 
 const newProposal = {
+  getContainerType,
   getCurrencies,
   getIncoterm,
+  getPackaging,
   getTransport,
   getOriginDestination,
   getFrequency,
