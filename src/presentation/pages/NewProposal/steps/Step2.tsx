@@ -18,7 +18,6 @@ import newProposal from '../../../../infrastructure/api/newProposalService'
 import { StyledPaper } from './StepsStyles'
 
 // mock
-const agentsList = ['agent 1', 'agent 2', 'agent 3']
 interface Step2Props {
   theme: any
   proposalType: string
@@ -38,6 +37,7 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
   const [incotermList, setIncotermList] = useState<any[]>([])
   const [incotermFilteredList, setIncotermFilteredList] = useState<any[]>([])
   const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
+  const [agentsList, setAgentsList] = useState<any[]>([])
   const [data, setData] = useState<DataProps>({
     origin: '',
     destiny: '',
@@ -57,6 +57,20 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
     void (async function () {
       await newProposal.getOriginDestination()
         .then((response) => setOriginDestinationList(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
+
+  useEffect(() => {
+    const newAgentsList: any[] = []
+    void (async function () {
+      await newProposal.getAgents()
+        .then((response) => {
+          response.forEach((agent: any) => {
+            newAgentsList.push(agent?.businessPartner?.simpleName)
+          })
+          return (setAgentsList(newAgentsList))
+        })
         .catch((err) => console.log(err))
     })()
   }, [])
@@ -84,22 +98,26 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
   }, [modal])
 
   useEffect(() => {
-    const AirList = ['EXW', 'FCA', 'CPT', 'CIP', 'DAP', 'DPU', 'DDP']
-    const SeaList = ['EXW', 'FCA', 'FAS', 'FOB', 'CFR', 'CIF', 'DAP', 'DPU', 'DDP']
-    const LandList = ['EXW', 'DAP', 'DPU', 'DDP']
+    const airList = ['EXW', 'FCA', 'CPT', 'CIP', 'DAP', 'DPU', 'DDP']
+    const seaList = ['EXW', 'FCA', 'FAS', 'FOB', 'CFR', 'CIF', 'DAP', 'DPU', 'DDP']
+    const landList = ['EXW', 'DAP', 'DPU', 'DDP']
     if (incotermList.length > 0) {
+      let airObject: any[] = []
+      let seaObject: any[] = []
+      let landObject: any[] = []
+
       switch (modal) {
         case 'AIR':
-          const AirObject = incotermList.filter(incotermList => AirList.includes(incotermList.id))
-          setIncotermFilteredList(AirObject)
+          airObject = incotermList.filter(incotermList => airList.includes(incotermList.id))
+          setIncotermFilteredList(airObject)
           break
         case 'SEA':
-          const SeaObject = incotermList.filter(incotermList => SeaList.includes(incotermList.id))
-          setIncotermFilteredList(SeaObject)
+          seaObject = incotermList.filter(incotermList => seaList.includes(incotermList.id))
+          setIncotermFilteredList(seaObject)
           break
         case 'LAND':
-          const LandObject = incotermList.filter(incotermList => LandList.includes(incotermList.id))
-          setIncotermFilteredList(LandObject)
+          landObject = incotermList.filter(incotermList => landList.includes(incotermList.id))
+          setIncotermFilteredList(landObject)
           break
       }
     }
