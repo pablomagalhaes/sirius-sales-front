@@ -45,12 +45,22 @@ const getFrequency = async (): Promise<any> => {
   }
 }
 
+const getAgents = async (): Promise<any> => {
+  try {
+    const res = await instance.get('/sirius-business-partner-api/business/partner/class/classification/agente')
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const newProposal = {
   getCurrencies,
   getIncoterm,
   getTransport,
   getOriginDestination,
-  getFrequency
+  getFrequency,
+  getAgents
 }
 
 export default newProposal
