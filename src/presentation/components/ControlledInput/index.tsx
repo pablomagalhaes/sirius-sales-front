@@ -5,8 +5,8 @@ import ControlledToolTip from '../ControlledToolTip/ControlledToolTip'
 const ControlledInput = ({ toolTipTitle, invalid, ...props }): JSX.Element => {
   return (
     <ControlledToolTip
-      title={toolTipTitle}
       open={invalid}
+      title={toolTipTitle}
     >
       <StyledInput
         $invalid={invalid}
