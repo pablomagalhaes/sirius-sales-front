@@ -84,26 +84,26 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
   }, [modal])
 
   useEffect(() => {
-    const AirList = ['EXW', 'FCA', 'CPT','CIP','DAP','DPU','DDP'];
-    const SeaList = ['EXW','FCA','FAS','FOB','CFR','CIF','DAP','DPU','DDP'];
-    const LandList = ['EXW','DAP','DPU','DDP'];
-    if(incotermList.length > 0){
+    const AirList = ['EXW', 'FCA', 'CPT', 'CIP', 'DAP', 'DPU', 'DDP']
+    const SeaList = ['EXW', 'FCA', 'FAS', 'FOB', 'CFR', 'CIF', 'DAP', 'DPU', 'DDP']
+    const LandList = ['EXW', 'DAP', 'DPU', 'DDP']
+    if (incotermList.length > 0) {
       switch (modal) {
         case 'AIR':
-            let AirObject = incotermList.filter(incotermList => AirList.includes( incotermList.id ));
-            setIncotermFilteredList(AirObject)
-            break
+          const AirObject = incotermList.filter(incotermList => AirList.includes(incotermList.id))
+          setIncotermFilteredList(AirObject)
+          break
         case 'SEA':
-            let SeaObject = incotermList.filter(incotermList => SeaList.includes( incotermList.id ));
-            setIncotermFilteredList(SeaObject)
-            break
+          const SeaObject = incotermList.filter(incotermList => SeaList.includes(incotermList.id))
+          setIncotermFilteredList(SeaObject)
+          break
         case 'LAND':
-            let LandObject = incotermList.filter(incotermList => LandList.includes( incotermList.id ));
-            setIncotermFilteredList(LandObject);
-            break
+          const LandObject = incotermList.filter(incotermList => LandList.includes(incotermList.id))
+          setIncotermFilteredList(LandObject)
+          break
       }
     }
-  }, [modal,incotermList])
+  }, [modal, incotermList])
 
   const setOriginDestinyLabel = (type: string): string => {
     switch (modal) {

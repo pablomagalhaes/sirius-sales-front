@@ -493,7 +493,7 @@ const CostModal = ({
                         {I18n.t('components.costModal.value')}
                         {saleCheckbox && <RedColorSpan> *</RedColorSpan>}
                       </PlaceholderSpan>
-                    )}
+                  )}
                   <Input
                     value={state.saleValue != null ? state.saleValue : ''}
                     onChange={saleValueHandler}
