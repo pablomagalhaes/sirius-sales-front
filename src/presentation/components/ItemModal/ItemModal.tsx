@@ -2,13 +2,17 @@ import { MenuItem, Modal } from '@material-ui/core'
 import { Button } from 'fiorde-fe-components'
 import React, { useEffect, useState } from 'react'
 import AlertIcon from '../../../application/icons/AlertIcon'
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import CloseIcon from '../../../application/icons/CloseIcon'
 import {
   AlertIconDiv,
+  AmountDiv,
   CheckBox,
+  CheckBoxArea,
   CheckBoxLabel,
   ModalDiv,
-  CheckBoxArea
+  StyledBox
 } from './ItemModalStyles'
 import { I18n } from 'react-redux-i18n'
 import CheckIcon from '../../../application/icons/CheckIcon'
@@ -26,6 +30,8 @@ import {
   CloseIconContainer
 } from '../StyledComponents/modalStyles'
 import NumberFormat from 'react-number-format'
+import newProposal from '../../../infrastructure/api/newProposalService'
+import { Input } from '../CostModal/CostModalStyles'
 
 export interface ItemModalData {
   amount: string
@@ -75,14 +81,30 @@ const ItemModal = ({
   modal,
   specifications
 }: ItemModalProps): JSX.Element => {
-  // Mock de tipos, valores serão especificados posteriormente
-  const typeList = ['Caixas', 'Bacias']
+  const [containerTypeList, setContainerTypeList] = useState<any[]>([])
+  const [packagingList, setPackagingList] = useState<any[]>([])
   // Mock de imo, valores serão especificados posteriormente
   const imoList = ['1', '2', '3']
   const rgxFloat = /^[0-9]*,?[0-9]*$/
   const rgxInt = /^[0-9]*$/
   const [data, setData] = useState<ItemModalData>(initialState)
   const [invalidInput, setInvalidInput] = useState(false)
+
+  useEffect(() => {
+    void (async function () {
+      await newProposal.getContainerType()
+        .then((response) => setContainerTypeList(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
+
+  useEffect(() => {
+    void (async function () {
+      await newProposal.getPackaging()
+        .then((response) => setPackagingList(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
 
   useEffect(() => {
     if (dataProp !== initialState) {
@@ -170,7 +192,7 @@ const ItemModal = ({
         <ItemModalForm>
           <RowDiv>
             <Label width="43.6%">
-              {I18n.t('components.itemModal.type')}
+              {marineFCL() ? I18n.t('components.itemModal.container') : I18n.t('components.itemModal.packaging') }
               <RedColorSpan> *</RedColorSpan>
             </Label>
             <Label width="29%">
@@ -187,31 +209,27 @@ const ItemModal = ({
             )}
           </RowDiv>
           <RowDiv margin={true}>
-            <div style={{ width: '198px', height: '32px', margin: '12px 0 5px 0' }}>
-              <ControlledSelect
-                onChange={e => (setData({ ...data, type: e.target.value }))}
-                displayEmpty
-                value={data.type}
-                disableUnderline
-                placeholder={data.type}
-                toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                invalid={
-                  invalidInput && (data.type === null || data.type.length === 0)
-                }
-              >
-                <MenuItem disabled value="">
-                  <span style={{ marginLeft: '10px' }}>{I18n.t('components.itemModal.choose')}</span>
-                </MenuItem>
-                {typeList.map((type) => {
-                  return (
-                    <MenuItem key={`${type}_key`} value={type}>
-                      <span style={{ marginLeft: '10px' }}>{type}</span>
-                    </MenuItem>
-                  )
-                })}
-              </ControlledSelect>
-            </div>
-            <div style={{ width: '126px', height: '30px', marginLeft: '18px', marginTop: '12px' }}>
+          <Autocomplete
+                style={{ position: 'relative' }}
+                options={ marineFCL() ? containerTypeList.map((item) => item.type) : packagingList.map((item) => item.packaging)}
+                value={ marineFCL() ? containerTypeList.map((item) => item.id) : packagingList.map((item) => item.id)}
+                onChange={(e, newValue) => setData({ ...data, type: newValue })}
+                renderInput={(params) => (
+                  <div ref={params.InputProps.ref}>
+                    <Input
+                      {...params.inputProps}
+                      style={{ width: '198px', height: '33px' }}
+                      toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                      invalid={ invalidInput && data.type.length === 0 }
+                      value={data.type}
+                    />
+                    <StyledBox {...params.inputProps}>
+                        <ArrowDropDownIcon />
+                      </StyledBox>
+                    </div>
+                )}
+              />
+            <AmountDiv>
               <ControlledInput
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 invalid={
@@ -224,7 +242,7 @@ const ItemModal = ({
                 size="small"
                 modal
               />
-            </div>
+            </AmountDiv>
             {!(marineFCL()) && (
               <div style={{ width: '126px', height: '30px', marginLeft: '18px', marginTop: '12px' }}>
                 <NumberFormat
