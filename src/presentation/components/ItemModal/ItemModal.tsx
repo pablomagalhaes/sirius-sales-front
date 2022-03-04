@@ -26,6 +26,7 @@ import {
   CloseIconContainer
 } from '../StyledComponents/modalStyles'
 import NumberFormat from 'react-number-format'
+import newProposal from '../../../infrastructure/api/newProposalService'
 
 export interface ItemModalData {
   amount: string
@@ -77,8 +78,7 @@ const ItemModal = ({
 }: ItemModalProps): JSX.Element => {
   // Mock de tipos, valores serão especificados posteriormente
   const typeList = ['Caixas', 'Bacias']
-  // Mock de imo, valores serão especificados posteriormente
-  const imoList = ['1', '2', '3']
+  const [imoList, setImoList] = useState<any[]>([])
   const rgxFloat = /^[0-9]*,?[0-9]*$/
   const rgxInt = /^[0-9]*$/
   const [data, setData] = useState<ItemModalData>(initialState)
@@ -89,6 +89,14 @@ const ItemModal = ({
       setData(dataProp)
     }
   }, [open])
+
+  useEffect(() => {
+    void (async function () {
+      await newProposal.getImo()
+        .then((response) => setImoList(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
 
   const handleOnClose = (): void => {
     setData(initialState)
@@ -428,10 +436,10 @@ const ItemModal = ({
                 <MenuItem disabled value="">
                   <span style={{ marginLeft: '10px' }}>{I18n.t('components.itemModal.choose')}</span>
                 </MenuItem>
-                {imoList.map((imo) => {
+                {imoList.map((item) => {
                   return (
-                    <MenuItem key={`${imo}_key`} value={imo}>
-                      <span style={{ marginLeft: '10px' }}>{imo}</span>
+                    <MenuItem key={item.id} value={item.id}>
+                      <span style={{ marginLeft: '10px' }}>{item.type}</span>
                     </MenuItem>
                   )
                 })}
