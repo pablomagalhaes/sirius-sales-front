@@ -6,6 +6,7 @@ import CloseIcon from '../../../application/icons/CloseIcon'
 import { I18n } from 'react-redux-i18n'
 import {
   ButtonDiv,
+  CloseIconContainer,
   Form,
   HeaderDiv,
   Label,
@@ -113,7 +114,9 @@ const FareModal = ({
         <HeaderDiv>
           <Title>{title}</Title>
           <RowReverseDiv>
-            <CloseIcon onClick={handleOnClose} />
+            <CloseIconContainer>
+              <CloseIcon onClick={handleOnClose} />
+            </CloseIconContainer>
           </RowReverseDiv>
         </HeaderDiv>
         <Form>

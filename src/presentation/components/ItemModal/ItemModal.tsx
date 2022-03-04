@@ -22,7 +22,8 @@ import {
   RedColorSpan,
   RowDiv,
   RowReverseDiv,
-  Title
+  Title,
+  CloseIconContainer
 } from '../StyledComponents/modalStyles'
 import NumberFormat from 'react-number-format'
 
@@ -161,7 +162,9 @@ const ItemModal = ({
         <HeaderDiv>
           <Title>{title}</Title>
           <RowReverseDiv>
-            <CloseIcon onClick={handleOnClose} />
+            <CloseIconContainer>
+              <CloseIcon onClick={handleOnClose} />
+            </CloseIconContainer>
           </RowReverseDiv>
         </HeaderDiv>
         <ItemModalForm>

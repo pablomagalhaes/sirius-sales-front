@@ -10,10 +10,16 @@ import { Title, Subtitle, Separator, SelectSpan } from '../style'
 import ControlledSelect from '../../../components/ControlledSelect'
 import ControlledInput from '../../../components/ControlledInput'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
+import newProposal from '../../../../infrastructure/api/newProposalService'
 
 interface Step4Props {
   invalidInput: boolean
   setCompleted: (completed: any) => void
+}
+
+interface Frequency {
+  id: number
+  description: string
 }
 
 const Step4 = ({ invalidInput, setCompleted }: Step4Props): JSX.Element => {
@@ -36,21 +42,6 @@ const Step4 = ({ invalidInput, setCompleted }: Step4Props): JSX.Element => {
       value: 5
     }
   ]
-  const frequencyList = [
-    {
-      name: 'Diariamente',
-      value: 6
-    }, {
-      name: 'A cada dois dias',
-      value: 7
-    }, {
-      name: 'Semanal',
-      value: 8
-    }, {
-      name: 'Quinzenal',
-      value: 9
-    }
-  ]
 
   const [data, setData] = useState({
     validity: '',
@@ -64,6 +55,8 @@ const Step4 = ({ invalidInput, setCompleted }: Step4Props): JSX.Element => {
     internalObs: ''
   })
 
+  const [frequencyList, setFrequencyList] = useState<Frequency[]>([])
+
   useEffect(() => {
     if (data.validity.length !== 0 && data.validityDate.length !== 0 && data.transitTime.length !== 0 && data.frequency.length !== 0) {
       setCompleted((currentState) => {
@@ -75,6 +68,14 @@ const Step4 = ({ invalidInput, setCompleted }: Step4Props): JSX.Element => {
       })
     }
   }, [data])
+
+  useEffect(() => {
+    void (async function () {
+      await newProposal.getFrequency()
+        .then((response) => setFrequencyList(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
 
   return (
     <Separator>
@@ -155,8 +156,8 @@ const Step4 = ({ invalidInput, setCompleted }: Step4Props): JSX.Element => {
                 <SelectSpan placeholder={1}>{I18n.t('pages.newProposal.step4.choose')}</SelectSpan>
               </MenuItem>
               {frequencyList.map((item) => (
-                <MenuItem key={item.value} value={item.value}>
-                  <SelectSpan>{item.name}</SelectSpan>
+                <MenuItem key={item.id} value={item.id}>
+                  <SelectSpan>{item.description}</SelectSpan>
                 </MenuItem>
               ))}
             </ControlledSelect>

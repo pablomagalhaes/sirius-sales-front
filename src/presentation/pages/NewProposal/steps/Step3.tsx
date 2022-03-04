@@ -218,8 +218,25 @@ const Step3 = ({
             </Grid>
               )
             : (
-            <Grid item xs={4}>
-              {' '}
+              <Grid item xs={4}>
+                <FormControlLabel
+                  value="refrigereted"
+                  className="checkbox-div-spacement"
+                  control={
+                    <Checkbox
+                      className="radio-spacement"
+                      onChange={() =>
+                        setData({ ...data, refrigereted: !data.refrigereted })
+                      }
+                      checked={data.refrigereted}
+                    />
+                  }
+                  label={
+                    <BoldSpan checked={data.refrigereted}>
+                      {I18n.t('pages.newProposal.step3.refrigerated')}
+                    </BoldSpan>
+                  }
+                />
             </Grid>
               )}
           {data.refrigereted && (
