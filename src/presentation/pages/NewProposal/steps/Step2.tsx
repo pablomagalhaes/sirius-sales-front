@@ -36,6 +36,7 @@ interface DataProps {
 
 const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2Props): JSX.Element => {
   const [incotermList, setIncotermList] = useState<any[]>([])
+  const [incotermFilteredList, setIncotermFilteredList] = useState<any[]>([])
   const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
   const [data, setData] = useState<DataProps>({
     origin: '',
@@ -81,6 +82,28 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
   useEffect(() => {
     setData({ ...data, destiny: '', origin: '' })
   }, [modal])
+
+  useEffect(() => {
+    const AirList = ['EXW', 'FCA', 'CPT','CIP','DAP','DPU','DDP'];
+    const SeaList = ['EXW','FCA','FAS','FOB','CFR','CIF','DAP','DPU','DDP'];
+    const LandList = ['EXW','DAP','DPU','DDP'];
+    if(incotermList.length > 0){
+      switch (modal) {
+        case 'AIR':
+            let AirObject = incotermList.filter(incotermList => AirList.includes( incotermList.id ));
+            setIncotermFilteredList(AirObject)
+            break
+        case 'SEA':
+            let SeaObject = incotermList.filter(incotermList => SeaList.includes( incotermList.id ));
+            setIncotermFilteredList(SeaObject)
+            break
+        case 'LAND':
+            let LandObject = incotermList.filter(incotermList => LandList.includes( incotermList.id ));
+            setIncotermFilteredList(LandObject);
+            break
+      }
+    }
+  }, [modal,incotermList])
 
   const setOriginDestinyLabel = (type: string): string => {
     switch (modal) {
@@ -246,7 +269,7 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
               <MenuItem disabled value={data.incoterm}>
                 <SelectSpan placeholder={1}>{I18n.t('pages.newProposal.step2.choose')}</SelectSpan>
               </MenuItem>
-              {incotermList.map((item) => (
+              {incotermFilteredList.map((item) => (
                 <MenuItem key={item.id} value={item.id}>
                   <SelectSpan>{item.id}</SelectSpan>
                 </MenuItem>
