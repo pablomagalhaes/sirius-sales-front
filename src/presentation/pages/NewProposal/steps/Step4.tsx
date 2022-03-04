@@ -11,6 +11,7 @@ import ControlledSelect from '../../../components/ControlledSelect'
 import ControlledInput from '../../../components/ControlledInput'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import newProposal from '../../../../infrastructure/api/newProposalService'
+import NumberFormat from 'react-number-format'
 
 interface Step4Props {
   invalidInput: boolean
@@ -26,20 +27,20 @@ const Step4 = ({ invalidInput, setCompleted }: Step4Props): JSX.Element => {
   // mock para os selects
   const validityList = [
     {
-      name: 'Personalizado',
-      value: 1
-    }, {
-      name: '1 semana',
-      value: 2
-    }, {
       name: '15 dias',
-      value: 3
+      value: 15
     }, {
       name: '30 dias',
-      value: 4
+      value: 30
     }, {
-      name: '45 dias',
-      value: 5
+      name: '60 dias',
+      value: 60
+    }, {
+      name: '90 dias',
+      value: 90
+    }, {
+      name: 'Customizado',
+      value: 0
     }
   ]
 
@@ -56,6 +57,7 @@ const Step4 = ({ invalidInput, setCompleted }: Step4Props): JSX.Element => {
   })
 
   const [frequencyList, setFrequencyList] = useState<Frequency[]>([])
+  const [disabledValidateDate, setDisabledValidateDate] = useState(true)
 
   useEffect(() => {
     if (data.validity.length !== 0 && data.validityDate.length !== 0 && data.transitTime.length !== 0 && data.frequency.length !== 0) {
@@ -76,6 +78,17 @@ const Step4 = ({ invalidInput, setCompleted }: Step4Props): JSX.Element => {
         .catch((err) => console.log(err))
     })()
   }, [])
+  const calculateValidityDate = (value): void => {
+    if (value !== 0) {
+      const myDate = new Date(new Date().getTime() + (value * 24 * 60 * 60 * 1000))
+      const dateFormated = myDate.toLocaleDateString('pt-BR', { timeZone: 'UTC' })
+      setData({ ...data, validityDate: dateFormated })
+      setDisabledValidateDate(true)
+    } else {
+      setData({ ...data, validityDate: '' })
+      setDisabledValidateDate(false)
+    }
+  }
 
   return (
     <Separator>
@@ -94,7 +107,7 @@ const Step4 = ({ invalidInput, setCompleted }: Step4Props): JSX.Element => {
               labelId="validity-label"
               id="validity"
               value={data.validity}
-              onChange={e => setData({ ...data, validity: e.target.value })}
+              onChange={e => calculateValidityDate(e.target.value)}
               displayEmpty
               disableUnderline
               invalid={invalidInput && data.validity.length === 0}
@@ -112,13 +125,20 @@ const Step4 = ({ invalidInput, setCompleted }: Step4Props): JSX.Element => {
           </Grid>
           <Grid item xs={2}>
             <FormLabel component="legend">&nbsp;</FormLabel>
-            <ControlledInput
+            <NumberFormat
               id="no-label-field"
+              disabled={disabledValidateDate}
+              format={'##/##/####'}
+              mask={[
+                'D', 'D', 'M', 'M', 'Y', 'Y', 'Y', 'Y'
+              ]}
+              placeholder="DD/MM/YYYY"
+              customInput={ControlledInput}
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
               invalid={invalidInput && data.validityDate.length === 0}
-              variant="outlined"
-              onChange={e => setData({ ...data, validityDate: e.target.value })}
               value={data.validityDate}
+              onChange={e => setData({ ...data, validityDate: e.target.value })}
+              variant="outlined"
               size="small"
             />
           </Grid>
