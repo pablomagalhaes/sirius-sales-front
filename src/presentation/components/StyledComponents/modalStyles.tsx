@@ -70,6 +70,13 @@ export const RowDiv = styled.div`
     z-index: 10;
     left: 78px;
   }
+
+  .dropdownLargerInput {
+    position: absolute;
+    top: 137px;
+    z-index: 10;
+    right: 28px;
+  }
 `
 export const Form = styled.div`
   margin-top: 26px;
