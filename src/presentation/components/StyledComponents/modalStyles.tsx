@@ -77,6 +77,13 @@ export const RowDiv = styled.div`
     z-index: 10;
     right: 28px;
   }
+
+  .dropdownCustom {
+    position: absolute;
+    top: 137px;
+    z-index: 10;
+    right: 58px;
+  }
 `
 export const Form = styled.div`
   margin-top: 26px;

@@ -59,8 +59,7 @@ const FareModal = ({
   const [invalidInput, setInvalidInput] = useState(false)
   // Mock de tipos, valores serão especificados posteriormente
   const typeList = ['CW', 'CM']
-  // Mock de despesas, valores serão especificados posteriormente
-  const expensesList = ['Fuel - Security1', 'Fuel - Security2', 'Fuel - Security3']
+  const [serviceList, setServiceList] = useState<any[]>([])
   const [currencyList, setCurrencyList] = useState<any[]>([])
 
   const rgxFloat = /^[0-9]*,?[0-9]*$/
@@ -104,6 +103,14 @@ const FareModal = ({
     void (async function () {
       await newProposal.getCurrencies()
         .then((response) => setCurrencyList(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
+
+  useEffect(() => {
+    void (async function () {
+      await newProposal.getService()
+        .then((response) => setServiceList(response))
         .catch((err) => console.log(err))
     })()
   }, [])
@@ -155,29 +162,27 @@ const FareModal = ({
                 })}
               </ControlledSelect>
             </Container>
-            <Container width="350px" height="32px" margin="12px 0 5px 23px">
-              <ControlledSelect
-                onChange={(e) => setData({ ...data, expense: e.target.value })}
-                displayEmpty
+            <Container width="350px" height="32px" margin="0 0 5px 23px">
+              <Autocomplete
+                onChange={(e, newValue) => setData({ ...data, expense: newValue })}
+                options={serviceList.map((option) => option.txService)}
                 value={data.expense}
-                disableUnderline
-                placeholder={data.expense}
-                toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                invalid={invalidInput && data.expense.length === 0}
-              >
-                <MenuItem disabled value="">
-                  <MenuItemContent>
-                    {I18n.t('components.fareModal.choose')}
-                  </MenuItemContent>
-                </MenuItem>
-                {expensesList.map((expenses) => {
-                  return (
-                    <MenuItem key={`${expenses}_key`} value={expenses}>
-                      <MenuItemContent>{expenses}</MenuItemContent>
-                    </MenuItem>
-                  )
-                })}
-              </ControlledSelect>
+                renderInput={(params) => (
+                  <div ref={params.InputProps.ref}>
+                    <Input
+                      {...params.inputProps}
+                      toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                      invalid={invalidInput && data.expense.length === 0}
+                      filled={data.expense}
+                      placeholder={I18n.t('components.fareModal.choose')}
+                      style={{ width: '350px' }}
+                    />
+                    <Box {...params.inputProps} className="dropdownCustom">
+                      <ArrowDropDownIcon />
+                    </Box>
+                  </div>
+                )}
+              />
             </Container>
           </RowDiv>
           <RowDiv>
