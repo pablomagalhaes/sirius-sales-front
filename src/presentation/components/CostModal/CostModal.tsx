@@ -119,17 +119,25 @@ const CostModal = ({
   // Listas são mock, serão alteradas posteriormente
   const typeList = ['Tipo1', 'Tipo2', 'Tipo3']
   const agentList = ['Agente1', 'Agente2', 'Agente3']
-  const descriptionList = ['Descrição1', 'Descrição2', 'Descrição3']
   const [buyCheckbox, setBuyCheckBox] = useState(state.buyValue != null)
   const [saleCheckbox, setSaleCheckBox] = useState(state.saleValue != null)
   const [invalidInput, setInvalidInput] = useState(false)
   const [invalidValueInput, setInvalidValueInput] = useState(false)
   const [currencyList, setCurrencyList] = useState<any[]>([])
+  const [serviceList, setServiceList] = useState<any[]>([])
 
   useEffect(() => {
     void (async function () {
       await newProposal.getCurrencies()
         .then((response) => setCurrencyList(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
+
+  useEffect(() => {
+    void (async function () {
+      await newProposal.getService()
+        .then((response) => setServiceList(response))
         .catch((err) => console.log(err))
     })()
   }, [])
@@ -279,33 +287,30 @@ const CostModal = ({
                 )
               })}
             </StyledMenuSelect>
-            <StyledMenuSelect
-              width="368px"
-              onChange={(e) =>
-                dispatch({ type: 'description', value: e.target.value })
-              }
-              displayEmpty
+            <Autocomplete
+              options={serviceList.map((option) => option.txService)}
               value={state.description}
-              placeholder={state.description}
-              disableUnderline
-              filled={state.description}
-              toolTipTitle={I18n.t('components.itemModal.requiredField')}
-              invalid={
-                invalidInput &&
-                (state.description === null || state.description.length === 0)
-              }
-            >
-              <MenuItem disabled value="">
-                {I18n.t('components.costModal.choose')}
-              </MenuItem>
-              {descriptionList.map((description) => {
-                return (
-                  <MenuItem key={`${description}_key`} value={description}>
-                    {description}
-                  </MenuItem>
-                )
-              })}
-            </StyledMenuSelect>
+              onChange={(event: any, newValue: string | null) => {
+                dispatch({ type: 'description', value: newValue })
+              }}
+              renderInput={(params) => (
+                <div ref={params.InputProps.ref}>
+                  <Input
+                    {...params.inputProps}
+                    filled={state.description}
+                    toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                    invalid={
+                      invalidInput &&
+                      (state.description === null || state.description.length === 0)
+                    }
+                    style={{ width: '368px' }}
+                  />
+                  <Box {...params.inputProps} className="dropdownLargerInput">
+                    <ArrowDropDownIcon />
+                  </Box>
+                </div>
+              )}
+            />
           </RowDiv>
           <RowDiv>
             <Label width="100%">
