@@ -72,6 +72,33 @@ const getAgents = async (): Promise<any> => {
   }
 }
 
+const getTemperature = async (): Promise<any> => {
+  try {
+    const res = await instance.get('/sirius-master-data-api/temperature')
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const getImo = async (): Promise<any> => {
+  try {
+    const res = await instance.get('/sirius-master-data-api/imo/type')
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const getService = async (): Promise<any> => {
+  try {
+    const res = await instance.get('/sirius-business-proposal-api/service')
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const newProposal = {
   getContainerType,
   getCurrencies,
@@ -80,7 +107,10 @@ const newProposal = {
   getTransport,
   getOriginDestination,
   getFrequency,
-  getAgents
+  getAgents,
+  getTemperature,
+  getImo,
+  getService
 }
 
 export default newProposal

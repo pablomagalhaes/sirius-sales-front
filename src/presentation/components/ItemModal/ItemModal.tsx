@@ -83,8 +83,7 @@ const ItemModal = ({
 }: ItemModalProps): JSX.Element => {
   const [containerTypeList, setContainerTypeList] = useState<any[]>([])
   const [packagingList, setPackagingList] = useState<any[]>([])
-  // Mock de imo, valores serão especificados posteriormente
-  const imoList = ['1', '2', '3']
+  const [imoList, setImoList] = useState<any[]>([])
   const rgxFloat = /^[0-9]*,?[0-9]*$/
   const rgxInt = /^[0-9]*$/
   const [data, setData] = useState<ItemModalData>(initialState)
@@ -111,6 +110,14 @@ const ItemModal = ({
       setData(dataProp)
     }
   }, [open])
+
+  useEffect(() => {
+    void (async function () {
+      await newProposal.getImo()
+        .then((response) => setImoList(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
 
   const handleOnClose = (): void => {
     setData(initialState)
@@ -209,26 +216,26 @@ const ItemModal = ({
             )}
           </RowDiv>
           <RowDiv margin={true}>
-          <Autocomplete
-                style={{ position: 'relative' }}
-                options={ marineFCL() ? containerTypeList.map((item) => item.type) : packagingList.map((item) => item.packaging)}
-                value={ marineFCL() ? containerTypeList.map((item) => item.id) : packagingList.map((item) => item.id)}
-                onChange={(e, newValue) => setData({ ...data, type: newValue })}
-                renderInput={(params) => (
-                  <div ref={params.InputProps.ref}>
-                    <Input
-                      {...params.inputProps}
-                      style={{ width: '198px', height: '33px' }}
-                      toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                      invalid={ invalidInput && data.type.length === 0 }
-                      value={data.type}
-                    />
-                    <StyledBox {...params.inputProps}>
-                        <ArrowDropDownIcon />
-                      </StyledBox>
-                    </div>
-                )}
-              />
+            <Autocomplete
+              style={{ position: 'relative' }}
+              options={ marineFCL() ? containerTypeList.map((item) => item.type) : packagingList.map((item) => item.packaging)}
+              value={ marineFCL() ? containerTypeList.map((item) => item.id) : packagingList.map((item) => item.id)}
+              onChange={(e, newValue) => setData({ ...data, type: newValue })}
+              renderInput={(params) => (
+                <div ref={params.InputProps.ref}>
+                  <Input
+                    {...params.inputProps}
+                    style={{ width: '198px', height: '33px' }}
+                    toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                    invalid={ invalidInput && data.type.length === 0 }
+                    value={data.type}
+                  />
+                  <StyledBox {...params.inputProps}>
+                    <ArrowDropDownIcon />
+                  </StyledBox>
+                </div>
+              )}
+            />
             <AmountDiv>
               <ControlledInput
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
@@ -446,10 +453,10 @@ const ItemModal = ({
                 <MenuItem disabled value="">
                   <span style={{ marginLeft: '10px' }}>{I18n.t('components.itemModal.choose')}</span>
                 </MenuItem>
-                {imoList.map((imo) => {
+                {imoList.map((item) => {
                   return (
-                    <MenuItem key={`${imo}_key`} value={imo}>
-                      <span style={{ marginLeft: '10px' }}>{imo}</span>
+                    <MenuItem key={item.id} value={item.id}>
+                      <span style={{ marginLeft: '10px' }}>{item.type}</span>
                     </MenuItem>
                   )
                 })}

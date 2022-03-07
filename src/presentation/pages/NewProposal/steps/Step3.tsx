@@ -27,34 +27,7 @@ import ControlledInput from '../../../components/ControlledInput'
 import ChargeTable from '../../../components/ChargeTable'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import { withTheme } from 'styled-components'
-
-// mock
-const temperatureList = [
-  {
-    name: 'Ambiente',
-    value: 1
-  },
-  {
-    name: 'Abaixo de -20',
-    value: 2
-  },
-  {
-    name: '-20',
-    value: 3
-  },
-  {
-    name: '-20 a -10',
-    value: 4
-  },
-  {
-    name: '-18 a 0',
-    value: 5
-  },
-  {
-    name: '-10',
-    value: 6
-  }
-]
+import newProposal from '../../../../infrastructure/api/newProposalService'
 
 interface Step3Props {
   theme?: any
@@ -74,10 +47,19 @@ const Step3 = ({
   const [open, setOpen] = useState(false)
   const [tableRows, setTableRows] = useState<ItemModalData[]>([])
   const [chargeData, setChargeData] = useState<ItemModalData>(initialState)
+  const [temperatureList, setTemperatureList] = useState<any[]>([])
 
   useEffect(() => {
     setCostData(tableRows.length)
   }, [tableRows.length])
+
+  useEffect(() => {
+    void (async function () {
+      await newProposal.getTemperature()
+        .then((response) => setTemperatureList(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
 
   const [data, setData] = useState({
     description: '',
@@ -267,8 +249,8 @@ const Step3 = ({
                   </SelectSpan>
                 </MenuItem>
                 {temperatureList.map((item) => (
-                  <MenuItem key={item.value} value={item.value}>
-                    <SelectSpan>{item.name}</SelectSpan>
+                  <MenuItem key={item.id} value={item.id}>
+                    <SelectSpan>{item.temperature}</SelectSpan>
                   </MenuItem>
                 ))}
               </ControlledSelect>
