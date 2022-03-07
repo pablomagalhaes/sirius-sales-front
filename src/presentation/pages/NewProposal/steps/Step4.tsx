@@ -78,14 +78,15 @@ const Step4 = ({ invalidInput, setCompleted }: Step4Props): JSX.Element => {
         .catch((err) => console.log(err))
     })()
   }, [])
+
   const calculateValidityDate = (value): void => {
     if (value !== 0) {
       const myDate = new Date(new Date().getTime() + (value * 24 * 60 * 60 * 1000))
       const dateFormated = myDate.toLocaleDateString('pt-BR', { timeZone: 'UTC' })
-      setData({ ...data, validityDate: dateFormated })
+      setData({ ...data, validity: value, validityDate: dateFormated })
       setDisabledValidateDate(true)
     } else {
-      setData({ ...data, validityDate: '' })
+      setData({ ...data, validity: value, validityDate: '' })
       setDisabledValidateDate(false)
     }
   }
