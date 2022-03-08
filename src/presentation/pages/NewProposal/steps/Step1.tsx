@@ -14,6 +14,7 @@ import { withTheme } from 'styled-components'
 import ControlledInput from '../../../components/ControlledInput'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import newProposal from '../../../../infrastructure/api/newProposalService'
+import Autocomplete from '@material-ui/lab/Autocomplete'
 
 export interface Step1Props {
   theme?: any
@@ -25,6 +26,8 @@ export interface Step1Props {
 
 const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }: Step1Props): JSX.Element => {
   const [transportList, setTransportList] = useState<any[]>([])
+  const [agentsList, setAgentsList] = useState<any[]>([])
+  const [partnerList, setPartnerList] = useState<any[]>([])
   const [data, setData] = useState({
     proposal: '',
     services: '',
@@ -36,6 +39,22 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
     void (async function () {
       await newProposal.getTransport()
         .then((response) => setTransportList(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
+
+  useEffect(() => {
+    void (async function () {
+      await newProposal.getAgents()
+        .then((response) => setAgentsList(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
+
+  useEffect(() => {
+    void (async function () {
+      await newProposal.getPartner()
+        .then((response) => setPartnerList(response))
         .catch((err) => console.log(err))
     })()
   }, [])
@@ -98,22 +117,31 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
               ? <FormLabel component="legend">{I18n.t('pages.newProposal.step1.agents')}<RedColorSpan> *</RedColorSpan></FormLabel>
               : <FormLabel component="legend">{I18n.t('pages.newProposal.step1.client')}:<RedColorSpan> *</RedColorSpan></FormLabel>
           }
-          <ControlledInput
-            id="search-client"
-            toolTipTitle={I18n.t('components.itemModal.requiredField')}
-            invalid={data.proposalValue === '' && invalidInput}
-            variant="outlined"
-            size="small"
-            onChange={e => setData({ ...data, proposalValue: e.target.value })}
+          <Autocomplete
+            freeSolo
+            onChange={(e, newValue) => setData({ ...data, proposalValue: String(newValue) })}
+            options={ data.proposal === 'routing' ? agentsList.map((item) => item.businessPartner.simpleName) : partnerList.map((item) => item.businessPartner.simpleName)}
             value={data.proposalValue}
-            placeholder={I18n.t('pages.newProposal.step1.searchClient')}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconComponent name="search" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
-                </InputAdornment>
-              )
-            }}
+            renderInput={(params) => (
+              <div ref={params.InputProps.ref}>
+                <ControlledInput
+                  {...params}
+                  id="search-client"
+                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                  invalid={data.proposalValue === '' && invalidInput}
+                  variant="outlined"
+                  size="small"
+                  placeholder={I18n.t('pages.newProposal.step1.searchClient')}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconComponent name="search" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
+                      </InputAdornment>
+                    )
+                  }}
+              />
+            </div>
+            )}
           />
         </Grid>
       </Grid>

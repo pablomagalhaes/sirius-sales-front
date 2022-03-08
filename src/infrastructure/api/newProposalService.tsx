@@ -90,6 +90,15 @@ const getImo = async (): Promise<any> => {
   }
 }
 
+const getPartner = async (): Promise<any> => {
+  try {
+    const res = await instance.get('/sirius-business-partner-api/business/partner/class/classification/cliente')
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const getService = async (): Promise<any> => {
   try {
     const res = await instance.get('/sirius-business-proposal-api/service')
@@ -106,6 +115,7 @@ const newProposal = {
   getPackaging,
   getTransport,
   getOriginDestination,
+  getPartner,
   getFrequency,
   getAgents,
   getTemperature,
