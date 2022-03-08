@@ -87,6 +87,11 @@
         "addFare": "Adicionar tarifa",
         "addFareTooltip": "Para adicionar, selecione os agentes na etapa \"Serviço\" e inclua pelo menos um item na etapa \"Carga\"",
         "totalFares": "Total Tarifas:"
+      },
+      "saveMessage": {
+        "message": "Proposta salva com sucesso, Ref: ",
+        "closeMessage": "Continuar editando",
+        "buttonText": "Voltar à lista de propostas"
       }
     }
   },
