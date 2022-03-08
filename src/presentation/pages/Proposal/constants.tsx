@@ -1,77 +1,58 @@
 interface CardFilterProps {
-  iconType: 'warn' | 'import' | 'export' | 'plane' | 'ship' | 'truck' | ''
+  iconType: string
   status: string
   value: string
 }
 
+const orderButtonMenuItems = ['Ref. proposta', 'Nome do cliente', 'Responsável', 'Modal', 'Origem', 'Destino', 'Dt. abertura', 'Dt. validade']
+
 const cardFilters: CardFilterProps[] = [
   {
-    iconType: 'warn',
+    iconType: '',
+    value: '-',
+    status: 'Rascunhos'
+  },
+  {
+    iconType: '',
     value: '170',
-    status: 'aberta'
+    status: 'Abertas'
   },
   {
     iconType: '',
     value: '61',
-    status: 'ag. ret. cliente'
+    status: 'Ag. ret. cliente'
   },
   {
     iconType: '',
     value: '5',
-    status: 'renegociação'
-  },
-  {
-    iconType: '',
-    value: '80',
-    status: 'IO concluída'
+    status: 'Renegociação'
   },
   {
     iconType: '',
     value: '12',
-    status: 'rejeitada'
+    status: 'Rejeitadas'
   },
   {
     iconType: '',
     value: '28',
-    status: 'aprovada'
+    status: 'Aprovadas'
   },
   {
     iconType: 'truck',
     value: '10',
-    status: 'rodoviário'
+    status: 'Rodoviário'
   },
   {
     iconType: 'plane',
     value: '40',
-    status: 'aéreo'
+    status: 'Aéreo'
   },
   {
     iconType: 'ship',
     value: '160',
-    status: 'marítimo'
+    status: 'Marítimo'
   }
 ]
-
-const TableRows = (): any => {
-  const array: any = []
-  Array.from(Array(20), (value, i: number) => {
-    const item = {
-      key: i,
-      reference: 'Ref. PC-000004/20',
-      client: 'EUROFARMA LABORATORIOS',
-      origin: 'GUARULHOS',
-      destination: 'MANAUS',
-      opening: '26/01/2021',
-      shelfLife: '10/07/2023',
-      iconterm: 'CFR',
-      numio: '000001/20',
-      responsible: 'Cristina A.',
-      status: 'aberto'
-    }
-    return array.push(item)
-  })
-  return array
-}
 
 const menuItemsSelector = [
   {
@@ -165,4 +146,27 @@ const menuItemsSelector = [
   }
 ]
 
-export { cardFilters, TableRows, menuItemsSelector }
+// mock
+const TableRows = (): any => {
+  const array: any = []
+  Array.from(Array(20), (value, i: number) => {
+    const item = {
+      key: i,
+      reference: 'PC-000004/20',
+      client: 'EUROFARMA LABORATORIOS',
+      origin: 'GUARULHOS',
+      destination: 'MANAUS',
+      opening: '26/01/2021',
+      shelfLife: '10/07/2023',
+      iconterm: 'CFR',
+      numio: '000001/20',
+      responsible: 'Cristina A.',
+      status: 'aberto',
+      type: 'importation'
+    }
+    return array.push(item)
+  })
+  return array
+}
+
+export { cardFilters, TableRows, menuItemsSelector, orderButtonMenuItems }

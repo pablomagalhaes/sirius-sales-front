@@ -1,23 +1,160 @@
 {
   "pages": {
+    "newProposal": {
+      "reference": "Referência:",
+      "encharged": "Responsável:",
+      "buttonFinish": "Concluir proposta",
+      "save": "Salvar",
+      "view": "Visualizar",
+      "download": "Fazer download",
+      "send": "Enviar por e-mail",
+      "proposal": "Propostas",
+      "newProposal": "Nova proposta frete internacional - Importação",
+      "step1": {
+        "title": "Serviço",
+        "subtitle": "Escolha o cliente e informe as particularidades do serviço.",
+        "proposalType": "Tipo de proposta:",
+        "client": "Cliente",
+        "routingOrder": "Routing Order",
+        "services": "Serviços associados:",
+        "transport": "Transporte",
+        "readiness": "Desembaraço",
+        "agents": "Agentes:",
+        "searchClient": "Procurar cliente por código ou nome...",
+        "modal": "Modal:",
+        "air": "Aéreo",
+        "marine": "Marítimo",
+        "road": "Rodoviário"
+      },
+      "step2": {
+        "title": "Trecho",
+        "subtitle": "Defina origem, destino e especificidades do trecho.",
+        "origin": "Origem:",
+        "searchPlaceholder": "Procurar por código/descrição do porto OU país...",
+        "destiny": "Destino:",
+        "destinyAirport": "Aeroporto Destino",
+        "destinySeaport": "Porto Destino",
+        "originAirport": "Aeroporto Origem",
+        "originSeaport": "Porto Origem",
+        "agents": "Agentes:",
+        "searchAgents": "Procurar por nome...",
+        "incoterm": "INCOTERM:",
+        "choose": "Escolha ..."
+      },
+      "step3": {
+        "title": "Carga",
+        "subtitle": "Especifique os itens a serem embarcados.",
+        "description": "Descrição geral da carga:",
+        "specifications": "Especificações:",
+        "refrigerated": "Refrigerada",
+        "temperature": "Temperatura:",
+        "choose": "Escolha ...",
+        "buttonAdd": "Adicionar item à carga",
+        "buttonAddTooltip": "Para adicionar, selecione os campos \"Modal\" na etapa \"Serviço\" e \"Especificação\" na etapa \"Carga\""
+      },
+      "step4": {
+        "title": "Dados Gerais",
+        "subtitle": "Informe detalhes gerais da sua proposta comercial.",
+        "validity": "Validade:",
+        "time": "Transit. time:",
+        "frequency": "Frequência:",
+        "route": "Rota:",
+        "client": "Ref. Cliente:",
+        "currency": "Moeda para envio dos custos:",
+        "general": "Observações gerais:",
+        "internal": "Observações internas (esse texto NÃO é enviado na proposta):",
+        "choose": "Escolha ..."
+      },
+      "step5": {
+        "title": "Custos",
+        "subtitle": "Faça a composição dos custos de origem e destino.",
+        "origin": "Origem",
+        "totalOrigin": "Total custos origem:",
+        "destiny": "Destino",
+        "totalDestiny": "Total custos destino:",
+        "originCost": "Novo custo de origem",
+        "destinationCost": "Novo custo de destino"
+      },
+      "step6": {
+        "title": "Frete",
+        "subtitle": "Informe as tarifas para o serviço de frete",
+        "origin": "Origin",
+        "totalOrigin": "Total origin costs:",
+        "destiny": "Destiny",
+        "totalDestiny": "Total destiny costs:",
+        "originCost": "New origin cost",
+        "destinationCost": "New destiny cost",
+        "addFare": "Adicionar tarifa",
+        "addFareTooltip": "Para adicionar, selecione os agentes na etapa \"Serviço\" e inclua pelo menos um item na etapa \"Carga\"",
+        "totalFares": "Total Tarifas:"
+      },
+      "saveMessage": {
+        "message": "Proposta salva com sucesso, Ref: ",
+        "closeMessage": "Continuar editando",
+        "buttonText": "Voltar à lista de propostas"
+      }
+    }
   },
   "components": {
     "header": {
       "home": "Home",
       "proposal": "Proposta",
       "tariff": "Tarifário",
-      "indicators": "Indicadores"
+      "indicators": "Indicadores Comerciais"
     },
     "costTable": {
       "addCost": "Adicionar custo",
+      "addCostTooltip": "Para adicionar, selecione os agentes na etapa \"Serviço\" e inclua pelo menos um item na etapa \"Carga\"",
       "agent": "Agente",
-      "buy": "Compra:",
+      "buy": "Compra",
       "description": "Descrição",
       "inform": "A informar",
       "minBuy": "Mín - Compra",
       "minSale": "Mín - Venda",
-      "sale": "Venda:",
+      "sale": "Venda",
       "type":"Tipo"
+    },
+    "costModal": {
+      "type": "Tipo:",
+      "description": "Descrição:",
+      "agent": "Agente:",
+      "buyValue": "Valor compra",
+      "saleValue": "Valor Venda",
+      "save": "Salvar",
+      "replyForSale": "Replicar para venda",
+      "minimum": "Mínimo",
+      "value": "Valor",
+      "choose": "Escolha...",
+      "gotIt": "Entendi",
+      "popUpMessageStart": "Informe o ",
+      "popUpMessageEnd": " ou desmarque esse campo caso não seja necessário."
+    },
+    "itemModal":{
+      "amount": "Qtd: ",
+      "type": "Tipo: ",
+      "rawWeight":"Peso bruto (kg): ",
+      "hwl": "C x L x A: ",
+      "diameter": "Diâmetro:",
+      "cubage": "Cubagem: ",
+      "imo": "IMO:",
+      "codUn": "Cód. Un:",
+      "choose": "Escolha ...",
+      "container": "Container",
+      "packaging": "Embalagem",
+      "yes": "Sim",
+      "hazardous": "Perigoso?",
+      "save": "Salvar",
+      "requiredField": "Campo obrigatório",
+      "cubageWeight": "Peso cubado (m3): ",
+      "qnt": "Qtd"
+    },
+    "fareModal":{
+      "type": "Tipo:",
+      "expense":"Despesa:",
+      "saleValue": "Valor venda:",
+      "choose": "Escolha...",
+      "value": "Valor",
+      "newFare": "Nova tarifa"
     }
   }
 }

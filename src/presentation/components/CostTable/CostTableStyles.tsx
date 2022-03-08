@@ -3,10 +3,9 @@ import styled from 'styled-components'
 import { Table, TableCell, TableRow } from '@material-ui/core'
 
 export const MainDiv = styled.div`
-  width: 95%;
+  width: auto;
   border-radius: 8px;
-  background: #f0f1f5;
-  margin-left: 20px;
+  background: ${(props: any) => props.theme?.commercial?.components?.costTable?.backgroundColor};
   margin-top: 30px;
 `
 
@@ -22,7 +21,7 @@ export const Header = styled.div`
 `
 
 export const Title = styled.span`
-  color: #222222;
+  color: ${(props: any) => props.theme?.commercial?.components?.costTable?.title};
   width: 15%;
   font-weight: bold;
   font-size: 16px;
@@ -40,7 +39,7 @@ export const TableHeadRow = styled(TableRow)`
   .MuiTableCell-root {
     border-bottom: none;
     font-family: DM Sans;
-    color: #545454;
+    color: ${(props: any) => props.theme?.commercial?.components?.costTable?.subtitle};
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
@@ -50,8 +49,17 @@ export const TableHeadRow = styled(TableRow)`
   }
 `
 
+interface StyledTableCellProps {
+  color: boolean
+  width: string
+  theme: any
+}
+
 export const StyledTableCell = styled(TableCell)`
-  width: ${(props) => props.width};
+  width: ${(props: StyledTableCellProps) => props.width};
+  color: ${(props: StyledTableCellProps) => props.color
+    ? `${String(props.theme?.commercial?.pages?.newProposal?.steps?.stepFare)}`
+    : `${String(props.theme?.commercial?.pages?.newProposal?.font)}`};
 `
 
 export const Description = styled.span`
@@ -61,7 +69,7 @@ export const Description = styled.span`
   font-size: 14px;
   line-height: 150%;
   letter-spacing: 0.02em;
-  color: #222222;
+  color: ${(props: any) => props.theme?.commercial?.components?.costTable?.title} !important;
 `
 
 export const Type = styled.span`
@@ -71,7 +79,7 @@ export const Type = styled.span`
   font-size: 12px;
   line-height: 150%;
   letter-spacing: 0.02em;
-  color: #222222;
+  color: ${(props: any) => props.theme?.commercial?.components?.costTable?.title};
 `
 
 export const Default = styled.span`
@@ -81,7 +89,7 @@ export const Default = styled.span`
   font-size: 14px;
   line-height: 150%;
   letter-spacing: 0.02em;
-  color: #222222;
+  color: ${(props: any) => props.theme?.commercial?.components?.costTable?.title};
 `
 
 export const Empty = styled.span`
@@ -91,7 +99,7 @@ export const Empty = styled.span`
   font-size: 12px;
   line-height: 150%;
   letter-spacing: 0.02em;
-  color: #999dac;
+  color: ${(props: any) => props.theme?.commercial?.components?.costTable?.emptyLabel};
 `
 
 export const RowReverseDiv = styled.div`
@@ -118,7 +126,7 @@ export const CostLabel = styled.span`
   margin-top:7px;
   font-weight: normal;
   font-size: 12px;
-  color: #545454;
+  color: ${(props: any) => props.theme?.commercial?.components?.costTable?.subtitle};
   margin-right: 30px;
 `
 
@@ -126,7 +134,7 @@ export const ValueLabel = styled.span`
   margin-top:7px;
   font-weight: normal;
   font-size: 16px;
-  color: #000000;
+  color: ${(props: any) => props.theme?.commercial?.components?.costTable?.title};
   margin-right: 30px;
 `
 
@@ -134,16 +142,24 @@ export const EndValueLabel = styled.span`
   margin-top:7px;
   font-weight: normal;
   font-size: 16px;
-  color: #000000;
+  color: ${(props: any) => props.theme?.commercial?.components?.costTable?.title};
 `
 
 export const TotalCostLabel = styled.span`
   margin-top:7px;
-  color: #222222;
+  color: ${(props: any) => props.theme?.commercial?.components?.costTable?.title};
   font-weight: bold;
   font-size: 16px;
   margin-right: 35px;
 `
-export const RemoveIconDiv = styled.div`
-  margin-right: 20px; 
+export const DeleteIconDiv = styled.div`
+  cursor: pointer;
+`
+
+export const EditIconDiv = styled.div`
+  margin-right: 20px;
+  cursor: pointer;
+`
+export const EmptyTableCost = styled.span`
+margin-left: 40px;
 `
