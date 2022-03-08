@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, FloatingMenu, Steps } from 'fiorde-fe-components'
+import { Button, FloatingMenu, Steps, Messages } from 'fiorde-fe-components'
 import { Breadcrumbs, Link } from '@material-ui/core/'
 import {
   ButtonContainer,
@@ -9,7 +9,8 @@ import {
   RootContainer,
   TopContainer,
   UserContainer,
-  Username
+  Username,
+  MessageContainer
 } from './style'
 import { withTheme } from 'styled-components'
 import { I18n } from 'react-redux-i18n'
@@ -34,6 +35,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [costData, setCostData] = useState(0)
   const [proposalType, setProposalType] = useState('')
   const [modal, setModal] = useState('')
+  const [showSaveMessage, setShowSaveMessage] = useState(false)
 
   const history = useHistory()
 
@@ -96,6 +98,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       completed.step5 &&
       completed.step6
     ) {
+      setShowSaveMessage(true)
       setInvalidInput(false)
     } else {
       setInvalidInput(true)
@@ -123,6 +126,17 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   ]
 
   const referenceCode = TableRows()
+
+  const saveMessageInfo = {
+    closable: true,
+    severity: 'success',
+    buttonText: I18n.t('pages.newProposal.saveMessage.buttonText'),
+    closeAlert: () => { setShowSaveMessage(false) },
+    closeMessage: I18n.t('pages.newProposal.saveMessage.closeMessage'),
+    goBack: () => { history.push('/proposta') },
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    message: `${I18n.t('pages.newProposal.saveMessage.message')} ${referenceCode[0].reference}.`
+  }
 
   return (
     <RootContainer>
@@ -189,6 +203,11 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         <div id="step5"><Step5 costData={costData} /></div>
         <div id="step6"><Step6 costData={costData} /></div>
       </MainContainer>
+
+      {showSaveMessage &&
+      <MessageContainer>
+        <Messages {...saveMessageInfo} />
+      </MessageContainer>}
     </RootContainer>
   )
 }
