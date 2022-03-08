@@ -188,6 +188,13 @@ const StyledRadio = styled(Radio)`
   color: ${({ color }: StyledRadioProps) => color} !important;
 `
 
+const MessageContainer = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+`
+
 export {
   ButtonContainer,
   IconContainer,
@@ -203,5 +210,6 @@ export {
   UserContainer,
   Username,
   BoldSpan,
-  StyledRadio
+  StyledRadio,
+  MessageContainer
 }

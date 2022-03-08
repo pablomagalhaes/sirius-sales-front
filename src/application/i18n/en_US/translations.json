@@ -87,6 +87,11 @@
         "addFare": "Add surcharge",
         "addFareTooltip": "To add, select agents in the \"Service\" step and include at least one item in the \"Cargo\" step",
         "totalFares": "Total Surcharges:"
+      },
+      "saveMessage": {
+        "message": "Proposal saved successfully, Ref. ",
+        "closeMessage": "Continue editing",
+        "buttonText": "Back to proposal list"
       }
     }
   },
