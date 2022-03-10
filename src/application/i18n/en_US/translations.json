@@ -24,7 +24,9 @@
         "modal": "Modal:",
         "air": "Air",
         "marine": "Marine",
-        "road": "Road"
+        "road": "Road",
+        "searchRequester": "Requester",
+        "searchRequesterPlaceholder": "Inform the name and e-mail (Ex: João - joao@cliente.com.br)"
       },
       "step2": {
         "title": "Section",

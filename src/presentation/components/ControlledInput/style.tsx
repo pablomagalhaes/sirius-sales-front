@@ -32,3 +32,21 @@ export const StyledInput = styled(TextField)`
     fill: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.subtitle}
   }
 `
+
+export const MainContainer = styled.div`
+  display: flex;
+  width: 100%; 
+  align-items: center;
+`
+export const InnerConteiner = styled.div`
+  width: 100%;
+`
+export const SpaceContainer = styled.div`
+  width: 16px; 
+  height: 16px; 
+  margin: 0 16px; 
+`
+
+export const SpaceIconContainer = styled.div`
+  margin: 0 16px; 
+`
