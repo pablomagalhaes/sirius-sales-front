@@ -165,7 +165,7 @@ const FareModal = ({
             <Container width="350px" height="32px" margin="0 0 5px 23px">
               <Autocomplete
                 onChange={(e, newValue) => setData({ ...data, expense: newValue })}
-                options={serviceList.map((option) => option.txService)}
+                options={serviceList.map((option) => option.service)}
                 value={data.expense}
                 renderInput={(params) => (
                   <div ref={params.InputProps.ref}>
