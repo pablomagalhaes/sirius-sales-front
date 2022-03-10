@@ -73,6 +73,7 @@ const Proposal = (): JSX.Element => {
         </Breadcrumbs>
         <TopButtonContainer>
           <Button
+            disabled={false}
             text={'Criar nova proposta...'}
             tooltip={'Criar nova proposta'}
             backgroundGreen={true}

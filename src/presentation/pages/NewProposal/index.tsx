@@ -183,6 +183,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         />
         <ButtonContainer>
           <Button
+            disabled={false}
             onAction={() => { }}
             text={I18n.t('pages.newProposal.buttonFinish')}
             tooltip={I18n.t('pages.newProposal.buttonFinish')}
