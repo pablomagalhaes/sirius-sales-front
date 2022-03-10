@@ -524,6 +524,7 @@ const CostModal = ({
           {!invalidValueInput && (
             <ButtonDiv>
               <Button
+                disabled={false}
                 backgroundGreen={true}
                 icon={''}
                 onAction={addHandler}
@@ -545,6 +546,7 @@ const CostModal = ({
             </WarningPopUpMessage>
             <WarningPopUpButtonDiv>
               <Button
+                disabled={false}
                 backgroundGreen={false}
                 icon={''}
                 onAction={handleClickWarningButton}
