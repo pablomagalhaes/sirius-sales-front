@@ -33,6 +33,7 @@
         "subtitle": "Defina origem, destino e especificidades do trecho.",
         "origin": "Origem:",
         "searchPlaceholder": "Procurar por código/descrição do porto OU país...",
+        "collectionAddress": "Endereço de coleta:",
         "destiny": "Destino:",
         "destinyAirport": "Aeroporto Destino",
         "destinySeaport": "Porto Destino",

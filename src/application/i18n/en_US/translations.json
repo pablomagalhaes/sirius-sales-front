@@ -33,6 +33,7 @@
         "subtitle": "Define the origin, destination and specifics of the section.",
         "origin": "Origin:",
         "searchPlaceholder": "Search by code/description of port OR country...",
+        "collectionAddress": "Colletion Address:",
         "destiny": "Destiny:",
         "destinyAirport": "Destiny Airport",
         "destinySeaport": "Destiny Seaport",
