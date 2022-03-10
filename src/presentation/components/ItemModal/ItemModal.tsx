@@ -480,6 +480,7 @@ const ItemModal = ({
           <RowDiv>
             <ButtonDiv>
               <Button
+                disabled={false}
                 text={I18n.t('components.itemModal.save')}
                 tooltip={I18n.t('components.itemModal.save')}
                 backgroundGreen={true}
