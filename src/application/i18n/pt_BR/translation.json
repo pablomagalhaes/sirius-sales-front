@@ -24,7 +24,9 @@
         "modal": "Modal:",
         "air": "Aéreo",
         "marine": "Marítimo",
-        "road": "Rodoviário"
+        "road": "Rodoviário",
+        "searchRequester": "Solicitante",
+        "searchRequesterPlaceholder": "Informe o nome e e-mail (Ex: João - joao@cliente.com.br)"
       },
       "step2": {
         "title": "Trecho",
