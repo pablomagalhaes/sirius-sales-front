@@ -10,8 +10,9 @@ export const AmountDiv = styled.div`
 
 export const StyledBox = styled(Box)`
   position: absolute;
-  top: 17px;
-  left: 168px; 
+  top: 13px;
+  left: 171px;
+  background: white;
 `
 
 export const ModalDiv = styled.div`
