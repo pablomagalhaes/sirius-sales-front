@@ -36,7 +36,7 @@ import {
 import newProposal from '../../../infrastructure/api/newProposalService'
 import { CheckBoxArea } from '../ItemModal/ItemModalStyles'
 
-interface ItemModalData {
+export interface CostTableItem {
   agent: string
   buyCurrency: string | null
   buyMin: string | null
@@ -50,11 +50,26 @@ interface ItemModalData {
 }
 
 interface CostModalProps {
-  dataProp?: ItemModalData
+  dataProp?: CostTableItem
   handleAdd: (item) => void
   open: boolean
   setClose: () => void
   title: string
+  modal: string
+  specifications: string
+}
+
+export const initialState = {
+  type: '',
+  description: '',
+  agent: '',
+  buyCurrency: 'BRL',
+  buyValue: null,
+  buyMin: null,
+  saleCurrency: 'BRL',
+  saleValue: null,
+  saleMin: null,
+  id: null
 }
 
 const CostModal = ({
@@ -62,22 +77,11 @@ const CostModal = ({
   handleAdd,
   open,
   setClose,
-  title
+  title,
+  modal,
+  specifications
 }: CostModalProps): JSX.Element => {
-  const initialState = {
-    type: '',
-    description: '',
-    agent: '',
-    buyCurrency: 'BRL',
-    buyValue: null,
-    buyMin: null,
-    saleCurrency: 'BRL',
-    saleValue: null,
-    saleMin: null,
-    id: null
-  }
-
-  const reducer = (state, action): ItemModalData => {
+  const reducer = (state, action): CostTableItem => {
     switch (action.type) {
       case 'type':
         return { ...state, type: action.value }
@@ -106,6 +110,8 @@ const CostModal = ({
         }
       case 'reset':
         return initialState
+      case 'dataProp':
+        return dataProp !== null && dataProp !== undefined ? dataProp : initialState
       default:
         return state
     }
@@ -114,10 +120,10 @@ const CostModal = ({
   const rgxFloat = /^[0-9]*,?[0-9]*$/
   const [state, dispatch] = useReducer(
     reducer,
-    dataProp != null ? dataProp : initialState
+    dataProp !== null && dataProp !== undefined ? dataProp : initialState
   )
+  const [typeList, setTypeList] = useState<object[]>([])
   // Listas são mock, serão alteradas posteriormente
-  const typeList = ['Tipo1', 'Tipo2', 'Tipo3']
   const agentList = ['Agente1', 'Agente2', 'Agente3']
   const [buyCheckbox, setBuyCheckBox] = useState(state.buyValue != null)
   const [saleCheckbox, setSaleCheckBox] = useState(state.saleValue != null)
@@ -125,6 +131,31 @@ const CostModal = ({
   const [invalidValueInput, setInvalidValueInput] = useState(false)
   const [currencyList, setCurrencyList] = useState<any[]>([])
   const [serviceList, setServiceList] = useState<any[]>([])
+
+  useEffect(() => {
+    dispatch({ type: 'dataProp' })
+    setBuyCheckBox(dataProp?.buyValue !== null && dataProp?.buyValue.length !== 0)
+    setSaleCheckBox(dataProp?.saleValue !== null && dataProp?.saleValue.length !== 0)
+  }, [open])
+
+  useEffect(() => {
+    switch (true) {
+      case modal === 'SEA' && specifications === 'fcl':
+        setTypeList([{ name: 'Container', value: 'CONTAINER' }, { name: 'BL', value: 'BL' }])
+        break
+      case modal === 'SEA' && specifications === 'lcl':
+        setTypeList([{ name: 'Ton³', value: 'TON' }, { name: 'BL', value: 'BL' }])
+        break
+      case modal === 'AIR':
+        setTypeList([{ name: 'KG', value: 'KG' }, { name: 'Fixo', value: 'FIXO' }, { name: 'CW', value: 'CW' }])
+        break
+      case modal === 'LAND':
+        setTypeList([{ name: 'Fixo', value: 'FIXO' }])
+        break
+      default:
+        setTypeList([])
+    }
+  }, [modal, specifications])
 
   useEffect(() => {
     void (async function () {
@@ -279,10 +310,10 @@ const CostModal = ({
               <MenuItem disabled value="">
                 {I18n.t('components.costModal.choose')}
               </MenuItem>
-              {typeList.map((type) => {
+              {typeList.map((item: any) => {
                 return (
-                  <MenuItem key={`${type}_key`} value={type}>
-                    {type}
+                  <MenuItem key={item.value} value={item.value}>
+                    {item.name}
                   </MenuItem>
                 )
               })}
@@ -498,7 +529,7 @@ const CostModal = ({
                         {I18n.t('components.costModal.value')}
                         {saleCheckbox && <RedColorSpan> *</RedColorSpan>}
                       </PlaceholderSpan>
-                    )}
+                  )}
                   <Input
                     value={state.saleValue != null ? state.saleValue : ''}
                     onChange={saleValueHandler}

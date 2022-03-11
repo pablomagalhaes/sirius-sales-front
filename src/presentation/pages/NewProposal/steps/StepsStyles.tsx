@@ -8,7 +8,7 @@ const TotalContainer = styled(MainDiv)`
   padding: 31px;
   display: flex;
   justify-content: flex-end;
-  align-items: center;
+  align-items: flex-start;
 `
 
 const StyledTable = styled(Table)`
