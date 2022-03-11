@@ -158,13 +158,6 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
             onChange={(e) => setData({ ...data, requester: e.target.value })}
             value={data.requester}
             space
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconComponent name="search" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
-                </InputAdornment>
-              )
-            }}
           />
         </Grid>
       </Grid>
