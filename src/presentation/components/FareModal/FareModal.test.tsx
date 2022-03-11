@@ -14,7 +14,9 @@ const props = {
   action: () => {},
   setOpen: () => {},
   open: true,
-  setClose: () => {}
+  setClose: () => {},
+  modal: '',
+  specifications: ''
 }
 
 test('should show text Editar item', () => {

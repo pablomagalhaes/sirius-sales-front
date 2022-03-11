@@ -4,9 +4,11 @@ import { I18n } from 'react-redux-i18n'
 import { Title, Subtitle, Separator } from '../style'
 interface Step5Props {
   costData: any
+  modal: string
+  specifications: string
 }
 
-const Step5 = ({ costData }: Step5Props): JSX.Element => {
+const Step5 = ({ costData, modal, specifications }: Step5Props): JSX.Element => {
   return (
     <Separator>
       <Title>
@@ -18,12 +20,16 @@ const Step5 = ({ costData }: Step5Props): JSX.Element => {
         title={I18n.t('pages.newProposal.step5.origin')}
         totalCostLabel={I18n.t('pages.newProposal.step5.totalOrigin')}
         costData={costData}
+        modal={modal}
+        specifications={specifications}
       />
       <CostTable
         modalTitle={I18n.t('pages.newProposal.step5.destinationCost')}
         title={I18n.t('pages.newProposal.step5.destiny')}
         totalCostLabel={I18n.t('pages.newProposal.step5.totalDestiny')}
         costData={costData}
+        modal={modal}
+        specifications={specifications}
       />
     </Separator>
   )
