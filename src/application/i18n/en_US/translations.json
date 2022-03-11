@@ -109,7 +109,7 @@
       "addCostTooltip": "To add, select agents in the \"Service\" step and include at least one item in the \"Cargo\" step",
       "agent": "Agent",
       "buy": "Buy",
-      "description": "Description",
+      "description": "Expense/Service",
       "inform": "To inform",
       "minBuy": "Min - Buy",
       "minSale": "Min - Sale",
@@ -118,7 +118,7 @@
     },
     "costModal": {
       "type": "Type:",
-      "description": "Description:",
+      "description": "Expense/Service:",
       "agent": "Agent:",
       "buyValue": "Buy value",
       "saleValue": "Sale value",
@@ -152,7 +152,7 @@
     },
     "fareModal":{
       "type": "Type:",
-      "expense":"Expense:",
+      "expense":"Expense/Service:",
       "saleValue": "Sale value:",
       "choose": "Choose...",
       "value": "Value",

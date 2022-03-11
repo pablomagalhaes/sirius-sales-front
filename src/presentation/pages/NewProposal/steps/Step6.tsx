@@ -1,12 +1,14 @@
-import React, { useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import { I18n } from 'react-redux-i18n'
 import { Title, Subtitle, Separator } from '../style'
-import FareModal from '../../../components/FareModal/FareModal'
+import FareModal, { FareModalData, initialState } from '../../../components/FareModal/FareModal'
 import { TableBody } from '@material-ui/core'
 
 import {
   DeleteIconDiv,
   EditIconDiv,
+  EmptyTableCost,
+  RowReverseContainer,
   RowReverseDiv,
   StyledTableCell,
   TotalCostLabel,
@@ -23,73 +25,64 @@ import {
 
 import EditIcon from '../../../../application/icons/EditIcon'
 import RemoveIcon from '../../../../application/icons/RemoveIcon'
-import { Button } from 'fiorde-fe-components'
+import { Button, MoneyValue } from 'fiorde-fe-components'
 
-const mock = [
-  {
-    fare: 'Frete Express',
-    type: 'Vlr. Fixo',
-    value: 'USD 50,00'
-  },
-  {
-    fare: 'Fuel - Security',
-    type: 'CW',
-    value: 'EUR 5,00'
-  }
-]
-
-interface Cell {
-  fare: string
-  type: string
-  value: string
-}
 interface TableData {
-  data?: Cell[]
+  data?: FareModalData[]
   costData: any
+  modal: string
+  specifications: string
+  remove?: (id: number | null) => void
+  edit?: (tableData: FareModalData) => void
 }
 
-const Table = ({ data }: TableData): JSX.Element => {
+const Table = ({ data, remove, edit }: TableData): JSX.Element => {
   return (
     <StyledTable>
       <TableBody>
         {data !== null
           ? (
-              data?.map((item: Cell, i) => {
+              data?.map((item: FareModalData) => {
                 return (
-              <StyledRow id="styled_row" key={i}>
-                <StyledTableCell
-                  color={1}
-                  width="100%"
-                  component="th"
-                  scope="row"
-                >
-                  {item.fare}
-                </StyledTableCell>
-                <StyledTableCell width="100%" align="left">
-                  {item.type}
-                </StyledTableCell>
-                <StyledTableCell width="100%" align="left">
-                  {item.value}
-                </StyledTableCell>
-                <StyledTableCell width="100%">
-                  <RowReverseDiv>
-                    <DeleteIconDiv>
-                      <RemoveIcon
-                        onClick={() => {
-                          console.log('Remove')
-                        }}
+                  <StyledRow id={item.id} key={item.id}>
+                    <StyledTableCell
+                      color={1}
+                      width="100%"
+                      component="th"
+                      scope="row"
+                    >
+                      {item.expense}
+                    </StyledTableCell>
+                    <StyledTableCell width="100%" align="left">
+                      {item.type}
+                    </StyledTableCell>
+                    <StyledTableCell width="100%" align="left">
+                      <MoneyValue
+                        currency={item.saleCurrency}
+                        language="pt-br"
+                        style={{ width: '80px' }}
+                        value={Number(item.saleValue)}
                       />
-                    </DeleteIconDiv>
-                    <EditIconDiv>
-                      <EditIcon
-                        onClick={() => {
-                          console.log('Edit')
-                        }}
-                      />
-                    </EditIconDiv>
-                  </RowReverseDiv>
-                </StyledTableCell>
-              </StyledRow>
+                    </StyledTableCell>
+                    <StyledTableCell width="100%">
+                      <RowReverseDiv>
+                        <DeleteIconDiv>
+                          <RemoveIcon
+                            onClick={() => {
+                              if (remove != null) remove(item.id)
+                            }}
+                          />
+                        </DeleteIconDiv>
+                        <EditIconDiv>
+                          <EditIcon
+                            onClick={() => {
+                              if (edit != null) edit(item)
+                            }}
+                          />
+                        </EditIconDiv>
+                      </RowReverseDiv>
+                    </StyledTableCell>
+                  </StyledRow>
                 )
               })
             )
@@ -101,12 +94,63 @@ const Table = ({ data }: TableData): JSX.Element => {
   )
 }
 
-const Step6 = ({ costData }: TableData): JSX.Element => {
+const Step6 = ({ costData, modal, specifications }: TableData): JSX.Element => {
   const [open, setOpen] = useState(false)
-  const [data] = useState(mock)
+  const [data, setData] = useState<FareModalData[]>([])
+  const [chargeData, setChargeData] = useState<FareModalData>(initialState)
+  const currencyList = new Map()
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
-  const handleAdd = (item): void => console.log(item)
+
+  const handleAdd = (item: FareModalData): void => {
+    if (item.id !== null) {
+      const editData = data
+      const index = editData.findIndex((i) => i.id === item.id)
+      editData[index] = item
+      setData(editData)
+    } else {
+      const lastIndex = data?.length - 1
+      const newItem = { ...item, id: data.length === 0 ? 0 : (Number(data[lastIndex].id) + 1) }
+      setData([...data, newItem])
+    }
+    setChargeData(initialState)
+  }
+
+  const calculateTotalCost = (saleCurrency, saleValue): void => {
+    if (saleCurrency !== null && saleCurrency !== '') {
+      currencyList.has(String(saleCurrency))
+        ? currencyList.set(String(saleCurrency), Number(currencyList.get(String(saleCurrency))) + Number(saleValue))
+        : currencyList.set(String(saleCurrency), Number(saleValue))
+    }
+  }
+
+  const removeClickHandler = (id: number | null): void => {
+    setData((tableData) => {
+      return tableData.filter((data) => data.id !== id)
+    })
+  }
+
+  const editClickHandler = (tableData: FareModalData): void => {
+    setChargeData(tableData)
+    handleOpen()
+  }
+
+  const showFares = (): ReactNode[] => {
+    data?.map((item) => calculateTotalCost(item.saleCurrency, item.saleValue))
+    return Array.from(currencyList, ([name, value]) => ({ name, value })).map((currency, index) => {
+      return (
+        <ValueLabel key={index}>
+          <MoneyValue
+            currency={currency.name}
+            language="pt-br"
+            style={{ width: '80px' }}
+            value={currency.value}
+          />
+        </ValueLabel>
+      )
+    })
+  }
+
   return (
     <Separator>
       <HeightDiv>
@@ -114,7 +158,14 @@ const Step6 = ({ costData }: TableData): JSX.Element => {
           6. {I18n.t('pages.newProposal.step6.title')}
           <Subtitle>{I18n.t('pages.newProposal.step6.subtitle')}</Subtitle>
         </Title>
-        <Table data={data} costData={costData} />
+        <Table
+          data={data}
+          costData={costData}
+          modal={modal}
+          specifications={specifications}
+          remove={removeClickHandler}
+          edit={editClickHandler}
+        />
         <ButtonWrapper>
           <Button
             onAction={handleOpen}
@@ -130,17 +181,32 @@ const Step6 = ({ costData }: TableData): JSX.Element => {
           />
         </ButtonWrapper>
         <FareModal
+          dataProp={chargeData}
           action={handleAdd}
           open={open}
           setClose={handleClose}
           title={I18n.t('components.fareModal.newFare')}
+          modal={modal}
+          specifications={specifications}
         />
-        <TotalContainer>
-          <TotalCostLabel>
-            {I18n.t('pages.newProposal.step6.totalFares')}
-          </TotalCostLabel>
-          <ValueLabel>USD 151,00</ValueLabel>
-        </TotalContainer>
+        {data.length === 0
+          ? <TotalContainer>
+              <TotalCostLabel>
+                {I18n.t('pages.newProposal.step6.totalFares')}
+              </TotalCostLabel>
+              <ValueLabel>
+                <EmptyTableCost>-</EmptyTableCost>
+              </ValueLabel>
+            </TotalContainer>
+          : <TotalContainer>
+              <TotalCostLabel>
+                {I18n.t('pages.newProposal.step6.totalFares')}
+              </TotalCostLabel>
+              <RowReverseContainer>
+                {showFares()}
+              </RowReverseContainer>
+            </TotalContainer>
+        }
       </HeightDiv>
     </Separator>
   )
