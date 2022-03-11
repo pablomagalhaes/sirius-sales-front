@@ -243,9 +243,9 @@ const Step4 = ({
                 title={I18n.t('components.itemModal.requiredField')}
               >
                 <FormControlLabel
-                  value="hired"
+                  value="notHired"
                   control={<StyledRadio color={getColor(data.freeTime)} />}
-                  label={I18n.t('pages.newProposal.step4.hired')}
+                  label={I18n.t('pages.newProposal.step4.notHired')}
                   style={{ marginRight: '30px' }}
                 />
               </ControlledToolTip>
@@ -254,9 +254,9 @@ const Step4 = ({
                 title={I18n.t('components.itemModal.requiredField')}
               >
                 <FormControlLabel
-                  value="notHired"
+                  value="hired"
                   control={<StyledRadio color={getColor(data.freeTime)} />}
-                  label={I18n.t('pages.newProposal.step4.notHired')}
+                  label={I18n.t('pages.newProposal.step4.hired')}
                 />
               </ControlledToolTip>
             </RadioGroup>
