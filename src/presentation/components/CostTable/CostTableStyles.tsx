@@ -109,6 +109,11 @@ export const RowReverseDiv = styled.div`
   width: 100%;
 `
 
+export const RowReverseContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
 export const Footer = styled.div`
   max-width: 94%;
   margin-top: 30px;
@@ -128,6 +133,7 @@ export const CostLabel = styled.span`
   font-size: 12px;
   color: ${(props: any) => props.theme?.commercial?.components?.costTable?.subtitle};
   margin-right: 30px;
+  width: 50px;
 `
 
 export const ValueLabel = styled.span`
@@ -136,6 +142,7 @@ export const ValueLabel = styled.span`
   font-size: 16px;
   color: ${(props: any) => props.theme?.commercial?.components?.costTable?.title};
   margin-right: 30px;
+  width: 110px;
 `
 
 export const EndValueLabel = styled.span`
@@ -143,6 +150,7 @@ export const EndValueLabel = styled.span`
   font-weight: normal;
   font-size: 16px;
   color: ${(props: any) => props.theme?.commercial?.components?.costTable?.title};
+  width: 110px;
 `
 
 export const TotalCostLabel = styled.span`
@@ -151,6 +159,7 @@ export const TotalCostLabel = styled.span`
   font-weight: bold;
   font-size: 16px;
   margin-right: 35px;
+  width: 160px;
 `
 export const DeleteIconDiv = styled.div`
   cursor: pointer;
