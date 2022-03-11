@@ -32,7 +32,8 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
     proposal: '',
     services: '',
     proposalValue: '',
-    modal: ''
+    modal: '',
+    requester: ''
   })
 
   useEffect(() => {
@@ -87,7 +88,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
         1. {I18n.t('pages.newProposal.step1.title')}
         <Subtitle>{I18n.t('pages.newProposal.step1.subtitle')}</Subtitle>
       </Title>
-      <Grid container spacing={2}>
+      <Grid container spacing={5}>
         <Grid item xs={6}>
           <FormLabel component="legend">{I18n.t('pages.newProposal.step1.proposalType')}<RedColorSpan> *</RedColorSpan></FormLabel>
           <RadioGroup
@@ -120,7 +121,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
           <Autocomplete
             freeSolo
             onChange={(e, newValue) => setData({ ...data, proposalValue: String(newValue) })}
-            options={ data.proposal === 'routing' ? agentsList.map((item) => item.businessPartner.simpleName) : partnerList.map((item) => item.businessPartner.simpleName)}
+            options={data.proposal === 'routing' ? agentsList.map((item) => item.businessPartner.simpleName) : partnerList.map((item) => item.businessPartner.simpleName)}
             value={data.proposalValue}
             renderInput={(params) => (
               <div ref={params.InputProps.ref}>
@@ -132,6 +133,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
                   variant="outlined"
                   size="small"
                   placeholder={I18n.t('pages.newProposal.step1.searchClient')}
+                  space
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
@@ -139,9 +141,30 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
                       </InputAdornment>
                     )
                   }}
-              />
-            </div>
+                />
+              </div>
             )}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <FormLabel component="legend">{I18n.t('pages.newProposal.step1.searchRequester')}:<RedColorSpan> *</RedColorSpan></FormLabel>
+          <ControlledInput
+            id="search-requester"
+            toolTipTitle={I18n.t('components.itemModal.requiredField')}
+            invalid={data.requester === '' && invalidInput}
+            variant="outlined"
+            size="small"
+            placeholder={I18n.t('pages.newProposal.step1.searchRequesterPlaceholder')}
+            onChange={(e) => setData({ ...data, requester: e.target.value })}
+            value={data.requester}
+            space
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconComponent name="search" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
+                </InputAdornment>
+              )
+            }}
           />
         </Grid>
       </Grid>

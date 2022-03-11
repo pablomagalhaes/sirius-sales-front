@@ -288,7 +288,7 @@ const CostModal = ({
               })}
             </StyledMenuSelect>
             <Autocomplete
-              options={serviceList.map((option) => option.txService)}
+              options={serviceList.map((option) => option.service)}
               value={state.description}
               onChange={(event: any, newValue: string | null) => {
                 dispatch({ type: 'description', value: newValue })
@@ -498,7 +498,7 @@ const CostModal = ({
                         {I18n.t('components.costModal.value')}
                         {saleCheckbox && <RedColorSpan> *</RedColorSpan>}
                       </PlaceholderSpan>
-                  )}
+                    )}
                   <Input
                     value={state.saleValue != null ? state.saleValue : ''}
                     onChange={saleValueHandler}

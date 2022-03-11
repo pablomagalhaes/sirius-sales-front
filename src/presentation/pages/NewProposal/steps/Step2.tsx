@@ -177,7 +177,7 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
         <Subtitle>{I18n.t('pages.newProposal.step2.subtitle')}</Subtitle>
       </Title>
       <FormControl variant="outlined" size="small" className='form-size'>
-        <Grid container spacing={2}>
+        <Grid container spacing={5}>
           <Grid item xs={6}>
             <FormLabel component="legend">
               {setOriginDestinyLabel('origin')}
@@ -198,6 +198,7 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
                     variant="outlined"
                     size="small"
                     placeholder={I18n.t('pages.newProposal.step2.searchPlaceholder')}
+                    space
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
@@ -230,6 +231,7 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
                     variant="outlined"
                     size="small"
                     placeholder={I18n.t('pages.newProposal.step2.searchPlaceholder')}
+                    space
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
@@ -264,6 +266,7 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
                       invalid={proposalType === 'client' && invalidInput && data.agents.length === 0}
                       variant="outlined"
                       placeholder={data.agents.length === 0 && I18n.t('pages.newProposal.step2.searchAgents')}
+                      space
                     />
                   </div>
                 )}
