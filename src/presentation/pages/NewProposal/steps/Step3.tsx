@@ -33,8 +33,9 @@ interface Step3Props {
   theme?: any
   modal: string
   invalidInput: boolean
-  setCompleted: (completed: any) => void
   setCostData: any
+  setCompleted: (completed: any) => void
+  setSpecifications: (specifications: string) => void
 }
 
 const Step3 = ({
@@ -42,7 +43,8 @@ const Step3 = ({
   invalidInput,
   setCompleted,
   theme,
-  setCostData
+  setCostData,
+  setSpecifications
 }: Step3Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [tableRows, setTableRows] = useState<ItemModalData[]>([])
@@ -103,6 +105,10 @@ const Step3 = ({
       return theme?.commercial?.components?.itemModal?.redAsterisk
     }
   }
+
+  useEffect(() => {
+    setSpecifications(data.specifications)
+  }, [data.specifications])
 
   useEffect(() => {
     if (

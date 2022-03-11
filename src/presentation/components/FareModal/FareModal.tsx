@@ -25,7 +25,7 @@ import ControlledToolTip from '../ControlledToolTip/ControlledToolTip'
 import { Container, MenuItemContent } from './FareModalStyles'
 import newProposal from '../../../infrastructure/api/newProposalService'
 
-interface FareModalData {
+export interface FareModalData {
   id: number | null
   saleCurrency: string
   saleValue: string
@@ -34,11 +34,21 @@ interface FareModalData {
 }
 
 interface FareModalProps {
-  dataProp?: FareModalData
+  dataProp: FareModalData
   action: (item) => void
   open: boolean
   setClose: () => void
   title: string
+  modal: string
+  specifications: string
+}
+
+export const initialState = {
+  type: '',
+  expense: '',
+  saleValue: '',
+  saleCurrency: 'BRL',
+  id: null
 }
 
 const FareModal = ({
@@ -46,19 +56,13 @@ const FareModal = ({
   action,
   open,
   setClose,
-  title
+  title,
+  modal,
+  specifications
 }: FareModalProps): JSX.Element => {
-  const initialState = {
-    type: '',
-    expense: '',
-    saleValue: '',
-    saleCurrency: 'BRL',
-    id: null
-  }
-  const [data, setData] = useState(dataProp != null ? dataProp : initialState)
+  const [data, setData] = useState<FareModalData>(initialState)
   const [invalidInput, setInvalidInput] = useState(false)
-  // Mock de tipos, valores serão especificados posteriormente
-  const typeList = ['CW', 'CM']
+  const [typeList, setTypeList] = useState<object[]>([])
   const [serviceList, setServiceList] = useState<any[]>([])
   const [currencyList, setCurrencyList] = useState<any[]>([])
 
@@ -100,6 +104,12 @@ const FareModal = ({
   }
 
   useEffect(() => {
+    if (dataProp !== initialState) {
+      setData(dataProp)
+    }
+  }, [open])
+
+  useEffect(() => {
     void (async function () {
       await newProposal.getCurrencies()
         .then((response) => setCurrencyList(response))
@@ -114,6 +124,25 @@ const FareModal = ({
         .catch((err) => console.log(err))
     })()
   }, [])
+
+  useEffect(() => {
+    switch (true) {
+      case modal === 'SEA' && specifications === 'fcl':
+        setTypeList([{ name: 'Container', value: 'CONTAINER' }, { name: 'BL', value: 'BL' }])
+        break
+      case modal === 'SEA' && specifications === 'lcl':
+        setTypeList([{ name: 'Ton³', value: 'TON' }, { name: 'BL', value: 'BL' }])
+        break
+      case modal === 'AIR':
+        setTypeList([{ name: 'KG', value: 'KG' }, { name: 'Fixo', value: 'FIXO' }, { name: 'CW', value: 'CW' }])
+        break
+      case modal === 'LAND':
+        setTypeList([{ name: 'Fixo', value: 'FIXO' }])
+        break
+      default:
+        setTypeList([])
+    }
+  }, [modal, specifications])
 
   return (
     <Modal open={open} onClose={handleOnClose}>
@@ -153,10 +182,10 @@ const FareModal = ({
                     {I18n.t('components.fareModal.choose')}
                   </MenuItemContent>
                 </MenuItem>
-                {typeList.map((type) => {
+                {typeList.map((item: any) => {
                   return (
-                    <MenuItem key={`${type}_key`} value={type}>
-                      <MenuItemContent>{type}</MenuItemContent>
+                    <MenuItem key={item.value} value={item.value}>
+                      <MenuItemContent>{item.name}</MenuItemContent>
                     </MenuItem>
                   )
                 })}
@@ -165,7 +194,7 @@ const FareModal = ({
             <Container width="350px" height="32px" margin="0 0 5px 23px">
               <Autocomplete
                 onChange={(e, newValue) => setData({ ...data, expense: newValue })}
-                options={serviceList.map((option) => option.txService)}
+                options={serviceList.map((option) => option.service)}
                 value={data.expense}
                 renderInput={(params) => (
                   <div ref={params.InputProps.ref}>
