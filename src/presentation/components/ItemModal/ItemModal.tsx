@@ -225,7 +225,11 @@ const ItemModal = ({
                 <div ref={params.InputProps.ref}>
                   <Input
                     {...params.inputProps}
-                    style={{ width: '198px', height: '33px' }}
+                    variant="outlined"
+                    style={{
+                      width: '198px',
+                      height: '33px'
+                    }}
                     toolTipTitle={I18n.t('components.itemModal.requiredField')}
                     invalid={ invalidInput && data.type.length === 0 }
                     value={data.type}
