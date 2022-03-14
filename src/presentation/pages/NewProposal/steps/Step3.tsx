@@ -6,7 +6,6 @@ import {
   FormLabel,
   Grid,
   MenuItem,
-  RadioGroup,
   Checkbox
 } from '@material-ui/core/'
 import { I18n } from 'react-redux-i18n'
@@ -15,8 +14,7 @@ import {
   Subtitle,
   Separator,
   SelectSpan,
-  BoldSpan,
-  StyledRadio
+  BoldSpan
 } from '../style'
 import ItemModal, {
   ItemModalData,
@@ -33,8 +31,9 @@ interface Step3Props {
   theme?: any
   modal: string
   invalidInput: boolean
-  setCompleted: (completed: any) => void
   setCostData: any
+  setCompleted: (completed: any) => void
+  setSpecifications: (specifications: string) => void
 }
 
 const Step3 = ({
@@ -42,12 +41,14 @@ const Step3 = ({
   invalidInput,
   setCompleted,
   theme,
-  setCostData
+  setCostData,
+  setSpecifications
 }: Step3Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [tableRows, setTableRows] = useState<ItemModalData[]>([])
   const [chargeData, setChargeData] = useState<ItemModalData>(initialState)
   const [temperatureList, setTemperatureList] = useState<any[]>([])
+  const specificationsList = ['Break Bulk', 'FCL', 'LCL', 'Ro-Ro']
 
   useEffect(() => {
     setCostData(tableRows.length)
@@ -97,12 +98,9 @@ const Step3 = ({
     setTableRows(newTable)
   }
 
-  const getColor = (value): any => {
-    if (value === '' && invalidInput && modal === 'SEA') {
-      console.log(theme?.commercial?.components?.itemModal?.redAsterisk)
-      return theme?.commercial?.components?.itemModal?.redAsterisk
-    }
-  }
+  useEffect(() => {
+    setSpecifications(data.specifications)
+  }, [data.specifications])
 
   useEffect(() => {
     if (
@@ -149,36 +147,36 @@ const Step3 = ({
           </Grid>
           {modal === 'SEA'
             ? (
-            <Grid item xs={4}>
+            <Grid item xs={2}>
               <FormLabel component="legend">
                 {I18n.t('pages.newProposal.step3.specifications')}
                 {modal === 'SEA' && <RedColorSpan> *</RedColorSpan>}
               </FormLabel>
-              <RadioGroup
-                row
-                aria-label="specifications"
-                name="row-radio-buttons-group"
+                <ControlledSelect
+                labelId="select-label-specifications"
+                id="specifications"
+                value={data.specifications}
                 onChange={(e) =>
                   setData({ ...data, specifications: e.target.value })
                 }
-              >
-                <FormControlLabel
-                  value="fcl"
-                  control={
-                    <StyledRadio color={getColor(data.specifications)} />
-                  }
-                  label="FCL"
-                />
-                <FormControlLabel
-                  value="lcl"
-                  control={
-                    <StyledRadio
-                      color={getColor(data.specifications)}
-                      className="radio-spacement"
-                    />
-                  }
-                  label="LCL"
-                />
+                displayEmpty
+                disableUnderline
+                invalid={ invalidInput && data.specifications === '' }
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                >
+                <MenuItem disabled value="">
+                  <SelectSpan placeholder={1}>
+                    {I18n.t('pages.newProposal.step3.choose')}
+                  </SelectSpan>
+                </MenuItem>
+                {specificationsList.map((item) => {
+                  return (
+                    <MenuItem key={`${item}_key`} value={item.toLowerCase()}>
+                      <SelectSpan>{item}</SelectSpan>
+                    </MenuItem>
+                  )
+                })}
+              </ControlledSelect>
                 <FormControlLabel
                   value="refrigereted"
                   control={
@@ -196,11 +194,10 @@ const Step3 = ({
                     </BoldSpan>
                   }
                 />
-              </RadioGroup>
             </Grid>
               )
             : (
-              <Grid item xs={4}>
+              <Grid item xs={2}>
                 <FormControlLabel
                   value="refrigereted"
                   className="checkbox-div-spacement"
@@ -222,7 +219,7 @@ const Step3 = ({
             </Grid>
               )}
           {data.refrigereted && (
-            <Grid item xs={3}>
+            <Grid item xs={2}>
               <FormLabel component="legend">
                 {I18n.t('pages.newProposal.step3.temperature')}
                 {data.refrigereted && <RedColorSpan> *</RedColorSpan>}

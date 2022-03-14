@@ -36,6 +36,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [proposalType, setProposalType] = useState('')
   const [modal, setModal] = useState('')
   const [showSaveMessage, setShowSaveMessage] = useState(false)
+  const [specifications, setSpecifications] = useState('')
 
   const history = useHistory()
 
@@ -183,6 +184,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         />
         <ButtonContainer>
           <Button
+            disabled={false}
             onAction={() => { }}
             text={I18n.t('pages.newProposal.buttonFinish')}
             tooltip={I18n.t('pages.newProposal.buttonFinish')}
@@ -198,10 +200,10 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       <MainContainer>
         <div id="step1"><Step1 setModal={setModal} setCompleted={setCompleted} invalidInput={invalidInput} setProposalType={setProposalType} /></div>
         <div id="step2"><Step2 proposalType={proposalType} setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} /></div>
-        <div id="step3"><Step3 setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} setCostData={setCostData} /></div>
+        <div id="step3"><Step3 setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} setCostData={setCostData} setSpecifications={setSpecifications} /></div>
         <div id="step4"><Step4 setCompleted={setCompleted} invalidInput={invalidInput} /></div>
-        <div id="step5"><Step5 costData={costData} /></div>
-        <div id="step6"><Step6 costData={costData} /></div>
+        <div id="step5"><Step5 costData={costData} modal={modal} specifications={specifications} /></div>
+        <div id="step6"><Step6 costData={costData} modal={modal} specifications={specifications} /></div>
       </MainContainer>
 
       {showSaveMessage &&

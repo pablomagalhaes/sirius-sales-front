@@ -14,6 +14,7 @@ import {
   Footer,
   Header,
   MainDiv,
+  RowReverseContainer,
   RowReverseDiv,
   StyledTable,
   StyledTableCell,
@@ -26,88 +27,98 @@ import {
 import EditIcon from '../../../application/icons/EditIcon'
 import RemoveIcon from '../../../application/icons/RemoveIcon'
 import { I18n } from 'react-redux-i18n'
-import { Button } from 'fiorde-fe-components'
-import CostModal from '../CostModal/CostModal'
-
-interface CostTableItem {
-  agent?: string
-  buy?: string
-  desc: string
-  id: number
-  minBuy?: string
-  minSale?: string
-  sale?: string
-  type?: string
-}
-
+import { Button, MoneyValue } from 'fiorde-fe-components'
+import CostModal, { CostTableItem, initialState } from '../CostModal/CostModal'
 interface CostTableProps {
   title: string
   totalCostLabel: string
   modalTitle: string
   costData: any
+  modal: string
+  specifications: string
 }
 
 const CostTable = ({
   modalTitle,
   title,
   totalCostLabel,
-  costData
+  costData,
+  modal,
+  specifications
 }: CostTableProps): JSX.Element => {
-  const mock: CostTableItem[] = [
-    {
-      agent: '-',
-      buy: '3%',
-      desc: 'DRY 40',
-      id: 0,
-      minBuy: 'R$ 200,00',
-      minSale: 'R$ 25',
-      sale: '3%',
-      type: 'container'
-    },
-    {
-      buy: '3%',
-      desc: 'DRY 40',
-      id: 1,
-      minBuy: 'R$ 20,00',
-      minSale: 'R$ 25',
-      sale: '3%',
-      type: 'container'
-    }
-  ]
   const [open, setOpen] = useState(false)
+  const [data, setData] = useState<CostTableItem[]>([])
+  const [chargeData, setChargeData] = useState<CostTableItem>(initialState)
+  const currencyList = new Map()
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
-  const handleAdd = (item): void => console.log(item)
-  const [data, setData] = useState(mock)
-  const [buyValue] = useState(0)
-  const [saleValue] = useState(0)
-  const formatter = new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-    minimumFractionDigits: 2
-  })
 
   const editClickHandler = (tableData: CostTableItem): void => {
-    console.log(tableData)
+    setChargeData(tableData)
+    handleOpen()
   }
 
-  const removeClickHandler = (id: number): void => {
+  const removeClickHandler = (id: number | null): void => {
     setData((tableData) => {
       return tableData.filter((data) => data.id !== id)
     })
   }
 
   const addClickHandler = (): void => {
+    setChargeData(initialState)
     handleOpen()
+  }
+
+  const handleAdd = (item: CostTableItem): void => {
+    if (item.id !== null) {
+      const editData = data
+      const index = editData.findIndex((i) => i.id === item.id)
+      editData[index] = item
+      setData(editData)
+    } else {
+      const newItem = { ...item, id: data.length }
+      setData([...data, newItem])
+    }
+  }
+
+  const calculateTotalCost = (buyCurrency, saleCurrency, buyValue, saleValue): void => {
+    if ((buyCurrency !== null && saleCurrency !== '') && buyCurrency === saleCurrency) {
+      currencyList.has(String(buyCurrency))
+        ? currencyList.set(String(buyCurrency), {
+          buy: Number(currencyList.get(String(buyCurrency)).buy) + Number(buyValue),
+          sale: Number(currencyList.get(String(saleCurrency)).sale) + Number(saleValue)
+        })
+        : currencyList.set(String(buyCurrency), { buy: Number(buyValue), sale: Number(saleValue) })
+    } else {
+      if (buyCurrency !== null && buyCurrency !== '') {
+        currencyList.has(String(buyCurrency))
+          ? currencyList.set(String(buyCurrency), {
+            buy: Number(currencyList.get(String(buyCurrency)).buy) + Number(buyValue),
+            sale: Number(currencyList.get(String(buyCurrency)).sale)
+          })
+          : currencyList.set(String(buyCurrency), { buy: Number(buyValue), sale: 0 })
+      }
+      if (saleCurrency !== null && saleCurrency !== '') {
+        currencyList.has(String(saleCurrency))
+          ? currencyList.set(String(saleCurrency), {
+            buy: Number(currencyList.get(String(saleCurrency)).buy),
+            sale: Number(currencyList.get(String(saleCurrency)).sale) + Number(saleValue)
+          })
+          : currencyList.set(String(saleCurrency), { buy: 0, sale: Number(saleValue) })
+      }
+    }
   }
 
   return (
     <MainDiv>
       <CostModal
+        dataProp={chargeData}
         handleAdd={handleAdd}
         open={open}
         setClose={handleClose}
         title={modalTitle}
+        modal={modal}
+        specifications={specifications}
       />
       <Header>
         <Title>{title}</Title>
@@ -140,75 +151,81 @@ const CostTable = ({
             </TableHeadRow>
           </TableHead>
           <TableBody>
-            {data.map((dataMap) => {
+            {data?.map((dataMap: CostTableItem) => {
+              calculateTotalCost(dataMap.buyCurrency, dataMap.saleCurrency, dataMap.buyValue, dataMap.saleValue)
               return (
-                <TableRow key={`${dataMap.id}_row`}>
+                <TableRow key={dataMap.id}>
                   <StyledTableCell width="14%" component="th" scope="row">
-                    <Description>{dataMap.desc}</Description>
+                    <Description>{dataMap.description}</Description>
                   </StyledTableCell>
                   <StyledTableCell width="11%" align="left">
                     <Type>{dataMap.type}</Type>
                   </StyledTableCell>
                   <StyledTableCell width="11%" align="left">
-                    {dataMap.buy != null
-                      ? (
-                      <Default>{dataMap.buy}</Default>
-                        )
-                      : (
-                      <Empty>{I18n.t('components.costTable.inform')}</Empty>
-                        )}
+                    {dataMap.buyValue !== ''
+                      ? <Default>
+                          <MoneyValue
+                            currency={String(dataMap.buyCurrency)}
+                            language="pt-br"
+                            style={{ width: '55px' }}
+                            value={Number(dataMap.buyValue)}
+                          />
+                        </Default>
+                      : <Empty>{I18n.t('components.costTable.inform')}</Empty>
+                    }
                   </StyledTableCell>
                   <StyledTableCell width="12%" align="left">
-                    {dataMap.minBuy != null
-                      ? (
-                      <Default>{dataMap.minBuy}</Default>
-                        )
-                      : (
-                      <Empty>{I18n.t('components.costTable.inform')}</Empty>
-                        )}
+                    {dataMap.buyMin !== ''
+                      ? <Default>
+                          <MoneyValue
+                            currency={String(dataMap.buyCurrency)}
+                            language="pt-br"
+                            style={{ width: '55px' }}
+                            value={Number(dataMap.buyMin)}
+                          />
+                        </Default>
+                      : <Empty>{I18n.t('components.costTable.inform')}</Empty>
+                    }
                   </StyledTableCell>
                   <StyledTableCell width="11%" align="left">
-                    {dataMap.sale != null
-                      ? (
-                      <Default>{dataMap.sale}</Default>
-                        )
-                      : (
-                      <Empty>{I18n.t('components.costTable.inform')}</Empty>
-                        )}
+                    {dataMap.saleValue !== ''
+                      ? <Default>
+                          <MoneyValue
+                            currency={String(dataMap.saleCurrency)}
+                            language="pt-br"
+                            style={{ width: '55px' }}
+                            value={Number(dataMap.saleValue)}
+                          />
+                        </Default>
+                      : <Empty>{I18n.t('components.costTable.inform')}</Empty>
+                    }
                   </StyledTableCell>
                   <StyledTableCell width="11%" align="left">
-                    {dataMap.minSale != null
-                      ? (
-                      <Default>{dataMap.minSale}</Default>
-                        )
-                      : (
-                      <Empty>{I18n.t('components.costTable.inform')}</Empty>
-                        )}
+                    {dataMap.saleMin !== ''
+                      ? <Default>
+                          <MoneyValue
+                            currency={String(dataMap.saleCurrency)}
+                            language="pt-br"
+                            style={{ width: '55px' }}
+                            value={Number(dataMap.saleMin)}
+                          />
+                        </Default>
+                      : <Empty>{I18n.t('components.costTable.inform')}</Empty>
+                    }
                   </StyledTableCell>
                   <StyledTableCell width="11%" align="left">
                     {dataMap.agent != null
-                      ? (
-                      <Default>{dataMap.agent}</Default>
-                        )
-                      : (
-                      <Empty>{I18n.t('components.costTable.inform')}</Empty>
-                        )}
+                      ? <Default>{dataMap.agent}</Default>
+                      : <Empty>{I18n.t('components.costTable.inform')}</Empty>
+                    }
                   </StyledTableCell>
                   <StyledTableCell width="19%">
                     <RowReverseDiv>
                       <DeleteIconDiv>
-                        <RemoveIcon
-                          onClick={() => {
-                            removeClickHandler(dataMap.id)
-                          }}
-                        />
+                        <RemoveIcon onClick={() => { removeClickHandler(dataMap.id) }} />
                       </DeleteIconDiv>
                       <EditIconDiv>
-                        <EditIcon
-                          onClick={() => {
-                            editClickHandler(dataMap)
-                          }}
-                        />
+                        <EditIcon onClick={() => { editClickHandler(dataMap) }} />
                       </EditIconDiv>
                     </RowReverseDiv>
                   </StyledTableCell>
@@ -231,29 +248,53 @@ const CostTable = ({
               : I18n.t('components.costTable.addCost')
           }
         />
-        <RowReverseDiv>
-          <EndValueLabel>
-            {data?.length > 0
-              ? (
-                  formatter.format(saleValue)
-                )
-              : (
-              <EmptyTableCost>-</EmptyTableCost>
-                )}
-          </EndValueLabel>
-          <CostLabel>{I18n.t('components.costTable.sale')}:</CostLabel>
-          <ValueLabel>
-            {data?.length > 0
-              ? (
-                  formatter.format(buyValue)
-                )
-              : (
-              <EmptyTableCost>-</EmptyTableCost>
-                )}
-          </ValueLabel>
-          <CostLabel>{I18n.t('components.costTable.buy')}:</CostLabel>
-          <TotalCostLabel>{totalCostLabel}</TotalCostLabel>
-        </RowReverseDiv>
+
+          {data?.length === 0
+            ? <RowReverseDiv>
+                <EndValueLabel>
+                  <EmptyTableCost>-</EmptyTableCost>
+                </EndValueLabel>
+                <CostLabel>{I18n.t('components.costTable.sale')}:</CostLabel>
+                <ValueLabel>
+                  <EmptyTableCost>-</EmptyTableCost>
+                </ValueLabel>
+                <CostLabel>{I18n.t('components.costTable.buy')}:</CostLabel>
+                <TotalCostLabel>{totalCostLabel}</TotalCostLabel>
+              </RowReverseDiv>
+            : <RowReverseDiv>
+                <RowReverseContainer>
+                  {Array.from(currencyList, ([name, value]) => ({ name, value })).map((currency, index) => {
+                    return (
+                      <RowReverseDiv>
+                        <EndValueLabel>
+                          <MoneyValue
+                            currency={currency.name}
+                            language="pt-br"
+                            style={{ width: '80px' }}
+                            value={currency.value.sale}
+                          />
+                        </EndValueLabel>
+                        <CostLabel>{I18n.t('components.costTable.sale')}:</CostLabel>
+                          <ValueLabel>
+                            <MoneyValue
+                              currency={currency.name}
+                              language="pt-br"
+                              style={{ width: '80px' }}
+                              value={currency.value.buy}
+                            />
+                          </ValueLabel>
+                        <CostLabel>{I18n.t('components.costTable.buy')}:</CostLabel>
+                        <CostLabel>{currency.name}</CostLabel>
+                        {index === 0
+                          ? <TotalCostLabel>{totalCostLabel}</TotalCostLabel>
+                          : null
+                        }
+                      </RowReverseDiv>
+                    )
+                  })}
+                </RowReverseContainer>
+              </RowReverseDiv>
+          }
       </Footer>
     </MainDiv>
   )

@@ -31,6 +31,7 @@ interface DataProps {
   destiny: string
   agents: string[]
   incoterm: string
+  collection: string
 }
 
 const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2Props): JSX.Element => {
@@ -42,7 +43,8 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
     origin: '',
     destiny: '',
     agents: [],
-    incoterm: ''
+    incoterm: '',
+    collection: ''
   })
 
   useEffect(() => {
@@ -177,7 +179,7 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
         <Subtitle>{I18n.t('pages.newProposal.step2.subtitle')}</Subtitle>
       </Title>
       <FormControl variant="outlined" size="small" className='form-size'>
-        <Grid container spacing={2}>
+        <Grid container spacing={5}>
           <Grid item xs={6}>
             <FormLabel component="legend">
               {setOriginDestinyLabel('origin')}
@@ -198,6 +200,7 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
                     variant="outlined"
                     size="small"
                     placeholder={I18n.t('pages.newProposal.step2.searchPlaceholder')}
+                    $space
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
@@ -230,6 +233,7 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
                     variant="outlined"
                     size="small"
                     placeholder={I18n.t('pages.newProposal.step2.searchPlaceholder')}
+                    $space
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
@@ -264,12 +268,13 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
                       invalid={proposalType === 'client' && invalidInput && data.agents.length === 0}
                       variant="outlined"
                       placeholder={data.agents.length === 0 && I18n.t('pages.newProposal.step2.searchAgents')}
+                      $space
                     />
                   </div>
                 )}
                 PaperComponent={(params: any) => <StyledPaper {...params} />} />
             </Grid>)}
-          <Grid item xs={3}>
+          <Grid item xs={2}>
             <FormLabel component="legend">
               {I18n.t('pages.newProposal.step2.incoterm')}
               <RedColorSpan> *</RedColorSpan>
@@ -293,6 +298,23 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
                 </MenuItem>
               ))}
             </ControlledSelect>
+          </Grid>
+          <Grid item xs={4}>
+            {(data.incoterm === 'EXW' || data.incoterm === 'FCA' || data.incoterm === 'DAP') && (
+              <><FormLabel component="legend">
+                {I18n.t('pages.newProposal.step2.collectionAddress')}
+                {data.incoterm !== 'FCA' && <RedColorSpan> *</RedColorSpan>}
+              </FormLabel><ControlledInput
+                  id="description"
+                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                  onChange={(e) => setData({ ...data, collection: e.target.value })}
+                  invalid={
+                    invalidInput && (data.incoterm !== 'FCA' && data.collection.length === 0)
+                  }
+                  value={data.collection.length !== 0 ? data.collection : ''}
+                  variant="outlined"
+                  size="small" /></>
+            )}
           </Grid>
         </Grid>
       </FormControl>
