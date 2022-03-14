@@ -219,16 +219,16 @@ const ItemModal = ({
             <Autocomplete
               style={{ position: 'relative' }}
               options={ marineFCL() ? containerTypeList.map((item) => item.type) : packagingList.map((item) => item.packaging)}
-              value={ marineFCL() ? containerTypeList.map((item) => item.id) : packagingList.map((item) => item.id)}
+              value={data.type}
               onChange={(e, newValue) => setData({ ...data, type: newValue })}
               renderInput={(params) => (
                 <div ref={params.InputProps.ref}>
                   <Input
                     {...params.inputProps}
                     style={{ width: '198px', height: '33px' }}
+                    placeholder={I18n.t('components.itemModal.choose')}
                     toolTipTitle={I18n.t('components.itemModal.requiredField')}
                     invalid={ invalidInput && data.type.length === 0 }
-                    value={data.type}
                   />
                   <StyledBox {...params.inputProps}>
                     <ArrowDropDownIcon />
