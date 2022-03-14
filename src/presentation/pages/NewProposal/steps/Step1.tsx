@@ -133,7 +133,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
                   variant="outlined"
                   size="small"
                   placeholder={I18n.t('pages.newProposal.step1.searchClient')}
-                  space
+                  $space
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
@@ -157,7 +157,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
             placeholder={I18n.t('pages.newProposal.step1.searchRequesterPlaceholder')}
             onChange={(e) => setData({ ...data, requester: e.target.value })}
             value={data.requester}
-            space
+            $space
           />
         </Grid>
       </Grid>
