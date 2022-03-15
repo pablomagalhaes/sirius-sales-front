@@ -43,7 +43,7 @@ export interface ItemModalData {
   imo: string | null
   length: string | null
   rawWeight: string | null
-  type: string
+  type: string | null
   width: string | null
   id: number | null
 }
@@ -67,7 +67,7 @@ export const initialState = {
   imo: null,
   length: null,
   rawWeight: null,
-  type: '',
+  type: null,
   width: null,
   id: null
 }
@@ -152,14 +152,14 @@ const ItemModal = ({
   const validateData = (): boolean => {
     if (marineFCL()) {
       return !(
-        data.type.length === 0 ||
+        (data.type === null || data.type?.length === 0) ||
         data.amount.length === 0 ||
         (data.codUn === null || data.codUn?.length === 0) ||
         (data.dangerous && (data.imo === null || data.imo?.length === 0))
       )
     } else {
       return !(
-        data.type.length === 0 ||
+        (data.type === null || data.type?.length === 0) ||
         data.amount.length === 0 ||
         (data.rawWeight === null || data.rawWeight?.length === 0) ||
         (data.height === null || data.height?.length === 0) ||
@@ -210,7 +210,7 @@ const ItemModal = ({
               <Label width="27.4%">
                 {I18n.t('components.itemModal.rawWeight')}
                 {(modal === 'AIR' ||
-                  (modal === 'SEA' && specifications === 'lcl') ||
+                  (modal === 'SEA' && specifications !== 'fcl') ||
                   modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}
               </Label>
             )}
@@ -232,7 +232,7 @@ const ItemModal = ({
                     }}
                     placeholder={I18n.t('components.itemModal.choose')}
                     toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                    invalid={ invalidInput && data.type.length === 0 }
+                    invalid={ invalidInput && (data.type === null || data.type?.length === 0) }
                   />
                   <StyledBox {...params.inputProps}>
                     <ArrowDropDownIcon />
@@ -281,7 +281,7 @@ const ItemModal = ({
               <Label width="44%">
                 {I18n.t('components.itemModal.hwl')}
                 {(modal === 'AIR' ||
-                  (modal === 'SEA' && specifications === 'lcl') ||
+                  (modal === 'SEA' && specifications !== 'fcl') ||
                   modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}
               </Label>
             )}
@@ -292,7 +292,7 @@ const ItemModal = ({
               <Label width="27%">
                 {I18n.t('components.itemModal.cubage')}
                 {(modal === 'AIR' ||
-                  (modal === 'SEA' && specifications === 'lcl') ||
+                  (modal === 'SEA' && specifications !== 'fcl') ||
                   modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}
               </Label>
             )}
