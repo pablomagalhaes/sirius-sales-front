@@ -162,7 +162,7 @@ const CostTable = ({
                     <Type>{dataMap.type}</Type>
                   </StyledTableCell>
                   <StyledTableCell width="11%" align="left">
-                    {dataMap.buyValue !== ''
+                    {dataMap.buyValue !== null && dataMap.buyValue !== ''
                       ? <Default>
                           <MoneyValue
                             currency={String(dataMap.buyCurrency)}
@@ -175,7 +175,7 @@ const CostTable = ({
                     }
                   </StyledTableCell>
                   <StyledTableCell width="12%" align="left">
-                    {dataMap.buyMin !== ''
+                    {dataMap.buyMin !== null && dataMap.buyMin !== ''
                       ? <Default>
                           <MoneyValue
                             currency={String(dataMap.buyCurrency)}
@@ -188,7 +188,7 @@ const CostTable = ({
                     }
                   </StyledTableCell>
                   <StyledTableCell width="11%" align="left">
-                    {dataMap.saleValue !== ''
+                    {dataMap.saleValue !== null && dataMap.saleValue !== ''
                       ? <Default>
                           <MoneyValue
                             currency={String(dataMap.saleCurrency)}
@@ -201,7 +201,7 @@ const CostTable = ({
                     }
                   </StyledTableCell>
                   <StyledTableCell width="11%" align="left">
-                    {dataMap.saleMin !== ''
+                    {dataMap.saleMin !== null && dataMap.saleMin !== ''
                       ? <Default>
                           <MoneyValue
                             currency={String(dataMap.saleCurrency)}
@@ -265,7 +265,7 @@ const CostTable = ({
                 <RowReverseContainer>
                   {Array.from(currencyList, ([name, value]) => ({ name, value })).map((currency, index) => {
                     return (
-                      <RowReverseDiv>
+                      <RowReverseDiv key={index}>
                         <EndValueLabel>
                           <MoneyValue
                             currency={currency.name}

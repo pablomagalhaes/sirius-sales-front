@@ -29,7 +29,7 @@ export interface FareModalData {
   id: number | null
   saleCurrency: string
   saleValue: string
-  expense: string
+  expense: string | null
   type: string
 }
 
@@ -45,7 +45,7 @@ interface FareModalProps {
 
 export const initialState = {
   type: '',
-  expense: '',
+  expense: null,
   saleValue: '',
   saleCurrency: 'BRL',
   id: null
@@ -75,9 +75,9 @@ const FareModal = ({
   const isValid = (): boolean => {
     return !(
       data.type.length === 0 ||
-      data.expense.length === 0 ||
       data.saleValue.length === 0 ||
-      data.saleCurrency.length === 0
+      data.saleCurrency.length === 0 ||
+      (data.expense === null || data.expense?.length === 0)
     )
   }
 
@@ -130,7 +130,7 @@ const FareModal = ({
       case modal === 'SEA' && specifications === 'fcl':
         setTypeList([{ name: 'Container', value: 'CONTAINER' }, { name: 'BL', value: 'BL' }])
         break
-      case modal === 'SEA' && specifications === 'lcl':
+      case (modal === 'SEA' && specifications === 'lcl') || (modal === 'SEA' && specifications === 'break bulk') || (modal === 'SEA' && specifications === 'ro-ro'):
         setTypeList([{ name: 'Ton³', value: 'TON' }, { name: 'BL', value: 'BL' }])
         break
       case modal === 'AIR':
@@ -175,7 +175,7 @@ const FareModal = ({
                 disableUnderline
                 placeholder={data.type}
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                invalid={invalidInput && data.type.length === 0}
+                invalid={invalidInput && (data.type === null || data.type.length === 0)}
               >
                 <MenuItem disabled value="">
                   <MenuItemContent>
@@ -201,7 +201,7 @@ const FareModal = ({
                     <Input
                       {...params.inputProps}
                       toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                      invalid={invalidInput && data.expense.length === 0}
+                      invalid={invalidInput && (data.expense === null || data.expense?.length === 0)}
                       filled={data.expense}
                       placeholder={I18n.t('components.fareModal.choose')}
                       style={{ width: '350px' }}
