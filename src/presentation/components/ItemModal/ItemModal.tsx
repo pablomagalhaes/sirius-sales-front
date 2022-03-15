@@ -251,7 +251,7 @@ const ItemModal = ({
                 onChange={e => { validateIntInput(e.target.value) !== null && (setData({ ...data, amount: e.target.value })) }}
                 variant="outlined"
                 size="small"
-                modal
+                $modal
               />
             </AmountDiv>
             {!(marineFCL()) && (
@@ -271,7 +271,7 @@ const ItemModal = ({
                   value={data.rawWeight != null ? data.rawWeight : ''}
                   variant="outlined"
                   size="small"
-                  modal
+                  $modal
                 />
               </div>
             )}
@@ -316,7 +316,7 @@ const ItemModal = ({
                     onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, length: e.target.value })) }}
                     variant="outlined"
                     size="small"
-                    modal
+                    $modal
                   />
                 </div>
                 <div style={{ width: '60px', height: '30px', marginRight: '8px', marginTop: '12px' }}>
@@ -335,7 +335,7 @@ const ItemModal = ({
                     }
                     variant="outlined"
                     size="small"
-                    modal
+                    $modal
                   />
                 </div>
                 <div style={{ width: '60px', height: '30px', marginRight: '8px', marginTop: '12px' }}>
@@ -354,7 +354,7 @@ const ItemModal = ({
                     }
                     variant="outlined"
                     size="small"
-                    modal
+                    $modal
                   />
                 </div>
               </>
@@ -373,7 +373,7 @@ const ItemModal = ({
                   onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, diameter: e.target.value })) }}
                   variant="outlined"
                   size="small"
-                  modal
+                  $modal
                 />
               </div>
 
@@ -392,7 +392,7 @@ const ItemModal = ({
                   onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, diameter: e.target.value })) }}
                   variant="outlined"
                   size="small"
-                  modal
+                  $modal
                 />
               </div>
             )}
@@ -413,7 +413,7 @@ const ItemModal = ({
                   onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, cubage: e.target.value })) }}
                   variant="outlined"
                   size="small"
-                  modal
+                  $modal
                 />
               </div>
             )}
@@ -477,7 +477,7 @@ const ItemModal = ({
                 onChange={e => (setData({ ...data, codUn: e.target.value }))}
                 variant="outlined"
                 size="small"
-                modal
+                $modal
               />
             </div>
           </RowDiv>
