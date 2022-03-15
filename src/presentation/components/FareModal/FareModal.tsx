@@ -130,7 +130,7 @@ const FareModal = ({
       case modal === 'SEA' && specifications === 'fcl':
         setTypeList([{ name: 'Container', value: 'CONTAINER' }, { name: 'BL', value: 'BL' }])
         break
-      case modal === 'SEA' && specifications === 'lcl':
+      case (modal === 'SEA' && specifications === 'lcl') || (modal === 'SEA' && specifications === 'break bulk') || (modal === 'SEA' && specifications === 'ro-ro'):
         setTypeList([{ name: 'Ton³', value: 'TON' }, { name: 'BL', value: 'BL' }])
         break
       case modal === 'AIR':

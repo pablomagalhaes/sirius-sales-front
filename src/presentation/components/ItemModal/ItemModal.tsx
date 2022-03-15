@@ -210,7 +210,7 @@ const ItemModal = ({
               <Label width="27.4%">
                 {I18n.t('components.itemModal.rawWeight')}
                 {(modal === 'AIR' ||
-                  (modal === 'SEA' && specifications === 'lcl') ||
+                  (modal === 'SEA' && specifications !== 'fcl') ||
                   modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}
               </Label>
             )}
@@ -281,7 +281,7 @@ const ItemModal = ({
               <Label width="44%">
                 {I18n.t('components.itemModal.hwl')}
                 {(modal === 'AIR' ||
-                  (modal === 'SEA' && specifications === 'lcl') ||
+                  (modal === 'SEA' && specifications !== 'fcl') ||
                   modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}
               </Label>
             )}
@@ -292,7 +292,7 @@ const ItemModal = ({
               <Label width="27%">
                 {I18n.t('components.itemModal.cubage')}
                 {(modal === 'AIR' ||
-                  (modal === 'SEA' && specifications === 'lcl') ||
+                  (modal === 'SEA' && specifications !== 'fcl') ||
                   modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}
               </Label>
             )}
