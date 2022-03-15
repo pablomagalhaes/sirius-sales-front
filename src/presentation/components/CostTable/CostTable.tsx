@@ -265,7 +265,7 @@ const CostTable = ({
                 <RowReverseContainer>
                   {Array.from(currencyList, ([name, value]) => ({ name, value })).map((currency, index) => {
                     return (
-                      <RowReverseDiv>
+                      <RowReverseDiv key={index}>
                         <EndValueLabel>
                           <MoneyValue
                             currency={currency.name}

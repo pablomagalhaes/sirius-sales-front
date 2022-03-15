@@ -43,7 +43,7 @@ const ChargeTable = ({ charges, onEdit, onDelete }: ChargeTableProps): JSX.Eleme
                   {i + 1}
                 </TableCell>
                 <TableCell>{row.amount}</TableCell>
-                <TableCell>{row.type.toUpperCase()}</TableCell>
+                <TableCell>{row.type?.toUpperCase()}</TableCell>
                 <TableCell>{row.rawWeight !== null ? Number(row.rawWeight.replace(',', '.')).toFixed(2).replace('.', ',') : '-'}</TableCell>
                 <TableCell>{row.cubage !== null ? Number(row.cubage.replace(',', '.')).toFixed(3).replace('.', ',') : '-'}</TableCell>
                 <TableCell>{row.length !== null && row.width !== null && row.height !== null ? `${Number(row.length.replace(',', '.')).toFixed(2).replace('.', ',')} x ${Number(row.width.replace(',', '.')).toFixed(2).replace('.', ',')} x ${Number(row.height.replace(',', '.')).toFixed(2).replace('.', ',')}` : '-'}</TableCell>

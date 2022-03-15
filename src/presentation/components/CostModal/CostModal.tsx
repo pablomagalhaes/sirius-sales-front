@@ -41,7 +41,7 @@ export interface CostTableItem {
   buyCurrency: string | null
   buyMin: string | null
   buyValue: string | null
-  description: string
+  description: string | null
   id: number | null
   saleCurrency: string | null
   saleMin: string | null
@@ -61,7 +61,7 @@ interface CostModalProps {
 
 export const initialState = {
   type: '',
-  description: '',
+  description: null,
   agent: '',
   buyCurrency: 'BRL',
   buyValue: null,
@@ -255,7 +255,7 @@ const CostModal = ({
     if (
       item.agent.length === 0 ||
       item.type.length === 0 ||
-      item.description.length === 0
+      (item.description === null || item.description?.length === 0)
     ) {
       invalid = true
     }
