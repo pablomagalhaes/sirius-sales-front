@@ -188,11 +188,11 @@ const ItemModal = ({
                 onChange={(e) => setData({ ...data, type: e.target.value })}
                 displayEmpty
                 disableUnderline
-                invalid={invalidInput && data.type?.length === 0}
+                invalid={invalidInput && (data.type?.length === 0 || data.type === null)}
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
               >
-                <MenuItem disabled value={data.type !== null ? data.type : ''}>
-                  <SelectSpan placeholder={1}>Escolha...</SelectSpan>
+                <MenuItem disabled value={String(data.type)}>
+                  <SelectSpan placeholder={1}>{I18n.t('components.itemModal.choose')}</SelectSpan>
                 </MenuItem>
                 {marineFCL()
                   ? containerTypeList.map((item) => (returnListItems(item.id, item.type)))
@@ -211,7 +211,7 @@ const ItemModal = ({
                 onChange={e => { validateIntInput(e.target.value) !== null && (setData({ ...data, amount: e.target.value })) }}
                 variant="outlined"
                 size="small"
-                $modal
+                modal
               />
             </Grid>
             <Grid item xs={4}>
@@ -300,7 +300,7 @@ const ItemModal = ({
                   }
                   variant="outlined"
                   size="small"
-                  $modal
+                  modal
                 />
               </div>
             </Grid>
