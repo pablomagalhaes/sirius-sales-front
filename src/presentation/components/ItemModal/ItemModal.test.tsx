@@ -15,13 +15,14 @@ const props = {
     rawWeight: '125.6',
     type: 'Caixas',
     width: '36',
-    id: 5
+    id: 5,
+    stack: false
   },
   title: 'Editar item',
-  handleAdd: () => {},
-  setOpen: () => {},
+  handleAdd: () => { },
+  setOpen: () => { },
   open: true,
-  setClose: () => {},
+  setClose: () => { },
   modal: '1',
   specifications: 'lcl'
 }
@@ -47,7 +48,7 @@ test('should click on the save button and should trigger handleAdd', () => {
 
 test('should click on the save button and should not trigger handleAdd due invalid input', () => {
   const jsdomAlert = window.alert
-  window.alert = () => {}
+  window.alert = () => { }
   const handleAdd = jest.fn()
   render(<ItemModal {...props} handleAdd={handleAdd} />)
   const input = screen.getByTestId('height')
