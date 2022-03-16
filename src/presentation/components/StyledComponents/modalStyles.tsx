@@ -127,10 +127,9 @@ export const PlaceholderSpan = styled.span`
   letter-spacing: 0.02em;
 `
 export const ButtonDiv = styled.div`
-  margin-top: 50px;
+  margin-top: 30px;
   margin-bottom: 25px;
   display: flex;
-  flex-direction: row;
   justify-content: center;
   width: 100%;
 `

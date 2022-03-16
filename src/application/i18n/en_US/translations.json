@@ -153,7 +153,8 @@
       "save": "Save",
       "requiredField": "Required field",
       "cubageWeight": "Cubage weight (m3): ",
-      "qnt": "Qnt"
+      "qnt": "Qnt",
+      "stack": "Stack up?"
     },
     "fareModal":{
       "type": "Type:",
