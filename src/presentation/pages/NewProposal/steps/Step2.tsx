@@ -17,7 +17,6 @@ import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import newProposal from '../../../../infrastructure/api/newProposalService'
 import { StyledPaper } from './StepsStyles'
 
-// mock
 interface Step2Props {
   theme: any
   proposalType: string

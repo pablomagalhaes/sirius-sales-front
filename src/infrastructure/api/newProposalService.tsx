@@ -36,15 +36,6 @@ const getPackaging = async (): Promise<any> => {
   }
 }
 
-const getTransport = async (): Promise<any> => {
-  try {
-    const res = await instance.get('/sirius-master-data-api/transport/')
-    return res.data
-  } catch (error) {
-    console.error(error)
-  }
-}
-
 const getOriginDestination = async (): Promise<any> => {
   try {
     const res = await instance.get('/sirius-master-data-api/origins/destinations/resumo')
@@ -113,7 +104,6 @@ const newProposal = {
   getCurrencies,
   getIncoterm,
   getPackaging,
-  getTransport,
   getOriginDestination,
   getPartner,
   getFrequency,

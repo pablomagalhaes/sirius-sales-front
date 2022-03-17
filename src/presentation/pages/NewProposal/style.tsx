@@ -73,7 +73,7 @@ const TopContainer = styled.div`
   margin: 3px 20px;
   padding: 24px;
   border-radius: 16px 16px 0 0;
-  box-shadow: 0px 4px 8px ${(props: any) => props.theme?.commercial?.pages?.newProposal?.steps?.stepsBoxShadow};
+  box-shadow: 0 4px 8px ${(props: any) => props.theme?.commercial?.pages?.newProposal?.steps?.stepsBoxShadow};
   position: sticky;
   top: 65px;
   z-index: 1;
@@ -87,7 +87,7 @@ const MainContainer = styled.div`
   background: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.background};
   margin: 0 20px;
   border-radius: 0 0 16px 16px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   padding: 44px 24px;
 `
 

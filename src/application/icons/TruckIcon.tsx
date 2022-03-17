@@ -2,7 +2,7 @@ import React from 'react'
 
 interface TruckIconProps {
   defaultColor: string
-};
+}
 
 const TruckIcon = ({ defaultColor }: TruckIconProps): JSX.Element => {
   return (

@@ -2,7 +2,7 @@ import React from 'react'
 
 interface PlaneIconProps {
   defaultColor: string
-};
+}
 
 const PlaneIcon = ({ defaultColor }: PlaneIconProps): JSX.Element => {
   return (
