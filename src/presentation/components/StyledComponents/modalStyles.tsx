@@ -88,7 +88,7 @@ export const RowDiv = styled.div`
 export const Form = styled.div`
   margin-top: 26px;
   margin-left: 24px;
-  margin-right: 0px;
+  margin-right: 0;
   font-family: DM Sans;
   font-style: normal;
   font-weight: normal;
@@ -96,7 +96,7 @@ export const Form = styled.div`
   line-height: 150%;
   letter-spacing: 0.02em;
   color: ${(props: any) =>
-    props.theme?.commercial?.components?.itemModal?.fontColor};
+          props.theme?.commercial?.components?.itemModal?.fontColor};
 `
 export const ItemModalForm = styled(Form)`
 margin-right: 24px;

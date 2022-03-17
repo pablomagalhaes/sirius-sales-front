@@ -33,21 +33,21 @@ const StyledSelect = styled(Select)`
   align-items: center;
   padding: 6px 8px 5px 16px;
   background: ${(props: { disabled: boolean, theme: any }) =>
-    props.disabled ? props.theme?.commercial?.components?.itemModal?.disabledBackground : props.theme?.commercial?.components?.itemModal?.backgroundColor};
-  border: 1px solid;
-  border-color: ${(props: { invalid: boolean, filled: string | null, theme: any }) =>
-    props.invalid
-      ? '#FF4D4D'
-      : props.filled != null && props.filled.length > 0
-        ? '#43BFB5'
-        : props.theme?.commercial?.components?.itemModal?.border};
+          props.disabled ? props.theme?.commercial?.components?.itemModal?.disabledBackground : props.theme?.commercial?.components?.itemModal?.backgroundColor};
+  border: 1px solid ${(props: { invalid: boolean, filled: string | null, theme: any }) =>
+          props.invalid
+                  ? '#FF4D4D'
+                  : props.filled != null && props.filled.length > 0
+                          ? '#43BFB5'
+                          : props.theme?.commercial?.components?.itemModal?.border};
   box-sizing: border-box;
   border-radius: 4px;
   width: ${(props) => props.width};
   height: 32px;
   margin-top: 12px;
   margin-right: ${(props: { large: boolean }) =>
-    props.large ? '23px' : '14px'};
+          props.large ? '23px' : '14px'};
+
   & .MuiSelect-root {
     font-family: DM Sans;
     font-style: normal;
@@ -56,41 +56,41 @@ const StyledSelect = styled(Select)`
     line-height: 150%;
     letter-spacing: 0.02em;
     color: ${(props: { placeholder: string, disabled: boolean, theme: any }) =>
-    props.placeholder === '' || props.disabled ? props.theme?.commercial?.pages?.newProposal?.placeholder : props.theme?.commercial?.components?.itemModal?.inputFontColor};
+            props.placeholder === '' || props.disabled ? props.theme?.commercial?.pages?.newProposal?.placeholder : props.theme?.commercial?.components?.itemModal?.inputFontColor};
   }
+
   & .MuiSvgIcon-root {
-    color:${(props: any) =>
-    props.theme?.commercial?.components?.itemModal?.iconColor};
+    color: ${(props: any) =>
+            props.theme?.commercial?.components?.itemModal?.iconColor};
   }
 
   &:hover {
-    border: 1px solid;
-    border-color: #43bfb5;
+    border: 1px solid #43bfb5;
   }
 `
 
 export const CheckBox = styled.div`
   border: ${(props: { checked: boolean }) =>
-    props.checked ? '0px' : '2px solid #B5B8C2'};
+          props.checked ? '0px' : '2px solid #B5B8C2'};
   box-sizing: border-box;
   border-radius: 2px;
   margin-right: 11px;
   margin-top: 28px;
   width: 18px;
   height: 18px;
-  background: blue;
   text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding-left: 1px;
-  background-color: ${(props: { checked: boolean, theme: any }) =>
-    props.checked ? '#43BFB5' : props.theme?.commercial?.components?.itemModal?.backgroundColor};
-  path  {
+  background: ${(props: { checked: boolean, theme: any }) =>
+          props.checked ? '#43BFB5' : props.theme?.commercial?.components?.itemModal?.backgroundColor};
+
+  path {
     fill: ${(props: any) =>
-    props.theme?.commercial?.components?.itemModal?.backgroundColor};
+            props.theme?.commercial?.components?.itemModal?.backgroundColor};
     stroke: ${(props: any) =>
-    props.theme?.commercial?.components?.itemModal?.backgroundColor};
+            props.theme?.commercial?.components?.itemModal?.backgroundColor};
   }
 `
 
@@ -105,13 +105,12 @@ export const CheckBoxLabel = styled.span`
 `
 export const Input = styled.input`
   text-indent: 10px;
-  border: 1px solid;
-  border-color: ${(props: { invalid: boolean, filled: string | null, theme: any }) =>
-    props.invalid
-      ? '#FF4D4D'
-      : props.filled != null && props.filled.length > 0
-        ? '#43BFB5'
-        : props.theme?.commercial?.components?.itemModal?.border};
+  border: 1px solid ${(props: { invalid: boolean, filled: string | null, theme: any }) =>
+          props.invalid
+                  ? '#FF4D4D'
+                  : props.filled != null && props.filled.length > 0
+                          ? '#43BFB5'
+                          : props.theme?.commercial?.components?.itemModal?.border};
   margin-top: 12px;
   box-sizing: border-box;
   border-radius: 4px;
@@ -125,10 +124,10 @@ export const Input = styled.input`
   line-height: 150%;
   letter-spacing: 0.02em;
   color: ${(props: { disabled: boolean, theme: any }) =>
-    props.disabled ? props.theme?.commercial?.pages?.newProposal?.placeholder : props.theme?.commercial?.components?.itemModal?.inputFontColor};
+          props.disabled ? props.theme?.commercial?.pages?.newProposal?.placeholder : props.theme?.commercial?.components?.itemModal?.inputFontColor};
   background: ${(props: { disabled: boolean, theme: any }) =>
-    props.disabled ? props.theme?.commercial?.components?.itemModal?.disabledBackground : props.theme?.commercial?.components?.itemModal?.backgroundColor};
-    
+          props.disabled ? props.theme?.commercial?.components?.itemModal?.disabledBackground : props.theme?.commercial?.components?.itemModal?.backgroundColor};
+
   :focus {
     outline: none;
     border-color: #43bfb5;

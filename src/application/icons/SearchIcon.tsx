@@ -2,7 +2,7 @@ import React from 'react'
 
 interface SearchIconProps {
   defaultColor: string
-};
+}
 
 const SearchIcon = ({ defaultColor }: SearchIconProps): JSX.Element => {
   return (
