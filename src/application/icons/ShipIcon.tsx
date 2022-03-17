@@ -2,7 +2,7 @@ import React from 'react'
 
 interface ShipIconProps {
   defaultColor: string
-};
+}
 
 const ShipIcon = ({ defaultColor }: ShipIconProps): JSX.Element => {
   return (

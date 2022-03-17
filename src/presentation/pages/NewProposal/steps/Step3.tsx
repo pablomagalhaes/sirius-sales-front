@@ -42,7 +42,6 @@ const Step3 = ({
   modal,
   invalidInput,
   setCompleted,
-  theme,
   setCostData,
   setSpecifications
 }: Step3Props): JSX.Element => {
