@@ -202,14 +202,14 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         <div id="step2"><Step2 proposalType={proposalType} setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} /></div>
         <div id="step3"><Step3 setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} setCostData={setCostData} setSpecifications={setSpecifications} /></div>
         <div id="step4"><Step4 setCompleted={setCompleted} invalidInput={invalidInput} /></div>
-        <div id="step5"><Step5 costData={costData} modal={modal} specifications={specifications} /></div>
-        <div id="step6"><Step6 costData={costData} modal={modal} specifications={specifications} /></div>
+        <div id="step5"><Step5 setCompleted={setCompleted} costData={costData} modal={modal} specifications={specifications} /></div>
+        <div id="step6"><Step6 setCompleted={setCompleted} costData={costData} modal={modal} specifications={specifications} /></div>
       </MainContainer>
 
       {showSaveMessage &&
-      <MessageContainer>
-        <Messages {...saveMessageInfo} />
-      </MessageContainer>}
+        <MessageContainer>
+          <Messages {...saveMessageInfo} />
+        </MessageContainer>}
     </RootContainer>
   )
 }

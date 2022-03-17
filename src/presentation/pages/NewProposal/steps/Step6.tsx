@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import { I18n } from 'react-redux-i18n'
 import { Title, Subtitle, Separator } from '../style'
 import FareModal, { FareModalData, initialState } from '../../../components/FareModal/FareModal'
@@ -27,13 +27,20 @@ import EditIcon from '../../../../application/icons/EditIcon'
 import RemoveIcon from '../../../../application/icons/RemoveIcon'
 import { Button, MoneyValue } from 'fiorde-fe-components'
 
-interface TableData {
-  data?: FareModalData[]
+interface Step6Props {
   costData: any
   modal: string
+  setCompleted: (completed: any) => void
   specifications: string
-  remove?: (id: number | null) => void
+}
+
+interface TableData {
+  costData: any
+  data?: FareModalData[]
   edit?: (tableData: FareModalData) => void
+  modal: string
+  remove?: (id: number | null) => void
+  specifications: string
 }
 
 const Table = ({ data, remove, edit }: TableData): JSX.Element => {
@@ -94,13 +101,25 @@ const Table = ({ data, remove, edit }: TableData): JSX.Element => {
   )
 }
 
-const Step6 = ({ costData, modal, specifications }: TableData): JSX.Element => {
+const Step6 = ({ costData, modal, setCompleted, specifications }: Step6Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [data, setData] = useState<FareModalData[]>([])
   const [chargeData, setChargeData] = useState<FareModalData>(initialState)
   const currencyList = new Map()
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
+
+  useEffect(() => {
+    if (data.length > 0) {
+      setCompleted((currentState) => {
+        return { ...currentState, step6: true }
+      })
+    } else {
+      setCompleted((currentState) => {
+        return { ...currentState, step6: false }
+      })
+    }
+  }, [data])
 
   const handleAdd = (item: FareModalData): void => {
     if (item.id !== null) {

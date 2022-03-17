@@ -6,7 +6,8 @@ import {
   FormLabel,
   Grid,
   MenuItem,
-  Checkbox
+  Checkbox,
+  RadioGroup
 } from '@material-ui/core/'
 import { I18n } from 'react-redux-i18n'
 import {
@@ -26,6 +27,7 @@ import ChargeTable from '../../../components/ChargeTable'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import { withTheme } from 'styled-components'
 import newProposal from '../../../../infrastructure/api/newProposalService'
+import AlertIcon from '../../../../application/icons/AlertIcon'
 
 interface Step3Props {
   theme?: any
@@ -40,7 +42,6 @@ const Step3 = ({
   modal,
   invalidInput,
   setCompleted,
-  theme,
   setCostData,
   setSpecifications
 }: Step3Props): JSX.Element => {
@@ -48,7 +49,16 @@ const Step3 = ({
   const [tableRows, setTableRows] = useState<ItemModalData[]>([])
   const [chargeData, setChargeData] = useState<ItemModalData>(initialState)
   const [temperatureList, setTemperatureList] = useState<any[]>([])
+  const [imoList, setImoList] = useState<any[]>([])
   const specificationsList = ['Break Bulk', 'FCL', 'LCL', 'Ro-Ro']
+
+  useEffect(() => {
+    void (async function () {
+      await newProposal.getImo()
+        .then((response) => setImoList(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
 
   useEffect(() => {
     setCostData(tableRows.length)
@@ -66,7 +76,10 @@ const Step3 = ({
     description: '',
     specifications: '',
     refrigereted: false,
-    temperature: ''
+    temperature: '',
+    dangerous: false,
+    imo: '',
+    codUn: ''
   })
 
   const handleOpen = (): void => setOpen(true)
@@ -127,7 +140,7 @@ const Step3 = ({
         <Subtitle>{I18n.t('pages.newProposal.step3.subtitle')}</Subtitle>
       </Title>
       <FormControl variant="outlined" size="small" className="form-size">
-        <Grid container spacing={2}>
+        <Grid container spacing={5}>
           <Grid item xs={4}>
             <FormLabel component="legend">
               {I18n.t('pages.newProposal.step3.description')}
@@ -147,36 +160,36 @@ const Step3 = ({
           </Grid>
           {modal === 'SEA'
             ? (
-            <Grid item xs={2}>
-              <FormLabel component="legend">
-                {I18n.t('pages.newProposal.step3.specifications')}
-                {modal === 'SEA' && <RedColorSpan> *</RedColorSpan>}
-              </FormLabel>
+              <Grid item xs={2}>
+                <FormLabel component="legend">
+                  {I18n.t('pages.newProposal.step3.specifications')}
+                  {modal === 'SEA' && <RedColorSpan> *</RedColorSpan>}
+                </FormLabel>
                 <ControlledSelect
-                labelId="select-label-specifications"
-                id="specifications"
-                value={data.specifications}
-                onChange={(e) =>
-                  setData({ ...data, specifications: e.target.value })
-                }
-                displayEmpty
-                disableUnderline
-                invalid={ invalidInput && data.specifications === '' }
-                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                  labelId="select-label-specifications"
+                  id="specifications"
+                  value={data.specifications}
+                  onChange={(e) =>
+                    setData({ ...data, specifications: e.target.value })
+                  }
+                  displayEmpty
+                  disableUnderline
+                  invalid={invalidInput && data.specifications === ''}
+                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 >
-                <MenuItem disabled value="">
-                  <SelectSpan placeholder={1}>
-                    {I18n.t('pages.newProposal.step3.choose')}
-                  </SelectSpan>
-                </MenuItem>
-                {specificationsList.map((item) => {
-                  return (
-                    <MenuItem key={`${item}_key`} value={item.toLowerCase()}>
-                      <SelectSpan>{item}</SelectSpan>
-                    </MenuItem>
-                  )
-                })}
-              </ControlledSelect>
+                  <MenuItem disabled value="">
+                    <SelectSpan placeholder={1}>
+                      {I18n.t('pages.newProposal.step3.choose')}
+                    </SelectSpan>
+                  </MenuItem>
+                  {specificationsList.map((item) => {
+                    return (
+                      <MenuItem key={`${item}_key`} value={item.toLowerCase()}>
+                        <SelectSpan>{item}</SelectSpan>
+                      </MenuItem>
+                    )
+                  })}
+                </ControlledSelect>
                 <FormControlLabel
                   value="refrigereted"
                   control={
@@ -194,7 +207,7 @@ const Step3 = ({
                     </BoldSpan>
                   }
                 />
-            </Grid>
+              </Grid>
               )
             : (
               <Grid item xs={2}>
@@ -216,7 +229,7 @@ const Step3 = ({
                     </BoldSpan>
                   }
                 />
-            </Grid>
+              </Grid>
               )}
           {data.refrigereted && (
             <Grid item xs={2}>
@@ -253,6 +266,59 @@ const Step3 = ({
               </ControlledSelect>
             </Grid>
           )}
+          <Grid container spacing={5} style={{ marginLeft: '0' }}>
+            <Grid item xs={1}>
+              <FormLabel component="legend">{I18n.t('components.itemModal.hazardous')}</FormLabel>
+              <RadioGroup row aria-label="services" name="row-radio-buttons-group" >
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  <FormControlLabel value="dangerous" control={<Checkbox onChange={e => setData({ ...data, dangerous: !data.dangerous })} />} label={I18n.t('components.itemModal.yes')} />
+                  <AlertIcon />
+                </div>
+              </RadioGroup>
+            </Grid>
+            {data.dangerous && <Grid item xs={3}>
+              <FormLabel component="legend">{I18n.t('components.itemModal.imo')}
+                {data.dangerous && <RedColorSpan> *</RedColorSpan>}</FormLabel>
+              <ControlledSelect
+                value={data.imo != null ? data.imo : ''}
+                onChange={e => (setData({ ...data, imo: e.target.value }))}
+                disableUnderline
+                displayEmpty
+                placeholder={data.imo != null ? data.imo : ''}
+                invalid={
+                  invalidInput && data.dangerous &&
+                  (data.imo === null || data.imo.length === 0)
+                }
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+              >
+                <MenuItem disabled value="">
+                  <span style={{ marginLeft: '10px' }}>{I18n.t('components.itemModal.choose')}</span>
+                </MenuItem>
+                {imoList.map((item) => {
+                  return (
+                    <MenuItem key={item.id} value={item.id}>
+                      <span style={{ marginLeft: '10px' }}>{item.type}</span>
+                    </MenuItem>
+                  )
+                })}
+              </ControlledSelect>
+            </Grid>}
+            {data.dangerous && <Grid item xs={2}>
+              <FormLabel component="legend">{I18n.t('components.itemModal.codUn')}
+                <RedColorSpan> *</RedColorSpan></FormLabel>
+              <ControlledInput
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                invalid={
+                  invalidInput &&
+                  (data.codUn === null || data.codUn.length === 0)
+                }
+                value={data.codUn}
+                onChange={e => (setData({ ...data, codUn: e.target.value }))}
+                variant="outlined"
+                size="small"
+              />
+            </Grid>}
+          </Grid>
           {tableRows.length > 0 && (
             <Grid item xs={12}>
               <ChargeTable
@@ -274,7 +340,7 @@ const Step3 = ({
               }
               tooltip={
                 modal === '' ||
-                (modal === 'SEA' && data.specifications.length === 0)
+                  (modal === 'SEA' && data.specifications.length === 0)
                   ? I18n.t('pages.newProposal.step3.buttonAddTooltip')
                   : I18n.t('pages.newProposal.step3.buttonAdd')
               }

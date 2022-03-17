@@ -2,7 +2,7 @@ import React from 'react'
 
 interface UserIconProps {
   defaultColor: string
-};
+}
 
 const UserIcon = ({ defaultColor }: UserIconProps): JSX.Element => {
   return (
