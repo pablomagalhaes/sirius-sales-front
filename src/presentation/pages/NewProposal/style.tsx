@@ -183,6 +183,8 @@ const Separator = styled.div`
 const SelectSpan = styled.span`
   color: ${(props: { placeholder: boolean, theme: any }) => props?.placeholder && props.theme?.commercial?.pages?.newProposal?.placeholder};
   margin: 0 10px;
+  overflow: hidden;
+  text-overflow: ellipsis !important;
 `
 
 const ButtonContainer = styled.div`
