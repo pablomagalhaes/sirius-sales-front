@@ -28,7 +28,7 @@ const ChargeTable = ({ charges, onEdit, onDelete, specification, modal }: Charge
   }
 
   const isFCL = (): boolean => {
-    if (specification === 'fcl') {
+    if (specification === 'fcl' && modal === 'SEA') {
       return true
     }
     return false
