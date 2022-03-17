@@ -7,7 +7,7 @@ import {
   Grid,
   MenuItem,
   Checkbox,
-  RadioGroup
+  Box
 } from '@material-ui/core/'
 import { I18n } from 'react-redux-i18n'
 import {
@@ -27,7 +27,6 @@ import ChargeTable from '../../../components/ChargeTable'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import { withTheme } from 'styled-components'
 import newProposal from '../../../../infrastructure/api/newProposalService'
-import AlertIcon from '../../../../application/icons/AlertIcon'
 
 interface Step3Props {
   theme?: any
@@ -266,59 +265,53 @@ const Step3 = ({
               </ControlledSelect>
             </Grid>
           )}
-          <Grid container spacing={5} style={{ marginLeft: '0' }}>
-            <Grid item xs={1}>
-              <FormLabel component="legend">{I18n.t('components.itemModal.hazardous')}</FormLabel>
-              <RadioGroup row aria-label="services" name="row-radio-buttons-group" >
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                  <FormControlLabel value="dangerous" control={<Checkbox onChange={e => setData({ ...data, dangerous: !data.dangerous })} />} label={I18n.t('components.itemModal.yes')} />
-                  <AlertIcon />
-                </div>
-              </RadioGroup>
-            </Grid>
-            {data.dangerous && <Grid item xs={3}>
-              <FormLabel component="legend">{I18n.t('components.itemModal.imo')}
-                {data.dangerous && <RedColorSpan> *</RedColorSpan>}</FormLabel>
-              <ControlledSelect
-                value={data.imo != null ? data.imo : ''}
-                onChange={e => (setData({ ...data, imo: e.target.value }))}
-                disableUnderline
-                displayEmpty
-                placeholder={data.imo != null ? data.imo : ''}
-                invalid={
-                  invalidInput && data.dangerous &&
-                  (data.imo === null || data.imo.length === 0)
-                }
-                toolTipTitle={I18n.t('components.itemModal.requiredField')}
-              >
-                <MenuItem disabled value="">
-                  <span style={{ marginLeft: '10px' }}>{I18n.t('components.itemModal.choose')}</span>
-                </MenuItem>
-                {imoList.map((item) => {
-                  return (
-                    <MenuItem key={item.id} value={item.id}>
-                      <span style={{ marginLeft: '10px' }}>{item.type}</span>
-                    </MenuItem>
-                  )
-                })}
-              </ControlledSelect>
-            </Grid>}
-            {data.dangerous && <Grid item xs={2}>
-              <FormLabel component="legend">{I18n.t('components.itemModal.codUn')}
-                <RedColorSpan> *</RedColorSpan></FormLabel>
-              <ControlledInput
-                toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                invalid={
-                  invalidInput &&
-                  (data.codUn === null || data.codUn.length === 0)
-                }
-                value={data.codUn}
-                onChange={e => (setData({ ...data, codUn: e.target.value }))}
-                variant="outlined"
-                size="small"
-              />
-            </Grid>}
+          <Box width="100%" />
+          <Grid item xs={1}>
+            <FormLabel component="legend">{I18n.t('components.itemModal.hazardous')}</FormLabel>
+            <FormControlLabel value="dangerous" control={<Checkbox onChange={e => setData({ ...data, dangerous: !data.dangerous })} />} label={I18n.t('components.itemModal.yes')} />
           </Grid>
+          {data.dangerous && <Grid item xs={3}>
+            <FormLabel component="legend">{I18n.t('components.itemModal.imo')}
+              {data.dangerous && <RedColorSpan> *</RedColorSpan>}</FormLabel>
+            <ControlledSelect
+              value={data.imo != null ? data.imo : ''}
+              onChange={e => (setData({ ...data, imo: e.target.value }))}
+              disableUnderline
+              displayEmpty
+              placeholder={data.imo != null ? data.imo : ''}
+              invalid={
+                invalidInput && data.dangerous &&
+                (data.imo === null || data.imo.length === 0)
+              }
+              toolTipTitle={I18n.t('components.itemModal.requiredField')}
+            >
+              <MenuItem disabled value="">
+                <span style={{ marginLeft: '10px' }}>{I18n.t('components.itemModal.choose')}</span>
+              </MenuItem>
+              {imoList.map((item) => {
+                return (
+                  <MenuItem key={item.id} value={item.id}>
+                    <span style={{ marginLeft: '10px' }}>{item.type}</span>
+                  </MenuItem>
+                )
+              })}
+            </ControlledSelect>
+          </Grid>}
+          {data.dangerous && <Grid item xs={2}>
+            <FormLabel component="legend">{I18n.t('components.itemModal.codUn')}
+              <RedColorSpan> *</RedColorSpan></FormLabel>
+            <ControlledInput
+              toolTipTitle={I18n.t('components.itemModal.requiredField')}
+              invalid={
+                invalidInput &&
+                (data.codUn === null || data.codUn.length === 0)
+              }
+              value={data.codUn}
+              onChange={e => (setData({ ...data, codUn: e.target.value }))}
+              variant="outlined"
+              size="small"
+            />
+          </Grid>}
           {tableRows.length > 0 && (
             <Grid item xs={12}>
               <ChargeTable
@@ -357,7 +350,7 @@ const Step3 = ({
           </Grid>
         </Grid>
       </FormControl>
-    </Separator>
+    </Separator >
   )
 }
 export default withTheme(Step3)
