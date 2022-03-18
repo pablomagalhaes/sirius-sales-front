@@ -217,7 +217,7 @@ const ItemModal = ({
             {!marineFCL() && <Grid item xs={4}>
               <FormLabel component="legend">{I18n.t('components.itemModal.rawWeight')}
                 {(modal === 'AIR' ||
-                  (modal === 'SEA' && specifications === 'lcl') ||
+                  (modal === 'SEA' && specifications !== 'fcl') ||
                   modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}</FormLabel>
               <NumberFormat
                 decimalSeparator={','}
@@ -247,7 +247,7 @@ const ItemModal = ({
             {!marineFCL() && <Grid item xs={5}>
               <FormLabel component="legend">{I18n.t('components.itemModal.hwl')}
                 {(modal === 'AIR' ||
-                  (modal === 'SEA' && specifications === 'lcl') ||
+                  (modal === 'SEA' && specifications !== 'fcl') ||
                   modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}</FormLabel>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <NumberFormat
@@ -326,7 +326,7 @@ const ItemModal = ({
               <FormLabel component="legend">
                 {I18n.t('components.itemModal.cubage')}
                 {(modal === 'AIR' ||
-                  (modal === 'SEA' && specifications === 'lcl') ||
+                  (modal === 'SEA' && specifications !== 'fcl') ||
                   modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}
               </FormLabel>
               <NumberFormat
