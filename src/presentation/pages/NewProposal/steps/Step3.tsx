@@ -81,6 +81,10 @@ const Step3 = ({
     codUn: ''
   })
 
+  useEffect(() => {
+    setTableRows([])
+  }, [modal, data.specifications])
+
   const handleOpen = (): void => setOpen(true)
 
   const handleClose = (): void => {
@@ -207,7 +211,7 @@ const Step3 = ({
                   }
                 />
               </Grid>
-              )
+            )
             : (
               <Grid item xs={2}>
                 <FormControlLabel
@@ -229,7 +233,7 @@ const Step3 = ({
                   }
                 />
               </Grid>
-              )}
+            )}
           {data.refrigereted && (
             <Grid item xs={2}>
               <FormLabel component="legend">
@@ -318,6 +322,8 @@ const Step3 = ({
                 charges={tableRows}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
+                modal={modal}
+                specification={data.specifications}
               />
             </Grid>
           )}
