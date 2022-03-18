@@ -1,4 +1,4 @@
-import { MenuItem, Modal, Grid, FormLabel, RadioGroup, Checkbox, FormControlLabel } from '@material-ui/core'
+import { MenuItem, Modal, Grid, FormLabel, RadioGroup, Checkbox, FormControlLabel, Box } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import CloseIcon from '../../../application/icons/CloseIcon'
 import {
@@ -214,7 +214,7 @@ const ItemModal = ({
                 modal
               />
             </Grid>
-            <Grid item xs={4}>
+            {!marineFCL() && <Grid item xs={4}>
               <FormLabel component="legend">{I18n.t('components.itemModal.rawWeight')}
                 {(modal === 'AIR' ||
                   (modal === 'SEA' && specifications === 'lcl') ||
@@ -236,14 +236,15 @@ const ItemModal = ({
                 size="small"
                 modal
               />
-            </Grid>
+            </Grid>}
             <Grid item xs={2}>
               <FormLabel component="legend">{I18n.t('components.itemModal.stack')}</FormLabel>
               <RadioGroup style={{ marginLeft: '15px' }} row aria-label="services" name="row-radio-buttons-group" onChange={e => setData({ ...data, stack: !data.stack })}>
                 <FormControlLabel value="stack" control={<Checkbox />} label={I18n.t('components.itemModal.yes')} />
               </RadioGroup>
             </Grid>
-            <Grid item xs={5}>
+            {marineFCL() && <Box width="100%" />}
+            {!marineFCL() && <Grid item xs={5}>
               <FormLabel component="legend">{I18n.t('components.itemModal.hwl')}
                 {(modal === 'AIR' ||
                   (modal === 'SEA' && specifications === 'lcl') ||
@@ -303,7 +304,7 @@ const ItemModal = ({
                   modal
                 />
               </div>
-            </Grid>
+            </Grid>}
             {hasDiameter() && <Grid item xs={4}>
               <FormLabel component="legend">{I18n.t('components.itemModal.diameter')}</FormLabel>
               <NumberFormat
