@@ -23,6 +23,9 @@ const RootContainer = styled.div`
     font-size: 14px;
     margin-top: 30px;
     margin-bottom: 10px;
+    @media only screen and (max-width: 1200px) {
+      overflow-wrap: break-word;
+    }
   }
   & .MuiTextField-root, .MuiOutlinedInput-root {
     width: 100%;
@@ -40,6 +43,11 @@ const RootContainer = styled.div`
   }
   & .MuiTypography-body1 {
     font-size: 14px;
+  }
+  & .MuiTypography-root {
+    @media only screen and (max-width: 1200px) {
+      margin-left: -15px;
+    }
   }
   & .MuiOutlinedInput-input {
     font-size: 14px;
@@ -175,6 +183,8 @@ const Separator = styled.div`
 const SelectSpan = styled.span`
   color: ${(props: { placeholder: boolean, theme: any }) => props?.placeholder && props.theme?.commercial?.pages?.newProposal?.placeholder};
   margin: 0 10px;
+  overflow: hidden;
+  text-overflow: ellipsis !important;
 `
 
 const ButtonContainer = styled.div`
