@@ -29,6 +29,7 @@ import RemoveIcon from '../../../application/icons/RemoveIcon'
 import { I18n } from 'react-redux-i18n'
 import { Button, MoneyValue } from 'fiorde-fe-components'
 import CostModal, { CostTableItem, initialState } from '../CostModal/CostModal'
+import { ItemModalData } from '../ItemModal/ItemModal'
 
 interface CostTableProps {
   title: string
@@ -38,6 +39,7 @@ interface CostTableProps {
   modal: string
   specifications: string
   changeTableFill: (arg: number) => void
+  containerItems: ItemModalData[]
 }
 
 const CostTable = ({
@@ -47,7 +49,8 @@ const CostTable = ({
   costData,
   modal,
   specifications,
-  changeTableFill
+  changeTableFill,
+  containerItems
 }: CostTableProps): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [data, setData] = useState<CostTableItem[]>([])
@@ -126,6 +129,7 @@ const CostTable = ({
         title={modalTitle}
         modal={modal}
         specifications={specifications}
+        containerItems={containerItems}
       />
       <Header>
         <Title>{title}</Title>

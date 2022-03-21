@@ -1,4 +1,4 @@
-import React, { useReducer, useState, useEffect, useContext } from 'react'
+import React, { useReducer, useState, useEffect } from 'react'
 import { MenuItem, Modal, Box } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
@@ -35,7 +35,7 @@ import {
 } from '../StyledComponents/modalStyles'
 import newProposal from '../../../infrastructure/api/newProposalService'
 import { CheckBoxArea } from '../ItemModal/ItemModalStyles'
-import { StoreProvider } from '../../../application/store/StoreContext'
+import { ItemModalData } from '../ItemModal/ItemModal'
 export interface CostTableItem {
   agent: string
   buyCurrency: string | null
@@ -58,6 +58,7 @@ interface CostModalProps {
   title: string
   modal: string
   specifications: string
+  containerItems: ItemModalData[]
 }
 
 export const initialState = {
@@ -81,7 +82,8 @@ const CostModal = ({
   setClose,
   title,
   modal,
-  specifications
+  specifications,
+  containerItems
 }: CostModalProps): JSX.Element => {
   const reducer = (state, action): CostTableItem => {
     switch (action.type) {
@@ -121,6 +123,14 @@ const CostModal = ({
     }
   }
 
+  useEffect(() => {
+    if (containerItems.length === 1) {
+      dispatch({ type: 'selectedContainer', value: containerItems[0].type })
+    } else {
+      dispatch({ type: 'selectedContainer', value: '' })
+    }
+  })
+
   const rgxFloat = /^[0-9]*,?[0-9]*$/
   const [state, dispatch] = useReducer(
     reducer,
@@ -135,13 +145,6 @@ const CostModal = ({
   const [invalidValueInput, setInvalidValueInput] = useState(false)
   const [currencyList, setCurrencyList] = useState<any[]>([])
   const [serviceList, setServiceList] = useState<any[]>([])
-  const { items, setItems } = useContext(StoreProvider)
-
-  useEffect(() => {
-    if (items.length === 0) {
-      setItems([])
-    }
-  }, [])
 
   useEffect(() => {
     dispatch({ type: 'dataProp' })
@@ -362,7 +365,7 @@ const CostModal = ({
               <RedColorSpan> *</RedColorSpan>
             </Label>
           </RowDiv>
-          <RowDiv margin={ specifications === 'fcl' && true }>
+          <RowDiv margin={specifications === 'fcl' && true}>
             <StyledMenuSelect
               width="513px"
               onChange={(e) =>
@@ -391,36 +394,36 @@ const CostModal = ({
               })}
             </StyledMenuSelect>
           </RowDiv>
-          { specifications === 'fcl' && (
-              <><RowDiv>
+          {specifications === 'fcl' && (
+            <><RowDiv>
               <Label width="100%">
                 {I18n.t('components.costModal.container')}
                 <RedColorSpan> *</RedColorSpan>
               </Label>
             </RowDiv>
-            <RowDiv style={{ position: 'relative' }}>
-            <Autocomplete
-              options={items.map((item) => item.type)}
-              value={state.selectedContainer}
-              onChange={(event: any, newValue: string | null) => {
-                dispatch({ type: 'selectedContainer', value: newValue })
-              }}
-              renderInput={(params) => (
-                <div ref={params.InputProps.ref}>
-                  <Input
-                    {...params.inputProps}
-                    filled={state.selectedContainer}
-                    placeholder={I18n.t('components.costModal.choose')}
-                    toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                    invalid={invalidInput && state.selectedContainer === null }
-                    style={{ width: '513px' }}
-                  />
-                  <Box {...params.inputProps} className="dropdownContainer">
-                    <ArrowDropDownIcon />
-                  </Box>
-                </div>
-              )}
-            />
+              <RowDiv style={{ position: 'relative' }}>
+                <Autocomplete
+                  options={containerItems.map((item) => item.type)}
+                  value={state.selectedContainer}
+                  onChange={(event: any, newValue: string | null) => {
+                    dispatch({ type: 'selectedContainer', value: newValue })
+                  }}
+                  renderInput={(params) => (
+                    <div ref={params.InputProps.ref}>
+                      <Input
+                        {...params.inputProps}
+                        filled={state.selectedContainer}
+                        placeholder={I18n.t('components.costModal.choose')}
+                        toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                        invalid={invalidInput && state.selectedContainer === null}
+                        style={{ width: '513px' }}
+                      />
+                      <Box {...params.inputProps} className="dropdownContainer">
+                        <ArrowDropDownIcon />
+                      </Box>
+                    </div>
+                  )}
+                />
               </RowDiv></>
           )}
           <RowDiv>
@@ -574,7 +577,7 @@ const CostModal = ({
                         {I18n.t('components.costModal.value')}
                         {saleCheckbox && <RedColorSpan> *</RedColorSpan>}
                       </PlaceholderSpan>
-                  )}
+                    )}
                   <Input
                     value={state.saleValue != null ? state.saleValue : ''}
                     onChange={saleValueHandler}

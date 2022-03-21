@@ -12,12 +12,13 @@ const props = {
     selectedContainer: null
   },
   title: 'Editar item',
-  action: () => {},
-  setOpen: () => {},
+  action: () => { },
+  setOpen: () => { },
   open: true,
-  setClose: () => {},
+  setClose: () => { },
   modal: '',
-  specifications: ''
+  specifications: '',
+  containerItems: []
 }
 
 test('should show text Editar item', () => {

@@ -3,6 +3,7 @@ import { I18n } from 'react-redux-i18n'
 import { Title, Subtitle, Separator } from '../style'
 import FareModal, { FareModalData, initialState } from '../../../components/FareModal/FareModal'
 import { TableBody } from '@material-ui/core'
+import { ItemModalData } from '../../../components/ItemModal/ItemModal'
 
 import {
   DeleteIconDiv,
@@ -32,6 +33,7 @@ interface Step6Props {
   modal: string
   setCompleted: (completed: any) => void
   specifications: string
+  containerItems: ItemModalData[]
 }
 
 interface TableData {
@@ -49,59 +51,59 @@ const Table = ({ data, remove, edit }: TableData): JSX.Element => {
       <TableBody>
         {data !== null
           ? (
-              data?.map((item: FareModalData) => {
-                return (
-                  <StyledRow id={item.id} key={item.id}>
-                    <StyledTableCell
-                      color={1}
-                      width="100%"
-                      component="th"
-                      scope="row"
-                    >
-                      {item.expense}
-                    </StyledTableCell>
-                    <StyledTableCell width="100%" align="left">
-                      {item.type}
-                    </StyledTableCell>
-                    <StyledTableCell width="100%" align="left">
-                      <MoneyValue
-                        currency={item.saleCurrency}
-                        language="pt-br"
-                        style={{ width: '80px' }}
-                        value={Number(item.saleValue)}
-                      />
-                    </StyledTableCell>
-                    <StyledTableCell width="100%">
-                      <RowReverseDiv>
-                        <DeleteIconDiv>
-                          <RemoveIcon
-                            onClick={() => {
-                              if (remove != null) remove(item.id)
-                            }}
-                          />
-                        </DeleteIconDiv>
-                        <EditIconDiv>
-                          <EditIcon
-                            onClick={() => {
-                              if (edit != null) edit(item)
-                            }}
-                          />
-                        </EditIconDiv>
-                      </RowReverseDiv>
-                    </StyledTableCell>
-                  </StyledRow>
-                )
-              })
-            )
+            data?.map((item: FareModalData) => {
+              return (
+                <StyledRow id={item.id} key={item.id}>
+                  <StyledTableCell
+                    color={1}
+                    width="100%"
+                    component="th"
+                    scope="row"
+                  >
+                    {item.expense}
+                  </StyledTableCell>
+                  <StyledTableCell width="100%" align="left">
+                    {item.type}
+                  </StyledTableCell>
+                  <StyledTableCell width="100%" align="left">
+                    <MoneyValue
+                      currency={item.saleCurrency}
+                      language="pt-br"
+                      style={{ width: '80px' }}
+                      value={Number(item.saleValue)}
+                    />
+                  </StyledTableCell>
+                  <StyledTableCell width="100%">
+                    <RowReverseDiv>
+                      <DeleteIconDiv>
+                        <RemoveIcon
+                          onClick={() => {
+                            if (remove != null) remove(item.id)
+                          }}
+                        />
+                      </DeleteIconDiv>
+                      <EditIconDiv>
+                        <EditIcon
+                          onClick={() => {
+                            if (edit != null) edit(item)
+                          }}
+                        />
+                      </EditIconDiv>
+                    </RowReverseDiv>
+                  </StyledTableCell>
+                </StyledRow>
+              )
+            })
+          )
           : (
-          <div />
-            )}
+            <div />
+          )}
       </TableBody>
     </StyledTable>
   )
 }
 
-const Step6 = ({ costData, modal, setCompleted, specifications }: Step6Props): JSX.Element => {
+const Step6 = ({ costData, modal, setCompleted, specifications, containerItems }: Step6Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [data, setData] = useState<FareModalData[]>([])
   const [chargeData, setChargeData] = useState<FareModalData>(initialState)
@@ -207,24 +209,25 @@ const Step6 = ({ costData, modal, setCompleted, specifications }: Step6Props): J
           title={I18n.t('components.fareModal.newFare')}
           modal={modal}
           specifications={specifications}
+          containerItems={containerItems}
         />
         {data.length === 0
           ? <TotalContainer>
-              <TotalCostLabel>
-                {I18n.t('pages.newProposal.step6.totalFares')}
-              </TotalCostLabel>
-              <ValueLabel>
-                <EmptyTableCost>-</EmptyTableCost>
-              </ValueLabel>
-            </TotalContainer>
+            <TotalCostLabel>
+              {I18n.t('pages.newProposal.step6.totalFares')}
+            </TotalCostLabel>
+            <ValueLabel>
+              <EmptyTableCost>-</EmptyTableCost>
+            </ValueLabel>
+          </TotalContainer>
           : <TotalContainer>
-              <TotalCostLabel>
-                {I18n.t('pages.newProposal.step6.totalFares')}
-              </TotalCostLabel>
-              <RowReverseContainer>
-                {showFares()}
-              </RowReverseContainer>
-            </TotalContainer>
+            <TotalCostLabel>
+              {I18n.t('pages.newProposal.step6.totalFares')}
+            </TotalCostLabel>
+            <RowReverseContainer>
+              {showFares()}
+            </RowReverseContainer>
+          </TotalContainer>
         }
       </HeightDiv>
     </Separator>

@@ -23,12 +23,13 @@ const props = {
   },
 
   title: 'Editar item',
-  handleAdd: () => {},
-  setOpen: () => {},
+  handleAdd: () => { },
+  setOpen: () => { },
   open: true,
-  setClose: () => {},
+  setClose: () => { },
   modal: '',
-  specifications: ''
+  specifications: '',
+  containerItems: []
 }
 
 test('should show text Editar item', () => {
@@ -58,7 +59,7 @@ test('should click on the checkbox and show the check icon', () => {
 
 test('should click on the checkbox and click on the save button and should not trigger handleAdd due invalid input', () => {
   const jsdomAlert = window.alert
-  window.alert = () => {}
+  window.alert = () => { }
   const handleAdd = jest.fn()
   render(<CostModal {...props} handleAdd={handleAdd} />)
   fireEvent.click(screen.getByLabelText('checkbox'))

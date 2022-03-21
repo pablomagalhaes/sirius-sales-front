@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from 'fiorde-fe-components'
 import {
   FormControl,
@@ -26,8 +26,6 @@ import ChargeTable from '../../../components/ChargeTable'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import { withTheme } from 'styled-components'
 import newProposal from '../../../../infrastructure/api/newProposalService'
-import { StoreProvider } from '../../../../application/store/StoreContext'
-
 interface Step3Props {
   theme?: any
   modal: string
@@ -35,6 +33,7 @@ interface Step3Props {
   setCostData: any
   setCompleted: (completed: any) => void
   setSpecifications: (specifications: string) => void
+  setTableItems: (tableItems: ItemModalData[]) => void
 }
 
 const Step3 = ({
@@ -42,7 +41,8 @@ const Step3 = ({
   invalidInput,
   setCompleted,
   setCostData,
-  setSpecifications
+  setSpecifications,
+  setTableItems
 }: Step3Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [tableRows, setTableRows] = useState<ItemModalData[]>([])
@@ -50,8 +50,6 @@ const Step3 = ({
   const [temperatureList, setTemperatureList] = useState<any[]>([])
   const [imoList, setImoList] = useState<any[]>([])
   const specificationsList = ['Break Bulk', 'FCL', 'LCL', 'Ro-Ro']
-
-  const { items, setItems } = useContext(StoreProvider)
 
   useEffect(() => {
     void (async function () {
@@ -99,11 +97,11 @@ const Step3 = ({
       const startTableRows = tableRows.slice(0, item.id)
       const endTableRows = tableRows.slice(item.id + 1)
       setTableRows([...startTableRows, item, ...endTableRows])
+      setTableItems([...startTableRows, item, ...endTableRows])
     } else {
       const newItem = { ...item, id: tableRows.length }
       setTableRows([...tableRows, newItem])
-
-      setItems([...items, newItem])
+      setTableItems([...tableRows, newItem])
     }
   }
 
@@ -116,6 +114,7 @@ const Step3 = ({
     const newTable = tableRows.slice(0)
     newTable.splice(index, 1)
     setTableRows(newTable)
+    setTableItems(newTable)
   }
 
   useEffect(() => {
@@ -166,55 +165,20 @@ const Step3 = ({
           </Grid>
           {modal === 'SEA' && (
             <Grid item xs={2}>
-                <FormLabel component="legend">
-                  {I18n.t('pages.newProposal.step3.specifications')}
-                  {modal === 'SEA' && <RedColorSpan> *</RedColorSpan>}
-                </FormLabel>
-                <ControlledSelect
-                  labelId="select-label-specifications"
-                  id="specifications"
-                  value={data.specifications}
-                  onChange={(e) =>
-                    setData({ ...data, specifications: e.target.value })
-                  }
-                  displayEmpty
-                  disableUnderline
-                  invalid={invalidInput && data.specifications === ''}
-                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                >
-                  <MenuItem disabled value="">
-                    <SelectSpan placeholder={1}>
-                      {I18n.t('pages.newProposal.step3.choose')}
-                    </SelectSpan>
-                  </MenuItem>
-                  {specificationsList.map((item) => {
-                    return (
-                      <MenuItem key={`${item}_key`} value={item.toLowerCase()}>
-                        <SelectSpan>{item}</SelectSpan>
-                      </MenuItem>
-                    )
-                  })}
-                </ControlledSelect>
-              </Grid>
-          )}
-            <Grid item xs={2}>
               <FormLabel component="legend">
-                {I18n.t('pages.newProposal.step3.temperature')}
-                {<RedColorSpan> *</RedColorSpan>}
+                {I18n.t('pages.newProposal.step3.specifications')}
+                {modal === 'SEA' && <RedColorSpan> *</RedColorSpan>}
               </FormLabel>
               <ControlledSelect
-                labelId="select-label-temperature"
-                id="temperature"
-                value={data.temperature}
+                labelId="select-label-specifications"
+                id="specifications"
+                value={data.specifications}
                 onChange={(e) =>
-                  setData({ ...data, temperature: e.target.value })
+                  setData({ ...data, specifications: e.target.value })
                 }
                 displayEmpty
                 disableUnderline
-                invalid={
-                  invalidInput &&
-                  data.temperature.length === 0
-                }
+                invalid={invalidInput && data.specifications === ''}
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
               >
                 <MenuItem disabled value="">
@@ -222,13 +186,48 @@ const Step3 = ({
                     {I18n.t('pages.newProposal.step3.choose')}
                   </SelectSpan>
                 </MenuItem>
-                {temperatureList.map((item) => (
-                  <MenuItem key={item.id} value={item.id}>
-                    <SelectSpan>{item.temperature}</SelectSpan>
-                  </MenuItem>
-                ))}
+                {specificationsList.map((item) => {
+                  return (
+                    <MenuItem key={`${item}_key`} value={item.toLowerCase()}>
+                      <SelectSpan>{item}</SelectSpan>
+                    </MenuItem>
+                  )
+                })}
               </ControlledSelect>
             </Grid>
+          )}
+          <Grid item xs={2}>
+            <FormLabel component="legend">
+              {I18n.t('pages.newProposal.step3.temperature')}
+              {<RedColorSpan> *</RedColorSpan>}
+            </FormLabel>
+            <ControlledSelect
+              labelId="select-label-temperature"
+              id="temperature"
+              value={data.temperature}
+              onChange={(e) =>
+                setData({ ...data, temperature: e.target.value })
+              }
+              displayEmpty
+              disableUnderline
+              invalid={
+                invalidInput &&
+                data.temperature.length === 0
+              }
+              toolTipTitle={I18n.t('components.itemModal.requiredField')}
+            >
+              <MenuItem disabled value="">
+                <SelectSpan placeholder={1}>
+                  {I18n.t('pages.newProposal.step3.choose')}
+                </SelectSpan>
+              </MenuItem>
+              {temperatureList.map((item) => (
+                <MenuItem key={item.id} value={item.id}>
+                  <SelectSpan>{item.temperature}</SelectSpan>
+                </MenuItem>
+              ))}
+            </ControlledSelect>
+          </Grid>
           <Box width="100%" />
           <Grid item xs={1}>
             <FormLabel component="legend">{I18n.t('components.itemModal.hazardous')}</FormLabel>
