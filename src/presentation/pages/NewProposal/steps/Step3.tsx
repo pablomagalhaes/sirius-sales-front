@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Button } from 'fiorde-fe-components'
 import {
   FormControl,
@@ -14,8 +14,7 @@ import {
   Title,
   Subtitle,
   Separator,
-  SelectSpan,
-  BoldSpan
+  SelectSpan
 } from '../style'
 import ItemModal, {
   ItemModalData,
@@ -27,6 +26,7 @@ import ChargeTable from '../../../components/ChargeTable'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import { withTheme } from 'styled-components'
 import newProposal from '../../../../infrastructure/api/newProposalService'
+import { StoreProvider } from '../../../../application/store/StoreContext'
 
 interface Step3Props {
   theme?: any
@@ -50,6 +50,8 @@ const Step3 = ({
   const [temperatureList, setTemperatureList] = useState<any[]>([])
   const [imoList, setImoList] = useState<any[]>([])
   const specificationsList = ['Break Bulk', 'FCL', 'LCL', 'Ro-Ro']
+
+  const { items, setItems } = useContext(StoreProvider)
 
   useEffect(() => {
     void (async function () {
@@ -100,6 +102,8 @@ const Step3 = ({
     } else {
       const newItem = { ...item, id: tableRows.length }
       setTableRows([...tableRows, newItem])
+
+      setItems([...items, newItem])
     }
   }
 

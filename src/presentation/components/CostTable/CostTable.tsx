@@ -29,6 +29,7 @@ import RemoveIcon from '../../../application/icons/RemoveIcon'
 import { I18n } from 'react-redux-i18n'
 import { Button, MoneyValue } from 'fiorde-fe-components'
 import CostModal, { CostTableItem, initialState } from '../CostModal/CostModal'
+
 interface CostTableProps {
   title: string
   totalCostLabel: string
