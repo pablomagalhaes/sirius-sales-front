@@ -14,8 +14,7 @@ import {
   Title,
   Subtitle,
   Separator,
-  SelectSpan,
-  BoldSpan
+  SelectSpan
 } from '../style'
 import ItemModal, {
   ItemModalData,
