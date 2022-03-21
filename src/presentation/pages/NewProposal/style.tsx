@@ -199,6 +199,7 @@ const StyledRadio = styled(Radio)`
 `
 
 const MessageContainer = styled.div`
+  color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.steps?.messageColor};
   position: fixed;
   bottom: 0;
   left: 0;

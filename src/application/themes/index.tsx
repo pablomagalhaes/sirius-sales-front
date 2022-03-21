@@ -48,6 +48,7 @@ const dark = {
         placeholder: '#7B8A9E',
         steps: {
           stepFare: '#B5B8C2',
+          messageColor: '#222222',
           stepsBoxShadow: 'rgba(0, 0, 0, 0.2)',
           chips: {
             background: '#364353',
@@ -108,6 +109,7 @@ const light = {
         placeholder: '#999DAC',
         steps: {
           stepFare: '#545454',
+          messageColor: '#222222',
           stepsBoxShadow: 'rgba(0, 0, 0, 0.05)',
           chips: {
             background: '#C2C5D1',
