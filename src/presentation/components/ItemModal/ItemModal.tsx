@@ -160,6 +160,18 @@ const ItemModal = ({
     }
   }
 
+  const updateCubage = (): void => {
+    const newCubage = Number(data.length === null ? 0 : Number(data.length.replace(',', '.'))) *
+      Number(data.width === null ? 0 : Number(data.width.replace(',', '.'))) *
+      Number(data.height === null ? 0 : Number(data.height.replace(',', '.'))) *
+      Number(data.amount === null ? 0 : Number(data.amount))
+    setData({ ...data, cubage: newCubage.toFixed(3).replace('.', ',') })
+  }
+
+  useEffect(() => {
+    updateCubage()
+  }, [data.length, data.width, data.height, data.amount])
+
   const returnListItems = (id: number, label: string): JSX.Element => {
     return (
       <MenuItem key={id} value={label}>
