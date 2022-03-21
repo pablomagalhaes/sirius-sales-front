@@ -123,8 +123,7 @@ const Step3 = ({
       data.description.length !== 0 &&
       ((modal === 'SEA' && data.specifications.length !== 0) ||
         modal !== 'SEA') &&
-      ((data.refrigereted && data.temperature.length !== 0) ||
-        !data.refrigereted)
+      data.temperature.length !== 0
     ) {
       setCompleted((currentState) => {
         return { ...currentState, step3: true }
@@ -161,9 +160,8 @@ const Step3 = ({
               size="small"
             />
           </Grid>
-          {modal === 'SEA'
-            ? (
-              <Grid item xs={2}>
+          {modal === 'SEA' && (
+            <Grid item xs={2}>
                 <FormLabel component="legend">
                   {I18n.t('pages.newProposal.step3.specifications')}
                   {modal === 'SEA' && <RedColorSpan> *</RedColorSpan>}
@@ -193,52 +191,12 @@ const Step3 = ({
                     )
                   })}
                 </ControlledSelect>
-                <FormControlLabel
-                  value="refrigereted"
-                  control={
-                    <Checkbox
-                      className="radio-spacement"
-                      onChange={() =>
-                        setData({ ...data, refrigereted: !data.refrigereted })
-                      }
-                      checked={data.refrigereted}
-                    />
-                  }
-                  label={
-                    <BoldSpan checked={data.refrigereted}>
-                      {I18n.t('pages.newProposal.step3.refrigerated')}
-                    </BoldSpan>
-                  }
-                />
               </Grid>
-            )
-            : (
-              <Grid item xs={2}>
-                <FormControlLabel
-                  value="refrigereted"
-                  className="checkbox-div-spacement"
-                  control={
-                    <Checkbox
-                      className="radio-spacement"
-                      onChange={() =>
-                        setData({ ...data, refrigereted: !data.refrigereted })
-                      }
-                      checked={data.refrigereted}
-                    />
-                  }
-                  label={
-                    <BoldSpan checked={data.refrigereted}>
-                      {I18n.t('pages.newProposal.step3.refrigerated')}
-                    </BoldSpan>
-                  }
-                />
-              </Grid>
-            )}
-          {data.refrigereted && (
+          )}
             <Grid item xs={2}>
               <FormLabel component="legend">
                 {I18n.t('pages.newProposal.step3.temperature')}
-                {data.refrigereted && <RedColorSpan> *</RedColorSpan>}
+                {<RedColorSpan> *</RedColorSpan>}
               </FormLabel>
               <ControlledSelect
                 labelId="select-label-temperature"
@@ -251,7 +209,6 @@ const Step3 = ({
                 disableUnderline
                 invalid={
                   invalidInput &&
-                  data.refrigereted &&
                   data.temperature.length === 0
                 }
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
