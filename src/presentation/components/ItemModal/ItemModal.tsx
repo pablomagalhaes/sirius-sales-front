@@ -165,7 +165,7 @@ const ItemModal = ({
       Number(data.width === null ? 0 : Number(data.width.replace(',', '.'))) *
       Number(data.height === null ? 0 : Number(data.height.replace(',', '.'))) *
       Number(data.amount === null ? 0 : Number(data.amount))
-    setData({ ...data, cubage: newCubage.toFixed(3).replace('.', ',') })
+    setData({ ...data, cubage: newCubage.toFixed(2).replace('.', ',') })
   }
 
   useEffect(() => {
