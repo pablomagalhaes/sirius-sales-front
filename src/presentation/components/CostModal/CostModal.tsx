@@ -1,4 +1,4 @@
-import React, { useReducer, useState, useEffect } from 'react'
+import React, { useReducer, useState, useEffect, useContext } from 'react'
 import { MenuItem, Modal, Box } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
@@ -35,7 +35,7 @@ import {
 } from '../StyledComponents/modalStyles'
 import newProposal from '../../../infrastructure/api/newProposalService'
 import { CheckBoxArea } from '../ItemModal/ItemModalStyles'
-
+import { StoreProvider } from '../../../application/store/StoreContext'
 export interface CostTableItem {
   agent: string
   buyCurrency: string | null
@@ -46,6 +46,7 @@ export interface CostTableItem {
   saleCurrency: string | null
   saleMin: string | null
   saleValue: string | null
+  selectedContainer: string | null
   type: string
 }
 
@@ -68,6 +69,7 @@ export const initialState = {
   buyMin: null,
   saleCurrency: 'BRL',
   saleValue: null,
+  selectedContainer: null,
   saleMin: null,
   id: null
 }
@@ -97,6 +99,8 @@ const CostModal = ({
         return { ...state, buyMin: action.value }
       case 'saleValue':
         return { ...state, saleValue: action.value }
+      case 'selectedContainer':
+        return { ...state, selectedContainer: action.value }
       case 'saleCurrency':
         return { ...state, saleCurrency: action.value }
       case 'saleMin':
@@ -131,6 +135,13 @@ const CostModal = ({
   const [invalidValueInput, setInvalidValueInput] = useState(false)
   const [currencyList, setCurrencyList] = useState<any[]>([])
   const [serviceList, setServiceList] = useState<any[]>([])
+  const { items, setItems } = useContext(StoreProvider)
+
+  useEffect(() => {
+    if (items.length === 0) {
+      setItems([])
+    }
+  }, [])
 
   useEffect(() => {
     dispatch({ type: 'dataProp' })
@@ -329,6 +340,8 @@ const CostModal = ({
                   <Input
                     {...params.inputProps}
                     filled={state.description}
+                    placeholder={I18n.t('components.costModal.choose')}
+                    autocomplete={'teste'}
                     toolTipTitle={I18n.t('components.itemModal.requiredField')}
                     invalid={
                       invalidInput &&
@@ -349,7 +362,7 @@ const CostModal = ({
               <RedColorSpan> *</RedColorSpan>
             </Label>
           </RowDiv>
-          <RowDiv>
+          <RowDiv margin={ specifications === 'fcl' && true }>
             <StyledMenuSelect
               width="513px"
               onChange={(e) =>
@@ -378,6 +391,38 @@ const CostModal = ({
               })}
             </StyledMenuSelect>
           </RowDiv>
+          { specifications === 'fcl' && (
+              <><RowDiv>
+              <Label width="100%">
+                {I18n.t('components.costModal.container')}
+                <RedColorSpan> *</RedColorSpan>
+              </Label>
+            </RowDiv>
+            <RowDiv style={{ position: 'relative' }}>
+            <Autocomplete
+              options={items.map((item) => item.type)}
+              value={state.selectedContainer}
+              onChange={(event: any, newValue: string | null) => {
+                dispatch({ type: 'selectedContainer', value: newValue })
+              }}
+              renderInput={(params) => (
+                <div ref={params.InputProps.ref}>
+                  <Input
+                    {...params.inputProps}
+                    filled={state.selectedContainer}
+                    placeholder={I18n.t('components.costModal.choose')}
+                    toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                    invalid={invalidInput && state.selectedContainer === null }
+                    style={{ width: '513px' }}
+                  />
+                  <Box {...params.inputProps} className="dropdownContainer">
+                    <ArrowDropDownIcon />
+                  </Box>
+                </div>
+              )}
+            />
+              </RowDiv></>
+          )}
           <RowDiv>
             <CheckBoxArea onClick={buyCheckboxHandler}>
               <CheckBox

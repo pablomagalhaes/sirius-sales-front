@@ -126,6 +126,7 @@
       "description": "Expense/Service:",
       "agent": "Agent:",
       "buyValue": "Buy value",
+      "container": "Container:",
       "saleValue": "Sale value",
       "save": "Save",
       "replyForSale": "Reply for sale",

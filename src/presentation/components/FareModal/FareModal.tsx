@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { MenuItem, Modal, Box } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
@@ -24,12 +24,14 @@ import { Button } from 'fiorde-fe-components'
 import ControlledToolTip from '../ControlledToolTip/ControlledToolTip'
 import { Container, MenuItemContent } from './FareModalStyles'
 import newProposal from '../../../infrastructure/api/newProposalService'
+import { StoreProvider } from '../../../application/store/StoreContext'
 
 export interface FareModalData {
   id: number | null
   saleCurrency: string
   saleValue: string
   expense: string | null
+  selectedContainer: string | null
   type: string
 }
 
@@ -48,6 +50,7 @@ export const initialState = {
   expense: null,
   saleValue: '',
   saleCurrency: 'BRL',
+  selectedContainer: null,
   id: null
 }
 
@@ -65,6 +68,13 @@ const FareModal = ({
   const [typeList, setTypeList] = useState<object[]>([])
   const [serviceList, setServiceList] = useState<any[]>([])
   const [currencyList, setCurrencyList] = useState<any[]>([])
+  const { items, setItems } = useContext(StoreProvider)
+
+  useEffect(() => {
+    if (items.length === 0) {
+      setItems([])
+    }
+  }, [])
 
   const rgxFloat = /^[0-9]*,?[0-9]*$/
 
@@ -214,12 +224,42 @@ const FareModal = ({
               />
             </Container>
           </RowDiv>
+          { specifications === 'fcl' && (
+              <><RowDiv>
+              <Label width="100%">
+                {I18n.t('components.costModal.container')}
+                <RedColorSpan> *</RedColorSpan>
+              </Label>
+            </RowDiv>
+            <RowDiv style={{ position: 'relative' }} margin={true}>
+            <Autocomplete
+              options={items.map((item) => item.type)}
+              value={data.selectedContainer}
+              onChange={(e, newValue) => setData({ ...data, selectedContainer: newValue })}
+              renderInput={(params) => (
+                <div ref={params.InputProps.ref}>
+                  <Input
+                    {...params.inputProps}
+                    filled={data.selectedContainer}
+                    placeholder={I18n.t('components.costModal.choose')}
+                    toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                    invalid={invalidInput && data.selectedContainer === null }
+                    style={{ width: '513px' }}
+                  />
+                  <Box {...params.inputProps} className="dropdownContainer">
+                    <ArrowDropDownIcon />
+                  </Box>
+                </div>
+              )}
+            />
+              </RowDiv></>
+          )}
           <RowDiv>
             <Label width="100%">
               {I18n.t('components.fareModal.saleValue')}
             </Label>
           </RowDiv>
-          <RowDiv margin={false}>
+          <RowDiv>
             <Container style={{ position: 'relative', marginRight: '14px' }}>
               <Autocomplete
                 value={data.saleCurrency}
