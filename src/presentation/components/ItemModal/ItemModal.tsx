@@ -332,8 +332,8 @@ const ItemModal = ({
               <NumberFormat
                 decimalSeparator={','}
                 thousandSeparator={'.'}
-                decimalScale={3}
-                format={(value: string) => rightToLeftFormatter(value, 3)}
+                decimalScale={2}
+                format={(value: string) => rightToLeftFormatter(value, 2)}
                 customInput={ControlledInput}
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 invalid={
