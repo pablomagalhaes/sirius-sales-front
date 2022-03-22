@@ -77,7 +77,7 @@ const FareModal = ({
     } else {
       setData({ ...data, selectedContainer: '' })
     }
-  })
+  }, [containerItems])
 
   const rgxFloat = /^[0-9]*,?[0-9]*$/
 

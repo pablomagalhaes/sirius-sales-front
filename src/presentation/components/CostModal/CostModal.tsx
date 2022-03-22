@@ -1,4 +1,4 @@
-import React, { useReducer, useState, useEffect, useContext } from 'react'
+import React, { useReducer, useState, useEffect } from 'react'
 import { MenuItem, Modal, Box } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
@@ -123,14 +123,6 @@ const CostModal = ({
     }
   }
 
-  useEffect(() => {
-    if (containerItems.length === 1) {
-      dispatch({ type: 'selectedContainer', value: containerItems[0].type })
-    } else {
-      dispatch({ type: 'selectedContainer', value: '' })
-    }
-  })
-
   const rgxFloat = /^[0-9]*,?[0-9]*$/
   const [state, dispatch] = useReducer(
     reducer,
@@ -145,13 +137,14 @@ const CostModal = ({
   const [invalidValueInput, setInvalidValueInput] = useState(false)
   const [currencyList, setCurrencyList] = useState<any[]>([])
   const [serviceList, setServiceList] = useState<any[]>([])
-  const { items, setItems } = useContext(StoreProvider)
 
   useEffect(() => {
-    if (items.length === 0) {
-      setItems([])
+    if (containerItems.length === 1) {
+      dispatch({ type: 'selectedContainer', value: containerItems[0].type })
+    } else {
+      dispatch({ type: 'selectedContainer', value: '' })
     }
-  }, [])
+  }, [containerItems])
 
   useEffect(() => {
     dispatch({ type: 'dataProp' })
@@ -410,7 +403,7 @@ const CostModal = ({
             </RowDiv>
             <RowDiv style={{ position: 'relative' }}>
             <Autocomplete
-              options={items.map((item) => item.type)}
+              options={containerItems.map((item) => item.type)}
               value={state.selectedContainer}
               onChange={(event: any, newValue: string | null) => {
                 dispatch({ type: 'selectedContainer', value: newValue })
