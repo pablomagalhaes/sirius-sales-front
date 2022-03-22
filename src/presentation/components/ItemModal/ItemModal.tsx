@@ -77,6 +77,7 @@ const ItemModal = ({
   const rgxInt = /^[0-9]*$/
   const [data, setData] = useState<ItemModalData>(initialState)
   const [invalidInput, setInvalidInput] = useState(false)
+  const [didMount, setDidMount] = useState(false)
 
   useEffect(() => {
     void (async function () {
@@ -103,6 +104,7 @@ const ItemModal = ({
   const handleOnClose = (): void => {
     setData(initialState)
     setInvalidInput(false)
+    setDidMount(false)
     setClose()
   }
   const marineFCL = (): boolean => {
@@ -169,7 +171,11 @@ const ItemModal = ({
   }
 
   useEffect(() => {
-    updateCubage()
+    if (didMount) {
+      updateCubage()
+    } else if (!didMount && data !== initialState) {
+      setDidMount(true)
+    }
   }, [data.length, data.width, data.height, data.amount])
 
   const returnListItems = (id: number, label: string): JSX.Element => {
