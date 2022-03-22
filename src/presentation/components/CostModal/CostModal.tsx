@@ -344,7 +344,6 @@ const CostModal = ({
                     {...params.inputProps}
                     filled={state.description}
                     placeholder={I18n.t('components.costModal.choose')}
-                    autocomplete={'teste'}
                     toolTipTitle={I18n.t('components.itemModal.requiredField')}
                     invalid={
                       invalidInput &&
