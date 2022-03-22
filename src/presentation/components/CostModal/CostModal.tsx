@@ -1,4 +1,4 @@
-import React, { useReducer, useState, useEffect, useContext } from 'react'
+import React, { useReducer, useState, useEffect } from 'react'
 import { MenuItem, Modal, Box } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
@@ -35,7 +35,7 @@ import {
 } from '../StyledComponents/modalStyles'
 import newProposal from '../../../infrastructure/api/newProposalService'
 import { CheckBoxArea } from '../ItemModal/ItemModalStyles'
-import { StoreProvider } from '../../../application/store/StoreContext'
+import { ItemModalData } from '../ItemModal/ItemModal'
 export interface CostTableItem {
   agent: string
   buyCurrency: string | null
@@ -58,6 +58,7 @@ interface CostModalProps {
   title: string
   modal: string
   specifications: string
+  containerItems: ItemModalData[]
 }
 
 export const initialState = {
@@ -81,7 +82,8 @@ const CostModal = ({
   setClose,
   title,
   modal,
-  specifications
+  specifications,
+  containerItems
 }: CostModalProps): JSX.Element => {
   const reducer = (state, action): CostTableItem => {
     switch (action.type) {
@@ -135,13 +137,14 @@ const CostModal = ({
   const [invalidValueInput, setInvalidValueInput] = useState(false)
   const [currencyList, setCurrencyList] = useState<any[]>([])
   const [serviceList, setServiceList] = useState<any[]>([])
-  const { items, setItems } = useContext(StoreProvider)
 
   useEffect(() => {
-    if (items.length === 0) {
-      setItems([])
+    if (containerItems.length === 1) {
+      dispatch({ type: 'selectedContainer', value: containerItems[0].type })
+    } else {
+      dispatch({ type: 'selectedContainer', value: '' })
     }
-  }, [])
+  }, [containerItems])
 
   useEffect(() => {
     dispatch({ type: 'dataProp' })
@@ -399,7 +402,7 @@ const CostModal = ({
             </RowDiv>
             <RowDiv style={{ position: 'relative' }}>
             <Autocomplete
-              options={items.map((item) => item.type)}
+              options={containerItems.map((item) => item.type)}
               value={state.selectedContainer}
               onChange={(event: any, newValue: string | null) => {
                 dispatch({ type: 'selectedContainer', value: newValue })

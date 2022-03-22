@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { MenuItem, Modal, Box } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
@@ -24,7 +24,7 @@ import { Button } from 'fiorde-fe-components'
 import ControlledToolTip from '../ControlledToolTip/ControlledToolTip'
 import { Container, MenuItemContent } from './FareModalStyles'
 import newProposal from '../../../infrastructure/api/newProposalService'
-import { StoreProvider } from '../../../application/store/StoreContext'
+import { ItemModalData } from '../ItemModal/ItemModal'
 
 export interface FareModalData {
   id: number | null
@@ -43,6 +43,7 @@ interface FareModalProps {
   title: string
   modal: string
   specifications: string
+  containerItems: ItemModalData[]
 }
 
 export const initialState = {
@@ -61,20 +62,22 @@ const FareModal = ({
   setClose,
   title,
   modal,
-  specifications
+  specifications,
+  containerItems
 }: FareModalProps): JSX.Element => {
   const [data, setData] = useState<FareModalData>(initialState)
   const [invalidInput, setInvalidInput] = useState(false)
   const [typeList, setTypeList] = useState<object[]>([])
   const [serviceList, setServiceList] = useState<any[]>([])
   const [currencyList, setCurrencyList] = useState<any[]>([])
-  const { items, setItems } = useContext(StoreProvider)
 
   useEffect(() => {
-    if (items.length === 0) {
-      setItems([])
+    if (containerItems.length === 1) {
+      setData({ ...data, selectedContainer: containerItems[0].type })
+    } else {
+      setData({ ...data, selectedContainer: '' })
     }
-  }, [])
+  }, [containerItems])
 
   const rgxFloat = /^[0-9]*,?[0-9]*$/
 
@@ -224,34 +227,34 @@ const FareModal = ({
               />
             </Container>
           </RowDiv>
-          { specifications === 'fcl' && (
-              <><RowDiv>
+          {specifications === 'fcl' && (
+            <><RowDiv>
               <Label width="100%">
                 {I18n.t('components.costModal.container')}
                 <RedColorSpan> *</RedColorSpan>
               </Label>
             </RowDiv>
-            <RowDiv style={{ position: 'relative' }} margin={true}>
-            <Autocomplete
-              options={items.map((item) => item.type)}
-              value={data.selectedContainer}
-              onChange={(e, newValue) => setData({ ...data, selectedContainer: newValue })}
-              renderInput={(params) => (
-                <div ref={params.InputProps.ref}>
-                  <Input
-                    {...params.inputProps}
-                    filled={data.selectedContainer}
-                    placeholder={I18n.t('components.costModal.choose')}
-                    toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                    invalid={invalidInput && data.selectedContainer === null }
-                    style={{ width: '513px' }}
-                  />
-                  <Box {...params.inputProps} className="dropdownContainer">
-                    <ArrowDropDownIcon />
-                  </Box>
-                </div>
-              )}
-            />
+              <RowDiv style={{ position: 'relative' }} margin={true}>
+                <Autocomplete
+                  options={containerItems.map((item) => item.type)}
+                  value={data.selectedContainer}
+                  onChange={(e, newValue) => setData({ ...data, selectedContainer: newValue })}
+                  renderInput={(params) => (
+                    <div ref={params.InputProps.ref}>
+                      <Input
+                        {...params.inputProps}
+                        filled={data.selectedContainer}
+                        placeholder={I18n.t('components.costModal.choose')}
+                        toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                        invalid={invalidInput && data.selectedContainer === null}
+                        style={{ width: '513px' }}
+                      />
+                      <Box {...params.inputProps} className="dropdownContainer">
+                        <ArrowDropDownIcon />
+                      </Box>
+                    </div>
+                  )}
+                />
               </RowDiv></>
           )}
           <RowDiv>
