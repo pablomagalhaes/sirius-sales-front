@@ -8,7 +8,8 @@ const props = {
     expense: 'Fuel - Security1',
     saleValue: '50,0',
     saleCurrency: 'EUR',
-    id: null
+    id: null,
+    selectedContainer: null
   },
   title: 'Editar item',
   action: () => {},
