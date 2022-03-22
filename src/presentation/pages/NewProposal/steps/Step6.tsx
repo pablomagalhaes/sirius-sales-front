@@ -51,8 +51,8 @@ const Table = ({ data, remove, edit }: TableData): JSX.Element => {
       <TableBody>
         {data !== null
           ? (
-            data?.map((item: FareModalData) => {
-              return (
+              data?.map((item: FareModalData) => {
+                return (
                 <StyledRow id={item.id} key={item.id}>
                   <StyledTableCell
                     color={1}
@@ -92,12 +92,12 @@ const Table = ({ data, remove, edit }: TableData): JSX.Element => {
                     </RowReverseDiv>
                   </StyledTableCell>
                 </StyledRow>
-              )
-            })
-          )
+                )
+              })
+            )
           : (
             <div />
-          )}
+            )}
       </TableBody>
     </StyledTable>
   )

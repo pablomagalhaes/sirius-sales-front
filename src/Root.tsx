@@ -7,7 +7,7 @@ import store from './application/redux/store'
 const Root = (): JSX.Element => {
   return (
     <Provider store={store}>
-      <App />
+        <App />
     </Provider>
   )
 }
