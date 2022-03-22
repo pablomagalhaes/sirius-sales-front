@@ -21,7 +21,6 @@ import { SelectSpan } from '../../pages/NewProposal/style'
 import { Button } from 'fiorde-fe-components'
 import { Autocomplete } from '@material-ui/lab'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
-import IconComponent from '../../../application/icons/IconComponent'
 
 export interface ItemModalData {
   amount: string
@@ -264,12 +263,6 @@ const ItemModal = ({
                 modal
               />
             </Grid>}
-            {/* <Grid item xs={2}>
-              <FormLabel component="legend">{I18n.t('components.itemModal.stack')}</FormLabel>
-              <RadioGroup style={{ marginLeft: '15px' }} row aria-label="services" name="row-radio-buttons-group" onChange={e => setData({ ...data, stack: !data.stack })}>
-                <FormControlLabel value="stack" control={<Checkbox />} label={I18n.t('components.itemModal.yes')} />
-              </RadioGroup>
-            </Grid> */}
             {marineFCL() && <Box width="100%" />}
             {!marineFCL() && <Grid item xs={5}>
               <FormLabel component="legend">{I18n.t('components.itemModal.hwl')}
