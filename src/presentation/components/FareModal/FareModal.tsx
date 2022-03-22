@@ -24,12 +24,14 @@ import { Button } from 'fiorde-fe-components'
 import ControlledToolTip from '../ControlledToolTip/ControlledToolTip'
 import { Container, MenuItemContent } from './FareModalStyles'
 import newProposal from '../../../infrastructure/api/newProposalService'
+import { ItemModalData } from '../ItemModal/ItemModal'
 
 export interface FareModalData {
   id: number | null
   saleCurrency: string
   saleValue: string
   expense: string | null
+  selectedContainer: string | null
   type: string
 }
 
@@ -41,6 +43,7 @@ interface FareModalProps {
   title: string
   modal: string
   specifications: string
+  containerItems: ItemModalData[]
 }
 
 export const initialState = {
@@ -48,6 +51,7 @@ export const initialState = {
   expense: null,
   saleValue: '',
   saleCurrency: 'BRL',
+  selectedContainer: null,
   id: null
 }
 
@@ -58,13 +62,22 @@ const FareModal = ({
   setClose,
   title,
   modal,
-  specifications
+  specifications,
+  containerItems
 }: FareModalProps): JSX.Element => {
   const [data, setData] = useState<FareModalData>(initialState)
   const [invalidInput, setInvalidInput] = useState(false)
   const [typeList, setTypeList] = useState<object[]>([])
   const [serviceList, setServiceList] = useState<any[]>([])
   const [currencyList, setCurrencyList] = useState<any[]>([])
+
+  useEffect(() => {
+    if (containerItems.length === 1) {
+      setData({ ...data, selectedContainer: containerItems[0].type })
+    } else {
+      setData({ ...data, selectedContainer: '' })
+    }
+  }, [containerItems])
 
   const rgxFloat = /^[0-9]*,?[0-9]*$/
 
@@ -214,12 +227,42 @@ const FareModal = ({
               />
             </Container>
           </RowDiv>
+          {specifications === 'fcl' && (
+            <><RowDiv>
+              <Label width="100%">
+                {I18n.t('components.costModal.container')}
+                <RedColorSpan> *</RedColorSpan>
+              </Label>
+            </RowDiv>
+              <RowDiv style={{ position: 'relative' }} margin={true}>
+                <Autocomplete
+                  options={containerItems.map((item) => item.type)}
+                  value={data.selectedContainer}
+                  onChange={(e, newValue) => setData({ ...data, selectedContainer: newValue })}
+                  renderInput={(params) => (
+                    <div ref={params.InputProps.ref}>
+                      <Input
+                        {...params.inputProps}
+                        filled={data.selectedContainer}
+                        placeholder={I18n.t('components.costModal.choose')}
+                        toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                        invalid={invalidInput && data.selectedContainer === null}
+                        style={{ width: '513px' }}
+                      />
+                      <Box {...params.inputProps} className="dropdownContainer">
+                        <ArrowDropDownIcon />
+                      </Box>
+                    </div>
+                  )}
+                />
+              </RowDiv></>
+          )}
           <RowDiv>
             <Label width="100%">
               {I18n.t('components.fareModal.saleValue')}
             </Label>
           </RowDiv>
-          <RowDiv margin={false}>
+          <RowDiv>
             <Container style={{ position: 'relative', marginRight: '14px' }}>
               <Autocomplete
                 value={data.saleCurrency}

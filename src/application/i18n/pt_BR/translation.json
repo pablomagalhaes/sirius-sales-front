@@ -126,6 +126,7 @@
       "description": "Despesa/Serviço:",
       "agent": "Agente:",
       "buyValue": "Valor compra",
+      "container": "Container:",
       "saleValue": "Valor Venda",
       "save": "Salvar",
       "replyForSale": "Replicar para venda",
