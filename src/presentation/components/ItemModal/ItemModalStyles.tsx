@@ -66,6 +66,10 @@ export const MainDiv = styled.div`
   .MuiSelect-icon {
     color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.font};
   }
+
+  .MuiOutlinedInput-adornedEnd {
+    padding-right: 6px !important;
+  }
   
 `
 
