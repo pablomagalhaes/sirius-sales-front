@@ -1,4 +1,4 @@
-import { MenuItem, Modal, Grid, FormLabel, RadioGroup, Checkbox, FormControlLabel, Box } from '@material-ui/core'
+import { MenuItem, Modal, Grid, FormLabel, RadioGroup, Checkbox, FormControlLabel, Box, InputAdornment } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import CloseIcon from '../../../application/icons/CloseIcon'
 import {
@@ -6,7 +6,6 @@ import {
   MainDiv
 } from './ItemModalStyles'
 import { I18n } from 'react-redux-i18n'
-import ControlledSelect from '../ControlledSelect'
 import ControlledInput from '../ControlledInput'
 import {
   HeaderDiv,
@@ -20,6 +19,8 @@ import NumberFormat from 'react-number-format'
 import newProposal from '../../../infrastructure/api/newProposalService'
 import { SelectSpan } from '../../pages/NewProposal/style'
 import { Button } from 'fiorde-fe-components'
+import { Autocomplete } from '@material-ui/lab'
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 
 export interface ItemModalData {
   amount: string
@@ -201,25 +202,38 @@ const ItemModal = ({
         </HeaderDiv>
         <MainDiv>
           <Grid container spacing={2} style={{ width: '100%' }}>
-            <Grid item xs={4}>
-              <FormLabel component="legend">{marineFCL() ? I18n.t('components.itemModal.container') : I18n.t('components.itemModal.packaging')}<RedColorSpan> *</RedColorSpan></FormLabel>
-              <ControlledSelect
-                id="container-type-select"
-                value={data.type}
-                onChange={(e) => setData({ ...data, type: e.target.value })}
-                displayEmpty
-                disableUnderline
-                invalid={invalidInput && (data.type?.length === 0 || data.type === null)}
-                toolTipTitle={I18n.t('components.itemModal.requiredField')}
-              >
-                <MenuItem disabled value={String(data.type)}>
-                  <SelectSpan placeholder={1}>{I18n.t('components.itemModal.choose')}</SelectSpan>
-                </MenuItem>
-                {marineFCL()
-                  ? containerTypeList.map((item) => (returnListItems(item.id, item.description)))
-                  : packagingList.map((item) => (returnListItems(item.id, item.packaging)))}
-              </ControlledSelect>
-            </Grid>
+            <Grid item xs={10}>
+            <FormLabel component="legend">{marineFCL() ? I18n.t('components.itemModal.container') : I18n.t('components.itemModal.packaging')}<RedColorSpan> *</RedColorSpan></FormLabel>
+            <Autocomplete
+              freeSolo
+              value={data.type}
+              onChange={(e, newValue) => setData({ ...data, type: newValue })}
+              options={ marineFCL() ? containerTypeList.map((item) => item.type) : packagingList.map((item) => item.packaging)}
+              renderInput={(params) => (
+                <div ref={params.InputProps.ref}>
+                  <ControlledInput
+                    {...params}
+                    id="search-origin"
+                    toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                    invalid={invalidInput &&data?.type?.length === 0 }
+                    variant="outlined"
+                    size="small"
+                    modal
+                    placeholder={I18n.t('components.itemModal.choose')}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <Box width={'max-content'} {...params.inputProps}>
+                              <ArrowDropDownIcon />
+                          </Box>
+                        </InputAdornment>
+                      )
+                    }}
+                  />
+                </div>
+              )}
+            />
+          </Grid>
             <Grid item xs={2}>
               <FormLabel component="legend">{I18n.t('components.itemModal.amount')}<RedColorSpan> *</RedColorSpan></FormLabel>
               <ControlledInput
@@ -258,14 +272,13 @@ const ItemModal = ({
                 modal
               />
             </Grid>}
-            <Grid item xs={2}>
-              <FormLabel component="legend">{I18n.t('components.itemModal.stack')}</FormLabel>
-              <RadioGroup style={{ marginLeft: '15px' }} row aria-label="services" name="row-radio-buttons-group" onChange={e => setData({ ...data, stack: !data.stack })}>
-                <FormControlLabel value="stack" control={<Checkbox />} label={I18n.t('components.itemModal.yes')} />
+            <Grid item xs={6}>
+              <RadioGroup style={{ margin: '47px 10px 10px -15px' }} row aria-label="services" name="row-radio-buttons-group" onChange={e => setData({ ...data, stack: !data.stack })}>
+                <FormControlLabel value="stack" control={<Checkbox />} label={I18n.t('components.itemModal.stack')} />
               </RadioGroup>
             </Grid>
             {marineFCL() && <Box width="100%" />}
-            {!marineFCL() && <Grid item xs={5}>
+            {!marineFCL() && <Grid item xs={6}>
               <FormLabel component="legend">{I18n.t('components.itemModal.hwl')}
                 {(modal === 'AIR' ||
                   (modal === 'SEA' && specifications !== 'fcl') ||
@@ -326,23 +339,6 @@ const ItemModal = ({
                 />
               </div>
             </Grid>}
-            {hasDiameter() && <Grid item xs={4}>
-              <FormLabel component="legend">{I18n.t('components.itemModal.diameter')}</FormLabel>
-              <NumberFormat
-                decimalSeparator={','}
-                thousandSeparator={'.'}
-                decimalScale={2}
-                format={(value: string) => rightToLeftFormatter(value, 2)}
-                customInput={ControlledInput}
-                toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                invalid={false}
-                value={data.diameter != null ? data.diameter : ''}
-                onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, diameter: e.target.value })) }}
-                variant="outlined"
-                size="small"
-                modal
-              />
-            </Grid>}
             {!(marineFCL()) && <Grid item xs={3}>
               <FormLabel component="legend">
                 {I18n.t('components.itemModal.cubage')}
@@ -363,6 +359,23 @@ const ItemModal = ({
                 }
                 value={data.cubage != null ? data.cubage : ''}
                 onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, cubage: e.target.value })) }}
+                variant="outlined"
+                size="small"
+                modal
+              />
+            </Grid>}
+            {hasDiameter() && <Grid item xs={3}>
+              <FormLabel component="legend">{I18n.t('components.itemModal.diameter')}</FormLabel>
+              <NumberFormat
+                decimalSeparator={','}
+                thousandSeparator={'.'}
+                decimalScale={2}
+                format={(value: string) => rightToLeftFormatter(value, 2)}
+                customInput={ControlledInput}
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                invalid={false}
+                value={data.diameter != null ? data.diameter : ''}
+                onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, diameter: e.target.value })) }}
                 variant="outlined"
                 size="small"
                 modal
