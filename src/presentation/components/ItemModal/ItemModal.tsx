@@ -180,6 +180,9 @@ const ItemModal = ({
   }, [data.length, data.width, data.height, data.amount])
 
   const returnListItems = (id: number, label: string): JSX.Element => {
+    if (label === null) {
+      return <></>
+    }
     return (
       <MenuItem key={id} value={label}>
         <SelectSpan>{label}</SelectSpan>
