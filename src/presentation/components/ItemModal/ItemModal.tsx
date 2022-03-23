@@ -78,6 +78,7 @@ const ItemModal = ({
   const rgxInt = /^[0-9]*$/
   const [data, setData] = useState<ItemModalData>(initialState)
   const [invalidInput, setInvalidInput] = useState(false)
+  const [didMount, setDidMount] = useState(false)
 
   useEffect(() => {
     void (async function () {
@@ -104,6 +105,7 @@ const ItemModal = ({
   const handleOnClose = (): void => {
     setData(initialState)
     setInvalidInput(false)
+    setDidMount(false)
     setClose()
   }
   const marineFCL = (): boolean => {
@@ -170,7 +172,11 @@ const ItemModal = ({
   }
 
   useEffect(() => {
-    updateCubage()
+    if (didMount) {
+      updateCubage()
+    } else if (!didMount && data !== initialState) {
+      setDidMount(true)
+    }
   }, [data.length, data.width, data.height, data.amount])
 
   const returnListItems = (id: number, label: string): JSX.Element => {
@@ -193,7 +199,7 @@ const ItemModal = ({
         </HeaderDiv>
         <MainDiv>
           <Grid container spacing={2} style={{ width: '100%' }}>
-            <Grid item xs={6}>
+            <Grid item xs={10}>
             <FormLabel component="legend">{marineFCL() ? I18n.t('components.itemModal.container') : I18n.t('components.itemModal.packaging')}<RedColorSpan> *</RedColorSpan></FormLabel>
             <Autocomplete
               freeSolo
@@ -263,8 +269,13 @@ const ItemModal = ({
                 modal
               />
             </Grid>}
+            <Grid item xs={6}>
+              <RadioGroup style={{ margin: '47px 10px 10px -15px' }} row aria-label="services" name="row-radio-buttons-group" onChange={e => setData({ ...data, stack: !data.stack })}>
+                <FormControlLabel value="stack" control={<Checkbox />} label={I18n.t('components.itemModal.stack')} />
+              </RadioGroup>
+            </Grid>
             {marineFCL() && <Box width="100%" />}
-            {!marineFCL() && <Grid item xs={5}>
+            {!marineFCL() && <Grid item xs={6}>
               <FormLabel component="legend">{I18n.t('components.itemModal.hwl')}
                 {(modal === 'AIR' ||
                   (modal === 'SEA' && specifications !== 'fcl') ||
@@ -325,23 +336,6 @@ const ItemModal = ({
                 />
               </div>
             </Grid>}
-            {hasDiameter() && <Grid item xs={4}>
-              <FormLabel component="legend">{I18n.t('components.itemModal.diameter')}</FormLabel>
-              <NumberFormat
-                decimalSeparator={','}
-                thousandSeparator={'.'}
-                decimalScale={2}
-                format={(value: string) => rightToLeftFormatter(value, 2)}
-                customInput={ControlledInput}
-                toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                invalid={false}
-                value={data.diameter != null ? data.diameter : ''}
-                onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, diameter: e.target.value })) }}
-                variant="outlined"
-                size="small"
-                modal
-              />
-            </Grid>}
             {!(marineFCL()) && <Grid item xs={3}>
               <FormLabel component="legend">
                 {I18n.t('components.itemModal.cubage')}
@@ -367,12 +361,23 @@ const ItemModal = ({
                 modal
               />
             </Grid>}
-            <Grid item xs={2}>
-              <FormLabel component="legend">{I18n.t('components.itemModal.stack')}</FormLabel>
-              <RadioGroup style={{ marginLeft: '15px' }} row aria-label="services" name="row-radio-buttons-group" onChange={e => setData({ ...data, stack: !data.stack })}>
-                <FormControlLabel value="stack" control={<Checkbox />} label={I18n.t('components.itemModal.yes')} />
-              </RadioGroup>
-            </Grid>
+            {hasDiameter() && <Grid item xs={3}>
+              <FormLabel component="legend">{I18n.t('components.itemModal.diameter')}</FormLabel>
+              <NumberFormat
+                decimalSeparator={','}
+                thousandSeparator={'.'}
+                decimalScale={2}
+                format={(value: string) => rightToLeftFormatter(value, 2)}
+                customInput={ControlledInput}
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                invalid={false}
+                value={data.diameter != null ? data.diameter : ''}
+                onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, diameter: e.target.value })) }}
+                variant="outlined"
+                size="small"
+                modal
+              />
+            </Grid>}
             <Grid item xs={12}>
               <ButtonDiv>
                 <Button
