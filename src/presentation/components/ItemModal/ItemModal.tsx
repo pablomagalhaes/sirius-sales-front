@@ -179,6 +179,9 @@ const ItemModal = ({
   }, [data.length, data.width, data.height, data.amount])
 
   const returnListItems = (id: number, label: string): JSX.Element => {
+    if (label === null) {
+      return <></>
+    }
     return (
       <MenuItem key={id} value={label}>
         <SelectSpan>{label}</SelectSpan>
@@ -213,7 +216,7 @@ const ItemModal = ({
                   <SelectSpan placeholder={1}>{I18n.t('components.itemModal.choose')}</SelectSpan>
                 </MenuItem>
                 {marineFCL()
-                  ? containerTypeList.map((item) => (returnListItems(item.id, item.type)))
+                  ? containerTypeList.map((item) => (returnListItems(item.id, item.description)))
                   : packagingList.map((item) => (returnListItems(item.id, item.packaging)))}
               </ControlledSelect>
             </Grid>
