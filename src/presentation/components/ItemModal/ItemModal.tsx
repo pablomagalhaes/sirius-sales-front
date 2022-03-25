@@ -1,4 +1,4 @@
-import { MenuItem, Modal, Grid, FormLabel, RadioGroup, Checkbox, FormControlLabel, Box, InputAdornment } from '@material-ui/core'
+import { Modal, Grid, FormLabel, RadioGroup, Checkbox, FormControlLabel, Box, InputAdornment } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import CloseIcon from '../../../application/icons/CloseIcon'
 import {
@@ -17,7 +17,6 @@ import {
 } from '../StyledComponents/modalStyles'
 import NumberFormat from 'react-number-format'
 import newProposal from '../../../infrastructure/api/newProposalService'
-import { SelectSpan } from '../../pages/NewProposal/style'
 import { Button } from 'fiorde-fe-components'
 import { Autocomplete } from '@material-ui/lab'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
@@ -162,6 +161,17 @@ const ItemModal = ({
       setInvalidInput(true)
     }
   }
+  const getContainerTypeList = (): string[] => {
+    const finalList: string[] = []
+
+    containerTypeList?.forEach((item): void => {
+      if (item.description !== null) {
+        finalList.push(String(item.description))
+      }
+    })
+
+    return finalList
+  }
 
   const updateCubage = (): void => {
     const newCubage = Number(data.length === null ? 0 : Number(data.length.replace(',', '.'))) *
@@ -178,16 +188,6 @@ const ItemModal = ({
       setDidMount(true)
     }
   }, [data.length, data.width, data.height, data.amount])
-
-  const returnListItems = (id: number, label: string): JSX.Element => {
-    if (label === null) {
-      return <></>
-    }
-    return (
-      <MenuItem key={id} value={label}>
-        <SelectSpan>{label}</SelectSpan>
-      </MenuItem>)
-  }
 
   return (
     <Modal open={open} onClose={handleOnClose}>
@@ -208,14 +208,14 @@ const ItemModal = ({
               freeSolo
               value={data.type}
               onChange={(e, newValue) => setData({ ...data, type: newValue })}
-              options={ marineFCL() ? containerTypeList.map((item) => item.type) : packagingList.map((item) => item.packaging)}
+              options={ marineFCL() ? getContainerTypeList() : packagingList.map((item) => String(item.packaging))}
               renderInput={(params) => (
                 <div ref={params.InputProps.ref}>
                   <ControlledInput
                     {...params}
                     id="search-origin"
                     toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                    invalid={invalidInput &&data?.type?.length === 0 }
+                    invalid={invalidInput && data?.type?.length === 0 }
                     variant="outlined"
                     size="small"
                     modal
