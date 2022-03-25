@@ -25,6 +25,7 @@ import ControlledToolTip from '../ControlledToolTip/ControlledToolTip'
 import { Container, MenuItemContent } from './FareModalStyles'
 import newProposal from '../../../infrastructure/api/newProposalService'
 import { ItemModalData } from '../ItemModal/ItemModal'
+import { StyledPaper } from '../../pages/NewProposal/steps/StepsStyles'
 
 export interface FareModalData {
   id: number | null
@@ -224,6 +225,7 @@ const FareModal = ({
                     </Box>
                   </div>
                 )}
+                PaperComponent={(params: any) => <StyledPaper {...params} />}
               />
             </Container>
           </RowDiv>
@@ -254,6 +256,7 @@ const FareModal = ({
                       </Box>
                     </div>
                   )}
+                  PaperComponent={(params: any) => <StyledPaper {...params} />}
                 />
               </RowDiv></>
           )}
@@ -282,6 +285,7 @@ const FareModal = ({
                     </Box>
                   </div>
                 )}
+                PaperComponent={(params: any) => <StyledPaper {...params} />}
               />
             </Container>
             <ControlledToolTip
