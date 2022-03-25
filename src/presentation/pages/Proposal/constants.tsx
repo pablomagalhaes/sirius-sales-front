@@ -9,11 +9,6 @@ const orderButtonMenuItems = ['Ref. proposta', 'Nome do cliente', 'Responsável'
 const cardFilters: CardFilterProps[] = [
   {
     iconType: '',
-    value: '-',
-    status: 'Rascunhos'
-  },
-  {
-    iconType: '',
     value: '170',
     status: 'Abertas'
   },
