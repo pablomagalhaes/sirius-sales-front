@@ -216,7 +216,10 @@ const ItemModal = ({
                     {...params}
                     id="search-origin"
                     toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                    invalid={invalidInput && data?.type?.length === 0 }
+                    invalid={
+                      invalidInput &&
+                      (data.length === null || data.length.length === 0)
+                    }
                     variant="outlined"
                     size="small"
                     modal
