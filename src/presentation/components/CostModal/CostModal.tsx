@@ -139,16 +139,15 @@ const CostModal = ({
   const [currencyList, setCurrencyList] = useState<any[]>([])
   const [serviceList, setServiceList] = useState<any[]>([])
 
-  useEffect(() => {
+  const verifyContainerItems = (): void => {
     if (containerItems.length === 1) {
       dispatch({ type: 'selectedContainer', value: containerItems[0].type })
-    } else {
-      dispatch({ type: 'selectedContainer', value: '' })
     }
-  }, [containerItems])
+  }
 
   useEffect(() => {
     dispatch({ type: 'dataProp' })
+    verifyContainerItems()
     setBuyCheckBox(dataProp?.buyValue !== null && dataProp?.buyValue.length !== 0)
     setSaleCheckBox(dataProp?.saleValue !== null && dataProp?.saleValue.length !== 0)
   }, [open])
@@ -366,7 +365,7 @@ const CostModal = ({
               <RedColorSpan> *</RedColorSpan>
             </Label>
           </RowDiv>
-          <RowDiv margin={ specifications === 'fcl' && true }>
+          <RowDiv margin={specifications === 'fcl' && true}>
             <StyledMenuSelect
               width="513px"
               onChange={(e) =>
@@ -395,37 +394,37 @@ const CostModal = ({
               })}
             </StyledMenuSelect>
           </RowDiv>
-          { specifications === 'fcl' && (
-              <><RowDiv>
+          {specifications === 'fcl' && (
+            <><RowDiv>
               <Label width="100%">
                 {I18n.t('components.costModal.container')}
                 <RedColorSpan> *</RedColorSpan>
               </Label>
             </RowDiv>
-            <RowDiv style={{ position: 'relative' }}>
-            <Autocomplete
-              options={containerItems.map((item) => item.type)}
-              value={state.selectedContainer}
-              onChange={(event: any, newValue: string | null) => {
-                dispatch({ type: 'selectedContainer', value: newValue })
-              }}
-              renderInput={(params) => (
-                <div ref={params.InputProps.ref}>
-                  <Input
-                    {...params.inputProps}
-                    filled={state.selectedContainer}
-                    placeholder={I18n.t('components.costModal.choose')}
-                    toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                    invalid={invalidInput && state.selectedContainer === null }
-                    style={{ width: '513px' }}
-                  />
-                  <Box {...params.inputProps} className="dropdownContainer">
-                    <ArrowDropDownIcon />
-                  </Box>
-                </div>
-              )}
-              PaperComponent={(params: any) => <StyledPaper {...params} />}
-            />
+              <RowDiv style={{ position: 'relative' }}>
+                <Autocomplete
+                  options={containerItems.map((item) => item.type)}
+                  value={state.selectedContainer}
+                  onChange={(event: any, newValue: string | null) => {
+                    dispatch({ type: 'selectedContainer', value: newValue })
+                  }}
+                  renderInput={(params) => (
+                    <div ref={params.InputProps.ref}>
+                      <Input
+                        {...params.inputProps}
+                        filled={state.selectedContainer}
+                        placeholder={I18n.t('components.costModal.choose')}
+                        toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                        invalid={invalidInput && state.selectedContainer === null}
+                        style={{ width: '513px' }}
+                      />
+                      <Box {...params.inputProps} className="dropdownContainer">
+                        <ArrowDropDownIcon />
+                      </Box>
+                    </div>
+                  )}
+                  PaperComponent={(params: any) => <StyledPaper {...params} />}
+                />
               </RowDiv></>
           )}
           <RowDiv>

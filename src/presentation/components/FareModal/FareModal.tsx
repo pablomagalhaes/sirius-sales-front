@@ -72,12 +72,16 @@ const FareModal = ({
   const [serviceList, setServiceList] = useState<any[]>([])
   const [currencyList, setCurrencyList] = useState<any[]>([])
 
-  useEffect(() => {
+  const verifyContainerItems = (): void => {
     if (containerItems.length === 1) {
       setData({ ...data, selectedContainer: containerItems[0].type })
     } else {
       setData({ ...data, selectedContainer: '' })
     }
+  }
+
+  useEffect(() => {
+    verifyContainerItems()
   }, [containerItems])
 
   const rgxFloat = /^[0-9]*,?[0-9]*$/
@@ -105,6 +109,7 @@ const FareModal = ({
   const handleOnClose = (): void => {
     setData(initialState)
     setInvalidInput(false)
+    verifyContainerItems()
     setClose()
   }
 
@@ -248,7 +253,7 @@ const FareModal = ({
                         filled={data.selectedContainer}
                         placeholder={I18n.t('components.costModal.choose')}
                         toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                        invalid={invalidInput && data.selectedContainer === null}
+                        invalid={invalidInput && data.selectedContainer === ''}
                         style={{ width: '513px' }}
                       />
                       <Box {...params.inputProps} className="dropdownContainer">
