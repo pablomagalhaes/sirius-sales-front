@@ -16,6 +16,7 @@ import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import newProposal from '../../../../infrastructure/api/newProposalService'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { Transport, TransportList } from '../../../../domain/transport'
+import { StyledPaper } from './StepsStyles'
 
 export interface Step1Props {
   theme?: any
@@ -137,6 +138,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
                 />
               </div>
             )}
+            PaperComponent={(params: any) => <StyledPaper {...params} />}
           />
         </Grid>
         <Grid item xs={6}>

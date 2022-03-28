@@ -210,6 +210,7 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
                   />
                 </div>
               )}
+              PaperComponent={(params: any) => <StyledPaper {...params} />}
             />
           </Grid>
           <Grid item xs={6}>
@@ -243,6 +244,7 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
                   />
                 </div>
               )}
+              PaperComponent={(params: any) => <StyledPaper {...params} />}
             />
           </Grid>
           {proposalType === 'client' &&
