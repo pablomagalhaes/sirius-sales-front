@@ -36,6 +36,7 @@ import {
 import newProposal from '../../../infrastructure/api/newProposalService'
 import { CheckBoxArea } from '../ItemModal/ItemModalStyles'
 import { ItemModalData } from '../ItemModal/ItemModal'
+import { StyledPaper } from '../../pages/NewProposal/steps/StepsStyles'
 export interface CostTableItem {
   agent: string
   buyCurrency: string | null
@@ -356,6 +357,7 @@ const CostModal = ({
                   </Box>
                 </div>
               )}
+              PaperComponent={(params: any) => <StyledPaper {...params} />}
             />
           </RowDiv>
           <RowDiv>
@@ -422,6 +424,7 @@ const CostModal = ({
                   </Box>
                 </div>
               )}
+              PaperComponent={(params: any) => <StyledPaper {...params} />}
             />
               </RowDiv></>
           )}
@@ -470,6 +473,7 @@ const CostModal = ({
                   </Box>
                 </div>
               )}
+              PaperComponent={(params: any) => <StyledPaper {...params} />}
             />
             <ControlledToolTip
               title={I18n.t('components.itemModal.requiredField')}
@@ -559,6 +563,7 @@ const CostModal = ({
                   </Box>
                 </div>
               )}
+              PaperComponent={(params: any) => <StyledPaper {...params} />}
             />
             <ControlledToolTip
               title={I18n.t('components.itemModal.requiredField')}

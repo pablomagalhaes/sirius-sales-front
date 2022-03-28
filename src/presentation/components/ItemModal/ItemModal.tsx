@@ -20,6 +20,7 @@ import newProposal from '../../../infrastructure/api/newProposalService'
 import { Button } from 'fiorde-fe-components'
 import { Autocomplete } from '@material-ui/lab'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
+import { StyledPaper } from '../../pages/NewProposal/steps/StepsStyles'
 
 export interface ItemModalData {
   amount: string
@@ -232,6 +233,7 @@ const ItemModal = ({
                   />
                 </div>
               )}
+              PaperComponent={(params: any) => <StyledPaper {...params} />}
             />
           </Grid>
             <Grid item xs={2}>
