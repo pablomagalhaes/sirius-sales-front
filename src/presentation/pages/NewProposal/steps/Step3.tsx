@@ -85,6 +85,10 @@ const Step3 = ({
     setTableRows([])
   }, [modal, data.specifications])
 
+  useEffect(() => {
+    setData({ ...data, specifications: '' })
+  }, [modal])
+
   const handleOpen = (): void => setOpen(true)
 
   const handleClose = (): void => {
