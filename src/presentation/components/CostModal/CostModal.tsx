@@ -337,7 +337,7 @@ const CostModal = ({
               title={I18n.t('components.itemModal.requiredField')}
               open={
                 invalidInput &&
-                (state.description === null || state.type.length === 0)
+                (state.description === null || state.description.length === 0)
               }
             >
               <Autocomplete
