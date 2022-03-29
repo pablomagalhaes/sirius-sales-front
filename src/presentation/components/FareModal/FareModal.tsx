@@ -23,8 +23,9 @@ import { Input } from '../CostModal/CostModalStyles'
 import { Button } from 'fiorde-fe-components'
 import ControlledToolTip from '../ControlledToolTip/ControlledToolTip'
 import { Container, MenuItemContent } from './FareModalStyles'
-import newProposal from '../../../infrastructure/api/newProposalService'
+import API from '../../../infrastructure/api'
 import { ItemModalData } from '../ItemModal/ItemModal'
+import { StyledPaper } from '../../pages/NewProposal/steps/StepsStyles'
 
 export interface FareModalData {
   id: number | null
@@ -71,12 +72,16 @@ const FareModal = ({
   const [serviceList, setServiceList] = useState<any[]>([])
   const [currencyList, setCurrencyList] = useState<any[]>([])
 
-  useEffect(() => {
+  const verifyContainerItems = (): void => {
     if (containerItems.length === 1) {
       setData({ ...data, selectedContainer: containerItems[0].type })
     } else {
       setData({ ...data, selectedContainer: '' })
     }
+  }
+
+  useEffect(() => {
+    verifyContainerItems()
   }, [containerItems])
 
   const rgxFloat = /^[0-9]*,?[0-9]*$/
@@ -104,6 +109,7 @@ const FareModal = ({
   const handleOnClose = (): void => {
     setData(initialState)
     setInvalidInput(false)
+    verifyContainerItems()
     setClose()
   }
 
@@ -124,7 +130,7 @@ const FareModal = ({
 
   useEffect(() => {
     void (async function () {
-      await newProposal.getCurrencies()
+      await API.getCurrencies()
         .then((response) => setCurrencyList(response))
         .catch((err) => console.log(err))
     })()
@@ -132,7 +138,7 @@ const FareModal = ({
 
   useEffect(() => {
     void (async function () {
-      await newProposal.getService()
+      await API.getService()
         .then((response) => setServiceList(response))
         .catch((err) => console.log(err))
     })()
@@ -224,6 +230,7 @@ const FareModal = ({
                     </Box>
                   </div>
                 )}
+                PaperComponent={(params: any) => <StyledPaper {...params} />}
               />
             </Container>
           </RowDiv>
@@ -246,7 +253,7 @@ const FareModal = ({
                         filled={data.selectedContainer}
                         placeholder={I18n.t('components.costModal.choose')}
                         toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                        invalid={invalidInput && data.selectedContainer === null}
+                        invalid={invalidInput && data.selectedContainer === ''}
                         style={{ width: '513px' }}
                       />
                       <Box {...params.inputProps} className="dropdownContainer">
@@ -254,6 +261,7 @@ const FareModal = ({
                       </Box>
                     </div>
                   )}
+                  PaperComponent={(params: any) => <StyledPaper {...params} />}
                 />
               </RowDiv></>
           )}
@@ -282,6 +290,7 @@ const FareModal = ({
                     </Box>
                   </div>
                 )}
+                PaperComponent={(params: any) => <StyledPaper {...params} />}
               />
             </Container>
             <ControlledToolTip

@@ -25,7 +25,7 @@ import ControlledInput from '../../../components/ControlledInput'
 import ChargeTable from '../../../components/ChargeTable'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import { withTheme } from 'styled-components'
-import newProposal from '../../../../infrastructure/api/newProposalService'
+import API from '../../../../infrastructure/api'
 interface Step3Props {
   theme?: any
   modal: string
@@ -53,7 +53,7 @@ const Step3 = ({
 
   useEffect(() => {
     void (async function () {
-      await newProposal.getImo()
+      await API.getImo()
         .then((response) => setImoList(response))
         .catch((err) => console.log(err))
     })()
@@ -65,7 +65,7 @@ const Step3 = ({
 
   useEffect(() => {
     void (async function () {
-      await newProposal.getTemperature()
+      await API.getTemperature()
         .then((response) => setTemperatureList(response))
         .catch((err) => console.log(err))
     })()
@@ -84,6 +84,10 @@ const Step3 = ({
   useEffect(() => {
     setTableRows([])
   }, [modal, data.specifications])
+
+  useEffect(() => {
+    setData({ ...data, specifications: '' })
+  }, [modal])
 
   const handleOpen = (): void => setOpen(true)
 

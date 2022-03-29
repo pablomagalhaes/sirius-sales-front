@@ -155,7 +155,7 @@
       "requiredField": "Campo obrigatório",
       "cubageWeight": "Peso cubado (m3): ",
       "qnt": "Qtd",
-      "stack": "Empilhar?"
+      "stack": "Permite empilhar?"
     },
     "fareModal":{
       "type": "Tipo:",
