@@ -42,6 +42,12 @@ const Proposal = (): JSX.Element => {
   const [openedOrderSelect, setOpenedOrderSelect] = useState(false)
   const [proposalList, setProposalList] = useState<any[]>([])
   const [totalProposalList, setTotalProposalList] = useState<number>(0)
+  const [incotermList, setIncotermList] = useState<any[]>([])
+  const [partnerList, setPartnerList] = useState<any[]>([])
+  const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
+  const [radioValue, setRadioValue] = useState('')
+
+  const history = useHistory()
 
   const [filter, setFilter] = useState<Object>({
     page: 0,
@@ -49,12 +55,6 @@ const Proposal = (): JSX.Element => {
     direction: 'ASC',
     orderByList: 'openingDate'
   })
-
-  const history = useHistory()
-  const [incotermList, setIncotermList] = useState<any[]>([])
-  const [partnerList, setPartnerList] = useState<any[]>([])
-  const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
-  const [radioValue, setRadioValue] = useState('')
 
   useEffect(() => {
     const newIncotermList: any[] = []
@@ -118,7 +118,6 @@ const Proposal = (): JSX.Element => {
 
   useEffect(() => {
     getProposalByFilter()
-    console.log(filter)
   }, [filter])
 
   const getProposalByFilter = (): void => {
