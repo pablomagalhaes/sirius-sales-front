@@ -259,7 +259,18 @@ const Proposal = (): JSX.Element => {
         </TableContainer>
         <PaginationContainer>
           <PaginationMainContainer>
-            <Pagination labelDisplay='exibindo' count={100} labelRowsPerPage='Propostas por página' labelDisplayedRows='de' tooltipFirst='Primeira' tooltipBack='Anterior' tooltipNext='Próxima' tooltipLast='Última' />
+            <Pagination
+              onPageChange={page => console.log(page)}
+              onRowsPerPageChange={rowsPerPage => console.log(rowsPerPage)}
+              labelDisplay='exibindo'
+              count={100}
+              labelRowsPerPage='Propostas por página'
+              labelDisplayedRows='de'
+              tooltipFirst='Primeira'
+              tooltipBack='Anterior'
+              tooltipNext='Próxima'
+              tooltipLast='Última'
+            />
           </PaginationMainContainer>
         </PaginationContainer>
       </BottomSideContainer>
