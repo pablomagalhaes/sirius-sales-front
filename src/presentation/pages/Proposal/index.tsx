@@ -158,6 +158,25 @@ const Proposal = (): JSX.Element => {
     }
   ]
 
+  const handleChangeModal = (
+    handleCleanAll: () => void,
+    handleCleanButton: () => void,
+    handlePickerChange1: (e: any, newValue: string[]) => void,
+    handlePickerChange2: (e: any, newValue: string[]) => void
+  ): void => {
+    if (radioValue !== '') {
+      handleCleanAll()
+      handleCleanButton()
+      handlePickerChange1(null, [])
+      handlePickerChange2(null, [])
+    }
+  }
+
+  const handleCleanModal = (handleCleanAll: () => void): void => {
+    setRadioValue('')
+    handleCleanAll()
+  }
+
   return (
     <RootContainer>
       <TopContainer>
@@ -194,6 +213,8 @@ const Proposal = (): JSX.Element => {
           addFilterLabel="Aplicar filtros"
           handleSelectedFilters={handleSelectedRowFilter}
           setRadioValue={setRadioValue}
+          handleClean={handleChangeModal}
+          handleCleanRow={handleCleanModal}
         />
       </RowFilterContainer>
       <ListHeaderContainer>

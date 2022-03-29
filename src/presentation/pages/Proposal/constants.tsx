@@ -54,7 +54,7 @@ const menuItems = {
     { label: 'Últimos 7 dias', lastDays: 7 },
     { label: 'Últimos 15 dias', lastDays: 14 },
     { label: 'Últimos 30 dias', lastDays: 29 },
-    { label: 'Últimos 3 meses', lastDays: 89 },
+    { label: 'Último trimestre', lastDays: 89 },
     { label: 'Início do mês até hoje', lastDays: -1 },
     { label: 'Customizado' }
   ],
