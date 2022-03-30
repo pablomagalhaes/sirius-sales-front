@@ -13,7 +13,7 @@ import IconComponent from '../../../../application/icons/IconComponent'
 import { withTheme } from 'styled-components'
 import ControlledInput from '../../../components/ControlledInput'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
-import newProposal from '../../../../infrastructure/api/newProposalService'
+import API from '../../../../infrastructure/api'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { Transport, TransportList } from '../../../../domain/transport'
 import { StyledPaper } from './StepsStyles'
@@ -40,7 +40,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
 
   useEffect(() => {
     void (async function () {
-      await newProposal.getAgents()
+      await API.getAgents()
         .then((response) => setAgentsList(response))
         .catch((err) => console.log(err))
     })()
@@ -48,7 +48,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
 
   useEffect(() => {
     void (async function () {
-      await newProposal.getPartner()
+      await API.getPartner()
         .then((response) => setPartnerList(response))
         .catch((err) => console.log(err))
     })()

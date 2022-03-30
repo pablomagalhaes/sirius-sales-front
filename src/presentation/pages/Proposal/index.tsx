@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   QuickFilters,
   Table,
@@ -30,25 +30,36 @@ import {
 } from './style'
 import { ExitToApp } from '@material-ui/icons/'
 import Warning from '../../../application/icons/WarningIcon'
-import { cardFilters, TableRows, orderButtonMenuItems, menuItems } from './constants'
 import { useHistory } from 'react-router-dom'
 import UpArrow from '../../../application/icons/UpArrow'
-import newProposal from '../../../infrastructure/api/newProposalService'
+import API from '../../../infrastructure/api'
+import ArrowDown from '../../../application/icons/ArrowDown'
+import { cardFilters, orderButtonMenuItems, menuItems } from './constants'
 
 const Proposal = (): JSX.Element => {
-  const [orderBy, setOrderBy] = useState<string>('Dt. validade')
+  const [orderBy, setOrderBy] = useState<string>('openingDate')
   const [orderAsc, setOrderAsc] = useState(true)
   const [openedOrderSelect, setOpenedOrderSelect] = useState(false)
-  const history = useHistory()
+  const [proposalList, setProposalList] = useState<any[]>([])
+  const [totalProposalList, setTotalProposalList] = useState<number>(0)
   const [incotermList, setIncotermList] = useState<any[]>([])
   const [partnerList, setPartnerList] = useState<any[]>([])
   const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
   const [radioValue, setRadioValue] = useState('')
 
+  const history = useHistory()
+
+  const [filter, setFilter] = useState<Object>({
+    page: 0,
+    size: 10,
+    direction: 'ASC',
+    orderByList: 'openingDate'
+  })
+
   useEffect(() => {
     const newIncotermList: any[] = []
     void (async function () {
-      await newProposal.getIncoterm()
+      await API.getIncoterm()
         .then((response) => {
           response.forEach((item: any) => {
             newIncotermList.push(item?.id)
@@ -62,7 +73,7 @@ const Proposal = (): JSX.Element => {
   useEffect(() => {
     const newPartnerList: any[] = []
     void (async function () {
-      await newProposal.getPartner()
+      await API.getPartner()
         .then((response) => {
           response.forEach((item: any) => {
             newPartnerList.push(item?.businessPartner?.simpleName)
@@ -75,7 +86,7 @@ const Proposal = (): JSX.Element => {
 
   useEffect(() => {
     void (async function () {
-      await newProposal.getOriginDestination()
+      await API.getOriginDestination()
         .then((response) => setOriginDestinationList(response))
         .catch((err) => console.log(err))
     })()
@@ -105,6 +116,49 @@ const Proposal = (): JSX.Element => {
     return actualList
   }
 
+  useEffect(() => {
+    getProposalByFilter()
+  }, [filter])
+
+  const getProposalByFilter = (): void => {
+    void (async function () {
+      await API.getProposals(filter)
+        .then((response) => {
+          setProposalList(response.content)
+          setTotalProposalList(response.totalElements)
+        })
+        .catch((err) => console.log(err))
+    })()
+  }
+
+  const getProposalItems = (proposalList): any => {
+    const array: any = []
+    for (const proposal of proposalList) {
+      const opening = new Date(proposal.openingDate).toLocaleDateString(
+        'pt-BR'
+      )
+      const shelfLife = new Date(proposal.validityDate).toLocaleDateString(
+        'pt-BR'
+      )
+      const item = {
+        key: proposal.id,
+        reference: proposal.reference,
+        client: proposal.client,
+        origin: proposal.originId,
+        destination: proposal.destinationId,
+        opening,
+        shelfLife,
+        iconterm: proposal.incotermId,
+        numio: proposal.numIO,
+        responsible: proposal.responsible,
+        status: proposal.status,
+        type: proposal.modal
+      }
+      array.push(item)
+    }
+    return array
+  }
+
   const handleExportList = (): void => {
     alert('export list')
   }
@@ -117,9 +171,19 @@ const Proposal = (): JSX.Element => {
     console.log(selectedFiltersRowFilter)
   }
 
+  const handleOrderSelect = (value): void => {
+    setFilter((filter) => ({ ...filter, orderByList: value }))
+    setOrderBy(value)
+  }
+
   const handleOrderDirection = (): void => {
-    setOrderAsc(!orderAsc)
-    console.log('handleOrderDireciton')
+    if (orderAsc) {
+      setFilter((filter) => ({ ...filter, direction: 'DESC' }))
+      setOrderAsc(false)
+    } else {
+      setFilter((filter) => ({ ...filter, direction: 'ASC' }))
+      setOrderAsc(true)
+    }
   }
 
   const menuItemsSelector = [
@@ -202,7 +266,10 @@ const Proposal = (): JSX.Element => {
           />
         </TopButtonContainer>
       </TopContainer>
-      <QuickFilters cardFilters={cardFilters} onFilterClick={handleCardFiltersClick} />
+      <QuickFilters
+        cardFilters={cardFilters}
+        onFilterClick={handleCardFiltersClick}
+      />
       <RowFilterContainer>
         <RowFilter
           menuItemsSelector={menuItemsSelector}
@@ -219,7 +286,9 @@ const Proposal = (): JSX.Element => {
       </RowFilterContainer>
       <ListHeaderContainer>
         <LeftSideListHeaderContainer>
-          <ListMainTitleSpan>Propostas em andamento (210)</ListMainTitleSpan>
+          <ListMainTitleSpan>
+            Propostas em andamento ({totalProposalList})
+          </ListMainTitleSpan>
           <ExportListContainer onClick={handleExportList}>
             <ExitToApp />
             <ExportListSpan>Exportar lista</ExportListSpan>
@@ -234,42 +303,46 @@ const Proposal = (): JSX.Element => {
             <ListTextSpan>Ordenar:</ListTextSpan>
             <DropdownMenuContainer showArrow={openedOrderSelect}>
               <Select
-                className='select-style'
-                onChange={(e) => setOrderBy(String(e.target.value))}
+                className="select-style"
+                onChange={(e) => handleOrderSelect(String(e.target.value))}
                 value={orderBy}
                 disableUnderline
                 placeholder={orderBy}
-                onOpen={() => setOpenedOrderSelect(!openedOrderSelect)}>
-                {orderButtonMenuItems.map((type) => (
-                  <MenuItem key={`${String(type)}_key`} value={type}>
-                    <span>{type}</span>
-                  </MenuItem>)
-                )}
+                onOpen={() => setOpenedOrderSelect(!openedOrderSelect)}
+              >
+                {orderButtonMenuItems.map((item) => (
+                  <MenuItem key={`${String(item.value)}_key`} value={item.value}>
+                    <span>{item.description}</span>
+                  </MenuItem>
+                ))}
               </Select>
             </DropdownMenuContainer>
-            <ArrowIconContainer onClick={handleOrderDirection} $rotate={orderAsc}>
-              <UpArrow />
+            <ArrowIconContainer
+              onClick={handleOrderDirection}
+              $rotate={orderAsc}
+            >
+              {orderAsc ? <ArrowDown /> : <UpArrow />}
             </ArrowIconContainer>
           </OrderByContainer>
         </RightSideListHeaderContainer>
       </ListHeaderContainer>
       <BottomSideContainer>
         <TableContainer>
-          <Table rows={TableRows()} />
+          <Table rows={getProposalItems(proposalList)} />
         </TableContainer>
         <PaginationContainer>
           <PaginationMainContainer>
             <Pagination
-              onPageChange={page => console.log(page)}
-              onRowsPerPageChange={rowsPerPage => console.log(rowsPerPage)}
-              labelDisplay='exibindo'
-              count={100}
-              labelRowsPerPage='Propostas por página'
-              labelDisplayedRows='de'
-              tooltipFirst='Primeira'
-              tooltipBack='Anterior'
-              tooltipNext='Próxima'
-              tooltipLast='Última'
+              onPageChange={(value) => setFilter((filter) => ({ ...filter, page: value }))}
+              onRowsPerPageChange={(value) => setFilter((filter) => ({ ...filter, size: value }))}
+              labelDisplay="exibindo"
+              count={totalProposalList}
+              labelRowsPerPage="Propostas por página"
+              labelDisplayedRows="de"
+              tooltipFirst="Primeira"
+              tooltipBack="Anterior"
+              tooltipNext="Próxima"
+              tooltipLast="Última"
             />
           </PaginationMainContainer>
         </PaginationContainer>

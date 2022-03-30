@@ -4,7 +4,40 @@ interface CardFilterProps {
   value: string
 }
 
-const orderButtonMenuItems = ['Ref. proposta', 'Nome do cliente', 'Responsável', 'Modal', 'Origem', 'Destino', 'Dt. abertura', 'Dt. validade']
+const orderButtonMenuItems = [
+  {
+    value: 'referenceProposal',
+    description: 'Ref. proposta'
+  },
+  {
+    value: 'referenceClientProposal',
+    description: 'Nome do cliente'
+  },
+  {
+    value: 'codeRespSeller',
+    description: 'Responsável'
+  },
+  {
+    value: 'idTransport',
+    description: 'Modal'
+  },
+  {
+    value: 'idOrigin',
+    description: 'Origem'
+  },
+  {
+    value: 'idDestination',
+    description: 'Destino'
+  },
+  {
+    value: 'openingDate',
+    description: 'Dt. abertura'
+  },
+  {
+    value: 'validityDate',
+    description: 'Dt. validade'
+  }
+]
 
 const cardFilters: CardFilterProps[] = [
   {

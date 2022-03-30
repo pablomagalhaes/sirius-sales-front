@@ -23,7 +23,7 @@ import { Input } from '../CostModal/CostModalStyles'
 import { Button } from 'fiorde-fe-components'
 import ControlledToolTip from '../ControlledToolTip/ControlledToolTip'
 import { Container, MenuItemContent } from './FareModalStyles'
-import newProposal from '../../../infrastructure/api/newProposalService'
+import API from '../../../infrastructure/api'
 import { ItemModalData } from '../ItemModal/ItemModal'
 import { StyledPaper } from '../../pages/NewProposal/steps/StepsStyles'
 
@@ -130,7 +130,7 @@ const FareModal = ({
 
   useEffect(() => {
     void (async function () {
-      await newProposal.getCurrencies()
+      await API.getCurrencies()
         .then((response) => setCurrencyList(response))
         .catch((err) => console.log(err))
     })()
@@ -138,7 +138,7 @@ const FareModal = ({
 
   useEffect(() => {
     void (async function () {
-      await newProposal.getService()
+      await API.getService()
         .then((response) => setServiceList(response))
         .catch((err) => console.log(err))
     })()
