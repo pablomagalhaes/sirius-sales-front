@@ -99,7 +99,16 @@ const getService = async (): Promise<any> => {
   }
 }
 
-const newProposal = {
+const getProposals = async (params): Promise<any> => {
+  try {
+    const res = await instance.get('/sirius-business-proposal-api/proposal/filter', { params })
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const API = {
   getContainerType,
   getCurrencies,
   getIncoterm,
@@ -110,7 +119,8 @@ const newProposal = {
   getAgents,
   getTemperature,
   getImo,
-  getService
+  getService,
+  getProposals
 }
 
-export default newProposal
+export default API

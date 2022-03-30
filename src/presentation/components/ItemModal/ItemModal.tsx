@@ -16,7 +16,7 @@ import {
   ButtonDiv
 } from '../StyledComponents/modalStyles'
 import NumberFormat from 'react-number-format'
-import newProposal from '../../../infrastructure/api/newProposalService'
+import API from '../../../infrastructure/api'
 import { Button } from 'fiorde-fe-components'
 import { Autocomplete } from '@material-ui/lab'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
@@ -82,7 +82,7 @@ const ItemModal = ({
 
   useEffect(() => {
     void (async function () {
-      await newProposal.getContainerType()
+      await API.getContainerType()
         .then((response) => setContainerTypeList(response))
         .catch((err) => console.log(err))
     })()
@@ -90,7 +90,7 @@ const ItemModal = ({
 
   useEffect(() => {
     void (async function () {
-      await newProposal.getPackaging()
+      await API.getPackaging()
         .then((response) => setPackagingList(response))
         .catch((err) => console.log(err))
     })()

@@ -13,7 +13,7 @@ import ControlledSelect from '../../../components/ControlledSelect'
 import ControlledInput from '../../../components/ControlledInput'
 import ControlledToolTip from '../../../components/ControlledToolTip/ControlledToolTip'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
-import newProposal from '../../../../infrastructure/api/newProposalService'
+import API from '../../../../infrastructure/api'
 import NumberFormat from 'react-number-format'
 import { withTheme } from 'styled-components'
 
@@ -93,7 +93,7 @@ const Step4 = ({
 
   useEffect(() => {
     void (async function () {
-      await newProposal
+      await API
         .getFrequency()
         .then((response) => setFrequencyList(response))
         .catch((err) => console.log(err))

@@ -33,7 +33,7 @@ import {
   RowReverseDiv,
   Title
 } from '../StyledComponents/modalStyles'
-import newProposal from '../../../infrastructure/api/newProposalService'
+import API from '../../../infrastructure/api'
 import { CheckBoxArea } from '../ItemModal/ItemModalStyles'
 import { ItemModalData } from '../ItemModal/ItemModal'
 import { StyledPaper } from '../../pages/NewProposal/steps/StepsStyles'
@@ -173,7 +173,7 @@ const CostModal = ({
 
   useEffect(() => {
     void (async function () {
-      await newProposal.getCurrencies()
+      await API.getCurrencies()
         .then((response) => setCurrencyList(response))
         .catch((err) => console.log(err))
     })()
@@ -181,7 +181,7 @@ const CostModal = ({
 
   useEffect(() => {
     void (async function () {
-      await newProposal.getService()
+      await API.getService()
         .then((response) => setServiceList(response))
         .catch((err) => console.log(err))
     })()
