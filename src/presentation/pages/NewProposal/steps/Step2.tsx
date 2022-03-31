@@ -162,9 +162,9 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
         break
     }
 
-    originDestinationList?.forEach((option): void => {
-      if (option.type === type) {
-        actualList.push(option.name)
+    originDestinationList?.forEach((item): void => {
+      if (item.type === type) {
+        actualList.push(item.id + ' - ' + item.name)
       }
     })
 
