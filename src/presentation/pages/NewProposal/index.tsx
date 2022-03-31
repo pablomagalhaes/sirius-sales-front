@@ -137,8 +137,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     closeAlert: () => { setShowSaveMessage(false) },
     closeMessage: I18n.t('pages.newProposal.saveMessage.closeMessage'),
     goBack: () => { history.push('/proposta') },
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    message: `${I18n.t('pages.newProposal.saveMessage.message')} ${referenceCode[0].reference}.`
+    message: `${String(I18n.t('pages.newProposal.saveMessage.message'))} ${String(referenceCode[0].reference)}.`
   }
 
   return (

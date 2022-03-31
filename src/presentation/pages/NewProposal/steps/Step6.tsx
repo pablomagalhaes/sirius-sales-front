@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useState } from 'react'
 import { I18n } from 'react-redux-i18n'
-import { Title, Subtitle, Separator } from '../style'
+import { Title, Subtitle, Separator, MessageContainer } from '../style'
 import FareModal, { FareModalData, initialState } from '../../../components/FareModal/FareModal'
 import { TableBody } from '@material-ui/core'
 import { ItemModalData } from '../../../components/ItemModal/ItemModal'
@@ -26,7 +26,7 @@ import {
 
 import EditIcon from '../../../../application/icons/EditIcon'
 import RemoveIcon from '../../../../application/icons/RemoveIcon'
-import { Button, MoneyValue } from 'fiorde-fe-components'
+import { Button, MoneyValue, Messages } from 'fiorde-fe-components'
 
 interface Step6Props {
   costData: any
@@ -51,8 +51,8 @@ const Table = ({ data, remove, edit }: TableData): JSX.Element => {
       <TableBody>
         {data !== null
           ? (
-              data?.map((item: FareModalData) => {
-                return (
+            data?.map((item: FareModalData) => {
+              return (
                 <StyledRow id={item.id} key={item.id}>
                   <StyledTableCell
                     color={1}
@@ -92,12 +92,12 @@ const Table = ({ data, remove, edit }: TableData): JSX.Element => {
                     </RowReverseDiv>
                   </StyledTableCell>
                 </StyledRow>
-                )
-              })
-            )
+              )
+            })
+          )
           : (
             <div />
-            )}
+          )}
       </TableBody>
     </StyledTable>
   )
@@ -106,10 +106,12 @@ const Table = ({ data, remove, edit }: TableData): JSX.Element => {
 const Step6 = ({ costData, modal, setCompleted, specifications, containerItems }: Step6Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [data, setData] = useState<FareModalData[]>([])
+  const [copyTable, setCopyTable] = useState<FareModalData[]>([])
   const [chargeData, setChargeData] = useState<FareModalData>(initialState)
   const currencyList = new Map()
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
+  const [showSaveMessage, setShowSaveMessage] = useState(false)
 
   useEffect(() => {
     if (data.length > 0) {
@@ -146,9 +148,11 @@ const Step6 = ({ costData, modal, setCompleted, specifications, containerItems }
   }
 
   const removeClickHandler = (id: number | null): void => {
+    setCopyTable(data)
     setData((tableData) => {
       return tableData.filter((data) => data.id !== id)
     })
+    setShowSaveMessage(true)
   }
 
   const editClickHandler = (tableData: FareModalData): void => {
@@ -230,6 +234,18 @@ const Step6 = ({ costData, modal, setCompleted, specifications, containerItems }
           </TotalContainer>
         }
       </HeightDiv>
+      {showSaveMessage &&
+        <MessageContainer>
+          <Messages
+            closable={true}
+            severity='success'
+            buttonText={I18n.t('pages.newProposal.step3.messageUndoDelete')}
+            closeAlert={() => { setShowSaveMessage(false) }}
+            closeMessage=''
+            goBack={() => { setData(copyTable); setShowSaveMessage(false) }}
+            message={I18n.t('pages.newProposal.step3.messageDeleteItem')}
+          />
+        </MessageContainer>}
     </Separator>
   )
 }

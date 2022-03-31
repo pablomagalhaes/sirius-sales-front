@@ -53,7 +53,9 @@
         "temperature": "Temperatura:",
         "choose": "Escolha ...",
         "buttonAdd": "Adicionar item à carga",
-        "buttonAddTooltip": "Para adicionar, selecione os campos \"Modal\" na etapa \"Serviço\" e \"Especificação\" na etapa \"Carga\""
+        "buttonAddTooltip": "Para adicionar, selecione os campos \"Modal\" na etapa \"Serviço\" e \"Especificação\" na etapa \"Carga\"",
+        "messageDeleteItem": "Item excluído com sucesso.",
+        "messageUndoDelete": "Desfazer"
       },
       "step4": {
         "title": "Dados Gerais",
