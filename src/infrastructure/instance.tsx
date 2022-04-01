@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import axios from 'axios'
 
 export const URL = process.env.BASE_URL_GATEWAY

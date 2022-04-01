@@ -126,6 +126,7 @@
       "description": "Expense/Service:",
       "agent": "Agent:",
       "buyValue": "Buy value",
+      "container": "Container:",
       "saleValue": "Sale value",
       "save": "Save",
       "replyForSale": "Reply for sale",
@@ -153,7 +154,8 @@
       "save": "Save",
       "requiredField": "Required field",
       "cubageWeight": "Cubage weight (m3): ",
-      "qnt": "Qnt"
+      "qnt": "Qnt",
+      "stack": "Stack up?"
     },
     "fareModal":{
       "type": "Type:",

@@ -1,37 +1,26 @@
-import { MenuItem, Modal } from '@material-ui/core'
-import { Button } from 'fiorde-fe-components'
+import { Modal, Grid, FormLabel, RadioGroup, Checkbox, FormControlLabel, Box, InputAdornment } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
-import AlertIcon from '../../../application/icons/AlertIcon'
-import Autocomplete from '@material-ui/lab/Autocomplete'
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import CloseIcon from '../../../application/icons/CloseIcon'
 import {
-  AlertIconDiv,
-  AmountDiv,
-  CheckBox,
-  CheckBoxArea,
-  CheckBoxLabel,
   ModalDiv,
-  StyledBox
+  MainDiv
 } from './ItemModalStyles'
 import { I18n } from 'react-redux-i18n'
-import CheckIcon from '../../../application/icons/CheckIcon'
-import ControlledSelect from '../ControlledSelect'
 import ControlledInput from '../ControlledInput'
 import {
-  ButtonDiv,
-  ItemModalForm,
   HeaderDiv,
-  Label,
   RedColorSpan,
-  RowDiv,
   RowReverseDiv,
   Title,
-  CloseIconContainer
+  CloseIconContainer,
+  ButtonDiv
 } from '../StyledComponents/modalStyles'
 import NumberFormat from 'react-number-format'
-import newProposal from '../../../infrastructure/api/newProposalService'
-import { Input } from '../CostModal/CostModalStyles'
+import API from '../../../infrastructure/api'
+import { Button } from 'fiorde-fe-components'
+import { Autocomplete } from '@material-ui/lab'
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
+import { StyledPaper } from '../../pages/NewProposal/steps/StepsStyles'
 
 export interface ItemModalData {
   amount: string
@@ -43,9 +32,10 @@ export interface ItemModalData {
   imo: string | null
   length: string | null
   rawWeight: string | null
-  type: string
+  type: string | null
   width: string | null
   id: number | null
+  stack: boolean
 }
 interface ItemModalProps {
   dataProp: ItemModalData
@@ -67,9 +57,10 @@ export const initialState = {
   imo: null,
   length: null,
   rawWeight: null,
-  type: '',
+  type: null,
   width: null,
-  id: null
+  id: null,
+  stack: false
 }
 
 const ItemModal = ({
@@ -83,15 +74,15 @@ const ItemModal = ({
 }: ItemModalProps): JSX.Element => {
   const [containerTypeList, setContainerTypeList] = useState<any[]>([])
   const [packagingList, setPackagingList] = useState<any[]>([])
-  const [imoList, setImoList] = useState<any[]>([])
   const rgxFloat = /^[0-9]*,?[0-9]*$/
   const rgxInt = /^[0-9]*$/
   const [data, setData] = useState<ItemModalData>(initialState)
   const [invalidInput, setInvalidInput] = useState(false)
+  const [didMount, setDidMount] = useState(false)
 
   useEffect(() => {
     void (async function () {
-      await newProposal.getContainerType()
+      await API.getContainerType()
         .then((response) => setContainerTypeList(response))
         .catch((err) => console.log(err))
     })()
@@ -99,7 +90,7 @@ const ItemModal = ({
 
   useEffect(() => {
     void (async function () {
-      await newProposal.getPackaging()
+      await API.getPackaging()
         .then((response) => setPackagingList(response))
         .catch((err) => console.log(err))
     })()
@@ -111,17 +102,10 @@ const ItemModal = ({
     }
   }, [open])
 
-  useEffect(() => {
-    void (async function () {
-      await newProposal.getImo()
-        .then((response) => setImoList(response))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
-
   const handleOnClose = (): void => {
     setData(initialState)
     setInvalidInput(false)
+    setDidMount(false)
     setClose()
   }
   const marineFCL = (): boolean => {
@@ -152,23 +136,17 @@ const ItemModal = ({
   const validateData = (): boolean => {
     if (marineFCL()) {
       return !(
-        data.type.length === 0 ||
-        data.amount.length === 0 ||
-        (data.codUn === null || data.codUn?.length === 0) ||
-        (data.dangerous && (data.imo === null || data.imo?.length === 0))
-      )
+        data.type?.length === 0 ||
+        data.amount.length === 0)
     } else {
       return !(
-        data.type.length === 0 ||
+        (data.type === null || data.type?.length === 0) ||
         data.amount.length === 0 ||
         (data.rawWeight === null || data.rawWeight?.length === 0) ||
         (data.height === null || data.height?.length === 0) ||
         (data.width === null || data.width?.length === 0) ||
         (data.length === null || data.length?.length === 0) ||
-        (data.cubage === null || data.cubage?.length === 0) ||
-        data.codUn.length === 0 ||
-        (data.dangerous && (data.imo === null || data.imo?.length === 0))
-      )
+        (data.cubage === null || data.cubage?.length === 0))
     }
   }
 
@@ -184,6 +162,33 @@ const ItemModal = ({
       setInvalidInput(true)
     }
   }
+  const getContainerTypeList = (): string[] => {
+    const finalList: string[] = []
+
+    containerTypeList?.forEach((item): void => {
+      if (item.description !== null) {
+        finalList.push(String(item.description))
+      }
+    })
+
+    return finalList
+  }
+
+  const updateCubage = (): void => {
+    const newCubage = Number(data.length === null ? 0 : Number(data.length.replace(',', '.'))) *
+      Number(data.width === null ? 0 : Number(data.width.replace(',', '.'))) *
+      Number(data.height === null ? 0 : Number(data.height.replace(',', '.'))) *
+      Number(data.amount === null ? 0 : Number(data.amount))
+    setData({ ...data, cubage: newCubage.toFixed(2).replace('.', ',') })
+  }
+
+  useEffect(() => {
+    if (didMount) {
+      updateCubage()
+    } else if (!didMount && data !== initialState) {
+      setDidMount(true)
+    }
+  }, [data.length, data.width, data.height, data.amount])
 
   return (
     <Modal open={open} onClose={handleOnClose}>
@@ -196,51 +201,46 @@ const ItemModal = ({
             </CloseIconContainer>
           </RowReverseDiv>
         </HeaderDiv>
-        <ItemModalForm>
-          <RowDiv>
-            <Label width="43.6%">
-              {marineFCL() ? I18n.t('components.itemModal.container') : I18n.t('components.itemModal.packaging') }
-              <RedColorSpan> *</RedColorSpan>
-            </Label>
-            <Label width="29%">
-              {I18n.t('components.itemModal.amount')}
-              <RedColorSpan> *</RedColorSpan>
-            </Label>
-            {!(marineFCL()) && (
-              <Label width="27.4%">
-                {I18n.t('components.itemModal.rawWeight')}
-                {(modal === 'AIR' ||
-                  (modal === 'SEA' && specifications === 'lcl') ||
-                  modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}
-              </Label>
-            )}
-          </RowDiv>
-          <RowDiv margin={true}>
+        <MainDiv>
+          <Grid container spacing={2} style={{ width: '100%' }}>
+            <Grid item xs={10}>
+            <FormLabel component="legend">{marineFCL() ? I18n.t('components.itemModal.container') : I18n.t('components.itemModal.packaging')}<RedColorSpan> *</RedColorSpan></FormLabel>
             <Autocomplete
-              style={{ position: 'relative' }}
-              options={ marineFCL() ? containerTypeList.map((item) => item.type) : packagingList.map((item) => item.packaging)}
+              freeSolo
               value={data.type}
               onChange={(e, newValue) => setData({ ...data, type: newValue })}
+              options={ marineFCL() ? getContainerTypeList() : packagingList.map((item) => String(item.packaging))}
               renderInput={(params) => (
                 <div ref={params.InputProps.ref}>
-                  <Input
-                    {...params.inputProps}
-                    variant="outlined"
-                    style={{
-                      width: '198px',
-                      height: '33px'
-                    }}
-                    placeholder={I18n.t('components.itemModal.choose')}
+                  <ControlledInput
+                    {...params}
+                    id="search-origin"
                     toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                    invalid={ invalidInput && data.type.length === 0 }
+                    invalid={
+                      invalidInput &&
+                      (data.length === null || data.length.length === 0)
+                    }
+                    variant="outlined"
+                    size="small"
+                    modal
+                    placeholder={I18n.t('components.itemModal.choose')}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <Box width={'max-content'} {...params.inputProps}>
+                              <ArrowDropDownIcon />
+                          </Box>
+                        </InputAdornment>
+                      )
+                    }}
                   />
-                  <StyledBox {...params.inputProps}>
-                    <ArrowDropDownIcon />
-                  </StyledBox>
                 </div>
               )}
+              PaperComponent={(params: any) => <StyledPaper {...params} />}
             />
-            <AmountDiv>
+          </Grid>
+            <Grid item xs={2}>
+              <FormLabel component="legend">{I18n.t('components.itemModal.amount')}<RedColorSpan> *</RedColorSpan></FormLabel>
               <ControlledInput
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 invalid={
@@ -253,249 +253,155 @@ const ItemModal = ({
                 size="small"
                 modal
               />
-            </AmountDiv>
-            {!(marineFCL()) && (
-              <div style={{ width: '126px', height: '30px', marginLeft: '18px', marginTop: '12px' }}>
-                <NumberFormat
-                  decimalSeparator={','}
-                  thousandSeparator={'.'}
-                  decimalScale={2}
-                  format={(value: string) => rightToLeftFormatter(value, 2)}
-                  customInput={ControlledInput}
-                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, rawWeight: e.target.value })) }}
-                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                  invalid={
-                    invalidInput && (!marineFCL()) &&
-                    (data.rawWeight === null || data.rawWeight.length === 0)
-                  }
-                  value={data.rawWeight != null ? data.rawWeight : ''}
-                  variant="outlined"
-                  size="small"
-                  modal
-                />
-              </div>
-            )}
-          </RowDiv>
-          <RowDiv>
-            {!(marineFCL()) && (
-              <Label width="44%">
-                {I18n.t('components.itemModal.hwl')}
+            </Grid>
+            {!marineFCL() && <Grid item xs={4}>
+              <FormLabel component="legend">{I18n.t('components.itemModal.rawWeight')}
                 {(modal === 'AIR' ||
-                  (modal === 'SEA' && specifications === 'lcl') ||
-                  modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}
-              </Label>
-            )}
-            {hasDiameter() && (
-              <Label width="29%">{I18n.t('components.itemModal.diameter')}</Label>
-            )}
-            {!(marineFCL()) && (
-              <Label width="27%">
-                {I18n.t('components.itemModal.cubage')}
-                {(modal === 'AIR' ||
-                  (modal === 'SEA' && specifications === 'lcl') ||
-                  modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}
-              </Label>
-            )}
-          </RowDiv>
-          <RowDiv margin={true}>
-            {!(marineFCL()) && (
-              <>
-                <div style={{ width: '60px', height: '30px', marginRight: '8px', marginTop: '12px' }}>
-                  <NumberFormat
-                    decimalSeparator={','}
-                    thousandSeparator={'.'}
-                    decimalScale={2}
-                    format={(value: string) => rightToLeftFormatter(value, 2)}
-                    customInput={ControlledInput}
-                    toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                    invalid={
-                      invalidInput && !(marineFCL()) &&
-                      (data.length === null || data.length.length === 0)
-                    }
-                    value={data.length != null ? data.length : ''}
-                    onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, length: e.target.value })) }}
-                    variant="outlined"
-                    size="small"
-                    modal
-                  />
-                </div>
-                <div style={{ width: '60px', height: '30px', marginRight: '8px', marginTop: '12px' }}>
-                  <NumberFormat
-                    decimalSeparator={','}
-                    thousandSeparator={'.'}
-                    decimalScale={2}
-                    format={(value: string) => rightToLeftFormatter(value, 2)}
-                    customInput={ControlledInput}
-                    toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                    value={data.width != null ? data.width : ''}
-                    onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, width: e.target.value })) }}
-                    invalid={
-                      invalidInput && !(marineFCL()) &&
-                      (data.width === null || data.width.length === 0)
-                    }
-                    variant="outlined"
-                    size="small"
-                    modal
-                  />
-                </div>
-                <div style={{ width: '60px', height: '30px', marginRight: '8px', marginTop: '12px' }}>
-                  <NumberFormat
-                    decimalSeparator={','}
-                    thousandSeparator={'.'}
-                    decimalScale={2}
-                    format={(value: string) => rightToLeftFormatter(value, 2)}
-                    customInput={ControlledInput}
-                    toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                    value={data.height != null ? data.height : ''}
-                    onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, height: e.target.value })) }}
-                    invalid={
-                      invalidInput && !(marineFCL()) &&
-                      (data.height === null || data.height.length === 0)
-                    }
-                    variant="outlined"
-                    size="small"
-                    modal
-                  />
-                </div>
-              </>
-            )}
-            {hasDiameter() && !(marineFCL()) && (
-              <div style={{ width: '126px', height: '30px', marginLeft: '15px', marginTop: '12px' }}>
-                <NumberFormat
-                  decimalSeparator={','}
-                  thousandSeparator={'.'}
-                  decimalScale={2}
-                  format={(value: string) => rightToLeftFormatter(value, 2)}
-                  customInput={ControlledInput}
-                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                  invalid={false}
-                  value={data.diameter != null ? data.diameter : ''}
-                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, diameter: e.target.value })) }}
-                  variant="outlined"
-                  size="small"
-                  modal
-                />
-              </div>
-
-            )}
-            {hasDiameter() && marineFCL() && (
-              <div style={{ width: '197px', height: '30px', marginLeft: '1px', marginTop: '12px' }}>
-                <NumberFormat
-                  decimalSeparator={','}
-                  thousandSeparator={'.'}
-                  decimalScale={2}
-                  format={(value: string) => rightToLeftFormatter(value, 2)}
-                  customInput={ControlledInput}
-                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                  invalid={false}
-                  value={data.diameter != null ? data.diameter : ''}
-                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, diameter: e.target.value })) }}
-                  variant="outlined"
-                  size="small"
-                  modal
-                />
-              </div>
-            )}
-            {!(marineFCL()) && (
-              <div style={{ width: '126px', height: '30px', marginLeft: '18px', marginTop: '12px' }}>
-                <NumberFormat
-                  decimalSeparator={','}
-                  thousandSeparator={'.'}
-                  decimalScale={3}
-                  format={(value: string) => rightToLeftFormatter(value, 3)}
-                  customInput={ControlledInput}
-                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                  invalid={
-                    invalidInput && !(marineFCL()) &&
-                    (data.cubage === null || data.cubage.length === 0)
-                  }
-                  value={data.cubage != null ? data.cubage : ''}
-                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, cubage: e.target.value })) }}
-                  variant="outlined"
-                  size="small"
-                  modal
-                />
-              </div>
-            )}
-          </RowDiv>
-          <RowDiv>
-            <Label width="29%">
-              {I18n.t('components.itemModal.hazardous')}
-            </Label>
-            <Label width="44%">
-              {I18n.t('components.itemModal.imo')}
-              {data.dangerous && <RedColorSpan> *</RedColorSpan>}
-            </Label>
-            <Label width="27%">
-              {I18n.t('components.itemModal.codUn')}
-              <RedColorSpan> *</RedColorSpan>
-            </Label>
-          </RowDiv>
-          <RowDiv>
-            <CheckBoxArea onClick={() => (setData({ ...data, dangerous: !data.dangerous }))}>
-              <CheckBox checked={data.dangerous}>
-                {data.dangerous && <CheckIcon />}
-              </CheckBox>
-              <CheckBoxLabel>{I18n.t('components.itemModal.yes')}</CheckBoxLabel>
-            </CheckBoxArea>
-            <AlertIconDiv>
-              <AlertIcon />
-            </AlertIconDiv>
-            <div style={{ width: '198px', height: '32px', margin: '12px 0 5px 0' }}>
-              <ControlledSelect
-                value={data.imo != null ? data.imo : ''}
-                onChange={e => (setData({ ...data, imo: e.target.value }))}
-                disableUnderline
-                displayEmpty
-                placeholder={data.imo != null ? data.imo : ''}
-                invalid={
-                  invalidInput && data.dangerous &&
-                  (data.imo === null || data.imo.length === 0)
-                }
-                toolTipTitle={I18n.t('components.itemModal.requiredField')}
-              >
-                <MenuItem disabled value="">
-                  <span style={{ marginLeft: '10px' }}>{I18n.t('components.itemModal.choose')}</span>
-                </MenuItem>
-                {imoList.map((item) => {
-                  return (
-                    <MenuItem key={item.id} value={item.id}>
-                      <span style={{ marginLeft: '10px' }}>{item.type}</span>
-                    </MenuItem>
-                  )
-                })}
-              </ControlledSelect>
-            </div>
-            <div style={{ width: '126px', height: '30px', marginLeft: '18px', marginTop: '12px' }}>
-              <ControlledInput
+                  (modal === 'SEA' && specifications !== 'fcl') ||
+                  modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}</FormLabel>
+              <NumberFormat
+                decimalSeparator={','}
+                thousandSeparator={'.'}
+                decimalScale={2}
+                format={(value: string) => rightToLeftFormatter(value, 2)}
+                customInput={ControlledInput}
+                onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, rawWeight: e.target.value })) }}
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 invalid={
-                  invalidInput &&
-                  (data.codUn === null || data.codUn.length === 0)
+                  invalidInput && (!marineFCL()) &&
+                  (data.rawWeight === null || data.rawWeight.length === 0)
                 }
-                value={data.codUn}
-                onChange={e => (setData({ ...data, codUn: e.target.value }))}
+                value={data.rawWeight != null ? data.rawWeight : ''}
                 variant="outlined"
                 size="small"
                 modal
               />
-            </div>
-          </RowDiv>
-          <RowDiv>
-            <ButtonDiv>
-              <Button
-                disabled={false}
-                text={I18n.t('components.itemModal.save')}
-                tooltip={I18n.t('components.itemModal.save')}
-                backgroundGreen={true}
-                icon=""
-                onAction={handleOnAdd}
+            </Grid>}
+            <Grid item xs={6}>
+              <RadioGroup style={{ margin: '47px 10px 10px -15px' }} row aria-label="services" name="row-radio-buttons-group" onChange={e => setData({ ...data, stack: !data.stack })}>
+                <FormControlLabel value="stack" control={<Checkbox />} label={I18n.t('components.itemModal.stack')} />
+              </RadioGroup>
+            </Grid>
+            {marineFCL() && <Box width="100%" />}
+            {!marineFCL() && <Grid item xs={6}>
+              <FormLabel component="legend">{I18n.t('components.itemModal.hwl')}
+                {(modal === 'AIR' ||
+                  (modal === 'SEA' && specifications !== 'fcl') ||
+                  modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}</FormLabel>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <NumberFormat
+                  decimalSeparator={','}
+                  thousandSeparator={'.'}
+                  decimalScale={2}
+                  format={(value: string) => rightToLeftFormatter(value, 2)}
+                  customInput={ControlledInput}
+                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                  invalid={
+                    invalidInput && !(marineFCL()) &&
+                    (data.length === null || data.length.length === 0)
+                  }
+                  value={data.length != null ? data.length : ''}
+                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, length: e.target.value })) }}
+                  variant="outlined"
+                  size="small"
+                  modal
+                  style={{ marginRight: '8px' }}
+                />
+                <NumberFormat
+                  decimalSeparator={','}
+                  thousandSeparator={'.'}
+                  decimalScale={2}
+                  format={(value: string) => rightToLeftFormatter(value, 2)}
+                  customInput={ControlledInput}
+                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                  value={data.width != null ? data.width : ''}
+                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, width: e.target.value })) }}
+                  invalid={
+                    invalidInput && !(marineFCL()) &&
+                    (data.width === null || data.width.length === 0)
+                  }
+                  variant="outlined"
+                  size="small"
+                  modal
+                  style={{ marginRight: '8px' }}
+                />
+                <NumberFormat
+                  decimalSeparator={','}
+                  thousandSeparator={'.'}
+                  decimalScale={2}
+                  format={(value: string) => rightToLeftFormatter(value, 2)}
+                  customInput={ControlledInput}
+                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                  value={data.height != null ? data.height : ''}
+                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, height: e.target.value })) }}
+                  invalid={
+                    invalidInput && !(marineFCL()) &&
+                    (data.height === null || data.height.length === 0)
+                  }
+                  variant="outlined"
+                  size="small"
+                  modal
+                />
+              </div>
+            </Grid>}
+            {!(marineFCL()) && <Grid item xs={3}>
+              <FormLabel component="legend">
+                {I18n.t('components.itemModal.cubage')}
+                {(modal === 'AIR' ||
+                  (modal === 'SEA' && specifications !== 'fcl') ||
+                  modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}
+              </FormLabel>
+              <NumberFormat
+                decimalSeparator={','}
+                thousandSeparator={'.'}
+                decimalScale={2}
+                format={(value: string) => rightToLeftFormatter(value, 2)}
+                customInput={ControlledInput}
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                invalid={
+                  invalidInput && !(marineFCL()) &&
+                  (data.cubage === null || data.cubage.length === 0)
+                }
+                value={data.cubage != null ? data.cubage : ''}
+                onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, cubage: e.target.value })) }}
+                variant="outlined"
+                size="small"
+                modal
               />
-            </ButtonDiv>
-          </RowDiv>
-        </ItemModalForm>
+            </Grid>}
+            {hasDiameter() && <Grid item xs={3}>
+              <FormLabel component="legend">{I18n.t('components.itemModal.diameter')}</FormLabel>
+              <NumberFormat
+                decimalSeparator={','}
+                thousandSeparator={'.'}
+                decimalScale={2}
+                format={(value: string) => rightToLeftFormatter(value, 2)}
+                customInput={ControlledInput}
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                invalid={false}
+                value={data.diameter != null ? data.diameter : ''}
+                onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, diameter: e.target.value })) }}
+                variant="outlined"
+                size="small"
+                modal
+              />
+            </Grid>}
+            <Grid item xs={12}>
+              <ButtonDiv>
+                <Button
+                  disabled={false}
+                  text={I18n.t('components.itemModal.save')}
+                  tooltip={I18n.t('components.itemModal.save')}
+                  backgroundGreen={true}
+                  icon=""
+                  onAction={handleOnAdd}
+                />
+              </ButtonDiv>
+            </Grid>
+          </Grid>
+        </MainDiv>
       </ModalDiv>
-    </Modal>
+    </Modal >
   )
 }
 export default ItemModal

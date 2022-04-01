@@ -126,6 +126,7 @@
       "description": "Despesa/Serviço:",
       "agent": "Agente:",
       "buyValue": "Valor compra",
+      "container": "Container:",
       "saleValue": "Valor Venda",
       "save": "Salvar",
       "replyForSale": "Replicar para venda",
@@ -153,7 +154,8 @@
       "save": "Salvar",
       "requiredField": "Campo obrigatório",
       "cubageWeight": "Peso cubado (m3): ",
-      "qnt": "Qtd"
+      "qnt": "Qtd",
+      "stack": "Permite empilhar?"
     },
     "fareModal":{
       "type": "Tipo:",

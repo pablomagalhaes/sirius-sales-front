@@ -84,11 +84,18 @@ export const RowDiv = styled.div`
     z-index: 10;
     right: 58px;
   }
+
+  .dropdownContainer {
+    position: absolute;
+    top: 16px;
+    z-index: 10;
+    right: 28px;
+  }
 `
 export const Form = styled.div`
   margin-top: 26px;
   margin-left: 24px;
-  margin-right: 0px;
+  margin-right: 0;
   font-family: DM Sans;
   font-style: normal;
   font-weight: normal;
@@ -96,7 +103,7 @@ export const Form = styled.div`
   line-height: 150%;
   letter-spacing: 0.02em;
   color: ${(props: any) =>
-    props.theme?.commercial?.components?.itemModal?.fontColor};
+          props.theme?.commercial?.components?.itemModal?.fontColor};
 `
 export const ItemModalForm = styled(Form)`
 margin-right: 24px;
@@ -127,10 +134,9 @@ export const PlaceholderSpan = styled.span`
   letter-spacing: 0.02em;
 `
 export const ButtonDiv = styled.div`
-  margin-top: 50px;
+  margin-top: 30px;
   margin-bottom: 25px;
   display: flex;
-  flex-direction: row;
   justify-content: center;
   width: 100%;
 `

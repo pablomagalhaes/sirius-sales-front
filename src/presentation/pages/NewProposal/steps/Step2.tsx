@@ -14,10 +14,9 @@ import { withTheme } from 'styled-components'
 import ControlledSelect from '../../../components/ControlledSelect'
 import ControlledInput from '../../../components/ControlledInput'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
-import newProposal from '../../../../infrastructure/api/newProposalService'
+import API from '../../../../infrastructure/api'
 import { StyledPaper } from './StepsStyles'
 
-// mock
 interface Step2Props {
   theme: any
   proposalType: string
@@ -49,7 +48,7 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
 
   useEffect(() => {
     void (async function () {
-      await newProposal.getIncoterm()
+      await API.getIncoterm()
         .then((response) => setIncotermList(response))
         .catch((err) => console.log(err))
     })()
@@ -57,7 +56,7 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
 
   useEffect(() => {
     void (async function () {
-      await newProposal.getOriginDestination()
+      await API.getOriginDestination()
         .then((response) => setOriginDestinationList(response))
         .catch((err) => console.log(err))
     })()
@@ -66,7 +65,7 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
   useEffect(() => {
     const newAgentsList: any[] = []
     void (async function () {
-      await newProposal.getAgents()
+      await API.getAgents()
         .then((response) => {
           response.forEach((agent: any) => {
             newAgentsList.push(agent?.businessPartner?.simpleName)
@@ -163,9 +162,9 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
         break
     }
 
-    originDestinationList?.forEach((option): void => {
-      if (option.type === type) {
-        actualList.push(option.name)
+    originDestinationList?.forEach((item): void => {
+      if (item.type === type) {
+        actualList.push(item.id + ' - ' + item.name)
       }
     })
 
@@ -211,6 +210,7 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
                   />
                 </div>
               )}
+              PaperComponent={(params: any) => <StyledPaper {...params} />}
             />
           </Grid>
           <Grid item xs={6}>
@@ -244,6 +244,7 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
                   />
                 </div>
               )}
+              PaperComponent={(params: any) => <StyledPaper {...params} />}
             />
           </Grid>
           {proposalType === 'client' &&

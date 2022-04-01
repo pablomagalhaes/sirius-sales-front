@@ -13,8 +13,10 @@ import IconComponent from '../../../../application/icons/IconComponent'
 import { withTheme } from 'styled-components'
 import ControlledInput from '../../../components/ControlledInput'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
-import newProposal from '../../../../infrastructure/api/newProposalService'
+import API from '../../../../infrastructure/api'
 import Autocomplete from '@material-ui/lab/Autocomplete'
+import { Transport, TransportList } from '../../../../domain/transport'
+import { StyledPaper } from './StepsStyles'
 
 export interface Step1Props {
   theme?: any
@@ -25,7 +27,7 @@ export interface Step1Props {
 }
 
 const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }: Step1Props): JSX.Element => {
-  const [transportList, setTransportList] = useState<any[]>([])
+  const [transportList] = useState<Transport[]>(TransportList)
   const [agentsList, setAgentsList] = useState<any[]>([])
   const [partnerList, setPartnerList] = useState<any[]>([])
   const [data, setData] = useState({
@@ -38,15 +40,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
 
   useEffect(() => {
     void (async function () {
-      await newProposal.getTransport()
-        .then((response) => setTransportList(response))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
-
-  useEffect(() => {
-    void (async function () {
-      await newProposal.getAgents()
+      await API.getAgents()
         .then((response) => setAgentsList(response))
         .catch((err) => console.log(err))
     })()
@@ -54,7 +48,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
 
   useEffect(() => {
     void (async function () {
-      await newProposal.getPartner()
+      await API.getPartner()
         .then((response) => setPartnerList(response))
         .catch((err) => console.log(err))
     })()
@@ -144,6 +138,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
                 />
               </div>
             )}
+            PaperComponent={(params: any) => <StyledPaper {...params} />}
           />
         </Grid>
         <Grid item xs={6}>
@@ -163,16 +158,16 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
       </Grid>
       <FormLabel component="legend">{I18n.t('pages.newProposal.step1.modal')}<RedColorSpan> *</RedColorSpan></FormLabel>
       <RadioGroup row aria-label="modal" name="row-radio-buttons-group" onChange={e => setData({ ...data, modal: e.target.value })}>
-        {transportList.map((item, i) => (
+        {transportList.map((transport, i) => (
           <div key={`div-${i}`} style={{ display: 'flex' }}>
             <FormControlLabel
-              value={item.id}
+              value={transport.id}
               control={<StyledRadio color={getColor(data?.modal)} key={`radio-${i}`} />}
-              label={item.description}
+              label={transport.description}
               key={`label-${i}`}
             />
             <IconContainer key={`container-${i}`}>
-              <IconComponent name={item.id} defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} key={`icon-${i}`} />
+              <IconComponent name={transport.id} defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} key={`icon-${i}`} />
             </IconContainer>
           </div>
         ))}

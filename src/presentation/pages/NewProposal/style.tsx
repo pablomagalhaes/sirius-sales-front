@@ -23,6 +23,9 @@ const RootContainer = styled.div`
     font-size: 14px;
     margin-top: 30px;
     margin-bottom: 10px;
+    @media only screen and (max-width: 1200px) {
+      overflow-wrap: break-word;
+    }
   }
   & .MuiTextField-root, .MuiOutlinedInput-root {
     width: 100%;
@@ -40,6 +43,11 @@ const RootContainer = styled.div`
   }
   & .MuiTypography-body1 {
     font-size: 14px;
+  }
+  & .MuiTypography-root {
+    @media only screen and (max-width: 1200px) {
+      margin-left: -15px;
+    }
   }
   & .MuiOutlinedInput-input {
     font-size: 14px;
@@ -73,7 +81,7 @@ const TopContainer = styled.div`
   margin: 3px 20px;
   padding: 24px;
   border-radius: 16px 16px 0 0;
-  box-shadow: 0px 4px 8px ${(props: any) => props.theme?.commercial?.pages?.newProposal?.steps?.stepsBoxShadow};
+  box-shadow: 0 4px 8px ${(props: any) => props.theme?.commercial?.pages?.newProposal?.steps?.stepsBoxShadow};
   position: sticky;
   top: 65px;
   z-index: 1;
@@ -87,7 +95,7 @@ const MainContainer = styled.div`
   background: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.background};
   margin: 0 20px;
   border-radius: 0 0 16px 16px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   padding: 44px 24px;
 `
 
@@ -175,6 +183,8 @@ const Separator = styled.div`
 const SelectSpan = styled.span`
   color: ${(props: { placeholder: boolean, theme: any }) => props?.placeholder && props.theme?.commercial?.pages?.newProposal?.placeholder};
   margin: 0 10px;
+  overflow: hidden;
+  text-overflow: ellipsis !important;
 `
 
 const ButtonContainer = styled.div`
@@ -189,6 +199,7 @@ const StyledRadio = styled(Radio)`
 `
 
 const MessageContainer = styled.div`
+  color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.steps?.messageColor};
   position: fixed;
   bottom: 0;
   left: 0;

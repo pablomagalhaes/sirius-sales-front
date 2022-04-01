@@ -36,15 +36,6 @@ const getPackaging = async (): Promise<any> => {
   }
 }
 
-const getTransport = async (): Promise<any> => {
-  try {
-    const res = await instance.get('/sirius-master-data-api/transport/')
-    return res.data
-  } catch (error) {
-    console.error(error)
-  }
-}
-
 const getOriginDestination = async (): Promise<any> => {
   try {
     const res = await instance.get('/sirius-master-data-api/origins/destinations/resumo')
@@ -108,19 +99,28 @@ const getService = async (): Promise<any> => {
   }
 }
 
-const newProposal = {
+const getProposals = async (params): Promise<any> => {
+  try {
+    const res = await instance.get('/sirius-business-proposal-api/proposal/filter', { params })
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const API = {
   getContainerType,
   getCurrencies,
   getIncoterm,
   getPackaging,
-  getTransport,
   getOriginDestination,
   getPartner,
   getFrequency,
   getAgents,
   getTemperature,
   getImo,
-  getService
+  getService,
+  getProposals
 }
 
-export default newProposal
+export default API
