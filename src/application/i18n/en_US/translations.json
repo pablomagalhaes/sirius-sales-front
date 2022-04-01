@@ -155,7 +155,7 @@
       "requiredField": "Required field",
       "cubageWeight": "Cubage weight (m3): ",
       "qnt": "Qnt",
-      "stack": "Stack up?"
+      "stack": "Stack up"
     },
     "fareModal":{
       "type": "Type:",

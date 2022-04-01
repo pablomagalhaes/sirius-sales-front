@@ -164,7 +164,7 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
 
     originDestinationList?.forEach((item): void => {
       if (item.type === type) {
-        actualList.push(item.id + ' - ' + item.name)
+        actualList.push(`${String(item.id)} - ${String(item.name)}`)
       }
     })
 
