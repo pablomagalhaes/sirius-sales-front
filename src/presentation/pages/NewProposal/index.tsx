@@ -130,12 +130,12 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
 
   const referenceCode = TableRows()
 
-  const getEnchargedUsername = (): string => {
+  const getEnchargedFullname = (): string => {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-    return user.username;
+    return `${String(user.firstname)}  ${String(user.lastname)}`;
   }
 
-  const username = getEnchargedUsername()
+  const fullname = getEnchargedFullname()
 
   const saveMessageInfo = {
     closable: true,
@@ -178,7 +178,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           {I18n.t('pages.newProposal.encharged')}
           <IconComponent name="user" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
           <Username>
-          {username}
+          {fullname}
           </Username>
         </UserContainer>
       </Header>
