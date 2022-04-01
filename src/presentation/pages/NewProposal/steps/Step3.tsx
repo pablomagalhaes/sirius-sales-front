@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button } from 'fiorde-fe-components'
+import { Button, Messages } from 'fiorde-fe-components'
 import {
   FormControl,
   FormControlLabel,
@@ -14,7 +14,8 @@ import {
   Title,
   Subtitle,
   Separator,
-  SelectSpan
+  SelectSpan,
+  MessageContainer
 } from '../style'
 import ItemModal, {
   ItemModalData,
@@ -26,6 +27,7 @@ import ChargeTable from '../../../components/ChargeTable'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import { withTheme } from 'styled-components'
 import API from '../../../../infrastructure/api'
+
 interface Step3Props {
   theme?: any
   modal: string
@@ -50,6 +52,8 @@ const Step3 = ({
   const [temperatureList, setTemperatureList] = useState<any[]>([])
   const [imoList, setImoList] = useState<any[]>([])
   const specificationsList = ['Break Bulk', 'FCL', 'LCL', 'Ro-Ro']
+  const [showSaveMessage, setShowSaveMessage] = useState(false)
+  const [copyTable, setCopyTable] = useState<ItemModalData[]>([])
 
   useEffect(() => {
     void (async function () {
@@ -58,6 +62,16 @@ const Step3 = ({
         .catch((err) => console.log(err))
     })()
   }, [])
+
+  const saveMessageInfo = {
+    closable: true,
+    severity: 'success',
+    buttonText: I18n.t('pages.newProposal.step3.messageUndoDelete'),
+    closeAlert: () => { setShowSaveMessage(false) },
+    closeMessage: '',
+    goBack: () => { setTableRows(copyTable); setShowSaveMessage(false) },
+    message: I18n.t('pages.newProposal.step3.messageDeleteItem')
+  }
 
   useEffect(() => {
     setCostData(tableRows.length)
@@ -116,9 +130,11 @@ const Step3 = ({
 
   const handleDelete = (index: number): void => {
     const newTable = tableRows.slice(0)
+    setCopyTable(tableRows)
     newTable.splice(index, 1)
     setTableRows(newTable)
     setTableItems(newTable)
+    setShowSaveMessage(true)
   }
 
   useEffect(() => {
@@ -319,6 +335,17 @@ const Step3 = ({
           </Grid>
         </Grid>
       </FormControl>
+      {showSaveMessage &&
+        <MessageContainer>
+          <Messages
+            closable={true}
+            severity='success'
+            buttonText={I18n.t('pages.newProposal.step3.messageUndoDelete')}
+            closeAlert={() => { setShowSaveMessage(false) }}
+            closeMessage=''
+            goBack={() => { setTableRows(copyTable); setShowSaveMessage(false) }}
+            message={I18n.t('pages.newProposal.step3.messageDeleteItem')} />
+        </MessageContainer>}
     </Separator >
   )
 }
