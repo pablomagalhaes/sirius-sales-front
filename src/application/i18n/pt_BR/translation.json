@@ -53,7 +53,9 @@
         "temperature": "Temperatura:",
         "choose": "Escolha ...",
         "buttonAdd": "Adicionar item à carga",
-        "buttonAddTooltip": "Para adicionar, selecione os campos \"Modal\" na etapa \"Serviço\" e \"Especificação\" na etapa \"Carga\""
+        "buttonAddTooltip": "Para adicionar, selecione os campos \"Modal\" na etapa \"Serviço\" e \"Especificação\" na etapa \"Carga\"",
+        "messageDeleteItem": "Item excluído com sucesso.",
+        "messageUndoDelete": "Desfazer"
       },
       "step4": {
         "title": "Dados Gerais",
@@ -126,6 +128,7 @@
       "description": "Despesa/Serviço:",
       "agent": "Agente:",
       "buyValue": "Valor compra",
+      "container": "Container:",
       "saleValue": "Valor Venda",
       "save": "Salvar",
       "replyForSale": "Replicar para venda",
@@ -154,7 +157,7 @@
       "requiredField": "Campo obrigatório",
       "cubageWeight": "Peso cubado (m3): ",
       "qnt": "Qtd",
-      "stack": "Empilhar?"
+      "stack": "Permite empilhar"
     },
     "fareModal":{
       "type": "Tipo:",

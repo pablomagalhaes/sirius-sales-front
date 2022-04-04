@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import React, { useState } from 'react'
 import { Button, FloatingMenu, Steps, Messages } from 'fiorde-fe-components'
 import { Breadcrumbs, Link } from '@material-ui/core/'
@@ -23,6 +25,7 @@ import Step5 from './steps/Step5'
 import Step6 from './steps/Step6'
 import { TableRows } from '../Proposal/constants'
 import { useHistory } from 'react-router-dom'
+import { ItemModalData } from '../../components/ItemModal/ItemModal'
 
 export interface NewProposalProps {
   theme: any
@@ -37,6 +40,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [modal, setModal] = useState('')
   const [showSaveMessage, setShowSaveMessage] = useState(false)
   const [specifications, setSpecifications] = useState('')
+  const [step3TableItems, setStep3TableItems] = useState<ItemModalData[]>([])
 
   const history = useHistory()
 
@@ -128,6 +132,13 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
 
   const referenceCode = TableRows()
 
+  const getEnchargedFullname = (): string => {
+    const user = JSON.parse(localStorage.getItem('user') || '{}')
+    return `${String(user.firstname)}  ${String(user.lastname)}`
+  }
+
+  const fullname = getEnchargedFullname()
+
   const saveMessageInfo = {
     closable: true,
     severity: 'success',
@@ -135,8 +146,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     closeAlert: () => { setShowSaveMessage(false) },
     closeMessage: I18n.t('pages.newProposal.saveMessage.closeMessage'),
     goBack: () => { history.push('/proposta') },
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    message: `${I18n.t('pages.newProposal.saveMessage.message')} ${referenceCode[0].reference}.`
+    message: `${String(I18n.t('pages.newProposal.saveMessage.message'))} ${String(referenceCode[0].reference)}.`
   }
 
   return (
@@ -169,7 +179,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           {I18n.t('pages.newProposal.encharged')}
           <IconComponent name="user" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
           <Username>
-            Cristina Alves
+          {fullname}
           </Username>
         </UserContainer>
       </Header>
@@ -200,10 +210,10 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       <MainContainer>
         <div id="step1"><Step1 setModal={setModal} setCompleted={setCompleted} invalidInput={invalidInput} setProposalType={setProposalType} /></div>
         <div id="step2"><Step2 proposalType={proposalType} setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} /></div>
-        <div id="step3"><Step3 setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} setCostData={setCostData} setSpecifications={setSpecifications} /></div>
+        <div id="step3"><Step3 setTableItems={setStep3TableItems} setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} setCostData={setCostData} setSpecifications={setSpecifications} /></div>
         <div id="step4"><Step4 setCompleted={setCompleted} invalidInput={invalidInput} /></div>
-        <div id="step5"><Step5 setCompleted={setCompleted} costData={costData} modal={modal} specifications={specifications} /></div>
-        <div id="step6"><Step6 setCompleted={setCompleted} costData={costData} modal={modal} specifications={specifications} /></div>
+        <div id="step5"><Step5 containerItems={step3TableItems} setCompleted={setCompleted} costData={costData} modal={modal} specifications={specifications} /></div>
+        <div id="step6"><Step6 containerItems={step3TableItems} setCompleted={setCompleted} costData={costData} modal={modal} specifications={specifications} /></div>
       </MainContainer>
 
       {showSaveMessage &&

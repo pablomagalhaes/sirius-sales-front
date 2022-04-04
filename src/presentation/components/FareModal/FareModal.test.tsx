@@ -9,15 +9,17 @@ const props = {
     saleValue: '50,0',
     minimumValue: '',
     saleCurrency: 'EUR',
-    id: null
+    id: null,
+    selectedContainer: null
   },
   title: 'Editar item',
-  action: () => {},
-  setOpen: () => {},
+  action: () => { },
+  setOpen: () => { },
   open: true,
-  setClose: () => {},
+  setClose: () => { },
   modal: '',
-  specifications: ''
+  specifications: '',
+  containerItems: []
 }
 
 test('should show text Editar item', () => {

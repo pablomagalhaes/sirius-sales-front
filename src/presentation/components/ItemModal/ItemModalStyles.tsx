@@ -21,7 +21,6 @@ export const ModalDiv = styled.div`
     props.theme?.commercial?.components?.itemModal?.backgroundColor};
   border-radius: 4px;
   width: 537px;
-  height: 360px;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -66,7 +65,17 @@ export const MainDiv = styled.div`
   .MuiSelect-icon {
     color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.font};
   }
-  
+
+  .MuiOutlinedInput-adornedEnd {
+    padding-right: 6px !important;
+  }  
+
+  .MuiTypography-root{
+  line-height: 21px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  letter-spacing: 2% !important;
+  }
 `
 
 export const CheckBoxArea = styled.div`

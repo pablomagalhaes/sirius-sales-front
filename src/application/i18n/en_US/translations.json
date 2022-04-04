@@ -53,7 +53,9 @@
         "temperature": "Temperature:",
         "choose": "Choose ...",
         "buttonAdd": "Add item to cargo",
-        "buttonAddTooltip": "To add, select the fields \"Modal\" in the step \"Service\" and \"Specification\" in the step \"Cargo\""
+        "buttonAddTooltip": "To add, select the fields \"Modal\" in the step \"Service\" and \"Specification\" in the step \"Cargo\"",
+        "messageDeleteItem": "Item successfully deleted.",
+        "messageUndoDelete": "Undo"
       },
       "step4": {
         "title": "General data",
@@ -126,6 +128,7 @@
       "description": "Expense/Service:",
       "agent": "Agent:",
       "buyValue": "Buy value",
+      "container": "Container:",
       "saleValue": "Sale value",
       "save": "Save",
       "replyForSale": "Reply for sale",
@@ -154,7 +157,7 @@
       "requiredField": "Required field",
       "cubageWeight": "Cubage weight (m3): ",
       "qnt": "Qnt",
-      "stack": "Stack up?"
+      "stack": "Stack up"
     },
     "fareModal":{
       "type": "Type:",

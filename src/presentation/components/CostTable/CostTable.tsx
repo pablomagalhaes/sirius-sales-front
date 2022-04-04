@@ -27,8 +27,11 @@ import {
 import EditIcon from '../../../application/icons/EditIcon'
 import RemoveIcon from '../../../application/icons/RemoveIcon'
 import { I18n } from 'react-redux-i18n'
-import { Button, MoneyValue } from 'fiorde-fe-components'
+import { Button, MoneyValue, Messages } from 'fiorde-fe-components'
 import CostModal, { CostTableItem, initialState } from '../CostModal/CostModal'
+import { ItemModalData } from '../ItemModal/ItemModal'
+import { MessageContainer } from '../../pages/NewProposal/style'
+
 interface CostTableProps {
   title: string
   totalCostLabel: string
@@ -37,6 +40,7 @@ interface CostTableProps {
   modal: string
   specifications: string
   changeTableFill: (arg: number) => void
+  containerItems: ItemModalData[]
 }
 
 const CostTable = ({
@@ -46,14 +50,17 @@ const CostTable = ({
   costData,
   modal,
   specifications,
-  changeTableFill
+  changeTableFill,
+  containerItems
 }: CostTableProps): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [data, setData] = useState<CostTableItem[]>([])
+  const [copyTable, setCopyTable] = useState<CostTableItem[]>([])
   const [chargeData, setChargeData] = useState<CostTableItem>(initialState)
   const currencyList = new Map()
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
+  const [showSaveMessage, setShowSaveMessage] = useState(false)
 
   const editClickHandler = (tableData: CostTableItem): void => {
     setChargeData(tableData)
@@ -61,9 +68,11 @@ const CostTable = ({
   }
 
   const removeClickHandler = (id: number | null): void => {
+    setCopyTable(data)
     setData((tableData) => {
       return tableData.filter((data) => data.id !== id)
     })
+    setShowSaveMessage(true)
   }
 
   const addClickHandler = (): void => {
@@ -125,6 +134,7 @@ const CostTable = ({
         title={modalTitle}
         modal={modal}
         specifications={specifications}
+        containerItems={containerItems}
       />
       <Header>
         <Title>{title}</Title>
@@ -302,6 +312,18 @@ const CostTable = ({
           </RowReverseDiv>
         }
       </Footer>
+      {showSaveMessage &&
+        <MessageContainer>
+          <Messages
+            closable={true}
+            severity='success'
+            buttonText={I18n.t('pages.newProposal.step3.messageUndoDelete')}
+            closeAlert={() => { setShowSaveMessage(false) }}
+            closeMessage=''
+            goBack={() => { setData(copyTable); setShowSaveMessage(false) }}
+            message={I18n.t('pages.newProposal.step3.messageDeleteItem')}
+          />
+        </MessageContainer>}
     </MainDiv>
   )
 }
