@@ -19,7 +19,7 @@ import {
   Title
 } from '../StyledComponents/modalStyles'
 import ControlledSelect from '../ControlledSelect'
-import { Input } from '../CostModal/CostModalStyles'
+import { Input, NumberInput } from '../CostModal/CostModalStyles'
 import { Button } from 'fiorde-fe-components'
 import ControlledToolTip from '../ControlledToolTip/ControlledToolTip'
 import { Container, MenuItemContent } from './FareModalStyles'
@@ -29,6 +29,7 @@ export interface FareModalData {
   id: number | null
   saleCurrency: string
   saleValue: string
+  minimumValue: string
   expense: string | null
   type: string
 }
@@ -47,6 +48,7 @@ export const initialState = {
   type: '',
   expense: null,
   saleValue: '',
+  minimumValue: '',
   saleCurrency: 'BRL',
   id: null
 }
@@ -88,6 +90,26 @@ const FareModal = ({
     }
   }
 
+  const minimumValueHandler = (e): void => {
+    const validatedInput = validateFloatInput(e.target.value)
+    if (validatedInput !== null) {
+      setData({ ...data, minimumValue: validatedInput[0] })
+    }
+  }
+
+  const rightToLeftFormatter = (value: string, decimal: number): string => {
+    if (Number(value) === 0) return ''
+
+    let amount = ''
+    if (amount.length > decimal) {
+      amount = parseInt(value).toFixed(decimal)
+    } else {
+      amount = (parseInt(value) / 10 ** decimal).toFixed(decimal)
+    }
+
+    return String(amount).replace('.', ',')
+  }
+
   const handleOnClose = (): void => {
     setData(initialState)
     setInvalidInput(false)
@@ -96,7 +118,8 @@ const FareModal = ({
 
   const handleAction = (): void => {
     if (isValid()) {
-      action(data)
+      const formattedData = { ...data, minimumValue: data.minimumValue.replace(',', '.'), saleValue: data.saleValue.replace(',', '.') }
+      action(formattedData)
       handleOnClose()
     } else {
       setInvalidInput(true)
@@ -253,16 +276,39 @@ const FareModal = ({
                       <RedColorSpan> *</RedColorSpan>
                     </PlaceholderSpan>
                   )}
-                  <Input
-                    value={data.saleValue}
+                  <NumberInput
+                    decimalSeparator={','}
+                    thousandSeparator={'.'}
+                    decimalScale={2}
+                    customInput={Input}
+                    format={(value: string) => rightToLeftFormatter(value, 2)}
                     onChange={saleValueHandler}
-                    invalid={invalidInput && data.saleValue.length === 0}
+                    value={data.saleValue}
                     filled={data.saleValue}
-                    aria-label="value"
+                    invalid={invalidInput && data.saleValue.length === 0}
                   />
                 </label>
               </PlaceholderDiv>
             </ControlledToolTip>
+            <PlaceholderDiv>
+              <label>
+                {data.minimumValue.length === 0 && (
+                  <PlaceholderSpan>
+                    {I18n.t('components.fareModal.minimum')}
+                  </PlaceholderSpan>
+                )}
+                <NumberInput
+                  decimalSeparator={','}
+                  thousandSeparator={'.'}
+                  decimalScale={2}
+                  customInput={Input}
+                  format={(value: string) => rightToLeftFormatter(value, 2)}
+                  onChange={minimumValueHandler}
+                  value={data.minimumValue}
+                  filled={data.minimumValue}
+                />
+              </label>
+              </PlaceholderDiv>
           </RowDiv>
           <RowDiv>
             <ButtonDiv>

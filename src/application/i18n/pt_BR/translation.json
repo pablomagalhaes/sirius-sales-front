@@ -162,7 +162,8 @@
       "saleValue": "Valor venda:",
       "choose": "Escolha...",
       "value": "Valor",
-      "newFare": "Nova tarifa"
+      "newFare": "Nova tarifa",
+      "minimum": "Mínimo"
     }
   }
 }

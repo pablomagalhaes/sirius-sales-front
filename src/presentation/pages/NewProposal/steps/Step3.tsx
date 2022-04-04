@@ -14,8 +14,7 @@ import {
   Title,
   Subtitle,
   Separator,
-  SelectSpan,
-  BoldSpan
+  SelectSpan
 } from '../style'
 import ItemModal, {
   ItemModalData,
@@ -225,7 +224,6 @@ const Step3 = ({
                 ))}
               </ControlledSelect>
             </Grid>
-          )}
           <Box width="100%" />
           <Grid item xs={1}>
             <FormLabel component="legend">{I18n.t('components.itemModal.hazardous')}</FormLabel>
