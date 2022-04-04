@@ -204,41 +204,41 @@ const ItemModal = ({
         <MainDiv>
           <Grid container spacing={2} style={{ width: '100%' }}>
             <Grid item xs={10}>
-            <FormLabel component="legend">{marineFCL() ? I18n.t('components.itemModal.container') : I18n.t('components.itemModal.packaging')}<RedColorSpan> *</RedColorSpan></FormLabel>
-            <Autocomplete
-              freeSolo
-              value={data.type}
-              onChange={(e, newValue) => setData({ ...data, type: newValue })}
-              options={ marineFCL() ? getContainerTypeList() : packagingList.map((item) => String(item.packaging))}
-              renderInput={(params) => (
-                <div ref={params.InputProps.ref}>
-                  <ControlledInput
-                    {...params}
-                    id="search-origin"
-                    toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                    invalid={
-                      invalidInput &&
-                      (data.length === null || data.length.length === 0)
-                    }
-                    variant="outlined"
-                    size="small"
-                    modal
-                    placeholder={I18n.t('components.itemModal.choose')}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <Box width={'max-content'} {...params.inputProps}>
+              <FormLabel component="legend">{marineFCL() ? I18n.t('components.itemModal.container') : I18n.t('components.itemModal.packaging')}<RedColorSpan> *</RedColorSpan></FormLabel>
+              <Autocomplete
+                freeSolo
+                value={data.type}
+                onChange={(e, newValue) => setData({ ...data, type: newValue })}
+                options={marineFCL() ? getContainerTypeList() : packagingList.map((item) => String(item.packaging))}
+                renderInput={(params) => (
+                  <div ref={params.InputProps.ref}>
+                    <ControlledInput
+                      {...params}
+                      id="search-origin"
+                      toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                      invalid={
+                        invalidInput &&
+                        (data.length === null || data.length.length === 0)
+                      }
+                      variant="outlined"
+                      size="small"
+                      modal
+                      placeholder={I18n.t('components.itemModal.choose')}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Box width={'max-content'} {...params.inputProps}>
                               <ArrowDropDownIcon />
-                          </Box>
-                        </InputAdornment>
-                      )
-                    }}
-                  />
-                </div>
-              )}
-              PaperComponent={(params: any) => <StyledPaper {...params} />}
-            />
-          </Grid>
+                            </Box>
+                          </InputAdornment>
+                        )
+                      }}
+                    />
+                  </div>
+                )}
+                PaperComponent={(params: any) => <StyledPaper {...params} />}
+              />
+            </Grid>
             <Grid item xs={2}>
               <FormLabel component="legend">{I18n.t('components.itemModal.amount')}<RedColorSpan> *</RedColorSpan></FormLabel>
               <ControlledInput
@@ -278,8 +278,8 @@ const ItemModal = ({
               />
             </Grid>}
             <Grid item xs={6}>
-              <RadioGroup style={{ margin: '47px 10px 10px -15px' }} row aria-label="services" name="row-radio-buttons-group" onChange={e => setData({ ...data, stack: !data.stack })}>
-                <FormControlLabel value="stack" control={<Checkbox />} label={I18n.t('components.itemModal.stack')} />
+              <RadioGroup style={{ margin: '47px 10px 10px -15px' }} row aria-label="services" name="row-radio-buttons-group">
+                <FormControlLabel value="stack" control={<Checkbox checked={data.stack} onChange={e => setData({ ...data, stack: !data.stack })} />} label={I18n.t('components.itemModal.stack')} />
               </RadioGroup>
             </Grid>
             {marineFCL() && <Box width="100%" />}
