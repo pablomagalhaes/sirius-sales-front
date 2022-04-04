@@ -24,7 +24,9 @@ const props = {
   open: true,
   setClose: () => { },
   modal: '1',
-  specifications: 'lcl'
+  specifications: 'lcl',
+  packagingList: [],
+  containerTypeList: []
 }
 
 test('should show text Editar item', () => {

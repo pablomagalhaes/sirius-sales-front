@@ -114,6 +114,15 @@ const getProposals = async (params): Promise<any> => {
   }
 }
 
+const postProposal = async (params): Promise<any> => {
+  try {
+    const res = await instance.post('/sirius-business-proposal-api/proposalimportfreight', params)
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const API = {
   getContainerType,
   getCurrencies,
@@ -126,7 +135,8 @@ const API = {
   getTemperature,
   getImo,
   getService,
-  getProposals
+  getProposals,
+  postProposal
 }
 
 export default API

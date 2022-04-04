@@ -16,7 +16,6 @@ import {
   ButtonDiv
 } from '../StyledComponents/modalStyles'
 import NumberFormat from 'react-number-format'
-import API from '../../../infrastructure/api'
 import { Button } from 'fiorde-fe-components'
 import { Autocomplete } from '@material-ui/lab'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
@@ -45,6 +44,8 @@ interface ItemModalProps {
   title: string
   modal: string
   specifications: string
+  containerTypeList: any[]
+  packagingList: any[]
 }
 
 export const initialState = {
@@ -70,31 +71,15 @@ const ItemModal = ({
   setClose,
   title,
   modal,
-  specifications
+  specifications,
+  containerTypeList,
+  packagingList
 }: ItemModalProps): JSX.Element => {
-  const [containerTypeList, setContainerTypeList] = useState<any[]>([])
-  const [packagingList, setPackagingList] = useState<any[]>([])
   const rgxFloat = /^[0-9]*,?[0-9]*$/
   const rgxInt = /^[0-9]*$/
   const [data, setData] = useState<ItemModalData>(initialState)
   const [invalidInput, setInvalidInput] = useState(false)
   const [didMount, setDidMount] = useState(false)
-
-  useEffect(() => {
-    void (async function () {
-      await API.getContainerType()
-        .then((response) => setContainerTypeList(response))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
-
-  useEffect(() => {
-    void (async function () {
-      await API.getPackaging()
-        .then((response) => setPackagingList(response))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
 
   useEffect(() => {
     if (dataProp !== initialState) {

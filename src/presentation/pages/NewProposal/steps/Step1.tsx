@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import {
   Checkbox,
   FormControlLabel,
@@ -18,6 +18,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import { Transport, TransportList } from '../../../../domain/transport'
 import { StyledPaper } from './StepsStyles'
 import { ExitDialog } from 'fiorde-fe-components'
+import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 
 export interface Filled {
   step3: boolean
@@ -47,6 +48,19 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal, f
   })
   const [showPopUp, setShowPopUp] = useState(false)
   const [modalCopy, setModalCopy] = useState('')
+  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+
+  useEffect(() => {
+    setProposal({
+      ...proposal,
+      proposalType: data.proposal,
+      idTransport: data.modal,
+      idBusinessPartnerCostumer: data.proposal === 'routing'
+        ? agentsList.filter((agt) => agt.businessPartner.simpleName === data.proposalValue)[0]?.id
+        : partnerList.filter((ptn) => ptn.businessPartner.simpleName === data.proposalValue)[0]?.id,
+      requester: data.requester
+    })
+  }, [data])
 
   useEffect(() => {
     void (async function () {
@@ -176,7 +190,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal, f
         </Grid>
       </Grid>
       <FormLabel component="legend">{I18n.t('pages.newProposal.step1.modal')}<RedColorSpan> *</RedColorSpan></FormLabel>
-      <RadioGroup row aria-label="modal" name="row-radio-buttons-group" value={data.modal} onChange={e => handleModalChange(e.target.value) }>
+      <RadioGroup row aria-label="modal" name="row-radio-buttons-group" value={data.modal} onChange={e => handleModalChange(e.target.value)}>
         {transportList.map((transport, i) => (
           <div key={`div-${i}`} style={{ display: 'flex' }}>
             <FormControlLabel
@@ -191,7 +205,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal, f
           </div>
         ))}
       </RadioGroup>
-      {showPopUp && <ExitDialog cancelButtonText={I18n.t('pages.newProposal.step1.popUpConfirmationButton1')} confirmButtonText={I18n.t('pages.newProposal.step1.popUpConfirmationButton2')} message={I18n.t('pages.newProposal.step1.popUpConfirmationBody')} title={I18n.t('pages.newProposal.step1.popUpConfirmationTitle')} onPressCancel={() => setShowPopUp(false)} onPressConfirm={() => { console.log(modalCopy); setData({ ...data, modal: modalCopy }); setShowPopUp(false) }}/>}
+      {showPopUp && <ExitDialog cancelButtonText={I18n.t('pages.newProposal.step1.popUpConfirmationButton1')} confirmButtonText={I18n.t('pages.newProposal.step1.popUpConfirmationButton2')} message={I18n.t('pages.newProposal.step1.popUpConfirmationBody')} title={I18n.t('pages.newProposal.step1.popUpConfirmationTitle')} onPressCancel={() => setShowPopUp(false)} onPressConfirm={() => { console.log(modalCopy); setData({ ...data, modal: modalCopy }); setShowPopUp(false) }} />}
     </Separator>
   )
 }

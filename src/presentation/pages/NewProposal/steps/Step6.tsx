@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from 'react'
+import React, { ReactNode, useEffect, useState, useContext } from 'react'
 import { I18n } from 'react-redux-i18n'
 import { Title, Subtitle, Separator, MessageContainer } from '../style'
 import FareModal, { FareModalData, initialState } from '../../../components/FareModal/FareModal'
@@ -27,6 +27,9 @@ import {
 import EditIcon from '../../../../application/icons/EditIcon'
 import RemoveIcon from '../../../../application/icons/RemoveIcon'
 import { Button, MoneyValue, Messages } from 'fiorde-fe-components'
+import { ProposalContext, ProposalProps } from '../context/ProposalContext'
+import { Cost } from '../../../../domain/Cost'
+import { TotalCost } from '../../../../domain/TotalCost'
 
 interface Step6Props {
   costData: any
@@ -42,16 +45,60 @@ interface Step6Props {
     step6: boolean
   }>>
   undoMessage: { step3: boolean, step5origin: boolean, step5destiny: boolean, step6: boolean }
+  serviceList: any[]
+  containerTypeList: any[]
 }
 
-const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, containerItems, setUndoMessage, undoMessage }: Step6Props): JSX.Element => {
+const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, containerItems, setUndoMessage, undoMessage, serviceList, containerTypeList }: Step6Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [data, setData] = useState<FareModalData[]>([])
   const [copyTable, setCopyTable] = useState<FareModalData[]>([])
   const [chargeData, setChargeData] = useState<FareModalData>(initialState)
   const currencyList = new Map()
+  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+  const [dataTotalCost, setDataTotalCost] = useState<any[]>([])
+
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
+
+  useEffect(() => {
+    let actualCostArray = proposal.costs
+    actualCostArray = actualCostArray.filter((cost) => cost.costType !== 'Tarifa' && cost)
+    const newFareItems: Cost[] = []
+    data.forEach((row) => {
+      newFareItems.push({
+        idProposal: 0,
+        idService: serviceList.filter((serv) => serv.service === row.expense)[0]?.id, // id Descricao
+        containerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : '', // containerMODAL
+        idBusinessPartnerAgent: 0, // data.agent, // AgenteMODALcusto
+        costType: 'Tarifa', // 'Origem''Destino''Tarifa'
+        billingType: row.type, // Tipo -MODAL
+        valuePurchase: null, // valor compra
+        valuePurchasePercent: 0, // 0 por enquanto
+        valueMinimumPurchase: null, // minimo compra
+        valueSale: Number(row.saleValue), // valor venda
+        valueSalePercent: 0, // 0 por enquanto
+        valueMinimumSale: Number(row.minimumValue), // minimo venda
+        idCurrencyPurchase: 'nul', // tipo moeda NOTNULL VARCHAR(3)
+        idCurrencySale: row.saleCurrency, // tipo moeda
+        isPurchase: false, // checkbox compra
+        isSale: row.saleValue !== null // checkbox venda
+      })
+    })
+
+    let actualTotalCostArray = proposal.totalCosts
+    actualTotalCostArray = actualTotalCostArray.filter((cost) => cost.costType !== 'Tarifa' && cost)
+    const newTotalCostFare: TotalCost[] = []
+    dataTotalCost.forEach((currency) => {
+      newTotalCostFare.push({
+        costType: 'Tarifa', // 'Origem''Destino''Tarifa'
+        idCurrency: currency.name, // id moeda
+        valueTotalSale: currency.value, // total sale da moeda
+        valueTotalPurchase: 0 // total compra da moeda
+      })
+    })
+    setProposal({ ...proposal, totalCosts: actualTotalCostArray.concat(newTotalCostFare), costs: actualCostArray.concat(newFareItems) })
+  }, [data, dataTotalCost])
 
   useEffect(() => {
     if (data.length > 0) {
@@ -69,6 +116,7 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
         return { ...currentState, step6: false }
       })
     }
+    setDataTotalCost(Array.from(currencyList, ([name, value]) => ({ name, value })))
   }, [data])
 
   useEffect(() => {
