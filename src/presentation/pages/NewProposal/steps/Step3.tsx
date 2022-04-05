@@ -175,11 +175,11 @@ const Step3 = ({
       data.dangerous
     ) {
       setFilled((currentState) => {
-        return { ...currentState, step3: true };
+        return { ...currentState, step3: true }
       })
     } else {
       setFilled((currentState) => {
-        return { ...currentState, step3: false };
+        return { ...currentState, step3: false }
       })
     }
   }, [data, modal, tableRows])

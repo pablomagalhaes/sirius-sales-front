@@ -248,9 +248,9 @@ const Proposal = (): JSX.Element => {
         <Breadcrumbs separator=">" aria-label="breadcrumb">
           <Link
             color="inherit"
-            onClick={() => history.push("/")}
+            onClick={() => history.push('/')}
             className="breadcrumbInitial"
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
           >
             Home
           </Link>
@@ -259,11 +259,11 @@ const Proposal = (): JSX.Element => {
         <TopButtonContainer>
           <Button
             disabled={false}
-            text={"Criar nova proposta..."}
-            tooltip={"Criar nova proposta"}
+            text={'Criar nova proposta...'}
+            tooltip={'Criar nova proposta'}
             backgroundGreen={true}
             icon="add"
-            onAction={() => history.push("/novaProposta")}
+            onAction={() => history.push('/novaProposta')}
           />
         </TopButtonContainer>
       </TopContainer>
@@ -365,7 +365,7 @@ const Proposal = (): JSX.Element => {
         </PaginationContainer>
       </BottomSideContainer>
     </RootContainer>
-  );
+  )
 }
 
 export default Proposal

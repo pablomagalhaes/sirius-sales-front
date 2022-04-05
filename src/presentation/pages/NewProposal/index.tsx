@@ -138,8 +138,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const referenceCode = TableRows()
 
   const getEnchargedFullname = (): string => {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    return `${String(user.firstname)}  ${String(user.lastname)}`;
+    const user = JSON.parse(localStorage.getItem('user') || '{}')
+    return `${String(user.firstname)}  ${String(user.lastname)}`
   }
 
   const fullname = getEnchargedFullname()
