@@ -175,11 +175,11 @@ const Step3 = ({
       data.dangerous
     ) {
       setFilled((currentState) => {
-        return { ...currentState, step3: true }
+        return { ...currentState, step3: true };
       })
     } else {
       setFilled((currentState) => {
-        return { ...currentState, step3: false }
+        return { ...currentState, step3: false };
       })
     }
   }, [data, modal, tableRows])
@@ -277,7 +277,7 @@ const Step3 = ({
           <Box width="100%" />
           <Grid item xs={1}>
             <FormLabel component="legend">{I18n.t('components.itemModal.hazardous')}</FormLabel>
-            <FormControlLabel value="dangerous" control={<Checkbox value={data.dangerous} onChange={e => setData({ ...data, dangerous: !data.dangerous })} />} label={I18n.t('components.itemModal.yes')} />
+            <FormControlLabel value="dangerous" control={<Checkbox checked={data.dangerous} onChange={e => setData({ ...data, dangerous: !data.dangerous })} />} label={I18n.t('components.itemModal.yes')} />
           </Grid>
           {data.dangerous && <Grid item xs={3}>
             <FormLabel component="legend">{I18n.t('components.itemModal.imo')}
