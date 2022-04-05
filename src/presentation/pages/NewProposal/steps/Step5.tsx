@@ -8,11 +8,12 @@ interface Step5Props {
   costData: any
   modal: string
   setCompleted: (completed: any) => void
+  setFilled: (filled: any) => void
   specifications: string
   containerItems: ItemModalData[]
 }
 
-const Step5 = ({ costData, modal, specifications, setCompleted, containerItems }: Step5Props): JSX.Element => {
+const Step5 = ({ setFilled, costData, modal, specifications, setCompleted, containerItems }: Step5Props): JSX.Element => {
   const [dataOrigin, setDataOrigin] = useState(0)
   const [dataDestiny, setDataDestiny] = useState(0)
 
@@ -21,8 +22,14 @@ const Step5 = ({ costData, modal, specifications, setCompleted, containerItems }
       setCompleted((currentState) => {
         return { ...currentState, step5: true }
       })
+      setFilled((currentState) => {
+        return { ...currentState, step5: true }
+      })
     } else {
       setCompleted((currentState) => {
+        return { ...currentState, step5: false }
+      })
+      setFilled((currentState) => {
         return { ...currentState, step5: false }
       })
     }

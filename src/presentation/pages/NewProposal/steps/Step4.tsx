@@ -20,7 +20,9 @@ import { withTheme } from 'styled-components'
 interface Step4Props {
   invalidInput: boolean
   setCompleted: (completed: any) => void
+  setFilled: (filled: any) => void
   theme?: any
+  modal: string
 }
 
 interface Frequency {
@@ -31,7 +33,9 @@ interface Frequency {
 const Step4 = ({
   invalidInput,
   setCompleted,
-  theme
+  setFilled,
+  theme,
+  modal
 }: Step4Props): JSX.Element => {
   // mock para os selects
   const validityList = [
@@ -57,7 +61,7 @@ const Step4 = ({
     }
   ]
 
-  const [data, setData] = useState({
+  const initialState = {
     validity: '',
     validityDate: '',
     transitTime: '',
@@ -69,7 +73,9 @@ const Step4 = ({
     deadline: '',
     generalObs: '',
     internalObs: ''
-  })
+  }
+
+  const [data, setData] = useState(initialState)
 
   const [frequencyList, setFrequencyList] = useState<Frequency[]>([])
   const [disabledValidateDate, setDisabledValidateDate] = useState(true)
@@ -89,7 +95,32 @@ const Step4 = ({
         return { ...currentState, step4: false }
       })
     }
+    if (
+      data.validity.length > 0 ||
+      data.validityDate.length > 0 ||
+      data.transitTime.length > 0 ||
+      data.frequency.length > 0 ||
+      data.route.length > 0 ||
+      data.client.length > 0 ||
+      data.freeTime.length > 0 ||
+      data.deadline.length > 0 ||
+      data.generalObs.length > 0 ||
+      data.internalObs.length > 0
+    ) {
+      setFilled((currentState) => {
+        return { ...currentState, step4: true }
+      })
+    } else {
+      setFilled((currentState) => {
+        return { ...currentState, step4: false }
+      })
+    }
   }, [data])
+
+  useEffect(() => {
+    setData(initialState)
+    setDisabledValidateDate(true)
+  }, [modal])
 
   useEffect(() => {
     void (async function () {

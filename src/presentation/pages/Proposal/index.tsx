@@ -35,6 +35,7 @@ import UpArrow from '../../../application/icons/UpArrow'
 import API from '../../../infrastructure/api'
 import ArrowDown from '../../../application/icons/ArrowDown'
 import { cardFilters, orderButtonMenuItems, menuItems } from './constants'
+import { I18n } from 'react-redux-i18n'
 
 const Proposal = (): JSX.Element => {
   const [orderBy, setOrderBy] = useState<string>('openingDate')
@@ -247,9 +248,9 @@ const Proposal = (): JSX.Element => {
         <Breadcrumbs separator=">" aria-label="breadcrumb">
           <Link
             color="inherit"
-            onClick={() => history.push('/')}
+            onClick={() => history.push("/")}
             className="breadcrumbInitial"
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
           >
             Home
           </Link>
@@ -258,11 +259,11 @@ const Proposal = (): JSX.Element => {
         <TopButtonContainer>
           <Button
             disabled={false}
-            text={'Criar nova proposta...'}
-            tooltip={'Criar nova proposta'}
+            text={"Criar nova proposta..."}
+            tooltip={"Criar nova proposta"}
             backgroundGreen={true}
             icon="add"
-            onAction={() => history.push('/novaProposta')}
+            onAction={() => history.push("/novaProposta")}
           />
         </TopButtonContainer>
       </TopContainer>
@@ -311,7 +312,10 @@ const Proposal = (): JSX.Element => {
                 onOpen={() => setOpenedOrderSelect(!openedOrderSelect)}
               >
                 {orderButtonMenuItems.map((item) => (
-                  <MenuItem key={`${String(item.value)}_key`} value={item.value}>
+                  <MenuItem
+                    key={`${String(item.value)}_key`}
+                    value={item.value}
+                  >
                     <span>{item.description}</span>
                   </MenuItem>
                 ))}
@@ -328,13 +332,26 @@ const Proposal = (): JSX.Element => {
       </ListHeaderContainer>
       <BottomSideContainer>
         <TableContainer>
-          <Table rows={getProposalItems(proposalList)} />
+          <Table
+            approvedLabel={I18n.t('pages.proposal.table.approvedLabel')}
+            cancelLabel={I18n.t('pages.proposal.table.cancelLabel')}
+            inRevisionLabel={I18n.t('pages.proposal.table.inRevisionLabel')}
+            isShowIconLate={true}
+            openLabel={I18n.t('pages.proposal.table.openLabel')}
+            rejectLabel={I18n.t('pages.proposal.table.rejectLabel')}
+            rows={getProposalItems(proposalList)}
+            waitingForCustomerReturnLabel={I18n.t('pages.proposal.table.waitingForCustomerReturnLabel')}
+          />
         </TableContainer>
         <PaginationContainer>
           <PaginationMainContainer>
             <Pagination
-              onPageChange={(value) => setFilter((filter) => ({ ...filter, page: value }))}
-              onRowsPerPageChange={(value) => setFilter((filter) => ({ ...filter, size: value }))}
+              onPageChange={(value) =>
+                setFilter((filter) => ({ ...filter, page: value }))
+              }
+              onRowsPerPageChange={(value) =>
+                setFilter((filter) => ({ ...filter, size: value }))
+              }
               labelDisplay="exibindo"
               count={totalProposalList}
               labelRowsPerPage="Propostas por página"
@@ -348,7 +365,7 @@ const Proposal = (): JSX.Element => {
         </PaginationContainer>
       </BottomSideContainer>
     </RootContainer>
-  )
+  );
 }
 
 export default Proposal

@@ -26,7 +26,11 @@
         "marine": "Marine",
         "road": "Road",
         "searchRequester": "Requester",
-        "searchRequesterPlaceholder": "Inform the name and e-mail (Ex: João - joao@cliente.com.br)"
+        "searchRequesterPlaceholder": "Inform the name and e-mail (Ex: João - joao@cliente.com.br)",
+        "popUpConfirmationTitle": "Are you sure you want to change the modal?",
+        "popUpConfirmationBody": "When selecting another modal, some information already filled in related to the current modal will be discarded. Confirm the change?",
+        "popUpConfirmationButton1": "Cancel",
+        "popUpConfirmationButton2": "Confirm"
       },
       "step2": {
         "title": "Section",
