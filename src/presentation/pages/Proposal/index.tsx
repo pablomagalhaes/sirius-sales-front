@@ -35,6 +35,8 @@ import UpArrow from '../../../application/icons/UpArrow'
 import API from '../../../infrastructure/api'
 import ArrowDown from '../../../application/icons/ArrowDown'
 import { cardFilters, orderButtonMenuItems, menuItems } from './constants'
+import { I18n } from 'react-redux-i18n'
+import {StatusProposalEnum} from '../../../application/enum/statusProposalEnum'
 
 const Proposal = (): JSX.Element => {
   const [orderBy, setOrderBy] = useState<string>('openingDate')
@@ -131,6 +133,23 @@ const Proposal = (): JSX.Element => {
     })()
   }
 
+  const verifyStatus = (status): any => {
+    switch(status){
+    case 'Aberta':
+      return StatusProposalEnum.ABERTA
+    case 'Ag. Retorno Cliente':
+      return StatusProposalEnum.AGUARDANDO_RETORNO_CLIENTE
+    case 'Em Revisao':
+      return StatusProposalEnum.EM_REVISAO
+    case 'Aprovada':
+      return StatusProposalEnum.APROVADA
+    case 'Rejeita':
+      return StatusProposalEnum.REJEITA
+    case 'Cancelada':
+      return StatusProposalEnum.CANCELADA
+    }
+  }
+
   const getProposalItems = (proposalList): any => {
     const array: any = []
     for (const proposal of proposalList) {
@@ -140,6 +159,7 @@ const Proposal = (): JSX.Element => {
       const shelfLife = new Date(proposal.validityDate).toLocaleDateString(
         'pt-BR'
       )
+      const status = verifyStatus(proposal.status)
       const item = {
         key: proposal.id,
         reference: proposal.reference,
@@ -151,7 +171,7 @@ const Proposal = (): JSX.Element => {
         iconterm: proposal.incotermId,
         numio: proposal.numIO,
         responsible: proposal.responsible,
-        status: proposal.status,
+        status: status,
         type: proposal.modal
       }
       array.push(item)
@@ -328,7 +348,16 @@ const Proposal = (): JSX.Element => {
       </ListHeaderContainer>
       <BottomSideContainer>
         <TableContainer>
-          <Table rows={getProposalItems(proposalList)} />
+          <Table
+            approvedLabel={(I18n.t('pages.proposal.table.approvedLabel'))}
+            cancelLabel={(I18n.t('pages.proposal.table.cancelLabel'))}
+            inRevisionLabel={(I18n.t('pages.proposal.table.inRevisionLabel'))}
+            isShowIconLate={(true)}
+            openLabel={(I18n.t('pages.proposal.table.openLabel'))}
+            rejectLabel={(I18n.t('pages.proposal.table.rejectLabel'))}
+            rows={getProposalItems(proposalList)}
+            waitingForCustomerReturnLabel={(I18n.t('pages.proposal.table.waitingForCustomerReturnLabel'))}
+          />
         </TableContainer>
         <PaginationContainer>
           <PaginationMainContainer>

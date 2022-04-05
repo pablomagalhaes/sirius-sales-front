@@ -53,9 +53,7 @@
         "temperature": "Temperatura:",
         "choose": "Escolha ...",
         "buttonAdd": "Adicionar item à carga",
-        "buttonAddTooltip": "Para adicionar, selecione os campos \"Modal\" na etapa \"Serviço\" e \"Especificação\" na etapa \"Carga\"",
-        "messageDeleteItem": "Item excluído com sucesso.",
-        "messageUndoDelete": "Desfazer"
+        "buttonAddTooltip": "Para adicionar, selecione os campos \"Modal\" na etapa \"Serviço\" e \"Especificação\" na etapa \"Carga\""
       },
       "step4": {
         "title": "Dados Gerais",
@@ -101,6 +99,16 @@
         "message": "Proposta salva com sucesso, Ref: ",
         "closeMessage": "Continuar editando",
         "buttonText": "Voltar à lista de propostas"
+      }
+    },
+    "proposal":{
+      "table":{
+        "openLabel":"aberta",
+        "waitingForCustomerReturnLabel": "ag. ret. cliente'",
+        "inRevisionLabel":"em revisão",
+        "approvedLabel":"aprovada",
+        "rejectLabel":"rejeitada",
+        "cancelLabel":"cancelada"
       }
     }
   },
@@ -157,7 +165,7 @@
       "requiredField": "Campo obrigatório",
       "cubageWeight": "Peso cubado (m3): ",
       "qnt": "Qtd",
-      "stack": "Permite empilhar"
+      "stack": "Permite empilhar?"
     },
     "fareModal":{
       "type": "Tipo:",
