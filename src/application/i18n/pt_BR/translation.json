@@ -102,6 +102,16 @@
         "closeMessage": "Continuar editando",
         "buttonText": "Voltar à lista de propostas"
       }
+    },
+    "proposal":{
+      "table":{
+        "openLabel":"aberta",
+        "waitingForCustomerReturnLabel": "ag. ret. cliente'",
+        "inRevisionLabel":"em revisão",
+        "approvedLabel":"aprovada",
+        "rejectLabel":"rejeitada",
+        "cancelLabel":"cancelada"
+      }
     }
   },
   "components": {
