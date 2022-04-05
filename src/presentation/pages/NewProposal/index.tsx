@@ -130,6 +130,13 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
 
   const referenceCode = TableRows()
 
+  const getEnchargedFullname = (): string => {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    return `${String(user.firstname)}  ${String(user.lastname)}`;
+  }
+
+  const fullname = getEnchargedFullname()
+
   const saveMessageInfo = {
     closable: true,
     severity: 'success',
@@ -137,8 +144,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     closeAlert: () => { setShowSaveMessage(false) },
     closeMessage: I18n.t('pages.newProposal.saveMessage.closeMessage'),
     goBack: () => { history.push('/proposta') },
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    message: `${I18n.t('pages.newProposal.saveMessage.message')} ${referenceCode[0].reference}.`
+    message: `${String(I18n.t('pages.newProposal.saveMessage.message'))} ${String(referenceCode[0].reference)}.`
   }
 
   return (
@@ -171,7 +177,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           {I18n.t('pages.newProposal.encharged')}
           <IconComponent name="user" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
           <Username>
-            Cristina Alves
+          {fullname}
           </Username>
         </UserContainer>
       </Header>
