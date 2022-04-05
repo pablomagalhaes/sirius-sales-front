@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import React, { useState } from 'react'
 import { Button, FloatingMenu, Steps, Messages } from 'fiorde-fe-components'
 import { Breadcrumbs, Link } from '@material-ui/core/'
@@ -131,8 +133,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const referenceCode = TableRows()
 
   const getEnchargedFullname = (): string => {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    return `${String(user.firstname)}  ${String(user.lastname)}`;
+    const user = JSON.parse(localStorage.getItem('user') || '{}')
+    return `${String(user.firstname)}  ${String(user.lastname)}`
   }
 
   const fullname = getEnchargedFullname()
