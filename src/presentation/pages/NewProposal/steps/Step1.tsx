@@ -17,16 +17,24 @@ import API from '../../../../infrastructure/api'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { Transport, TransportList } from '../../../../domain/transport'
 import { StyledPaper } from './StepsStyles'
+import { ExitDialog } from 'fiorde-fe-components'
 
+export interface Filled {
+  step3: boolean
+  step4: boolean
+  step5: boolean
+  step6: boolean
+}
 export interface Step1Props {
   theme?: any
   invalidInput: boolean
   setCompleted: (completed: any) => void
   setProposalType: (proposal: string) => void
   setModal: (modal: string) => void
+  filled: Filled
 }
 
-const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }: Step1Props): JSX.Element => {
+const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal, filled }: Step1Props): JSX.Element => {
   const [transportList] = useState<Transport[]>(TransportList)
   const [agentsList, setAgentsList] = useState<any[]>([])
   const [partnerList, setPartnerList] = useState<any[]>([])
@@ -37,6 +45,8 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
     modal: '',
     requester: ''
   })
+  const [showPopUp, setShowPopUp] = useState(false)
+  const [modalCopy, setModalCopy] = useState('')
 
   useEffect(() => {
     void (async function () {
@@ -73,6 +83,15 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
   const getColor = (value): any => {
     if (value === '' && invalidInput) {
       return theme?.commercial?.components?.itemModal?.redAsterisk
+    }
+  }
+
+  const handleModalChange = (modal): void => {
+    if (filled.step3 || filled.step4 || filled.step5 || filled.step6) {
+      setModalCopy(modal)
+      setShowPopUp(true)
+    } else {
+      setData({ ...data, modal: modal })
     }
   }
 
@@ -157,7 +176,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
         </Grid>
       </Grid>
       <FormLabel component="legend">{I18n.t('pages.newProposal.step1.modal')}<RedColorSpan> *</RedColorSpan></FormLabel>
-      <RadioGroup row aria-label="modal" name="row-radio-buttons-group" onChange={e => setData({ ...data, modal: e.target.value })}>
+      <RadioGroup row aria-label="modal" name="row-radio-buttons-group" value={data.modal} onChange={e => handleModalChange(e.target.value) }>
         {transportList.map((transport, i) => (
           <div key={`div-${i}`} style={{ display: 'flex' }}>
             <FormControlLabel
@@ -172,6 +191,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
           </div>
         ))}
       </RadioGroup>
+      {showPopUp && <ExitDialog cancelButtonText={I18n.t('pages.newProposal.step1.popUpConfirmationButton1')} confirmButtonText={I18n.t('pages.newProposal.step1.popUpConfirmationButton2')} message={I18n.t('pages.newProposal.step1.popUpConfirmationBody')} title={I18n.t('pages.newProposal.step1.popUpConfirmationTitle')} onPressCancel={() => setShowPopUp(false)} onPressConfirm={() => { console.log(modalCopy); setData({ ...data, modal: modalCopy }); setShowPopUp(false) }}/>}
     </Separator>
   )
 }

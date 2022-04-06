@@ -26,7 +26,11 @@
         "marine": "Marítimo",
         "road": "Rodoviário",
         "searchRequester": "Solicitante",
-        "searchRequesterPlaceholder": "Informe o nome e e-mail (Ex: João - joao@cliente.com.br)"
+        "searchRequesterPlaceholder": "Informe o nome e e-mail (Ex: João - joao@cliente.com.br)",
+        "popUpConfirmationTitle": "Tem certeza que quer alterar o modal?",
+        "popUpConfirmationBody": "Ao selecionar outro modal, algumas informações já preenchidas relacionadas ao modal atual serão descartadas. Confirmar a alteração?",
+        "popUpConfirmationButton1": "Cancelar",
+        "popUpConfirmationButton2": "Confirmar"
       },
       "step2": {
         "title": "Trecho",

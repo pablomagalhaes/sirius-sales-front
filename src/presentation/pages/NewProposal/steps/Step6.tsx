@@ -32,6 +32,7 @@ interface Step6Props {
   costData: any
   modal: string
   setCompleted: (completed: any) => void
+  setFilled: (filled: any) => void
   specifications: string
   containerItems: ItemModalData[]
 }
@@ -103,7 +104,7 @@ const Table = ({ data, remove, edit }: TableData): JSX.Element => {
   )
 }
 
-const Step6 = ({ costData, modal, setCompleted, specifications, containerItems }: Step6Props): JSX.Element => {
+const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, containerItems }: Step6Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [data, setData] = useState<FareModalData[]>([])
   const [copyTable, setCopyTable] = useState<FareModalData[]>([])
@@ -118,12 +119,25 @@ const Step6 = ({ costData, modal, setCompleted, specifications, containerItems }
       setCompleted((currentState) => {
         return { ...currentState, step6: true }
       })
+      setFilled((currentState) => {
+        return { ...currentState, step6: true }
+      })
     } else {
+      setFilled((currentState) => {
+        return { ...currentState, step6: false }
+      })
       setCompleted((currentState) => {
         return { ...currentState, step6: false }
       })
     }
   }, [data])
+
+  useEffect(() => {
+    setData([])
+    setCopyTable([])
+    setChargeData(initialState)
+    setShowSaveMessage(false)
+  }, [modal])
 
   const handleAdd = (item: FareModalData): void => {
     if (item.id !== null) {
