@@ -169,7 +169,8 @@
       "saleValue": "Sale value:",
       "choose": "Choose...",
       "value": "Value",
-      "newFare": "New surcharge"
+      "newFare": "New surcharge",
+      "minimum": "Minimum"
     }
   }
 }

@@ -178,6 +178,9 @@ const PaginationContainer = styled.div`
 
 const PaginationMainContainer = styled.div`
   width: 60%;
+  & .MuiSelect-select {
+    padding-left: 10px !important;
+  }
 `
 
 const TopContainer = styled.div`

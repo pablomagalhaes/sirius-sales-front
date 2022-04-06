@@ -13,7 +13,8 @@ import {
   ReplyIconDiv,
   WarningPopUp,
   WarningPopUpMessage,
-  WarningPopUpButtonDiv
+  WarningPopUpButtonDiv,
+  NumberInput
 } from './CostModalStyles'
 import { I18n } from 'react-redux-i18n'
 import CheckIcon from '../../../application/icons/CheckItem'
@@ -274,11 +275,30 @@ const CostModal = ({
       invalid = true
     }
     if (!invalid) {
-      handleAdd(item)
+      // eslint-disable-next-line prefer-const
+      let formattedItem = item
+      if (item.saleMin != null) formattedItem.saleMin = item.saleMin.replace(',', '.')
+      if (item.saleValue != null) formattedItem.saleValue = item.saleValue.replace(',', '.')
+      if (item.buyMin != null) formattedItem.buyMin = item.buyMin.replace(',', '.')
+      if (item.buyValue != null) formattedItem.buyValue = item.buyValue.replace(',', '.')
+      handleAdd(formattedItem)
       handleOnClose()
     } else {
       setInvalidInput(true)
     }
+  }
+
+  const rightToLeftFormatter = (value: string, decimal: number): string => {
+    if (Number(value) === 0) return ''
+
+    let amount = ''
+    if (amount.length > decimal) {
+      amount = parseInt(value).toFixed(decimal)
+    } else {
+      amount = (parseInt(value) / 10 ** decimal).toFixed(decimal)
+    }
+
+    return String(amount).replace('.', ',')
   }
 
   return (
@@ -501,25 +521,34 @@ const CostModal = ({
                       {buyCheckbox && <RedColorSpan> *</RedColorSpan>}
                     </PlaceholderSpan>
                   )}
-                  <Input
-                    value={state.buyValue != null ? state.buyValue : ''}
+                  <NumberInput
+                    decimalSeparator={','}
+                    thousandSeparator={'.'}
+                    decimalScale={2}
+                    customInput={Input}
+                    format={(value: string) => rightToLeftFormatter(value, 2)}
                     onChange={buyValueHandler}
+                    value={state.buyValue != null ? state.buyValue : ''}
                     disabled={!buyCheckbox}
+                    filled={buyCheckbox ? state.buyValue : null}
                     invalid={
                       buyCheckbox &&
                       invalidInput &&
                       (state.buyValue === null || state.buyValue.length === 0)
                     }
-                    filled={buyCheckbox ? state.buyValue : null}
                   />
                 </label>
               </PlaceholderDiv>
             </ControlledToolTip>
-            <Input
-              aria-label="minimum"
-              value={state.buyMin != null ? state.buyMin : ''}
-              onChange={buyMinHandler}
+            <NumberInput
               placeholder={I18n.t('components.costModal.minimum')}
+              decimalSeparator={','}
+              thousandSeparator={'.'}
+              decimalScale={2}
+              customInput={Input}
+              format={(value: string) => rightToLeftFormatter(value, 2)}
+              onChange={buyMinHandler}
+              value={state.buyMin != null ? state.buyMin : ''}
               disabled={!buyCheckbox}
               filled={buyCheckbox ? state.buyMin : null}
             />
@@ -592,24 +621,34 @@ const CostModal = ({
                         {saleCheckbox && <RedColorSpan> *</RedColorSpan>}
                       </PlaceholderSpan>
                   )}
-                  <Input
-                    value={state.saleValue != null ? state.saleValue : ''}
+                  <NumberInput
+                    decimalSeparator={','}
+                    thousandSeparator={'.'}
+                    decimalScale={2}
+                    customInput={Input}
+                    format={(value: string) => rightToLeftFormatter(value, 2)}
                     onChange={saleValueHandler}
+                    value={state.saleValue != null ? state.saleValue : ''}
                     disabled={!saleCheckbox}
+                    filled={saleCheckbox ? state.saleValue : null}
                     invalid={
                       saleCheckbox &&
                       invalidInput &&
                       (state.saleValue === null || state.saleValue.length === 0)
                     }
-                    filled={saleCheckbox ? state.saleValue : null}
                   />
                 </label>
               </PlaceholderDiv>
             </ControlledToolTip>
-            <Input
+            <NumberInput
               placeholder={I18n.t('components.costModal.minimum')}
-              value={state.saleMin != null ? state.saleMin : ''}
+              decimalSeparator={','}
+              thousandSeparator={'.'}
+              decimalScale={2}
+              customInput={Input}
+              format={(value: string) => rightToLeftFormatter(value, 2)}
               onChange={saleMinHandler}
+              value={state.saleMin != null ? state.saleMin : ''}
               disabled={!saleCheckbox}
               filled={saleCheckbox ? state.saleMin : null}
             />
