@@ -41,6 +41,13 @@ interface CostTableProps {
   specifications: string
   changeTableFill: (arg: number) => void
   containerItems: ItemModalData[]
+  setUndoMessage: React.Dispatch<React.SetStateAction<{
+    step3: boolean
+    step5origin: boolean
+    step5destiny: boolean
+    step6: boolean
+  }>>
+  undoMessage: { step3: boolean, step5origin: boolean, step5destiny: boolean, step6: boolean }
 }
 
 const CostTable = ({
@@ -51,7 +58,9 @@ const CostTable = ({
   modal,
   specifications,
   changeTableFill,
-  containerItems
+  containerItems,
+  setUndoMessage,
+  undoMessage
 }: CostTableProps): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [data, setData] = useState<CostTableItem[]>([])
@@ -60,7 +69,6 @@ const CostTable = ({
   const currencyList = new Map()
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
-  const [showSaveMessage, setShowSaveMessage] = useState(false)
 
   const editClickHandler = (tableData: CostTableItem): void => {
     setChargeData(tableData)
@@ -72,11 +80,16 @@ const CostTable = ({
     setData((tableData) => {
       return tableData.filter((data) => data.id !== id)
     })
-    setShowSaveMessage(true)
+    if (title === I18n.t('pages.newProposal.step5.origin')) {
+      setUndoMessage({ step3: false, step5origin: true, step5destiny: false, step6: false })
+    } else {
+      setUndoMessage({ step3: false, step5origin: false, step5destiny: true, step6: false })
+    }
   }
 
   const addClickHandler = (): void => {
     setChargeData(initialState)
+    setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false })
     handleOpen()
   }
 
@@ -100,7 +113,7 @@ const CostTable = ({
     setCopyTable([])
     setChargeData(initialState)
     setData([])
-    setShowSaveMessage(false)
+    setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false })
   }, [modal])
 
   const calculateTotalCost = (buyCurrency, saleCurrency, buyValue, saleValue): void => {
@@ -319,15 +332,16 @@ const CostTable = ({
           </RowReverseDiv>
         }
       </Footer>
-      {showSaveMessage &&
+      {(((title === I18n.t('pages.newProposal.step5.origin')) && undoMessage.step5origin) ||
+        ((title === I18n.t('pages.newProposal.step5.destiny')) && undoMessage.step5destiny)) &&
         <MessageContainer>
           <Messages
             closable={true}
             severity='success'
             buttonText={I18n.t('pages.newProposal.step3.messageUndoDelete')}
-            closeAlert={() => { setShowSaveMessage(false) }}
+            closeAlert={() => { setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false }) }}
             closeMessage=''
-            goBack={() => { setData(copyTable); setShowSaveMessage(false) }}
+            goBack={() => { setData(copyTable); setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false }) }}
             message={I18n.t('pages.newProposal.step3.messageDeleteItem')}
           />
         </MessageContainer>}
