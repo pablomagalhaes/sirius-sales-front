@@ -29,6 +29,11 @@ export const StyledField = styled(Select)`
     & .MuiSvgIcon-root {
       margin-right: 5px;
     }
+
+    & .MuiMenu-list {
+    height: 300px;
+    overflow-y: scroll;
+}
   `
 
 export const StyledSelect = styled(
@@ -38,7 +43,16 @@ export const StyledSelect = styled(
         <StyledField
           {...props}
           invalid={invalid}
-          MenuProps={{ classes: { paper: className } }}
+          MenuProps={{ classes: { paper: className }, 
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "left"
+          },
+          transformOrigin: {
+            vertical: "top",
+            horizontal: "left"
+          },
+          getContentAnchorEl: null} }
         />
       </ControlledToolTip>
     )

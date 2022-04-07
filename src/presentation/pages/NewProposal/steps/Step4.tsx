@@ -180,6 +180,7 @@ const Step4 = ({
               disableUnderline
               invalid={invalidInput && data.validity.length === 0}
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
+              autoWidth = {true}
             >
               <MenuItem disabled value={data.validity}>
                 <SelectSpan placeholder={1}>
