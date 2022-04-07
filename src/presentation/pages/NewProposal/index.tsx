@@ -53,6 +53,13 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     step6: false
   })
 
+  const [filled, setFilled] = useState({
+    step3: false,
+    step4: false,
+    step5: false,
+    step6: false
+  })
+
   const steps = [
     {
       id: 'step1',
@@ -208,12 +215,12 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         </ButtonContainer>
       </TopContainer>
       <MainContainer>
-        <div id="step1"><Step1 setModal={setModal} setCompleted={setCompleted} invalidInput={invalidInput} setProposalType={setProposalType} /></div>
+        <div id="step1"><Step1 filled={filled} setModal={setModal} setCompleted={setCompleted} invalidInput={invalidInput} setProposalType={setProposalType} /></div>
         <div id="step2"><Step2 proposalType={proposalType} setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} /></div>
-        <div id="step3"><Step3 setTableItems={setStep3TableItems} setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} setCostData={setCostData} setSpecifications={setSpecifications} /></div>
-        <div id="step4"><Step4 setCompleted={setCompleted} invalidInput={invalidInput} /></div>
-        <div id="step5"><Step5 containerItems={step3TableItems} setCompleted={setCompleted} costData={costData} modal={modal} specifications={specifications} /></div>
-        <div id="step6"><Step6 containerItems={step3TableItems} setCompleted={setCompleted} costData={costData} modal={modal} specifications={specifications} /></div>
+        <div id="step3"><Step3 setFilled={setFilled} setTableItems={setStep3TableItems} setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} setCostData={setCostData} setSpecifications={setSpecifications} /></div>
+        <div id="step4"><Step4 modal={modal} setFilled={setFilled} setCompleted={setCompleted} invalidInput={invalidInput} /></div>
+        <div id="step5"><Step5 setFilled={setFilled} containerItems={step3TableItems} setCompleted={setCompleted} costData={costData} modal={modal} specifications={specifications} /></div>
+        <div id="step6"><Step6 setFilled={setFilled} containerItems={step3TableItems} setCompleted={setCompleted} costData={costData} modal={modal} specifications={specifications} /></div>
       </MainContainer>
 
       {showSaveMessage &&
