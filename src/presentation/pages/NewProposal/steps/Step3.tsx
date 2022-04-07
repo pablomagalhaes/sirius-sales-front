@@ -34,6 +34,7 @@ interface Step3Props {
   invalidInput: boolean
   setCostData: any
   setCompleted: (completed: any) => void
+  setFilled: (filled: any) => void
   setSpecifications: (specifications: string) => void
   setTableItems: (tableItems: ItemModalData[]) => void
 }
@@ -43,6 +44,7 @@ const Step3 = ({
   invalidInput,
   setCompleted,
   setCostData,
+  setFilled,
   setSpecifications,
   setTableItems
 }: Step3Props): JSX.Element => {
@@ -86,7 +88,7 @@ const Step3 = ({
     })()
   }, [])
 
-  const [data, setData] = useState({
+  const initialData = {
     description: '',
     specifications: '',
     refrigereted: false,
@@ -94,14 +96,20 @@ const Step3 = ({
     dangerous: false,
     imo: '',
     codUn: ''
-  })
+  }
+
+  const [data, setData] = useState(initialData)
 
   useEffect(() => {
     setTableRows([])
-  }, [modal, data.specifications])
+  }, [data.specifications])
 
   useEffect(() => {
-    setData({ ...data, specifications: '' })
+    setTableRows([])
+    setChargeData(initialState)
+    setCopyTable([])
+    setShowSaveMessage(false)
+    setData(initialData)
   }, [modal])
 
   const handleOpen = (): void => setOpen(true)
@@ -157,7 +165,25 @@ const Step3 = ({
         return { ...currentState, step3: false }
       })
     }
-  }, [data, modal])
+    if (
+      tableRows.length > 0 ||
+      data.description.length > 0 ||
+      data.specifications.length > 0 ||
+      data.temperature.length > 0 ||
+      data.imo.length > 0 ||
+      data.codUn.length > 0 ||
+      data.refrigereted ||
+      data.dangerous
+    ) {
+      setFilled((currentState) => {
+        return { ...currentState, step3: true }
+      })
+    } else {
+      setFilled((currentState) => {
+        return { ...currentState, step3: false }
+      })
+    }
+  }, [data, modal, tableRows])
 
   return (
     <Separator>
@@ -252,7 +278,7 @@ const Step3 = ({
           <Box width="100%" />
           <Grid item xs={1}>
             <FormLabel component="legend">{I18n.t('components.itemModal.hazardous')}</FormLabel>
-            <FormControlLabel value="dangerous" control={<Checkbox onChange={e => setData({ ...data, dangerous: !data.dangerous })} />} label={I18n.t('components.itemModal.yes')} />
+            <FormControlLabel value="dangerous" control={<Checkbox checked={data.dangerous} onChange={e => setData({ ...data, dangerous: !data.dangerous })} />} label={I18n.t('components.itemModal.yes')} />
           </Grid>
           {data.dangerous && <Grid item xs={3}>
             <FormLabel component="legend">{I18n.t('components.itemModal.imo')}

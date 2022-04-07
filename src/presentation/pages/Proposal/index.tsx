@@ -36,7 +36,7 @@ import API from '../../../infrastructure/api'
 import ArrowDown from '../../../application/icons/ArrowDown'
 import { cardFilters, orderButtonMenuItems, menuItems } from './constants'
 import { I18n } from 'react-redux-i18n'
-import {StatusProposalEnum} from '../../../application/enum/statusProposalEnum'
+import { StatusProposalEnum } from '../../../application/enum/statusProposalEnum'
 
 const Proposal = (): JSX.Element => {
   const [orderBy, setOrderBy] = useState<string>('openingDate')
@@ -331,7 +331,10 @@ const Proposal = (): JSX.Element => {
                 onOpen={() => setOpenedOrderSelect(!openedOrderSelect)}
               >
                 {orderButtonMenuItems.map((item) => (
-                  <MenuItem key={`${String(item.value)}_key`} value={item.value}>
+                  <MenuItem
+                    key={`${String(item.value)}_key`}
+                    value={item.value}
+                  >
                     <span>{item.description}</span>
                   </MenuItem>
                 ))}
@@ -362,8 +365,12 @@ const Proposal = (): JSX.Element => {
         <PaginationContainer>
           <PaginationMainContainer>
             <Pagination
-              onPageChange={(value) => setFilter((filter) => ({ ...filter, page: value }))}
-              onRowsPerPageChange={(value) => setFilter((filter) => ({ ...filter, size: value }))}
+              onPageChange={(value) =>
+                setFilter((filter) => ({ ...filter, page: value }))
+              }
+              onRowsPerPageChange={(value) =>
+                setFilter((filter) => ({ ...filter, size: value }))
+              }
               labelDisplay="exibindo"
               count={totalProposalList}
               labelRowsPerPage="Propostas por página"

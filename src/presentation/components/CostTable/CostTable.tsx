@@ -96,6 +96,13 @@ const CostTable = ({
     changeTableFill(data.length)
   }, [data])
 
+  useEffect(() => {
+    setCopyTable([])
+    setChargeData(initialState)
+    setData([])
+    setShowSaveMessage(false)
+  }, [modal])
+
   const calculateTotalCost = (buyCurrency, saleCurrency, buyValue, saleValue): void => {
     if ((buyCurrency !== null && saleCurrency !== '') && buyCurrency === saleCurrency) {
       currencyList.has(String(buyCurrency))
