@@ -1,4 +1,5 @@
 import instance from '../instance'
+import qs from 'qs'
 
 const getContainerType = async (): Promise<any> => {
   try {
@@ -101,7 +102,12 @@ const getService = async (): Promise<any> => {
 
 const getProposals = async (params): Promise<any> => {
   try {
-    const res = await instance.get('/sirius-business-proposal-api/proposal/filter', { params })
+    const res = await instance.get('/sirius-business-proposal-api/proposal/filter', {
+      params,
+      paramsSerializer: params => {
+        return qs.stringify(params, { arrayFormat: 'comma' })
+      }
+    })
     return res.data
   } catch (error) {
     console.error(error)

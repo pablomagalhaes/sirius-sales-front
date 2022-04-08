@@ -51,7 +51,7 @@ const Proposal = (): JSX.Element => {
 
   const history = useHistory()
 
-  const [filter, setFilter] = useState<Object>({
+  const [filter, setFilter] = useState<any>({
     page: 0,
     size: 10,
     direction: 'ASC',
@@ -109,9 +109,9 @@ const Proposal = (): JSX.Element => {
         break
     }
 
-    originDestinationList?.forEach((option): void => {
-      if (option.type === type) {
-        actualList.push(option.name)
+    originDestinationList?.forEach((item): void => {
+      if (item.type === type) {
+        actualList.push(`${String(item.id)} - ${String(item.name)}`)
       }
     })
 
@@ -134,19 +134,19 @@ const Proposal = (): JSX.Element => {
   }
 
   const verifyStatus = (status): any => {
-    switch(status){
-    case 'Aberta':
-      return StatusProposalEnum.ABERTA
-    case 'Ag. Retorno Cliente':
-      return StatusProposalEnum.AGUARDANDO_RETORNO_CLIENTE
-    case 'Em Revisao':
-      return StatusProposalEnum.EM_REVISAO
-    case 'Aprovada':
-      return StatusProposalEnum.APROVADA
-    case 'Rejeita':
-      return StatusProposalEnum.REJEITA
-    case 'Cancelada':
-      return StatusProposalEnum.CANCELADA
+    switch (status) {
+      case 'Aberta':
+        return StatusProposalEnum.ABERTA
+      case 'Ag. Retorno Cliente':
+        return StatusProposalEnum.AGUARDANDO_RETORNO_CLIENTE
+      case 'Em Revisao':
+        return StatusProposalEnum.EM_REVISAO
+      case 'Aprovada':
+        return StatusProposalEnum.APROVADA
+      case 'Rejeita':
+        return StatusProposalEnum.REJEITA
+      case 'Cancelada':
+        return StatusProposalEnum.CANCELADA
     }
   }
 
@@ -188,7 +188,152 @@ const Proposal = (): JSX.Element => {
   }
 
   const handleSelectedRowFilter = (selectedFiltersRowFilter: any): void => {
-    console.log(selectedFiltersRowFilter)
+    cleanFilter()
+
+    const selectedProposals = findKeyFilter(selectedFiltersRowFilter, 'Ref. proposta')
+    if (selectedProposals !== undefined) {
+      setFilter((filter) => ({
+        ...filter,
+        referenceProposal: [selectedProposals]
+      }))
+    }
+
+    const selectedClients = findKeyFilter(selectedFiltersRowFilter, 'Cliente')
+    if (selectedClients !== undefined) {
+      setFilter((filter) => ({
+        ...filter,
+        referenceClientProposal: [selectedClients]
+      }))
+    }
+
+    const selectedProcessTypes = findKeyFilter(selectedFiltersRowFilter, 'Tipo de processo')
+    if (selectedProcessTypes !== undefined) {
+      setFilter((filter) => ({
+        ...filter,
+        operationType: [selectedProcessTypes]
+      }))
+    }
+
+    const selectedOriginsDestinations = findKeyFilter(selectedFiltersRowFilter, 'Origem/Destino')
+    if (selectedOriginsDestinations !== undefined) {
+      const typeOrigin = selectedFiltersRowFilter[3].pickerSelecteds1
+      const typeDestination = selectedFiltersRowFilter[3].pickerSelecteds2
+
+      if (typeOrigin.length === 1 && typeDestination.length === 0) {
+        const origins = selectedOriginsDestinations[0].split(' - ')
+        setFilter({
+          ...filter,
+          idOrigin: [origins]
+        })
+      }
+
+      if (typeOrigin.length === 0 && typeDestination.length === 1) {
+        const destinations = selectedOriginsDestinations[0].split(' - ')
+        setFilter({
+          ...filter,
+          idDestination: [destinations]
+        })
+      }
+
+      if (typeOrigin.length === 1 && typeDestination.length === 1) {
+        const selectOriginsDestinations = selectedOriginsDestinations.split(' / ')
+
+        const origins = selectOriginsDestinations[0].split(' - ')
+        const destinations = selectOriginsDestinations[1].split(' - ')
+
+        setFilter((filter) => ({
+          ...filter,
+          idOrigin: [origins[0]],
+          idDestination: [destinations[0]]
+        }))
+      }
+    }
+
+    const selectedIncoterms = findKeyFilter(selectedFiltersRowFilter, 'Incoterm')
+    if (selectedIncoterms !== undefined) {
+      setFilter((filter) => ({
+        ...filter,
+        idIncoterm: [selectedIncoterms]
+      }))
+    }
+
+    const selectedDates = findKeyFilter(selectedFiltersRowFilter, 'Período')
+    if (selectedDates !== undefined) {
+      const type = selectedFiltersRowFilter[5].checkBoxSelecteds
+      const size = selectedDates.length
+
+      if (type[0] === 'Dt. Abertura') {
+        const openedDates = selectedDates[size - 1].split(' - ')
+
+        const [openedDayBegin, openedMonthBegin, openedYearBegin] = openedDates[0].split('/')
+        const [openedDayEnd, openedMonthEnd, openedYearEnd] = openedDates[1].split('/')
+
+        const openedDtBeginFormated = `${String(openedYearBegin)}/${String(openedMonthBegin)}/${String(openedDayBegin)}`
+        const openedDtEndFormated = `${String(openedYearEnd)}/${String(openedMonthEnd)}/${String(openedDayEnd)}`
+
+        setFilter((filter) => ({
+          ...filter,
+          'openingDate.dtBegin': openedDtBeginFormated,
+          'openingDate.dtEnd': openedDtEndFormated
+        }))
+      }
+
+      if (type[0] === 'Dt. Validade' || type[1] === 'Dt. Validade') {
+        const validateDates = selectedDates[size - 1].split(' - ')
+
+        const [validateDayBegin, validateMonthBegin, validateYearBegin] = validateDates[0].split('/')
+        const [validateDayEnd, validateMonthEnd, validateYearEnd] = validateDates[1].split('/')
+
+        const validateDtBeginFormated = `${String(validateYearBegin)}/${String(validateMonthBegin)}/${String(validateDayBegin)}`
+        const validateDtEndFormated = `${String(validateYearEnd)}/${String(validateMonthEnd)}/${String(validateDayEnd)}`
+
+        setFilter((filter) => ({
+          ...filter,
+          'validityDate.dtBegin': validateDtBeginFormated,
+          'validityDate.dtEnd': validateDtEndFormated
+        }))
+      }
+    }
+  }
+
+  const findKeyFilter = (filterSelected, key): any => {
+    for (const item of filterSelected) {
+      if (item.filterName === key) {
+        if (item.textFieldValueSelected !== '') {
+          return item.textFieldValueSelected
+        }
+        if (item.pickerSelecteds1.length === 1 && item.pickerSelecteds2.length === 0) {
+          return item.pickerSelecteds1
+        }
+        if (item.pickerSelecteds1.length === 0 && item.pickerSelecteds2.length === 1) {
+          return item.pickerSelecteds2
+        }
+        if (item.pickerSelecteds1.length === 1 && item.pickerSelecteds2.length === 1) {
+          return `${String(item.pickerSelecteds1)} / ${String(item.pickerSelecteds2)}`
+        }
+        if (item.checkBoxSelecteds1.length > 0) {
+          return item.checkBoxSelecteds1
+        }
+        if (item.selectedDates.length > 0) {
+          return item.selectedDates
+        }
+      }
+    }
+  }
+
+  const cleanFilter = (): void => {
+    delete filter.referenceProposal
+    delete filter.referenceClientProposal
+    delete filter.operationType
+    delete filter.idOrigin
+    delete filter.idDestination
+    delete filter.idIncoterm
+    delete filter['openingDate.dtBegin']
+    delete filter['openingDate.dtEnd']
+    delete filter['validityDate.dtBegin']
+    delete filter['validityDate.dtEnd']
+
+    setFilter({ ...filter, orderByList: 'openingDate' })
   }
 
   const handleOrderSelect = (value): void => {
