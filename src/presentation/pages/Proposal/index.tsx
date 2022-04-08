@@ -500,7 +500,7 @@ const Proposal = (): JSX.Element => {
             approvedLabel={(I18n.t('pages.proposal.table.approvedLabel'))}
             cancelLabel={(I18n.t('pages.proposal.table.cancelLabel'))}
             inRevisionLabel={(I18n.t('pages.proposal.table.inRevisionLabel'))}
-            isShowIconLate={(true)}
+            isShowIconLate={true}
             openLabel={(I18n.t('pages.proposal.table.openLabel'))}
             rejectLabel={(I18n.t('pages.proposal.table.rejectLabel'))}
             rows={getProposalItems(proposalList)}
