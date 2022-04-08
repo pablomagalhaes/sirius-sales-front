@@ -175,7 +175,6 @@ const Step3 = ({
       data.refrigereted ||
       data.dangerous
     ) {
-      console.log(data)
       setFilled((currentState) => {
         return { ...currentState, step3: true }
       })
