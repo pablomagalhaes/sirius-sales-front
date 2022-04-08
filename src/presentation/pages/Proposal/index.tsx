@@ -38,6 +38,13 @@ import { cardFilters, orderButtonMenuItems, menuItems } from './constants'
 import { I18n } from 'react-redux-i18n'
 import { StatusProposalEnum } from '../../../application/enum/statusProposalEnum'
 
+const defaultFilter = {
+  page: 0,
+  size: 10,
+  direction: 'ASC',
+  orderByList: 'openingDate'
+}
+
 const Proposal = (): JSX.Element => {
   const [orderBy, setOrderBy] = useState<string>('openingDate')
   const [orderAsc, setOrderAsc] = useState(true)
@@ -51,12 +58,7 @@ const Proposal = (): JSX.Element => {
 
   const history = useHistory()
 
-  const [filter, setFilter] = useState<any>({
-    page: 0,
-    size: 10,
-    direction: 'ASC',
-    orderByList: 'openingDate'
-  })
+  const [filter, setFilter] = useState<any>(defaultFilter)
 
   useEffect(() => {
     const newIncotermList: any[] = []
@@ -333,7 +335,7 @@ const Proposal = (): JSX.Element => {
     delete filter['validityDate.dtBegin']
     delete filter['validityDate.dtEnd']
 
-    setFilter({ ...filter, orderByList: 'openingDate' })
+    setFilter((filter) => ({ ...filter, defaultFilter }))
   }
 
   const handleOrderSelect = (value): void => {

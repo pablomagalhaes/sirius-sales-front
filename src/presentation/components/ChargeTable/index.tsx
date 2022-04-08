@@ -21,13 +21,11 @@ const ChargeTable = ({ charges, onEdit, onDelete, specification, modal }: Charge
   let cubageWeight = 0
 
   const isLand = (): boolean => {
-    return modal === 'LAND';
-
+    return modal === 'LAND'
   }
 
   const isFCL = (): boolean => {
-    return specification === 'fcl' && modal === 'SEA';
-
+    return specification === 'fcl' && modal === 'SEA'
   }
 
   return (
