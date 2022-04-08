@@ -99,7 +99,7 @@ const Step4 = ({
       data.validity.length > 0 ||
       data.validityDate.length > 0 ||
       data.transitTime.length > 0 ||
-      data.frequency.length > 0 ||
+      data.frequency !== '' ||
       data.route.length > 0 ||
       data.client.length > 0 ||
       data.freeTime.length > 0 ||
