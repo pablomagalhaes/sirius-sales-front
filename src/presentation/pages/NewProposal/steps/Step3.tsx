@@ -37,6 +37,13 @@ interface Step3Props {
   setFilled: (filled: any) => void
   setSpecifications: (specifications: string) => void
   setTableItems: (tableItems: ItemModalData[]) => void
+  setUndoMessage: React.Dispatch<React.SetStateAction<{
+    step3: boolean
+    step5origin: boolean
+    step5destiny: boolean
+    step6: boolean
+  }>>
+  undoMessage: { step3: boolean, step5origin: boolean, step5destiny: boolean, step6: boolean }
 }
 
 const Step3 = ({
@@ -46,7 +53,9 @@ const Step3 = ({
   setCostData,
   setFilled,
   setSpecifications,
-  setTableItems
+  setTableItems,
+  setUndoMessage,
+  undoMessage
 }: Step3Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [tableRows, setTableRows] = useState<ItemModalData[]>([])
@@ -54,7 +63,6 @@ const Step3 = ({
   const [temperatureList, setTemperatureList] = useState<any[]>([])
   const [imoList, setImoList] = useState<any[]>([])
   const specificationsList = ['Break Bulk', 'FCL', 'LCL', 'Ro-Ro']
-  const [showSaveMessage, setShowSaveMessage] = useState(false)
   const [copyTable, setCopyTable] = useState<ItemModalData[]>([])
 
   useEffect(() => {
@@ -64,17 +72,6 @@ const Step3 = ({
         .catch((err) => console.log(err))
     })()
   }, [])
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const saveMessageInfo = {
-    closable: true,
-    severity: 'success',
-    buttonText: I18n.t('pages.newProposal.step3.messageUndoDelete'),
-    closeAlert: () => { setShowSaveMessage(false) },
-    closeMessage: '',
-    goBack: () => { setTableRows(copyTable); setShowSaveMessage(false) },
-    message: I18n.t('pages.newProposal.step3.messageDeleteItem')
-  }
 
   useEffect(() => {
     setCostData(tableRows.length)
@@ -108,11 +105,14 @@ const Step3 = ({
     setTableRows([])
     setChargeData(initialState)
     setCopyTable([])
-    setShowSaveMessage(false)
+    setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false })
     setData(initialData)
   }, [modal])
 
-  const handleOpen = (): void => setOpen(true)
+  const handleOpen = (): void => {
+    setOpen(true)
+    setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false })
+  }
 
   const handleClose = (): void => {
     setOpen(false)
@@ -143,7 +143,7 @@ const Step3 = ({
     newTable.splice(index, 1)
     setTableRows(newTable)
     setTableItems(newTable)
-    setShowSaveMessage(true)
+    setUndoMessage({ step3: true, step5origin: false, step5destiny: false, step6: false })
   }
 
   useEffect(() => {
@@ -362,15 +362,15 @@ const Step3 = ({
           </Grid>
         </Grid>
       </FormControl>
-      {showSaveMessage &&
+      {undoMessage.step3 &&
         <MessageContainer>
           <Messages
             closable={true}
             severity='success'
             buttonText={I18n.t('pages.newProposal.step3.messageUndoDelete')}
-            closeAlert={() => { setShowSaveMessage(false) }}
+            closeAlert={() => { setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false }) }}
             closeMessage=''
-            goBack={() => { setTableRows(copyTable); setShowSaveMessage(false) }}
+            goBack={() => { setTableItems(copyTable); setTableRows(copyTable); setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false }) }}
             message={I18n.t('pages.newProposal.step3.messageDeleteItem')} />
         </MessageContainer>}
     </Separator >

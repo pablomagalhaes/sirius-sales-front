@@ -44,6 +44,13 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
 
   const history = useHistory()
 
+  const [undoMessage, setUndoMessage] = useState({
+    step3: false,
+    step5origin: false,
+    step5destiny: false,
+    step6: false
+  })
+
   const [completed, setCompleted] = useState({
     step1: false,
     step2: false,
@@ -186,7 +193,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           {I18n.t('pages.newProposal.encharged')}
           <IconComponent name="user" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
           <Username>
-          {fullname}
+            {fullname}
           </Username>
         </UserContainer>
       </Header>
@@ -217,10 +224,10 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       <MainContainer>
         <div id="step1"><Step1 filled={filled} setModal={setModal} setCompleted={setCompleted} invalidInput={invalidInput} setProposalType={setProposalType} /></div>
         <div id="step2"><Step2 proposalType={proposalType} setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} /></div>
-        <div id="step3"><Step3 setFilled={setFilled} setTableItems={setStep3TableItems} setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} setCostData={setCostData} setSpecifications={setSpecifications} /></div>
+        <div id="step3"><Step3 undoMessage={undoMessage} setUndoMessage={setUndoMessage} setFilled={setFilled} setTableItems={setStep3TableItems} setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} setCostData={setCostData} setSpecifications={setSpecifications} /></div>
         <div id="step4"><Step4 modal={modal} setFilled={setFilled} setCompleted={setCompleted} invalidInput={invalidInput} /></div>
-        <div id="step5"><Step5 setFilled={setFilled} containerItems={step3TableItems} setCompleted={setCompleted} costData={costData} modal={modal} specifications={specifications} /></div>
-        <div id="step6"><Step6 setFilled={setFilled} containerItems={step3TableItems} setCompleted={setCompleted} costData={costData} modal={modal} specifications={specifications} /></div>
+        <div id="step5"><Step5 undoMessage={undoMessage} setUndoMessage={setUndoMessage} setFilled={setFilled} containerItems={step3TableItems} setCompleted={setCompleted} costData={costData} modal={modal} specifications={specifications} /></div>
+        <div id="step6"><Step6 undoMessage={undoMessage} setUndoMessage={setUndoMessage} setFilled={setFilled} containerItems={step3TableItems} setCompleted={setCompleted} costData={costData} modal={modal} specifications={specifications} /></div>
       </MainContainer>
 
       {showSaveMessage &&
