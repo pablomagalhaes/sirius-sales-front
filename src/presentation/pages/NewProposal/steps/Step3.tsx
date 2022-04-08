@@ -169,12 +169,13 @@ const Step3 = ({
       tableRows.length > 0 ||
       data.description.length > 0 ||
       data.specifications.length > 0 ||
-      data.temperature.length > 0 ||
+      data.temperature !== '' ||
       data.imo.length > 0 ||
       data.codUn.length > 0 ||
       data.refrigereted ||
       data.dangerous
     ) {
+      console.log(data)
       setFilled((currentState) => {
         return { ...currentState, step3: true }
       })
