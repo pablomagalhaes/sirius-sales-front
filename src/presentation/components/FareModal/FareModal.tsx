@@ -131,7 +131,6 @@ const FareModal = ({
   const handleOnClose = (): void => {
     setData(initialState)
     setInvalidInput(false)
-    verifyContainerItems()
     setClose()
   }
 
