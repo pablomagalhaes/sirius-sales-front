@@ -335,7 +335,12 @@ const Proposal = (): JSX.Element => {
     delete filter['validityDate.dtBegin']
     delete filter['validityDate.dtEnd']
 
-    setFilter(defaultFilter)
+    setFilter(() => ({
+      page: 0,
+      size: 10,
+      direction: 'ASC',
+      orderByList: 'openingDate'
+    }))
   }
 
   const handleOrderSelect = (value): void => {
