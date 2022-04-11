@@ -335,7 +335,7 @@ const Proposal = (): JSX.Element => {
     delete filter['validityDate.dtBegin']
     delete filter['validityDate.dtEnd']
 
-    setFilter((filter) => ({ ...filter, defaultFilter }))
+    setFilter(defaultFilter)
   }
 
   const handleOrderSelect = (value): void => {
@@ -408,6 +408,14 @@ const Proposal = (): JSX.Element => {
     handleCleanAll()
   }
 
+  const showTotalResult = (): string => {
+    const result = JSON.stringify(filter) === JSON.stringify(defaultFilter)
+    if (result) {
+      return `Propostas (${totalProposalList}) - Últimos 30 dias`
+    }
+    return `Resultado do filtro (${totalProposalList})`
+  }
+
   return (
     <RootContainer>
       <TopContainer>
@@ -444,7 +452,7 @@ const Proposal = (): JSX.Element => {
           myFilterLabel="Meus Filtros"
           applyLabel="Aplicar"
           approveLabel="Salvar Filtro"
-          addFilterLabel="Aplicar filtros"
+          addFilterLabel="Filtros avançados"
           handleSelectedFilters={handleSelectedRowFilter}
           setRadioValue={setRadioValue}
           handleClean={handleChangeModal}
@@ -454,7 +462,7 @@ const Proposal = (): JSX.Element => {
       <ListHeaderContainer>
         <LeftSideListHeaderContainer>
           <ListMainTitleSpan>
-            Propostas em andamento ({totalProposalList})
+            { showTotalResult() }
           </ListMainTitleSpan>
           <ExportListContainer onClick={handleExportList}>
             <ExitToApp />
