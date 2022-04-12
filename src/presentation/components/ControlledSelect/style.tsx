@@ -38,7 +38,18 @@ export const StyledSelect = styled(
         <StyledField
           {...props}
           invalid={invalid}
-          MenuProps={{ classes: { paper: className } }}
+          MenuProps={{
+            classes: { paper: className },
+            anchorOrigin: {
+              vertical: 'bottom',
+              horizontal: 'left'
+            },
+            transformOrigin: {
+              vertical: 'top',
+              horizontal: 'left'
+            },
+            getContentAnchorEl: null
+          } }
         />
       </ControlledToolTip>
     )

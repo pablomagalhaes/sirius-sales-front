@@ -11,9 +11,16 @@ interface Step5Props {
   setFilled: (filled: any) => void
   specifications: string
   containerItems: ItemModalData[]
+  setUndoMessage: React.Dispatch<React.SetStateAction<{
+    step3: boolean
+    step5origin: boolean
+    step5destiny: boolean
+    step6: boolean
+  }>>
+  undoMessage: { step3: boolean, step5origin: boolean, step5destiny: boolean, step6: boolean }
 }
 
-const Step5 = ({ setFilled, costData, modal, specifications, setCompleted, containerItems }: Step5Props): JSX.Element => {
+const Step5 = ({ setFilled, costData, modal, specifications, setCompleted, containerItems, setUndoMessage, undoMessage }: Step5Props): JSX.Element => {
   const [dataOrigin, setDataOrigin] = useState(0)
   const [dataDestiny, setDataDestiny] = useState(0)
 
@@ -50,6 +57,8 @@ const Step5 = ({ setFilled, costData, modal, specifications, setCompleted, conta
         specifications={specifications}
         changeTableFill={setDataOrigin}
         containerItems={containerItems}
+        undoMessage={undoMessage}
+        setUndoMessage={setUndoMessage}
       />
       <CostTable
         modalTitle={I18n.t('pages.newProposal.step5.destinationCost')}
@@ -60,6 +69,8 @@ const Step5 = ({ setFilled, costData, modal, specifications, setCompleted, conta
         specifications={specifications}
         changeTableFill={setDataDestiny}
         containerItems={containerItems}
+        undoMessage={undoMessage}
+        setUndoMessage={setUndoMessage}
       />
     </Separator>
   )

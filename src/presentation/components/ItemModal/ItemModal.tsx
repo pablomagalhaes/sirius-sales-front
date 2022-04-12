@@ -279,7 +279,7 @@ const ItemModal = ({
             </Grid>}
             <Grid item xs={6}>
               <RadioGroup style={{ margin: '47px 10px 10px -15px' }} row aria-label="services" name="row-radio-buttons-group">
-                <FormControlLabel value="stack" control={<Checkbox checked={data.stack} onChange={e => setData({ ...data, stack: !data.stack })} />} label={I18n.t('components.itemModal.stack')} />
+                <FormControlLabel value="stack" control={<Checkbox checked={data.stack} onChange={() => setData({ ...data, stack: !data.stack })} />} label={I18n.t('components.itemModal.stack')} />
               </RadioGroup>
             </Grid>
             {marineFCL() && <Box width="100%" />}
