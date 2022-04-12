@@ -186,7 +186,6 @@ const Proposal = (): JSX.Element => {
   }
 
   const handleCardFiltersClick = (selectedCardFilters: any): void => {
-    console.log(selectedCardFilters)
   }
 
   const handleSelectedRowFilter = (selectedFiltersRowFilter: any): void => {
@@ -413,9 +412,16 @@ const Proposal = (): JSX.Element => {
     handleCleanAll()
   }
 
-  const showTotalResult = (): string => {
-    const result = JSON.stringify(filter) === JSON.stringify(defaultFilter)
-    if (result) {
+  const showMsgTotalResult = (): string => {
+    const keys = Object.keys(filter)
+
+    /* eslint-disable no-prototype-builtins */
+    const page = filter.hasOwnProperty('page')
+    const size = filter.hasOwnProperty('size')
+    const direction = filter.hasOwnProperty('direction')
+    const orderByList = filter.hasOwnProperty('orderByList')
+
+    if (keys.length === 4 && (Boolean(page)) && (Boolean(size)) && (Boolean(direction)) && (Boolean(orderByList))) {
       return `Propostas (${totalProposalList}) - Últimos 30 dias`
     }
     return `Resultado do filtro (${totalProposalList})`
@@ -467,7 +473,7 @@ const Proposal = (): JSX.Element => {
       <ListHeaderContainer>
         <LeftSideListHeaderContainer>
           <ListMainTitleSpan>
-            { showTotalResult() }
+            { showMsgTotalResult() }
           </ListMainTitleSpan>
           <ExportListContainer onClick={handleExportList}>
             <ExitToApp />
@@ -525,12 +531,8 @@ const Proposal = (): JSX.Element => {
         <PaginationContainer>
           <PaginationMainContainer>
             <Pagination
-              onPageChange={(value) =>
-                setFilter((filter) => ({ ...filter, page: value }))
-              }
-              onRowsPerPageChange={(value) =>
-                setFilter((filter) => ({ ...filter, size: value }))
-              }
+              onPageChange={(value) => setFilter((filter) => ({ ...filter, page: value }))}
+              onRowsPerPageChange={(value) => setFilter((filter) => ({ ...filter, size: value }))}
               labelDisplay="exibindo"
               count={totalProposalList}
               labelRowsPerPage="Propostas por página"
