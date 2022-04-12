@@ -222,10 +222,10 @@ const Proposal = (): JSX.Element => {
 
       if (typeOrigin.length === 1 && typeDestination.length === 0) {
         const origins = selectedOriginsDestinations[0].split(' - ')
-        setFilter({
+        setFilter((filter) => ({
           ...filter,
           idOrigin: [origins]
-        })
+        }))
       }
 
       if (typeOrigin.length === 0 && typeDestination.length === 1) {
