@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import React, { useState, useContext, useEffect } from 'react'
-import { Button, FloatingMenu, Steps, Messages } from 'fiorde-fe-components'
+import React, { useState, useCallback, useEffect, useContext, useRef } from 'react'
+import { Button, ExitDialog, FloatingMenu, Steps, Messages } from 'fiorde-fe-components'
 import { Breadcrumbs, Link } from '@material-ui/core/'
 import {
   ButtonContainer,
@@ -46,6 +46,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
   const [serviceList, setServiceList] = useState<any[]>([])
   const [containerTypeList, setContainerTypeList] = useState<any[]>([])
+  const [leavingPage, setLeavingPage] = useState(false)
+  const [confirmLeavingPage, setConfirmLeavingPage] = useState(false)
 
   useEffect(() => {
     void (async function () {
@@ -89,6 +91,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   })
 
   const [filled, setFilled] = useState({
+    step1: false,
+    step2: false,
     step3: false,
     step4: false,
     step5: false,
@@ -195,8 +199,64 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     message: `${String(I18n.t('pages.newProposal.saveMessage.message'))} ${String(referenceCode[0].reference)}.`
   }
 
+  const MessageExitDialog = (): JSX.Element => {
+    if (!confirmLeavingPage) {
+      useEffect(() => {
+        if ((filled.step1 ||
+          filled.step2 ||
+          filled.step3 ||
+          filled.step4 ||
+          filled.step5 ||
+          filled.step6) && !confirmLeavingPage) {
+          setLeavingPage(true)
+        } else {
+          setLeavingPage(false)
+        }
+      }, [])
+    }
+
+    return (
+      <>
+        <ExitDialog
+          cancelButtonText={I18n.t('pages.newProposal.unsavedChanges.cancelMessage')}
+          confirmButtonText={I18n.t('pages.newProposal.unsavedChanges.confirmMessage')}
+          message={I18n.t('pages.newProposal.unsavedChanges.message')}
+          title={I18n.t('pages.newProposal.unsavedChanges.title')}
+          onPressCancel={() => setLeavingPage(false)}
+          onPressConfirm={() => setConfirmLeavingPage(true)} />
+      </>
+    )
+  }
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', (event) => {
+      event.returnValue = setLeavingPage(true)
+    })
+  }, [])
+
+  const useOnClickOutside = (ref, handler): void => {
+    useEffect(() => {
+      const listener = (event: any): void => {
+        if (!ref.current || ref.current.contains(event.target)) {
+          return
+        }
+        handler(event)
+      }
+      document.addEventListener('mousedown', listener)
+      document.addEventListener('touchstart', listener)
+      return () => {
+        document.removeEventListener('mousedown', listener)
+        document.removeEventListener('touchstart', listener)
+      }
+    }, [ref, handler])
+  }
+  const divRef = useRef()
+
+  const handler = useCallback(() => { setLeavingPage(true) }, [])
+  useOnClickOutside(divRef, handler)
+
   return (
-    <RootContainer>
+    <RootContainer ref={divRef}>
       <Header>
         <Breadcrumbs separator=">" aria-label="breadcrumb">
           <Link
@@ -253,9 +313,10 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           </Button>
         </ButtonContainer>
       </TopContainer>
+      {leavingPage && !confirmLeavingPage && <MessageExitDialog />}
       <MainContainer>
-        <div id="step1"><Step1 filled={filled} setModal={setModal} setCompleted={setCompleted} invalidInput={invalidInput} setProposalType={setProposalType} /></div>
-        <div id="step2"><Step2 proposalType={proposalType} setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} /></div>
+        <div id="step1"><Step1 filled={filled} setModal={setModal} setCompleted={setCompleted} setFilled={setFilled} invalidInput={invalidInput} setProposalType={setProposalType} /></div>
+        <div id="step2"><Step2 proposalType={proposalType} setCompleted={setCompleted} setFilled={setFilled} invalidInput={invalidInput} modal={modal} /></div>
         <div id="step3"><Step3 containerTypeList={containerTypeList} undoMessage={undoMessage} setUndoMessage={setUndoMessage} setFilled={setFilled} setTableItems={setStep3TableItems} setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} setCostData={setCostData} setSpecifications={setSpecifications} /></div>
         <div id="step4"><Step4 modal={modal} setFilled={setFilled} setCompleted={setCompleted} invalidInput={invalidInput} /></div>
         <div id="step5"><Step5 containerTypeList={containerTypeList} serviceList={serviceList} undoMessage={undoMessage} setUndoMessage={setUndoMessage} setFilled={setFilled} containerItems={step3TableItems} setCompleted={setCompleted} costData={costData} modal={modal} specifications={specifications} /></div>
