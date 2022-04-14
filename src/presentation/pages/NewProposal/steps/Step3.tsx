@@ -64,6 +64,7 @@ const Step3 = ({
   const [imoList, setImoList] = useState<any[]>([])
   const specificationsList = ['Break Bulk', 'FCL', 'LCL', 'Ro-Ro']
   const [copyTable, setCopyTable] = useState<ItemModalData[]>([])
+  const [tableId, setTableId] = useState(0)
 
   useEffect(() => {
     void (async function () {
@@ -107,6 +108,7 @@ const Step3 = ({
     setCopyTable([])
     setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false })
     setData(initialData)
+    setTableId(0)
   }, [modal])
 
   const handleOpen = (): void => {
@@ -121,12 +123,20 @@ const Step3 = ({
 
   const handleAdd = (item: ItemModalData): void => {
     if (item.id !== null) {
-      const startTableRows = tableRows.slice(0, item.id)
-      const endTableRows = tableRows.slice(item.id + 1)
-      setTableRows([...startTableRows, item, ...endTableRows])
-      setTableItems([...startTableRows, item, ...endTableRows])
+      if (item.id === tableRows[0].id) {
+        const endTableRows = tableRows.slice(1)
+        setTableRows([item, ...endTableRows])
+        setTableItems([item, ...endTableRows])
+      } else {
+        const elementIndex = tableRows.findIndex(element => element.id === item.id)
+        const startTableRows = tableRows.slice(0, elementIndex)
+        const endTableRows = tableRows.slice(elementIndex + 1)
+        setTableRows([...startTableRows, item, ...endTableRows])
+        setTableItems([...startTableRows, item, ...endTableRows])
+      }
     } else {
-      const newItem = { ...item, id: tableRows.length }
+      const newItem = { ...item, id: tableId }
+      setTableId((tableId) => tableId + 1)
       setTableRows([...tableRows, newItem])
       setTableItems([...tableRows, newItem])
     }
