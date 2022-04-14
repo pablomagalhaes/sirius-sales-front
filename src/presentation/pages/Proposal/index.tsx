@@ -532,7 +532,7 @@ const Proposal = (): JSX.Element => {
           <PaginationMainContainer>
             <Pagination
               onPageChange={(value) => setFilter((filter) => ({ ...filter, page: value }))}
-              onRowsPerPageChange={(value) => setFilter((filter) => ({ ...filter, size: value }))}
+              onRowsPerPageChange={(value) => setFilter((filter) => ({ ...filter, size: value, page: 0 }))}
               labelDisplay="exibindo"
               count={totalProposalList}
               labelRowsPerPage="Propostas por página"
