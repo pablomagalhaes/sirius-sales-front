@@ -47,7 +47,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [serviceList, setServiceList] = useState<any[]>([])
   const [containerTypeList, setContainerTypeList] = useState<any[]>([])
   const [leavingPage, setLeavingPage] = useState(false)
-  const [confirmLeavingPage, setConfirmLeavingPage] = useState(false)
+  const [confirmLeavingPage] = useState(false)
+  const [action, setAction] = useState('')
 
   useEffect(() => {
     void (async function () {
@@ -223,21 +224,38 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           message={I18n.t('pages.newProposal.unsavedChanges.message')}
           title={I18n.t('pages.newProposal.unsavedChanges.title')}
           onPressCancel={() => setLeavingPage(false)}
-          onPressConfirm={() => setConfirmLeavingPage(true)} />
+          onPressConfirm={() => executeAction()} />
       </>
     )
   }
 
+  const validateAction = (element): boolean => {
+    console.log(element.tagName)
+    if (element.querySelector('#billing') && (element.tagName === 'LI' || element.tagName === 'svg' || element.tagName === 'path')) {
+      setAction('freight-forwarder')
+      return true
+    }
+    return false
+  }
+
+  const executeAction = (): void => {
+    switch (action) {
+      case 'freight-forwarder':
+        console.log('teste')
+    }
+  }
+
   useEffect(() => {
     window.addEventListener('beforeunload', (event) => {
+      console.log(event)
       event.returnValue = setLeavingPage(true)
     })
   }, [])
 
-  const useOnClickOutside = (ref, handler): void => {
+  const useOnClickOutside = (handler): void => {
     useEffect(() => {
       const listener = (event: any): void => {
-        if (!ref.current || ref.current.contains(event.target)) {
+        if (!validateAction(event.target)) {
           return
         }
         handler(event)
@@ -248,12 +266,12 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         document.removeEventListener('mousedown', listener)
         document.removeEventListener('touchstart', listener)
       }
-    }, [ref, handler])
+    }, [handler])
   }
   const divRef = useRef()
 
   const handler = useCallback(() => { setLeavingPage(true) }, [])
-  useOnClickOutside(divRef, handler)
+  useOnClickOutside(handler)
 
   return (
     <RootContainer ref={divRef}>
