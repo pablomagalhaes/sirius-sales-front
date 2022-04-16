@@ -303,13 +303,13 @@ const Proposal = (): JSX.Element => {
         if (item.textFieldValueSelected !== '') {
           return item.textFieldValueSelected
         }
-        if (item.pickerSelecteds1.length === 1 && item.pickerSelecteds2.length === 0) {
+        if (item.pickerSelecteds1.length > 0 && item.pickerSelecteds2.length === 0) {
           return item.pickerSelecteds1
         }
-        if (item.pickerSelecteds1.length === 0 && item.pickerSelecteds2.length === 1) {
+        if (item.pickerSelecteds1.length === 0 && item.pickerSelecteds2.length > 0) {
           return item.pickerSelecteds2
         }
-        if (item.pickerSelecteds1.length === 1 && item.pickerSelecteds2.length === 1) {
+        if (item.pickerSelecteds1.length > 0 && item.pickerSelecteds2.length > 0) {
           return `${String(item.pickerSelecteds1)} / ${String(item.pickerSelecteds2)}`
         }
         if (item.checkBoxSelecteds1.length > 0) {
