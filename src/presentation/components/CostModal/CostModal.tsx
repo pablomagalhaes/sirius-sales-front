@@ -323,7 +323,7 @@ const CostModal = ({
               <ControlledSelect
                 onChange={(e) => dispatch({ type: 'type', value: e.target.value })}
                 displayEmpty
-                style={{ width: '122px' }}
+                style={{ width: '122px', marginTop: '12px' }}
                 value={state.type}
                 disableUnderline
                 placeholder={state.type}
@@ -360,7 +360,7 @@ const CostModal = ({
                       <div ref={params.InputProps.ref}>
                         <Input
                           {...params.inputProps}
-                          style={{ width: '368px', marginTop: 'unset' }}
+                          style={{ width: '368px' }}
                           placeholder={I18n.t('components.costModal.choose')}
                           toolTipTitle={I18n.t('components.itemModal.requiredField')}
                           invalid={invalidInput && (state.description === null || state.description.length === 0)}
@@ -385,7 +385,7 @@ const CostModal = ({
               <ControlledSelect
                 onChange={(e) => dispatch({ type: 'agent', value: e.target.value })}
                 displayEmpty
-                style={{ width: '513px' }}
+                style={{ width: '513px', marginTop: '12px'  }}
                 value={state.agent}
                 disableUnderline
                 placeholder={state.agent}
