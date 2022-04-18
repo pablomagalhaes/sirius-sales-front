@@ -10,7 +10,18 @@ export const StyledMenuSelect = styled(({ className, invalid, toolTipTitle, ...p
       <StyledSelect
         {...props}
         invalid={invalid === true ? 1 : 0}
-        MenuProps={{ classes: { paper: className } }}
+        MenuProps={{
+          classes: { paper: className },
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'left'
+          },
+          transformOrigin: {
+            vertical: 'top',
+            horizontal: 'left'
+          },
+          getContentAnchorEl: null
+        } }
       />
     </ControlledToolTip>
   )
@@ -138,6 +149,10 @@ export const Input = styled.input`
     color: #999dac;
     opacity: 1;
   }
+
+  &:hover {
+    border: 1px solid #43bfb5;
+  }
 `
 
 export const NumberInput = styled(NumberFormat)`
@@ -199,4 +214,9 @@ export const WarningPopUp = styled.div`
   padding-top:24px;
   padding-bottom:24px;
   margin-top: 32px;
+`
+export const MainDiv = styled.div`
+  .MuiSelect-icon {
+    color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.font};
+  }
 `
