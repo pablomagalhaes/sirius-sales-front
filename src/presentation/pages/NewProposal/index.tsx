@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import React, { useState } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { Button, FloatingMenu, Steps, Messages } from 'fiorde-fe-components'
 import { Breadcrumbs, Link } from '@material-ui/core/'
 import {
@@ -26,6 +26,8 @@ import Step6 from './steps/Step6'
 import { TableRows } from '../Proposal/constants'
 import { useHistory } from 'react-router-dom'
 import { ItemModalData } from '../../components/ItemModal/ItemModal'
+import { ProposalContext, ProposalProps } from './context/ProposalContext'
+import API from '../../../infrastructure/api'
 
 export interface NewProposalProps {
   theme: any
@@ -41,6 +43,32 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [showSaveMessage, setShowSaveMessage] = useState(false)
   const [specifications, setSpecifications] = useState('')
   const [step3TableItems, setStep3TableItems] = useState<ItemModalData[]>([])
+  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+  const [serviceList, setServiceList] = useState<any[]>([])
+  const [containerTypeList, setContainerTypeList] = useState<any[]>([])
+
+  useEffect(() => {
+    void (async function () {
+      await API.getContainerType()
+        .then((response) => setContainerTypeList(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
+
+  useEffect(() => {
+    void (async function () {
+      await API.getService()
+        .then((response) => setServiceList(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
+
+  useEffect(() => {
+    const today = new Date()
+    const timeNow = `${today.getFullYear()}-${('0' + String(today.getMonth() + 1).slice(-2))}-${('0' + String(today.getDate())).slice(-2)}T${('0' + String(today.getHours())).slice(-2)}:${('0' + String(today.getMinutes())).slice(-2)}:${('0' + String(today.getSeconds())).slice(-2)}.000Z`
+    const validity = `${today.getFullYear()}-${('0' + String(today.getMonth() + 2).slice(-2))}-${('0' + String(today.getDate())).slice(-2)}T${('0' + String(today.getHours())).slice(-2)}:${('0' + String(today.getMinutes())).slice(-2)}:${('0' + String(today.getSeconds())).slice(-2)}.000Z`
+    setProposal({ ...proposal, operationType: 'FRETE - IMPORTAÇÃO', openingDate: timeNow, validityDate: validity })
+  }, [])
 
   const history = useHistory()
 
@@ -117,8 +145,12 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       completed.step5 &&
       completed.step6
     ) {
-      setShowSaveMessage(true)
-      setInvalidInput(false)
+      API.postProposal(JSON.stringify(proposal)).then(() => {
+        setShowSaveMessage(true)
+        setInvalidInput(false)
+      }).catch((error) => {
+        console.trace(error)
+      })
     } else {
       setInvalidInput(true)
     }
@@ -224,12 +256,11 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       <MainContainer>
         <div id="step1"><Step1 filled={filled} setModal={setModal} setCompleted={setCompleted} invalidInput={invalidInput} setProposalType={setProposalType} /></div>
         <div id="step2"><Step2 proposalType={proposalType} setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} /></div>
-        <div id="step3"><Step3 undoMessage={undoMessage} setUndoMessage={setUndoMessage} setFilled={setFilled} setTableItems={setStep3TableItems} setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} setCostData={setCostData} setSpecifications={setSpecifications} /></div>
+        <div id="step3"><Step3 containerTypeList={containerTypeList} undoMessage={undoMessage} setUndoMessage={setUndoMessage} setFilled={setFilled} setTableItems={setStep3TableItems} setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} setCostData={setCostData} setSpecifications={setSpecifications} /></div>
         <div id="step4"><Step4 modal={modal} setFilled={setFilled} setCompleted={setCompleted} invalidInput={invalidInput} /></div>
-        <div id="step5"><Step5 undoMessage={undoMessage} setUndoMessage={setUndoMessage} setFilled={setFilled} containerItems={step3TableItems} setCompleted={setCompleted} costData={costData} modal={modal} specifications={specifications} /></div>
-        <div id="step6"><Step6 undoMessage={undoMessage} setUndoMessage={setUndoMessage} setFilled={setFilled} containerItems={step3TableItems} setCompleted={setCompleted} costData={costData} modal={modal} specifications={specifications} /></div>
+        <div id="step5"><Step5 containerTypeList={containerTypeList} serviceList={serviceList} undoMessage={undoMessage} setUndoMessage={setUndoMessage} setFilled={setFilled} containerItems={step3TableItems} setCompleted={setCompleted} costData={costData} modal={modal} specifications={specifications} /></div>
+        <div id="step6"><Step6 containerTypeList={containerTypeList} serviceList={serviceList} undoMessage={undoMessage} setUndoMessage={setUndoMessage} setFilled={setFilled} containerItems={step3TableItems} setCompleted={setCompleted} costData={costData} modal={modal} specifications={specifications} /></div>
       </MainContainer>
-
       {showSaveMessage &&
         <MessageContainer>
           <Messages {...saveMessageInfo} />

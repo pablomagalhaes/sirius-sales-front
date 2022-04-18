@@ -31,6 +31,7 @@ import { Button, MoneyValue, Messages } from 'fiorde-fe-components'
 import CostModal, { CostTableItem, initialState } from '../CostModal/CostModal'
 import { ItemModalData } from '../ItemModal/ItemModal'
 import { MessageContainer } from '../../pages/NewProposal/style'
+import { TotalCostTable } from '../../pages/NewProposal/steps/Step5'
 
 interface CostTableProps {
   title: string
@@ -39,7 +40,6 @@ interface CostTableProps {
   costData: any
   modal: string
   specifications: string
-  changeTableFill: (arg: number) => void
   containerItems: ItemModalData[]
   setUndoMessage: React.Dispatch<React.SetStateAction<{
     step3: boolean
@@ -48,6 +48,10 @@ interface CostTableProps {
     step6: boolean
   }>>
   undoMessage: { step3: boolean, step5origin: boolean, step5destiny: boolean, step6: boolean }
+  tableData: CostTableItem[]
+  setTableData: React.Dispatch<React.SetStateAction<CostTableItem[]>>
+  setTotalCostData: React.Dispatch<React.SetStateAction<TotalCostTable[]>>
+  serviceList: any[]
 }
 
 const CostTable = ({
@@ -57,10 +61,13 @@ const CostTable = ({
   costData,
   modal,
   specifications,
-  changeTableFill,
   containerItems,
   setUndoMessage,
-  undoMessage
+  undoMessage,
+  tableData,
+  setTableData,
+  setTotalCostData,
+  serviceList
 }: CostTableProps): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [data, setData] = useState<CostTableItem[]>([])
@@ -70,15 +77,15 @@ const CostTable = ({
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
 
-  const editClickHandler = (tableData: CostTableItem): void => {
-    setChargeData(tableData)
+  const editClickHandler = (tableDataItem: CostTableItem): void => {
+    setChargeData(tableDataItem)
     handleOpen()
   }
 
   const removeClickHandler = (id: number | null): void => {
     setCopyTable(data)
-    setData((tableData) => {
-      return tableData.filter((data) => data.id !== id)
+    setData((tableDataItem) => {
+      return tableDataItem.filter((data) => data.id !== id)
     })
     if (title === I18n.t('pages.newProposal.step5.origin')) {
       setUndoMessage({ step3: false, step5origin: true, step5destiny: false, step6: false })
@@ -106,7 +113,8 @@ const CostTable = ({
   }
 
   useEffect(() => {
-    changeTableFill(data.length)
+    setTableData(data)
+    setTotalCostData(Array.from(currencyList, ([name, value]) => ({ name, value })))
   }, [data])
 
   useEffect(() => {
@@ -115,6 +123,14 @@ const CostTable = ({
     setData([])
     setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false })
   }, [modal])
+
+  useEffect(() => {
+    if (tableData.length > 0) {
+      tableData.forEach((row: CostTableItem) => {
+        handleAdd(row)
+      })
+    }
+  }, [])
 
   const calculateTotalCost = (buyCurrency, saleCurrency, buyValue, saleValue): void => {
     if ((buyCurrency !== null && saleCurrency !== '') && buyCurrency === saleCurrency) {
@@ -155,6 +171,7 @@ const CostTable = ({
         modal={modal}
         specifications={specifications}
         containerItems={containerItems}
+        serviceList={serviceList}
       />
       <Header>
         <Title>{title}</Title>

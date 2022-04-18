@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import {
   FormControl,
   FormLabel,
@@ -16,6 +16,7 @@ import ControlledInput from '../../../components/ControlledInput'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import API from '../../../../infrastructure/api'
 import { StyledPaper } from './StepsStyles'
+import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 
 interface Step2Props {
   theme: any
@@ -45,6 +46,18 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
     incoterm: '',
     collection: ''
   })
+  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+
+  useEffect(() => {
+    setProposal({
+      ...proposal,
+      idOrigin: data.origin.split(' - ')[0],
+      idDestination: data.destiny.split(' - ')[0],
+      idBusinessPartnerAgent: 0, // TODO vai sofrer alteracao no banco para receber array
+      idIncoterm: data.incoterm,
+      cargoCollectionAddress: data.collection
+    })
+  }, [data])
 
   useEffect(() => {
     void (async function () {

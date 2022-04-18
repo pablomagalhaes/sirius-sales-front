@@ -29,7 +29,8 @@ const props = {
   setClose: () => { },
   modal: '',
   specifications: '',
-  containerItems: []
+  containerItems: [],
+  serviceList: []
 }
 
 test('should show text Editar item', () => {
