@@ -105,6 +105,12 @@
         "message": "Proposta salva com sucesso, Ref: ",
         "closeMessage": "Continuar editando",
         "buttonText": "Voltar à lista de propostas"
+      },
+      "unsavedChanges": {
+        "cancelMessage": "Cancelar",
+        "confirmMessage": "Descartar",
+        "message": "Essa página contém alterações não salvas. Deseja descartar a proposta e sair da página?",
+        "title": "Tem certeza que deseja sair?"
       }
     },
     "proposal":{

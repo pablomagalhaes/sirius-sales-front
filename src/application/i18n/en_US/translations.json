@@ -105,6 +105,12 @@
         "message": "Proposal saved successfully, Ref. ",
         "closeMessage": "Continue editing",
         "buttonText": "Back to proposal list"
+      },
+      "unsavedChanges": {
+        "cancelMessage": "Cancel",
+        "confirmMessage": "Discard",
+        "message": "This page contains unsaved changes. Do you want to discard the proposal and leave the page?",
+        "title": "Are you sure you want to quit?"
       }
     }
   },
