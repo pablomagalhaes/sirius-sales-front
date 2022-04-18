@@ -230,8 +230,9 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   }
 
   const validateAction = (element): boolean => {
+    console.log(element)
     console.log(element.tagName)
-    if (element.querySelector('#billing') && (element.tagName === 'LI' || element.tagName === 'svg' || element.tagName === 'path')) {
+    if ((element.id === 'billing' || element.querySelector('#billing')) && element.tagName !== 'UL') {
       setAction('freight-forwarder')
       return true
     }
@@ -247,7 +248,6 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
 
   useEffect(() => {
     window.addEventListener('beforeunload', (event) => {
-      console.log(event)
       event.returnValue = setLeavingPage(true)
     })
   }, [])
