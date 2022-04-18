@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { Button, Messages } from 'fiorde-fe-components'
 import {
   FormControl,
@@ -27,6 +27,8 @@ import ChargeTable from '../../../components/ChargeTable'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import { withTheme } from 'styled-components'
 import API from '../../../../infrastructure/api'
+import { ProposalContext, ProposalProps } from '../context/ProposalContext'
+import { CargoVolume } from '../../../../domain/CargoVolume'
 
 interface Step3Props {
   theme?: any
@@ -44,6 +46,7 @@ interface Step3Props {
     step6: boolean
   }>>
   undoMessage: { step3: boolean, step5origin: boolean, step5destiny: boolean, step6: boolean }
+  containerTypeList: any[]
 }
 
 const Step3 = ({
@@ -55,16 +58,75 @@ const Step3 = ({
   setSpecifications,
   setTableItems,
   setUndoMessage,
-  undoMessage
+  undoMessage,
+  containerTypeList
 }: Step3Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [tableRows, setTableRows] = useState<ItemModalData[]>([])
   const [chargeData, setChargeData] = useState<ItemModalData>(initialState)
+  const [cargoVolume, setCargoVolume] = useState<CargoVolume[]>([])
   const [temperatureList, setTemperatureList] = useState<any[]>([])
   const [imoList, setImoList] = useState<any[]>([])
-  const specificationsList = ['Break Bulk', 'FCL', 'LCL', 'Ro-Ro']
   const [copyTable, setCopyTable] = useState<ItemModalData[]>([])
   const [tableId, setTableId] = useState(0)
+  const specificationsList = ['FCL', 'LCL', 'Break Bulk', 'Ro-Ro']
+  const [packagingList, setPackagingList] = useState<any[]>([])
+  const [data, setData] = useState({
+    description: '',
+    specifications: '',
+    refrigereted: false,
+    temperature: '',
+    dangerous: false,
+    imo: '',
+    codUn: ''
+  })
+  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+
+  useEffect(() => {
+    setProposal(
+      {
+        ...proposal,
+        cargo: {
+          ...proposal.cargo,
+          cargo: data.description,
+          idCargoContractingType: modal === 'SEA' ? (specificationsList.map((spe) => spe.toLowerCase()).indexOf(data.specifications) + 1) : 1,
+          idPackaging: 0, // esse campo vai ser realocado para CargoVolume
+          idContainerType: 'nul', // esse campo vai ser realocado para CargoVolume
+          isDangerous: data.dangerous,
+          idImoType: Number(data.imo),
+          codeUn: Number(data.codUn),
+          idTemperature: Number(data.temperature),
+          cargoVolumes: cargoVolume
+        }
+      })
+  }, [data, cargoVolume])
+
+  useEffect(() => {
+    setCostData(tableRows.length)
+    const newCargoVolumes: CargoVolume[] = []
+    tableRows.forEach((row) => {
+      newCargoVolumes.push({
+        cdCargoType: marineFCL() ? 1 : packagingList.filter((pack) => pack.packaging === row.type)[0].id, // TODO quando for marineFCL salvar id (string 4 digitos)
+        valueQuantity: Number(row.amount),
+        valueGrossWeight: Number(row.rawWeight?.replace(',', '.')),
+        valueCubage: Number(row.cubage?.replace(',', '.')),
+        valueLength: Number(row.length?.replace(',', '.')),
+        valueHeight: Number(row.height?.replace(',', '.')),
+        valueWidth: Number(row.width?.replace(',', '.')),
+        valueDiameter: Number(row.diameter?.replace(',', '.')),
+        isStacked: row.stack
+      })
+    })
+    setCargoVolume(newCargoVolumes)
+  }, [tableRows])
+
+  useEffect(() => {
+    void (async function () {
+      await API.getPackaging()
+        .then((response) => setPackagingList(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
 
   useEffect(() => {
     void (async function () {
@@ -73,10 +135,6 @@ const Step3 = ({
         .catch((err) => console.log(err))
     })()
   }, [])
-
-  useEffect(() => {
-    setCostData(tableRows.length)
-  }, [tableRows.length])
 
   useEffect(() => {
     void (async function () {
@@ -96,8 +154,6 @@ const Step3 = ({
     codUn: ''
   }
 
-  const [data, setData] = useState(initialData)
-
   useEffect(() => {
     setTableRows([])
   }, [data.specifications])
@@ -110,6 +166,10 @@ const Step3 = ({
     setData(initialData)
     setTableId(0)
   }, [modal])
+
+  const marineFCL = (): boolean => {
+    return modal === 'SEA' && data.specifications === 'fcl'
+  }
 
   const handleOpen = (): void => {
     setOpen(true)
@@ -368,6 +428,8 @@ const Step3 = ({
               title={I18n.t('pages.newProposal.step3.buttonAdd')}
               modal={modal}
               specifications={data.specifications}
+              containerTypeList={containerTypeList}
+              packagingList={packagingList}
             />
           </Grid>
         </Grid>

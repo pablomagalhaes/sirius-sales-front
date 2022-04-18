@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import {
   FormControl,
   FormControlLabel,
@@ -16,6 +16,7 @@ import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import API from '../../../../infrastructure/api'
 import NumberFormat from 'react-number-format'
 import { withTheme } from 'styled-components'
+import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 
 interface Step4Props {
   invalidInput: boolean
@@ -79,6 +80,22 @@ const Step4 = ({
 
   const [frequencyList, setFrequencyList] = useState<Frequency[]>([])
   const [disabledValidateDate, setDisabledValidateDate] = useState(true)
+  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+
+  useEffect(() => {
+    const splitedValidityDate = data.validityDate.trim().split('/')
+    setProposal({
+      ...proposal,
+      validityDate: `${splitedValidityDate[2]}-${splitedValidityDate[1]}-${splitedValidityDate[0]}T00:00:00.000Z`,
+      transitTime: Number(data.transitTime),
+      route: data.route,
+      freeTime: data.freeTime === 'hired',
+      idFrequency: Number(data.frequency),
+      generalObservations: data.generalObs,
+      internalObservations: data.internalObs,
+      referenceClientProposal: data.client
+    })
+  }, [data])
 
   useEffect(() => {
     if (
@@ -149,7 +166,6 @@ const Step4 = ({
 
   const getColor = (value): any => {
     if (value === '' && invalidInput) {
-      console.log(theme?.commercial?.components?.itemModal?.redAsterisk)
       return theme?.commercial?.components?.itemModal?.redAsterisk
     }
   }
@@ -293,16 +309,16 @@ const Step4 = ({
             </RadioGroup>
           </Grid>
           <Grid item xs={2}>
-            { data.freeTime === 'hired' && (
+            {data.freeTime === 'hired' && (
               <><FormLabel component="legend">{I18n.t('pages.newProposal.step4.deadline')}<RedColorSpan> *</RedColorSpan></FormLabel>
                 <ControlledInput
-                id="deadline"
-                toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                invalid={invalidInput && data.deadline.length === 0}
-                variant="outlined"
-                onChange={(e) => validateIntInput(e.target.value) !== null && (setData({ ...data, deadline: e.target.value }))}
-                value={data.deadline}
-                size="small" />
+                  id="deadline"
+                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                  invalid={invalidInput && data.deadline.length === 0}
+                  variant="outlined"
+                  onChange={(e) => validateIntInput(e.target.value) !== null && (setData({ ...data, deadline: e.target.value }))}
+                  value={data.deadline}
+                  size="small" />
               </>
             )}
           </Grid>

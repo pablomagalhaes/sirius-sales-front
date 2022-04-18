@@ -3,7 +3,10 @@ import axios from 'axios'
 export const URL = process.env.BASE_URL_GATEWAY
 
 const instance = axios.create({
-  baseURL: URL
+  baseURL: URL,
+  headers: {
+    'Content-Type': 'application/json;'
+  }
 })
 
 const getTokenFromLocalStorage = (): string => {
