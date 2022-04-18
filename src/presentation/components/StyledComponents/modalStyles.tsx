@@ -71,6 +71,13 @@ export const RowDiv = styled.div`
     left: 78px;
   }
 
+  .dropdownIconAutoComplete {
+    position: absolute;
+    top: 4px;
+    z-index: 10;
+    left: 78px;
+  }
+
   .dropdownLargerInput {
     position: absolute;
     top: 137px;
