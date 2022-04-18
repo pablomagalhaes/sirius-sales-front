@@ -47,7 +47,6 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [serviceList, setServiceList] = useState<any[]>([])
   const [containerTypeList, setContainerTypeList] = useState<any[]>([])
   const [leavingPage, setLeavingPage] = useState(false)
-  const [confirmLeavingPage] = useState(false)
   const [action, setAction] = useState('')
 
   useEffect(() => {
@@ -201,20 +200,18 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   }
 
   const MessageExitDialog = (): JSX.Element => {
-    if (!confirmLeavingPage) {
-      useEffect(() => {
-        if ((filled.step1 ||
+    useEffect(() => {
+      if (filled.step1 ||
           filled.step2 ||
           filled.step3 ||
           filled.step4 ||
           filled.step5 ||
-          filled.step6) && !confirmLeavingPage) {
-          setLeavingPage(true)
-        } else {
-          setLeavingPage(false)
-        }
-      }, [])
-    }
+          filled.step6) {
+        setLeavingPage(true)
+      } else {
+        setLeavingPage(false)
+      }
+    }, [])
 
     return (
       <>
@@ -230,10 +227,52 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   }
 
   const validateAction = (element): boolean => {
-    console.log(element)
-    console.log(element.tagName)
+    if ((element.id === 'mini-logo' || element.querySelector('#mini-logo')) && element.tagName !== 'UL') {
+      setAction('home')
+      return true
+    }
+    if ((element.id === 'exportation' || element.querySelector('#exportation')) && element.tagName !== 'UL') {
+      setAction('home')
+      return true
+    }
+    if ((element.id === 'importation' || element.querySelector('#importation')) && element.tagName !== 'UL') {
+      setAction('home')
+      return true
+    }
+    if ((element.id === 'freight-forwarder' || element.querySelector('#freight-forwarder')) && element.tagName !== 'UL') {
+      setAction('home')
+      return true
+    }
     if ((element.id === 'billing' || element.querySelector('#billing')) && element.tagName !== 'UL') {
-      setAction('freight-forwarder')
+      setAction('home')
+      return true
+    }
+    if ((element.id === 'national-logistic' || element.querySelector('#national-logistic')) && element.tagName !== 'UL') {
+      setAction('home')
+      return true
+    }
+    if ((element.id === 'logo_sirius' || element.querySelector('#logo_sirius')) && element.tagName !== 'DIV') {
+      setAction('home')
+      return true
+    }
+    if (element.id === 'home' || element.querySelector('#sub_menu_icon')) {
+      setAction('commercial-home')
+      return true
+    }
+    if ((element.id === 'proposal' || element.querySelector('#proposal')) && element.tagName !== 'DIV') {
+      setAction('proposals')
+      return true
+    }
+    if ((element.id === 'tariff' || element.querySelector('#tariff')) && element.tagName !== 'DIV') {
+      setAction('commercial-home')
+      return true
+    }
+    if ((element.id === 'chart' || element.querySelector('#chart')) && element.tagName !== 'DIV') {
+      setAction('commercial-home')
+      return true
+    }
+    if (element.id === 'exit_button') {
+      setAction('logout')
       return true
     }
     return false
@@ -241,8 +280,18 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
 
   const executeAction = (): void => {
     switch (action) {
-      case 'freight-forwarder':
-        console.log('teste')
+      case 'home':
+        history.go(-4)
+        break
+      case 'commercial-home':
+        history.push('/')
+        break
+      case 'proposals':
+        history.push('/proposta')
+        break
+      case 'logout':
+        console.log('keycloak logout')
+        break
     }
   }
 
@@ -331,7 +380,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           </Button>
         </ButtonContainer>
       </TopContainer>
-      {leavingPage && !confirmLeavingPage && <MessageExitDialog />}
+      {leavingPage && <MessageExitDialog />}
       <MainContainer>
         <div id="step1"><Step1 filled={filled} setModal={setModal} setCompleted={setCompleted} setFilled={setFilled} invalidInput={invalidInput} setProposalType={setProposalType} /></div>
         <div id="step2"><Step2 proposalType={proposalType} setCompleted={setCompleted} setFilled={setFilled} invalidInput={invalidInput} modal={modal} /></div>
