@@ -77,7 +77,7 @@ pipelines:
           caches:
             - node
           script:
-            - CI=false && npm install && npm run build
+            - CI=false && npm install && npm run build:production
           artifacts:
             - build/**
       - step:
