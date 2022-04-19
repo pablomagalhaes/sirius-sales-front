@@ -1,0 +1,22 @@
+#single-spa-application\:\@sirius\/sales-fe {
+  position: absolute;
+  top: 64px;
+  left: 88px;
+  width: calc(100% - 88px);
+  height: calc(100% - 64px);
+  z-index: 10;
+}
+#single-spa-application\:\@sirius\/sales-fe:empty {
+  display: none;
+}
+.MuiList-root.MuiMenu-list.MuiList-padding .MuiButtonBase-root {
+  display: block !important;
+  padding: 6px 16px 6px 16px;
+}
+.MuiSwitch-root.fiorde-switch-root .MuiButtonBase-root {
+  display: block !important;
+  position: absolute !important;
+}
+.upper-buttons .MuiButtonBase-root{
+  padding: 6px 16px !important;
+}

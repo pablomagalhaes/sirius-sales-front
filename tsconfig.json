@@ -1,0 +1,11 @@
+{
+  "extends": "ts-config-single-spa",
+  "compilerOptions": {
+    "jsx": "react",
+    "declarationDir": "build",
+    "strictNullChecks": true
+  },
+  "files": ["src/sirius-sales-fe.tsx"],
+  "include": ["src/**/*"],
+  "exclude": ["src/**/*.test"]
+}

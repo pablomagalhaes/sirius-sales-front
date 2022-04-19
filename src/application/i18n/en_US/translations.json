@@ -1,0 +1,169 @@
+{
+  "pages": {
+    "newProposal": {
+      "reference": "Reference:",
+      "encharged": "Encharged:",
+      "buttonFinish": "Finish proposal",
+      "save": "Save",
+      "view": "View",
+      "download": "Download",
+      "send": "Send by email",
+      "proposal": "Proposals",
+      "newProposal": "New proposal international freight - Import",
+      "step1": {
+        "title": "Service",
+        "subtitle": "Choose the customer and inform the particularity of the service.",
+        "proposalType": "Proposal type:",
+        "client": "Client",
+        "routingOrder": "Routing Order",
+        "services": "Associated services:",
+        "transport": "Transport",
+        "readiness": "Readiness",
+        "agents": "Agents:",
+        "searchClient": "Search customer by code or name...",
+        "modal": "Modal:",
+        "air": "Air",
+        "marine": "Marine",
+        "road": "Road",
+        "searchRequester": "Requester",
+        "searchRequesterPlaceholder": "Inform the name and e-mail (Ex: João - joao@cliente.com.br)"
+      },
+      "step2": {
+        "title": "Section",
+        "subtitle": "Define the origin, destination and specifics of the section.",
+        "origin": "Origin:",
+        "searchPlaceholder": "Search by code/description of port OR country...",
+        "collectionAddress": "Colletion Address:",
+        "destiny": "Destiny:",
+        "destinyAirport": "Destiny Airport",
+        "destinySeaport": "Destiny Seaport",
+        "originAirport": "Origin Airport",
+        "originSeaport": "Origin Seaport",
+        "agents": "Agents:",
+        "searchAgents": "Search by name...",
+        "incoterm": "INCOTERM:",
+        "choose": "Choose ..."
+      },
+      "step3": {
+        "title": "Cargo",
+        "subtitle": "Specify the items to be shipped.",
+        "description": "General cargo description:",
+        "specifications": "Specifications:",
+        "refrigerated": "Refrigerated",
+        "temperature": "Temperature:",
+        "choose": "Choose ...",
+        "buttonAdd": "Add item to cargo",
+        "buttonAddTooltip": "To add, select the fields \"Modal\" in the step \"Service\" and \"Specification\" in the step \"Cargo\""
+      },
+      "step4": {
+        "title": "General data",
+        "subtitle": "Inform general details of your commercial proposal.",
+        "validity": "Validity:",
+        "time": "Transit. time:",
+        "freeTime": "Free Time",
+        "frequency": "Frequency:",
+        "route": "Route:",
+        "client": "Client ref.:",
+        "currency": "Currency for sending costs:",
+        "general": "General observations:",
+        "hired": "Hired",
+        "notHired": "Not Hired",
+        "deadline": "Deadline (days):",
+        "internal": "Internal observations (this text is NOT sent in the proposal):",
+        "choose": "Choose ..."
+      },
+      "step5": {
+        "title": "Costs",
+        "subtitle": "Compose the origin and destination costs.",
+        "origin": "Origin",
+        "totalOrigin": "Total origin costs:",
+        "destiny": "Destiny",
+        "totalDestiny": "Total destiny costs:",
+        "originCost": "New origin cost",
+        "destinationCost": "New destiny cost"
+      },
+      "step6": {
+        "title": "Freight",
+        "subtitle": "Inform the rates for the freight service",
+        "origin": "Origin",
+        "totalOrigin": "Total origin costs:",
+        "destiny": "Destiny",
+        "totalDestiny": "Total destiny costs:",
+        "originCost": "New origin cost",
+        "destinationCost": "New destiny cost",
+        "addFare": "Add surcharge",
+        "addFareTooltip": "To add, select agents in the \"Service\" step and include at least one item in the \"Cargo\" step",
+        "totalFares": "Total Surcharges:"
+      },
+      "saveMessage": {
+        "message": "Proposal saved successfully, Ref. ",
+        "closeMessage": "Continue editing",
+        "buttonText": "Back to proposal list"
+      }
+    }
+  },
+  "components": {
+    "header": {
+      "home": "Home",
+      "proposal": "Proposal",
+      "tariff": "Tariff",
+      "indicators": "Commercial Indicators"
+    },
+    "costTable": {
+      "addCost": "Add cost",
+      "addCostTooltip": "To add, select agents in the \"Service\" step and include at least one item in the \"Cargo\" step",
+      "agent": "Agent",
+      "buy": "Buy",
+      "description": "Expense/Service",
+      "inform": "To inform",
+      "minBuy": "Min - Buy",
+      "minSale": "Min - Sale",
+      "sale": "Sale",
+      "type":"Type"
+    },
+    "costModal": {
+      "type": "Type:",
+      "description": "Expense/Service:",
+      "agent": "Agent:",
+      "buyValue": "Buy value",
+      "container": "Container:",
+      "saleValue": "Sale value",
+      "save": "Save",
+      "replyForSale": "Reply for sale",
+      "minimum": "Minimum",
+      "value": "Value",
+      "choose": "Choose...",
+      "gotIt": "Got it",
+      "popUpMessageStart": "Inform ",
+      "popUpMessageEnd": " or unmark the field if it isn't necessary"
+    },
+    "itemModal":{
+      "amount":"Amount: ",
+      "type":"Type: ",
+      "rawWeight":"Raw weight (kg): ",
+      "hwl": "L x W x H: ",
+      "diameter": "Diameter:",
+      "cubage": "Cubage: ",
+      "imo": "IMO:",
+      "codUn": "Cod. Un:",
+      "choose": "Choose ...",
+      "container": "Container",
+      "packaging": "Packaging",
+      "yes": "Yes",
+      "hazardous": "Hazardous?",
+      "save": "Save",
+      "requiredField": "Required field",
+      "cubageWeight": "Cubage weight (m3): ",
+      "qnt": "Qnt",
+      "stack": "Stack up"
+    },
+    "fareModal":{
+      "type": "Type:",
+      "expense":"Expense/Service:",
+      "saleValue": "Sale value:",
+      "choose": "Choose...",
+      "value": "Value",
+      "newFare": "New surcharge"
+    }
+  }
+}
