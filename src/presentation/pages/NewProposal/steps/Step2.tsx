@@ -23,6 +23,7 @@ interface Step2Props {
   proposalType: string
   invalidInput: boolean
   setCompleted: (completed: any) => void
+  setFilled: (filled: any) => void
   modal: string
 }
 
@@ -34,7 +35,7 @@ interface DataProps {
   collection: string
 }
 
-const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2Props): JSX.Element => {
+const Step2 = ({ theme, proposalType, invalidInput, setCompleted, setFilled, modal }: Step2Props): JSX.Element => {
   const [incotermList, setIncotermList] = useState<any[]>([])
   const [incotermFilteredList, setIncotermFilteredList] = useState<any[]>([])
   const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
@@ -102,6 +103,21 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, modal }: Step2
       })
     } else {
       setCompleted((currentState) => {
+        return { ...currentState, step2: false }
+      })
+    }
+    if (
+      data.origin !== '' ||
+      data.destiny !== '' ||
+      data.agents.length !== 0 ||
+      data.incoterm !== '' ||
+      data.collection !== ''
+    ) {
+      setFilled((currentState) => {
+        return { ...currentState, step2: true }
+      })
+    } else {
+      setFilled((currentState) => {
         return { ...currentState, step2: false }
       })
     }

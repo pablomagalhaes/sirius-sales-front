@@ -72,6 +72,7 @@ export const RowDiv = styled.div`
   }
 
   .dropdownIconAutoComplete {
+    margin-top: 12px;
     position: absolute;
     top: 4px;
     z-index: 10;

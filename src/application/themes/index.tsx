@@ -19,7 +19,8 @@ const dark = {
         backgroundColor: '#151D28',
         title: '#F2F3F7',
         subtitle: '#B5B8C2',
-        emptyLabel: '#B5B8C2'
+        emptyLabel: '#B5B8C2',
+        border: '#364353'
       }
     },
     pages: {
@@ -80,7 +81,8 @@ const light = {
         backgroundColor: '#f0f1f5',
         title: '#222222',
         subtitle: '#545454',
-        emptyLabel: '#999DAC'
+        emptyLabel: '#999DAC',
+        border: '#D9DCE5'
       }
     },
     pages: {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Table, TableBody, TableCell, TableContainer, TableHead } from '@material-ui/core/'
 import EditIcon from '../../../application/icons/EditIcon'
 import RemoveIcon from '../../../application/icons/RemoveIcon'
@@ -6,19 +6,30 @@ import { IconsContainer, IndividualIconContainer, TableHeader, StyledTableRow, B
 import { ItemModalData } from '../ItemModal/ItemModal'
 import { I18n } from 'react-redux-i18n'
 
+export interface CalculationDataProps {
+  weight: number | null
+  cubage: number | null
+  cubageWeight: number | null
+}
+
 interface ChargeTableProps {
   charges: ItemModalData[]
   onEdit: (row: ItemModalData) => void
   onDelete: (index: number) => void
   specification: string
   modal: string
+  setCalculation: (items: CalculationDataProps) => void
 }
 
-const ChargeTable = ({ charges, onEdit, onDelete, specification, modal }: ChargeTableProps): JSX.Element => {
+const ChargeTable = ({ charges, onEdit, onDelete, specification, modal, setCalculation }: ChargeTableProps): JSX.Element => {
   let amount = 0
   let weight = 0
   let cubage = 0
   let cubageWeight = 0
+
+  useEffect(() => {
+    setCalculation({ weight, cubage, cubageWeight })
+  }, [charges])
 
   const isLand = (): boolean => {
     return modal === 'LAND'

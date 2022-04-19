@@ -7,6 +7,7 @@ import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import { CostTableItem } from '../../../components/CostModal/CostModal'
 import { Cost } from '../../../../domain/Cost'
 import { TotalCost } from '../../../../domain/TotalCost'
+import { CalculationDataProps } from '../../../components/ChargeTable'
 
 interface Step5Props {
   costData: any
@@ -24,6 +25,7 @@ interface Step5Props {
   undoMessage: { step3: boolean, step5origin: boolean, step5destiny: boolean, step6: boolean }
   serviceList: any[]
   containerTypeList: any[]
+  calculationData: CalculationDataProps
 }
 
 export interface TotalCostTable {
@@ -37,7 +39,7 @@ export interface TotalCostTable {
 // Listas são mock, serão alteradas posteriormente
 export const agentList = ['Agente1', 'Agente2', 'Agente3']
 
-const Step5 = ({ setFilled, costData, modal, specifications, setCompleted, containerItems, setUndoMessage, undoMessage, serviceList, containerTypeList }: Step5Props): JSX.Element => {
+const Step5 = ({ setFilled, costData, modal, specifications, setCompleted, containerItems, setUndoMessage, undoMessage, serviceList, containerTypeList, calculationData }: Step5Props): JSX.Element => {
   const [dataOrigin, setDataOrigin] = useState<CostTableItem[]>([])
   const [dataDestiny, setDataDestiny] = useState<CostTableItem[]>([])
   const [dataTotalCostOrigin, setDataTotalCostOrigin] = useState<TotalCostTable[]>([])
@@ -153,6 +155,7 @@ const Step5 = ({ setFilled, costData, modal, specifications, setCompleted, conta
         undoMessage={undoMessage}
         setUndoMessage={setUndoMessage}
         serviceList={serviceList}
+        calculationData={calculationData}
       />
       <CostTable
         modalTitle={I18n.t('pages.newProposal.step5.destinationCost')}
@@ -168,6 +171,7 @@ const Step5 = ({ setFilled, costData, modal, specifications, setCompleted, conta
         undoMessage={undoMessage}
         setUndoMessage={setUndoMessage}
         serviceList={serviceList}
+        calculationData={calculationData}
       />
     </Separator>
   )

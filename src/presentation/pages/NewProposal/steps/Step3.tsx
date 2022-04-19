@@ -23,7 +23,7 @@ import ItemModal, {
 } from '../../../components/ItemModal/ItemModal'
 import ControlledSelect from '../../../components/ControlledSelect'
 import ControlledInput from '../../../components/ControlledInput'
-import ChargeTable from '../../../components/ChargeTable'
+import ChargeTable, { CalculationDataProps } from '../../../components/ChargeTable'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import { withTheme } from 'styled-components'
 import API from '../../../../infrastructure/api'
@@ -47,6 +47,7 @@ interface Step3Props {
   }>>
   undoMessage: { step3: boolean, step5origin: boolean, step5destiny: boolean, step6: boolean }
   containerTypeList: any[]
+  setCalculationData: (items: CalculationDataProps) => void
 }
 
 const Step3 = ({
@@ -59,7 +60,8 @@ const Step3 = ({
   setTableItems,
   setUndoMessage,
   undoMessage,
-  containerTypeList
+  containerTypeList,
+  setCalculationData
 }: Step3Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [tableRows, setTableRows] = useState<ItemModalData[]>([])
@@ -81,6 +83,7 @@ const Step3 = ({
     codUn: ''
   })
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+  const [calculation, setCalculation] = useState<CalculationDataProps>({ weight: 0, cubage: 0, cubageWeight: 0 })
 
   useEffect(() => {
     setProposal(
@@ -135,6 +138,10 @@ const Step3 = ({
         .catch((err) => console.log(err))
     })()
   }, [])
+
+  useEffect(() => {
+    setCalculationData(calculation)
+  }, [calculation])
 
   useEffect(() => {
     void (async function () {
@@ -400,6 +407,7 @@ const Step3 = ({
                 onDelete={handleDelete}
                 modal={modal}
                 specification={data.specifications}
+                setCalculation={setCalculation}
               />
             </Grid>
           )}

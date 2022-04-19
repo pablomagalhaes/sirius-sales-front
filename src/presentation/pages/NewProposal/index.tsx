@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import React, { useState, useContext, useEffect } from 'react'
-import { Button, FloatingMenu, Steps, Messages } from 'fiorde-fe-components'
+import React, { useState, useCallback, useEffect, useContext, useRef } from 'react'
+import { Button, ExitDialog, FloatingMenu, Steps, Messages } from 'fiorde-fe-components'
 import { Breadcrumbs, Link } from '@material-ui/core/'
 import {
   ButtonContainer,
@@ -28,6 +28,7 @@ import { useHistory } from 'react-router-dom'
 import { ItemModalData } from '../../components/ItemModal/ItemModal'
 import { ProposalContext, ProposalProps } from './context/ProposalContext'
 import API from '../../../infrastructure/api'
+import { CalculationDataProps } from '../../components/ChargeTable'
 
 export interface NewProposalProps {
   theme: any
@@ -46,6 +47,9 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
   const [serviceList, setServiceList] = useState<any[]>([])
   const [containerTypeList, setContainerTypeList] = useState<any[]>([])
+  const [leavingPage, setLeavingPage] = useState(false)
+  const [action, setAction] = useState('')
+  const [calculationData, setCalculationData] = useState<CalculationDataProps>({ weight: 0, cubage: 0, cubageWeight: 0 })
 
   useEffect(() => {
     void (async function () {
@@ -89,6 +93,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   })
 
   const [filled, setFilled] = useState({
+    step1: false,
+    step2: false,
     step3: false,
     step4: false,
     step5: false,
@@ -195,8 +201,130 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     message: `${String(I18n.t('pages.newProposal.saveMessage.message'))} ${String(referenceCode[0].reference)}.`
   }
 
+  const MessageExitDialog = (): JSX.Element => {
+    useEffect(() => {
+      if (filled.step1 ||
+          filled.step2 ||
+          filled.step3 ||
+          filled.step4 ||
+          filled.step5 ||
+          filled.step6) {
+        setLeavingPage(true)
+      } else {
+        setLeavingPage(false)
+      }
+    }, [])
+
+    return (
+      <ExitDialog
+        cancelButtonText={I18n.t('pages.newProposal.unsavedChanges.cancelMessage')}
+        confirmButtonText={I18n.t('pages.newProposal.unsavedChanges.confirmMessage')}
+        message={I18n.t('pages.newProposal.unsavedChanges.message')}
+        title={I18n.t('pages.newProposal.unsavedChanges.title')}
+        onPressCancel={() => setLeavingPage(false)}
+        onPressConfirm={() => executeAction()}
+      />
+    )
+  }
+
+  const validateAction = (element): boolean => {
+    if ((element.id === 'mini-logo' || element.querySelector('#mini-logo')) && element.tagName !== 'UL') {
+      setAction('home')
+      return true
+    }
+    if ((element.id === 'exportation' || element.querySelector('#exportation')) && element.tagName !== 'UL') {
+      setAction('home')
+      return true
+    }
+    if ((element.id === 'importation' || element.querySelector('#importation')) && element.tagName !== 'UL') {
+      setAction('home')
+      return true
+    }
+    if ((element.id === 'freight-forwarder' || element.querySelector('#freight-forwarder')) && element.tagName !== 'UL') {
+      setAction('home')
+      return true
+    }
+    if ((element.id === 'billing' || element.querySelector('#billing')) && element.tagName !== 'UL') {
+      setAction('home')
+      return true
+    }
+    if ((element.id === 'national-logistic' || element.querySelector('#national-logistic')) && element.tagName !== 'UL') {
+      setAction('home')
+      return true
+    }
+    if ((element.id === 'logo_sirius' || element.querySelector('#logo_sirius')) && element.tagName !== 'DIV') {
+      setAction('home')
+      return true
+    }
+    if (element.id === 'home' || element.querySelector('#sub_menu_icon')) {
+      setAction('commercial-home')
+      return true
+    }
+    if ((element.id === 'proposal' || element.querySelector('#proposal')) && element.tagName !== 'DIV') {
+      setAction('proposals')
+      return true
+    }
+    if ((element.id === 'tariff' || element.querySelector('#tariff')) && element.tagName !== 'DIV') {
+      setAction('commercial-home')
+      return true
+    }
+    if ((element.id === 'chart' || element.querySelector('#chart')) && element.tagName !== 'DIV') {
+      setAction('commercial-home')
+      return true
+    }
+    if (element.id === 'exit_button') {
+      setAction('logout')
+      return true
+    }
+    return false
+  }
+
+  const executeAction = (): void => {
+    switch (action) {
+      case 'home':
+        history.go(-4)
+        break
+      case 'commercial-home':
+        history.push('/')
+        break
+      case 'proposals':
+        history.push('/proposta')
+        break
+      case 'logout':
+        console.log('keycloak logout')
+        break
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', (event) => {
+      event.returnValue = setLeavingPage(true)
+    })
+  }, [])
+
+  const useOnClickOutside = (handler): void => {
+    useEffect(() => {
+      const listener = (event: any): void => {
+        if (!validateAction(event.target)) {
+          return
+        }
+        handler(event)
+      }
+      document.addEventListener('mousedown', listener)
+      document.addEventListener('touchstart', listener)
+      return () => {
+        document.removeEventListener('mousedown', listener)
+        document.removeEventListener('touchstart', listener)
+      }
+    }, [handler])
+  }
+  const divRef = useRef()
+
+  const handler = useCallback(() => { setLeavingPage(true) }, [])
+  useOnClickOutside(handler)
+
   return (
-    <RootContainer>
+    <RootContainer ref={divRef}>
       <Header>
         <Breadcrumbs separator=">" aria-label="breadcrumb">
           <Link
@@ -253,13 +381,79 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           </Button>
         </ButtonContainer>
       </TopContainer>
+      {leavingPage && <MessageExitDialog />}
       <MainContainer>
-        <div id="step1"><Step1 filled={filled} setModal={setModal} setCompleted={setCompleted} invalidInput={invalidInput} setProposalType={setProposalType} /></div>
-        <div id="step2"><Step2 proposalType={proposalType} setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} /></div>
-        <div id="step3"><Step3 containerTypeList={containerTypeList} undoMessage={undoMessage} setUndoMessage={setUndoMessage} setFilled={setFilled} setTableItems={setStep3TableItems} setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} setCostData={setCostData} setSpecifications={setSpecifications} /></div>
-        <div id="step4"><Step4 modal={modal} setFilled={setFilled} setCompleted={setCompleted} invalidInput={invalidInput} /></div>
-        <div id="step5"><Step5 containerTypeList={containerTypeList} serviceList={serviceList} undoMessage={undoMessage} setUndoMessage={setUndoMessage} setFilled={setFilled} containerItems={step3TableItems} setCompleted={setCompleted} costData={costData} modal={modal} specifications={specifications} /></div>
-        <div id="step6"><Step6 containerTypeList={containerTypeList} serviceList={serviceList} undoMessage={undoMessage} setUndoMessage={setUndoMessage} setFilled={setFilled} containerItems={step3TableItems} setCompleted={setCompleted} costData={costData} modal={modal} specifications={specifications} /></div>
+        <div id="step1">
+          <Step1
+            filled={filled}
+            setModal={setModal}
+            setCompleted={setCompleted}
+            setFilled={setFilled}
+            invalidInput={invalidInput}
+            setProposalType={setProposalType}
+          />
+        </div>
+        <div id="step2">
+          <Step2
+            proposalType={proposalType}
+            setCompleted={setCompleted}
+            setFilled={setFilled}
+            invalidInput={invalidInput}
+            modal={modal}
+          />
+        </div>
+        <div id="step3">
+          <Step3
+            setCalculationData={setCalculationData}
+            containerTypeList={containerTypeList}
+            undoMessage={undoMessage}
+            setUndoMessage={setUndoMessage}
+            setFilled={setFilled}
+            setTableItems={setStep3TableItems}
+            setCompleted={setCompleted}
+            invalidInput={invalidInput}
+            modal={modal}
+            setCostData={setCostData}
+            setSpecifications={setSpecifications}
+          />
+        </div>
+        <div id="step4">
+          <Step4
+            modal={modal}
+            setFilled={setFilled}
+            setCompleted={setCompleted}
+            invalidInput={invalidInput}
+          />
+        </div>
+        <div id="step5">
+          <Step5
+            calculationData={calculationData}
+            containerTypeList={containerTypeList}
+            serviceList={serviceList}
+            undoMessage={undoMessage}
+            setUndoMessage={setUndoMessage}
+            setFilled={setFilled}
+            containerItems={step3TableItems}
+            setCompleted={setCompleted}
+            costData={costData}
+            modal={modal}
+            specifications={specifications}
+          />
+        </div>
+        <div id="step6">
+          <Step6
+            containerTypeList={containerTypeList}
+            serviceList={serviceList}
+            undoMessage={undoMessage}
+            setUndoMessage={setUndoMessage}
+            setFilled={setFilled}
+            containerItems={step3TableItems}
+            setCompleted={setCompleted}
+            costData={costData}
+            modal={modal}
+            specifications={specifications}
+          />
+        </div>
       </MainContainer>
       {showSaveMessage &&
         <MessageContainer>

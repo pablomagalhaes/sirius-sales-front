@@ -41,6 +41,7 @@ import { StyledPaper } from '../../pages/NewProposal/steps/StepsStyles'
 import ControlledSelect from '../ControlledSelect'
 import { MenuItemContent } from '../FareModal/FareModalStyles'
 import { agentList } from '../../pages/NewProposal/steps/Step5'
+import { CalculationDataProps } from '../ChargeTable'
 export interface CostTableItem {
   agent: string
   buyCurrency: string | null
@@ -53,6 +54,8 @@ export interface CostTableItem {
   saleValue: string | null
   selectedContainer: string | null
   type: string
+  buyValueCalculated: string | null
+  saleValueCalculated: string | null
 }
 
 interface CostModalProps {
@@ -65,6 +68,7 @@ interface CostModalProps {
   specifications: string
   containerItems: ItemModalData[]
   serviceList: any[]
+  calculationData?: CalculationDataProps
 }
 
 export const initialState = {
@@ -78,7 +82,9 @@ export const initialState = {
   saleValue: null,
   selectedContainer: null,
   saleMin: null,
-  id: null
+  id: null,
+  buyValueCalculated: null,
+  saleValueCalculated: null
 }
 
 const CostModal = ({
@@ -90,7 +96,8 @@ const CostModal = ({
   modal,
   specifications,
   containerItems,
-  serviceList
+  serviceList,
+  calculationData
 }: CostModalProps): JSX.Element => {
   const reducer = (state, action): CostTableItem => {
     switch (action.type) {
@@ -114,6 +121,10 @@ const CostModal = ({
         return { ...state, saleCurrency: action.value }
       case 'saleMin':
         return { ...state, saleMin: action.value }
+      case 'buyValueCalculated':
+        return { ...state, buyValueCalculated: action.value }
+      case 'saleValueCalculated':
+        return { ...state, saleValueCalculated: action.value }
       case 'replyForSale':
         return {
           ...state,
@@ -142,6 +153,7 @@ const CostModal = ({
   const [invalidInput, setInvalidInput] = useState(false)
   const [invalidValueInput, setInvalidValueInput] = useState(false)
   const [currencyList, setCurrencyList] = useState<any[]>([])
+  const [flag, setFlag] = useState(false)
 
   const verifyContainerItems = (): void => {
     if (containerItems.length === 1) {
@@ -184,6 +196,7 @@ const CostModal = ({
   }, [])
 
   const handleOnClose = (): void => {
+    setFlag(false)
     dispatch({ type: 'reset' })
     setInvalidInput(false)
     setInvalidValueInput(false)
@@ -246,6 +259,7 @@ const CostModal = ({
   const addHandler = (): void => {
     let invalid = false
     let item = state
+
     if (buyCheckbox) {
       if (item.buyValue === null || item.buyValue.length === 0) {
         invalid = true
@@ -253,6 +267,9 @@ const CostModal = ({
       }
     } else {
       item = { ...item, buyMin: '', buyCurrency: '', buyValue: '' }
+      dispatch({ type: 'buyValue', value: '' })
+      dispatch({ type: 'buyMin', value: '' })
+      dispatch({ type: 'buyCurrency', value: '' })
     }
     if (saleCheckbox) {
       if (item.saleValue === null || item.saleValue.length === 0) {
@@ -261,6 +278,9 @@ const CostModal = ({
       }
     } else {
       item = { ...item, saleMin: '', saleCurrency: '', saleValue: '' }
+      dispatch({ type: 'saleValue', value: '' })
+      dispatch({ type: 'saleMin', value: '' })
+      dispatch({ type: 'saleCurrency', value: '' })
     }
     if (
       item.agent.length === 0 ||
@@ -269,15 +289,49 @@ const CostModal = ({
     ) {
       invalid = true
     }
+    if (item.saleMin !== null) {
+      dispatch({ type: 'saleMin', value: item.saleMin.replace(',', '.') })
+      item.saleMin = item.saleMin.replace(',', '.')
+    }
+
+    if (item.saleValue !== null) {
+      dispatch({ type: 'saleValue', value: item.saleValue.replace(',', '.') })
+      item.saleValue = item.saleValue.replace(',', '.')
+    }
+
+    if (item.buyMin !== null) {
+      dispatch({ type: 'buyMin', value: item.buyMin.replace(',', '.') })
+      item.buyMin = item.buyMin.replace(',', '.')
+    }
+
+    if (item.buyValue !== null) {
+      dispatch({ type: 'buyValue', value: item.buyValue.replace(',', '.') })
+      item.buyValue = item.buyValue.replace(',', '.')
+    }
+
     if (!invalid) {
-      // eslint-disable-next-line prefer-const
-      let formattedItem = item
-      if (item.saleMin != null) formattedItem.saleMin = item.saleMin.replace(',', '.')
-      if (item.saleValue != null) formattedItem.saleValue = item.saleValue.replace(',', '.')
-      if (item.buyMin != null) formattedItem.buyMin = item.buyMin.replace(',', '.')
-      if (item.buyValue != null) formattedItem.buyValue = item.buyValue.replace(',', '.')
-      handleAdd(formattedItem)
-      handleOnClose()
+      const indexContainer = containerItems.findIndex(container => state.selectedContainer === container.type)
+
+      const data = {
+        costType: item.type,
+        quantityContainer: specifications === 'fcl' ? Number(containerItems[indexContainer].amount) : 0,
+        valueGrossWeight: isNaN(Number(calculationData?.weight)) ? 0 : calculationData?.weight,
+        valueCubage: isNaN(Number(calculationData?.cubage)) ? 0 : calculationData?.cubage,
+        valueWeightCubed: isNaN(Number(calculationData?.cubageWeight)) ? 0 : calculationData?.cubageWeight,
+        valuePurchase: Number(item.buyValue),
+        valueSale: Number(item.saleValue),
+        idCurrencyPurchase: item.buyCurrency,
+        idCurrencySale: item.saleCurrency
+      }
+
+      void (async function () {
+        await API.postTotalCalculation(data)
+          .then((response) => {
+            dispatch({ type: 'buyValueCalculated', value: response.valuePurchase })
+            dispatch({ type: 'saleValueCalculated', value: response.valueSale })
+          })
+          .catch((err) => console.log(err))
+      })()
     } else {
       setInvalidInput(true)
     }
@@ -295,6 +349,19 @@ const CostModal = ({
 
     return String(amount).replace('.', ',')
   }
+
+  useEffect(() => {
+    if (state.buyValueCalculated !== null && state.saleValueCalculated !== null) {
+      setFlag(true)
+    }
+  }, [state.buyValueCalculated, state.saleValueCalculated])
+
+  useEffect(() => {
+    if (flag) {
+      handleAdd(state)
+      handleOnClose()
+    }
+  }, [flag])
 
   return (
     <Modal open={open} onClose={handleOnClose}>
@@ -323,7 +390,7 @@ const CostModal = ({
               <ControlledSelect
                 onChange={(e) => dispatch({ type: 'type', value: e.target.value })}
                 displayEmpty
-                style={{ width: '122px' }}
+                style={{ width: '122px', marginTop: '12px' }}
                 value={state.type}
                 disableUnderline
                 placeholder={state.type}
@@ -360,7 +427,7 @@ const CostModal = ({
                       <div ref={params.InputProps.ref}>
                         <Input
                           {...params.inputProps}
-                          style={{ width: '368px', marginTop: 'unset' }}
+                          style={{ width: '368px' }}
                           placeholder={I18n.t('components.costModal.choose')}
                           toolTipTitle={I18n.t('components.itemModal.requiredField')}
                           invalid={invalidInput && (state.description === null || state.description.length === 0)}
@@ -385,7 +452,7 @@ const CostModal = ({
               <ControlledSelect
                 onChange={(e) => dispatch({ type: 'agent', value: e.target.value })}
                 displayEmpty
-                style={{ width: '513px' }}
+                style={{ width: '513px', marginTop: '12px' }}
                 value={state.agent}
                 disableUnderline
                 placeholder={state.agent}
@@ -601,7 +668,7 @@ const CostModal = ({
                           {I18n.t('components.costModal.value')}
                           {saleCheckbox && <RedColorSpan> *</RedColorSpan>}
                         </PlaceholderSpan>
-                      )}
+                    )}
                     <NumberInput
                       decimalSeparator={','}
                       thousandSeparator={'.'}
