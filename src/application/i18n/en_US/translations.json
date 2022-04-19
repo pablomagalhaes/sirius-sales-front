@@ -128,8 +128,8 @@
       "buy": "Buy",
       "description": "Expense/Service",
       "inform": "To inform",
-      "minBuy": "Min - Buy",
-      "minSale": "Min - Sale",
+      "minBuy": "Buy - Min",
+      "minSale": "Sale - Min",
       "sale": "Sale",
       "type":"Type"
     },
