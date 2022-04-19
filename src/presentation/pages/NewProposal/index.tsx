@@ -204,11 +204,11 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const MessageExitDialog = (): JSX.Element => {
     useEffect(() => {
       if (filled.step1 ||
-          filled.step2 ||
-          filled.step3 ||
-          filled.step4 ||
-          filled.step5 ||
-          filled.step6) {
+        filled.step2 ||
+        filled.step3 ||
+        filled.step4 ||
+        filled.step5 ||
+        filled.step6) {
         setLeavingPage(true)
       } else {
         setLeavingPage(false)
@@ -228,53 +228,55 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   }
 
   const validateAction = (element): boolean => {
-    if ((element.id === 'mini-logo' || element.querySelector('#mini-logo')) && element.tagName !== 'UL') {
-      setAction('home')
-      return true
-    }
-    if ((element.id === 'exportation' || element.querySelector('#exportation')) && element.tagName !== 'UL') {
-      setAction('home')
-      return true
-    }
-    if ((element.id === 'importation' || element.querySelector('#importation')) && element.tagName !== 'UL') {
-      setAction('home')
-      return true
-    }
-    if ((element.id === 'freight-forwarder' || element.querySelector('#freight-forwarder')) && element.tagName !== 'UL') {
-      setAction('home')
-      return true
-    }
-    if ((element.id === 'billing' || element.querySelector('#billing')) && element.tagName !== 'UL') {
-      setAction('home')
-      return true
-    }
-    if ((element.id === 'national-logistic' || element.querySelector('#national-logistic')) && element.tagName !== 'UL') {
-      setAction('home')
-      return true
-    }
-    if ((element.id === 'logo_sirius' || element.querySelector('#logo_sirius')) && element.tagName !== 'DIV') {
-      setAction('home')
-      return true
-    }
-    if (element.id === 'home' || element.querySelector('#sub_menu_icon')) {
-      setAction('commercial-home')
-      return true
-    }
-    if ((element.id === 'proposal' || element.querySelector('#proposal')) && element.tagName !== 'DIV') {
-      setAction('proposals')
-      return true
-    }
-    if ((element.id === 'tariff' || element.querySelector('#tariff')) && element.tagName !== 'DIV') {
-      setAction('commercial-home')
-      return true
-    }
-    if ((element.id === 'chart' || element.querySelector('#chart')) && element.tagName !== 'DIV') {
-      setAction('commercial-home')
-      return true
-    }
-    if (element.id === 'exit_button') {
-      setAction('logout')
-      return true
+    if (element.tagName !== 'HTML') {
+      if (element.id === 'button_home' || element.tagName === 'svg' || element.tagName === 'path') {
+        setAction('home')
+        return true
+      }
+      if ((element.id === 'exportation' || element.querySelector('#exportation')) && element.tagName !== 'UL') {
+        setAction('home')
+        return true
+      }
+      if ((element.id === 'importation' || element.querySelector('#importation')) && element.tagName !== 'UL') {
+        setAction('home')
+        return true
+      }
+      if ((element.id === 'freight-forwarder' || element.querySelector('#freight-forwarder')) && element.tagName !== 'UL') {
+        setAction('home')
+        return true
+      }
+      if ((element.id === 'billing' || element.querySelector('#billing')) && element.tagName !== 'UL') {
+        setAction('home')
+        return true
+      }
+      if ((element.id === 'national-logistic' || element.querySelector('#national-logistic')) && element.tagName !== 'UL') {
+        setAction('home')
+        return true
+      }
+      if ((element.id === 'logo_sirius' || element.querySelector('#logo_sirius')) && element.tagName !== 'DIV') {
+        setAction('home')
+        return true
+      }
+      if (element.tagName === 'A') {
+        setAction('proposals')
+        return true
+      }
+      if ((element.id === 'proposal' || element.querySelector('#proposal')) && element.tagName !== 'DIV') {
+        setAction('proposals')
+        return true
+      }
+      if ((element.id === 'tariff' || element.querySelector('#tariff')) && element.tagName !== 'DIV') {
+        setAction('commercial-home')
+        return true
+      }
+      if ((element.id === 'chart' || element.querySelector('#chart')) && element.tagName !== 'DIV') {
+        setAction('commercial-home')
+        return true
+      }
+      if (element.id === 'exit_button') {
+        setAction('logout')
+        return true
+      }
     }
     return false
   }
@@ -324,7 +326,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   useOnClickOutside(handler)
 
   return (
-    <RootContainer ref={divRef}>
+    <RootContainer>
       <Header>
         <Breadcrumbs separator=">" aria-label="breadcrumb">
           <Link
@@ -382,7 +384,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         </ButtonContainer>
       </TopContainer>
       {leavingPage && <MessageExitDialog />}
-      <MainContainer>
+      <MainContainer ref={divRef}>
         <div id="step1">
           <Step1
             filled={filled}
