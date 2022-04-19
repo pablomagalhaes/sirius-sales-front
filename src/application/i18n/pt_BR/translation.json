@@ -138,8 +138,8 @@
       "buy": "Compra",
       "description": "Despesa/Serviço",
       "inform": "A informar",
-      "minBuy": "Mín - Compra",
-      "minSale": "Mín - Venda",
+      "minBuy": "Compra - Mín",
+      "minSale": "Venda - Mín",
       "sale": "Venda",
       "type":"Tipo"
     },

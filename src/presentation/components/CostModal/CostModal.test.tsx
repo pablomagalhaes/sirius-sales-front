@@ -19,7 +19,9 @@ const props = {
     saleValue: null,
     saleMin: null,
     id: 5,
-    selectedContainer: null
+    selectedContainer: null,
+    buyValueCalculated: null,
+    saleValueCalculated: null
   },
 
   title: 'Editar item',

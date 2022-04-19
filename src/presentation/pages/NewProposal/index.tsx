@@ -28,6 +28,7 @@ import { useHistory } from 'react-router-dom'
 import { ItemModalData } from '../../components/ItemModal/ItemModal'
 import { ProposalContext, ProposalProps } from './context/ProposalContext'
 import API from '../../../infrastructure/api'
+import { CalculationDataProps } from '../../components/ChargeTable'
 
 export interface NewProposalProps {
   theme: any
@@ -48,6 +49,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [containerTypeList, setContainerTypeList] = useState<any[]>([])
   const [leavingPage, setLeavingPage] = useState(false)
   const [action, setAction] = useState('')
+  const [calculationData, setCalculationData] = useState<CalculationDataProps>({ weight: 0, cubage: 0, cubageWeight: 0 })
 
   useEffect(() => {
     void (async function () {
@@ -214,15 +216,14 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     }, [])
 
     return (
-      <>
-        <ExitDialog
-          cancelButtonText={I18n.t('pages.newProposal.unsavedChanges.cancelMessage')}
-          confirmButtonText={I18n.t('pages.newProposal.unsavedChanges.confirmMessage')}
-          message={I18n.t('pages.newProposal.unsavedChanges.message')}
-          title={I18n.t('pages.newProposal.unsavedChanges.title')}
-          onPressCancel={() => setLeavingPage(false)}
-          onPressConfirm={() => executeAction()} />
-      </>
+      <ExitDialog
+        cancelButtonText={I18n.t('pages.newProposal.unsavedChanges.cancelMessage')}
+        confirmButtonText={I18n.t('pages.newProposal.unsavedChanges.confirmMessage')}
+        message={I18n.t('pages.newProposal.unsavedChanges.message')}
+        title={I18n.t('pages.newProposal.unsavedChanges.title')}
+        onPressCancel={() => setLeavingPage(false)}
+        onPressConfirm={() => executeAction()}
+      />
     )
   }
 
@@ -382,12 +383,77 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       </TopContainer>
       {leavingPage && <MessageExitDialog />}
       <MainContainer>
-        <div id="step1"><Step1 filled={filled} setModal={setModal} setCompleted={setCompleted} setFilled={setFilled} invalidInput={invalidInput} setProposalType={setProposalType} /></div>
-        <div id="step2"><Step2 proposalType={proposalType} setCompleted={setCompleted} setFilled={setFilled} invalidInput={invalidInput} modal={modal} /></div>
-        <div id="step3"><Step3 containerTypeList={containerTypeList} undoMessage={undoMessage} setUndoMessage={setUndoMessage} setFilled={setFilled} setTableItems={setStep3TableItems} setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} setCostData={setCostData} setSpecifications={setSpecifications} /></div>
-        <div id="step4"><Step4 modal={modal} setFilled={setFilled} setCompleted={setCompleted} invalidInput={invalidInput} /></div>
-        <div id="step5"><Step5 containerTypeList={containerTypeList} serviceList={serviceList} undoMessage={undoMessage} setUndoMessage={setUndoMessage} setFilled={setFilled} containerItems={step3TableItems} setCompleted={setCompleted} costData={costData} modal={modal} specifications={specifications} /></div>
-        <div id="step6"><Step6 containerTypeList={containerTypeList} serviceList={serviceList} undoMessage={undoMessage} setUndoMessage={setUndoMessage} setFilled={setFilled} containerItems={step3TableItems} setCompleted={setCompleted} costData={costData} modal={modal} specifications={specifications} /></div>
+        <div id="step1">
+          <Step1
+            filled={filled}
+            setModal={setModal}
+            setCompleted={setCompleted}
+            setFilled={setFilled}
+            invalidInput={invalidInput}
+            setProposalType={setProposalType}
+          />
+        </div>
+        <div id="step2">
+          <Step2
+            proposalType={proposalType}
+            setCompleted={setCompleted}
+            setFilled={setFilled}
+            invalidInput={invalidInput}
+            modal={modal}
+          />
+        </div>
+        <div id="step3">
+          <Step3
+            setCalculationData={setCalculationData}
+            containerTypeList={containerTypeList}
+            undoMessage={undoMessage}
+            setUndoMessage={setUndoMessage}
+            setFilled={setFilled}
+            setTableItems={setStep3TableItems}
+            setCompleted={setCompleted}
+            invalidInput={invalidInput}
+            modal={modal}
+            setCostData={setCostData}
+            setSpecifications={setSpecifications}
+          />
+        </div>
+        <div id="step4">
+          <Step4
+            modal={modal}
+            setFilled={setFilled}
+            setCompleted={setCompleted}
+            invalidInput={invalidInput}
+          />
+        </div>
+        <div id="step5">
+          <Step5
+            calculationData={calculationData}
+            containerTypeList={containerTypeList}
+            serviceList={serviceList}
+            undoMessage={undoMessage}
+            setUndoMessage={setUndoMessage}
+            setFilled={setFilled}
+            containerItems={step3TableItems}
+            setCompleted={setCompleted}
+            costData={costData}
+            modal={modal}
+            specifications={specifications}
+          />
+        </div>
+        <div id="step6">
+          <Step6
+            containerTypeList={containerTypeList}
+            serviceList={serviceList}
+            undoMessage={undoMessage}
+            setUndoMessage={setUndoMessage}
+            setFilled={setFilled}
+            containerItems={step3TableItems}
+            setCompleted={setCompleted}
+            costData={costData}
+            modal={modal}
+            specifications={specifications}
+          />
+        </div>
       </MainContainer>
       {showSaveMessage &&
         <MessageContainer>

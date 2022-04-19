@@ -7,6 +7,24 @@ export const MainDiv = styled.div`
   border-radius: 8px;
   background: ${(props: any) => props.theme?.commercial?.components?.costTable?.backgroundColor};
   margin-top: 30px;
+  padding: 0 16px;
+
+  .MuiTableCell-root {
+    padding-left: 0 !important;
+  }
+
+  .MuiTableCell-body {
+    border-bottom: 1px solid ${(props: any) => props.theme?.commercial?.components?.costTable?.border} !important;
+  }
+
+  .noBorder {
+    border-bottom: none !important;
+    padding: 8px 16px 8px 0 !important;
+  }
+
+  .noPadding {
+    padding: 0 16px 0 0 !important;
+  }
 `
 
 export const Header = styled.div`
@@ -25,14 +43,11 @@ export const Title = styled.span`
   width: 15%;
   font-weight: bold;
   font-size: 16px;
-  margin-left: 45px;
   margin-top: 30px;
 `
 
 export const StyledTable = styled(Table)`
-  max-width: 94%;
   margin-top: 20px;
-  margin-left: 30px;
 `
 
 export const TableHeadRow = styled(TableRow)`
@@ -115,9 +130,6 @@ export const RowReverseContainer = styled.div`
 `
 
 export const Footer = styled.div`
-  max-width: 94%;
-  margin-top: 30px;
-  margin-left: 30px;
   padding-bottom: 30px;
   letter-spacing: 0.02em;
   font-family: DM Sans;
@@ -158,17 +170,42 @@ export const TotalCostLabel = styled.span`
   color: ${(props: any) => props.theme?.commercial?.components?.costTable?.title};
   font-weight: bold;
   font-size: 16px;
-  margin-right: 35px;
-  width: 160px;
 `
 export const DeleteIconDiv = styled.div`
   cursor: pointer;
+  height: 36px;
+  align-items: center;
+  display: flex;
 `
 
 export const EditIconDiv = styled.div`
   margin-right: 20px;
   cursor: pointer;
+  height: 36px;
+  border-left: 1px solid ${(props: any) => props.theme?.commercial?.components?.costTable?.border};
+  padding-left: 16px;
+  align-items: center;
+  display: flex;
 `
 export const EmptyTableCost = styled.span`
-margin-left: 40px;
+  margin-left: 40px;
+`
+
+export const SecondaryValue = styled.span`
+  display: flex;
+  font-size: 12px;
+  line-height: 150%;
+  letter-spacing: 0.02em;
+  color: ${(props: any) => props.theme?.commercial?.components?.costTable?.subtitle};
+`
+
+export const ButtonContainer = styled.div`
+  margin-top: 24px;
+`
+
+export const RedColorSpan = styled.span`
+  color: ${(props: any) =>
+    props.theme?.commercial?.components?.itemModal?.redAsterisk};
+  font-size: 16px;
+  font-weight: bold;
 `
