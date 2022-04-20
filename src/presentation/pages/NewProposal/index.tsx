@@ -229,7 +229,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
 
   const validateAction = (element): boolean => {
     if (element.tagName !== 'HTML') {
-      if (element.id === 'button_home' || element.querySelectorAll('#button_home')) {
+      if (element.id === 'button_home' || element.querySelector('#button_home')) {
         setAction('home')
         return true
       }
