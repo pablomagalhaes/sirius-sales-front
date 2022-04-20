@@ -229,7 +229,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
 
   const validateAction = (element): boolean => {
     if (element.tagName !== 'HTML') {
-      if (element.id === 'button_home' || element.tagName === 'svg' || element.tagName === 'path') {
+      if (element.id === 'button_home' || element.querySelectorAll('#button_home')) {
         setAction('home')
         return true
       }
@@ -259,6 +259,10 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       }
       if (element.tagName === 'A') {
         setAction('proposals')
+        return true
+      }
+      if ((element.id === 'home' || element.querySelector('#home')) && element.tagName !== 'DIV') {
+        setAction('commercial-home')
         return true
       }
       if ((element.id === 'proposal' || element.querySelector('#proposal')) && element.tagName !== 'DIV') {
