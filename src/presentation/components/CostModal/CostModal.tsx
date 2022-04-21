@@ -481,7 +481,7 @@ const CostModal = ({
                 {agentList.map((agent) => {
                   return (
                     <MenuItem key={`${agent}_key`} value={agent}>
-                      <MenuItemContent>  {agent}</MenuItemContent>
+                      <MenuItemContent>{agent}</MenuItemContent>
                     </MenuItem>
                   )
                 })}

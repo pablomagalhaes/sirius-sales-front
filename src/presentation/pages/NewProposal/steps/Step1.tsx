@@ -52,6 +52,24 @@ const Step1 = ({ theme, invalidInput, setCompleted, setFilled, setProposalType, 
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
   useEffect(() => {
+    if (proposal.id !== undefined && proposal.id !== null) {
+      void (async function () {
+        await API.getBusinessPartnerCostumer(proposal.idBusinessPartnerCostumer)
+          .then((response) => {
+            setData({
+              proposal: proposal.proposalType,
+              services: '',
+              modal: proposal.idTransport,
+              proposalValue: response?.businessPartner?.simpleName,
+              requester: proposal.requester
+            })
+          })
+          .catch((err) => console.log(err))
+      })()
+    }
+  }, [])
+
+  useEffect(() => {
     setProposal({
       ...proposal,
       proposalType: data.proposal,
@@ -134,8 +152,8 @@ const Step1 = ({ theme, invalidInput, setCompleted, setFilled, setProposalType, 
             value={data.proposal}
             onChange={e => setData({ ...data, proposal: e.target.value })}
           >
-            <FormControlLabel value="client" control={<StyledRadio color={getColor(data.proposal)} />} label={I18n.t('pages.newProposal.step1.client')} style={{ marginRight: '30px' }} />
-            <FormControlLabel value="routing" control={<StyledRadio color={getColor(data.proposal)} />} label={I18n.t('pages.newProposal.step1.routingOrder')} />
+            <FormControlLabel checked={data.proposal === 'client'} value="client" control={<StyledRadio color={getColor(data.proposal)} />} label={I18n.t('pages.newProposal.step1.client')} style={{ marginRight: '30px' }} />
+            <FormControlLabel checked={data.proposal === 'routing'} value="routing" control={<StyledRadio color={getColor(data.proposal)} />} label={I18n.t('pages.newProposal.step1.routingOrder')} />
           </RadioGroup>
         </Grid>
         {

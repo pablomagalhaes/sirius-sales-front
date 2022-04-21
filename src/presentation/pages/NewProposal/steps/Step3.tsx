@@ -73,17 +73,67 @@ const Step3 = ({
   const [tableId, setTableId] = useState(0)
   const specificationsList = ['FCL', 'LCL', 'Break Bulk', 'Ro-Ro']
   const [packagingList, setPackagingList] = useState<any[]>([])
-  const [data, setData] = useState({
+  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+  const [calculation, setCalculation] = useState<CalculationDataProps>({ weight: 0, cubage: 0, cubageWeight: 0 })
+  const initialData = {
     description: '',
     specifications: '',
-    refrigereted: false,
     temperature: '',
     dangerous: false,
     imo: '',
     codUn: ''
-  })
-  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
-  const [calculation, setCalculation] = useState<CalculationDataProps>({ weight: 0, cubage: 0, cubageWeight: 0 })
+  }
+  const [data, setData] = useState(initialData)
+
+  useEffect(() => {
+    setSpecifications(data.specifications)
+    setTableRows([])
+  }, [data.specifications])
+
+  useEffect(() => {
+    setTableRows([])
+    setChargeData(initialState)
+    setCopyTable([])
+    setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false })
+    setData(initialData)
+    setTableId(0)
+  }, [modal])
+
+  useEffect(() => {
+    if (proposal.id !== undefined && proposal.id !== null) {
+      void new Promise<void>((resolve) => {
+        setTimeout(() => resolve(), 1000)
+      }).then(() => {
+        setData({
+          description: proposal.cargo.cargo,
+          specifications: proposal.idTransport === 'SEA' ? specificationsList[Number(proposal.cargo.idCargoContractingType) - 1].toLowerCase() : '',
+          temperature: String(proposal.cargo.idTemperature),
+          dangerous: proposal.cargo.isDangerous,
+          imo: String(proposal.cargo.idImoType),
+          codUn: String(proposal.cargo.codeUn)
+        })
+
+        let id = 0
+        const loadedTableRows: ItemModalData[] = []
+        proposal.cargo.cargoVolumes.forEach((cargo: CargoVolume) => {
+          loadedTableRows.push({
+            amount: String(cargo.valueQuantity),
+            cubage: String(cargo.valueCubage),
+            diameter: String(cargo.valueDiameter),
+            height: String(cargo.valueHeight),
+            length: String(cargo.valueLength),
+            rawWeight: String(cargo.valueGrossWeight),
+            type: '', // TODO inserir esse campo depois de ajustada a tabela (container ou package)
+            width: String(cargo.valueWidth),
+            id: id++,
+            stack: cargo.isStacked
+          })
+        })
+        setTableRows(loadedTableRows)
+        setTableId(loadedTableRows.length)
+      })
+    }
+  }, [])
 
   useEffect(() => {
     setProposal(
@@ -109,7 +159,7 @@ const Step3 = ({
     const newCargoVolumes: CargoVolume[] = []
     tableRows.forEach((row) => {
       newCargoVolumes.push({
-        cdCargoType: marineFCL() ? 1 : packagingList.filter((pack) => pack.packaging === row.type)[0].id, // TODO quando for marineFCL salvar id (string 4 digitos)
+        cdCargoType: marineFCL() ? 1 : packagingList.filter((pack) => pack.packaging === row.type)[0]?.id, // TODO quando for marineFCL salvar id (string 4 digitos)
         valueQuantity: Number(row.amount),
         valueGrossWeight: Number(row.rawWeight?.replace(',', '.')),
         valueCubage: Number(row.cubage?.replace(',', '.')),
@@ -150,29 +200,6 @@ const Step3 = ({
         .catch((err) => console.log(err))
     })()
   }, [])
-
-  const initialData = {
-    description: '',
-    specifications: '',
-    refrigereted: false,
-    temperature: '',
-    dangerous: false,
-    imo: '',
-    codUn: ''
-  }
-
-  useEffect(() => {
-    setTableRows([])
-  }, [data.specifications])
-
-  useEffect(() => {
-    setTableRows([])
-    setChargeData(initialState)
-    setCopyTable([])
-    setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false })
-    setData(initialData)
-    setTableId(0)
-  }, [modal])
 
   const marineFCL = (): boolean => {
     return modal === 'SEA' && data.specifications === 'fcl'
@@ -224,10 +251,6 @@ const Step3 = ({
   }
 
   useEffect(() => {
-    setSpecifications(data.specifications)
-  }, [data.specifications])
-
-  useEffect(() => {
     if (
       data.description.length !== 0 &&
       ((modal === 'SEA' && data.specifications.length !== 0) ||
@@ -249,7 +272,6 @@ const Step3 = ({
       data.temperature !== '' ||
       data.imo.length > 0 ||
       data.codUn.length > 0 ||
-      data.refrigereted ||
       data.dangerous
     ) {
       setFilled((currentState) => {

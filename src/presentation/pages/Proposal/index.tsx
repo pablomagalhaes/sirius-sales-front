@@ -63,7 +63,7 @@ const Proposal = (): JSX.Element => {
   useEffect(() => {
     const newIncotermList: any[] = []
     void (async function () {
-      await API.getIncoterm()
+      await API.getIncoterms()
         .then((response) => {
           response.forEach((item: any) => {
             newIncotermList.push(item?.id)
@@ -163,7 +163,7 @@ const Proposal = (): JSX.Element => {
       )
       const status = verifyStatus(proposal.status)
       const item = {
-        key: proposal.id,
+        key: proposal.proposalId,
         reference: proposal.reference,
         client: proposal.client,
         origin: proposal.originId,
@@ -448,7 +448,10 @@ const Proposal = (): JSX.Element => {
             tooltip={'Criar nova proposta'}
             backgroundGreen={true}
             icon="add"
-            onAction={() => history.push('/novaProposta')}
+            onAction={() => history.push({
+              pathname: '/novaProposta',
+              state: { proposalId: null }
+            })}
           />
         </TopButtonContainer>
       </TopContainer>
@@ -473,7 +476,7 @@ const Proposal = (): JSX.Element => {
       <ListHeaderContainer>
         <LeftSideListHeaderContainer>
           <ListMainTitleSpan>
-            { showMsgTotalResult() }
+            {showMsgTotalResult()}
           </ListMainTitleSpan>
           <ExportListContainer onClick={handleExportList}>
             <ExitToApp />
@@ -526,6 +529,14 @@ const Proposal = (): JSX.Element => {
             rejectLabel={(I18n.t('pages.proposal.table.rejectLabel'))}
             rows={getProposalItems(proposalList)}
             waitingForCustomerReturnLabel={(I18n.t('pages.proposal.table.waitingForCustomerReturnLabel'))}
+            editMenuLabel="Editar"
+            duplicateMenuLabel="Duplicar"
+            cancelMenuLabel="Cancelar"
+            defineApprovedMenuLabel="Definir como aprovada"
+            onClickMenuItem={(item: Number) => history.push({
+              pathname: '/novaProposta',
+              state: { proposalId: item }
+            })}
           />
         </TableContainer>
         <PaginationContainer>

@@ -164,9 +164,7 @@ const CostTable = ({
 
   useEffect(() => {
     if (tableData.length > 0) {
-      tableData.forEach((row: CostTableItem) => {
-        handleAdd(row)
-      })
+      setData(tableData)
     }
   }, [])
 
