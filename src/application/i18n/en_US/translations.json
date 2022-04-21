@@ -86,7 +86,9 @@
         "destiny": "Destiny",
         "totalDestiny": "Total destiny costs:",
         "originCost": "New origin cost",
-        "destinationCost": "New destiny cost"
+        "destinationCost": "New destiny cost",
+        "errorOrigin": "It is mandatory to inform some origin cost.",
+        "errorDestiny": "It is mandatory to inform some destiny cost"
       },
       "step6": {
         "title": "Freight",

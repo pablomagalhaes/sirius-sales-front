@@ -8,6 +8,7 @@ import {
   DeleteIconDiv,
   Description,
   EditIconDiv,
+  ErrorText,
   Footer,
   Header,
   MainDiv,
@@ -52,6 +53,7 @@ interface CostTableProps {
   setTotalCostData: React.Dispatch<React.SetStateAction<TotalCostTable[]>>
   serviceList: any[]
   calculationData: CalculationDataProps
+  errorMessage: string
 }
 
 const CostTable = ({
@@ -68,7 +70,8 @@ const CostTable = ({
   setTableData,
   setTotalCostData,
   serviceList,
-  calculationData
+  calculationData,
+  errorMessage
 }: CostTableProps): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [data, setData] = useState<CostTableItem[]>([])
@@ -343,6 +346,7 @@ const CostTable = ({
                     : I18n.t('components.costTable.addCost')
                 }
               />
+              <ErrorText>{errorMessage}</ErrorText>
             </ButtonContainer>
           : <StyledTable>
             <TableBody>
