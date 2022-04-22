@@ -15,11 +15,10 @@ import {
   CloseIconContainer,
   ButtonDiv
 } from '../StyledComponents/modalStyles'
-import NumberFormat from 'react-number-format'
 import { Button } from 'fiorde-fe-components'
 import { Autocomplete } from '@material-ui/lab'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
-import { StyledPaper } from '../../pages/NewProposal/steps/StepsStyles'
+import { StyledPaper, NumberInput } from '../../pages/NewProposal/steps/StepsStyles'
 
 export interface ItemModalData {
   amount: string
@@ -244,7 +243,7 @@ const ItemModal = ({
                 {(modal === 'AIR' ||
                   (modal === 'SEA' && specifications !== 'fcl') ||
                   modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}</FormLabel>
-              <NumberFormat
+              <NumberInput
                 decimalSeparator={','}
                 thousandSeparator={'.'}
                 decimalScale={2}
@@ -274,7 +273,7 @@ const ItemModal = ({
                   (modal === 'SEA' && specifications !== 'fcl') ||
                   modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}</FormLabel>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <NumberFormat
+                <NumberInput
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -292,7 +291,7 @@ const ItemModal = ({
                   modal
                   style={{ marginRight: '8px' }}
                 />
-                <NumberFormat
+                <NumberInput
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -310,7 +309,7 @@ const ItemModal = ({
                   modal
                   style={{ marginRight: '8px' }}
                 />
-                <NumberFormat
+                <NumberInput
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -336,7 +335,7 @@ const ItemModal = ({
                   (modal === 'SEA' && specifications !== 'fcl') ||
                   modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}
               </FormLabel>
-              <NumberFormat
+              <NumberInput
                 decimalSeparator={','}
                 thousandSeparator={'.'}
                 decimalScale={2}
@@ -356,7 +355,7 @@ const ItemModal = ({
             </Grid>}
             {hasDiameter() && <Grid item xs={3}>
               <FormLabel component="legend">{I18n.t('components.itemModal.diameter')}</FormLabel>
-              <NumberFormat
+              <NumberInput
                 decimalSeparator={','}
                 thousandSeparator={'.'}
                 decimalScale={2}

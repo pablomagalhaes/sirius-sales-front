@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 import { Select } from '@material-ui/core'
 import ControlledToolTip from '../ControlledToolTip/ControlledToolTip'
-import NumberFormat from 'react-number-format'
 import React from 'react'
 
 export const StyledMenuSelect = styled(({ className, invalid, toolTipTitle, ...props }) => {
@@ -153,9 +152,6 @@ export const Input = styled.input`
   &:hover {
     border: 1px solid #43bfb5;
   }
-`
-
-export const NumberInput = styled(NumberFormat)`
 `
 
 export const ReplyDiv = styled.div`
