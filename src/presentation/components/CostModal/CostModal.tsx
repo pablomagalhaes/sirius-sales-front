@@ -410,18 +410,21 @@ const CostModal = ({
                   )
                 })}
               </ControlledSelect>
-              <ControlledToolTip
-                title={I18n.t('components.itemModal.requiredField')}
-                open={
-                  invalidInput &&
-                  (state.description === null || state.description.length === 0)
-                }
-              >
-                <Container style={{ position: 'relative', marginRight: '368px' }}>
+              <Container style={{ position: 'relative', marginRight: '368px' }}>
+                <ControlledToolTip
+                  title={I18n.t('components.itemModal.requiredField')}
+                  open={
+                    invalidInput &&
+                    (state.description === null ||
+                      state.description.length === 0)
+                  }
+                >
                   <Autocomplete
                     style={{ width: '368px' }}
                     value={state.description}
-                    onChange={(event: any, newValue: string | null) => { dispatch({ type: 'description', value: newValue }) }}
+                    onChange={(event: any, newValue: string | null) => {
+                      dispatch({ type: 'description', value: newValue });
+                    }}
                     options={serviceList.map((option) => option.service)}
                     renderInput={(params) => (
                       <div ref={params.InputProps.ref}>
@@ -429,18 +432,30 @@ const CostModal = ({
                           {...params.inputProps}
                           style={{ width: '368px' }}
                           placeholder={I18n.t('components.costModal.choose')}
-                          toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                          invalid={invalidInput && (state.description === null || state.description.length === 0)}
+                          toolTipTitle={I18n.t(
+                            'components.itemModal.requiredField'
+                          )}
+                          invalid={
+                            invalidInput &&
+                            (state.description === null ||
+                              state.description.length === 0)
+                          }
                         />
-                        <Box style={{ left: '360px' }} {...params.inputProps} className="dropdownIconAutoComplete">
+                        <Box
+                          style={{ left: '360px' }}
+                          {...params.inputProps}
+                          className='dropdownIconAutoComplete'
+                        >
                           <ArrowDropDownIcon />
                         </Box>
                       </div>
                     )}
-                    PaperComponent={(params: any) => <StyledPaper {...params} />}
+                    PaperComponent={(params: any) => (
+                      <StyledPaper {...params} />
+                    )}
                   />
-                </Container>
-              </ControlledToolTip>
+                </ControlledToolTip>
+              </Container>
             </RowDiv>
             <RowDiv>
               <Label width="100%">
