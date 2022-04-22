@@ -13,7 +13,6 @@ import {
   WarningPopUp,
   WarningPopUpMessage,
   WarningPopUpButtonDiv,
-  NumberInput,
   MainDiv
 } from './CostModalStyles'
 import { I18n } from 'react-redux-i18n'
@@ -37,7 +36,7 @@ import {
 import API from '../../../infrastructure/api'
 import { CheckBoxArea } from '../ItemModal/ItemModalStyles'
 import { ItemModalData } from '../ItemModal/ItemModal'
-import { StyledPaper } from '../../pages/NewProposal/steps/StepsStyles'
+import { StyledPaper, NumberInput } from '../../pages/NewProposal/steps/StepsStyles'
 import ControlledSelect from '../ControlledSelect'
 import { MenuItemContent } from '../FareModal/FareModalStyles'
 import { agentList } from '../../pages/NewProposal/steps/Step5'
@@ -423,7 +422,7 @@ const CostModal = ({
                     style={{ width: '368px' }}
                     value={state.description}
                     onChange={(event: any, newValue: string | null) => {
-                      dispatch({ type: 'description', value: newValue });
+                      dispatch({ type: 'description', value: newValue })
                     }}
                     options={serviceList.map((option) => option.service)}
                     renderInput={(params) => (

@@ -429,6 +429,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
             setFilled={setFilled}
             setCompleted={setCompleted}
             invalidInput={invalidInput}
+            specifications={specifications}
           />
         </div>
         <div id="step5">
