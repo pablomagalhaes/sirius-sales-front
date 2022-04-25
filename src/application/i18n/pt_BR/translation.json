@@ -88,7 +88,9 @@
         "destiny": "Destino",
         "totalDestiny": "Total custos destino:",
         "originCost": "Novo custo de origem",
-        "destinationCost": "Novo custo de destino"
+        "destinationCost": "Novo custo de destino",
+        "errorOrigin": "É obrigatório informar algum custo de origem.",
+        "errorDestiny": "É obrigatório informar algum custo de destino."
       },
       "step6": {
         "title": "Frete",
