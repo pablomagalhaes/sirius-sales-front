@@ -26,6 +26,7 @@ interface Step5Props {
   serviceList: any[]
   containerTypeList: any[]
   calculationData: CalculationDataProps
+  invalidInput: boolean
 }
 
 export interface TotalCostTable {
@@ -39,7 +40,20 @@ export interface TotalCostTable {
 // Listas são mock, serão alteradas posteriormente
 export const agentList = ['Agente1', 'Agente2', 'Agente3']
 
-const Step5 = ({ setFilled, costData, modal, specifications, setCompleted, containerItems, setUndoMessage, undoMessage, serviceList, containerTypeList, calculationData }: Step5Props): JSX.Element => {
+const Step5 = ({
+  setFilled,
+  costData,
+  modal,
+  specifications,
+  setCompleted,
+  containerItems,
+  setUndoMessage,
+  undoMessage,
+  serviceList,
+  containerTypeList,
+  calculationData,
+  invalidInput
+}: Step5Props): JSX.Element => {
   const [dataOrigin, setDataOrigin] = useState<CostTableItem[]>([])
   const [dataDestiny, setDataDestiny] = useState<CostTableItem[]>([])
   const [dataTotalCostOrigin, setDataTotalCostOrigin] = useState<TotalCostTable[]>([])
@@ -156,6 +170,7 @@ const Step5 = ({ setFilled, costData, modal, specifications, setCompleted, conta
         setUndoMessage={setUndoMessage}
         serviceList={serviceList}
         calculationData={calculationData}
+        errorMessage={invalidInput ? I18n.t('pages.newProposal.step5.errorOrigin') : ''}
       />
       <CostTable
         modalTitle={I18n.t('pages.newProposal.step5.destinationCost')}
@@ -172,6 +187,7 @@ const Step5 = ({ setFilled, costData, modal, specifications, setCompleted, conta
         setUndoMessage={setUndoMessage}
         serviceList={serviceList}
         calculationData={calculationData}
+        errorMessage={invalidInput ? I18n.t('pages.newProposal.step5.errorDestiny') : ''}
       />
     </Separator>
   )

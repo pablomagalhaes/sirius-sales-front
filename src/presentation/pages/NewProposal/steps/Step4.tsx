@@ -14,16 +14,16 @@ import ControlledInput from '../../../components/ControlledInput'
 import ControlledToolTip from '../../../components/ControlledToolTip/ControlledToolTip'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import API from '../../../../infrastructure/api'
-import NumberFormat from 'react-number-format'
+import { NumberInput } from './StepsStyles'
 import { withTheme } from 'styled-components'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
-
 interface Step4Props {
   invalidInput: boolean
   setCompleted: (completed: any) => void
   setFilled: (filled: any) => void
   theme?: any
   modal: string
+  specifications: string
 }
 
 interface Frequency {
@@ -36,7 +36,8 @@ const Step4 = ({
   setCompleted,
   setFilled,
   theme,
-  modal
+  modal,
+  specifications
 }: Step4Props): JSX.Element => {
   // mock para os selects
   const validityList = [
@@ -72,6 +73,7 @@ const Step4 = ({
     currency: '',
     freeTime: '',
     deadline: '',
+    value: '',
     generalObs: '',
     internalObs: ''
   }
@@ -81,6 +83,23 @@ const Step4 = ({
   const [frequencyList, setFrequencyList] = useState<Frequency[]>([])
   const [disabledValidateDate, setDisabledValidateDate] = useState(true)
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+
+  const rightToLeftFormatter = (value: string, decimal: number): string => {
+    if (Number(value) === 0) return ''
+
+    let amount = ''
+    if (amount.length > decimal) {
+      amount = parseInt(value).toFixed(decimal)
+    } else {
+      amount = (parseInt(value) / 10 ** decimal).toFixed(decimal)
+    }
+
+    return String(amount).replace('.', ',')
+  }
+
+  const validateFloatInput = (value: string): RegExpMatchArray | null => {
+    return value.match(/^[0-9]*,?[0-9]*$/)
+  }
 
   useEffect(() => {
     const splitedValidityDate = data.validityDate.trim().split('/')
@@ -121,6 +140,7 @@ const Step4 = ({
       data.client.length > 0 ||
       data.freeTime.length > 0 ||
       data.deadline.length > 0 ||
+      data.value.length > 0 ||
       data.generalObs.length > 0 ||
       data.internalObs.length > 0
     ) {
@@ -211,7 +231,7 @@ const Step4 = ({
           </Grid>
           <Grid item xs={2}>
             <FormLabel component="legend">&nbsp;</FormLabel>
-            <NumberFormat
+            <NumberInput
               id="no-label-field"
               disabled={disabledValidateDate}
               format={'##/##/####'}
@@ -273,11 +293,12 @@ const Step4 = ({
             />
           </Grid>
 
-          <Grid item xs={4}>
-            <FormLabel component="legend">
-              {I18n.t('pages.newProposal.step4.freeTime')}
-              <RedColorSpan> *</RedColorSpan>
-            </FormLabel>
+          {modal === 'SEA' && <Grid item xs={4}>
+            {
+              specifications === 'fcl'
+                ? <FormLabel component="legend">{I18n.t('pages.newProposal.step4.freeTimeDemurrage')}<RedColorSpan> *</RedColorSpan></FormLabel>
+                : <FormLabel component="legend">{I18n.t('pages.newProposal.step4.freeTimeStorage')}:<RedColorSpan> *</RedColorSpan></FormLabel>
+            }
             <RadioGroup
               row
               aria-label="proposal type"
@@ -307,23 +328,38 @@ const Step4 = ({
                 />
               </ControlledToolTip>
             </RadioGroup>
-          </Grid>
-          <Grid item xs={2}>
-            {data.freeTime === 'hired' && (
-              <><FormLabel component="legend">{I18n.t('pages.newProposal.step4.deadline')}<RedColorSpan> *</RedColorSpan></FormLabel>
-                <ControlledInput
-                  id="deadline"
-                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                  invalid={invalidInput && data.deadline.length === 0}
-                  variant="outlined"
-                  onChange={(e) => validateIntInput(e.target.value) !== null && (setData({ ...data, deadline: e.target.value }))}
-                  value={data.deadline}
-                  size="small" />
-              </>
-            )}
-          </Grid>
-
-          <Grid item xs={2} />
+          </Grid>}
+          {data.freeTime === 'hired' &&
+            <><Grid item xs={2}>
+              <FormLabel component="legend">{I18n.t('pages.newProposal.step4.deadline')}<RedColorSpan> *</RedColorSpan></FormLabel>
+              <ControlledInput
+                id="deadline"
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                invalid={invalidInput && data.deadline.length === 0}
+                variant="outlined"
+                onChange={(e) => validateIntInput(e.target.value) !== null && (setData({ ...data, deadline: e.target.value }))}
+                value={data.deadline}
+                size="small" />
+            </Grid>
+              <Grid item xs={2}>
+                {specifications !== 'fcl' &&
+                  (<><FormLabel component="legend">
+                    {I18n.t('pages.newProposal.step4.value')} <RedColorSpan> *</RedColorSpan></FormLabel>
+                    <NumberInput
+                      decimalSeparator={','}
+                      thousandSeparator={'.'}
+                      decimalScale={2}
+                      format={(value: string) => rightToLeftFormatter(value, 2)}
+                      customInput={ControlledInput}
+                      toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                      invalid={invalidInput && data.value === ''}
+                      value={data.value}
+                      onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, value: e.target.value })) }}
+                      variant="outlined"
+                      size="small" /></>)}
+              </Grid></>}
+          {modal !== 'SEA' && <Grid item xs={8} /> }
+          {modal === 'SEA' && data.freeTime !== 'hired' && <Grid item xs={4} /> }
           <Grid item xs={2}>
             <FormLabel component="legend">
               {I18n.t('pages.newProposal.step4.frequency')}

@@ -429,6 +429,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
             setFilled={setFilled}
             setCompleted={setCompleted}
             invalidInput={invalidInput}
+            specifications={specifications}
           />
         </div>
         <div id="step5">
@@ -444,6 +445,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
             costData={costData}
             modal={modal}
             specifications={specifications}
+            invalidInput={invalidInput}
           />
         </div>
         <div id="step6">

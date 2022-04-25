@@ -205,7 +205,15 @@ export const ButtonContainer = styled.div`
 
 export const RedColorSpan = styled.span`
   color: ${(props: any) =>
-    props.theme?.commercial?.components?.itemModal?.redAsterisk};
+    props.theme?.commercial?.components?.costTable?.errorText};
   font-size: 16px;
   font-weight: bold;
+`
+
+export const ErrorText = styled.span`
+  color: ${(props: any) => props.theme?.commercial?.components?.costTable?.errorText};
+  font-weight: normal;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  line-height: 150%;
 `
