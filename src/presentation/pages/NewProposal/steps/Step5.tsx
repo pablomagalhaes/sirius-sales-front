@@ -61,6 +61,48 @@ const Step5 = ({
 
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
+  const [loadedTable, setLoadedTable] = useState(false)
+
+  useEffect(() => {
+    const loadedDataOrigin: CostTableItem[] = []
+    const loadedDataDestiny: CostTableItem[] = []
+
+    let id = 0
+    if (proposal.id !== undefined && proposal.id !== null) {
+      void new Promise<void>((resolve) => {
+        setTimeout(() => resolve(), 1000)
+      }).then(() => {
+        proposal.costs.forEach((cost: Cost) => {
+          const loadedItem: CostTableItem = {
+            agent: agentList[Number(cost.idBusinessPartnerAgent) - 1],
+            buyCurrency: cost.idCurrencyPurchase === '' ? 'BRL' : String(cost.idCurrencyPurchase),
+            buyMin: cost.valueMinimumPurchase === 0 ? null : String(cost.valueMinimumPurchase),
+            buyValue: cost.valuePurchase === 0 ? '' : String(cost.valuePurchase),
+            description: '', // TODO inserir esse campo depois de ajustada a tabela (container ou package)
+            id: id++,
+            saleCurrency: cost.idCurrencySale === '' ? 'BRL' : String(cost.idCurrencySale),
+            saleMin: cost.valueMinimumSale === 0 ? null : String(cost.valueMinimumSale),
+            saleValue: cost.valueSale === 0 ? '' : String(cost.valueSale),
+            selectedContainer: String(cost.containerType),
+            type: String(cost.billingType),
+            buyValueCalculated: null,
+            saleValueCalculated: null
+          }
+          if (cost.costType === 'Origem') {
+            loadedDataOrigin.push(loadedItem)
+          } if (cost.costType === 'Destino') {
+            loadedDataDestiny.push(loadedItem)
+          }
+        })
+        setDataOrigin(loadedDataOrigin)
+        setDataDestiny(loadedDataDestiny)
+        setLoadedTable(true)
+      })
+    } else {
+      setLoadedTable(true)
+    }
+  }, [])
+
   useEffect(() => {
     let actualCostArray = proposal.costs
     actualCostArray = actualCostArray.filter((cost) => cost.costType === 'Tarifa' && cost)
@@ -155,7 +197,7 @@ const Step5 = ({
         5. {I18n.t('pages.newProposal.step5.title')}
         <Subtitle>{I18n.t('pages.newProposal.step5.subtitle')}</Subtitle>
       </Title>
-      <CostTable
+      {loadedTable && <CostTable
         modalTitle={I18n.t('pages.newProposal.step5.originCost')}
         title={I18n.t('pages.newProposal.step5.origin')}
         totalCostLabel={I18n.t('pages.newProposal.step5.totalOrigin')}
@@ -172,7 +214,8 @@ const Step5 = ({
         calculationData={calculationData}
         errorMessage={invalidInput ? I18n.t('pages.newProposal.step5.errorOrigin') : ''}
       />
-      <CostTable
+      }
+      {loadedTable && <CostTable
         modalTitle={I18n.t('pages.newProposal.step5.destinationCost')}
         title={I18n.t('pages.newProposal.step5.destiny')}
         totalCostLabel={I18n.t('pages.newProposal.step5.totalDestiny')}
@@ -189,6 +232,7 @@ const Step5 = ({
         calculationData={calculationData}
         errorMessage={invalidInput ? I18n.t('pages.newProposal.step5.errorDestiny') : ''}
       />
+      }
     </Separator>
   )
 }

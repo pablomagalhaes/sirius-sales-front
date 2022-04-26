@@ -19,7 +19,7 @@ const getCurrencies = async (): Promise<any> => {
   }
 }
 
-const getIncoterm = async (): Promise<any> => {
+const getIncoterms = async (): Promise<any> => {
   try {
     const res = await instance.get('/sirius-master-data-api/incoterms/')
     return res.data
@@ -46,6 +46,15 @@ const getOriginDestination = async (): Promise<any> => {
   }
 }
 
+const getOriginDestinationById = async (params): Promise<any> => {
+  try {
+    const res = await instance.get(`/sirius-master-data-api/origins/destinations/${String(params)}`)
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const getFrequency = async (): Promise<any> => {
   try {
     const res = await instance.get('/sirius-master-data-api/frequency')
@@ -64,18 +73,18 @@ const getAgents = async (): Promise<any> => {
   }
 }
 
-const getTemperature = async (): Promise<any> => {
+const getTemperature = async (params?): Promise<any> => {
   try {
-    const res = await instance.get('/sirius-master-data-api/temperature')
+    const res = await instance.get(`/sirius-master-data-api/temperature/${params !== undefined ? String(params) : ''}`)
     return res.data
   } catch (error) {
     console.error(error)
   }
 }
 
-const getImo = async (): Promise<any> => {
+const getImo = async (params?): Promise<any> => {
   try {
-    const res = await instance.get('/sirius-master-data-api/imo/type')
+    const res = await instance.get(`/sirius-master-data-api/imo/type/${params !== undefined ? String(params) : ''}`)
     return res.data
   } catch (error) {
     console.error(error)
@@ -132,10 +141,28 @@ const postTotalCalculation = async (params): Promise<any> => {
   }
 }
 
+const getProposal = async (params): Promise<any> => {
+  try {
+    const res = await instance.get(`/sirius-business-proposal-api/proposalimportfreight/${String(params)}`)
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const getBusinessPartnerCostumer = async (params): Promise<any> => {
+  try {
+    const res = await instance.get(`/sirius-business-partner-api/business/partner/class/${String(params)}`)
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const API = {
   getContainerType,
   getCurrencies,
-  getIncoterm,
+  getIncoterms,
   getPackaging,
   getOriginDestination,
   getPartner,
@@ -146,7 +173,10 @@ const API = {
   getService,
   getProposals,
   postProposal,
-  postTotalCalculation
+  postTotalCalculation,
+  getProposal,
+  getBusinessPartnerCostumer,
+  getOriginDestinationById
 }
 
 export default API
