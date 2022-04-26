@@ -70,7 +70,6 @@ const Step4 = ({
     frequency: '',
     route: '',
     client: '',
-    currency: '',
     freeTime: '',
     deadline: '',
     value: '',
@@ -100,6 +99,29 @@ const Step4 = ({
   const validateFloatInput = (value: string): RegExpMatchArray | null => {
     return value.match(/^[0-9]*,?[0-9]*$/)
   }
+
+  useEffect(() => {
+    if (proposal.id !== undefined && proposal.id !== null) {
+      const validityDate = proposal.validityDate.split('T')[0].split('-')
+      void new Promise<void>((resolve) => {
+        setTimeout(() => resolve(), 1000)
+      }).then(() => {
+        setData({
+          validity: '0',
+          validityDate: `${validityDate[2]}/${validityDate[1]}/${validityDate[0]}`,
+          transitTime: String(proposal.transitTime),
+          frequency: String(proposal.idFrequency),
+          route: proposal.route,
+          client: proposal.referenceClientProposal,
+          freeTime: proposal.freeTime ? 'hired' : 'notHired',
+          deadline: '',
+          generalObs: proposal.generalObservations,
+          internalObs: proposal.internalObservations,
+          value: ''
+        })
+      })
+    }
+  }, [])
 
   useEffect(() => {
     const splitedValidityDate = data.validityDate.trim().split('/')
@@ -358,8 +380,8 @@ const Step4 = ({
                       variant="outlined"
                       size="small" /></>)}
               </Grid></>}
-          {modal !== 'SEA' && <Grid item xs={8} /> }
-          {modal === 'SEA' && data.freeTime !== 'hired' && <Grid item xs={4} /> }
+          {modal !== 'SEA' && <Grid item xs={8} />}
+          {modal === 'SEA' && data.freeTime !== 'hired' && <Grid item xs={4} />}
           <Grid item xs={2}>
             <FormLabel component="legend">
               {I18n.t('pages.newProposal.step4.frequency')}

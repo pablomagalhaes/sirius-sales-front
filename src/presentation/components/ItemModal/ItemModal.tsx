@@ -22,12 +22,9 @@ import { StyledPaper, NumberInput } from '../../pages/NewProposal/steps/StepsSty
 
 export interface ItemModalData {
   amount: string
-  codUn: string
   cubage: string | null
-  dangerous: boolean
   diameter: string | null
   height: string | null
-  imo: string | null
   length: string | null
   rawWeight: string | null
   type: string | null
@@ -49,12 +46,9 @@ interface ItemModalProps {
 
 export const initialState = {
   amount: '',
-  codUn: '',
   cubage: null,
-  dangerous: false,
   diameter: null,
   height: null,
-  imo: null,
   length: null,
   rawWeight: null,
   type: null,

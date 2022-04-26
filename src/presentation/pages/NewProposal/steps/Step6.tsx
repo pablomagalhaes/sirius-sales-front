@@ -61,6 +61,38 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
 
+  const [loadedTable, setLoadedTable] = useState(false)
+
+  useEffect(() => {
+    const loadedData: FareModalData[] = []
+
+    let id = 0
+    if (proposal.id !== undefined && proposal.id !== null) {
+      void new Promise<void>((resolve) => {
+        setTimeout(() => resolve(), 1000)
+      }).then(() => {
+        proposal.costs.forEach((cost: Cost) => {
+          const loadedItem: FareModalData = {
+            id: id++,
+            saleCurrency: cost.idCurrencySale === '' ? 'BRL' : String(cost.idCurrencySale),
+            saleValue: cost.valueSale === 0 ? '' : String(cost.valueSale),
+            minimumValue: cost.valueMinimumSale === 0 ? '' : String(cost.valueMinimumSale),
+            expense: '', // TODO inserir esse campo depois de ajustada a tabela (container ou package)
+            selectedContainer: String(cost.containerType),
+            type: String(cost.billingType)
+          }
+          if (cost.costType === 'Tarifa') {
+            loadedData.push(loadedItem)
+          }
+        })
+        setData(loadedData)
+        setLoadedTable(true)
+      })
+    } else {
+      setLoadedTable(true)
+    }
+  }, [])
+
   useEffect(() => {
     let actualCostArray = proposal.costs
     actualCostArray = actualCostArray.filter((cost) => cost.costType !== 'Tarifa' && cost)
@@ -185,14 +217,14 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
           6. {I18n.t('pages.newProposal.step6.title')}
           <Subtitle>{I18n.t('pages.newProposal.step6.subtitle')}</Subtitle>
         </Title>
-        <Table
+        {loadedTable && <Table
           data={data}
           costData={costData}
           modal={modal}
           specifications={specifications}
           remove={removeClickHandler}
           edit={editClickHandler}
-        />
+        />}
         <ButtonWrapper>
           <Button
             onAction={handleOpen}
@@ -265,10 +297,10 @@ const Table = ({ data, remove, edit }: TableData): JSX.Element => {
   return (
     <StyledTable>
       <TableBody>
-        {data !== null
-          ? (
-              data?.map((item: FareModalData) => {
-                return (
+        {data !== null &&
+          (
+            <div>
+              {data?.map((item: FareModalData) => (
                 <StyledRow id={item.id} key={item.id}>
                   <StyledTableCell
                     color={1}
@@ -308,12 +340,9 @@ const Table = ({ data, remove, edit }: TableData): JSX.Element => {
                     </RowReverseDiv>
                   </StyledTableCell>
                 </StyledRow>
-                )
-              })
-            )
-          : (
-            <div />
-            )}
+              ))}
+            </div>
+          )}
       </TableBody>
     </StyledTable>
   )
