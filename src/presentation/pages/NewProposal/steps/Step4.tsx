@@ -314,74 +314,74 @@ const Step4 = ({
               size="small"
             />
           </Grid>
-
-          {modal === 'SEA' && <Grid item xs={4}>
-            {
-              specifications === 'fcl'
-                ? <FormLabel component="legend">{I18n.t('pages.newProposal.step4.freeTimeDemurrage')}<RedColorSpan> *</RedColorSpan></FormLabel>
-                : <FormLabel component="legend">{I18n.t('pages.newProposal.step4.freeTimeStorage')}:<RedColorSpan> *</RedColorSpan></FormLabel>
-            }
-            <RadioGroup
-              row
-              aria-label="proposal type"
-              name="row-radio-buttons-group"
-              value={data.freeTime}
-              onChange={(e) => setData({ ...data, freeTime: e.target.value })}
-            >
-              <ControlledToolTip
-                open={invalidInput && data.freeTime.length === 0}
-                title={I18n.t('components.itemModal.requiredField')}
+          {modal === 'SEA' && <Grid item xs={8} container spacing={2}>
+            <Grid item xs style={{ maxWidth: '330px' }}>
+              {
+                specifications === 'fcl'
+                  ? <FormLabel component="legend">{I18n.t('pages.newProposal.step4.freeTimeDemurrage')}<RedColorSpan> *</RedColorSpan></FormLabel>
+                  : <FormLabel component="legend">{I18n.t('pages.newProposal.step4.freeTimeStorage')}:<RedColorSpan> *</RedColorSpan></FormLabel>
+              }
+              <RadioGroup
+                row
+                aria-label="proposal type"
+                name="row-radio-buttons-group"
+                value={data.freeTime}
+                onChange={(e) => setData({ ...data, freeTime: e.target.value })}
               >
-                <FormControlLabel
-                  value="notHired"
-                  control={<StyledRadio color={getColor(data.freeTime)} />}
-                  label={I18n.t('pages.newProposal.step4.notHired')}
-                  style={{ marginRight: '30px' }}
-                />
-              </ControlledToolTip>
-              <ControlledToolTip
-                open={invalidInput && data.freeTime.length === 0}
-                title={I18n.t('components.itemModal.requiredField')}
-              >
-                <FormControlLabel
-                  value="hired"
-                  control={<StyledRadio color={getColor(data.freeTime)} />}
-                  label={I18n.t('pages.newProposal.step4.hired')}
-                />
-              </ControlledToolTip>
-            </RadioGroup>
-          </Grid>}
-          {data.freeTime === 'hired' &&
-            <><Grid item xs={2}>
-              <FormLabel component="legend">{I18n.t('pages.newProposal.step4.deadline')}<RedColorSpan> *</RedColorSpan></FormLabel>
-              <ControlledInput
-                id="deadline"
-                toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                invalid={invalidInput && data.deadline.length === 0}
-                variant="outlined"
-                onChange={(e) => validateIntInput(e.target.value) !== null && (setData({ ...data, deadline: e.target.value }))}
-                value={data.deadline}
-                size="small" />
+                <ControlledToolTip
+                  open={invalidInput && data.freeTime.length === 0}
+                  title={I18n.t('components.itemModal.requiredField')}
+                >
+                  <FormControlLabel
+                    value="notHired"
+                    control={<StyledRadio color={getColor(data.freeTime)} />}
+                    label={I18n.t('pages.newProposal.step4.notHired')}
+                    style={{ marginRight: '30px' }}
+                  />
+                </ControlledToolTip>
+                <ControlledToolTip
+                  open={invalidInput && data.freeTime.length === 0}
+                  title={I18n.t('components.itemModal.requiredField')}
+                >
+                  <FormControlLabel
+                    value="hired"
+                    control={<StyledRadio color={getColor(data.freeTime)} />}
+                    label={I18n.t('pages.newProposal.step4.hired')}
+                  />
+                </ControlledToolTip>
+              </RadioGroup>
             </Grid>
-              <Grid item xs={2}>
-                {specifications !== 'fcl' &&
-                  (<><FormLabel component="legend">
-                    {I18n.t('pages.newProposal.step4.value')} <RedColorSpan> *</RedColorSpan></FormLabel>
-                    <NumberInput
-                      decimalSeparator={','}
-                      thousandSeparator={'.'}
-                      decimalScale={2}
-                      format={(value: string) => rightToLeftFormatter(value, 2)}
-                      customInput={ControlledInput}
-                      toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                      invalid={invalidInput && data.value === ''}
-                      value={data.value}
-                      onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, value: e.target.value })) }}
-                      variant="outlined"
-                      size="small" /></>)}
-              </Grid></>}
+            {data.freeTime === 'hired' &&
+              <><Grid item xs={2}>
+                <FormLabel component="legend">{I18n.t('pages.newProposal.step4.deadline')}<RedColorSpan> *</RedColorSpan></FormLabel>
+                <ControlledInput
+                  id="deadline"
+                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                  invalid={invalidInput && data.deadline.length === 0}
+                  variant="outlined"
+                  onChange={(e) => validateIntInput(e.target.value) !== null && (setData({ ...data, deadline: e.target.value }))}
+                  value={data.deadline}
+                  size="small" />
+              </Grid>
+                <Grid item xs={2}>
+                  {specifications !== 'fcl' &&
+                    <><FormLabel component="legend">
+                      {I18n.t('pages.newProposal.step4.value')} <RedColorSpan> *</RedColorSpan></FormLabel>
+                      <NumberInput
+                        decimalSeparator={','}
+                        thousandSeparator={'.'}
+                        decimalScale={2}
+                        format={(value: string) => rightToLeftFormatter(value, 2)}
+                        customInput={ControlledInput}
+                        toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                        invalid={invalidInput && data.value === ''}
+                        value={data.value}
+                        onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, value: e.target.value })) }}
+                        variant="outlined"
+                        size="small" /></>}
+                </Grid></>}
+          </Grid>}
           {modal !== 'SEA' && <Grid item xs={8} />}
-          {modal === 'SEA' && data.freeTime !== 'hired' && <Grid item xs={4} />}
           <Grid item xs={2}>
             <FormLabel component="legend">
               {I18n.t('pages.newProposal.step4.frequency')}
