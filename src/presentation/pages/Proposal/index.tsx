@@ -145,8 +145,8 @@ const Proposal = (): JSX.Element => {
         return StatusProposalEnum.EM_REVISAO
       case 'Aprovada':
         return StatusProposalEnum.APROVADA
-      case 'Rejeita':
-        return StatusProposalEnum.REJEITA
+      case 'Rejeitada':
+        return StatusProposalEnum.REJEITADA
       case 'Cancelada':
         return StatusProposalEnum.CANCELADA
     }
@@ -274,7 +274,7 @@ const Proposal = (): JSX.Element => {
           onClick: () => {}
         })
         return array
-      case StatusProposalEnum.REJEITA:
+      case StatusProposalEnum.REJEITADA:
         array.push({
           iconType: 'duplicate',
           label: I18n.t('pages.proposal.table.duplicateLabel'),
