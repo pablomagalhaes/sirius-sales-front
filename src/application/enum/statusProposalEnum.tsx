@@ -3,6 +3,6 @@ export enum StatusProposalEnum {
   AGUARDANDO_RETORNO_CLIENTE = 2,
   EM_REVISAO = 3,
   APROVADA = 4,
-  REJEITA = 5,
+  REJEITADA = 5,
   CANCELADA = 6,
 }
