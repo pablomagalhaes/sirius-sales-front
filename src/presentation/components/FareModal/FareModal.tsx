@@ -28,6 +28,7 @@ import { ItemModalData } from '../ItemModal/ItemModal'
 import { StyledPaper, NumberInput } from '../../pages/NewProposal/steps/StepsStyles'
 
 export interface FareModalData {
+  idCost?: number | null
   id: number | null
   saleCurrency: string
   saleValue: string
@@ -359,7 +360,7 @@ const FareModal = ({
                   filled={data.minimumValue}
                 />
               </label>
-              </PlaceholderDiv>
+            </PlaceholderDiv>
           </RowDiv>
           <RowDiv>
             <ButtonDiv>

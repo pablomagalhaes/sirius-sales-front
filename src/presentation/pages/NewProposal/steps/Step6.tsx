@@ -30,6 +30,7 @@ import { Button, MoneyValue, Messages } from 'fiorde-fe-components'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import { Cost } from '../../../../domain/Cost'
 import { TotalCost } from '../../../../domain/TotalCost'
+import API from '../../../../infrastructure/api'
 
 interface Step6Props {
   costData: any
@@ -57,6 +58,7 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
   const currencyList = new Map()
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
   const [dataTotalCost, setDataTotalCost] = useState<any[]>([])
+  const [loadedTotalCostsIds, setLoadedTotalCostsIds] = useState<number[]>([])
 
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
@@ -71,22 +73,56 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
       void new Promise<void>((resolve) => {
         setTimeout(() => resolve(), 1000)
       }).then(() => {
-        proposal.costs.forEach((cost: Cost) => {
-          const loadedItem: FareModalData = {
-            id: id++,
-            saleCurrency: cost.idCurrencySale === '' ? 'BRL' : String(cost.idCurrencySale),
-            saleValue: cost.valueSale === 0 ? '' : String(cost.valueSale),
-            minimumValue: cost.valueMinimumSale === 0 ? '' : String(cost.valueMinimumSale),
-            expense: '', // TODO inserir esse campo depois de ajustada a tabela (container ou package)
-            selectedContainer: String(cost.containerType),
-            type: String(cost.billingType)
+        const waitAllData = async (): Promise<void> => {
+          for (const cost of proposal.costs) {
+            const getContainer = new Promise((resolve) => {
+              if (specifications === 'fcl') {
+                void (async function () {
+                  await API.getContainerType(cost.containerType)
+                    .then((response) => resolve(String(response?.description)))
+                    .catch((err) => console.log(err))
+                })()
+              } else {
+                (resolve(''))
+              }
+            })
+
+            const getService = new Promise((resolve) => {
+              void (async function () {
+                await API.getService(cost.idService)
+                  .then((response) => resolve(response?.service))
+                  .catch((err) => console.log(err))
+              })()
+            })
+
+            void await Promise.all([getContainer, getService]).then((response) => {
+              const loadedItem: FareModalData = {
+                idCost: cost.id,
+                id: id++,
+                saleCurrency: cost.idCurrencySale === '' ? 'BRL' : String(cost.idCurrencySale),
+                saleValue: cost.valueSale === 0 ? '' : String(cost.valueSale),
+                minimumValue: cost.valueMinimumSale === 0 ? '' : String(cost.valueMinimumSale),
+                expense: String(response[1]),
+                selectedContainer: String(response[0]),
+                type: String(cost.billingType)
+              }
+              if (cost.costType === 'Tarifa') {
+                loadedData.push(loadedItem)
+              }
+            })
           }
-          if (cost.costType === 'Tarifa') {
-            loadedData.push(loadedItem)
+          setData(loadedData)
+          setLoadedTable(true)
+        }
+        void waitAllData()
+
+        const loadedTotalCosts: any[] = []
+        proposal.totalCosts.forEach((totalCost: TotalCost) => {
+          if (totalCost.costType === 'Tarifa') {
+            loadedTotalCosts.push(totalCost.id)
           }
         })
-        setData(loadedData)
-        setLoadedTable(true)
+        setLoadedTotalCostsIds(loadedTotalCosts)
       })
     } else {
       setLoadedTable(true)
@@ -99,6 +135,7 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
     const newFareItems: Cost[] = []
     data.forEach((row) => {
       newFareItems.push({
+        id: row.idCost === undefined ? null : row.idCost,
         idProposal: 0,
         idService: serviceList.filter((serv) => serv.service === row.expense)[0]?.id, // id Descricao
         containerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : '', // containerMODAL
@@ -121,8 +158,10 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
     let actualTotalCostArray = proposal.totalCosts
     actualTotalCostArray = actualTotalCostArray.filter((cost) => cost.costType !== 'Tarifa' && cost)
     const newTotalCostFare: TotalCost[] = []
-    dataTotalCost.forEach((currency) => {
+    dataTotalCost.forEach((currency, index) => {
       newTotalCostFare.push({
+        id: loadedTotalCostsIds[index] === undefined ? null : loadedTotalCostsIds[index],
+        idProposal: 0,
         costType: 'Tarifa', // 'Origem''Destino''Tarifa'
         idCurrency: currency.name, // id moeda
         valueTotalSale: currency.value, // total sale da moeda
