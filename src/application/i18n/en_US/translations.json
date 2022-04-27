@@ -146,6 +146,7 @@
       "value": "Value",
       "choose": "Choose...",
       "gotIt": "Got it",
+      "noValueError": "It is necessary to inform at least the Purchase Value or the Sale Value",
       "popUpMessageStart": "Inform ",
       "popUpMessageEnd": " or unmark the field if it isn't necessary"
     },

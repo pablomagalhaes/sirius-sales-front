@@ -40,7 +40,6 @@ import { ItemModalData } from '../ItemModal/ItemModal'
 import { StyledPaper } from '../../pages/NewProposal/steps/StepsStyles'
 import ControlledSelect from '../ControlledSelect'
 import { MenuItemContent } from '../FareModal/FareModalStyles'
-import { agentList } from '../../pages/NewProposal/steps/Step5'
 import { CalculationDataProps } from '../ChargeTable'
 export interface CostTableItem {
   agent: string
@@ -59,6 +58,7 @@ export interface CostTableItem {
 }
 
 interface CostModalProps {
+  agentList: string[]
   dataProp?: CostTableItem
   handleAdd: (item) => void
   open: boolean
@@ -88,6 +88,7 @@ export const initialState = {
 }
 
 const CostModal = ({
+  agentList,
   dataProp,
   handleAdd,
   open,
@@ -152,6 +153,7 @@ const CostModal = ({
   const [saleCheckbox, setSaleCheckBox] = useState(state.saleValue != null)
   const [invalidInput, setInvalidInput] = useState(false)
   const [invalidValueInput, setInvalidValueInput] = useState(false)
+  const [noValueInput, setNoValueInput] = useState(false)
   const [currencyList, setCurrencyList] = useState<any[]>([])
   const [flag, setFlag] = useState(false)
 
@@ -206,7 +208,8 @@ const CostModal = ({
   }
 
   const handleClickWarningButton = (): void => {
-    setInvalidValueInput(false)
+    if (invalidValueInput) setInvalidValueInput(false)
+    if (noValueInput) setNoValueInput(false)
   }
 
   const validateFloatInput = (value: string): RegExpMatchArray | null => {
@@ -259,6 +262,11 @@ const CostModal = ({
   const addHandler = (): void => {
     let invalid = false
     let item = state
+
+    if (!buyCheckbox && !saleCheckbox) {
+      setNoValueInput(true)
+      return
+    }
 
     if (buyCheckbox) {
       if (item.buyValue === null || item.buyValue.length === 0) {
@@ -363,6 +371,10 @@ const CostModal = ({
     }
   }, [flag])
 
+  const isOriginCost = title === I18n.t('pages.newProposal.step5.originCost')
+
+  state.agent === '' && agentList.length === 1 && dispatch({ type: 'agent', value: agentList[0] })
+
   return (
     <Modal open={open} onClose={handleOnClose}>
       <ModalContainer>
@@ -442,13 +454,13 @@ const CostModal = ({
                 </Container>
               </ControlledToolTip>
             </RowDiv>
-            <RowDiv>
+            {isOriginCost && <RowDiv>
               <Label width="100%">
                 {I18n.t('components.costModal.agent')}
                 <RedColorSpan> *</RedColorSpan>
               </Label>
-            </RowDiv>
-            <RowDiv margin={specifications === 'fcl' && true}>
+            </RowDiv>}
+            {isOriginCost && <RowDiv margin={specifications === 'fcl' && true}>
               <ControlledSelect
                 onChange={(e) => dispatch({ type: 'agent', value: e.target.value })}
                 displayEmpty
@@ -472,7 +484,7 @@ const CostModal = ({
                   )
                 })}
               </ControlledSelect>
-            </RowDiv>
+            </RowDiv>}
             {specifications === 'fcl' && (
               <><RowDiv>
                 <Label width="100%">
@@ -701,7 +713,7 @@ const CostModal = ({
                 filled={saleCheckbox ? state.saleMin : null}
               />
             </RowDiv>
-            {!invalidValueInput && (
+            {(!invalidValueInput && !noValueInput) && (
               <ButtonDiv>
                 <Button
                   disabled={false}
@@ -724,6 +736,23 @@ const CostModal = ({
                 ? I18n.t('components.costModal.buyValue')
                 : I18n.t('components.costModal.saleValue')}
               ”{I18n.t('components.costModal.popUpMessageEnd')}
+            </WarningPopUpMessage>
+            <WarningPopUpButtonDiv>
+              <Button
+                disabled={false}
+                backgroundGreen={false}
+                icon={''}
+                onAction={handleClickWarningButton}
+                text={I18n.t('components.costModal.gotIt')}
+                tooltip={I18n.t('components.costModal.gotIt')}
+              />
+            </WarningPopUpButtonDiv>
+          </WarningPopUp>
+        )}
+        {noValueInput && (
+          <WarningPopUp>
+            <WarningPopUpMessage>
+              {I18n.t('components.costModal.noValueError')}
             </WarningPopUpMessage>
             <WarningPopUpButtonDiv>
               <Button
