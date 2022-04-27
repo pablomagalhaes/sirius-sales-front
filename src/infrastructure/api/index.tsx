@@ -1,9 +1,9 @@
 import instance from '../instance'
 import qs from 'qs'
 
-const getContainerType = async (): Promise<any> => {
+const getContainerType = async (params?): Promise<any> => {
   try {
-    const res = await instance.get('/sirius-master-data-api/container/type/')
+    const res = await instance.get(`/sirius-master-data-api/container/type/${params !== undefined ? String(params) : ''}`)
     return res.data
   } catch (error) {
     console.error(error)
@@ -100,9 +100,9 @@ const getPartner = async (): Promise<any> => {
   }
 }
 
-const getService = async (): Promise<any> => {
+const getService = async (params?): Promise<any> => {
   try {
-    const res = await instance.get('/sirius-business-proposal-api/service')
+    const res = await instance.get(`/sirius-business-proposal-api/service/${params !== undefined ? String(params) : ''}`)
     return res.data
   } catch (error) {
     console.error(error)
@@ -150,6 +150,15 @@ const getProposal = async (params): Promise<any> => {
   }
 }
 
+const putProposal = async (id, params): Promise<any> => {
+  try {
+    const res = await instance.put(`/sirius-business-proposal-api/proposalimportfreight/${String(id)}`, params)
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const getBusinessPartnerCostumer = async (params): Promise<any> => {
   try {
     const res = await instance.get(`/sirius-business-partner-api/business/partner/class/${String(params)}`)
@@ -176,7 +185,8 @@ const API = {
   postTotalCalculation,
   getProposal,
   getBusinessPartnerCostumer,
-  getOriginDestinationById
+  getOriginDestinationById,
+  putProposal
 }
 
 export default API

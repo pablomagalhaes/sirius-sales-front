@@ -21,6 +21,8 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import { StyledPaper, NumberInput } from '../../pages/NewProposal/steps/StepsStyles'
 
 export interface ItemModalData {
+  idCargoVolume?: number | null
+  idCargo?: number | null
   amount: string
   cubage: string | null
   diameter: string | null

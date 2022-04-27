@@ -8,6 +8,7 @@ import { CostTableItem } from '../../../components/CostModal/CostModal'
 import { Cost } from '../../../../domain/Cost'
 import { TotalCost } from '../../../../domain/TotalCost'
 import { CalculationDataProps } from '../../../components/ChargeTable'
+import API from '../../../../infrastructure/api'
 
 interface Step5Props {
   costData: any
@@ -30,6 +31,7 @@ interface Step5Props {
 }
 
 export interface TotalCostTable {
+  idTotalCost?: number | null
   name: string
   value: {
     buy: number
@@ -58,6 +60,8 @@ const Step5 = ({
   const [dataDestiny, setDataDestiny] = useState<CostTableItem[]>([])
   const [dataTotalCostOrigin, setDataTotalCostOrigin] = useState<TotalCostTable[]>([])
   const [dataTotalCostDestiny, setDataTotalCostDestiny] = useState<TotalCostTable[]>([])
+  const [loadedTotalCostsOrigIds, setLoadedTotalCostsOrigIds] = useState<number[]>([])
+  const [loadedTotalCostsDestIds, setLoadedTotalCostsDestIds] = useState<number[]>([])
 
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
@@ -72,31 +76,65 @@ const Step5 = ({
       void new Promise<void>((resolve) => {
         setTimeout(() => resolve(), 1000)
       }).then(() => {
-        proposal.costs.forEach((cost: Cost) => {
-          const loadedItem: CostTableItem = {
-            agent: agentList[Number(cost.idBusinessPartnerAgent) - 1],
-            buyCurrency: cost.idCurrencyPurchase === '' ? 'BRL' : String(cost.idCurrencyPurchase),
-            buyMin: cost.valueMinimumPurchase === 0 ? null : String(cost.valueMinimumPurchase),
-            buyValue: cost.valuePurchase === 0 ? '' : String(cost.valuePurchase),
-            description: '', // TODO inserir esse campo depois de ajustada a tabela (container ou package)
-            id: id++,
-            saleCurrency: cost.idCurrencySale === '' ? 'BRL' : String(cost.idCurrencySale),
-            saleMin: cost.valueMinimumSale === 0 ? null : String(cost.valueMinimumSale),
-            saleValue: cost.valueSale === 0 ? '' : String(cost.valueSale),
-            selectedContainer: String(cost.containerType),
-            type: String(cost.billingType),
-            buyValueCalculated: null,
-            saleValueCalculated: null
+        const waitAllData = async (): Promise<void> => {
+          for (const cost of proposal.costs) {
+            const getContainer = new Promise((resolve) => {
+              if (specifications === 'fcl') {
+                API.getContainerType(cost.containerType)
+                  .then((response) => resolve(String(response?.description)))
+                  .catch((err) => console.log(err))
+              } else {
+                (resolve(''))
+              }
+            })
+
+            const getService = new Promise((resolve) => {
+              API.getService(cost.idService)
+                .then((response) => resolve(response?.service))
+                .catch((err) => console.log(err))
+            })
+
+            void await Promise.all([getContainer, getService]).then((response) => {
+              const loadedItem: CostTableItem = {
+                idCost: cost.id,
+                agent: agentList[Number(cost.idBusinessPartnerAgent) - 1],
+                buyCurrency: cost.idCurrencyPurchase === '' ? 'BRL' : String(cost.idCurrencyPurchase),
+                buyMin: cost.valueMinimumPurchase === 0 ? null : String(cost.valueMinimumPurchase),
+                buyValue: cost.valuePurchase === 0 ? '' : String(cost.valuePurchase),
+                description: String(response[1]),
+                id: id++,
+                saleCurrency: cost.idCurrencySale === '' ? 'BRL' : String(cost.idCurrencySale),
+                saleMin: cost.valueMinimumSale === 0 ? null : String(cost.valueMinimumSale),
+                saleValue: cost.valueSale === 0 ? '' : String(cost.valueSale),
+                selectedContainer: String(response[0]),
+                type: String(cost.billingType),
+                buyValueCalculated: null,
+                saleValueCalculated: null
+              }
+              if (cost.costType === 'Origem') {
+                loadedDataOrigin.push(loadedItem)
+              } if (cost.costType === 'Destino') {
+                loadedDataDestiny.push(loadedItem)
+              }
+            })
           }
-          if (cost.costType === 'Origem') {
-            loadedDataOrigin.push(loadedItem)
-          } if (cost.costType === 'Destino') {
-            loadedDataDestiny.push(loadedItem)
+          setDataOrigin(loadedDataOrigin)
+          setDataDestiny(loadedDataDestiny)
+          setLoadedTable(true)
+        }
+        void waitAllData()
+
+        const loadedTotalCostsOrig: any[] = []
+        const loadedTotalCostsDest: any[] = []
+        proposal.totalCosts.forEach((totalCost: TotalCost) => {
+          if (totalCost.costType === 'Origem') {
+            loadedTotalCostsOrig.push(totalCost.id)
+          } if (totalCost.costType === 'Destino') {
+            loadedTotalCostsDest.push(totalCost.id)
           }
         })
-        setDataOrigin(loadedDataOrigin)
-        setDataDestiny(loadedDataDestiny)
-        setLoadedTable(true)
+        setLoadedTotalCostsOrigIds(loadedTotalCostsOrig)
+        setLoadedTotalCostsDestIds(loadedTotalCostsDest)
       })
     } else {
       setLoadedTable(true)
@@ -109,6 +147,7 @@ const Step5 = ({
     const newOriginTableData: Cost[] = []
     dataOrigin.forEach((row) => {
       newOriginTableData.push({
+        id: row.idCost === undefined ? null : row.idCost,
         idProposal: 0,
         idService: serviceList.filter((serv) => serv.service === row.description)[0]?.id, // id Descricao
         containerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : '', // containerMODAL
@@ -130,6 +169,7 @@ const Step5 = ({
     const newDestinyTableData: Cost[] = []
     dataDestiny.forEach((row) => {
       newDestinyTableData.push({
+        id: row.idCost === undefined ? null : row.idCost,
         idProposal: 0,
         idService: serviceList.filter((serv) => serv.service === row.description)[0]?.id, // id Descricao
         containerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : '', // containerMODAL
@@ -152,22 +192,30 @@ const Step5 = ({
     let actualTotalCostArray = proposal.totalCosts
     actualTotalCostArray = actualTotalCostArray.filter((cost) => cost.costType === 'Tarifa' && cost)
     const newTotalCostOrigin: TotalCost[] = []
-    dataTotalCostOrigin.forEach((currency) => {
-      newTotalCostOrigin.push({
-        costType: 'Origem', // 'Origem''Destino''Tarifa'
-        idCurrency: currency.name, // id moeda
-        valueTotalSale: currency.value.sale, // total sale da moeda
-        valueTotalPurchase: currency.value.buy // total compra da moeda
-      })
+    dataTotalCostOrigin.forEach((currency, index) => {
+      if (currency.value.buy !== 0 || currency.value.sale !== 0) {
+        newTotalCostOrigin.push({
+          id: loadedTotalCostsOrigIds[index] === undefined ? null : loadedTotalCostsOrigIds[index],
+          idProposal: 0,
+          costType: 'Origem', // 'Origem''Destino''Tarifa'
+          idCurrency: currency.name, // id moeda
+          valueTotalSale: currency.value.sale, // total sale da moeda
+          valueTotalPurchase: currency.value.buy // total compra da moeda
+        })
+      }
     })
     const newTotalCostDestiny: TotalCost[] = []
-    dataTotalCostDestiny.forEach((currency) => {
-      newTotalCostDestiny.push({
-        costType: 'Destino', // 'Origem''Destino''Tarifa'
-        idCurrency: currency.name, // id moeda
-        valueTotalSale: currency.value.sale, // total sale da moeda
-        valueTotalPurchase: currency.value.buy // total compra da moeda
-      })
+    dataTotalCostDestiny.forEach((currency, index) => {
+      if (currency.value.buy !== 0 || currency.value.sale !== 0) {
+        newTotalCostDestiny.push({
+          id: loadedTotalCostsDestIds[index] === undefined ? null : loadedTotalCostsDestIds[index],
+          idProposal: 0,
+          costType: 'Destino', // 'Origem''Destino''Tarifa'
+          idCurrency: currency.name, // id moeda
+          valueTotalSale: currency.value.sale, // total sale da moeda
+          valueTotalPurchase: currency.value.buy // total compra da moeda
+        })
+      }
     })
     const newTotal: TotalCost[] = actualTotalCostArray.concat(newTotalCostOrigin.concat(newTotalCostDestiny))
     setProposal({ ...proposal, totalCosts: newTotal, costs: actualCostArray.concat(newOriginTableData.concat(newDestinyTableData)) })

@@ -3,13 +3,13 @@ import { Cost } from './Cost'
 import { TotalCost } from './TotalCost'
 
 export interface Proposal {
-  id?: Number | null
+  id?: number | null
   referenceProposal: string // referencia proposta
-  idBusinessPartnerCostumer: Number // cliente step1
+  idBusinessPartnerCostumer: number // cliente step1
   operationType: string // FRETE IMPORTACAO
-  idStatus: Number // sempre passar 1
-  codeUserCreation: Number // codigo do usuario
-  codeRespSeller: Number // 0 por enquanto nao sabemos
+  idStatus: number // sempre passar 1
+  codeUserCreation: number // codigo do usuario
+  codeRespSeller: number // 0 por enquanto nao sabemos
   openingDate: string // 2022-03-17T13:03:46.340Z//DiaDeHoje
   validityDate: string // 2022-03-17T13:03:46.340Z//Step4Validade
   approvalDate: Date | null // 2022-03-17T13:03:46.340Z//null
@@ -27,20 +27,21 @@ export interface Proposal {
   idBusinessPartnerAgent: 0 // step2 agent
   idIncoterm: string // step2 incoterm id
   cargo: {
+    id?: number
     cargo: string // descricao
-    idPackaging: Number
+    idPackaging: number
     idContainerType: string
     isDangerous: boolean // step3 perigoso
-    idImoType: Number // id IMO
-    idTemperature: Number // step 3 id temperatura
-    idCargoContractingType: Number // id especificacoes step3 (null observar comportamento)
-    codeUn: Number // step 3 codigo
+    idImoType: number // id IMO
+    idTemperature: number // step 3 id temperatura
+    idCargoContractingType: number // id especificacoes step3 (null observar comportamento)
+    codeUn: number // step 3 codigo
     cargoVolumes: CargoVolume[] // array de items adicionados
   }
-  transitTime: Number // step4 transit time
-  idFrequency: Number // step 4 id frequency
+  transitTime: number // step4 transit time
+  idFrequency: number // step 4 id frequency
   route: string // step4 rota
   freeTime: boolean // true step4
-  recurrency: Number// 1
+  recurrency: number// 1
   weeklyRecurrency: string // "0101100" segunda quarta e quinta
 }
