@@ -91,6 +91,10 @@ const Step3 = ({
   }, [data.specifications])
 
   useEffect(() => {
+    setCalculationData(calculation)
+  }, [calculation])
+
+  useEffect(() => {
     setTableRows([])
     setChargeData(initialState)
     setCopyTable([])
@@ -100,10 +104,26 @@ const Step3 = ({
   }, [modal])
 
   useEffect(() => {
-    if (proposal.id !== undefined && proposal.id !== null) {
-      void new Promise<void>((resolve) => {
-        setTimeout(() => resolve(), 1000)
-      }).then(() => {
+    const getPackagingList = new Promise<void>((resolve) => {
+      API.getPackaging()
+        .then((response) => { setPackagingList(response); resolve(response) })
+        .catch((err) => console.log(err))
+    })
+
+    const getImoList = new Promise<void>((resolve) => {
+      API.getImo()
+        .then((response) => { setImoList(response); resolve() })
+        .catch((err) => console.log(err))
+    })
+
+    const getTemperatureList = new Promise<void>((resolve) => {
+      API.getTemperature()
+        .then((response) => { setTemperatureList(response); resolve() })
+        .catch((err) => console.log(err))
+    })
+
+    void Promise.all([getPackagingList, getImoList, getTemperatureList]).then((response: any) => {
+      if (proposal.id !== undefined && proposal.id !== null) {
         setData({
           description: proposal.cargo.cargo,
           specifications: proposal.idTransport === 'SEA' ? specificationsList[Number(proposal.cargo.idCargoContractingType) - 1].toLowerCase() : '',
@@ -117,13 +137,15 @@ const Step3 = ({
         const loadedTableRows: ItemModalData[] = []
         proposal.cargo.cargoVolumes.forEach((cargo: CargoVolume) => {
           loadedTableRows.push({
+            idCargoVolume: cargo.id,
+            idCargo: proposal.cargo.id,
             amount: String(cargo.valueQuantity),
             cubage: String(cargo.valueCubage),
             diameter: String(cargo.valueDiameter),
             height: String(cargo.valueHeight),
             length: String(cargo.valueLength),
             rawWeight: String(cargo.valueGrossWeight),
-            type: '', // TODO inserir esse campo depois de ajustada a tabela (container ou package)
+            type: marineFCL() ? '' : response[0].filter((pack) => Number(pack.id) === cargo.cdCargoType)[0]?.packaging, // TODO inserir esse campo depois de ajustada a tabela (container ou package)
             width: String(cargo.valueWidth),
             id: id++,
             stack: cargo.isStacked
@@ -131,8 +153,8 @@ const Step3 = ({
         })
         setTableRows(loadedTableRows)
         setTableId(loadedTableRows.length)
-      })
-    }
+      }
+    })
   }, [])
 
   useEffect(() => {
@@ -159,6 +181,8 @@ const Step3 = ({
     const newCargoVolumes: CargoVolume[] = []
     tableRows.forEach((row) => {
       newCargoVolumes.push({
+        id: row.idCargoVolume === undefined ? null : row.idCargoVolume,
+        idCargo: row.idCargo === undefined ? null : row.idCargo,
         cdCargoType: marineFCL() ? 1 : packagingList.filter((pack) => pack.packaging === row.type)[0]?.id, // TODO quando for marineFCL salvar id (string 4 digitos)
         valueQuantity: Number(row.amount),
         valueGrossWeight: Number(row.rawWeight?.replace(',', '.')),
@@ -172,34 +196,6 @@ const Step3 = ({
     })
     setCargoVolume(newCargoVolumes)
   }, [tableRows])
-
-  useEffect(() => {
-    void (async function () {
-      await API.getPackaging()
-        .then((response) => setPackagingList(response))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
-
-  useEffect(() => {
-    void (async function () {
-      await API.getImo()
-        .then((response) => setImoList(response))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
-
-  useEffect(() => {
-    setCalculationData(calculation)
-  }, [calculation])
-
-  useEffect(() => {
-    void (async function () {
-      await API.getTemperature()
-        .then((response) => setTemperatureList(response))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
 
   const marineFCL = (): boolean => {
     return modal === 'SEA' && data.specifications === 'fcl'

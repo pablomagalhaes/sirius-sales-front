@@ -112,6 +112,14 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     step6: false
   })
 
+  const [stepLoaded, setSteploaded] = useState({
+    step1: false,
+    step2: false,
+    step3: false,
+    step4: false,
+    step5: false
+  })
+
   const steps = [
     {
       id: 'step1',
@@ -162,12 +170,21 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       completed.step5 &&
       completed.step6
     ) {
-      API.postProposal(JSON.stringify(proposal)).then(() => {
-        setShowSaveMessage(true)
-        setInvalidInput(false)
-      }).catch((error) => {
-        console.trace(error)
-      })
+      if (proposal.id === undefined || proposal.id === null) {
+        API.postProposal(JSON.stringify(proposal)).then(() => {
+          setShowSaveMessage(true)
+          setInvalidInput(false)
+        }).catch((error) => {
+          console.trace(error)
+        })
+      } else {
+        API.putProposal(proposal.id, JSON.stringify(proposal)).then(() => {
+          setShowSaveMessage(true)
+          setInvalidInput(false)
+        }).catch((error) => {
+          console.trace(error)
+        })
+      }
     } else {
       setInvalidInput(true)
     }
@@ -409,71 +426,75 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
               setFilled={setFilled}
               invalidInput={invalidInput}
               setProposalType={setProposalType}
+              setSteploaded={setSteploaded}
             />
           </div>
-          <div id="step2">
-            <Step2
-              proposalType={proposalType}
-              setCompleted={setCompleted}
-              setFilled={setFilled}
-              invalidInput={invalidInput}
-              modal={modal}
-            />
-          </div>
-          <div id="step3">
-            <Step3
-              setCalculationData={setCalculationData}
-              containerTypeList={containerTypeList}
-              undoMessage={undoMessage}
-              setUndoMessage={setUndoMessage}
-              setFilled={setFilled}
-              setTableItems={setStep3TableItems}
-              setCompleted={setCompleted}
-              invalidInput={invalidInput}
-              modal={modal}
-              setCostData={setCostData}
-              setSpecifications={setSpecifications}
-            />
-          </div>
-          <div id="step4">
-            <Step4
-              modal={modal}
-              setFilled={setFilled}
-              setCompleted={setCompleted}
-              invalidInput={invalidInput}
-              specifications={specifications}
-            />
-          </div>
-          <div id="step5">
-            <Step5
-              calculationData={calculationData}
-              containerTypeList={containerTypeList}
-              serviceList={serviceList}
-              undoMessage={undoMessage}
-              setUndoMessage={setUndoMessage}
-              setFilled={setFilled}
-              containerItems={step3TableItems}
-              setCompleted={setCompleted}
-              costData={costData}
-              modal={modal}
-              specifications={specifications}
-              invalidInput={invalidInput}
-            />
-          </div>
-          <div id="step6">
-            <Step6
-              containerTypeList={containerTypeList}
-              serviceList={serviceList}
-              undoMessage={undoMessage}
-              setUndoMessage={setUndoMessage}
-              setFilled={setFilled}
-              containerItems={step3TableItems}
-              setCompleted={setCompleted}
-              costData={costData}
-              modal={modal}
-              specifications={specifications}
-            />
-          </div>
+          {stepLoaded.step1 && <>
+            <div id="step2">
+              <Step2
+                proposalType={proposalType}
+                setCompleted={setCompleted}
+                setFilled={setFilled}
+                invalidInput={invalidInput}
+                modal={modal}
+              />
+            </div>
+            <div id="step3">
+              <Step3
+                setCalculationData={setCalculationData}
+                containerTypeList={containerTypeList}
+                undoMessage={undoMessage}
+                setUndoMessage={setUndoMessage}
+                setFilled={setFilled}
+                setTableItems={setStep3TableItems}
+                setCompleted={setCompleted}
+                invalidInput={invalidInput}
+                modal={modal}
+                setCostData={setCostData}
+                setSpecifications={setSpecifications}
+              />
+            </div>
+            <div id="step4">
+              <Step4
+                modal={modal}
+                setFilled={setFilled}
+                setCompleted={setCompleted}
+                invalidInput={invalidInput}
+                specifications={specifications}
+              />
+            </div>
+            <div id="step5">
+              <Step5
+                calculationData={calculationData}
+                containerTypeList={containerTypeList}
+                serviceList={serviceList}
+                undoMessage={undoMessage}
+                setUndoMessage={setUndoMessage}
+                setFilled={setFilled}
+                containerItems={step3TableItems}
+                setCompleted={setCompleted}
+                costData={costData}
+                modal={modal}
+                specifications={specifications}
+                invalidInput={invalidInput}
+              />
+            </div>
+            <div id="step6">
+              <Step6
+                containerTypeList={containerTypeList}
+                serviceList={serviceList}
+                undoMessage={undoMessage}
+                setUndoMessage={setUndoMessage}
+                setFilled={setFilled}
+                containerItems={step3TableItems}
+                setCompleted={setCompleted}
+                costData={costData}
+                modal={modal}
+                specifications={specifications}
+              />
+            </div>
+          </>
+          }
         </MainContainer>
       }
       {showSaveMessage &&

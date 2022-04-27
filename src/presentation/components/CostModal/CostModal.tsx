@@ -42,6 +42,7 @@ import { MenuItemContent } from '../FareModal/FareModalStyles'
 import { agentList } from '../../pages/NewProposal/steps/Step5'
 import { CalculationDataProps } from '../ChargeTable'
 export interface CostTableItem {
+  idCost?: number | null
   agent: string
   buyCurrency: string | null
   buyMin: string | null
@@ -313,7 +314,7 @@ const CostModal = ({
 
       const data = {
         costType: item.type,
-        quantityContainer: specifications === 'fcl' ? Number(containerItems[indexContainer].amount) : 0,
+        quantityContainer: specifications === 'fcl' ? Number(containerItems[indexContainer]?.amount) : 0,
         valueGrossWeight: isNaN(Number(calculationData?.weight)) ? 0 : calculationData?.weight,
         valueCubage: isNaN(Number(calculationData?.cubage)) ? 0 : calculationData?.cubage,
         valueWeightCubed: isNaN(Number(calculationData?.cubageWeight)) ? 0 : calculationData?.cubageWeight,
@@ -682,7 +683,7 @@ const CostModal = ({
                           {I18n.t('components.costModal.value')}
                           {saleCheckbox && <RedColorSpan> *</RedColorSpan>}
                         </PlaceholderSpan>
-                    )}
+                      )}
                     <NumberInput
                       decimalSeparator={','}
                       thousandSeparator={'.'}
