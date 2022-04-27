@@ -174,11 +174,128 @@ const Proposal = (): JSX.Element => {
         numio: proposal.numIO,
         responsible: proposal.responsible,
         status: status,
-        type: proposal.modal
+        type: proposal.modal,
+        menuItems: menuItemsList(status, proposal.proposalId),
+        isLate: false // alterar o 'false' pela regra para quando o vencimento estiver proximo
       }
       array.push(item)
     }
     return array
+  }
+
+  const menuItemsList = (status, id): void => {
+    const array: any = []
+    switch (status) {
+      case StatusProposalEnum.ABERTA:
+        array.push({
+          iconType: 'edit',
+          label: I18n.t('pages.proposal.table.editLabel'),
+          onClick: () => {
+            history.push({
+              pathname: '/novaProposta',
+              state: { proposalId: id }
+            })
+          }
+        },
+        {
+          iconType: 'duplicate',
+          label: I18n.t('pages.proposal.table.duplicateLabel'),
+          onClick: () => {}
+        },
+        {
+          iconType: 'forward',
+          label: I18n.t('pages.proposal.table.confirmLabel'),
+          onClick: () => {}
+        },
+        {
+          iconType: 'cancel',
+          label: I18n.t('pages.proposal.table.cancelLabel'),
+          onClick: () => {}
+        })
+        return array
+      case StatusProposalEnum.AGUARDANDO_RETORNO_CLIENTE:
+        array.push({
+          iconType: 'duplicate',
+          label: I18n.t('pages.proposal.table.duplicateLabel'),
+          onClick: () => {}
+        },
+        {
+          iconType: 'fileReview',
+          label: I18n.t('pages.proposal.table.reviewLabel'),
+          onClick: () => {}
+        },
+        {
+          iconType: 'cancel',
+          label: I18n.t('pages.proposal.table.cancelLabel'),
+          onClick: () => {}
+        },
+        {
+          iconType: 'thumbsUp',
+          label: I18n.t('pages.proposal.table.approveLabel'),
+          onClick: () => {}
+        },
+        {
+          iconType: 'thumbsDown',
+          label: I18n.t('pages.proposal.table.rejectLabel'),
+          onClick: () => {}
+        })
+        return array
+      case StatusProposalEnum.EM_REVISAO:
+        array.push({
+          iconType: 'edit',
+          label: I18n.t('pages.proposal.table.editLabel'),
+          onClick: () => {
+            history.push({
+              pathname: '/novaProposta',
+              state: { proposalId: id }
+            })
+          }
+        },
+        {
+          iconType: 'duplicate',
+          label: I18n.t('pages.proposal.table.duplicateLabel'),
+          onClick: () => {}
+        },
+        {
+          iconType: 'forward',
+          label: I18n.t('pages.proposal.table.confirmLabel'),
+          onClick: () => {}
+        },
+        {
+          iconType: 'cancel',
+          label: I18n.t('pages.proposal.table.cancelLabel'),
+          onClick: () => {}
+        })
+        return array
+      case StatusProposalEnum.APROVADA:
+        array.push({
+          iconType: 'duplicate',
+          label: I18n.t('pages.proposal.table.duplicateLabel'),
+          onClick: () => {}
+        })
+        return array
+      case StatusProposalEnum.REJEITA:
+        array.push({
+          iconType: 'duplicate',
+          label: I18n.t('pages.proposal.table.duplicateLabel'),
+          onClick: () => {}
+        })
+        return array
+      case StatusProposalEnum.CANCELADA:
+        array.push({
+          iconType: 'duplicate',
+          label: I18n.t('pages.proposal.table.duplicateLabel'),
+          onClick: () => {}
+        })
+        return array
+      default:
+        array.push({
+          iconType: 'duplicate',
+          label: I18n.t('pages.proposal.table.duplicateLabel'),
+          onClick: () => {}
+        })
+        return array
+    }
   }
 
   const handleExportList = (): void => {
@@ -522,21 +639,13 @@ const Proposal = (): JSX.Element => {
         <TableContainer>
           <Table
             approvedLabel={(I18n.t('pages.proposal.table.approvedLabel'))}
-            cancelLabel={(I18n.t('pages.proposal.table.cancelLabel'))}
+            cancelLabel={(I18n.t('pages.proposal.table.cancelledLabel'))}
             inRevisionLabel={(I18n.t('pages.proposal.table.inRevisionLabel'))}
             isShowIconLate={true}
             openLabel={(I18n.t('pages.proposal.table.openLabel'))}
-            rejectLabel={(I18n.t('pages.proposal.table.rejectLabel'))}
+            rejectLabel={(I18n.t('pages.proposal.table.rejectedLabel'))}
             rows={getProposalItems(proposalList)}
             waitingForCustomerReturnLabel={(I18n.t('pages.proposal.table.waitingForCustomerReturnLabel'))}
-            editMenuLabel="Editar"
-            duplicateMenuLabel="Duplicar"
-            cancelMenuLabel="Cancelar"
-            defineApprovedMenuLabel="Definir como aprovada"
-            onClickMenuItem={(item: Number) => history.push({
-              pathname: '/novaProposta',
-              state: { proposalId: item }
-            })}
           />
         </TableContainer>
         <PaginationContainer>
