@@ -120,11 +120,18 @@
     "proposal":{
       "table":{
         "openLabel":"aberta",
-        "waitingForCustomerReturnLabel": "ag. ret. cliente'",
+        "waitingForCustomerReturnLabel": "ag. ret. cliente",
         "inRevisionLabel":"em revisão",
         "approvedLabel":"aprovada",
-        "rejectLabel":"rejeitada",
-        "cancelLabel":"cancelada"
+        "rejectedLabel":"rejeitada",
+        "cancelledLabel":"cancelada",
+        "editLabel": "Editar",
+        "duplicateLabel": "Duplicar",
+        "reviewLabel": "Definir como \"Em revisão\"",
+        "confirmLabel": "Confirmar envio ao cliente",
+        "cancelLabel": "Cancelar",
+        "approveLabel": "Definir como aprovada",
+        "rejectLabel": "Definir como rejeitada"
       }
     }
   },
