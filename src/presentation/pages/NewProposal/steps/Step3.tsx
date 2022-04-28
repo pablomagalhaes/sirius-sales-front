@@ -391,12 +391,12 @@ const Step3 = ({
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
             >
               <MenuItem disabled value="">
-                <span style={{ marginLeft: '10px' }}>{I18n.t('components.itemModal.choose')}</span>
+                <SelectSpan placeholder={1}>{I18n.t('pages.newProposal.step3.choose')}</SelectSpan>
               </MenuItem>
               {imoList.map((item) => {
                 return (
                   <MenuItem key={item.id} value={item.id}>
-                    <span style={{ marginLeft: '10px' }}>{item.type}</span>
+                    <SelectSpan>{item.type}</SelectSpan>
                   </MenuItem>
                 )
               })}
