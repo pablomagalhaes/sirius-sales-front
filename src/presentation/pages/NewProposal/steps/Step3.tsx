@@ -140,13 +140,13 @@ const Step3 = ({
             idCargoVolume: cargo.id,
             idCargo: proposal.cargo.id,
             amount: String(cargo.valueQuantity),
-            cubage: String(cargo.valueCubage),
-            diameter: String(cargo.valueDiameter),
-            height: String(cargo.valueHeight),
-            length: String(cargo.valueLength),
-            rawWeight: String(cargo.valueGrossWeight),
+            cubage: completeDecimalPlaces(cargo.valueCubage),
+            diameter: completeDecimalPlaces(cargo.valueDiameter),
+            height: completeDecimalPlaces(cargo.valueHeight),
+            length: completeDecimalPlaces(cargo.valueLength),
+            rawWeight: completeDecimalPlaces(cargo.valueGrossWeight),
             type: marineFCL() ? '' : response[0].filter((pack) => Number(pack.id) === cargo.cdCargoType)[0]?.packaging, // TODO inserir esse campo depois de ajustada a tabela (container ou package)
-            width: String(cargo.valueWidth),
+            width: completeDecimalPlaces(cargo.valueWidth),
             id: id++,
             stack: cargo.isStacked
           })
@@ -199,6 +199,18 @@ const Step3 = ({
 
   const marineFCL = (): boolean => {
     return modal === 'SEA' && data.specifications === 'fcl'
+  }
+
+  const completeDecimalPlaces = (num: number): string => {
+    const decimalPlaces = String(num).split('.')[1]
+    let completeNumber = String(num)
+    if ((decimalPlaces === undefined) || decimalPlaces.length < 2) {
+      completeNumber = completeNumber + ','
+      for (let i = 0; i < 2 - (decimalPlaces === undefined ? 0 : decimalPlaces.length); i++) {
+        completeNumber = completeNumber + '0'
+      }
+    }
+    return completeNumber
   }
 
   const handleOpen = (): void => {
@@ -391,12 +403,12 @@ const Step3 = ({
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
             >
               <MenuItem disabled value="">
-                <span style={{ marginLeft: '10px' }}>{I18n.t('components.itemModal.choose')}</span>
+                <SelectSpan placeholder={1}>{I18n.t('pages.newProposal.step3.choose')}</SelectSpan>
               </MenuItem>
               {imoList.map((item) => {
                 return (
                   <MenuItem key={item.id} value={item.id}>
-                    <span style={{ marginLeft: '10px' }}>{item.type}</span>
+                    <SelectSpan>{item.type}</SelectSpan>
                   </MenuItem>
                 )
               })}

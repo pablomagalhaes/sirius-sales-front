@@ -99,13 +99,13 @@ const Step5 = ({
                 idCost: cost.id,
                 agent: agentList[Number(cost.idBusinessPartnerAgent) - 1],
                 buyCurrency: cost.idCurrencyPurchase === '' ? 'BRL' : String(cost.idCurrencyPurchase),
-                buyMin: cost.valueMinimumPurchase === 0 ? null : String(cost.valueMinimumPurchase),
-                buyValue: cost.valuePurchase === 0 ? '' : String(cost.valuePurchase),
+                buyMin: cost.valueMinimumPurchase === 0 ? null : completeDecimalPlaces(cost.valueMinimumPurchase),
+                buyValue: cost.valuePurchase === 0 ? '' : completeDecimalPlaces(cost.valuePurchase),
                 description: String(response[1]),
                 id: id++,
                 saleCurrency: cost.idCurrencySale === '' ? 'BRL' : String(cost.idCurrencySale),
-                saleMin: cost.valueMinimumSale === 0 ? null : String(cost.valueMinimumSale),
-                saleValue: cost.valueSale === 0 ? '' : String(cost.valueSale),
+                saleMin: cost.valueMinimumSale === 0 ? null : completeDecimalPlaces(cost.valueMinimumSale),
+                saleValue: cost.valueSale === 0 ? '' : completeDecimalPlaces(cost.valueSale),
                 selectedContainer: String(response[0]),
                 type: String(cost.billingType),
                 buyValueCalculated: null,
@@ -173,7 +173,7 @@ const Step5 = ({
         idProposal: 0,
         idService: serviceList.filter((serv) => serv.service === row.description)[0]?.id, // id Descricao
         containerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : '', // containerMODAL
-        idBusinessPartnerAgent: 0, // data.agent, // AgenteMODALcusto
+        idBusinessPartnerAgent: agentList.indexOf(row.agent) + 1, // AgenteMODALcusto
         costType: 'Destino', // 'Origem''Destino''Tarifa'
         billingType: row.type, // Tipo -MODAL
         valuePurchase: Number(row.buyValue), // valor compra
@@ -219,7 +219,7 @@ const Step5 = ({
     })
     const newTotal: TotalCost[] = actualTotalCostArray.concat(newTotalCostOrigin.concat(newTotalCostDestiny))
     setProposal({ ...proposal, totalCosts: newTotal, costs: actualCostArray.concat(newOriginTableData.concat(newDestinyTableData)) })
-  }, [dataOrigin, dataDestiny, dataTotalCostDestiny, dataTotalCostOrigin])
+  }, [dataOrigin, dataDestiny, dataTotalCostDestiny, dataTotalCostOrigin, setDataOrigin, setDataDestiny])
 
   useEffect(() => {
     if (dataOrigin.length > 0 && dataDestiny.length > 0) {
@@ -238,6 +238,19 @@ const Step5 = ({
       })
     }
   }, [dataDestiny, dataOrigin])
+
+  const completeDecimalPlaces = (num: number | null): string | null => {
+    if (num === null) return null
+    const decimalPlaces = String(num).split('.')[1]
+    let completeNumber = String(num)
+    if ((decimalPlaces === undefined) || decimalPlaces.length < 2) {
+      completeNumber = completeNumber + '.'
+      for (let i = 0; i < 2 - (decimalPlaces === undefined ? 0 : decimalPlaces.length); i++) {
+        completeNumber = completeNumber + '0'
+      }
+    }
+    return completeNumber
+  }
 
   return (
     <Separator>

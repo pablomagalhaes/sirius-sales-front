@@ -88,9 +88,8 @@ const CostTable = ({
 
   const removeClickHandler = (id: number | null): void => {
     setCopyTable(data)
-    setData((tableDataItem) => {
-      return tableDataItem.filter((data) => data.id !== id)
-    })
+    const newTableData = [...data]
+    setData(newTableData.filter((data) => data.id !== id))
     if (title === I18n.t('pages.newProposal.step5.origin')) {
       setUndoMessage({ step3: false, step5origin: true, step5destiny: false, step6: false })
     } else {
@@ -106,7 +105,7 @@ const CostTable = ({
 
   const handleAdd = (item: CostTableItem): void => {
     if (item.id !== null) {
-      const editData = data
+      const editData = [...data]
       const index = editData.findIndex((i) => i.id === item.id)
       editData[index] = item
       setData(editData)
@@ -164,6 +163,32 @@ const CostTable = ({
 
   useEffect(() => {
     if (tableData.length > 0) {
+      const waitLoadAllData = async (): Promise<void> => {
+        for (const item of tableData) {
+          const indexContainer = containerItems.findIndex(container => item.selectedContainer === container.type)
+          const data = {
+            costType: item.type,
+            quantityContainer: specifications === 'fcl' ? Number(containerItems[indexContainer]?.amount) : 0,
+            valueGrossWeight: isNaN(Number(calculationData?.weight)) ? 0 : calculationData?.weight,
+            valueCubage: isNaN(Number(calculationData?.cubage)) ? 0 : calculationData?.cubage,
+            valueWeightCubed: isNaN(Number(calculationData?.cubageWeight)) ? 0 : calculationData?.cubageWeight,
+            valuePurchase: Number(item.buyValue),
+            valueSale: Number(item.saleValue),
+            idCurrencyPurchase: item.buyCurrency,
+            idCurrencySale: item.saleCurrency
+          }
+          void await new Promise<void>((resolve) => {
+            API.postTotalCalculation(data)
+              .then((response) => {
+                item.buyValueCalculated = response.valuePurchase
+                item.saleValueCalculated = response.valueSale
+                resolve()
+              })
+              .catch((err) => console.log(err))
+          })
+        }
+      }
+      void waitLoadAllData()
       setData(tableData)
     }
   }, [])
@@ -329,23 +354,23 @@ const CostTable = ({
           </TableBody>
         </StyledTable>
       )}
-      <Footer style={data?.length > 0 ? { borderTop: '1px solid #999DAC' } : { border: 'none' } }>
+      <Footer style={data?.length > 0 ? { borderTop: '1px solid #999DAC' } : { border: 'none' }}>
         {data?.length === 0
           ? <ButtonContainer>
-              <Button
-                text={I18n.t('components.costTable.addCost')}
-                backgroundGreen={false}
-                icon={'add'}
-                onAction={addClickHandler}
-                disabled={costData === 0}
-                tooltip={
-                  costData === 0
-                    ? I18n.t('components.costTable.addCostTooltip')
-                    : I18n.t('components.costTable.addCost')
-                }
-              />
-              <ErrorText>{errorMessage}</ErrorText>
-            </ButtonContainer>
+            <Button
+              text={I18n.t('components.costTable.addCost')}
+              backgroundGreen={false}
+              icon={'add'}
+              onAction={addClickHandler}
+              disabled={costData === 0}
+              tooltip={
+                costData === 0
+                  ? I18n.t('components.costTable.addCostTooltip')
+                  : I18n.t('components.costTable.addCost')
+              }
+            />
+            <ErrorText>{errorMessage}</ErrorText>
+          </ButtonContainer>
           : <StyledTable>
             <TableBody>
               {Array.from(currencyList, ([name, value]) => ({ name, value })).map((currency, index) => {

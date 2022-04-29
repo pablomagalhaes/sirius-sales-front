@@ -683,7 +683,7 @@ const CostModal = ({
                           {I18n.t('components.costModal.value')}
                           {saleCheckbox && <RedColorSpan> *</RedColorSpan>}
                         </PlaceholderSpan>
-                      )}
+                    )}
                     <NumberInput
                       decimalSeparator={','}
                       thousandSeparator={'.'}
