@@ -66,7 +66,9 @@
         "subtitle": "Inform general details of your commercial proposal.",
         "validity": "Validity:",
         "time": "Transit. time:",
-        "freeTime": "Free Time",
+        "freeTimeDemurrage": "Free time demurrage",
+        "freeTimeStorage": "Free time storage",
+        "value": "Value (BRL):",
         "frequency": "Frequency:",
         "route": "Route:",
         "client": "Client ref.:",
@@ -86,7 +88,9 @@
         "destiny": "Destiny",
         "totalDestiny": "Total destiny costs:",
         "originCost": "New origin cost",
-        "destinationCost": "New destiny cost"
+        "destinationCost": "New destiny cost",
+        "errorOrigin": "It is mandatory to inform some origin cost.",
+        "errorDestiny": "It is mandatory to inform some destiny cost"
       },
       "step6": {
         "title": "Freight",
@@ -111,6 +115,23 @@
         "confirmMessage": "Discard",
         "message": "This page contains unsaved changes. Do you want to discard the proposal and leave the page?",
         "title": "Are you sure you want to quit?"
+      }
+    },
+    "proposal":{
+      "table":{
+        "openLabel":"open",
+        "waitingForCustomerReturnLabel": "awai. customer return",
+        "inRevisionLabel":"under review",
+        "approvedLabel":"approved",
+        "rejectedLabel":"discard",
+        "cancelledLabel":"cancelled",
+        "editLabel": "Edit",
+        "duplicateLabel": "Duplicate",
+        "reviewLabel": "Set to \"Under review\"",
+        "confirmLabel": "Confirm shipment to customer",
+        "cancelLabel": "Cancel",
+        "approveLabel": "Set as approved",
+        "rejectLabel": "Set as rejected"
       }
     }
   },

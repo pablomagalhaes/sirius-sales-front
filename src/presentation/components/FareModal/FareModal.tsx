@@ -19,15 +19,16 @@ import {
   Title
 } from '../StyledComponents/modalStyles'
 import ControlledSelect from '../ControlledSelect'
-import { Input, NumberInput } from '../CostModal/CostModalStyles'
+import { Input } from '../CostModal/CostModalStyles'
 import { Button } from 'fiorde-fe-components'
 import ControlledToolTip from '../ControlledToolTip/ControlledToolTip'
 import { Container, MenuItemContent } from './FareModalStyles'
 import API from '../../../infrastructure/api'
 import { ItemModalData } from '../ItemModal/ItemModal'
-import { StyledPaper } from '../../pages/NewProposal/steps/StepsStyles'
+import { StyledPaper, NumberInput } from '../../pages/NewProposal/steps/StepsStyles'
 
 export interface FareModalData {
+  idCost?: number | null
   id: number | null
   saleCurrency: string
   saleValue: string
@@ -359,7 +360,7 @@ const FareModal = ({
                   filled={data.minimumValue}
                 />
               </label>
-              </PlaceholderDiv>
+            </PlaceholderDiv>
           </RowDiv>
           <RowDiv>
             <ButtonDiv>

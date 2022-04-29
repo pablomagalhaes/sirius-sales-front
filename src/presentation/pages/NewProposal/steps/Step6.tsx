@@ -30,6 +30,7 @@ import { Button, MoneyValue, Messages } from 'fiorde-fe-components'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import { Cost } from '../../../../domain/Cost'
 import { TotalCost } from '../../../../domain/TotalCost'
+import API from '../../../../infrastructure/api'
 
 interface Step6Props {
   costData: any
@@ -57,9 +58,76 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
   const currencyList = new Map()
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
   const [dataTotalCost, setDataTotalCost] = useState<any[]>([])
+  const [loadedTotalCostsIds, setLoadedTotalCostsIds] = useState<number[]>([])
 
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
+
+  const [loadedTable, setLoadedTable] = useState(false)
+
+  useEffect(() => {
+    const loadedData: FareModalData[] = []
+
+    let id = 0
+    if (proposal.id !== undefined && proposal.id !== null) {
+      void new Promise<void>((resolve) => {
+        setTimeout(() => resolve(), 1000)
+      }).then(() => {
+        const waitAllData = async (): Promise<void> => {
+          for (const cost of proposal.costs) {
+            const getContainer = new Promise((resolve) => {
+              if (specifications === 'fcl') {
+                void (async function () {
+                  await API.getContainerType(cost.containerType)
+                    .then((response) => resolve(String(response?.description)))
+                    .catch((err) => console.log(err))
+                })()
+              } else {
+                (resolve(''))
+              }
+            })
+
+            const getService = new Promise((resolve) => {
+              void (async function () {
+                await API.getService(cost.idService)
+                  .then((response) => resolve(response?.service))
+                  .catch((err) => console.log(err))
+              })()
+            })
+
+            void await Promise.all([getContainer, getService]).then((response) => {
+              const loadedItem: FareModalData = {
+                idCost: cost.id,
+                id: id++,
+                saleCurrency: cost.idCurrencySale === '' ? 'BRL' : String(cost.idCurrencySale),
+                saleValue: cost.valueSale === 0 ? '' : completeDecimalPlaces(cost.valueSale),
+                minimumValue: cost.valueMinimumSale === 0 ? '' : completeDecimalPlaces(cost.valueMinimumSale),
+                expense: String(response[1]),
+                selectedContainer: String(response[0]),
+                type: String(cost.billingType)
+              }
+              if (cost.costType === 'Tarifa') {
+                loadedData.push(loadedItem)
+              }
+            })
+          }
+          setData(loadedData)
+          setLoadedTable(true)
+        }
+        void waitAllData()
+
+        const loadedTotalCosts: any[] = []
+        proposal.totalCosts.forEach((totalCost: TotalCost) => {
+          if (totalCost.costType === 'Tarifa') {
+            loadedTotalCosts.push(totalCost.id)
+          }
+        })
+        setLoadedTotalCostsIds(loadedTotalCosts)
+      })
+    } else {
+      setLoadedTable(true)
+    }
+  }, [])
 
   useEffect(() => {
     let actualCostArray = proposal.costs
@@ -67,6 +135,7 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
     const newFareItems: Cost[] = []
     data.forEach((row) => {
       newFareItems.push({
+        id: row.idCost === undefined ? null : row.idCost,
         idProposal: 0,
         idService: serviceList.filter((serv) => serv.service === row.expense)[0]?.id, // id Descricao
         containerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : '', // containerMODAL
@@ -89,8 +158,10 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
     let actualTotalCostArray = proposal.totalCosts
     actualTotalCostArray = actualTotalCostArray.filter((cost) => cost.costType !== 'Tarifa' && cost)
     const newTotalCostFare: TotalCost[] = []
-    dataTotalCost.forEach((currency) => {
+    dataTotalCost.forEach((currency, index) => {
       newTotalCostFare.push({
+        id: loadedTotalCostsIds[index] === undefined ? null : loadedTotalCostsIds[index],
+        idProposal: 0,
         costType: 'Tarifa', // 'Origem''Destino''Tarifa'
         idCurrency: currency.name, // id moeda
         valueTotalSale: currency.value, // total sale da moeda
@@ -129,7 +200,7 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
   const handleAdd = (item: FareModalData): void => {
     setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false })
     if (item.id !== null) {
-      const editData = data
+      const editData = [...data]
       const index = editData.findIndex((i) => i.id === item.id)
       editData[index] = item
       setData(editData)
@@ -178,6 +249,19 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
     })
   }
 
+  const completeDecimalPlaces = (num: number | null): string => {
+    if (num === null) return '0'
+    const decimalPlaces = String(num).split('.')[1]
+    let completeNumber = String(num)
+    if ((decimalPlaces === undefined) || decimalPlaces.length < 2) {
+      completeNumber = completeNumber + '.'
+      for (let i = 0; i < 2 - (decimalPlaces === undefined ? 0 : decimalPlaces.length); i++) {
+        completeNumber = completeNumber + '0'
+      }
+    }
+    return completeNumber
+  }
+
   return (
     <Separator>
       <HeightDiv>
@@ -185,14 +269,14 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
           6. {I18n.t('pages.newProposal.step6.title')}
           <Subtitle>{I18n.t('pages.newProposal.step6.subtitle')}</Subtitle>
         </Title>
-        <Table
+        {loadedTable && <Table
           data={data}
           costData={costData}
           modal={modal}
           specifications={specifications}
           remove={removeClickHandler}
           edit={editClickHandler}
-        />
+        />}
         <ButtonWrapper>
           <Button
             onAction={handleOpen}
@@ -265,10 +349,10 @@ const Table = ({ data, remove, edit }: TableData): JSX.Element => {
   return (
     <StyledTable>
       <TableBody>
-        {data !== null
-          ? (
-              data?.map((item: FareModalData) => {
-                return (
+        {data !== null &&
+          (
+            <div>
+              {data?.map((item: FareModalData) => (
                 <StyledRow id={item.id} key={item.id}>
                   <StyledTableCell
                     color={1}
@@ -308,12 +392,9 @@ const Table = ({ data, remove, edit }: TableData): JSX.Element => {
                     </RowReverseDiv>
                   </StyledTableCell>
                 </StyledRow>
-                )
-              })
-            )
-          : (
-            <div />
-            )}
+              ))}
+            </div>
+          )}
       </TableBody>
     </StyledTable>
   )

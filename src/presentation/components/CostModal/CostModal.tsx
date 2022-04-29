@@ -13,7 +13,6 @@ import {
   WarningPopUp,
   WarningPopUpMessage,
   WarningPopUpButtonDiv,
-  NumberInput,
   MainDiv
 } from './CostModalStyles'
 import { I18n } from 'react-redux-i18n'
@@ -37,11 +36,12 @@ import {
 import API from '../../../infrastructure/api'
 import { CheckBoxArea } from '../ItemModal/ItemModalStyles'
 import { ItemModalData } from '../ItemModal/ItemModal'
-import { StyledPaper } from '../../pages/NewProposal/steps/StepsStyles'
+import { StyledPaper, NumberInput } from '../../pages/NewProposal/steps/StepsStyles'
 import ControlledSelect from '../ControlledSelect'
 import { MenuItemContent } from '../FareModal/FareModalStyles'
 import { CalculationDataProps } from '../ChargeTable'
 export interface CostTableItem {
+  idCost?: number | null
   agent: string
   buyCurrency: string | null
   buyMin: string | null
@@ -322,7 +322,7 @@ const CostModal = ({
 
       const data = {
         costType: item.type,
-        quantityContainer: specifications === 'fcl' ? Number(containerItems[indexContainer].amount) : 0,
+        quantityContainer: specifications === 'fcl' ? Number(containerItems[indexContainer]?.amount) : 0,
         valueGrossWeight: isNaN(Number(calculationData?.weight)) ? 0 : calculationData?.weight,
         valueCubage: isNaN(Number(calculationData?.cubage)) ? 0 : calculationData?.cubage,
         valueWeightCubed: isNaN(Number(calculationData?.cubageWeight)) ? 0 : calculationData?.cubageWeight,
@@ -422,18 +422,21 @@ const CostModal = ({
                   )
                 })}
               </ControlledSelect>
-              <ControlledToolTip
-                title={I18n.t('components.itemModal.requiredField')}
-                open={
-                  invalidInput &&
-                  (state.description === null || state.description.length === 0)
-                }
-              >
-                <Container style={{ position: 'relative', marginRight: '368px' }}>
+              <Container style={{ position: 'relative', marginRight: '368px' }}>
+                <ControlledToolTip
+                  title={I18n.t('components.itemModal.requiredField')}
+                  open={
+                    invalidInput &&
+                    (state.description === null ||
+                      state.description.length === 0)
+                  }
+                >
                   <Autocomplete
                     style={{ width: '368px' }}
                     value={state.description}
-                    onChange={(event: any, newValue: string | null) => { dispatch({ type: 'description', value: newValue }) }}
+                    onChange={(event: any, newValue: string | null) => {
+                      dispatch({ type: 'description', value: newValue })
+                    }}
                     options={serviceList.map((option) => option.service)}
                     renderInput={(params) => (
                       <div ref={params.InputProps.ref}>
@@ -441,18 +444,30 @@ const CostModal = ({
                           {...params.inputProps}
                           style={{ width: '368px' }}
                           placeholder={I18n.t('components.costModal.choose')}
-                          toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                          invalid={invalidInput && (state.description === null || state.description.length === 0)}
+                          toolTipTitle={I18n.t(
+                            'components.itemModal.requiredField'
+                          )}
+                          invalid={
+                            invalidInput &&
+                            (state.description === null ||
+                              state.description.length === 0)
+                          }
                         />
-                        <Box style={{ left: '360px' }} {...params.inputProps} className="dropdownIconAutoComplete">
+                        <Box
+                          style={{ left: '360px' }}
+                          {...params.inputProps}
+                          className='dropdownIconAutoComplete'
+                        >
                           <ArrowDropDownIcon />
                         </Box>
                       </div>
                     )}
-                    PaperComponent={(params: any) => <StyledPaper {...params} />}
+                    PaperComponent={(params: any) => (
+                      <StyledPaper {...params} />
+                    )}
                   />
-                </Container>
-              </ControlledToolTip>
+                </ControlledToolTip>
+              </Container>
             </RowDiv>
             {isOriginCost && <RowDiv>
               <Label width="100%">
@@ -479,7 +494,7 @@ const CostModal = ({
                 {agentList.map((agent) => {
                   return (
                     <MenuItem key={`${agent}_key`} value={agent}>
-                      <MenuItemContent>  {agent}</MenuItemContent>
+                      <MenuItemContent>{agent}</MenuItemContent>
                     </MenuItem>
                   )
                 })}

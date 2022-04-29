@@ -2,8 +2,9 @@ import React, { createContext, useState, useMemo } from 'react'
 import { Proposal } from '../../../../domain/Proposal'
 
 export const emptyProposalValue: Proposal = {
+  id: null,
   referenceProposal: 'str', // referencia proposta
-  idBusinessPartnerCostumer: 0, // nao sabemos
+  idBusinessPartnerCostumer: 0, // step1 agent client
   operationType: 'str', // FRETE IMPORTACAO
   idStatus: 1, // sempre passar 1
   codeUserCreation: 0, // codigo do usuario
@@ -39,7 +40,7 @@ export const emptyProposalValue: Proposal = {
   transitTime: 0, // step4 transit time
   idFrequency: 0, // step 4 id frequency
   route: 'str', // step4 rota
-  freeTime: true, // true
+  freeTime: false, // step4 freetime
   recurrency: 1, // 1
   weeklyRecurrency: 'str' // "0101100" segunda quarta e quinta
 }

@@ -24,9 +24,9 @@ import Step4 from './steps/Step4'
 import Step5 from './steps/Step5'
 import Step6 from './steps/Step6'
 import { TableRows } from '../Proposal/constants'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { ItemModalData } from '../../components/ItemModal/ItemModal'
-import { ProposalContext, ProposalProps } from './context/ProposalContext'
+import { ProposalContext, ProposalProps, emptyProposalValue } from './context/ProposalContext'
 import API from '../../../infrastructure/api'
 import { CalculationDataProps } from '../../components/ChargeTable'
 
@@ -50,6 +50,10 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [leavingPage, setLeavingPage] = useState(false)
   const [action, setAction] = useState('')
   const [calculationData, setCalculationData] = useState<CalculationDataProps>({ weight: 0, cubage: 0, cubageWeight: 0 })
+  const [loadExistingProposal, setLoadExistingProposal] = useState(false)
+
+  const history = useHistory()
+  const location = useLocation()
 
   useEffect(() => {
     void (async function () {
@@ -68,13 +72,20 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   }, [])
 
   useEffect(() => {
-    const today = new Date()
-    const timeNow = `${today.getFullYear()}-${('0' + String(today.getMonth() + 1).slice(-2))}-${('0' + String(today.getDate())).slice(-2)}T${('0' + String(today.getHours())).slice(-2)}:${('0' + String(today.getMinutes())).slice(-2)}:${('0' + String(today.getSeconds())).slice(-2)}.000Z`
-    const validity = `${today.getFullYear()}-${('0' + String(today.getMonth() + 2).slice(-2))}-${('0' + String(today.getDate())).slice(-2)}T${('0' + String(today.getHours())).slice(-2)}:${('0' + String(today.getMinutes())).slice(-2)}:${('0' + String(today.getSeconds())).slice(-2)}.000Z`
-    setProposal({ ...proposal, operationType: 'FRETE - IMPORTAÇÃO', openingDate: timeNow, validityDate: validity })
+    const proposalId = location.state?.proposalId
+    if (proposalId !== undefined && proposalId !== null) {
+      void (async function () {
+        await API.getProposal(proposalId)
+          .then((response) => { setProposal(response); setLoadExistingProposal(true) })
+          .catch((err) => console.log(err))
+      })()
+    } else {
+      setLoadExistingProposal(true)
+      const today = new Date()
+      const timeNow = `${today.getFullYear()}-${('0' + String(today.getMonth() + 1).slice(-2))}-${('0' + String(today.getDate())).slice(-2)}T${('0' + String(today.getHours())).slice(-2)}:${('0' + String(today.getMinutes())).slice(-2)}:${('0' + String(today.getSeconds())).slice(-2)}.000Z`
+      setProposal({ ...emptyProposalValue, operationType: 'FRETE - IMPORTAÇÃO', openingDate: timeNow })
+    }
   }, [])
-
-  const history = useHistory()
 
   const [undoMessage, setUndoMessage] = useState({
     step3: false,
@@ -99,6 +110,14 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     step4: false,
     step5: false,
     step6: false
+  })
+
+  const [stepLoaded, setSteploaded] = useState({
+    step1: false,
+    step2: false,
+    step3: false,
+    step4: false,
+    step5: false
   })
 
   const steps = [
@@ -151,12 +170,21 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       completed.step5 &&
       completed.step6
     ) {
-      API.postProposal(JSON.stringify(proposal)).then(() => {
-        setShowSaveMessage(true)
-        setInvalidInput(false)
-      }).catch((error) => {
-        console.trace(error)
-      })
+      if (proposal.id === undefined || proposal.id === null) {
+        API.postProposal(JSON.stringify(proposal)).then(() => {
+          setShowSaveMessage(true)
+          setInvalidInput(false)
+        }).catch((error) => {
+          console.trace(error)
+        })
+      } else {
+        API.putProposal(proposal.id, JSON.stringify(proposal)).then(() => {
+          setShowSaveMessage(true)
+          setInvalidInput(false)
+        }).catch((error) => {
+          console.trace(error)
+        })
+      }
     } else {
       setInvalidInput(true)
     }
@@ -204,11 +232,11 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const MessageExitDialog = (): JSX.Element => {
     useEffect(() => {
       if (filled.step1 ||
-          filled.step2 ||
-          filled.step3 ||
-          filled.step4 ||
-          filled.step5 ||
-          filled.step6) {
+        filled.step2 ||
+        filled.step3 ||
+        filled.step4 ||
+        filled.step5 ||
+        filled.step6) {
         setLeavingPage(true)
       } else {
         setLeavingPage(false)
@@ -228,53 +256,59 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   }
 
   const validateAction = (element): boolean => {
-    if ((element.id === 'mini-logo' || element.querySelector('#mini-logo')) && element.tagName !== 'UL') {
-      setAction('home')
-      return true
-    }
-    if ((element.id === 'exportation' || element.querySelector('#exportation')) && element.tagName !== 'UL') {
-      setAction('home')
-      return true
-    }
-    if ((element.id === 'importation' || element.querySelector('#importation')) && element.tagName !== 'UL') {
-      setAction('home')
-      return true
-    }
-    if ((element.id === 'freight-forwarder' || element.querySelector('#freight-forwarder')) && element.tagName !== 'UL') {
-      setAction('home')
-      return true
-    }
-    if ((element.id === 'billing' || element.querySelector('#billing')) && element.tagName !== 'UL') {
-      setAction('home')
-      return true
-    }
-    if ((element.id === 'national-logistic' || element.querySelector('#national-logistic')) && element.tagName !== 'UL') {
-      setAction('home')
-      return true
-    }
-    if ((element.id === 'logo_sirius' || element.querySelector('#logo_sirius')) && element.tagName !== 'DIV') {
-      setAction('home')
-      return true
-    }
-    if (element.id === 'home' || element.querySelector('#sub_menu_icon')) {
-      setAction('commercial-home')
-      return true
-    }
-    if ((element.id === 'proposal' || element.querySelector('#proposal')) && element.tagName !== 'DIV') {
-      setAction('proposals')
-      return true
-    }
-    if ((element.id === 'tariff' || element.querySelector('#tariff')) && element.tagName !== 'DIV') {
-      setAction('commercial-home')
-      return true
-    }
-    if ((element.id === 'chart' || element.querySelector('#chart')) && element.tagName !== 'DIV') {
-      setAction('commercial-home')
-      return true
-    }
-    if (element.id === 'exit_button') {
-      setAction('logout')
-      return true
+    if (element.tagName !== 'HTML') {
+      if (element.id === 'button_home' || element.querySelector('#button_home')) {
+        setAction('home')
+        return true
+      }
+      if ((element.id === 'exportation' || element.querySelector('#exportation')) && element.tagName !== 'UL') {
+        setAction('home')
+        return true
+      }
+      if ((element.id === 'importation' || element.querySelector('#importation')) && element.tagName !== 'UL') {
+        setAction('home')
+        return true
+      }
+      if ((element.id === 'freight-forwarder' || element.querySelector('#freight-forwarder')) && element.tagName !== 'UL') {
+        setAction('home')
+        return true
+      }
+      if ((element.id === 'billing' || element.querySelector('#billing')) && element.tagName !== 'UL') {
+        setAction('home')
+        return true
+      }
+      if ((element.id === 'national-logistic' || element.querySelector('#national-logistic')) && element.tagName !== 'UL') {
+        setAction('home')
+        return true
+      }
+      if ((element.id === 'logo_sirius' || element.querySelector('#logo_sirius')) && element.tagName !== 'DIV') {
+        setAction('home')
+        return true
+      }
+      if (element.tagName === 'A') {
+        setAction('proposals')
+        return true
+      }
+      if ((element.id === 'home' || element.querySelector('#home')) && element.tagName !== 'DIV') {
+        setAction('commercial-home')
+        return true
+      }
+      if ((element.id === 'proposal' || element.querySelector('#proposal')) && element.tagName !== 'DIV') {
+        setAction('proposals')
+        return true
+      }
+      if ((element.id === 'tariff' || element.querySelector('#tariff')) && element.tagName !== 'DIV') {
+        setAction('commercial-home')
+        return true
+      }
+      if ((element.id === 'chart' || element.querySelector('#chart')) && element.tagName !== 'DIV') {
+        setAction('commercial-home')
+        return true
+      }
+      if (element.id === 'exit_button') {
+        setAction('logout')
+        return true
+      }
     }
     return false
   }
@@ -324,7 +358,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   useOnClickOutside(handler)
 
   return (
-    <RootContainer ref={divRef}>
+    <RootContainer>
       <Header>
         <Breadcrumbs separator=">" aria-label="breadcrumb">
           <Link
@@ -382,79 +416,87 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         </ButtonContainer>
       </TopContainer>
       {leavingPage && <MessageExitDialog />}
-      <MainContainer>
-        <div id="step1">
-          <Step1
-            filled={filled}
-            setModal={setModal}
-            setCompleted={setCompleted}
-            setFilled={setFilled}
-            invalidInput={invalidInput}
-            setProposalType={setProposalType}
-          />
-        </div>
-        <div id="step2">
-          <Step2
-            proposalType={proposalType}
-            setCompleted={setCompleted}
-            setFilled={setFilled}
-            invalidInput={invalidInput}
-            modal={modal}
-          />
-        </div>
-        <div id="step3">
-          <Step3
-            setCalculationData={setCalculationData}
-            containerTypeList={containerTypeList}
-            undoMessage={undoMessage}
-            setUndoMessage={setUndoMessage}
-            setFilled={setFilled}
-            setTableItems={setStep3TableItems}
-            setCompleted={setCompleted}
-            invalidInput={invalidInput}
-            modal={modal}
-            setCostData={setCostData}
-            setSpecifications={setSpecifications}
-          />
-        </div>
-        <div id="step4">
-          <Step4
-            modal={modal}
-            setFilled={setFilled}
-            setCompleted={setCompleted}
-            invalidInput={invalidInput}
-          />
-        </div>
-        <div id="step5">
-          <Step5
-            calculationData={calculationData}
-            containerTypeList={containerTypeList}
-            serviceList={serviceList}
-            undoMessage={undoMessage}
-            setUndoMessage={setUndoMessage}
-            setFilled={setFilled}
-            containerItems={step3TableItems}
-            setCompleted={setCompleted}
-            costData={costData}
-            modal={modal}
-            specifications={specifications}
-          />
-        </div>
-        <div id="step6">
-          <Step6
-            containerTypeList={containerTypeList}
-            serviceList={serviceList}
-            undoMessage={undoMessage}
-            setUndoMessage={setUndoMessage}
-            setFilled={setFilled}
-            containerItems={step3TableItems}
-            setCompleted={setCompleted}
-            costData={costData}
-            modal={modal}
-            specifications={specifications}
-          />
-        </div>
-      </MainContainer>
+      {loadExistingProposal &&
+        <MainContainer ref={divRef}>
+          <div id="step1">
+            <Step1
+              filled={filled}
+              setModal={setModal}
+              setCompleted={setCompleted}
+              setFilled={setFilled}
+              invalidInput={invalidInput}
+              setProposalType={setProposalType}
+              setSteploaded={setSteploaded}
+            />
+          </div>
+          {stepLoaded.step1 && <>
+            <div id="step2">
+              <Step2
+                proposalType={proposalType}
+                setCompleted={setCompleted}
+                setFilled={setFilled}
+                invalidInput={invalidInput}
+                modal={modal}
+              />
+            </div>
+            <div id="step3">
+              <Step3
+                setCalculationData={setCalculationData}
+                containerTypeList={containerTypeList}
+                undoMessage={undoMessage}
+                setUndoMessage={setUndoMessage}
+                setFilled={setFilled}
+                setTableItems={setStep3TableItems}
+                setCompleted={setCompleted}
+                invalidInput={invalidInput}
+                modal={modal}
+                setCostData={setCostData}
+                setSpecifications={setSpecifications}
+              />
+            </div>
+            <div id="step4">
+              <Step4
+                modal={modal}
+                setFilled={setFilled}
+                setCompleted={setCompleted}
+                invalidInput={invalidInput}
+                specifications={specifications}
+              />
+            </div>
+            <div id="step5">
+              <Step5
+                calculationData={calculationData}
+                containerTypeList={containerTypeList}
+                serviceList={serviceList}
+                undoMessage={undoMessage}
+                setUndoMessage={setUndoMessage}
+                setFilled={setFilled}
+                containerItems={step3TableItems}
+                setCompleted={setCompleted}
+                costData={costData}
+                modal={modal}
+                specifications={specifications}
+                invalidInput={invalidInput}
+              />
+            </div>
+            <div id="step6">
+              <Step6
+                containerTypeList={containerTypeList}
+                serviceList={serviceList}
+                undoMessage={undoMessage}
+                setUndoMessage={setUndoMessage}
+                setFilled={setFilled}
+                containerItems={step3TableItems}
+                setCompleted={setCompleted}
+                costData={costData}
+                modal={modal}
+                specifications={specifications}
+              />
+            </div>
+          </>
+          }
+        </MainContainer>
+      }
       {showSaveMessage &&
         <MessageContainer>
           <Messages {...saveMessageInfo} />

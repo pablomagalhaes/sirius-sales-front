@@ -73,17 +73,89 @@ const Step3 = ({
   const [tableId, setTableId] = useState(0)
   const specificationsList = ['FCL', 'LCL', 'Break Bulk', 'Ro-Ro']
   const [packagingList, setPackagingList] = useState<any[]>([])
-  const [data, setData] = useState({
+  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+  const [calculation, setCalculation] = useState<CalculationDataProps>({ weight: 0, cubage: 0, cubageWeight: 0 })
+  const initialData = {
     description: '',
     specifications: '',
-    refrigereted: false,
     temperature: '',
     dangerous: false,
     imo: '',
     codUn: ''
-  })
-  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
-  const [calculation, setCalculation] = useState<CalculationDataProps>({ weight: 0, cubage: 0, cubageWeight: 0 })
+  }
+  const [data, setData] = useState(initialData)
+
+  useEffect(() => {
+    setSpecifications(data.specifications)
+    setTableRows([])
+  }, [data.specifications])
+
+  useEffect(() => {
+    setCalculationData(calculation)
+  }, [calculation])
+
+  useEffect(() => {
+    setTableRows([])
+    setChargeData(initialState)
+    setCopyTable([])
+    setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false })
+    setData(initialData)
+    setTableId(0)
+  }, [modal])
+
+  useEffect(() => {
+    const getPackagingList = new Promise<void>((resolve) => {
+      API.getPackaging()
+        .then((response) => { setPackagingList(response); resolve(response) })
+        .catch((err) => console.log(err))
+    })
+
+    const getImoList = new Promise<void>((resolve) => {
+      API.getImo()
+        .then((response) => { setImoList(response); resolve() })
+        .catch((err) => console.log(err))
+    })
+
+    const getTemperatureList = new Promise<void>((resolve) => {
+      API.getTemperature()
+        .then((response) => { setTemperatureList(response); resolve() })
+        .catch((err) => console.log(err))
+    })
+
+    void Promise.all([getPackagingList, getImoList, getTemperatureList]).then((response: any) => {
+      if (proposal.id !== undefined && proposal.id !== null) {
+        setData({
+          description: proposal.cargo.cargo,
+          specifications: proposal.idTransport === 'SEA' ? specificationsList[Number(proposal.cargo.idCargoContractingType) - 1].toLowerCase() : '',
+          temperature: String(proposal.cargo.idTemperature),
+          dangerous: proposal.cargo.isDangerous,
+          imo: String(proposal.cargo.idImoType),
+          codUn: String(proposal.cargo.codeUn)
+        })
+
+        let id = 0
+        const loadedTableRows: ItemModalData[] = []
+        proposal.cargo.cargoVolumes.forEach((cargo: CargoVolume) => {
+          loadedTableRows.push({
+            idCargoVolume: cargo.id,
+            idCargo: proposal.cargo.id,
+            amount: String(cargo.valueQuantity),
+            cubage: completeDecimalPlaces(cargo.valueCubage),
+            diameter: completeDecimalPlaces(cargo.valueDiameter),
+            height: completeDecimalPlaces(cargo.valueHeight),
+            length: completeDecimalPlaces(cargo.valueLength),
+            rawWeight: completeDecimalPlaces(cargo.valueGrossWeight),
+            type: marineFCL() ? '' : response[0].filter((pack) => Number(pack.id) === cargo.cdCargoType)[0]?.packaging, // TODO inserir esse campo depois de ajustada a tabela (container ou package)
+            width: completeDecimalPlaces(cargo.valueWidth),
+            id: id++,
+            stack: cargo.isStacked
+          })
+        })
+        setTableRows(loadedTableRows)
+        setTableId(loadedTableRows.length)
+      }
+    })
+  }, [])
 
   useEffect(() => {
     setProposal(
@@ -109,7 +181,9 @@ const Step3 = ({
     const newCargoVolumes: CargoVolume[] = []
     tableRows.forEach((row) => {
       newCargoVolumes.push({
-        cdCargoType: marineFCL() ? 1 : packagingList.filter((pack) => pack.packaging === row.type)[0].id, // TODO quando for marineFCL salvar id (string 4 digitos)
+        id: row.idCargoVolume === undefined ? null : row.idCargoVolume,
+        idCargo: row.idCargo === undefined ? null : row.idCargo,
+        cdCargoType: marineFCL() ? 1 : packagingList.filter((pack) => pack.packaging === row.type)[0]?.id, // TODO quando for marineFCL salvar id (string 4 digitos)
         valueQuantity: Number(row.amount),
         valueGrossWeight: Number(row.rawWeight?.replace(',', '.')),
         valueCubage: Number(row.cubage?.replace(',', '.')),
@@ -123,59 +197,20 @@ const Step3 = ({
     setCargoVolume(newCargoVolumes)
   }, [tableRows])
 
-  useEffect(() => {
-    void (async function () {
-      await API.getPackaging()
-        .then((response) => setPackagingList(response))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
-
-  useEffect(() => {
-    void (async function () {
-      await API.getImo()
-        .then((response) => setImoList(response))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
-
-  useEffect(() => {
-    setCalculationData(calculation)
-  }, [calculation])
-
-  useEffect(() => {
-    void (async function () {
-      await API.getTemperature()
-        .then((response) => setTemperatureList(response))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
-
-  const initialData = {
-    description: '',
-    specifications: '',
-    refrigereted: false,
-    temperature: '',
-    dangerous: false,
-    imo: '',
-    codUn: ''
-  }
-
-  useEffect(() => {
-    setTableRows([])
-  }, [data.specifications])
-
-  useEffect(() => {
-    setTableRows([])
-    setChargeData(initialState)
-    setCopyTable([])
-    setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false })
-    setData(initialData)
-    setTableId(0)
-  }, [modal])
-
   const marineFCL = (): boolean => {
     return modal === 'SEA' && data.specifications === 'fcl'
+  }
+
+  const completeDecimalPlaces = (num: number): string => {
+    const decimalPlaces = String(num).split('.')[1]
+    let completeNumber = String(num)
+    if ((decimalPlaces === undefined) || decimalPlaces.length < 2) {
+      completeNumber = completeNumber + ','
+      for (let i = 0; i < 2 - (decimalPlaces === undefined ? 0 : decimalPlaces.length); i++) {
+        completeNumber = completeNumber + '0'
+      }
+    }
+    return completeNumber
   }
 
   const handleOpen = (): void => {
@@ -224,10 +259,6 @@ const Step3 = ({
   }
 
   useEffect(() => {
-    setSpecifications(data.specifications)
-  }, [data.specifications])
-
-  useEffect(() => {
     if (
       data.description.length !== 0 &&
       ((modal === 'SEA' && data.specifications.length !== 0) ||
@@ -249,7 +280,6 @@ const Step3 = ({
       data.temperature !== '' ||
       data.imo.length > 0 ||
       data.codUn.length > 0 ||
-      data.refrigereted ||
       data.dangerous
     ) {
       setFilled((currentState) => {
@@ -373,12 +403,12 @@ const Step3 = ({
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
             >
               <MenuItem disabled value="">
-                <span style={{ marginLeft: '10px' }}>{I18n.t('components.itemModal.choose')}</span>
+                <SelectSpan placeholder={1}>{I18n.t('pages.newProposal.step3.choose')}</SelectSpan>
               </MenuItem>
               {imoList.map((item) => {
                 return (
                   <MenuItem key={item.id} value={item.id}>
-                    <span style={{ marginLeft: '10px' }}>{item.type}</span>
+                    <SelectSpan>{item.type}</SelectSpan>
                   </MenuItem>
                 )
               })}

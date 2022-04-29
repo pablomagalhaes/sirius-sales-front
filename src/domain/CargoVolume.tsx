@@ -1,11 +1,13 @@
 export interface CargoVolume {
-  cdCargoType: Number// modal tipo
-  valueQuantity: Number // qnt
-  valueGrossWeight: Number // peso bruto
-  valueCubage: Number // cubagem
-  valueLength: Number // comprimento
-  valueHeight: Number // altura
-  valueWidth: Number // largura
-  valueDiameter: Number // diametro
+  id?: number | null
+  idCargo?: number | null
+  cdCargoType: number// modal tipo
+  valueQuantity: number // qnt
+  valueGrossWeight: number // peso bruto
+  valueCubage: number // cubagem
+  valueLength: number // comprimento
+  valueHeight: number // altura
+  valueWidth: number // largura
+  valueDiameter: number // diametro
   isStacked: boolean // empilhar
 }

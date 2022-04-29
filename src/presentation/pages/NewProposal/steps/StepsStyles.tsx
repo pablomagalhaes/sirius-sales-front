@@ -1,6 +1,7 @@
 import { TableRow, Table, Paper } from '@material-ui/core'
 import { MainDiv } from '../../../components/CostTable/CostTableStyles'
 import styled from 'styled-components'
+import NumberFormat from 'react-number-format'
 
 const TotalContainer = styled(MainDiv)`
   width: 95%;
@@ -29,7 +30,8 @@ const ButtonWrapper = styled.div`
 const HeightDiv = styled.div`
   min-height: 650px; // Para que o stepper marque o Step 6 corretamente
 `
-
+const NumberInput = styled(NumberFormat)`
+`
 const StyledPaper = styled(Paper)`
     border: 1px solid ${(props: any) => props.theme?.commercial?.pages?.proposal?.dropdownBorderColor} !important;
     background-color: ${(props: any) => props.theme?.commercial?.pages?.proposal?.dropdownBackgroundColor} !important;
@@ -42,6 +44,7 @@ export {
   StyledTable,
   StyledRow,
   ButtonWrapper,
+  NumberInput,
   HeightDiv,
   StyledPaper
 }

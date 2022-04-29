@@ -66,7 +66,9 @@
         "subtitle": "Informe detalhes gerais da sua proposta comercial.",
         "validity": "Validade:",
         "time": "Transit. time:",
-        "freeTime": "Free Time",
+        "freeTimeDemurrage": "Free time demurrage",
+        "freeTimeStorage": "Free time armazenagem",
+        "value": "Valor (BRL):",
         "frequency": "Frequência:",
         "route": "Rota:",
         "client": "Ref. Cliente:",
@@ -86,7 +88,9 @@
         "destiny": "Destino",
         "totalDestiny": "Total custos destino:",
         "originCost": "Novo custo de origem",
-        "destinationCost": "Novo custo de destino"
+        "destinationCost": "Novo custo de destino",
+        "errorOrigin": "É obrigatório informar algum custo de origem.",
+        "errorDestiny": "É obrigatório informar algum custo de destino."
       },
       "step6": {
         "title": "Frete",
@@ -116,11 +120,18 @@
     "proposal":{
       "table":{
         "openLabel":"aberta",
-        "waitingForCustomerReturnLabel": "ag. ret. cliente'",
+        "waitingForCustomerReturnLabel": "ag. ret. cliente",
         "inRevisionLabel":"em revisão",
         "approvedLabel":"aprovada",
-        "rejectLabel":"rejeitada",
-        "cancelLabel":"cancelada"
+        "rejectedLabel":"rejeitada",
+        "cancelledLabel":"cancelada",
+        "editLabel": "Editar",
+        "duplicateLabel": "Duplicar",
+        "reviewLabel": "Definir como \"Em revisão\"",
+        "confirmLabel": "Confirmar envio ao cliente",
+        "cancelLabel": "Cancelar",
+        "approveLabel": "Definir como aprovada",
+        "rejectLabel": "Definir como rejeitada"
       }
     }
   },

@@ -34,9 +34,10 @@ export interface Step1Props {
   setProposalType: (proposal: string) => void
   setModal: (modal: string) => void
   filled: Filled
+  setSteploaded: (steps: any) => void
 }
 
-const Step1 = ({ theme, invalidInput, setCompleted, setFilled, setProposalType, setModal, filled }: Step1Props): JSX.Element => {
+const Step1 = ({ theme, invalidInput, setCompleted, setFilled, setProposalType, setModal, filled, setSteploaded }: Step1Props): JSX.Element => {
   const [transportList] = useState<Transport[]>(TransportList)
   const [agentsList, setAgentsList] = useState<any[]>([])
   const [partnerList, setPartnerList] = useState<any[]>([])
@@ -52,6 +53,43 @@ const Step1 = ({ theme, invalidInput, setCompleted, setFilled, setProposalType, 
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
   useEffect(() => {
+    const getAgents = new Promise<void>((resolve) => {
+      API.getAgents()
+        .then((response) => { setAgentsList(response); resolve() })
+        .catch((err) => console.log(err))
+    })
+
+    const getPartners = new Promise<void>((resolve) => {
+      API.getPartner()
+        .then((response) => { setPartnerList(response); resolve() })
+        .catch((err) => console.log(err))
+    })
+
+    const getPartnerCostumer = new Promise<void>((resolve) => {
+      API.getBusinessPartnerCostumer(proposal.idBusinessPartnerCostumer)
+        .then((response) => {
+          resolve(response?.businessPartner?.simpleName)
+        })
+        .catch((err) => console.log(err))
+    })
+
+    if (proposal.id !== undefined && proposal.id !== null) {
+      void Promise.all([getAgents, getPartners, getPartnerCostumer]).then((response) => {
+        setData({
+          proposal: proposal.proposalType,
+          services: '',
+          modal: proposal.idTransport,
+          proposalValue: String(response[2]),
+          requester: proposal.requester
+        })
+        setSteploaded((currentState) => ({ ...currentState, step1: true }))
+      })
+    } else {
+      setSteploaded((currentState) => ({ ...currentState, step1: true }))
+    }
+  }, [])
+
+  useEffect(() => {
     setProposal({
       ...proposal,
       proposalType: data.proposal,
@@ -62,22 +100,6 @@ const Step1 = ({ theme, invalidInput, setCompleted, setFilled, setProposalType, 
       requester: data.requester
     })
   }, [data])
-
-  useEffect(() => {
-    void (async function () {
-      await API.getAgents()
-        .then((response) => setAgentsList(response))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
-
-  useEffect(() => {
-    void (async function () {
-      await API.getPartner()
-        .then((response) => setPartnerList(response))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
 
   useEffect(() => {
     setProposalType(data.proposal)
@@ -134,8 +156,8 @@ const Step1 = ({ theme, invalidInput, setCompleted, setFilled, setProposalType, 
             value={data.proposal}
             onChange={e => setData({ ...data, proposal: e.target.value })}
           >
-            <FormControlLabel value="client" control={<StyledRadio color={getColor(data.proposal)} />} label={I18n.t('pages.newProposal.step1.client')} style={{ marginRight: '30px' }} />
-            <FormControlLabel value="routing" control={<StyledRadio color={getColor(data.proposal)} />} label={I18n.t('pages.newProposal.step1.routingOrder')} />
+            <FormControlLabel checked={data.proposal === 'client'} value="client" control={<StyledRadio color={getColor(data.proposal)} />} label={I18n.t('pages.newProposal.step1.client')} style={{ marginRight: '30px' }} />
+            <FormControlLabel checked={data.proposal === 'routing'} value="routing" control={<StyledRadio color={getColor(data.proposal)} />} label={I18n.t('pages.newProposal.step1.routingOrder')} />
           </RadioGroup>
         </Grid>
         {

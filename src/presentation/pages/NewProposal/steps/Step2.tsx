@@ -50,6 +50,40 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, setFilled, mod
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
   useEffect(() => {
+    void (async function () {
+      await API.getOriginDestination()
+        .then((response) => setOriginDestinationList(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
+
+  useEffect(() => {
+    if (proposal.id !== undefined && proposal.id !== null) {
+      const getOrigin = new Promise((resolve) => {
+        API.getOriginDestinationById(proposal.idOrigin)
+          .then((response) => resolve(`${String(response.id)} - ${String(response.name)}`))
+          .catch((err) => console.log(err))
+      })
+
+      const getDestiny = new Promise((resolve) => {
+        API.getOriginDestinationById(proposal.idDestination)
+          .then((response) => resolve(`${String(response.id)} - ${String(response.name)}`))
+          .catch((err) => console.log(err))
+      })
+
+      void Promise.all([getOrigin, getDestiny]).then((values) => {
+        setData({
+          origin: String(values[0]),
+          destiny: String(values[1]),
+          agents: [],
+          incoterm: proposal.idIncoterm,
+          collection: proposal.cargoCollectionAddress
+        })
+      })
+    }
+  }, [])
+
+  useEffect(() => {
     setProposal({
       ...proposal,
       idOrigin: data.origin.split(' - ')[0],
@@ -63,16 +97,8 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, setFilled, mod
 
   useEffect(() => {
     void (async function () {
-      await API.getIncoterm()
+      await API.getIncoterms()
         .then((response) => setIncotermList(response))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
-
-  useEffect(() => {
-    void (async function () {
-      await API.getOriginDestination()
-        .then((response) => setOriginDestinationList(response))
         .catch((err) => console.log(err))
     })()
   }, [])
