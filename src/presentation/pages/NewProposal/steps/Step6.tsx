@@ -100,8 +100,8 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
                 idCost: cost.id,
                 id: id++,
                 saleCurrency: cost.idCurrencySale === '' ? 'BRL' : String(cost.idCurrencySale),
-                saleValue: cost.valueSale === 0 ? '' : String(cost.valueSale),
-                minimumValue: cost.valueMinimumSale === 0 ? '' : String(cost.valueMinimumSale),
+                saleValue: cost.valueSale === 0 ? '' : completeDecimalPlaces(cost.valueSale),
+                minimumValue: cost.valueMinimumSale === 0 ? '' : completeDecimalPlaces(cost.valueMinimumSale),
                 expense: String(response[1]),
                 selectedContainer: String(response[0]),
                 type: String(cost.billingType)
@@ -200,7 +200,7 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
   const handleAdd = (item: FareModalData): void => {
     setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false })
     if (item.id !== null) {
-      const editData = data
+      const editData = [...data]
       const index = editData.findIndex((i) => i.id === item.id)
       editData[index] = item
       setData(editData)
@@ -247,6 +247,19 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
         </ValueLabel>
       )
     })
+  }
+
+  const completeDecimalPlaces = (num: number | null): string => {
+    if (num === null) return '0'
+    const decimalPlaces = String(num).split('.')[1]
+    let completeNumber = String(num)
+    if ((decimalPlaces === undefined) || decimalPlaces.length < 2) {
+      completeNumber = completeNumber + '.'
+      for (let i = 0; i < 2 - (decimalPlaces === undefined ? 0 : decimalPlaces.length); i++) {
+        completeNumber = completeNumber + '0'
+      }
+    }
+    return completeNumber
   }
 
   return (
