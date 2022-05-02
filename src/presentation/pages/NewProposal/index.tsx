@@ -285,7 +285,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         setAction('home')
         return true
       }
-      if (element.tagName === 'A') {
+      if (element.tagName === 'A' && !element.id.includes('step')) {
         setAction('proposals')
         return true
       }
