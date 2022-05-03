@@ -7,7 +7,7 @@ import CostModal from './CostModal'
 import '@testing-library/jest-dom'
 
 const props = {
-
+  agentList: ['Agente1', 'Agente2', 'Agente3'],
   dataProp: {
     type: 'Tipo1',
     description: 'Descrição1',
