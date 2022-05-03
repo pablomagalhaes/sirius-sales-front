@@ -259,6 +259,7 @@ const Step5 = ({
         <Subtitle>{I18n.t('pages.newProposal.step5.subtitle')}</Subtitle>
       </Title>
       {loadedTable && <CostTable
+        agentList={proposal.agents}
         modalTitle={I18n.t('pages.newProposal.step5.originCost')}
         title={I18n.t('pages.newProposal.step5.origin')}
         totalCostLabel={I18n.t('pages.newProposal.step5.totalOrigin')}
@@ -277,6 +278,7 @@ const Step5 = ({
       />
       }
       {loadedTable && <CostTable
+        agentList={proposal.agents}
         modalTitle={I18n.t('pages.newProposal.step5.destinationCost')}
         title={I18n.t('pages.newProposal.step5.destiny')}
         totalCostLabel={I18n.t('pages.newProposal.step5.totalDestiny')}

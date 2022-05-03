@@ -34,6 +34,7 @@ import { TotalCostTable } from '../../pages/NewProposal/steps/Step5'
 import API from '../../../infrastructure/api'
 
 interface CostTableProps {
+  agentList: string[]
   title: string
   totalCostLabel: string
   modalTitle: string
@@ -57,6 +58,7 @@ interface CostTableProps {
 }
 
 const CostTable = ({
+  agentList,
   modalTitle,
   title,
   totalCostLabel,
@@ -231,6 +233,7 @@ const CostTable = ({
   return (
     <MainDiv>
       <CostModal
+        agentList={agentList}
         dataProp={chargeData}
         handleAdd={handleAdd}
         open={open}
