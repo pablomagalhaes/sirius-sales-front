@@ -398,11 +398,11 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
             {fullname}
           </Username>
           {editMode && proposal.idStatus === 1
-            ? <Status style={{ background: '#50E5D9' }}>{I18n.t('pages.proposal.table.openLabel')}</Status>
+            ? <Status className="open">{I18n.t('pages.proposal.table.openLabel')}</Status>
             : null
           }
           {editMode && proposal.idStatus === 3
-            ? <Status style={{ background: '#F2D16D' }}>{I18n.t('pages.proposal.table.inRevisionLabel')}</Status>
+            ? <Status className="inReview">{I18n.t('pages.proposal.table.inRevisionLabel')}</Status>
             : null
           }
         </UserContainer>

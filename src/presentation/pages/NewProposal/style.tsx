@@ -131,7 +131,15 @@ const UserContainer = styled.div`
   display: flex;
   svg {
     margin-left: 18px;
-}
+  }
+
+  .open {
+    background: #50E5D9;
+  }
+
+  .inReview {
+    background: #F2D16D;
+  }
 `
 
 const ReferenceCode = styled.span`
