@@ -178,6 +178,21 @@ const Separator = styled.div`
     props.theme?.commercial?.pages?.newProposal?.steps?.chips?.deleteBackground};
         }
     }
+
+  .disabledDay {
+    background: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.weekComponent};
+    color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.subtitle};
+  }
+
+  .activeDay {
+    background: #50E5D9;
+    color: #545454;
+  }
+
+  input[type=number]::-webkit-inner-spin-button, 
+  input[type=number]::-webkit-outer-spin-button {
+    opacity: 1;
+  }
 `
 
 const SelectSpan = styled.span`
@@ -207,6 +222,29 @@ const MessageContainer = styled.div`
   z-index: 99;
 `
 
+const InputContainer = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+const WeekDay = styled.button`
+  width: 32px;
+  height: 32px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 8px;
+  border: none;
+  cursor: pointer;
+`
+
+const WeekContainer = styled.div`
+  display: flex;
+`
+
 export {
   ButtonContainer,
   IconContainer,
@@ -223,5 +261,8 @@ export {
   Username,
   BoldSpan,
   StyledRadio,
-  MessageContainer
+  MessageContainer,
+  InputContainer,
+  WeekDay,
+  WeekContainer
 }
