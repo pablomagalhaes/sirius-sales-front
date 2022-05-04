@@ -245,6 +245,14 @@ const WeekContainer = styled.div`
   display: flex;
 `
 
+const Status = styled.span`
+  color: #222222;
+  padding: 1px 8px;
+  font-size: 12px;
+  border-radius: 50px;
+  margin-left: 40px;
+`
+
 export {
   ButtonContainer,
   IconContainer,
@@ -264,5 +272,6 @@ export {
   MessageContainer,
   InputContainer,
   WeekDay,
-  WeekContainer
+  WeekContainer,
+  Status
 }

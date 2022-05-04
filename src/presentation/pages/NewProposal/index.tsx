@@ -12,7 +12,8 @@ import {
   TopContainer,
   UserContainer,
   Username,
-  MessageContainer
+  MessageContainer,
+  Status
 } from './style'
 import { withTheme } from 'styled-components'
 import { I18n } from 'react-redux-i18n'
@@ -51,6 +52,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [action, setAction] = useState('')
   const [calculationData, setCalculationData] = useState<CalculationDataProps>({ weight: 0, cubage: 0, cubageWeight: 0 })
   const [loadExistingProposal, setLoadExistingProposal] = useState(false)
+  const [editMode, setEditMode] = useState(false)
 
   const history = useHistory()
   const location = useLocation()
@@ -74,6 +76,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   useEffect(() => {
     const proposalId = location.state?.proposalId
     if (proposalId !== undefined && proposalId !== null) {
+      setEditMode(true)
       void (async function () {
         await API.getProposal(proposalId)
           .then((response) => { setProposal(response); setLoadExistingProposal(true) })
@@ -380,15 +383,28 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           <span className="breadcrumbEnd">{I18n.t('pages.newProposal.newProposal')}</span>
         </Breadcrumbs>
         <UserContainer>
-          {I18n.t('pages.newProposal.reference')}
-          <ReferenceCode>
-            {referenceCode[0].reference}
-          </ReferenceCode>
+          {editMode
+            ? <>
+              {I18n.t('pages.newProposal.reference')}
+              <ReferenceCode>
+                {proposal.referenceProposal}
+              </ReferenceCode>
+            </>
+            : null
+          }
           {I18n.t('pages.newProposal.encharged')}
           <IconComponent name="user" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
           <Username>
             {fullname}
           </Username>
+          {editMode && proposal.idStatus === 1
+            ? <Status style={{ background: '#50E5D9' }}>{I18n.t('pages.proposal.table.openLabel')}</Status>
+            : null
+          }
+          {editMode && proposal.idStatus === 3
+            ? <Status style={{ background: '#F2D16D' }}>{I18n.t('pages.proposal.table.inRevisionLabel')}</Status>
+            : null
+          }
         </UserContainer>
       </Header>
       <TopContainer>
