@@ -66,8 +66,8 @@
         "subtitle": "Informe detalhes gerais da sua proposta comercial.",
         "validity": "Validade:",
         "time": "Transit. time:",
-        "freeTimeDemurrage": "Free time demurrage",
-        "freeTimeStorage": "Free time armazenagem",
+        "freeTimeDemurrage": "Free time demurrage:",
+        "freeTimeStorage": "Free time armazenagem:",
         "value": "Valor (BRL):",
         "frequency": "Frequência:",
         "route": "Rota:",
@@ -78,7 +78,16 @@
         "notHired": "Não Contratado",
         "deadline": "Prazo (dias):",
         "internal": "Observações internas (esse texto NÃO é enviado na proposta):",
-        "choose": "Escolha ..."
+        "choose": "Escolha ...",
+        "customDays": "Personalizar dias:",
+        "times": "vez(es)",
+        "sunday": "D",
+        "monday": "S",
+        "tuesday": "T",
+        "wednesday": "Q",
+        "thursday": "Q",
+        "friday": "S",
+        "saturday": "S"
       },
       "step5": {
         "title": "Custos",

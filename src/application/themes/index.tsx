@@ -48,6 +48,7 @@ const dark = {
         border: '#505F73',
         font: '#F2F3F7',
         placeholder: '#7B8A9E',
+        weekComponent: '#151D28',
         steps: {
           stepFare: '#B5B8C2',
           messageColor: '#222222',
@@ -111,6 +112,7 @@ const light = {
         border: '#F0F1F5',
         font: '#222222',
         placeholder: '#999DAC',
+        weekComponent: '#F0F1F5',
         steps: {
           stepFare: '#545454',
           messageColor: '#222222',

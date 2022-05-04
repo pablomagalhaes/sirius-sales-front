@@ -8,7 +8,16 @@ import {
   RadioGroup
 } from '@material-ui/core/'
 import { I18n } from 'react-redux-i18n'
-import { Title, Subtitle, Separator, SelectSpan, StyledRadio } from '../style'
+import {
+  InputContainer,
+  SelectSpan,
+  Separator,
+  StyledRadio,
+  Subtitle,
+  Title,
+  WeekDay,
+  WeekContainer
+} from '../style'
 import ControlledSelect from '../../../components/ControlledSelect'
 import ControlledInput from '../../../components/ControlledInput'
 import ControlledToolTip from '../../../components/ControlledToolTip/ControlledToolTip'
@@ -74,7 +83,9 @@ const Step4 = ({
     deadline: '',
     value: '',
     generalObs: '',
-    internalObs: ''
+    internalObs: '',
+    recurrency: '1',
+    weeklyRecurrency: ''
   }
 
   const [data, setData] = useState(initialState)
@@ -117,8 +128,11 @@ const Step4 = ({
           deadline: '',
           generalObs: proposal.generalObservations,
           internalObs: proposal.internalObservations,
-          value: ''
+          value: '',
+          recurrency: String(proposal.recurrency),
+          weeklyRecurrency: proposal.weeklyRecurrency
         })
+        filledWeekValue(proposal.weeklyRecurrency)
       })
     }
   }, [])
@@ -132,6 +146,8 @@ const Step4 = ({
       route: data.route,
       freeTime: data.freeTime === 'hired',
       idFrequency: Number(data.frequency),
+      recurrency: Number(data.recurrency),
+      weeklyRecurrency: data.weeklyRecurrency,
       generalObservations: data.generalObs,
       internalObservations: data.internalObs,
       referenceClientProposal: data.client
@@ -143,7 +159,8 @@ const Step4 = ({
       data.validity.length !== 0 &&
       data.validityDate.length !== 0 &&
       data.transitTime.length !== 0 &&
-      data.frequency.length !== 0
+      data.frequency.length !== 0 &&
+      data.recurrency.length !== 0
     ) {
       setCompleted((currentState) => {
         return { ...currentState, step4: true }
@@ -164,7 +181,8 @@ const Step4 = ({
       data.deadline.length > 0 ||
       data.value.length > 0 ||
       data.generalObs.length > 0 ||
-      data.internalObs.length > 0
+      data.internalObs.length > 0 ||
+      data.recurrency.length > 0
     ) {
       setFilled((currentState) => {
         return { ...currentState, step4: true }
@@ -214,6 +232,98 @@ const Step4 = ({
 
   const validateIntInput = (value: string): RegExpMatchArray | null => {
     return value.match(/^[0-9]*$/)
+  }
+
+  const weekDaysFrequency = (id: string): any => {
+    const element = (document.getElementById(id) as HTMLInputElement)
+    let weeklyValue: string
+
+    if ((element.classList.contains('disabledDay')) ?? false) {
+      element.classList.remove('disabledDay')
+      element.classList.add('activeDay')
+      element.value = '1'
+      weeklyValue = weekValue()
+      setData({ ...data, weeklyRecurrency: weeklyValue })
+    } else {
+      element.classList.remove('activeDay')
+      element.classList.add('disabledDay')
+      element.value = '0'
+      weeklyValue = weekValue()
+      setData({ ...data, weeklyRecurrency: weeklyValue })
+    }
+  }
+
+  const weekValue = (): string => {
+    const sunday = (document.getElementById('sunday') as HTMLInputElement).value
+    const monday = (document.getElementById('monday') as HTMLInputElement).value
+    const tuesday = (document.getElementById('tuesday') as HTMLInputElement).value
+    const wednesday = (document.getElementById('wednesday') as HTMLInputElement).value
+    const thursday = (document.getElementById('thursday') as HTMLInputElement).value
+    const friday = (document.getElementById('friday') as HTMLInputElement).value
+    const saturday = (document.getElementById('saturday') as HTMLInputElement).value
+    let weeklyRecurrency = '0000000'
+
+    weeklyRecurrency = `${sunday}${monday}${tuesday}${wednesday}${thursday}${friday}${saturday}`
+    return weeklyRecurrency
+  }
+
+  const filledWeekValue = (weeklyRecurrency: string): void => {
+    const sunday = (document.getElementById('sunday') as HTMLInputElement)
+    const monday = (document.getElementById('monday') as HTMLInputElement)
+    const tuesday = (document.getElementById('tuesday') as HTMLInputElement)
+    const wednesday = (document.getElementById('wednesday') as HTMLInputElement)
+    const thursday = (document.getElementById('thursday') as HTMLInputElement)
+    const friday = (document.getElementById('friday') as HTMLInputElement)
+    const saturday = (document.getElementById('saturday') as HTMLInputElement)
+
+    sunday.value = weeklyRecurrency.charAt(0)
+    if (sunday.value === '1') {
+      sunday.classList.remove('disabledDay')
+      sunday.classList.add('activeDay')
+    }
+
+    monday.value = weeklyRecurrency.charAt(1)
+    if (monday.value === '1') {
+      monday.classList.remove('disabledDay')
+      monday.classList.add('activeDay')
+    }
+
+    tuesday.value = weeklyRecurrency.charAt(2)
+    if (tuesday.value === '1') {
+      tuesday.classList.remove('disabledDay')
+      tuesday.classList.add('activeDay')
+    }
+
+    wednesday.value = weeklyRecurrency.charAt(3)
+    if (wednesday.value === '1') {
+      wednesday.classList.remove('disabledDay')
+      wednesday.classList.add('activeDay')
+    }
+
+    thursday.value = weeklyRecurrency.charAt(4)
+    if (thursday.value === '1') {
+      thursday.classList.remove('disabledDay')
+      thursday.classList.add('activeDay')
+    }
+
+    friday.value = weeklyRecurrency.charAt(5)
+    if (friday.value === '1') {
+      friday.classList.remove('disabledDay')
+      friday.classList.add('activeDay')
+    }
+
+    saturday.value = weeklyRecurrency.charAt(6)
+    if (saturday.value === '1') {
+      saturday.classList.remove('disabledDay')
+      saturday.classList.add('activeDay')
+    }
+  }
+
+  const valuesRecurrency = (e): any => {
+    let value = parseInt(e.target.value, 10)
+    if (value > 99) value = 99
+    if (value < 1) value = 1
+    setData({ ...data, recurrency: String(value) })
   }
 
   return (
@@ -352,21 +462,29 @@ const Step4 = ({
               </RadioGroup>
             </Grid>
             {data.freeTime === 'hired' &&
-              <><Grid item xs={2}>
-                <FormLabel component="legend">{I18n.t('pages.newProposal.step4.deadline')}<RedColorSpan> *</RedColorSpan></FormLabel>
-                <ControlledInput
-                  id="deadline"
-                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                  invalid={invalidInput && data.deadline.length === 0}
-                  variant="outlined"
-                  onChange={(e) => validateIntInput(e.target.value) !== null && (setData({ ...data, deadline: e.target.value }))}
-                  value={data.deadline}
-                  size="small" />
-              </Grid>
+              <>
+                <Grid item xs={2}>
+                  <FormLabel component="legend">
+                    {I18n.t('pages.newProposal.step4.deadline')}
+                    <RedColorSpan> *</RedColorSpan>
+                  </FormLabel>
+                  <ControlledInput
+                    id="deadline"
+                    toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                    invalid={invalidInput && data.deadline.length === 0}
+                    variant="outlined"
+                    onChange={(e) => validateIntInput(e.target.value) !== null && (setData({ ...data, deadline: e.target.value }))}
+                    value={data.deadline}
+                    size="small"
+                  />
+                </Grid>
                 <Grid item xs={2}>
                   {specifications !== 'fcl' &&
-                    <><FormLabel component="legend">
-                      {I18n.t('pages.newProposal.step4.value')} <RedColorSpan> *</RedColorSpan></FormLabel>
+                    <>
+                      <FormLabel component="legend">
+                        {I18n.t('pages.newProposal.step4.value')}
+                        <RedColorSpan> *</RedColorSpan>
+                      </FormLabel>
                       <NumberInput
                         decimalSeparator={','}
                         thousandSeparator={'.'}
@@ -378,8 +496,13 @@ const Step4 = ({
                         value={data.value}
                         onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, value: e.target.value })) }}
                         variant="outlined"
-                        size="small" /></>}
-                </Grid></>}
+                        size="small"
+                      />
+                    </>
+                  }
+                </Grid>
+              </>
+            }
           </Grid>}
           {modal !== 'SEA' && <Grid item xs={8} />}
           <Grid item xs={2}>
@@ -387,6 +510,30 @@ const Step4 = ({
               {I18n.t('pages.newProposal.step4.frequency')}
               <RedColorSpan> *</RedColorSpan>
             </FormLabel>
+            <InputContainer>
+              <ControlledInput
+                id="recurrency"
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                invalid={invalidInput && data.recurrency.length === 0}
+                variant="outlined"
+                value={data.recurrency}
+                size="small"
+                InputProps={{
+                  inputProps: {
+                    max: 99,
+                    min: 1
+                  }
+                }}
+                type="number"
+                onChange={(e) => { valuesRecurrency(e) }}
+              />
+              <FormLabel component="span" style={{ margin: '0 0 0 10px' }}>
+                {I18n.t('pages.newProposal.step4.times')}
+              </FormLabel>
+            </InputContainer>
+          </Grid>
+          <Grid item xs={2}>
+            <FormLabel component="legend">&nbsp;</FormLabel>
             <ControlledSelect
               labelId="frequency-label"
               id="frequency"
@@ -409,7 +556,36 @@ const Step4 = ({
               ))}
             </ControlledSelect>
           </Grid>
-          <Grid item xs={8} />
+          {
+            Number(data.frequency) === 2 || Number(data.frequency) === 3
+              ? <Grid item xs={8}>
+                <FormLabel component="legend">{I18n.t('pages.newProposal.step4.customDays')}</FormLabel>
+                <WeekContainer>
+                  <WeekDay id="sunday" className="disabledDay" value="0" onClick={() => weekDaysFrequency('sunday')}>
+                    {I18n.t('pages.newProposal.step4.sunday')}
+                  </WeekDay>
+                  <WeekDay id="monday" className="disabledDay" value="0" onClick={() => weekDaysFrequency('monday')}>
+                    {I18n.t('pages.newProposal.step4.monday')}
+                  </WeekDay>
+                  <WeekDay id="tuesday" className="disabledDay" value="0" onClick={() => weekDaysFrequency('tuesday')}>
+                    {I18n.t('pages.newProposal.step4.tuesday')}
+                  </WeekDay>
+                  <WeekDay id="wednesday" className="disabledDay" value="0" onClick={() => weekDaysFrequency('wednesday')}>
+                    {I18n.t('pages.newProposal.step4.wednesday')}
+                  </WeekDay>
+                  <WeekDay id="thursday" className="disabledDay" value="0" onClick={() => weekDaysFrequency('thursday')}>
+                    {I18n.t('pages.newProposal.step4.thursday')}
+                  </WeekDay>
+                  <WeekDay id="friday" className="disabledDay" value="0" onClick={() => weekDaysFrequency('friday')}>
+                    {I18n.t('pages.newProposal.step4.friday')}
+                  </WeekDay>
+                  <WeekDay id="saturday" className="disabledDay" value="0" onClick={() => weekDaysFrequency('saturday')}>
+                    {I18n.t('pages.newProposal.step4.saturday')}
+                  </WeekDay>
+                </WeekContainer>
+              </Grid>
+              : <Grid item xs={8} />
+          }
           <Grid item xs={6}>
             <FormLabel component="legend">
               {I18n.t('pages.newProposal.step4.general')}
