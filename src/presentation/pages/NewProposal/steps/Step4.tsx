@@ -236,7 +236,7 @@ const Step4 = ({
 
   const weekDaysFrequency = (id: string): any => {
     const element = (document.getElementById(id) as HTMLInputElement)
-    let weeklyValue = '0000000'
+    let weeklyValue: string
 
     if ((element.classList.contains('disabledDay')) ?? false) {
       element.classList.remove('disabledDay')
