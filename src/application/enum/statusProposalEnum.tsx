@@ -6,3 +6,12 @@ export enum StatusProposalEnum {
   REJEITADA = 5,
   CANCELADA = 6,
 }
+
+export enum StatusProposalStringEnum {
+  ABERTA = 'Aberta',
+  AGUARDANDO_RETORNO_CLIENTE = 'Ag. Retorno Cliente',
+  EM_REVISAO = 'Em Revisao',
+  APROVADA = 'Aprovada',
+  REJEITADA = 'Rejeitada',
+  CANCELADA = 'Cancelada',
+}
