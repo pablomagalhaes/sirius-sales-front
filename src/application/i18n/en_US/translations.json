@@ -66,8 +66,8 @@
         "subtitle": "Inform general details of your commercial proposal.",
         "validity": "Validity:",
         "time": "Transit. time:",
-        "freeTimeDemurrage": "Free time demurrage",
-        "freeTimeStorage": "Free time storage",
+        "freeTimeDemurrage": "Free time demurrage:",
+        "freeTimeStorage": "Free time storage:",
         "value": "Value (BRL):",
         "frequency": "Frequency:",
         "route": "Route:",
@@ -78,7 +78,16 @@
         "notHired": "Not Hired",
         "deadline": "Deadline (days):",
         "internal": "Internal observations (this text is NOT sent in the proposal):",
-        "choose": "Choose ..."
+        "choose": "Choose ...",
+        "customDays": "Customize days:",
+        "times": "time(s)",
+        "sunday": "S",
+        "monday": "M",
+        "tuesday": "T",
+        "wednesday": "W",
+        "thursday": "T",
+        "friday": "F",
+        "saturday": "S"
       },
       "step5": {
         "title": "Costs",
