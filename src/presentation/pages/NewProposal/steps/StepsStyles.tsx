@@ -4,10 +4,11 @@ import styled from 'styled-components'
 import NumberFormat from 'react-number-format'
 
 const TotalContainer = styled(MainDiv)`
-  width: 95%;
-  margin: 56px auto;
-  padding: 31px;
   display: flex;
+  width: 100%;
+  flex-direction: row;
+  padding-top: 31px;
+  padding-bottom: 31px;
   justify-content: flex-end;
   align-items: flex-start;
 `
@@ -18,13 +19,12 @@ const StyledTable = styled(Table)`
 `
 
 const StyledRow = styled(TableRow)`
-  display: flex !important;
   justify-content: space-between !important;
   margin: 0 20px !important;
 `
 
 const ButtonWrapper = styled.div`
-  margin-left: 20px;
+  margin-top: 15px;
 `
 
 const HeightDiv = styled.div`
@@ -39,6 +39,42 @@ const StyledPaper = styled(Paper)`
     box-sizing: border-box;
 `
 
+const Input = styled.input`
+  text-indent: 10px;
+  border: 1px solid ${(props: { invalid: boolean, filled: string | null, theme: any }) =>
+          props.invalid
+                  ? '#FF4D4D'
+                  : props.filled != null && props.filled.length > 0
+                          ? '#43BFB5'
+                          : props.theme?.commercial?.components?.itemModal?.border};
+                          
+  box-sizing: border-box;
+  border-radius: 4px;
+  width: 110px;
+  height: 32px;
+  margin-right: 14px;
+  font-family: DM Sans;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 150%;
+  letter-spacing: 0.02em;
+  color: ${(props: { disabled: boolean, theme: any }) =>
+          props.disabled ? props.theme?.commercial?.pages?.newProposal?.placeholder : props.theme?.commercial?.components?.itemModal?.inputFontColor};
+  background: ${(props: { disabled: boolean, theme: any }) =>
+          props.disabled ? props.theme?.commercial?.components?.itemModal?.disabledBackground : props.theme?.commercial?.components?.itemModal?.backgroundColor};
+
+  :focus {
+    outline: none;
+    border-color: #43bfb5;
+  }
+
+  ::placeholder {
+    color: #999dac;
+    opacity: 1;
+  }
+`
+
 export {
   TotalContainer,
   StyledTable,
@@ -46,5 +82,6 @@ export {
   ButtonWrapper,
   NumberInput,
   HeightDiv,
-  StyledPaper
+  StyledPaper,
+  Input
 }

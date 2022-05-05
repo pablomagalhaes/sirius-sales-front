@@ -1,44 +1,39 @@
-import React, { ReactNode, useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { I18n } from 'react-redux-i18n'
 import { Title, Subtitle, Separator, MessageContainer } from '../style'
 import FareModal, { FareModalData, initialState } from '../../../components/FareModal/FareModal'
-import { TableBody } from '@material-ui/core'
+import { Box, FormControl, FormLabel, Grid, InputAdornment, withTheme } from '@material-ui/core'
 import { ItemModalData } from '../../../components/ItemModal/ItemModal'
 
 import {
-  DeleteIconDiv,
-  EditIconDiv,
-  EmptyTableCost,
-  RowReverseContainer,
-  RowReverseDiv,
-  StyledTableCell,
-  TotalCostLabel,
-  ValueLabel
-} from '../../../components/CostTable/CostTableStyles'
-
-import {
-  TotalContainer,
-  StyledTable,
-  StyledRow,
   ButtonWrapper,
-  HeightDiv
+  HeightDiv,
+  StyledPaper,
+  NumberInput
 } from './StepsStyles'
 
-import EditIcon from '../../../../application/icons/EditIcon'
-import RemoveIcon from '../../../../application/icons/RemoveIcon'
-import { Button, MoneyValue, Messages } from 'fiorde-fe-components'
+import { Button, Messages } from 'fiorde-fe-components'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import { Cost } from '../../../../domain/Cost'
 import { TotalCost } from '../../../../domain/TotalCost'
 import API from '../../../../infrastructure/api'
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import ControlledInput from '../../../components/ControlledInput'
+import IconComponent from '../../../../application/icons/IconComponent'
+import FormatNumber from '../../../../application/utils/formatNumber'
+import SurchargeTable from '../../../components/SurchargeTable/index'
+import TotalSurcharge from '../../../components/TotalSurcharge'
+import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
+import { CalculationDataProps } from '../../../components/ChargeTable'
 
 interface Step6Props {
+  containerItems: ItemModalData[]
   costData: any
   modal: string
   setCompleted: (completed: any) => void
   setFilled: (filled: any) => void
   specifications: string
-  containerItems: ItemModalData[]
   setUndoMessage: React.Dispatch<React.SetStateAction<{
     step3: boolean
     step5origin: boolean
@@ -48,22 +43,52 @@ interface Step6Props {
   undoMessage: { step3: boolean, step5origin: boolean, step5destiny: boolean, step6: boolean }
   serviceList: any[]
   containerTypeList: any[]
+  theme: any
+  calculationData: CalculationDataProps
 }
 
-const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, containerItems, setUndoMessage, undoMessage, serviceList, containerTypeList }: Step6Props): JSX.Element => {
+const Step6 = ({
+  setFilled,
+  costData,
+  modal,
+  setCompleted,
+  specifications,
+  containerItems,
+  setUndoMessage,
+  undoMessage,
+  serviceList,
+  containerTypeList,
+  theme,
+  calculationData
+}: Step6Props): JSX.Element => {
   const [open, setOpen] = useState(false)
-  const [data, setData] = useState<FareModalData[]>([])
+  const [tableData, setTableData] = useState<FareModalData[]>([])
   const [copyTable, setCopyTable] = useState<FareModalData[]>([])
   const [chargeData, setChargeData] = useState<FareModalData>(initialState)
-  const currencyList = new Map()
+  const [currencyList, setCurrencyList] = useState<any[]>([])
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
   const [dataTotalCost, setDataTotalCost] = useState<any[]>([])
   const [loadedTotalCostsIds, setLoadedTotalCostsIds] = useState<number[]>([])
+  const [loadedTable, setLoadedTable] = useState(false)
 
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
 
-  const [loadedTable, setLoadedTable] = useState(false)
+  const currencyArray = new Map()
+
+  const [data, setData] = useState({
+    company: '',
+    currency: '',
+    value: '0',
+    tableData: []
+  })
+
+  useEffect(() => {
+    setTableData([])
+    setCopyTable([])
+    setChargeData(initialState)
+    setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false })
+  }, [modal])
 
   useEffect(() => {
     const loadedData: FareModalData[] = []
@@ -77,25 +102,45 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
           for (const cost of proposal.costs) {
             const getContainer = new Promise((resolve) => {
               if (specifications === 'fcl') {
-                void (async function () {
-                  await API.getContainerType(cost.containerType)
-                    .then((response) => resolve(String(response?.description)))
-                    .catch((err) => console.log(err))
-                })()
+                API.getContainerType(cost.containerType)
+                  .then((response) => resolve(String(response?.description)))
+                  .catch((err) => console.log(err))
               } else {
                 (resolve(''))
               }
             })
 
             const getService = new Promise((resolve) => {
-              void (async function () {
-                await API.getService(cost.idService)
-                  .then((response) => resolve(response?.service))
-                  .catch((err) => console.log(err))
-              })()
+              API.getService(cost.idService)
+                .then((response) => resolve(response?.service))
+                .catch((err) => console.log(err))
             })
 
-            void await Promise.all([getContainer, getService]).then((response) => {
+            const getTotalItemValue = new Promise((resolve) => {
+              if (cost.costType === 'Tarifa') {
+                const indexContainer = containerItems.findIndex(container => cost.containerType === container.type)
+                const totalCostCalculationData = {
+                  costType: cost.billingType,
+                  quantityContainer: specifications === 'fcl' ? Number(containerItems[indexContainer].amount) : 0,
+                  valueGrossWeight: isNaN(Number(calculationData?.weight)) ? 0 : calculationData?.weight,
+                  valueCubage: isNaN(Number(calculationData?.cubage)) ? 0 : calculationData?.cubage,
+                  valueWeightCubed: isNaN(Number(calculationData?.cubageWeight)) ? 0 : calculationData?.cubageWeight,
+                  valuePurchase: 0,
+                  valueSale: cost.valueSale,
+                  idCurrencyPurchase: '',
+                  idCurrencySale: cost.idCurrencySale
+                }
+
+                API.postTotalCalculation(totalCostCalculationData).then(response => {
+                  resolve(response.valueSale)
+                })
+                  .catch((err) => { resolve(''); console.log(err) })
+              } else {
+                resolve('')
+              }
+            })
+
+            void await Promise.all([getContainer, getService, getTotalItemValue]).then((response) => {
               const loadedItem: FareModalData = {
                 idCost: cost.id,
                 id: id++,
@@ -104,14 +149,15 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
                 minimumValue: cost.valueMinimumSale === 0 ? '' : completeDecimalPlaces(cost.valueMinimumSale),
                 expense: String(response[1]),
                 selectedContainer: String(response[0]),
-                type: String(cost.billingType)
+                type: String(cost.billingType),
+                totalItem: cost.valueSale === 0 ? '' : completeDecimalPlaces(Number(response[2]))
               }
               if (cost.costType === 'Tarifa') {
                 loadedData.push(loadedItem)
               }
             })
           }
-          setData(loadedData)
+          setTableData(loadedData)
           setLoadedTable(true)
         }
         void waitAllData()
@@ -123,6 +169,8 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
           }
         })
         setLoadedTotalCostsIds(loadedTotalCosts)
+        setTableData(loadedData)
+        setLoadedTable(true)
       })
     } else {
       setLoadedTable(true)
@@ -133,7 +181,7 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
     let actualCostArray = proposal.costs
     actualCostArray = actualCostArray.filter((cost) => cost.costType !== 'Tarifa' && cost)
     const newFareItems: Cost[] = []
-    data.forEach((row) => {
+    tableData.forEach((row) => {
       newFareItems.push({
         id: row.idCost === undefined ? null : row.idCost,
         idProposal: 0,
@@ -145,9 +193,9 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
         valuePurchase: null, // valor compra
         valuePurchasePercent: 0, // 0 por enquanto
         valueMinimumPurchase: null, // minimo compra
-        valueSale: Number(row.saleValue), // valor venda
+        valueSale: Number(row.saleValue.replace(',', '.')), // valor venda
         valueSalePercent: 0, // 0 por enquanto
-        valueMinimumSale: Number(row.minimumValue), // minimo venda
+        valueMinimumSale: Number(row.minimumValue.replace(',', '.')), // minimo venda
         idCurrencyPurchase: 'nul', // tipo moeda NOTNULL VARCHAR(3)
         idCurrencySale: row.saleCurrency, // tipo moeda
         isPurchase: false, // checkbox compra
@@ -172,7 +220,7 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
   }, [data, dataTotalCost])
 
   useEffect(() => {
-    if (data.length > 0) {
+    if (tableData.length > 0 && data.currency !== '' && data.company !== '' && data.value !== '') {
       setCompleted((currentState) => {
         return { ...currentState, step6: true }
       })
@@ -187,42 +235,87 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
         return { ...currentState, step6: false }
       })
     }
-    setDataTotalCost(Array.from(currencyList, ([name, value]) => ({ name, value })))
-  }, [data])
+    setDataTotalCost(Array.from(currencyArray, ([name, value]) => ({ name, value })))
+  }, [tableData, data, tableData.length])
 
   useEffect(() => {
-    setData([])
-    setCopyTable([])
-    setChargeData(initialState)
-    setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false })
-  }, [modal])
+    const newTableData: FareModalData[] = []
+    const waitAllData = async (): Promise<void> => {
+      for (const item of tableData) {
+        void await new Promise((resolve) => {
+          const indexContainer = containerItems.findIndex(container => item.selectedContainer === container.type)
+          const totalCostCalculationData = {
+            costType: item.type,
+            quantityContainer: specifications === 'fcl' ? Number(containerItems[indexContainer].amount) : 0,
+            valueGrossWeight: isNaN(Number(calculationData?.weight)) ? 0 : calculationData?.weight,
+            valueCubage: isNaN(Number(calculationData?.cubage)) ? 0 : calculationData?.cubage,
+            valueWeightCubed: isNaN(Number(calculationData?.cubageWeight)) ? 0 : calculationData?.cubageWeight,
+            valuePurchase: 0,
+            valueSale: Number(item.saleValue.replace(',', '.')),
+            idCurrencyPurchase: '',
+            idCurrencySale: item.saleCurrency
+          }
+          API.postTotalCalculation(totalCostCalculationData).then(response => {
+            item.totalItem = Number(response?.valueSale)?.toFixed(2).replace('.', ',')
+            resolve(newTableData.push(item))
+          })
+            .catch((err) => { resolve(''); console.log(err) })
+        })
+      }
+      setTableData(newTableData)
+    }
+    void waitAllData()
+  }, [containerItems, calculationData])
+
+  useEffect(() => {
+    void (async function () {
+      await API.getCurrencies()
+        .then((response) => setCurrencyList(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
 
   const handleAdd = (item: FareModalData): void => {
     setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false })
-    if (item.id !== null) {
-      const editData = [...data]
-      const index = editData.findIndex((i) => i.id === item.id)
-      editData[index] = item
-      setData(editData)
-    } else {
-      const lastIndex = data?.length - 1
-      const newItem = { ...item, id: data.length === 0 ? 0 : (Number(data[lastIndex].id) + 1) }
-      setData([...data, newItem])
-    }
-    setChargeData(initialState)
-  }
 
-  const calculateTotalCost = (saleCurrency, saleValue): void => {
-    if (saleCurrency !== null && saleCurrency !== '') {
-      currencyList.has(String(saleCurrency))
-        ? currencyList.set(String(saleCurrency), Number(currencyList.get(String(saleCurrency))) + Number(saleValue))
-        : currencyList.set(String(saleCurrency), Number(saleValue))
+    const indexContainer = containerItems.findIndex(container => item.selectedContainer === container.type)
+    const totalCostCalculationData = {
+      costType: item.type,
+      quantityContainer: specifications === 'fcl' ? Number(containerItems[indexContainer].amount) : 0,
+      valueGrossWeight: isNaN(Number(calculationData?.weight)) ? 0 : calculationData?.weight,
+      valueCubage: isNaN(Number(calculationData?.cubage)) ? 0 : calculationData?.cubage,
+      valueWeightCubed: isNaN(Number(calculationData?.cubageWeight)) ? 0 : calculationData?.cubageWeight,
+      valuePurchase: 0,
+      valueSale: Number(item.saleValue.replace(',', '.')),
+      idCurrencyPurchase: '',
+      idCurrencySale: item.saleCurrency
     }
+
+    void (async function () {
+      await API.postTotalCalculation(totalCostCalculationData)
+        .then((response) => {
+          item.totalItem = response.valueSale
+          item.saleCurrency = response.idCurrencySale
+
+          if (item.id !== null) {
+            const editData = [...tableData]
+            const index = editData.findIndex((i) => i.id === item.id)
+            editData[index] = item
+            setTableData(editData)
+          } else {
+            const lastIndex = tableData?.length - 1
+            const newItem = { ...item, id: tableData.length === 0 ? 0 : (Number(tableData[lastIndex].id) + 1) }
+            setTableData([...tableData, newItem])
+          }
+          setChargeData(initialState)
+        })
+        .catch((err) => console.log(err))
+    })()
   }
 
   const removeClickHandler = (id: number | null): void => {
-    setCopyTable(data)
-    setData((tableData) => {
+    setCopyTable(tableData)
+    setTableData((tableData) => {
       return tableData.filter((data) => data.id !== id)
     })
     setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: true })
@@ -233,20 +326,20 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
     handleOpen()
   }
 
-  const showFares = (): ReactNode[] => {
-    data?.map((item) => calculateTotalCost(item.saleCurrency, item.saleValue))
-    return Array.from(currencyList, ([name, value]) => ({ name, value })).map((currency, index) => {
-      return (
-        <ValueLabel key={index}>
-          <MoneyValue
-            currency={currency.name}
-            language="pt-br"
-            style={{ width: '80px' }}
-            value={currency.value}
-          />
-        </ValueLabel>
-      )
-    })
+  const getCompany = (): string[] => {
+    return ['teste 1', 'teste 2']
+  }
+
+  const selectTypeModal = (): string => {
+    switch (modal) {
+      case 'AIR':
+        return String(I18n.t('pages.newProposal.step6.companyAir'))
+      case 'SEA':
+        return String(I18n.t('pages.newProposal.step6.companySea'))
+      case 'LAND':
+        return String(I18n.t('pages.newProposal.step6.companyLand'))
+    }
+    return String(I18n.t('pages.newProposal.step6.companySea'))
   }
 
   const completeDecimalPlaces = (num: number | null): string => {
@@ -254,12 +347,17 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
     const decimalPlaces = String(num).split('.')[1]
     let completeNumber = String(num)
     if ((decimalPlaces === undefined) || decimalPlaces.length < 2) {
-      completeNumber = completeNumber + '.'
+      completeNumber = completeNumber + ','
       for (let i = 0; i < 2 - (decimalPlaces === undefined ? 0 : decimalPlaces.length); i++) {
         completeNumber = completeNumber + '0'
       }
     }
-    return completeNumber
+    return completeNumber.replace('.', ',')
+  }
+
+  const getSumTotalItem = (): string => {
+    const totalSum = (tableData.reduce((total, item) => Number(item.totalItem?.replace(',', '.')) + total, 0))
+    return totalSum.toFixed(2).replace('.', ',')
   }
 
   return (
@@ -269,14 +367,107 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
           6. {I18n.t('pages.newProposal.step6.title')}
           <Subtitle>{I18n.t('pages.newProposal.step6.subtitle')}</Subtitle>
         </Title>
-        {loadedTable && <Table
-          data={data}
-          costData={costData}
-          modal={modal}
-          specifications={specifications}
-          remove={removeClickHandler}
-          edit={editClickHandler}
-        />}
+        <FormControl variant="outlined" size="small" className='form-size'>
+          <Grid container spacing={5}>
+            <Grid item xs={4}>
+              <FormLabel component="legend">
+                {selectTypeModal()}
+              </FormLabel>
+              <Autocomplete
+                freeSolo
+                onChange={(e, newValue) => setData({ ...data, company: String(newValue) })}
+                options={getCompany()}
+                value={data.company}
+                renderInput={(params) => (
+                  <div ref={params.InputProps.ref}>
+                    <ControlledInput
+                      {...params}
+                      id="search-destiny"
+                      toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                      invalid={false}
+                      variant="outlined"
+                      size="small"
+                      $space
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconComponent name="search" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
+                          </InputAdornment>
+                        )
+                      }}
+                    />
+                  </div>
+                )}
+                PaperComponent={(params: any) => <StyledPaper {...params} />}
+              />
+            </Grid>
+            <Grid item xs={2}>
+              <FormLabel component="legend">
+                {I18n.t('pages.newProposal.step6.currency')}
+                <RedColorSpan> *</RedColorSpan>
+              </FormLabel>
+              <Autocomplete
+                freeSolo
+                value={data.currency}
+                onChange={(e, newValue) => setData({ ...data, currency: newValue })}
+                options={currencyList.map(item => item.id)}
+                renderInput={(params) => (
+                  <div ref={params.InputProps.ref}>
+                    <ControlledInput
+                      {...params}
+                      id="currencies"
+                      toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                      invalid={false}
+                      variant="outlined"
+                      size="small"
+                      placeholder={I18n.t('components.itemModal.choose')}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Box style={{ position: 'absolute', top: '7px', right: '0' }} {...params.inputProps}>
+                              <ArrowDropDownIcon />
+                            </Box>
+                          </InputAdornment>
+                        )
+                      }}
+                    />
+                  </div>
+                )}
+                PaperComponent={(params: any) => <StyledPaper {...params} />}
+              />
+            </Grid>
+            <Grid item xs={2}>
+              <FormLabel component="legend">
+                {I18n.t('pages.newProposal.step6.value')}
+                <RedColorSpan> *</RedColorSpan>
+              </FormLabel>
+              <NumberInput
+                decimalSeparator={','}
+                thousandSeparator={'.'}
+                decimalScale={2}
+                format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                customInput={ControlledInput}
+                onChange={(e) => setData({ ...data, value: e.target.value })}
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                invalid={false}
+                value={data.value}
+                variant="outlined"
+                size="small"
+              />
+            </Grid>
+          </Grid>
+        </FormControl>
+        {loadedTable &&
+          <SurchargeTable
+            data={tableData}
+            costData={costData}
+            modal={modal}
+            specifications={specifications}
+            remove={removeClickHandler}
+            edit={editClickHandler}
+            dataFields={data}
+          />
+        }
         <ButtonWrapper>
           <Button
             onAction={handleOpen}
@@ -300,24 +491,14 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
           modal={modal}
           specifications={specifications}
           containerItems={containerItems}
+          currency={data.currency}
         />
-        {data.length === 0
-          ? <TotalContainer>
-            <TotalCostLabel>
-              {I18n.t('pages.newProposal.step6.totalFares')}
-            </TotalCostLabel>
-            <ValueLabel>
-              <EmptyTableCost>-</EmptyTableCost>
-            </ValueLabel>
-          </TotalContainer>
-          : <TotalContainer>
-            <TotalCostLabel>
-              {I18n.t('pages.newProposal.step6.totalFares')}
-            </TotalCostLabel>
-            <RowReverseContainer>
-              {showFares()}
-            </RowReverseContainer>
-          </TotalContainer>
+        {(tableData.length !== 0 && loadedTable) &&
+          <TotalSurcharge
+            currency={data.currency}
+            value={data.value}
+            totalOtherFare={getSumTotalItem()}
+          />
         }
       </HeightDiv>
       {undoMessage.step6 &&
@@ -328,7 +509,7 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
             buttonText={I18n.t('pages.newProposal.step3.messageUndoDelete')}
             closeAlert={() => { setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false }) }}
             closeMessage=''
-            goBack={() => { setData(copyTable); setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false }) }}
+            goBack={() => { setTableData(copyTable); setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false }) }}
             message={I18n.t('pages.newProposal.step3.messageDeleteItem')}
           />
         </MessageContainer>}
@@ -336,68 +517,4 @@ const Step6 = ({ setFilled, costData, modal, setCompleted, specifications, conta
   )
 }
 
-interface TableData {
-  costData: any
-  data?: FareModalData[]
-  edit?: (tableData: FareModalData) => void
-  modal: string
-  remove?: (id: number | null) => void
-  specifications: string
-}
-
-const Table = ({ data, remove, edit }: TableData): JSX.Element => {
-  return (
-    <StyledTable>
-      <TableBody>
-        {data !== null &&
-          (
-            <div>
-              {data?.map((item: FareModalData) => (
-                <StyledRow id={item.id} key={item.id}>
-                  <StyledTableCell
-                    color={1}
-                    width="100%"
-                    component="th"
-                    scope="row"
-                  >
-                    {item.expense}
-                  </StyledTableCell>
-                  <StyledTableCell width="100%" align="left">
-                    {item.type}
-                  </StyledTableCell>
-                  <StyledTableCell width="100%" align="left">
-                    <MoneyValue
-                      currency={item.saleCurrency}
-                      language="pt-br"
-                      style={{ width: '80px' }}
-                      value={Number(item.saleValue)}
-                    />
-                  </StyledTableCell>
-                  <StyledTableCell width="100%">
-                    <RowReverseDiv>
-                      <DeleteIconDiv>
-                        <RemoveIcon
-                          onClick={() => {
-                            if (remove != null) remove(item.id)
-                          }}
-                        />
-                      </DeleteIconDiv>
-                      <EditIconDiv>
-                        <EditIcon
-                          onClick={() => {
-                            if (edit != null) edit(item)
-                          }}
-                        />
-                      </EditIconDiv>
-                    </RowReverseDiv>
-                  </StyledTableCell>
-                </StyledRow>
-              ))}
-            </div>
-          )}
-      </TableBody>
-    </StyledTable>
-  )
-}
-
-export default Step6
+export default withTheme(Step6)

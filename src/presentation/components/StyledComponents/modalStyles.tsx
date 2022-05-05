@@ -30,6 +30,7 @@ export const RedColorSpan = styled.span`
 `
 export const Label = styled.span`
   width: ${(props) => props.width};
+  padding-left: ${(props) => props.paddingLeft};
 `
 
 export const Title = styled.span`
@@ -90,7 +91,7 @@ export const RowDiv = styled.div`
     position: absolute;
     top: 137px;
     z-index: 10;
-    right: 58px;
+    left: 345px;
   }
 
   .dropdownContainer {
@@ -111,8 +112,9 @@ export const Form = styled.div`
   line-height: 150%;
   letter-spacing: 0.02em;
   color: ${(props: any) =>
-          props.theme?.commercial?.components?.itemModal?.fontColor};
+    props.theme?.commercial?.components?.itemModal?.fontColor};
 `
+
 export const ItemModalForm = styled(Form)`
 margin-right: 24px;
 font-size: 14px;
