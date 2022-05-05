@@ -159,6 +159,15 @@ const putProposal = async (id, params): Promise<any> => {
   }
 }
 
+const putStatus = async (id, status): Promise<any> => {
+  try {
+    const res = await instance.put(`/sirius-business-proposal-api/proposal/status/${String(id)}/${String(status)}`)
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const getBusinessPartnerCostumer = async (params): Promise<any> => {
   try {
     const res = await instance.get(`/sirius-business-partner-api/business/partner/class/${String(params)}`)
@@ -186,7 +195,8 @@ const API = {
   getProposal,
   getBusinessPartnerCostumer,
   getOriginDestinationById,
-  putProposal
+  putProposal,
+  putStatus
 }
 
 export default API

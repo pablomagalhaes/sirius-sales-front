@@ -36,7 +36,7 @@ import API from '../../../infrastructure/api'
 import ArrowDown from '../../../application/icons/ArrowDown'
 import { cardFilters, orderButtonMenuItems, menuItems } from './constants'
 import { I18n } from 'react-redux-i18n'
-import { StatusProposalEnum } from '../../../application/enum/statusProposalEnum'
+import { StatusProposalEnum, StatusProposalStringEnum } from '../../../application/enum/statusProposalEnum'
 
 const defaultFilter = {
   page: 0,
@@ -135,7 +135,7 @@ const Proposal = (): JSX.Element => {
     })()
   }
 
-  const verifyStatus = (status): any => {
+  const verifyStatus = (status: any): any => {
     switch (status) {
       case 'Aberta':
         return StatusProposalEnum.ABERTA
@@ -152,7 +152,7 @@ const Proposal = (): JSX.Element => {
     }
   }
 
-  const getProposalItems = (proposalList): any => {
+  const getProposalItems = (proposalList: any[]): any => {
     const array: any = []
     for (const proposal of proposalList) {
       const opening = new Date(proposal.openingDate).toLocaleDateString(
@@ -183,7 +183,17 @@ const Proposal = (): JSX.Element => {
     return array
   }
 
-  const menuItemsList = (status, id): void => {
+  const setStatus = (id: any, status: String): void => {
+    void (async function () {
+      await API.putStatus(id, status)
+        .then(() => {
+          getProposalByFilter()
+        })
+        .catch((err) => console.log(err))
+    })()
+  }
+
+  const menuItemsList = (status: any, id: any): void => {
     const array: any = []
     switch (status) {
       case StatusProposalEnum.ABERTA:
@@ -205,12 +215,12 @@ const Proposal = (): JSX.Element => {
         {
           iconType: 'forward',
           label: I18n.t('pages.proposal.table.confirmLabel'),
-          onClick: () => {}
+          onClick: () => { setStatus(id, StatusProposalStringEnum.AGUARDANDO_RETORNO_CLIENTE) }
         },
         {
           iconType: 'cancel',
           label: I18n.t('pages.proposal.table.cancelLabel'),
-          onClick: () => {}
+          onClick: () => { setStatus(id, StatusProposalStringEnum.CANCELADA) }
         })
         return array
       case StatusProposalEnum.AGUARDANDO_RETORNO_CLIENTE:
@@ -222,22 +232,22 @@ const Proposal = (): JSX.Element => {
         {
           iconType: 'fileReview',
           label: I18n.t('pages.proposal.table.reviewLabel'),
-          onClick: () => {}
+          onClick: () => { setStatus(id, StatusProposalStringEnum.EM_REVISAO) }
         },
         {
           iconType: 'cancel',
           label: I18n.t('pages.proposal.table.cancelLabel'),
-          onClick: () => {}
+          onClick: () => { setStatus(id, StatusProposalStringEnum.CANCELADA) }
         },
         {
           iconType: 'thumbsUp',
           label: I18n.t('pages.proposal.table.approveLabel'),
-          onClick: () => {}
+          onClick: () => { setStatus(id, StatusProposalStringEnum.APROVADA) }
         },
         {
           iconType: 'thumbsDown',
           label: I18n.t('pages.proposal.table.rejectLabel'),
-          onClick: () => {}
+          onClick: () => { setStatus(id, StatusProposalStringEnum.REJEITADA) }
         })
         return array
       case StatusProposalEnum.EM_REVISAO:
@@ -259,12 +269,12 @@ const Proposal = (): JSX.Element => {
         {
           iconType: 'forward',
           label: I18n.t('pages.proposal.table.confirmLabel'),
-          onClick: () => {}
+          onClick: () => { setStatus(id, StatusProposalStringEnum.AGUARDANDO_RETORNO_CLIENTE) }
         },
         {
           iconType: 'cancel',
           label: I18n.t('pages.proposal.table.cancelLabel'),
-          onClick: () => {}
+          onClick: () => { setStatus(id, StatusProposalStringEnum.CANCELADA) }
         })
         return array
       case StatusProposalEnum.APROVADA:
@@ -310,7 +320,7 @@ const Proposal = (): JSX.Element => {
 
     const selectedProposals = findKeyFilter(selectedFiltersRowFilter, 'Ref. proposta')
     if (selectedProposals !== undefined) {
-      setFilter((filter) => ({
+      setFilter((filter: any) => ({
         ...filter,
         referenceProposal: [selectedProposals]
       }))
@@ -318,7 +328,7 @@ const Proposal = (): JSX.Element => {
 
     const selectedClients = findKeyFilter(selectedFiltersRowFilter, 'Cliente')
     if (selectedClients !== undefined) {
-      setFilter((filter) => ({
+      setFilter((filter: any) => ({
         ...filter,
         referenceClientProposal: [selectedClients]
       }))
@@ -326,7 +336,7 @@ const Proposal = (): JSX.Element => {
 
     const selectedProcessTypes = findKeyFilter(selectedFiltersRowFilter, 'Tipo de processo')
     if (selectedProcessTypes !== undefined) {
-      setFilter((filter) => ({
+      setFilter((filter: any) => ({
         ...filter,
         operationType: [selectedProcessTypes]
       }))
@@ -339,7 +349,7 @@ const Proposal = (): JSX.Element => {
 
       if (typeOrigin.length === 1 && typeDestination.length === 0) {
         const origins = selectedOriginsDestinations[0].split(' - ')
-        setFilter((filter) => ({
+        setFilter((filter: any) => ({
           ...filter,
           idOrigin: [origins]
         }))
@@ -359,7 +369,7 @@ const Proposal = (): JSX.Element => {
         const origins = selectOriginsDestinations[0].split(' - ')
         const destinations = selectOriginsDestinations[1].split(' - ')
 
-        setFilter((filter) => ({
+        setFilter((filter: any) => ({
           ...filter,
           idOrigin: [origins[0]],
           idDestination: [destinations[0]]
@@ -369,7 +379,7 @@ const Proposal = (): JSX.Element => {
 
     const selectedIncoterms = findKeyFilter(selectedFiltersRowFilter, 'Incoterm')
     if (selectedIncoterms !== undefined) {
-      setFilter((filter) => ({
+      setFilter((filter: any) => ({
         ...filter,
         idIncoterm: [selectedIncoterms]
       }))
@@ -389,7 +399,7 @@ const Proposal = (): JSX.Element => {
         const openedDtBeginFormated = `${String(openedYearBegin)}/${String(openedMonthBegin)}/${String(openedDayBegin)}`
         const openedDtEndFormated = `${String(openedYearEnd)}/${String(openedMonthEnd)}/${String(openedDayEnd)}`
 
-        setFilter((filter) => ({
+        setFilter((filter: any) => ({
           ...filter,
           'openingDate.dtBegin': openedDtBeginFormated,
           'openingDate.dtEnd': openedDtEndFormated
@@ -405,7 +415,7 @@ const Proposal = (): JSX.Element => {
         const validateDtBeginFormated = `${String(validateYearBegin)}/${String(validateMonthBegin)}/${String(validateDayBegin)}`
         const validateDtEndFormated = `${String(validateYearEnd)}/${String(validateMonthEnd)}/${String(validateDayEnd)}`
 
-        setFilter((filter) => ({
+        setFilter((filter: any) => ({
           ...filter,
           'validityDate.dtBegin': validateDtBeginFormated,
           'validityDate.dtEnd': validateDtEndFormated
@@ -414,7 +424,7 @@ const Proposal = (): JSX.Element => {
     }
   }
 
-  const findKeyFilter = (filterSelected, key): any => {
+  const findKeyFilter = (filterSelected: any, key: string): any => {
     for (const item of filterSelected) {
       if (item.filterName === key) {
         if (item.textFieldValueSelected !== '') {
@@ -459,17 +469,17 @@ const Proposal = (): JSX.Element => {
     }))
   }
 
-  const handleOrderSelect = (value): void => {
-    setFilter((filter) => ({ ...filter, orderByList: value }))
+  const handleOrderSelect = (value: React.SetStateAction<string>): void => {
+    setFilter((filter: any) => ({ ...filter, orderByList: value }))
     setOrderBy(value)
   }
 
   const handleOrderDirection = (): void => {
     if (orderAsc) {
-      setFilter((filter) => ({ ...filter, direction: 'DESC' }))
+      setFilter((filter: any) => ({ ...filter, direction: 'DESC' }))
       setOrderAsc(false)
     } else {
-      setFilter((filter) => ({ ...filter, direction: 'ASC' }))
+      setFilter((filter: any) => ({ ...filter, direction: 'ASC' }))
       setOrderAsc(true)
     }
   }
@@ -651,8 +661,8 @@ const Proposal = (): JSX.Element => {
         <PaginationContainer>
           <PaginationMainContainer>
             <Pagination
-              onPageChange={(value) => setFilter((filter) => ({ ...filter, page: value }))}
-              onRowsPerPageChange={(value) => setFilter((filter) => ({ ...filter, size: value, page: 0 }))}
+              onPageChange={(value) => setFilter((filter: any) => ({ ...filter, page: value }))}
+              onRowsPerPageChange={(value) => setFilter((filter: any) => ({ ...filter, size: value, page: 0 }))}
               labelDisplay="exibindo"
               count={totalProposalList}
               labelRowsPerPage="Propostas por página"
