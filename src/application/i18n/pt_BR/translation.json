@@ -112,7 +112,21 @@
         "destinationCost": "New destiny cost",
         "addFare": "Adicionar tarifa",
         "addFareTooltip": "Para adicionar, selecione os agentes na etapa \"Serviço\" e inclua pelo menos um item na etapa \"Carga\"",
-        "totalFares": "Total Tarifas:"
+        "totalFares": "Total Tarifas:",
+        "companySea": "Cia. Maritima:",
+        "companyAir": "Cia. Aérea:",
+        "companyLand": "Cia. Rodoviária:",
+        "currency": "Moeda:",
+        "value": "Valor:",
+        "type": "Tipo",
+        "expense":"Despesa/Serviço",
+        "colValue": "Valor",
+        "minValue": "Valor-Min.",
+        "totalItem": "Total Item",
+        "cwBuySell": "CW Compra / Venda:",
+        "totalLoad": "Total carga:",
+        "totalOtherFees": "Total outras tarifas:",
+        "profit": "Profit:"
       },
       "saveMessage": {
         "message": "Proposta salva com sucesso, Ref: ",
@@ -203,11 +217,11 @@
     "fareModal":{
       "type": "Tipo:",
       "expense":"Despesa/Serviço:",
-      "saleValue": "Valor venda:",
+      "saleValue": "Valor Venda:",
       "choose": "Escolha...",
       "value": "Valor",
       "newFare": "Nova tarifa",
-      "minimum": "Mínimo"
+      "minimum": "Mínimo:"
     }
   }
 }

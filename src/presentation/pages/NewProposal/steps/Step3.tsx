@@ -48,6 +48,7 @@ interface Step3Props {
   undoMessage: { step3: boolean, step5origin: boolean, step5destiny: boolean, step6: boolean }
   containerTypeList: any[]
   setCalculationData: (items: CalculationDataProps) => void
+  setStepLoaded: (steps: any) => void
 }
 
 const Step3 = ({
@@ -61,7 +62,8 @@ const Step3 = ({
   setUndoMessage,
   undoMessage,
   containerTypeList,
-  setCalculationData
+  setCalculationData,
+  setStepLoaded
 }: Step3Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [tableRows, setTableRows] = useState<ItemModalData[]>([])
@@ -153,6 +155,9 @@ const Step3 = ({
         })
         setTableRows(loadedTableRows)
         setTableId(loadedTableRows.length)
+        setStepLoaded((currentState) => ({ ...currentState, step3: true }))
+      } else {
+        setStepLoaded((currentState) => ({ ...currentState, step3: true }))
       }
     })
   }, [])

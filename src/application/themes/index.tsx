@@ -22,6 +22,11 @@ const dark = {
         emptyLabel: '#B5B8C2',
         border: '#364353',
         errorText: '#FF7373'
+      },
+      totalSurchage: {
+        backgroundColor: '#151D28',
+        fontColor: '#F2F3F7',
+        borderColor: '#222E3E'
       }
     },
     pages: {
@@ -86,6 +91,11 @@ const light = {
         emptyLabel: '#999DAC',
         border: '#D9DCE5',
         errorText: '#FF4D4D'
+      },
+      totalSurchage: {
+        backgroundColor: '#F0F1F5',
+        fontColor: '#222222',
+        borderColor: '#999DAC'
       }
     },
     pages: {

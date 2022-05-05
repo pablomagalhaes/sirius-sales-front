@@ -168,6 +168,7 @@ const Step5 = ({
     })
     const newDestinyTableData: Cost[] = []
     dataDestiny.forEach((row) => {
+      console.log(row)
       newDestinyTableData.push({
         id: row.idCost === undefined ? null : row.idCost,
         idProposal: 0,
