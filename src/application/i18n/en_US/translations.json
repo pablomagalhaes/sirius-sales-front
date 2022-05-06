@@ -112,7 +112,21 @@
         "destinationCost": "New destiny cost",
         "addFare": "Add surcharge",
         "addFareTooltip": "To add, select agents in the \"Service\" step and include at least one item in the \"Cargo\" step",
-        "totalFares": "Total Surcharges:"
+        "totalFares": "Total Surcharges:",
+        "companySea": "Cia. Sea:",
+        "companyAir": "Cia. Air:",
+        "companyLand": "Cia. Land:",
+        "currency": "Currency:",
+        "value": "Value:",
+        "type": "Type",
+        "expense":"Expense/Service",
+        "colValue": "Value",
+        "minValue": "Min. Value",
+        "totalItem": "Total Item",
+        "cwBuySell": "CW Buy / Sell:",
+        "totalLoad": "Total load:",
+        "totalOtherFees": "Total other fees:",
+        "profit": "Profit:"
       },
       "saveMessage": {
         "message": "Proposal saved successfully, Ref. ",
@@ -203,11 +217,11 @@
     "fareModal":{
       "type": "Type:",
       "expense":"Expense/Service:",
-      "saleValue": "Sale value:",
+      "saleValue": "Sale Value:",
       "choose": "Choose...",
       "value": "Value",
       "newFare": "New surcharge",
-      "minimum": "Minimum"
+      "minimum": "Minimum:"
     }
   }
 }

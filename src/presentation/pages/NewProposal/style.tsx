@@ -200,6 +200,13 @@ const Separator = styled.div`
   input[type=number]::-webkit-inner-spin-button, 
   input[type=number]::-webkit-outer-spin-button {
     opacity: 1;
+  .dropdown {
+    margin-top: 12px;
+    position: absolute;
+    top: 4px;
+    z-index: 10;
+    left: 78px;
+    background: green;
   }
 `
 

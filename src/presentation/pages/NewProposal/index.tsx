@@ -115,7 +115,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     step6: false
   })
 
-  const [stepLoaded, setSteploaded] = useState({
+  const [stepLoaded, setStepLoaded] = useState({
     step1: false,
     step2: false,
     step3: false,
@@ -442,7 +442,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
               setFilled={setFilled}
               invalidInput={invalidInput}
               setProposalType={setProposalType}
-              setSteploaded={setSteploaded}
+              setStepLoaded={setStepLoaded}
             />
           </div>
           {stepLoaded.step1 && <>
@@ -468,6 +468,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                 modal={modal}
                 setCostData={setCostData}
                 setSpecifications={setSpecifications}
+                setStepLoaded={setStepLoaded}
               />
             </div>
             <div id="step4">
@@ -479,7 +480,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                 specifications={specifications}
               />
             </div>
-            <div id="step5">
+            {stepLoaded.step3 && <> <div id="step5">
               <Step5
                 calculationData={calculationData}
                 containerTypeList={containerTypeList}
@@ -495,20 +496,22 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                 invalidInput={invalidInput}
               />
             </div>
-            <div id="step6">
-              <Step6
-                containerTypeList={containerTypeList}
-                serviceList={serviceList}
-                undoMessage={undoMessage}
-                setUndoMessage={setUndoMessage}
-                setFilled={setFilled}
-                containerItems={step3TableItems}
-                setCompleted={setCompleted}
-                costData={costData}
-                modal={modal}
-                specifications={specifications}
-              />
-            </div>
+              <div id="step6">
+                <Step6
+                  calculationData={calculationData}
+                  containerTypeList={containerTypeList}
+                  serviceList={serviceList}
+                  undoMessage={undoMessage}
+                  setUndoMessage={setUndoMessage}
+                  setFilled={setFilled}
+                  containerItems={step3TableItems}
+                  setCompleted={setCompleted}
+                  costData={costData}
+                  modal={modal}
+                  specifications={specifications}
+                />
+              </div>
+            </>}
           </>
           }
         </MainContainer>

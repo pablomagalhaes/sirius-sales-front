@@ -34,10 +34,10 @@ export interface Step1Props {
   setProposalType: (proposal: string) => void
   setModal: (modal: string) => void
   filled: Filled
-  setSteploaded: (steps: any) => void
+  setStepLoaded: (steps: any) => void
 }
 
-const Step1 = ({ theme, invalidInput, setCompleted, setFilled, setProposalType, setModal, filled, setSteploaded }: Step1Props): JSX.Element => {
+const Step1 = ({ theme, invalidInput, setCompleted, setFilled, setProposalType, setModal, filled, setStepLoaded }: Step1Props): JSX.Element => {
   const [transportList] = useState<Transport[]>(TransportList)
   const [agentsList, setAgentsList] = useState<any[]>([])
   const [partnerList, setPartnerList] = useState<any[]>([])
@@ -82,10 +82,10 @@ const Step1 = ({ theme, invalidInput, setCompleted, setFilled, setProposalType, 
           proposalValue: String(response[2]),
           requester: proposal.requester
         })
-        setSteploaded((currentState) => ({ ...currentState, step1: true }))
+        setStepLoaded((currentState) => ({ ...currentState, step1: true }))
       })
     } else {
-      setSteploaded((currentState) => ({ ...currentState, step1: true }))
+      setStepLoaded((currentState) => ({ ...currentState, step1: true }))
     }
   }, [])
 

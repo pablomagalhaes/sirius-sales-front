@@ -26,6 +26,8 @@ import API from '../../../../infrastructure/api'
 import { NumberInput } from './StepsStyles'
 import { withTheme } from 'styled-components'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
+import FormatNumber from '../../../../application/utils/formatNumber'
+
 interface Step4Props {
   invalidInput: boolean
   setCompleted: (completed: any) => void
@@ -93,19 +95,6 @@ const Step4 = ({
   const [frequencyList, setFrequencyList] = useState<Frequency[]>([])
   const [disabledValidateDate, setDisabledValidateDate] = useState(true)
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
-
-  const rightToLeftFormatter = (value: string, decimal: number): string => {
-    if (Number(value) === 0) return ''
-
-    let amount = ''
-    if (amount.length > decimal) {
-      amount = parseInt(value).toFixed(decimal)
-    } else {
-      amount = (parseInt(value) / 10 ** decimal).toFixed(decimal)
-    }
-
-    return String(amount).replace('.', ',')
-  }
 
   const validateFloatInput = (value: string): RegExpMatchArray | null => {
     return value.match(/^[0-9]*,?[0-9]*$/)
@@ -489,7 +478,7 @@ const Step4 = ({
                         decimalSeparator={','}
                         thousandSeparator={'.'}
                         decimalScale={2}
-                        format={(value: string) => rightToLeftFormatter(value, 2)}
+                        format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                         customInput={ControlledInput}
                         toolTipTitle={I18n.t('components.itemModal.requiredField')}
                         invalid={invalidInput && data.value === ''}
