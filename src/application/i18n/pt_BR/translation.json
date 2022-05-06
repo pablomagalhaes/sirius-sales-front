@@ -142,12 +142,12 @@
     },
     "proposal":{
       "table":{
-        "openLabel":"aberta",
-        "waitingForCustomerReturnLabel": "ag. ret. cliente",
-        "inRevisionLabel":"em revisão",
-        "approvedLabel":"aprovada",
-        "rejectedLabel":"rejeitada",
-        "cancelledLabel":"cancelada",
+        "openLabel":"Aberta",
+        "waitingForCustomerReturnLabel": "Ag. ret. cliente",
+        "inRevisionLabel":"Em revisão",
+        "approvedLabel":"Aprovada",
+        "rejectedLabel":"Rejeitada",
+        "cancelledLabel":"Cancelada",
         "editLabel": "Editar",
         "duplicateLabel": "Duplicar",
         "reviewLabel": "Definir como \"Em revisão\"",
