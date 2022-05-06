@@ -170,8 +170,7 @@ const Step4 = ({
       data.deadline.length > 0 ||
       data.value.length > 0 ||
       data.generalObs.length > 0 ||
-      data.internalObs.length > 0 ||
-      data.recurrency.length > 0
+      data.internalObs.length > 0
     ) {
       setFilled((currentState) => {
         return { ...currentState, step4: true }
