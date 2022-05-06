@@ -90,8 +90,7 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, setFilled, mod
       idDestination: data.destiny.split(' - ')[0],
       idBusinessPartnerAgent: 0, // TODO vai sofrer alteracao no banco para receber array
       idIncoterm: data.incoterm,
-      cargoCollectionAddress: data.collection,
-      agents: data.agents
+      cargoCollectionAddress: data.collection
     })
   }, [data])
 
