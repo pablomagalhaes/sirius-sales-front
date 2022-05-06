@@ -30,7 +30,7 @@ interface TableData {
 
 const SurchargeTable = ({ data, dataFields, remove, edit }: TableData): JSX.Element => {
   const verifyType = (item): JSX.Element => {
-    if (item.type === 'Vl. Fixo' || item.type === 'BL') {
+    if (item.type === 'FIXO' || item.type === 'BL') {
       return (
         <FormatValue>
           -
