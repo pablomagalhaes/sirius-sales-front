@@ -174,7 +174,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       completed.step6
     ) {
       if (proposal.id === undefined || proposal.id === null) {
-        API.postProposal(JSON.stringify(proposal)).then(() => {
+        API.postProposal(JSON.stringify(proposal)).then((response) => {
+          setProposal(response)
           setShowSaveMessage(true)
           setInvalidInput(false)
         }).catch((error) => {
