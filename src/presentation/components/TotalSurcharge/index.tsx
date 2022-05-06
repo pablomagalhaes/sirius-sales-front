@@ -17,7 +17,7 @@ const TotalSurcharge = ({ value, currency, totalOtherFare }: TotalSurchargeProps
         <div>926,27 / 1.000</div>
         <TotalCargoContainer>
           <div>{I18n.t('pages.newProposal.step6.totalLoad')}</div>
-          <div>{(value !== '0' && value !== '') ? `${currency} ${value}` : '-'}</div>
+          <div>{(value !== '0,00' && value !== '') ? `${currency} ${value}` : '-'}</div>
         </TotalCargoContainer>
       </UpperContainer>
       <LowerContainer>
@@ -28,7 +28,7 @@ const TotalSurcharge = ({ value, currency, totalOtherFare }: TotalSurchargeProps
         </ProfitContainer>
         <TotalCargoContainer>
           <div>{I18n.t('pages.newProposal.step6.totalOtherFees')}</div>
-          <div>{(totalOtherFare !== '0' && totalOtherFare !== '') ? `${currency} ${totalOtherFare}` : '-'}</div>
+          <div>{(totalOtherFare !== '0,00' && totalOtherFare !== '') ? `${currency} ${totalOtherFare}` : '-'}</div>
         </TotalCargoContainer>
       </LowerContainer>
     </TotalContainer>
