@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext, useImperativeHandle } from 'react'
 import CostTable from '../../../components/CostTable/CostTable'
 import { I18n } from 'react-redux-i18n'
 import { Title, Subtitle, Separator } from '../style'
@@ -28,6 +28,7 @@ interface Step5Props {
   containerTypeList: any[]
   calculationData: CalculationDataProps
   invalidInput: boolean
+  updateTableIdsRef: any
 }
 
 export interface TotalCostTable {
@@ -54,7 +55,8 @@ const Step5 = ({
   serviceList,
   containerTypeList,
   calculationData,
-  invalidInput
+  invalidInput,
+  updateTableIdsRef
 }: Step5Props): JSX.Element => {
   const [dataOrigin, setDataOrigin] = useState<CostTableItem[]>([])
   const [dataDestiny, setDataDestiny] = useState<CostTableItem[]>([])
@@ -67,12 +69,32 @@ const Step5 = ({
 
   const [loadedTable, setLoadedTable] = useState(false)
 
+  useImperativeHandle(updateTableIdsRef, () => ({
+    updateStep5Ids () {
+      let originId = 0
+      let destinyId = 0
+      if (proposal?.id !== undefined && proposal?.id !== null) {
+        const newOriginTable = [...dataOrigin]
+        const newDestinyTable = [...dataDestiny]
+        for (const cost of proposal.costs) {
+          if (cost.costType === 'Origem') {
+            newOriginTable[originId++].idCost = cost.id
+            setDataOrigin(newOriginTable)
+          } else if (cost.costType === 'Destino') {
+            newDestinyTable[destinyId++].idCost = cost.id
+            setDataDestiny(newDestinyTable)
+          }
+        }
+      }
+    }
+  }))
+
   useEffect(() => {
     const loadedDataOrigin: CostTableItem[] = []
     const loadedDataDestiny: CostTableItem[] = []
 
     let id = 0
-    if (proposal.id !== undefined && proposal.id !== null) {
+    if (proposal?.id !== undefined && proposal?.id !== null) {
       void new Promise<void>((resolve) => {
         setTimeout(() => resolve(), 1000)
       }).then(() => {
@@ -168,7 +190,6 @@ const Step5 = ({
     })
     const newDestinyTableData: Cost[] = []
     dataDestiny.forEach((row) => {
-      console.log(row)
       newDestinyTableData.push({
         id: row.idCost === undefined ? null : row.idCost,
         idProposal: 0,

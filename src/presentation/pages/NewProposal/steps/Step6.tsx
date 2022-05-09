@@ -1,8 +1,23 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  useImperativeHandle
+} from 'react'
 import { I18n } from 'react-redux-i18n'
 import { Title, Subtitle, Separator, MessageContainer } from '../style'
-import FareModal, { FareModalData, initialState } from '../../../components/FareModal/FareModal'
-import { Box, FormControl, FormLabel, Grid, InputAdornment, withTheme } from '@material-ui/core'
+import FareModal, {
+  FareModalData,
+  initialState
+} from '../../../components/FareModal/FareModal'
+import {
+  Box,
+  FormControl,
+  FormLabel,
+  Grid,
+  InputAdornment,
+  withTheme
+} from '@material-ui/core'
 import { ItemModalData } from '../../../components/ItemModal/ItemModal'
 
 import {
@@ -34,18 +49,26 @@ interface Step6Props {
   setCompleted: (completed: any) => void
   setFilled: (filled: any) => void
   specifications: string
-  setUndoMessage: React.Dispatch<React.SetStateAction<{
+  setUndoMessage: React.Dispatch<
+    React.SetStateAction<{
+      step3: boolean
+      step5origin: boolean
+      step5destiny: boolean
+      step6: boolean
+    }>
+  >
+  undoMessage: {
     step3: boolean
     step5origin: boolean
     step5destiny: boolean
     step6: boolean
-  }>>
-  undoMessage: { step3: boolean, step5origin: boolean, step5destiny: boolean, step6: boolean }
+  }
   serviceList: any[]
   containerTypeList: any[]
   theme: any
   calculationData: CalculationDataProps
   invalidInput: boolean
+  updateTableIdsRef: any
 }
 
 const Step6 = ({
@@ -61,7 +84,8 @@ const Step6 = ({
   containerTypeList,
   theme,
   calculationData,
-  invalidInput
+  invalidInput,
+  updateTableIdsRef
 }: Step6Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [tableData, setTableData] = useState<FareModalData[]>([])
@@ -85,11 +109,31 @@ const Step6 = ({
     tableData: []
   })
 
+  useImperativeHandle(updateTableIdsRef, () => ({
+    updateStep6Ids() {
+      let tableDataId = 0
+      if (proposal?.id !== undefined && proposal?.id !== null) {
+        const newTableData = [...tableData]
+        for (const cost of proposal.costs) {
+          if (cost.costType === 'Tarifa') {
+            newTableData[tableDataId++].idCost = cost.id
+            setTableData(newTableData)
+          }
+        }
+      }
+    }
+  }))
+
   useEffect(() => {
     setTableData([])
     setCopyTable([])
     setChargeData(initialState)
-    setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false })
+    setUndoMessage({
+      step3: false,
+      step5origin: false,
+      step5destiny: false,
+      step6: false
+    })
   }, [modal])
 
   useEffect(() => {
@@ -108,7 +152,7 @@ const Step6 = ({
                   .then((response) => resolve(String(response?.description)))
                   .catch((err) => console.log(err))
               } else {
-                (resolve(''))
+                resolve('')
               }
             })
 
@@ -120,13 +164,24 @@ const Step6 = ({
 
             const getTotalItemValue = new Promise((resolve) => {
               if (cost.costType === 'Tarifa') {
-                const indexContainer = containerItems.findIndex(container => cost.containerType === container.type)
+                const indexContainer = containerItems.findIndex(
+                  (container) => cost.containerType === container.type
+                )
                 const totalCostCalculationData = {
                   costType: cost.billingType,
-                  quantityContainer: specifications === 'fcl' ? Number(containerItems[indexContainer].amount) : 0,
-                  valueGrossWeight: isNaN(Number(calculationData?.weight)) ? 0 : calculationData?.weight,
-                  valueCubage: isNaN(Number(calculationData?.cubage)) ? 0 : calculationData?.cubage,
-                  valueWeightCubed: isNaN(Number(calculationData?.cubageWeight)) ? 0 : calculationData?.cubageWeight,
+                  quantityContainer:
+                    specifications === 'fcl'
+                      ? Number(containerItems[indexContainer].amount)
+                      : 0,
+                  valueGrossWeight: isNaN(Number(calculationData?.weight))
+                    ? 0
+                    : calculationData?.weight,
+                  valueCubage: isNaN(Number(calculationData?.cubage))
+                    ? 0
+                    : calculationData?.cubage,
+                  valueWeightCubed: isNaN(Number(calculationData?.cubageWeight))
+                    ? 0
+                    : calculationData?.cubageWeight,
                   valuePurchase: 0,
                   valueSale: Number(cost.valueSale) > Number(cost.valueMinimumSale)
                     ? Number(cost.valueSale)
@@ -138,7 +193,7 @@ const Step6 = ({
                 API.postTotalCalculation(totalCostCalculationData).then(response => {
                   resolve((cost.billingType === 'FIXO' || cost.billingType === 'BL')
                     ? '0'
-                    : Number(response?.valueSale)?.toFixed(2).replace('.', ','))
+                    : Number(response?.valueSale))
                 })
                   .catch((err) => { resolve(''); console.log(err) })
               } else {
@@ -146,22 +201,35 @@ const Step6 = ({
               }
             })
 
-            void await Promise.all([getContainer, getService, getTotalItemValue]).then((response) => {
+            void (await Promise.all([
+              getContainer,
+              getService,
+              getTotalItemValue
+            ]).then((response) => {
               const loadedItem: FareModalData = {
                 idCost: cost.id,
                 id: id++,
-                saleCurrency: cost.idCurrencySale === '' ? 'BRL' : String(cost.idCurrencySale),
-                saleValue: cost.valueSale === 0 ? '' : completeDecimalPlaces(cost.valueSale),
-                minimumValue: cost.valueMinimumSale === 0 ? '' : completeDecimalPlaces(cost.valueMinimumSale),
+                saleCurrency:
+                  cost.idCurrencySale === ''
+                    ? 'BRL'
+                    : String(cost.idCurrencySale),
+                saleValue:
+                  cost.valueSale === 0
+                    ? ''
+                    : completeDecimalPlaces(cost.valueSale),
+                minimumValue:
+                  cost.valueMinimumSale === 0
+                    ? ''
+                    : completeDecimalPlaces(cost.valueMinimumSale),
                 expense: String(response[1]),
                 selectedContainer: String(response[0]),
                 type: String(cost.billingType),
-                totalItem: cost.valueSale === 0 ? '' : completeDecimalPlaces(Number(response[2]))
+                totalItem: cost.valueSale === 0 ? '' : Number(response[2]).toFixed(2).replace('.', ',')
               }
               if (cost.costType === 'Tarifa') {
                 loadedData.push(loadedItem)
               }
-            })
+            }))
           }
           setTableData(loadedData)
           setLoadedTable(true)
@@ -185,14 +253,22 @@ const Step6 = ({
 
   useEffect(() => {
     let actualCostArray = proposal.costs
-    actualCostArray = actualCostArray.filter((cost) => cost.costType !== 'Tarifa' && cost)
+    actualCostArray = actualCostArray.filter(
+      (cost) => cost.costType !== 'Tarifa' && cost
+    )
     const newFareItems: Cost[] = []
     tableData.forEach((row) => {
       newFareItems.push({
         id: row.idCost === undefined ? null : row.idCost,
         idProposal: 0,
-        idService: serviceList.filter((serv) => serv.service === row.expense)[0]?.id, // id Descricao
-        containerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : '', // containerMODAL
+        idService: serviceList.filter((serv) => serv.service === row.expense)[0]
+          ?.id, // id Descricao
+        containerType:
+          specifications === 'fcl'
+            ? containerTypeList.filter(
+              (cont) => cont.description === row.selectedContainer
+            )[0]?.id
+            : '', // containerMODAL
         idBusinessPartnerAgent: 0, // data.agent, // AgenteMODALcusto
         costType: 'Tarifa', // 'Origem''Destino''Tarifa'
         billingType: row.type, // Tipo -MODAL
@@ -210,11 +286,16 @@ const Step6 = ({
     })
 
     let actualTotalCostArray = proposal.totalCosts
-    actualTotalCostArray = actualTotalCostArray.filter((cost) => cost.costType !== 'Tarifa' && cost)
+    actualTotalCostArray = actualTotalCostArray.filter(
+      (cost) => cost.costType !== 'Tarifa' && cost
+    )
     const newTotalCostFare: TotalCost[] = []
     dataTotalCost.forEach((currency, index) => {
       newTotalCostFare.push({
-        id: loadedTotalCostsIds[index] === undefined ? null : loadedTotalCostsIds[index],
+        id:
+          loadedTotalCostsIds[index] === undefined
+            ? null
+            : loadedTotalCostsIds[index],
         idProposal: 0,
         costType: 'Tarifa', // 'Origem''Destino''Tarifa'
         idCurrency: currency.name, // id moeda
@@ -222,7 +303,11 @@ const Step6 = ({
         valueTotalPurchase: 0 // total compra da moeda
       })
     })
-    setProposal({ ...proposal, totalCosts: actualTotalCostArray.concat(newTotalCostFare), costs: actualCostArray.concat(newFareItems) })
+    setProposal({
+      ...proposal,
+      totalCosts: actualTotalCostArray.concat(newTotalCostFare),
+      costs: actualCostArray.concat(newFareItems)
+    })
   }, [data, dataTotalCost])
 
   useEffect(() => {
@@ -241,23 +326,36 @@ const Step6 = ({
         return { ...currentState, step6: false }
       })
     }
-    setDataTotalCost(Array.from(currencyArray, ([name, value]) => ({ name, value })))
+    setDataTotalCost(
+      Array.from(currencyArray, ([name, value]) => ({ name, value }))
+    )
   }, [tableData, data, tableData.length])
 
   useEffect(() => {
     const newTableData: FareModalData[] = []
     const waitAllData = async (): Promise<void> => {
       for (const item of tableData) {
-        void await new Promise((resolve) => {
-          const indexContainer = containerItems.findIndex(container => item.selectedContainer === container.type)
+        void (await new Promise((resolve) => {
+          const indexContainer = containerItems.findIndex(
+            (container) => item.selectedContainer === container.type
+          )
           const totalCostCalculationData = {
             costType: item.type,
-            quantityContainer: specifications === 'fcl' ? Number(containerItems[indexContainer].amount) : 0,
-            valueGrossWeight: isNaN(Number(calculationData?.weight)) ? 0 : calculationData?.weight,
-            valueCubage: isNaN(Number(calculationData?.cubage)) ? 0 : calculationData?.cubage,
-            valueWeightCubed: isNaN(Number(calculationData?.cubageWeight)) ? 0 : calculationData?.cubageWeight,
+            quantityContainer:
+              specifications === 'fcl'
+                ? Number(containerItems[indexContainer].amount)
+                : 0,
+            valueGrossWeight: isNaN(Number(calculationData?.weight))
+              ? 0
+              : calculationData?.weight,
+            valueCubage: isNaN(Number(calculationData?.cubage))
+              ? 0
+              : calculationData?.cubage,
+            valueWeightCubed: isNaN(Number(calculationData?.cubageWeight))
+              ? 0
+              : calculationData?.cubageWeight,
             valuePurchase: 0,
-            valueSale: Number(item.saleValue) > Number(item.minimumValue)
+            valueSale: Number(item.saleValue.replace(',', '.')) > Number(item.minimumValue.replace(',', '.'))
               ? Number(item.saleValue.replace(',', '.'))
               : Number(item.minimumValue.replace(',', '.')),
             idCurrencyPurchase: '',
@@ -271,6 +369,7 @@ const Step6 = ({
           })
             .catch((err) => { resolve(''); console.log(err) })
         })
+        )
       }
       setTableData(newTableData)
     }
@@ -286,17 +385,33 @@ const Step6 = ({
   }, [])
 
   const handleAdd = (item: FareModalData): void => {
-    setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false })
+    setUndoMessage({
+      step3: false,
+      step5origin: false,
+      step5destiny: false,
+      step6: false
+    })
 
-    const indexContainer = containerItems.findIndex(container => item.selectedContainer === container.type)
+    const indexContainer = containerItems.findIndex(
+      (container) => item.selectedContainer === container.type
+    )
     const totalCostCalculationData = {
       costType: item.type,
-      quantityContainer: specifications === 'fcl' ? Number(containerItems[indexContainer].amount) : 0,
-      valueGrossWeight: isNaN(Number(calculationData?.weight)) ? 0 : calculationData?.weight,
-      valueCubage: isNaN(Number(calculationData?.cubage)) ? 0 : calculationData?.cubage,
-      valueWeightCubed: isNaN(Number(calculationData?.cubageWeight)) ? 0 : calculationData?.cubageWeight,
+      quantityContainer:
+        specifications === 'fcl'
+          ? Number(containerItems[indexContainer].amount)
+          : 0,
+      valueGrossWeight: isNaN(Number(calculationData?.weight))
+        ? 0
+        : calculationData?.weight,
+      valueCubage: isNaN(Number(calculationData?.cubage))
+        ? 0
+        : calculationData?.cubage,
+      valueWeightCubed: isNaN(Number(calculationData?.cubageWeight))
+        ? 0
+        : calculationData?.cubageWeight,
       valuePurchase: 0,
-      valueSale: Number(item.saleValue) > Number(item.minimumValue)
+      valueSale: Number(item.saleValue.replace(',', '.')) > Number(item.minimumValue.replace(',', '.'))
         ? Number(item.saleValue.replace(',', '.'))
         : Number(item.minimumValue.replace(',', '.')),
       idCurrencyPurchase: '',
@@ -318,7 +433,13 @@ const Step6 = ({
             setTableData(editData)
           } else {
             const lastIndex = tableData?.length - 1
-            const newItem = { ...item, id: tableData.length === 0 ? 0 : (Number(tableData[lastIndex].id) + 1) }
+            const newItem = {
+              ...item,
+              id:
+                tableData.length === 0
+                  ? 0
+                  : Number(tableData[lastIndex].id) + 1
+            }
             setTableData([...tableData, newItem])
           }
           setChargeData(initialState)
@@ -332,7 +453,12 @@ const Step6 = ({
     setTableData((tableData) => {
       return tableData.filter((data) => data.id !== id)
     })
-    setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: true })
+    setUndoMessage({
+      step3: false,
+      step5origin: false,
+      step5destiny: false,
+      step6: true
+    })
   }
 
   const editClickHandler = (tableData: FareModalData): void => {
@@ -360,9 +486,13 @@ const Step6 = ({
     if (num === null) return '0'
     const decimalPlaces = String(num).split('.')[1]
     let completeNumber = String(num)
-    if ((decimalPlaces === undefined) || decimalPlaces.length < 2) {
+    if (decimalPlaces === undefined || decimalPlaces.length < 2) {
       completeNumber = completeNumber + ','
-      for (let i = 0; i < 2 - (decimalPlaces === undefined ? 0 : decimalPlaces.length); i++) {
+      for (
+        let i = 0;
+        i < 2 - (decimalPlaces === undefined ? 0 : decimalPlaces.length);
+        i++
+      ) {
         completeNumber = completeNumber + '0'
       }
     }
@@ -370,7 +500,10 @@ const Step6 = ({
   }
 
   const getSumTotalItem = (): string => {
-    const totalSum = (tableData.reduce((total, item) => Number(item.totalItem?.replace(',', '.')) + total, 0))
+    const totalSum = tableData.reduce(
+      (total, item) => Number(item.totalItem?.replace(',', '.')) + total,
+      0
+    )
     return totalSum.toFixed(2).replace('.', ',')
   }
 
@@ -381,31 +514,38 @@ const Step6 = ({
           6. {I18n.t('pages.newProposal.step6.title')}
           <Subtitle>{I18n.t('pages.newProposal.step6.subtitle')}</Subtitle>
         </Title>
-        <FormControl variant="outlined" size="small" className='form-size'>
+        <FormControl variant='outlined' size='small' className='form-size'>
           <Grid container spacing={5}>
             <Grid item xs={4}>
-              <FormLabel component="legend">
-                {selectTypeModal()}
-              </FormLabel>
+              <FormLabel component='legend'>{selectTypeModal()}</FormLabel>
               <Autocomplete
                 freeSolo
-                onChange={(e, newValue) => setData({ ...data, company: String(newValue) })}
+                onChange={(e, newValue) =>
+                  setData({ ...data, company: String(newValue) })
+                }
                 options={getCompany()}
                 value={data.company}
                 renderInput={(params) => (
                   <div ref={params.InputProps.ref}>
                     <ControlledInput
                       {...params}
-                      id="search-destiny"
-                      toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                      id='search-destiny'
+                      toolTipTitle={I18n.t(
+                        'components.itemModal.requiredField'
+                      )}
                       invalid={false}
-                      variant="outlined"
-                      size="small"
+                      variant='outlined'
+                      size='small'
                       $space
                       InputProps={{
                         endAdornment: (
-                          <InputAdornment position="end">
-                            <IconComponent name="search" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
+                          <InputAdornment position='end'>
+                            <IconComponent
+                              name='search'
+                              defaultColor={
+                                theme?.commercial?.pages?.newProposal?.subtitle
+                              }
+                            />
                           </InputAdornment>
                         )
                       }}
@@ -416,15 +556,17 @@ const Step6 = ({
               />
             </Grid>
             <Grid item xs={2}>
-              <FormLabel component="legend">
+              <FormLabel component='legend'>
                 {I18n.t('pages.newProposal.step6.currency')}
                 <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <Autocomplete
                 freeSolo
                 value={data.currency}
-                onChange={(e, newValue) => setData({ ...data, currency: newValue })}
-                options={currencyList.map(item => item.id)}
+                onChange={(e, newValue) =>
+                  setData({ ...data, currency: newValue })
+                }
+                options={currencyList.map((item) => item.id)}
                 renderInput={(params) => (
                   <div ref={params.InputProps.ref}>
                     <ControlledInput
@@ -437,8 +579,15 @@ const Step6 = ({
                       placeholder={I18n.t('components.itemModal.choose')}
                       InputProps={{
                         endAdornment: (
-                          <InputAdornment position="end">
-                            <Box style={{ position: 'absolute', top: '7px', right: '0' }} {...params.inputProps}>
+                          <InputAdornment position='end'>
+                            <Box
+                              style={{
+                                position: 'absolute',
+                                top: '7px',
+                                right: '0'
+                              }}
+                              {...params.inputProps}
+                            >
                               <ArrowDropDownIcon />
                             </Box>
                           </InputAdornment>
@@ -451,7 +600,7 @@ const Step6 = ({
               />
             </Grid>
             <Grid item xs={2}>
-              <FormLabel component="legend">
+              <FormLabel component='legend'>
                 {I18n.t('pages.newProposal.step6.value')}
                 <RedColorSpan> *</RedColorSpan>
               </FormLabel>
@@ -459,19 +608,21 @@ const Step6 = ({
                 decimalSeparator={','}
                 thousandSeparator={'.'}
                 decimalScale={2}
-                format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                format={(value: string) =>
+                  FormatNumber.rightToLeftFormatter(value, 2)
+                }
                 customInput={ControlledInput}
                 onChange={(e) => setData({ ...data, value: e.target.value })}
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 invalid={invalidInput && (data.value === '' || data.value === '0')}
                 value={data.value}
-                variant="outlined"
-                size="small"
+                variant='outlined'
+                size='small'
               />
             </Grid>
           </Grid>
         </FormControl>
-        {loadedTable &&
+        {loadedTable && (
           <SurchargeTable
             data={tableData}
             costData={costData}
@@ -481,12 +632,12 @@ const Step6 = ({
             edit={editClickHandler}
             dataFields={data}
           />
-        }
+        )}
         <ButtonWrapper>
           <Button
             onAction={handleOpen}
             text={I18n.t('pages.newProposal.step6.addFare')}
-            icon="add"
+            icon='add'
             backgroundGreen={false}
             tooltip={
               costData === 0
@@ -507,26 +658,42 @@ const Step6 = ({
           containerItems={containerItems}
           currency={data.currency}
         />
-        {(tableData.length !== 0 && loadedTable) &&
+        {tableData.length !== 0 && loadedTable && (
           <TotalSurcharge
             currency={data.currency}
             value={data.value}
             totalOtherFare={getSumTotalItem()}
           />
-        }
+        )}
       </HeightDiv>
-      {undoMessage.step6 &&
+      {undoMessage.step6 && (
         <MessageContainer>
           <Messages
             closable={true}
             severity='success'
             buttonText={I18n.t('pages.newProposal.step3.messageUndoDelete')}
-            closeAlert={() => { setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false }) }}
+            closeAlert={() => {
+              setUndoMessage({
+                step3: false,
+                step5origin: false,
+                step5destiny: false,
+                step6: false
+              })
+            }}
             closeMessage=''
-            goBack={() => { setTableData(copyTable); setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false }) }}
+            goBack={() => {
+              setTableData(copyTable)
+              setUndoMessage({
+                step3: false,
+                step5origin: false,
+                step5destiny: false,
+                step6: false
+              })
+            }}
             message={I18n.t('pages.newProposal.step3.messageDeleteItem')}
           />
-        </MessageContainer>}
+        </MessageContainer>
+      )}
     </Separator>
   )
 }

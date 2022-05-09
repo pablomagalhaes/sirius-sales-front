@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext, useImperativeHandle } from 'react'
 import { Button, Messages } from 'fiorde-fe-components'
 import {
   FormControl,
@@ -49,6 +49,7 @@ interface Step3Props {
   containerTypeList: any[]
   setCalculationData: (items: CalculationDataProps) => void
   setStepLoaded: (steps: any) => void
+  updateTableIdsRef: any
 }
 
 const Step3 = ({
@@ -63,7 +64,8 @@ const Step3 = ({
   undoMessage,
   containerTypeList,
   setCalculationData,
-  setStepLoaded
+  setStepLoaded,
+  updateTableIdsRef
 }: Step3Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [tableRows, setTableRows] = useState<ItemModalData[]>([])
@@ -86,6 +88,20 @@ const Step3 = ({
     codUn: ''
   }
   const [data, setData] = useState(initialData)
+
+  useImperativeHandle(updateTableIdsRef, () => ({
+    updateStep3Ids () {
+      let tableDataId = 0
+      if (proposal?.id !== undefined && proposal?.id !== null) {
+        const newTableData = [...tableRows]
+        for (const cargo of proposal.cargo.cargoVolumes) {
+          newTableData[tableDataId].idCargoVolume = cargo?.id
+          newTableData[tableDataId++].idCargo = cargo?.idCargo
+          setTableRows(newTableData)
+        }
+      }
+    }
+  }))
 
   useEffect(() => {
     setSpecifications(data.specifications)
