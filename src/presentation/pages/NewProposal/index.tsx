@@ -191,7 +191,14 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           console.trace(error)
         })
       } else {
-        API.putProposal(proposal.id, JSON.stringify(proposal)).then(() => {
+        API.putProposal(proposal.id, JSON.stringify(proposal)).then((response) => {
+          setProposal(response)
+          // @ts-expect-error
+          updateTable3IdsRef?.current?.updateStep3Ids()
+          // @ts-expect-error
+          updateTable6IdsRef?.current?.updateStep6Ids()
+          // @ts-expect-error
+          updateTable5IdsRef?.current?.updateStep5Ids()
           setShowSaveMessage(true)
           setInvalidInput(false)
         }).catch((error) => {
