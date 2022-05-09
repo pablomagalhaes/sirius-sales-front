@@ -56,6 +56,9 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
 
   const history = useHistory()
   const location = useLocation()
+  const updateTable3IdsRef = useRef()
+  const updateTable5IdsRef = useRef()
+  const updateTable6IdsRef = useRef()
 
   useEffect(() => {
     void (async function () {
@@ -176,6 +179,12 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       if (proposal.id === undefined || proposal.id === null) {
         API.postProposal(JSON.stringify(proposal)).then((response) => {
           setProposal(response)
+          // @ts-expect-error
+          updateTable3IdsRef?.current?.updateStep3Ids()
+          // @ts-expect-error
+          updateTable6IdsRef?.current?.updateStep6Ids()
+          // @ts-expect-error
+          updateTable5IdsRef?.current?.updateStep5Ids()
           setShowSaveMessage(true)
           setInvalidInput(false)
         }).catch((error) => {
@@ -458,6 +467,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
             </div>
             <div id="step3">
               <Step3
+                updateTableIdsRef={updateTable3IdsRef}
                 setCalculationData={setCalculationData}
                 containerTypeList={containerTypeList}
                 undoMessage={undoMessage}
@@ -483,6 +493,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
             </div>
             {stepLoaded.step3 && <> <div id="step5">
               <Step5
+                updateTableIdsRef={updateTable5IdsRef}
                 calculationData={calculationData}
                 containerTypeList={containerTypeList}
                 serviceList={serviceList}
@@ -499,6 +510,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
             </div>
               <div id="step6">
                 <Step6
+                  updateTableIdsRef={updateTable6IdsRef}
                   calculationData={calculationData}
                   containerTypeList={containerTypeList}
                   serviceList={serviceList}
