@@ -50,12 +50,12 @@ interface Step6Props {
   setFilled: (filled: any) => void
   specifications: string
   setUndoMessage: React.Dispatch<
-  React.SetStateAction<{
-    step3: boolean
-    step5origin: boolean
-    step5destiny: boolean
-    step6: boolean
-  }>
+    React.SetStateAction<{
+      step3: boolean
+      step5origin: boolean
+      step5destiny: boolean
+      step6: boolean
+    }>
   >
   undoMessage: {
     step3: boolean
@@ -110,7 +110,7 @@ const Step6 = ({
   })
 
   useImperativeHandle(updateTableIdsRef, () => ({
-    updateStep6Ids () {
+    updateStep6Ids() {
       let tableDataId = 0
       if (proposal?.id !== undefined && proposal?.id !== null) {
         const newTableData = [...tableData]
@@ -193,7 +193,7 @@ const Step6 = ({
                 API.postTotalCalculation(totalCostCalculationData).then(response => {
                   resolve((cost.billingType === 'FIXO' || cost.billingType === 'BL')
                     ? '0'
-                    : Number(response?.valueSale)?.toFixed(2).replace('.', ','))
+                    : Number(response?.valueSale))
                 })
                   .catch((err) => { resolve(''); console.log(err) })
               } else {
@@ -224,10 +224,7 @@ const Step6 = ({
                 expense: String(response[1]),
                 selectedContainer: String(response[0]),
                 type: String(cost.billingType),
-                totalItem:
-                  cost.valueSale === 0
-                    ? ''
-                    : completeDecimalPlaces(Number(response[2]))
+                totalItem: cost.valueSale === 0 ? '' : Number(response[2]).toFixed(2).replace('.', ',')
               }
               if (cost.costType === 'Tarifa') {
                 loadedData.push(loadedItem)
@@ -358,7 +355,7 @@ const Step6 = ({
               ? 0
               : calculationData?.cubageWeight,
             valuePurchase: 0,
-            valueSale: Number(item.saleValue) > Number(item.minimumValue)
+            valueSale: Number(item.saleValue.replace(',', '.')) > Number(item.minimumValue.replace(',', '.'))
               ? Number(item.saleValue.replace(',', '.'))
               : Number(item.minimumValue.replace(',', '.')),
             idCurrencyPurchase: '',
@@ -414,7 +411,7 @@ const Step6 = ({
         ? 0
         : calculationData?.cubageWeight,
       valuePurchase: 0,
-      valueSale: Number(item.saleValue) > Number(item.minimumValue)
+      valueSale: Number(item.saleValue.replace(',', '.')) > Number(item.minimumValue.replace(',', '.'))
         ? Number(item.saleValue.replace(',', '.'))
         : Number(item.minimumValue.replace(',', '.')),
       idCurrencyPurchase: '',
