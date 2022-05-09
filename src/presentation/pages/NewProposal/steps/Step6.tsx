@@ -45,6 +45,7 @@ interface Step6Props {
   containerTypeList: any[]
   theme: any
   calculationData: CalculationDataProps
+  invalidInput: boolean
 }
 
 const Step6 = ({
@@ -59,7 +60,8 @@ const Step6 = ({
   serviceList,
   containerTypeList,
   theme,
-  calculationData
+  calculationData,
+  invalidInput
 }: Step6Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [tableData, setTableData] = useState<FareModalData[]>([])
@@ -79,7 +81,7 @@ const Step6 = ({
   const [data, setData] = useState({
     company: '',
     currency: '',
-    value: '0',
+    value: '',
     tableData: []
   })
 
@@ -126,13 +128,17 @@ const Step6 = ({
                   valueCubage: isNaN(Number(calculationData?.cubage)) ? 0 : calculationData?.cubage,
                   valueWeightCubed: isNaN(Number(calculationData?.cubageWeight)) ? 0 : calculationData?.cubageWeight,
                   valuePurchase: 0,
-                  valueSale: cost.valueSale,
+                  valueSale: Number(cost.valueSale) > Number(cost.valueMinimumSale)
+                    ? Number(cost.valueSale)
+                    : Number(cost.valueMinimumSale),
                   idCurrencyPurchase: '',
                   idCurrencySale: cost.idCurrencySale
                 }
 
                 API.postTotalCalculation(totalCostCalculationData).then(response => {
-                  resolve(response.valueSale)
+                  resolve((cost.billingType === 'FIXO' || cost.billingType === 'BL')
+                    ? '0'
+                    : Number(response?.valueSale)?.toFixed(2).replace('.', ','))
                 })
                   .catch((err) => { resolve(''); console.log(err) })
               } else {
@@ -220,7 +226,7 @@ const Step6 = ({
   }, [data, dataTotalCost])
 
   useEffect(() => {
-    if (tableData.length > 0 && data.currency !== '' && data.company !== '' && data.value !== '') {
+    if (tableData.length > 0 && data.currency !== '' && data.value !== '') {
       setCompleted((currentState) => {
         return { ...currentState, step6: true }
       })
@@ -251,12 +257,16 @@ const Step6 = ({
             valueCubage: isNaN(Number(calculationData?.cubage)) ? 0 : calculationData?.cubage,
             valueWeightCubed: isNaN(Number(calculationData?.cubageWeight)) ? 0 : calculationData?.cubageWeight,
             valuePurchase: 0,
-            valueSale: Number(item.saleValue.replace(',', '.')),
+            valueSale: Number(item.saleValue) > Number(item.minimumValue)
+              ? Number(item.saleValue.replace(',', '.'))
+              : Number(item.minimumValue.replace(',', '.')),
             idCurrencyPurchase: '',
             idCurrencySale: item.saleCurrency
           }
           API.postTotalCalculation(totalCostCalculationData).then(response => {
-            item.totalItem = Number(response?.valueSale)?.toFixed(2).replace('.', ',')
+            item.totalItem = (item.type === 'FIXO' || item.type === 'BL')
+              ? '0'
+              : Number(response?.valueSale)?.toFixed(2).replace('.', ',')
             resolve(newTableData.push(item))
           })
             .catch((err) => { resolve(''); console.log(err) })
@@ -286,7 +296,9 @@ const Step6 = ({
       valueCubage: isNaN(Number(calculationData?.cubage)) ? 0 : calculationData?.cubage,
       valueWeightCubed: isNaN(Number(calculationData?.cubageWeight)) ? 0 : calculationData?.cubageWeight,
       valuePurchase: 0,
-      valueSale: Number(item.saleValue.replace(',', '.')),
+      valueSale: Number(item.saleValue) > Number(item.minimumValue)
+        ? Number(item.saleValue.replace(',', '.'))
+        : Number(item.minimumValue.replace(',', '.')),
       idCurrencyPurchase: '',
       idCurrencySale: item.saleCurrency
     }
@@ -294,7 +306,9 @@ const Step6 = ({
     void (async function () {
       await API.postTotalCalculation(totalCostCalculationData)
         .then((response) => {
-          item.totalItem = response.valueSale
+          item.totalItem = (item.type === 'FIXO' || item.type === 'BL')
+            ? '0'
+            : Number(response.valueSale).toFixed(2).replace('.', ',')
           item.saleCurrency = response.idCurrencySale
 
           if (item.id !== null) {
@@ -417,7 +431,7 @@ const Step6 = ({
                       {...params}
                       id="currencies"
                       toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                      invalid={false}
+                      invalid={invalidInput && data.currency === ''}
                       variant="outlined"
                       size="small"
                       placeholder={I18n.t('components.itemModal.choose')}
@@ -449,7 +463,7 @@ const Step6 = ({
                 customInput={ControlledInput}
                 onChange={(e) => setData({ ...data, value: e.target.value })}
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                invalid={false}
+                invalid={invalidInput && (data.value === '' || data.value === '0')}
                 value={data.value}
                 variant="outlined"
                 size="small"

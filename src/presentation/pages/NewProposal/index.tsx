@@ -510,6 +510,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                   costData={costData}
                   modal={modal}
                   specifications={specifications}
+                  invalidInput={invalidInput}
                 />
               </div>
             </>}
