@@ -29,6 +29,7 @@ interface Step5Props {
   calculationData: CalculationDataProps
   invalidInput: boolean
   updateTableIdsRef: any
+  agentList: string[]
 }
 
 export interface TotalCostTable {
@@ -39,9 +40,6 @@ export interface TotalCostTable {
     sale: number
   }
 }
-
-// Listas são mock, serão alteradas posteriormente
-export const agentList = ['Agente1', 'Agente2', 'Agente3']
 
 const Step5 = ({
   setFilled,
@@ -56,7 +54,8 @@ const Step5 = ({
   containerTypeList,
   calculationData,
   invalidInput,
-  updateTableIdsRef
+  updateTableIdsRef,
+  agentList
 }: Step5Props): JSX.Element => {
   const [dataOrigin, setDataOrigin] = useState<CostTableItem[]>([])
   const [dataDestiny, setDataDestiny] = useState<CostTableItem[]>([])
@@ -195,7 +194,7 @@ const Step5 = ({
         idProposal: 0,
         idService: serviceList.filter((serv) => serv.service === row.description)[0]?.id, // id Descricao
         containerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : '', // containerMODAL
-        idBusinessPartnerAgent: agentList.indexOf(row.agent) + 1, // AgenteMODALcusto
+        idBusinessPartnerAgent: 0, // AgenteMODALcusto
         costType: 'Destino', // 'Origem''Destino''Tarifa'
         billingType: row.type, // Tipo -MODAL
         valuePurchase: Number(row.buyValue), // valor compra
