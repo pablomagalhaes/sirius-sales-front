@@ -261,9 +261,13 @@ const CostTable = ({
               <StyledTableCell width="11%" align="left">
                 {I18n.t('components.costTable.type')}
               </StyledTableCell>
-              <StyledTableCell width="11%" align="left">
-                {I18n.t('components.costTable.agent')}
-              </StyledTableCell>
+              {
+                title === I18n.t('pages.newProposal.step5.destiny')
+                  ? null
+                  : <StyledTableCell width="11%" align="left">
+                    {I18n.t('components.costTable.agent')}
+                  </StyledTableCell>
+              }
               <StyledTableCell width="12%" align="left">
                 {I18n.t('components.costTable.minBuy')}
               </StyledTableCell>
@@ -289,12 +293,16 @@ const CostTable = ({
                   <StyledTableCell width="11%" align="left">
                     <Type>{dataMap.type}</Type>
                   </StyledTableCell>
-                  <StyledTableCell width="12%" align="left">
-                    {dataMap.agent != null
-                      ? <Default>{dataMap.agent}</Default>
-                      : <Default>-</Default>
-                    }
-                  </StyledTableCell>
+                  {
+                    title === I18n.t('pages.newProposal.step5.destiny')
+                      ? null
+                      : <StyledTableCell width="12%" align="left">
+                        {dataMap.agent != null
+                          ? <Default>{dataMap.agent}</Default>
+                          : <Default>-</Default>
+                        }
+                      </StyledTableCell>
+                  }
                   <StyledTableCell width="13%" align="left">
                     {dataMap.buyMin !== null && dataMap.buyMin !== ''
                       ? <Default>

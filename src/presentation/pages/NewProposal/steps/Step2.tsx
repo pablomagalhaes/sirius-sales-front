@@ -25,6 +25,7 @@ interface Step2Props {
   setCompleted: (completed: any) => void
   setFilled: (filled: any) => void
   modal: string
+  setAgentList: (agent: string[]) => void
 }
 
 interface DataProps {
@@ -35,7 +36,15 @@ interface DataProps {
   collection: string
 }
 
-const Step2 = ({ theme, proposalType, invalidInput, setCompleted, setFilled, modal }: Step2Props): JSX.Element => {
+const Step2 = ({
+  theme,
+  proposalType,
+  invalidInput,
+  setCompleted,
+  setFilled,
+  modal,
+  setAgentList
+}: Step2Props): JSX.Element => {
   const [incotermList, setIncotermList] = useState<any[]>([])
   const [incotermFilteredList, setIncotermFilteredList] = useState<any[]>([])
   const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
@@ -48,6 +57,12 @@ const Step2 = ({ theme, proposalType, invalidInput, setCompleted, setFilled, mod
     collection: ''
   })
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+
+  useEffect(() => {
+    if (proposalType === 'client') {
+      setAgentList(data.agents)
+    }
+  }, [data.agents])
 
   useEffect(() => {
     void (async function () {

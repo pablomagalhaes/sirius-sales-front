@@ -53,6 +53,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [calculationData, setCalculationData] = useState<CalculationDataProps>({ weight: 0, cubage: 0, cubageWeight: 0 })
   const [loadExistingProposal, setLoadExistingProposal] = useState(false)
   const [editMode, setEditMode] = useState(false)
+  const [agentList, setAgentList] = useState<any[]>([])
 
   const history = useHistory()
   const location = useLocation()
@@ -460,6 +461,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
               invalidInput={invalidInput}
               setProposalType={setProposalType}
               setStepLoaded={setStepLoaded}
+              setAgentList={setAgentList}
             />
           </div>
           {stepLoaded.step1 && <>
@@ -470,6 +472,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                 setFilled={setFilled}
                 invalidInput={invalidInput}
                 modal={modal}
+                setAgentList={setAgentList}
               />
             </div>
             <div id="step3">
@@ -513,6 +516,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                 modal={modal}
                 specifications={specifications}
                 invalidInput={invalidInput}
+                agentList={agentList}
               />
             </div>
               <div id="step6">
