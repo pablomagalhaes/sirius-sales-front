@@ -417,7 +417,7 @@ const Step4 = ({
               {
                 specifications === 'fcl'
                   ? <FormLabel component="legend">{I18n.t('pages.newProposal.step4.freeTimeDemurrage')}<RedColorSpan> *</RedColorSpan></FormLabel>
-                  : <FormLabel component="legend">{I18n.t('pages.newProposal.step4.freeTimeStorage')}:<RedColorSpan> *</RedColorSpan></FormLabel>
+                  : <FormLabel component="legend">{I18n.t('pages.newProposal.step4.freeTimeStorage')}<RedColorSpan> *</RedColorSpan></FormLabel>
               }
               <RadioGroup
                 row
