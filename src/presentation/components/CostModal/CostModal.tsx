@@ -266,7 +266,7 @@ const CostModal = ({
 
     if (!buyCheckbox && !saleCheckbox) {
       setNoValueInput(true)
-      return
+      invalid = true
     }
 
     if (buyCheckbox) {
@@ -292,7 +292,6 @@ const CostModal = ({
       dispatch({ type: 'saleCurrency', value: '' })
     }
     if (
-      item.agent.length === 0 ||
       item.type.length === 0 ||
       (item.description === null || item.description?.length === 0)
     ) {
@@ -358,6 +357,8 @@ const CostModal = ({
       handleOnClose()
     }
   }, [flag])
+
+  const isOriginCost = title === I18n.t('pages.newProposal.step5.originCost')
 
   state.agent === '' && agentList.length === 1 && dispatch({ type: 'agent', value: agentList[0] })
 
@@ -438,6 +439,7 @@ const CostModal = ({
                             (state.description === null ||
                               state.description.length === 0)
                           }
+                          filled={state.description}
                         />
                         <Box
                           style={{ left: '360px' }}
@@ -455,37 +457,46 @@ const CostModal = ({
                 </ControlledToolTip>
               </Container>
             </RowDiv>
-            <RowDiv>
-              <Label width="100%">
-                {I18n.t('components.costModal.agent')}
-                <RedColorSpan> *</RedColorSpan>
-              </Label>
-            </RowDiv>
-            <RowDiv margin={specifications === 'fcl' && true}>
-              <ControlledSelect
-                onChange={(e) => dispatch({ type: 'agent', value: e.target.value })}
-                displayEmpty
-                style={{ width: '513px', marginTop: '12px' }}
-                value={state.agent}
-                disableUnderline
-                placeholder={state.agent}
-                toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                invalid={invalidInput && (state.agent === null || state.agent.length === 0)}
-              >
-                <MenuItem disabled value="">
-                  <MenuItemContent>
-                    {I18n.t('components.costModal.choose')}
-                  </MenuItemContent>
-                </MenuItem>
-                {agentList.map((agent) => {
-                  return (
-                    <MenuItem key={`${agent}_key`} value={agent}>
-                      <MenuItemContent>{agent}</MenuItemContent>
-                    </MenuItem>
-                  )
-                })}
-              </ControlledSelect>
-            </RowDiv>
+            {isOriginCost &&
+              <RowDiv>
+                <Label width="100%">
+                  {I18n.t('components.costModal.agent')}
+                  <RedColorSpan> *</RedColorSpan>
+                </Label>
+              </RowDiv>
+            }
+            {isOriginCost &&
+              <RowDiv margin={specifications === 'fcl' && true} style={{ position: 'relative' }}>
+                <ControlledToolTip
+                    title={I18n.t('components.itemModal.requiredField')}
+                    open={invalidInput && (state.agent === null || state.agent.length === 0)}
+                  >
+                  <Autocomplete
+                    options={agentList.map((agent) => agent)}
+                    value={state.agent}
+                    onChange={(event: any, newValue: string | null) => {
+                      dispatch({ type: 'agent', value: newValue })
+                    }}
+                    renderInput={(params) => (
+                      <div ref={params.InputProps.ref}>
+                        <Input
+                          {...params.inputProps}
+                          filled={state.agent}
+                          placeholder={I18n.t('components.costModal.choose')}
+                          toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                          invalid={invalidInput && (state.agent === null || state.agent.length === 0)}
+                          style={{ width: '513px' }}
+                        />
+                        <Box {...params.inputProps} className="dropdownContainer">
+                          <ArrowDropDownIcon />
+                        </Box>
+                      </div>
+                    )}
+                    PaperComponent={(params: any) => <StyledPaper {...params} />}
+                  />
+                </ControlledToolTip>
+              </RowDiv>
+            }
             {specifications === 'fcl' && (
               <><RowDiv>
                 <Label width="100%">
@@ -714,7 +725,7 @@ const CostModal = ({
                 filled={saleCheckbox ? state.saleMin : null}
               />
             </RowDiv>
-            {!invalidValueInput && (
+            {(!invalidValueInput && !noValueInput) && (
               <ButtonDiv>
                 <Button
                   disabled={false}
@@ -737,6 +748,23 @@ const CostModal = ({
                 ? I18n.t('components.costModal.buyValue')
                 : I18n.t('components.costModal.saleValue')}
               ”{I18n.t('components.costModal.popUpMessageEnd')}
+            </WarningPopUpMessage>
+            <WarningPopUpButtonDiv>
+              <Button
+                disabled={false}
+                backgroundGreen={false}
+                icon={''}
+                onAction={handleClickWarningButton}
+                text={I18n.t('components.costModal.gotIt')}
+                tooltip={I18n.t('components.costModal.gotIt')}
+              />
+            </WarningPopUpButtonDiv>
+          </WarningPopUp>
+        )}
+        {noValueInput && (
+          <WarningPopUp>
+            <WarningPopUpMessage>
+              {I18n.t('components.costModal.noValueError')}
             </WarningPopUpMessage>
             <WarningPopUpButtonDiv>
               <Button

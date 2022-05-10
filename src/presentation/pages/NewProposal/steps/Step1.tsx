@@ -35,9 +35,20 @@ export interface Step1Props {
   setModal: (modal: string) => void
   filled: Filled
   setStepLoaded: (steps: any) => void
+  setAgentList: (agent: string[]) => void
 }
 
-const Step1 = ({ theme, invalidInput, setCompleted, setFilled, setProposalType, setModal, filled, setStepLoaded }: Step1Props): JSX.Element => {
+const Step1 = ({
+  theme,
+  invalidInput,
+  setCompleted,
+  setFilled,
+  setProposalType,
+  setModal,
+  filled,
+  setStepLoaded,
+  setAgentList
+}: Step1Props): JSX.Element => {
   const [transportList] = useState<Transport[]>(TransportList)
   const [agentsList, setAgentsList] = useState<any[]>([])
   const [partnerList, setPartnerList] = useState<any[]>([])
@@ -108,6 +119,14 @@ const Step1 = ({ theme, invalidInput, setCompleted, setFilled, setProposalType, 
   useEffect(() => {
     setModal(data.modal)
   }, [data.modal])
+
+  useEffect(() => {
+    if (data.proposal === 'routing') {
+      const agent: string[] = []
+      agent.push(data.proposalValue)
+      setAgentList(agent)
+    }
+  }, [data.proposalValue])
 
   useEffect(() => {
     if (data.proposal !== '' && data.proposalValue !== '' && data.modal !== '') {
