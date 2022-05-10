@@ -264,11 +264,6 @@ const CostModal = ({
     let invalid = false
     let item = state
 
-    if (!buyCheckbox && !saleCheckbox) {
-      setNoValueInput(true)
-      invalid = true
-    }
-
     if (buyCheckbox) {
       if (item.buyValue === null || item.buyValue.length === 0) {
         invalid = true
@@ -315,6 +310,14 @@ const CostModal = ({
     if (item.buyValue !== null) {
       dispatch({ type: 'buyValue', value: item.buyValue.replace(',', '.') })
       item.buyValue = item.buyValue.replace(',', '.')
+    }
+
+    if (!buyCheckbox && !saleCheckbox) {
+      setNoValueInput(true)
+      invalid = true
+      item = { ...item, buyCurrency: 'BRL', saleCurrency: 'BRL' }
+      dispatch({ type: 'buyCurrency', value: 'BRL' })
+      dispatch({ type: 'saleCurrency', value: 'BRL' })
     }
 
     if (!invalid) {
