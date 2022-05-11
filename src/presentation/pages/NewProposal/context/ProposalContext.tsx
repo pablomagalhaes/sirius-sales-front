@@ -3,9 +3,9 @@ import { Proposal } from '../../../../domain/Proposal'
 
 export const emptyProposalValue: Proposal = {
   id: null,
-  referenceProposal: 'str', // referencia proposta
+  referenceProposal: 'Ref-000000', // referencia proposta
   idBusinessPartnerCostumer: 0, // step1 agent client
-  operationType: 'str', // FRETE IMPORTACAO
+  operationType: 'FRETE - IMPORTAÇÃO', // FRETE IMPORTACAO
   idStatus: 1, // sempre passar 1
   codeUserCreation: 0, // codigo do usuario
   codeRespSeller: 0, // 0 por enquanto nao sabemos

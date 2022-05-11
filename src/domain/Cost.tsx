@@ -1,6 +1,6 @@
 export interface Cost {
   id?: number | null
-  idProposal: number
+  idProposal?: number | null
   idService: number // id Descricao
   containerType: string | null// containerMODAL
   idBusinessPartnerAgent: number // AgenteMODALcusto
