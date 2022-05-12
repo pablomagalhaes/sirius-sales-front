@@ -6,7 +6,7 @@ import {
   InputAdornment,
   MenuItem
 } from '@material-ui/core/'
-import Autocomplete from '@material-ui/lab/Autocomplete'
+import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete'
 import { I18n } from 'react-redux-i18n'
 import { Title, Subtitle, Separator, SelectSpan } from '../style'
 import IconComponent from '../../../../application/icons/IconComponent'
@@ -63,14 +63,6 @@ const Step2 = ({
       setAgentList(data.agents)
     }
   }, [data.agents])
-
-  useEffect(() => {
-    void (async function () {
-      await API.getOriginDestination()
-        .then((response) => setOriginDestinationList(response))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
 
   useEffect(() => {
     if (proposal.id !== undefined && proposal.id !== null) {
@@ -165,6 +157,17 @@ const Step2 = ({
   }, [data, proposalType])
 
   useEffect(() => {
+    if (modal?.length > 0) {
+      if (modal === 'LAND') {
+        setOriginDestinationList([])
+      } else {
+        void (async function () {
+          await API.getOriginDestinationByModal(modal)
+            .then((response) => setOriginDestinationList(response))
+            .catch((err) => console.log(err))
+        })()
+      }
+    }
     setData({ ...data, destiny: '', origin: '' })
   }, [modal])
 
@@ -241,6 +244,11 @@ const Step2 = ({
     return actualList
   }
 
+  const filterOptions = createFilterOptions({
+    matchFrom: 'any',
+    limit: 500
+  })
+
   return (
     <Separator>
       <Title>
@@ -256,8 +264,9 @@ const Step2 = ({
             </FormLabel>
             <Autocomplete
               freeSolo
-              onChange={(e, newValue) => setData({ ...data, origin: String(newValue) })}
+              onChange={(e, newValue) => setData({ ...data, origin: String(newValue ?? '') })}
               options={getOriginDestinyList()}
+              filterOptions={filterOptions}
               value={data.origin}
               renderInput={(params) => (
                 <div ref={params.InputProps.ref}>
@@ -290,8 +299,9 @@ const Step2 = ({
             </FormLabel>
             <Autocomplete
               freeSolo
-              onChange={(e, newValue) => setData({ ...data, destiny: String(newValue) })}
+              onChange={(e, newValue) => setData({ ...data, destiny: String(newValue ?? '') })}
               options={getOriginDestinyList()}
+              filterOptions={filterOptions}
               value={data.destiny}
               renderInput={(params) => (
                 <div ref={params.InputProps.ref}>
