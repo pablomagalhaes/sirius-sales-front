@@ -74,16 +74,29 @@ const Step5 = ({
       let destinyId = 0
       if (proposal?.id !== undefined && proposal?.id !== null) {
         const newOriginTable = [...dataOrigin]
+        const newTotalCostOrigIds: number[] = []
         const newDestinyTable = [...dataDestiny]
+        const newTotalCostDestIds: number[] = []
         for (const cost of proposal.costs) {
           if (cost.costType === 'Origem') {
-            newOriginTable[originId++].idCost = cost.id
-            setDataOrigin(newOriginTable)
+            newOriginTable[originId].idCost = cost.id
+            newOriginTable[originId++].idProposal = proposal.id
           } else if (cost.costType === 'Destino') {
-            newDestinyTable[destinyId++].idCost = cost.id
-            setDataDestiny(newDestinyTable)
+            newDestinyTable[destinyId].idCost = cost.id
+            newDestinyTable[destinyId++].idProposal = proposal.id
           }
         }
+        setDataOrigin(newOriginTable)
+        setDataDestiny(newDestinyTable)
+        for (const totalCost of proposal.totalCosts) {
+          if (totalCost.costType === 'Origem') {
+            newTotalCostOrigIds.push(Number(totalCost.id))
+          } else if (totalCost.costType === 'Destino') {
+            newTotalCostDestIds.push(Number(totalCost.id))
+          }
+        }
+        setLoadedTotalCostsOrigIds(newTotalCostOrigIds)
+        setLoadedTotalCostsDestIds(newTotalCostDestIds)
       }
     }
   }))
@@ -105,7 +118,7 @@ const Step5 = ({
                   .then((response) => resolve(String(response?.description)))
                   .catch((err) => console.log(err))
               } else {
-                (resolve(''))
+                (resolve(null))
               }
             })
 
@@ -118,6 +131,7 @@ const Step5 = ({
             void await Promise.all([getContainer, getService]).then((response) => {
               const loadedItem: CostTableItem = {
                 idCost: cost.id,
+                idProposal: proposal.id,
                 agent: agentList[Number(cost.idBusinessPartnerAgent) - 1],
                 buyCurrency: cost.idCurrencyPurchase === '' ? 'BRL' : String(cost.idCurrencyPurchase),
                 buyMin: cost.valueMinimumPurchase === 0 ? null : completeDecimalPlaces(cost.valueMinimumPurchase),
@@ -127,7 +141,7 @@ const Step5 = ({
                 saleCurrency: cost.idCurrencySale === '' ? 'BRL' : String(cost.idCurrencySale),
                 saleMin: cost.valueMinimumSale === 0 ? null : completeDecimalPlaces(cost.valueMinimumSale),
                 saleValue: cost.valueSale === 0 ? '' : completeDecimalPlaces(cost.valueSale),
-                selectedContainer: String(response[0]),
+                selectedContainer: response[0] === null ? null : String(response[0]),
                 type: String(cost.billingType),
                 buyValueCalculated: null,
                 saleValueCalculated: null
@@ -169,9 +183,9 @@ const Step5 = ({
     dataOrigin.forEach((row) => {
       newOriginTableData.push({
         id: row.idCost === undefined ? null : row.idCost,
-        idProposal: 0,
+        idProposal: proposal?.id === undefined ? null : proposal?.id,
         idService: serviceList.filter((serv) => serv.service === row.description)[0]?.id, // id Descricao
-        containerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : '', // containerMODAL
+        containerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : null, // containerMODAL
         idBusinessPartnerAgent: agentList.indexOf(row.agent) + 1, // data.agent, // AgenteMODALcusto
         costType: 'Origem', // 'Origem''Destino''Tarifa'
         billingType: row.type, // Tipo -MODAL
@@ -191,9 +205,9 @@ const Step5 = ({
     dataDestiny.forEach((row) => {
       newDestinyTableData.push({
         id: row.idCost === undefined ? null : row.idCost,
-        idProposal: 0,
+        idProposal: proposal?.id === undefined ? null : proposal?.id,
         idService: serviceList.filter((serv) => serv.service === row.description)[0]?.id, // id Descricao
-        containerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : '', // containerMODAL
+        containerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : null, // containerMODAL
         idBusinessPartnerAgent: 0, // AgenteMODALcusto
         costType: 'Destino', // 'Origem''Destino''Tarifa'
         billingType: row.type, // Tipo -MODAL
@@ -217,7 +231,7 @@ const Step5 = ({
       if (currency.value.buy !== 0 || currency.value.sale !== 0) {
         newTotalCostOrigin.push({
           id: loadedTotalCostsOrigIds[index] === undefined ? null : loadedTotalCostsOrigIds[index],
-          idProposal: 0,
+          idProposal: proposal?.id === undefined ? null : proposal?.id,
           costType: 'Origem', // 'Origem''Destino''Tarifa'
           idCurrency: currency.name, // id moeda
           valueTotalSale: currency.value.sale, // total sale da moeda
@@ -230,7 +244,7 @@ const Step5 = ({
       if (currency.value.buy !== 0 || currency.value.sale !== 0) {
         newTotalCostDestiny.push({
           id: loadedTotalCostsDestIds[index] === undefined ? null : loadedTotalCostsDestIds[index],
-          idProposal: 0,
+          idProposal: loadedTotalCostsDestIds[index] === undefined ? null : proposal?.id,
           costType: 'Destino', // 'Origem''Destino''Tarifa'
           idCurrency: currency.name, // id moeda
           valueTotalSale: currency.value.sale, // total sale da moeda

@@ -76,15 +76,15 @@ const Step1 = ({
         .catch((err) => console.log(err))
     })
 
-    const getPartnerCostumer = new Promise<void>((resolve) => {
-      API.getBusinessPartnerCostumer(proposal.idBusinessPartnerCostumer)
-        .then((response) => {
-          resolve(response?.businessPartner?.simpleName)
-        })
-        .catch((err) => console.log(err))
-    })
-
     if (proposal.id !== undefined && proposal.id !== null) {
+      const getPartnerCostumer = new Promise<void>((resolve) => {
+        API.getBusinessPartnerCostumer(proposal.idBusinessPartnerCostumer)
+          .then((response) => {
+            resolve(response?.businessPartner?.simpleName)
+          })
+          .catch((err) => console.log(err))
+      })
+
       void Promise.all([getAgents, getPartners, getPartnerCostumer]).then((response) => {
         setData({
           proposal: proposal.proposalType,
@@ -103,6 +103,7 @@ const Step1 = ({
   useEffect(() => {
     setProposal({
       ...proposal,
+      referenceProposal: data.requester, // TODO campo inserido para facilitar as buscas de propostas, depois sera retirado
       proposalType: data.proposal,
       idTransport: data.modal,
       idBusinessPartnerCostumer: data.proposal === 'routing'
@@ -207,7 +208,7 @@ const Step1 = ({
                   {...params}
                   id="search-client"
                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                  invalid={data.proposalValue === '' && invalidInput}
+                  invalid={(data.proposalValue === '') && invalidInput}
                   variant="outlined"
                   size="small"
                   placeholder={I18n.t('pages.newProposal.step1.searchClient')}
@@ -230,7 +231,7 @@ const Step1 = ({
           <ControlledInput
             id="search-requester"
             toolTipTitle={I18n.t('components.itemModal.requiredField')}
-            invalid={data.requester === '' && invalidInput}
+            invalid={(data.requester === '') && invalidInput}
             variant="outlined"
             size="small"
             placeholder={I18n.t('pages.newProposal.step1.searchRequesterPlaceholder')}

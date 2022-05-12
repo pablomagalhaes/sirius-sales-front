@@ -124,7 +124,7 @@ const CostTable = ({
 
   useEffect(() => {
     const copyData = containerItems.length > 0
-      ? data.filter(item => containerItems.findIndex(container => item.selectedContainer === container.type) !== -1).map((item) => {
+      ? data.filter(item => (containerItems.findIndex(container => item.selectedContainer === container.type) !== -1) || item.selectedContainer === null).map((item) => {
         const indexContainer = containerItems.findIndex(container => item.selectedContainer === container.type)
 
         const newData = {

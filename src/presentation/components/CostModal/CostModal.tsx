@@ -43,6 +43,7 @@ import { CalculationDataProps } from '../ChargeTable'
 import FormatNumber from '../../../application/utils/formatNumber'
 export interface CostTableItem {
   idCost?: number | null
+  idProposal?: number | null
   agent: string
   buyCurrency: string | null
   buyMin: string | null
@@ -471,9 +472,9 @@ const CostModal = ({
             {isOriginCost &&
               <RowDiv margin={specifications === 'fcl' && true} style={{ position: 'relative' }}>
                 <ControlledToolTip
-                    title={I18n.t('components.itemModal.requiredField')}
-                    open={invalidInput && (state.agent === null || state.agent.length === 0)}
-                  >
+                  title={I18n.t('components.itemModal.requiredField')}
+                  open={invalidInput && (state.agent === null || state.agent.length === 0)}
+                >
                   <Autocomplete
                     options={agentList.map((agent) => agent)}
                     value={state.agent}
