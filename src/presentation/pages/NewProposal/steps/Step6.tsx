@@ -114,11 +114,19 @@ const Step6 = ({
       let tableDataId = 0
       if (proposal?.id !== undefined && proposal?.id !== null) {
         const newTableData = [...tableData]
+        const newLoadedTotalCostsIds: number[] = []
         for (const cost of proposal.costs) {
           if (cost.costType === 'Tarifa') {
-            newTableData[tableDataId++].idCost = cost.id
-            setTableData(newTableData)
+            newTableData[tableDataId].idCost = cost.id
+            newTableData[tableDataId++].idProposal = proposal.id
           }
+        }
+        setTableData(newTableData)
+        for (const totalCost of proposal.totalCosts) {
+          if (totalCost.costType === 'Tarifa') {
+            newLoadedTotalCostsIds.push(Number(totalCost.id))
+          }
+          setLoadedTotalCostsIds(newLoadedTotalCostsIds)
         }
       }
     }
@@ -152,7 +160,7 @@ const Step6 = ({
                   .then((response) => resolve(String(response?.description)))
                   .catch((err) => console.log(err))
               } else {
-                resolve('')
+                resolve(null)
               }
             })
 
@@ -208,6 +216,7 @@ const Step6 = ({
             ]).then((response) => {
               const loadedItem: FareModalData = {
                 idCost: cost.id,
+                idProposal: proposal.id,
                 id: id++,
                 saleCurrency:
                   cost.idCurrencySale === ''
@@ -222,7 +231,7 @@ const Step6 = ({
                     ? ''
                     : completeDecimalPlaces(cost.valueMinimumSale),
                 expense: String(response[1]),
-                selectedContainer: String(response[0]),
+                selectedContainer: response[0] === null ? null : String(response[0]),
                 type: String(cost.billingType),
                 totalItem: cost.valueSale === 0 ? '' : Number(response[2]).toFixed(2).replace('.', ',')
               }
@@ -260,7 +269,7 @@ const Step6 = ({
     tableData.forEach((row) => {
       newFareItems.push({
         id: row.idCost === undefined ? null : row.idCost,
-        idProposal: 0,
+        idProposal: proposal?.id === undefined ? null : proposal?.id,
         idService: serviceList.filter((serv) => serv.service === row.expense)[0]
           ?.id, // id Descricao
         containerType:
@@ -268,7 +277,7 @@ const Step6 = ({
             ? containerTypeList.filter(
               (cont) => cont.description === row.selectedContainer
             )[0]?.id
-            : '', // containerMODAL
+            : null, // containerMODAL
         idBusinessPartnerAgent: 0, // data.agent, // AgenteMODALcusto
         costType: 'Tarifa', // 'Origem''Destino''Tarifa'
         billingType: row.type, // Tipo -MODAL
@@ -296,7 +305,7 @@ const Step6 = ({
           loadedTotalCostsIds[index] === undefined
             ? null
             : loadedTotalCostsIds[index],
-        idProposal: 0,
+        idProposal: proposal?.id === undefined ? null : proposal?.id,
         costType: 'Tarifa', // 'Origem''Destino''Tarifa'
         idCurrency: currency.name, // id moeda
         valueTotalSale: currency.value, // total sale da moeda
@@ -336,31 +345,7 @@ const Step6 = ({
     const waitAllData = async (): Promise<void> => {
       for (const item of tableData) {
         void (await new Promise((resolve) => {
-          const indexContainer = containerItems.findIndex(
-            (container) => item.selectedContainer === container.type
-          )
-          const totalCostCalculationData = {
-            costType: item.type,
-            quantityContainer:
-              specifications === 'fcl'
-                ? Number(containerItems[indexContainer].amount)
-                : 0,
-            valueGrossWeight: isNaN(Number(calculationData?.weight))
-              ? 0
-              : calculationData?.weight,
-            valueCubage: isNaN(Number(calculationData?.cubage))
-              ? 0
-              : calculationData?.cubage,
-            valueWeightCubed: isNaN(Number(calculationData?.cubageWeight))
-              ? 0
-              : calculationData?.cubageWeight,
-            valuePurchase: 0,
-            valueSale: Number(item.saleValue.replace(',', '.')) > Number(item.minimumValue.replace(',', '.'))
-              ? Number(item.saleValue.replace(',', '.'))
-              : Number(item.minimumValue.replace(',', '.')),
-            idCurrencyPurchase: '',
-            idCurrencySale: item.saleCurrency
-          }
+          const totalCostCalculationData = getTotalCalculationData(item)
           API.postTotalCalculation(totalCostCalculationData).then(response => {
             item.totalItem = (item.type === 'FIXO' || item.type === 'BL')
               ? '0'
@@ -384,14 +369,7 @@ const Step6 = ({
     })()
   }, [])
 
-  const handleAdd = (item: FareModalData): void => {
-    setUndoMessage({
-      step3: false,
-      step5origin: false,
-      step5destiny: false,
-      step6: false
-    })
-
+  const getTotalCalculationData = (item): any => {
     const indexContainer = containerItems.findIndex(
       (container) => item.selectedContainer === container.type
     )
@@ -417,6 +395,18 @@ const Step6 = ({
       idCurrencyPurchase: '',
       idCurrencySale: item.saleCurrency
     }
+    return totalCostCalculationData
+  }
+
+  const handleAdd = (item: FareModalData): void => {
+    setUndoMessage({
+      step3: false,
+      step5origin: false,
+      step5destiny: false,
+      step6: false
+    })
+
+    const totalCostCalculationData = getTotalCalculationData(item)
 
     void (async function () {
       await API.postTotalCalculation(totalCostCalculationData)

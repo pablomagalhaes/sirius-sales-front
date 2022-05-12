@@ -30,6 +30,7 @@ import FormatNumber from '../../../application/utils/formatNumber'
 
 export interface FareModalData {
   idCost?: number | null
+  idProposal?: number | null
   id: number | null
   saleCurrency: string
   saleValue: string

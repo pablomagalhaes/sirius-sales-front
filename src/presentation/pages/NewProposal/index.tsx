@@ -90,7 +90,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       setLoadExistingProposal(true)
       const today = new Date()
       const timeNow = `${today.getFullYear()}-${('0' + String(today.getMonth() + 1).slice(-2))}-${('0' + String(today.getDate())).slice(-2)}T${('0' + String(today.getHours())).slice(-2)}:${('0' + String(today.getMinutes())).slice(-2)}:${('0' + String(today.getSeconds())).slice(-2)}.000Z`
-      setProposal({ ...emptyProposalValue, operationType: 'FRETE - IMPORTAÇÃO', openingDate: timeNow })
+      setProposal({ ...emptyProposalValue, openingDate: timeNow })
     }
   }, [])
 
@@ -189,6 +189,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           setShowSaveMessage(true)
           setInvalidInput(false)
         }).catch((error) => {
+          setShowSaveMessage(false)
+          setInvalidInput(true)
           console.trace(error)
         })
       } else {
@@ -203,6 +205,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           setShowSaveMessage(true)
           setInvalidInput(false)
         }).catch((error) => {
+          setShowSaveMessage(false)
+          setInvalidInput(true)
           console.trace(error)
         })
       }
@@ -346,7 +350,6 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         history.push('/proposta')
         break
       case 'logout':
-        console.log('keycloak logout')
         break
     }
   }
@@ -405,7 +408,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
             ? <>
               {I18n.t('pages.newProposal.reference')}
               <ReferenceCode>
-                {proposal.referenceProposal}
+                {proposal?.referenceProposal}
               </ReferenceCode>
             </>
             : null
