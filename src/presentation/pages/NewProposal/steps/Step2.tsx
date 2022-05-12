@@ -156,18 +156,20 @@ const Step2 = ({
     }
   }, [data, proposalType])
 
-  useEffect(() => {
+  const getOriginDestinationListByModal = async (modal: string): Promise<void> => {
     if (modal?.length > 0) {
       if (modal === 'LAND') {
         setOriginDestinationList([])
       } else {
-        void (async function () {
-          await API.getOriginDestinationByModal(modal)
-            .then((response) => setOriginDestinationList(response))
-            .catch((err) => console.log(err))
-        })()
+        await API.getOriginDestinationByModal(modal)
+          .then((response) => setOriginDestinationList(response))
+          .catch((err) => console.log(err))
       }
     }
+  }
+
+  useEffect(() => {
+    void getOriginDestinationListByModal(modal)
     setData({ ...data, destiny: '', origin: '' })
   }, [modal])
 
