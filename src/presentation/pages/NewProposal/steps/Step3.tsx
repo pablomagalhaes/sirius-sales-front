@@ -104,6 +104,10 @@ const Step3 = ({
   }))
 
   useEffect(() => {
+    setTableItems([...tableRows])
+  }, [tableRows, setTableRows])
+
+  useEffect(() => {
     setSpecifications(data.specifications)
     setTableRows([])
   }, [data.specifications])
@@ -249,19 +253,16 @@ const Step3 = ({
       if (item.id === tableRows[0].id) {
         const endTableRows = tableRows.slice(1)
         setTableRows([item, ...endTableRows])
-        setTableItems([item, ...endTableRows])
       } else {
         const elementIndex = tableRows.findIndex(element => element.id === item.id)
         const startTableRows = tableRows.slice(0, elementIndex)
         const endTableRows = tableRows.slice(elementIndex + 1)
         setTableRows([...startTableRows, item, ...endTableRows])
-        setTableItems([...startTableRows, item, ...endTableRows])
       }
     } else {
       const newItem = { ...item, id: tableId }
       setTableId((tableId) => tableId + 1)
       setTableRows([...tableRows, newItem])
-      setTableItems([...tableRows, newItem])
     }
   }
 
@@ -275,7 +276,6 @@ const Step3 = ({
     setCopyTable(tableRows)
     newTable.splice(index, 1)
     setTableRows(newTable)
-    setTableItems(newTable)
     setUndoMessage({ step3: true, step5origin: false, step5destiny: false, step6: false })
   }
 
@@ -501,7 +501,7 @@ const Step3 = ({
             buttonText={I18n.t('pages.newProposal.step3.messageUndoDelete')}
             closeAlert={() => { setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false }) }}
             closeMessage=''
-            goBack={() => { setTableItems(copyTable); setTableRows(copyTable); setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false }) }}
+            goBack={() => { setTableRows(copyTable); setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false }) }}
             message={I18n.t('pages.newProposal.step3.messageDeleteItem')} />
         </MessageContainer>}
     </Separator >
