@@ -46,6 +46,15 @@ const getOriginDestination = async (): Promise<any> => {
   }
 }
 
+const getOriginDestinationByModal = async (params): Promise<any> => {
+  try {
+    const res = await instance.get(`/sirius-master-data-api/origins/destinations/transport/${String(params)}`)
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const getOriginDestinationById = async (params): Promise<any> => {
   try {
     const res = await instance.get(`/sirius-master-data-api/origins/destinations/${String(params)}`)
@@ -195,6 +204,7 @@ const API = {
   getProposal,
   getBusinessPartnerCostumer,
   getOriginDestinationById,
+  getOriginDestinationByModal,
   putProposal,
   putStatus
 }
