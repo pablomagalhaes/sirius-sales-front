@@ -29,6 +29,7 @@ import { withTheme } from 'styled-components'
 import API from '../../../../infrastructure/api'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import { CargoVolume } from '../../../../domain/CargoVolume'
+import CwModal, { CwData, initialCwState } from '../../../components/CwModal/CwModal'
 
 interface Step3Props {
   theme?: any
@@ -68,8 +69,10 @@ const Step3 = ({
   updateTableIdsRef
 }: Step3Props): JSX.Element => {
   const [open, setOpen] = useState(false)
+  const [cwOpen, setCwOpen] = useState(false)
   const [tableRows, setTableRows] = useState<ItemModalData[]>([])
   const [chargeData, setChargeData] = useState<ItemModalData>(initialState)
+  const [cwData] = useState<CwData>(initialCwState)
   const [cargoVolume, setCargoVolume] = useState<CargoVolume[]>([])
   const [temperatureList, setTemperatureList] = useState<any[]>([])
   const [imoList, setImoList] = useState<any[]>([])
@@ -234,6 +237,10 @@ const Step3 = ({
     return completeNumber
   }
 
+  const handleCwClose = (): void => {
+    setCwOpen(false)
+  }
+
   const handleOpen = (): void => {
     setOpen(true)
     setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false })
@@ -263,6 +270,10 @@ const Step3 = ({
       setTableRows([...tableRows, newItem])
       setTableItems([...tableRows, newItem])
     }
+  }
+
+  const handleCwEdit = (item: CwData): void => {
+    console.log(item)
   }
 
   const handleEdit = (row: ItemModalData): void => {
@@ -504,6 +515,13 @@ const Step3 = ({
             goBack={() => { setTableItems(copyTable); setTableRows(copyTable); setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false }) }}
             message={I18n.t('pages.newProposal.step3.messageDeleteItem')} />
         </MessageContainer>}
+        <CwModal dataProp={cwData} action={handleCwEdit} open={cwOpen} setClose={handleCwClose}/>
+        <Button
+         text={'abrir modal cw'}
+         disabled={false}
+         icon=""
+         onAction={() => setCwOpen(true)}
+        />
     </Separator >
   )
 }
