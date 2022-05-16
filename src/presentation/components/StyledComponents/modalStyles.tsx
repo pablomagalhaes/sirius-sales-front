@@ -35,7 +35,7 @@ export const Label = styled.span`
 
 export const Title = styled.span`
   margin-left: 24px;
-  width: 70%;
+  width: 71%;
 `
 export const HeaderDiv = styled.div`
   display: flex;

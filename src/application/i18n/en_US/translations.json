@@ -165,6 +165,17 @@
       "tariff": "Tariff",
       "indicators": "Commercial Indicators"
     },
+    "cwModal": {
+      "title": "Change Chargeable Weight",
+      "grossWeight": "Gross weight (kg):",
+      "cubage": "Cubage:",
+      "cubageWeight": "Cubage weight (m3):",
+      "cwSales": "CW Sale:",
+      "cancel": "Cancel",
+      "save": "Save",
+      "attention": "ATTENTION:",
+      "infoText": "When changing the value manually, you will be disregarding the automatic calculation of the chargeable weight"
+    },
     "costTable": {
       "addCost": "Add cost",
       "addCostTooltip": "To add, select agents in the \"Service\" step and include at least one item in the \"Cargo\" step",
