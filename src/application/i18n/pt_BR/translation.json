@@ -177,6 +177,17 @@
       "sale": "Venda",
       "type":"Tipo"
     },
+    "cwModal": {
+      "title": "Alterar Chargeable Weight",
+      "grossWeight": "Peso bruto (kg):",
+      "cubage": "Cubagem:",
+      "cubageWeight": "Peso cubado (m3):",
+      "cwSales": "CW Venda:",
+      "cancel": "Cancelar",
+      "save": "Salvar",
+      "attention": "ATENÇÃO:",
+      "infoText": "Ao alterar o valor manualmente, você estará desconsiderando o cálculo automático do chargeable weight."
+    },
     "costModal": {
       "type": "Tipo:",
       "description": "Despesa/Serviço:",
