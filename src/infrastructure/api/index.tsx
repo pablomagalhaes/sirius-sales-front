@@ -186,6 +186,45 @@ const getBusinessPartnerCostumer = async (params): Promise<any> => {
   }
 }
 
+const getCountries = async (): Promise<any> => {
+  try {
+    const res = await instance.get('/sirius-master-data-api/countries/')
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const getStates = async (params): Promise<any> => {
+  try {
+    const res = await instance.get(`/sirius-master-data-api/countries/${String(params)}/states`)
+    return res.data
+  } catch (error) {
+    console.error(error)
+    return ('error')
+  }
+}
+
+const getCities = async (params): Promise<any> => {
+  try {
+    const res = await instance.get(`https://qa.siriuslog.com/gateway/sirius-master-data-api/city/states/${String(params)}/cities`)
+    return res.data
+  } catch (error) {
+    console.error(error)
+    return ('error')
+  }
+}
+
+const getCityById = async (params): Promise<any> => {
+  try {
+    const res = await instance.get(`https://qa.siriuslog.com/gateway/sirius-master-data-api/city/${String(params)}`)
+    return res.data
+  } catch (error) {
+    console.error(error)
+    return ('error')
+  }
+}
+
 const API = {
   getContainerType,
   getCurrencies,
@@ -206,7 +245,11 @@ const API = {
   getOriginDestinationById,
   getOriginDestinationByModal,
   putProposal,
-  putStatus
+  putStatus,
+  getCountries,
+  getStates,
+  getCities,
+  getCityById
 }
 
 export default API

@@ -213,7 +213,7 @@ const Proposal = (): JSX.Element => {
   const editEventPage = (id: any): void => {
     history.push({
       pathname: '/novaProposta',
-      state: { proposalId: id}
+      state: { proposalId: id }
     })
   }
 
