@@ -174,7 +174,7 @@
       "cancel": "Cancel",
       "save": "Save",
       "attention": "ATTENTION:",
-      "infoText": "When changing the value manually, you will be disregarding the automatic calculation of the chargeable weight"
+      "infoText": "When changing the value manually, you will be disregarding the automatic calculation of the chargeable weight. The value entered must be greater than 0.00"
     },
     "costTable": {
       "addCost": "Add cost",
