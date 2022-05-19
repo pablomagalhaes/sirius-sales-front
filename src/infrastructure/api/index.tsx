@@ -179,7 +179,7 @@ const putStatus = async (id, status): Promise<any> => {
 
 const getBusinessPartnerCostumer = async (params): Promise<any> => {
   try {
-    const res = await instance.get(`/sirius-business-partner-api/business/partner/class/${String(params)}`)
+    const res = await instance.get(`/sirius-business-partner-api/business/partner/${String(params)}`)
     return res.data
   } catch (error) {
     console.error(error)

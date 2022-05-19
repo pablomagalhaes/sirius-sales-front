@@ -53,6 +53,7 @@ const Proposal = (): JSX.Element => {
   const [totalProposalList, setTotalProposalList] = useState<number>(0)
   const [incotermList, setIncotermList] = useState<any[]>([])
   const [partnerList, setPartnerList] = useState<any[]>([])
+  const [partnerSimpleNameList, setPartnerSimpleNameList] = useState<any[]>([])
   const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
   const [radioValue, setRadioValue] = useState('')
 
@@ -75,14 +76,17 @@ const Proposal = (): JSX.Element => {
   }, [])
 
   useEffect(() => {
+    const simpleNameList: any[] = []
     const newPartnerList: any[] = []
     void (async function () {
       await API.getPartner()
         .then((response) => {
           response.forEach((item: any) => {
-            newPartnerList.push(item?.businessPartner?.simpleName)
+            simpleNameList.push(item?.businessPartner?.simpleName)
+            newPartnerList.push(item?.businessPartner)
           })
-          return (setPartnerList(newPartnerList))
+          setPartnerSimpleNameList(simpleNameList)
+          setPartnerList(newPartnerList)
         })
         .catch((err) => console.log(err))
     })()
@@ -152,6 +156,17 @@ const Proposal = (): JSX.Element => {
     }
   }
 
+  const getClientSimpleName = (clientId): string[] => {
+    const finalList: string[] = []
+
+    partnerList?.forEach((item): void => {
+      if (Number(item.id) === Number(clientId)) {
+        finalList.push(String(item.simpleName))
+      }
+    })
+    return finalList
+  }
+
   const getProposalItems = (proposalList: any[]): any => {
     const array: any = []
     for (const proposal of proposalList) {
@@ -165,7 +180,7 @@ const Proposal = (): JSX.Element => {
       const item = {
         key: proposal.proposalId,
         reference: proposal.reference,
-        client: proposal.client,
+        client: getClientSimpleName(proposal.client),
         origin: proposal.originId,
         destination: proposal.destinationId,
         opening,
@@ -210,7 +225,7 @@ const Proposal = (): JSX.Element => {
         {
           iconType: 'duplicate',
           label: I18n.t('pages.proposal.table.duplicateLabel'),
-          onClick: () => {}
+          onClick: () => { }
         },
         {
           iconType: 'forward',
@@ -227,7 +242,7 @@ const Proposal = (): JSX.Element => {
         array.push({
           iconType: 'duplicate',
           label: I18n.t('pages.proposal.table.duplicateLabel'),
-          onClick: () => {}
+          onClick: () => { }
         },
         {
           iconType: 'fileReview',
@@ -264,7 +279,7 @@ const Proposal = (): JSX.Element => {
         {
           iconType: 'duplicate',
           label: I18n.t('pages.proposal.table.duplicateLabel'),
-          onClick: () => {}
+          onClick: () => { }
         },
         {
           iconType: 'forward',
@@ -281,28 +296,28 @@ const Proposal = (): JSX.Element => {
         array.push({
           iconType: 'duplicate',
           label: I18n.t('pages.proposal.table.duplicateLabel'),
-          onClick: () => {}
+          onClick: () => { }
         })
         return array
       case StatusProposalEnum.REJEITADA:
         array.push({
           iconType: 'duplicate',
           label: I18n.t('pages.proposal.table.duplicateLabel'),
-          onClick: () => {}
+          onClick: () => { }
         })
         return array
       case StatusProposalEnum.CANCELADA:
         array.push({
           iconType: 'duplicate',
           label: I18n.t('pages.proposal.table.duplicateLabel'),
-          onClick: () => {}
+          onClick: () => { }
         })
         return array
       default:
         array.push({
           iconType: 'duplicate',
           label: I18n.t('pages.proposal.table.duplicateLabel'),
-          onClick: () => {}
+          onClick: () => { }
         })
         return array
     }
@@ -330,7 +345,7 @@ const Proposal = (): JSX.Element => {
     if (selectedClients !== undefined) {
       setFilter((filter: any) => ({
         ...filter,
-        referenceClientProposal: [selectedClients]
+        idBusinessPartnerCostumer: [selectedClients]
       }))
     }
 
@@ -451,7 +466,7 @@ const Proposal = (): JSX.Element => {
 
   const cleanFilter = (): void => {
     delete filter.referenceProposal
-    delete filter.referenceClientProposal
+    delete filter.idBusinessPartnerCostumer
     delete filter.operationType
     delete filter.idOrigin
     delete filter.idDestination
@@ -491,7 +506,7 @@ const Proposal = (): JSX.Element => {
     },
     {
       label: 'Cliente',
-      pickerListOptions1: partnerList,
+      pickerListOptions1: partnerSimpleNameList,
       pickerLabel1: 'Cliente'
     },
     {
