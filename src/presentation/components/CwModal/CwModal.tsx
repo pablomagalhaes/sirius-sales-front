@@ -9,6 +9,7 @@ import {
   Form,
   HeaderDiv,
   ModalContainer,
+  RedColorSpan,
   RowReverseDiv,
   Title
 } from '../StyledComponents/modalStyles'
@@ -60,8 +61,10 @@ const CwModal = ({
   }
 
   const HandleOnAction = (): void => {
-    action(data)
-    setClose()
+    if (data.cwSale !== undefined && data.cwSale?.length > 0) {
+      action(data)
+      setClose()
+    }
   }
 
   return (
@@ -96,7 +99,10 @@ const CwModal = ({
               <ValueLabel>{data.cubageWeight}</ValueLabel>
             </Grid>
             <Grid item xs={4}>
-              <CwSaleLabel>{I18n.t('components.cwModal.cwSales')}</CwSaleLabel>
+              <CwSaleLabel>
+                {I18n.t('components.cwModal.cwSales')}
+                <RedColorSpan> *</RedColorSpan>
+              </CwSaleLabel>
             </Grid>
             <Grid item xs={8}>
               <CwValue>
