@@ -186,7 +186,7 @@
       "cancel": "Cancelar",
       "save": "Salvar",
       "attention": "ATENÇÃO:",
-      "infoText": "Ao alterar o valor manualmente, você estará desconsiderando o cálculo automático do chargeable weight."
+      "infoText": "Ao alterar o valor manualmente, você estará desconsiderando o cálculo automático do chargeable weight. O valor preenchido deve ser maior que 0,00"
     },
     "costModal": {
       "type": "Tipo:",
