@@ -107,8 +107,8 @@ const Step1 = ({
       proposalType: data.proposal,
       idTransport: data.modal,
       idBusinessPartnerCostumer: data.proposal === 'routing'
-        ? agentsList.filter((agt) => agt.simpleName === data.proposalValue)[0]?.id
-        : partnerList.filter((ptn) => ptn.simpleName === data.proposalValue)[0]?.id,
+        ? agentsList.filter((agt) => agt.businessPartner.simpleName === data.proposalValue)[0]?.businessPartner.id
+        : partnerList.filter((ptn) => ptn.businessPartner.simpleName === data.proposalValue)[0]?.businessPartner.id,
       requester: data.requester
     })
   }, [data])
@@ -200,7 +200,7 @@ const Step1 = ({
           <Autocomplete
             freeSolo
             onChange={(e, newValue) => setData({ ...data, proposalValue: String(newValue) })}
-            options={data.proposal === 'routing' ? agentsList.map((item) => item.simpleName) : partnerList.map((item) => item.simpleName)}
+            options={data.proposal === 'routing' ? agentsList.map((item) => item.businessPartner.simpleName) : partnerList.map((item) => item.businessPartner.simpleName)}
             value={data.proposalValue}
             renderInput={(params) => (
               <div ref={params.InputProps.ref}>
