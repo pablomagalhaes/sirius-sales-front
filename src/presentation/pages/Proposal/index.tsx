@@ -153,6 +153,8 @@ const Proposal = (): JSX.Element => {
         return StatusProposalEnum.REJEITADA
       case 'Cancelada':
         return StatusProposalEnum.CANCELADA
+      case 'Cancelamento Automático':
+        return StatusProposalEnum.CANCELAMENDO_AUTOMATICO
     }
   }
 

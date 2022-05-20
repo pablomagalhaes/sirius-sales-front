@@ -5,6 +5,7 @@ export enum StatusProposalEnum {
   APROVADA = 4,
   REJEITADA = 5,
   CANCELADA = 6,
+  CANCELAMENDO_AUTOMATICO = 7
 }
 
 export enum StatusProposalStringEnum {
@@ -14,4 +15,5 @@ export enum StatusProposalStringEnum {
   APROVADA = 'Aprovada',
   REJEITADA = 'Rejeitada',
   CANCELADA = 'Cancelada',
+  CANCELAMENDO_AUTOMATICO = 'Cancelada',
 }
