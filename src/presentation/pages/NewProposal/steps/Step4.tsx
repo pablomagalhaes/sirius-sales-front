@@ -35,6 +35,7 @@ interface Step4Props {
   theme?: any
   modal: string
   specifications: string
+  duplicateMode: boolean
 }
 
 interface Frequency {
@@ -48,7 +49,8 @@ const Step4 = ({
   setFilled,
   theme,
   modal,
-  specifications
+  specifications,
+  duplicateMode
 }: Step4Props): JSX.Element => {
   // mock para os selects
   const validityList = [
@@ -102,13 +104,15 @@ const Step4 = ({
 
   useEffect(() => {
     if (proposal.id !== undefined && proposal.id !== null) {
-      const validityDate = proposal.validityDate.split('T')[0].split('-')
+      const validityType = !duplicateMode ? '0' : '';
+      const validityDateSplit = !duplicateMode ? proposal.validityDate.split('T')[0].split('-') : '';
+      const validityDateFormat = !duplicateMode ? `${validityDateSplit[2]}/${validityDateSplit[1]}/${validityDateSplit[0]}` : '';
       void new Promise<void>((resolve) => {
         setTimeout(() => resolve(), 1000)
       }).then(() => {
         setData({
-          validity: '0',
-          validityDate: `${validityDate[2]}/${validityDate[1]}/${validityDate[0]}`,
+          validity: validityType,
+          validityDate: validityDateFormat,
           transitTime: String(proposal.transitTime),
           frequency: String(proposal.idFrequency),
           route: proposal.route,
