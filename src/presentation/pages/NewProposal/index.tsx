@@ -53,6 +53,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [calculationData, setCalculationData] = useState<CalculationDataProps>({ weight: 0, cubage: 0, cubageWeight: 0 })
   const [loadExistingProposal, setLoadExistingProposal] = useState(false)
   const [editMode, setEditMode] = useState(false)
+  const [duplicateMode, setduplicateMode] = useState(false)
   const [agentList, setAgentList] = useState<any[]>([])
 
   const history = useHistory()
@@ -83,7 +84,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       setEditMode(true)
       void (async function () {
         await API.getProposal(proposalId)
-          .then((response) => { setProposal(response); setLoadExistingProposal(true) })
+          .then((response) => { setProposal(response); duplicateProposal(response); setLoadExistingProposal(true) })
           .catch((err) => console.log(err))
       })()
     } else {
@@ -93,6 +94,42 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       setProposal({ ...emptyProposalValue, openingDate: timeNow })
     }
   }, [])
+
+  const duplicateProposal = (proposal): void => {
+    if (location.state?.eventType === 'duplicate') {
+      setEditMode(false)
+      setduplicateMode(true)
+      const proposalObject = [proposal].reduce((index, object) => {
+        object.cargo.id = null
+        object.validityDate = ''
+        object.openingDate = formatDate()
+        object.cargo.cargoVolumes.map(cargoVolume => {
+          cargoVolume.id = null; cargoVolume.idCargo = null; return cargoVolume
+        })
+        object.totalCosts.map(totalCost => {
+          totalCost.id = null; totalCost.idProposal = null; return totalCost
+        })
+        object.costs.map(cost => {
+          cost.id = null; cost.idProposal = null; return cost
+        })
+        return object
+      }, 0)
+      setProposal(proposalObject)
+    }
+  }
+
+  const formatDate = (): string => {
+    const year = new Date().getFullYear()
+    const month = new Date().getMonth()
+    const date = new Date().getDate()
+    const hour = new Date().getHours()
+    const minute = new Date().getMinutes()
+    const second = new Date().getSeconds()
+    const yearMonth = `${year}-${('0' + String(month + 1).slice(-2))}`
+    const dateHour = `-${('0' + String(date)).slice(-2)}T${('0' + String(hour)).slice(-2)}`
+    const minuteSecond = `:${('0' + String(minute)).slice(-2)}:${('0' + String(second)).slice(-2)}.000Z`
+    return yearMonth + dateHour + minuteSecond
+  }
 
   const [undoMessage, setUndoMessage] = useState({
     step3: false,
@@ -177,7 +214,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       completed.step5 &&
       completed.step6
     ) {
-      if (proposal.id === undefined || proposal.id === null) {
+      if (proposal.id === undefined || proposal.id === null || location.state?.eventType === 'duplicate') {
+        proposal.id = null
         API.postProposal(JSON.stringify(proposal)).then((response) => {
           setProposal(response)
           // @ts-expect-error
@@ -502,6 +540,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                 setCompleted={setCompleted}
                 invalidInput={invalidInput}
                 specifications={specifications}
+                duplicateMode={duplicateMode}
               />
             </div>
             {stepLoaded.step3 && <> <div id="step5">

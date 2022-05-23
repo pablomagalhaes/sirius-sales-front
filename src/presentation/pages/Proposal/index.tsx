@@ -208,6 +208,20 @@ const Proposal = (): JSX.Element => {
     })()
   }
 
+  const editEventPage = (id: any): void => {
+    history.push({
+      pathname: '/novaProposta',
+      state: { proposalId: id}
+    })
+  }
+
+  const duplicateEventPage = (id: any): void => {
+    history.push({
+      pathname: '/novaProposta',
+      state: { proposalId: id, eventType: 'duplicate' }
+    })
+  }
+
   const menuItemsList = (status: any, id: any): void => {
     const array: any = []
     switch (status) {
@@ -216,16 +230,15 @@ const Proposal = (): JSX.Element => {
           iconType: 'edit',
           label: I18n.t('pages.proposal.table.editLabel'),
           onClick: () => {
-            history.push({
-              pathname: '/novaProposta',
-              state: { proposalId: id }
-            })
+            editEventPage(id)
           }
         },
         {
           iconType: 'duplicate',
           label: I18n.t('pages.proposal.table.duplicateLabel'),
-          onClick: () => { }
+          onClick: () => {
+            duplicateEventPage(id)
+          }
         },
         {
           iconType: 'forward',
@@ -242,7 +255,9 @@ const Proposal = (): JSX.Element => {
         array.push({
           iconType: 'duplicate',
           label: I18n.t('pages.proposal.table.duplicateLabel'),
-          onClick: () => { }
+          onClick: () => {
+            duplicateEventPage(id)
+          }
         },
         {
           iconType: 'fileReview',
@@ -270,16 +285,15 @@ const Proposal = (): JSX.Element => {
           iconType: 'edit',
           label: I18n.t('pages.proposal.table.editLabel'),
           onClick: () => {
-            history.push({
-              pathname: '/novaProposta',
-              state: { proposalId: id }
-            })
+            editEventPage(id)
           }
         },
         {
           iconType: 'duplicate',
           label: I18n.t('pages.proposal.table.duplicateLabel'),
-          onClick: () => { }
+          onClick: () => {
+            duplicateEventPage(id)
+          }
         },
         {
           iconType: 'forward',
@@ -296,28 +310,36 @@ const Proposal = (): JSX.Element => {
         array.push({
           iconType: 'duplicate',
           label: I18n.t('pages.proposal.table.duplicateLabel'),
-          onClick: () => { }
+          onClick: () => {
+            duplicateEventPage(id)
+          }
         })
         return array
       case StatusProposalEnum.REJEITADA:
         array.push({
           iconType: 'duplicate',
           label: I18n.t('pages.proposal.table.duplicateLabel'),
-          onClick: () => { }
+          onClick: () => {
+            duplicateEventPage(id)
+          }
         })
         return array
       case StatusProposalEnum.CANCELADA:
         array.push({
           iconType: 'duplicate',
           label: I18n.t('pages.proposal.table.duplicateLabel'),
-          onClick: () => { }
+          onClick: () => {
+            duplicateEventPage(id)
+          }
         })
         return array
       default:
         array.push({
           iconType: 'duplicate',
           label: I18n.t('pages.proposal.table.duplicateLabel'),
-          onClick: () => { }
+          onClick: () => {
+            duplicateEventPage(id)
+          }
         })
         return array
     }
