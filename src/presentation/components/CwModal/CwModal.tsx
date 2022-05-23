@@ -135,6 +135,7 @@ const CwModal = ({
                 disabled={false}
                 icon=""
                 onAction={HandleOnAction}
+                tooltip=""
               />
             </ButtonDiv>
             <ButtonDiv green={true}>
@@ -144,6 +145,7 @@ const CwModal = ({
                 disabled={false}
                 icon=""
                 onAction={handleOnClose}
+                tooltip=""
               />
             </ButtonDiv>
           </RowReverseDiv>
