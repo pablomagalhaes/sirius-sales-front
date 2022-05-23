@@ -521,6 +521,8 @@ const Step3 = ({
          disabled={false}
          icon=""
          onAction={() => setCwOpen(true)}
+         tooltip=""
+         backgroundGreen={true}
         />
     </Separator >
   )
