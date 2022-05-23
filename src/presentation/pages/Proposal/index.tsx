@@ -154,7 +154,7 @@ const Proposal = (): JSX.Element => {
       case 'Cancelada':
         return StatusProposalEnum.CANCELADA
       case 'Cancelamento Automático':
-        return StatusProposalEnum.CANCELAMENDO_AUTOMATICO
+        return StatusProposalEnum.CANCELAMENTO_AUTOMATICO
     }
   }
 
