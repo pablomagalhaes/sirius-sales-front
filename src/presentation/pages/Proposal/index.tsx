@@ -351,7 +351,7 @@ const Proposal = (): JSX.Element => {
     alert('export list')
   }
 
-  const handleCardFiltersClick = (selectedCardFilters: any): void => {
+  const handleCardFiltersClick = (): void => {
   }
 
   const handleSelectedRowFilter = (selectedFiltersRowFilter: any): void => {

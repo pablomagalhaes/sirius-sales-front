@@ -21,10 +21,7 @@ const TotalContainer = styled.div`
 const UpperContainer = styled.div`
   display: flex;
   flex-direction: row;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  margin-left: 1%;
-  margin-right: 1%;
+  margin: 20px 1%;
   width: 98%;
   border-bottom: 1px solid;
   border-color: ${(props: any) => props.theme?.commercial?.components?.totalSurchage?.borderColor};
@@ -40,14 +37,11 @@ const LowerContainer = styled.div`
 `
 
 const ProfitContainer = styled.div`
-background: #6CD99A;
-border-radius: 4px;
-font-weight: 400;
-padding-left: 9px;
-padding-right: 9px;
-padding-top: 2px;
-padding-bottom: 2px;
-color: #222222;
+  background: #6CD99A;
+  border-radius: 4px;
+  font-weight: 400;
+  padding: 2px 9px;
+  color: #222222;
 `
 
 const CwLabel = styled.span`

@@ -61,7 +61,6 @@ const CostTable = ({
   agentList,
   modalTitle,
   title,
-  totalCostLabel,
   costData,
   modal,
   specifications,
