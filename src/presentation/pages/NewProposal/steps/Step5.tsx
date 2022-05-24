@@ -64,9 +64,19 @@ const Step5 = ({
   const [loadedTotalCostsOrigIds, setLoadedTotalCostsOrigIds] = useState<number[]>([])
   const [loadedTotalCostsDestIds, setLoadedTotalCostsDestIds] = useState<number[]>([])
 
+  const [agentsListSuper, setAgentsListSuper] = useState<any[]>([])
+
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
   const [loadedTable, setLoadedTable] = useState(false)
+
+  useEffect(() => {
+    void (async function () {
+      await API.getAgents()
+        .then((response) => setAgentsListSuper(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
 
   useImperativeHandle(updateTableIdsRef, () => ({
     updateStep5Ids () {
@@ -77,6 +87,15 @@ const Step5 = ({
         const newTotalCostOrigIds: number[] = []
         const newDestinyTable = [...dataDestiny]
         const newTotalCostDestIds: number[] = []
+        for (const totalCost of proposal.totalCosts) {
+          if (totalCost.costType === 'Origem') {
+            newTotalCostOrigIds.push(Number(totalCost.id))
+          } else if (totalCost.costType === 'Destino') {
+            newTotalCostDestIds.push(Number(totalCost.id))
+          }
+        }
+        setLoadedTotalCostsOrigIds(newTotalCostOrigIds)
+        setLoadedTotalCostsDestIds(newTotalCostDestIds)
         for (const cost of proposal.costs) {
           if (cost.costType === 'Origem') {
             newOriginTable[originId].idCost = cost.id
@@ -88,15 +107,6 @@ const Step5 = ({
         }
         setDataOrigin(newOriginTable)
         setDataDestiny(newDestinyTable)
-        for (const totalCost of proposal.totalCosts) {
-          if (totalCost.costType === 'Origem') {
-            newTotalCostOrigIds.push(Number(totalCost.id))
-          } else if (totalCost.costType === 'Destino') {
-            newTotalCostDestIds.push(Number(totalCost.id))
-          }
-        }
-        setLoadedTotalCostsOrigIds(newTotalCostOrigIds)
-        setLoadedTotalCostsDestIds(newTotalCostDestIds)
       }
     }
   }))
@@ -128,11 +138,23 @@ const Step5 = ({
                 .catch((err) => console.log(err))
             })
 
-            void await Promise.all([getContainer, getService]).then((response) => {
+            const getAgent = new Promise(resolve => {
+              if (cost.idBusinessPartnerAgent !== 0) {
+                API.getBusinessPartnerCostumer(cost.idBusinessPartnerAgent)
+                  .then((response) => {
+                    resolve(response.simpleName)
+                  })
+                  .catch((err) => console.log(err))
+              } else {
+                resolve('')
+              }
+            })
+
+            void await Promise.all([getContainer, getService, getAgent]).then((response) => {
               const loadedItem: CostTableItem = {
                 idCost: cost.id,
                 idProposal: proposal.idProposal,
-                agent: agentList[Number(cost.idBusinessPartnerAgent) - 1],
+                agent: String(response[2]),
                 buyCurrency: cost.idCurrencyPurchase === '' ? 'BRL' : String(cost.idCurrencyPurchase),
                 buyMin: cost.valueMinimumPurchase === 0 ? null : completeDecimalPlaces(cost.valueMinimumPurchase),
                 buyValue: cost.valuePurchase === 0 ? '' : completeDecimalPlaces(cost.valuePurchase),
@@ -177,6 +199,16 @@ const Step5 = ({
   }, [])
 
   useEffect(() => {
+    const getAgentId = (agentName): number => {
+      let id = 0
+      agentsListSuper?.forEach((item): void => {
+        if (String(item.businessPartner.simpleName) === String(agentName)) {
+          id = item.businessPartner.id
+        }
+      })
+      return id
+    }
+
     let actualCostArray = proposal.costs
     actualCostArray = actualCostArray.filter((cost) => cost.costType === 'Tarifa' && cost)
     const newOriginTableData: Cost[] = []
@@ -186,7 +218,7 @@ const Step5 = ({
         idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
         idService: serviceList.filter((serv) => serv.service === row.description)[0]?.id, // id Descricao
         containerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : null, // containerMODAL
-        idBusinessPartnerAgent: agentList.indexOf(row.agent) + 1, // data.agent, // AgenteMODALcusto
+        idBusinessPartnerAgent: getAgentId(row.agent),
         costType: 'Origem', // 'Origem''Destino''Tarifa'
         billingType: row.type, // Tipo -MODAL
         valuePurchase: Number(row.buyValue), // valor compra
@@ -208,7 +240,7 @@ const Step5 = ({
         idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
         idService: serviceList.filter((serv) => serv.service === row.description)[0]?.id, // id Descricao
         containerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : null, // containerMODAL
-        idBusinessPartnerAgent: 0, // AgenteMODALcusto
+        idBusinessPartnerAgent: getAgentId(row.agent),
         costType: 'Destino', // 'Origem''Destino''Tarifa'
         billingType: row.type, // Tipo -MODAL
         valuePurchase: Number(row.buyValue), // valor compra
@@ -231,7 +263,7 @@ const Step5 = ({
       if (currency.value.buy !== 0 || currency.value.sale !== 0) {
         newTotalCostOrigin.push({
           id: loadedTotalCostsOrigIds[index] === undefined ? null : loadedTotalCostsOrigIds[index],
-          idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
+          idProposal: loadedTotalCostsOrigIds[index] === undefined ? null : proposal?.idProposal,
           costType: 'Origem', // 'Origem''Destino''Tarifa'
           idCurrency: currency.name, // id moeda
           valueTotalSale: currency.value.sale, // total sale da moeda

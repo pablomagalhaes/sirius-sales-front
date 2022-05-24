@@ -1,3 +1,4 @@
+import { Agent } from './Agent'
 import { CargoVolume } from './CargoVolume'
 import { Cost } from './Cost'
 import { TotalCost } from './TotalCost'
@@ -25,13 +26,12 @@ export interface Proposal {
   idTransport: string // step1 modal
   idOrigin: string // id origem (if rod="NULL") step2
   idDestination: string // id destino (if rod="NULL") step2
-  idBusinessPartnerAgent: 0 // step2 agent
+  idOriginCity: number | null
+  idDestinationCity: number | null
   idIncoterm: string // step2 incoterm id
   cargo: {
     id?: number
     cargo: string // descricao
-    idPackaging: number
-    idContainerType: string
     isDangerous: boolean // step3 perigoso
     idImoType: number // id IMO
     idTemperature: number // step 3 id temperatura
@@ -45,6 +45,11 @@ export interface Proposal {
   idFrequency: number // step 4 id frequency
   route: string // step4 rota
   freeTime: boolean // true step4
+  vlFreeTime: number | null
+  nrFreeTimeDaysDeadline: number | null
   recurrency: number// 1
   weeklyRecurrency: string // "0101100" segunda quarta e quinta
+  transportIncluded: boolean
+  clearenceIncluded: number | null
+  agents: Agent[]
 }
