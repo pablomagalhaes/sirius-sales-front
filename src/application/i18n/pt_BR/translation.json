@@ -35,10 +35,10 @@
       "step2": {
         "title": "Trecho",
         "subtitle": "Defina origem, destino e especificidades do trecho.",
-        "origin": "Origem:",
+        "origin": "Origem",
         "searchPlaceholder": "Procurar por código/descrição do porto OU país...",
         "collectionAddress": "Endereço de coleta:",
-        "destiny": "Destino:",
+        "destiny": "Destino",
         "destinyAirport": "Aeroporto Destino",
         "destinySeaport": "Porto Destino",
         "originAirport": "Aeroporto Origem",
@@ -46,7 +46,12 @@
         "agents": "Agentes:",
         "searchAgents": "Procurar por nome...",
         "incoterm": "INCOTERM:",
-        "choose": "Escolha ..."
+        "choose": "Escolha ...",
+        "country": "País",
+        "state": "Estado",
+        "city": "Cidade",
+        "differentLocationsDestiny": "Selecione um destino diferente da origem.",
+        "differentLocationsOrigin": "Selecione uma origem diferente do destino."
       },
       "step3": {
         "title": "Carga",

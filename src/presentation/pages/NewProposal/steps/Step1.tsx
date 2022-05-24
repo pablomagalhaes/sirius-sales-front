@@ -257,7 +257,14 @@ const Step1 = ({
           </div>
         ))}
       </RadioGroup>
-      {showPopUp && <ExitDialog cancelButtonText={I18n.t('pages.newProposal.step1.popUpConfirmationButton1')} confirmButtonText={I18n.t('pages.newProposal.step1.popUpConfirmationButton2')} message={I18n.t('pages.newProposal.step1.popUpConfirmationBody')} title={I18n.t('pages.newProposal.step1.popUpConfirmationTitle')} onPressCancel={() => setShowPopUp(false)} onPressConfirm={() => { console.log(modalCopy); setData({ ...data, modal: modalCopy }); setShowPopUp(false) }} />}
+      {showPopUp &&
+        <ExitDialog
+          cancelButtonText={I18n.t('pages.newProposal.step1.popUpConfirmationButton1')}
+          confirmButtonText={I18n.t('pages.newProposal.step1.popUpConfirmationButton2')}
+          message={I18n.t('pages.newProposal.step1.popUpConfirmationBody')}
+          title={I18n.t('pages.newProposal.step1.popUpConfirmationTitle')}
+          onPressCancel={() => setShowPopUp(false)}
+          onPressConfirm={() => { setData({ ...data, modal: modalCopy }); setShowPopUp(false) }} />}
     </Separator>
   )
 }

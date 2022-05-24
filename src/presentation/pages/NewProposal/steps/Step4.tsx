@@ -104,9 +104,9 @@ const Step4 = ({
 
   useEffect(() => {
     if (proposal.id !== undefined && proposal.id !== null) {
-      const validityType = !duplicateMode ? '0' : '';
-      const validityDateSplit = !duplicateMode ? proposal.validityDate.split('T')[0].split('-') : '';
-      const validityDateFormat = !duplicateMode ? `${validityDateSplit[2]}/${validityDateSplit[1]}/${validityDateSplit[0]}` : '';
+      const validityType = !duplicateMode ? '0' : ''
+      const validityDateSplit = !duplicateMode ? proposal.validityDate.split('T')[0].split('-') : ''
+      const validityDateFormat = !duplicateMode ? `${validityDateSplit[2]}/${validityDateSplit[1]}/${validityDateSplit[0]}` : ''
       void new Promise<void>((resolve) => {
         setTimeout(() => resolve(), 1000)
       }).then(() => {

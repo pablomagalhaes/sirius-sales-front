@@ -1,26 +1,9 @@
-import { TableRow, Table, Paper } from '@material-ui/core'
-import { MainDiv } from '../../../components/CostTable/CostTableStyles'
+import { Paper } from '@material-ui/core'
 import styled from 'styled-components'
 import NumberFormat from 'react-number-format'
 
-const TotalContainer = styled(MainDiv)`
-  display: flex;
-  width: 100%;
-  flex-direction: row;
-  padding-top: 31px;
-  padding-bottom: 31px;
-  justify-content: flex-end;
-  align-items: flex-start;
-`
-
-const StyledTable = styled(Table)`
-  width: 100%;
-  margin-bottom: 24px;
-`
-
-const StyledRow = styled(TableRow)`
-  justify-content: space-between !important;
-  margin: 0 20px !important;
+const OriginDestLabel = styled.span`
+  font-weight: ${(props: { isLand: boolean }) => props.isLand ? 'bold' : 400};
 `
 
 const ButtonWrapper = styled.div`
@@ -39,49 +22,17 @@ const StyledPaper = styled(Paper)`
     box-sizing: border-box;
 `
 
-const Input = styled.input`
-  text-indent: 10px;
-  border: 1px solid ${(props: { invalid: boolean, filled: string | null, theme: any }) =>
-          props.invalid
-                  ? '#FF4D4D'
-                  : props.filled != null && props.filled.length > 0
-                          ? '#43BFB5'
-                          : props.theme?.commercial?.components?.itemModal?.border};
-                          
-  box-sizing: border-box;
-  border-radius: 4px;
-  width: 110px;
-  height: 32px;
-  margin-right: 14px;
-  font-family: DM Sans;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 150%;
-  letter-spacing: 0.02em;
-  color: ${(props: { disabled: boolean, theme: any }) =>
-          props.disabled ? props.theme?.commercial?.pages?.newProposal?.placeholder : props.theme?.commercial?.components?.itemModal?.inputFontColor};
-  background: ${(props: { disabled: boolean, theme: any }) =>
-          props.disabled ? props.theme?.commercial?.components?.itemModal?.disabledBackground : props.theme?.commercial?.components?.itemModal?.backgroundColor};
-
-  :focus {
-    outline: none;
-    border-color: #43bfb5;
-  }
-
-  ::placeholder {
-    color: #999dac;
-    opacity: 1;
-  }
+const SelectorIconAdornment = styled.div`
+  position: absolute;
+  top: 7px;
+  right: 0;
 `
 
 export {
-  TotalContainer,
-  StyledTable,
-  StyledRow,
+  OriginDestLabel,
   ButtonWrapper,
   NumberInput,
   HeightDiv,
   StyledPaper,
-  Input
+  SelectorIconAdornment
 }
