@@ -3,15 +3,15 @@ import { TextField } from '@material-ui/core/'
 import { primary } from '../../../application/themes'
 
 export const StyledInput = styled(TextField)`
-  background: ${(props: any) =>
-    props.theme?.commercial?.components?.itemModal?.backgroundColor};
+  background: ${(props: { disabled: boolean, theme: any }) =>
+    props.disabled ? props.theme?.commercial?.components?.itemModal?.disabledBackground : props.theme?.commercial?.components?.itemModal?.backgroundColor};
   & .MuiOutlinedInput-root {
     & fieldset {
       border-color: ${(props: { invalid: boolean, value: string | null, theme: any }) => props.invalid
     ? '#FF4D4D'
     : props.value != null && props.value.length > 0
       ? primary
-      : props.theme?.commercial?.components?.itemModal?.border};
+      : props.theme?.commercial?.components?.itemModal?.border} !important;
     }
     &:hover fieldset {
       border-color: ${primary};
@@ -21,7 +21,8 @@ export const StyledInput = styled(TextField)`
     }
     input {
       height: ${(props: { modal: boolean }) => (props.modal && '12px')};
-      color: ${(props: any) => props.theme?.commercial?.components?.itemModal?.inputFontColor};
+      color: ${(props: { disabled: boolean, theme: any }) =>
+    props.disabled ? props.theme?.commercial?.pages?.newProposal?.placeholder : props.theme?.commercial?.components?.itemModal?.inputFontColor};
     }
   }
   & .MuiInputBase-input {
