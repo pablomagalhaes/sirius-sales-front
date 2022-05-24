@@ -2,14 +2,7 @@ import styled from 'styled-components'
 import { Box } from '@material-ui/core'
 import { primary } from '../../../application/themes'
 
-export const AmountDiv = styled.div`
-  width: 126px;
-  height: 30px;
-  margin-left: 6px;
-  margin-top: 12px; 
-`
-
-export const StyledBox = styled(Box)`
+styled(Box)`
   position: absolute;
   top: 13px;
   left: 171px;
@@ -81,10 +74,4 @@ export const MainDiv = styled.div`
 export const CheckBoxArea = styled.div`
   display: flex;
   cursor: pointer;
-`
-
-export const FieldsContainer = styled.div`
-  width: ${(props: any) => props.widtht};
-  height: ${(props: any) => props.heigtht};
-  margin: ${(props: any) => props.margint};
 `

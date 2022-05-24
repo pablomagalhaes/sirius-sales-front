@@ -115,7 +115,7 @@ export const Form = styled.div`
     props.theme?.commercial?.components?.itemModal?.fontColor};
 `
 
-export const ItemModalForm = styled(Form)`
+styled(Form)`
 margin-right: 24px;
 font-size: 14px;
 `

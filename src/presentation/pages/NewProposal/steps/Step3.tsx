@@ -417,7 +417,7 @@ const Step3 = ({
           <Box width="100%" />
           <Grid item xs={1}>
             <FormLabel component="legend">{I18n.t('components.itemModal.hazardous')}</FormLabel>
-            <FormControlLabel value="dangerous" control={<Checkbox checked={data.dangerous} onChange={e => setData({ ...data, dangerous: !data.dangerous })} />} label={I18n.t('components.itemModal.yes')} />
+            <FormControlLabel value="dangerous" control={<Checkbox checked={data.dangerous} onChange={() => setData({ ...data, dangerous: !data.dangerous })} />} label={I18n.t('components.itemModal.yes')} />
           </Grid>
           {data.dangerous && <Grid item xs={3}>
             <FormLabel component="legend">{I18n.t('components.itemModal.imo')}

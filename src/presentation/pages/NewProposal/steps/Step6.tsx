@@ -1,31 +1,11 @@
-import React, {
-  useEffect,
-  useState,
-  useContext,
-  useImperativeHandle
-} from 'react'
+import React, { useContext, useEffect, useImperativeHandle, useState } from 'react'
 import { I18n } from 'react-redux-i18n'
-import { Title, Subtitle, Separator, MessageContainer } from '../style'
-import FareModal, {
-  FareModalData,
-  initialState
-} from '../../../components/FareModal/FareModal'
-import {
-  Box,
-  FormControl,
-  FormLabel,
-  Grid,
-  InputAdornment,
-  withTheme
-} from '@material-ui/core'
+import { MessageContainer, Separator, Subtitle, Title } from '../style'
+import FareModal, { FareModalData, initialState } from '../../../components/FareModal/FareModal'
+import { Box, FormControl, FormLabel, Grid, InputAdornment, withTheme } from '@material-ui/core'
 import { ItemModalData } from '../../../components/ItemModal/ItemModal'
 
-import {
-  ButtonWrapper,
-  HeightDiv,
-  StyledPaper,
-  NumberInput
-} from './StepsStyles'
+import { ButtonWrapper, HeightDiv, NumberInput, StyledPaper } from './StepsStyles'
 
 import { Button, Messages } from 'fiorde-fe-components'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
@@ -373,12 +353,12 @@ const Step6 = ({
     const indexContainer = containerItems.findIndex(
       (container) => item.selectedContainer === container.type
     )
-    const totalCostCalculationData = {
+    return {
       costType: item.type,
       quantityContainer:
-        specifications === 'fcl'
-          ? Number(containerItems[indexContainer].amount)
-          : 0,
+          specifications === 'fcl'
+            ? Number(containerItems[indexContainer].amount)
+            : 0,
       valueGrossWeight: isNaN(Number(calculationData?.weight))
         ? 0
         : calculationData?.weight,
@@ -395,7 +375,6 @@ const Step6 = ({
       idCurrencyPurchase: '',
       idCurrencySale: item.saleCurrency
     }
-    return totalCostCalculationData
   }
 
   const handleAdd = (item: FareModalData): void => {
