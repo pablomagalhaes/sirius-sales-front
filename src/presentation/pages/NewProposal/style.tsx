@@ -220,9 +220,6 @@ const SelectSpan = styled.span`
 const ButtonContainer = styled.div`
   height: 36px;
 `
-const BoldSpan = styled.span`
-  font-weight: ${(props: { checked: boolean }) => props.checked ? '600' : 'normal'};
-`
 
 const StyledRadio = styled(Radio)`
   color: ${({ color }: StyledRadioProps) => color} !important;
@@ -282,7 +279,6 @@ export {
   TopContainer,
   UserContainer,
   Username,
-  BoldSpan,
   StyledRadio,
   MessageContainer,
   InputContainer,

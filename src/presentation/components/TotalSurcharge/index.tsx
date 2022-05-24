@@ -1,6 +1,6 @@
 import React from 'react'
 import PositiveProfitIcon from '../../../application/icons/PositiveProfitIcon'
-import { CwLabel, LowerContainer, PercentageLabel, ProfitContainer, ProfitLabel, TotalCargoContainer, TotalContainer, UpperContainer } from './sytle'
+import { CwLabel, LowerContainer, PercentageLabel, ProfitContainer, ProfitLabel, TotalCargoContainer, TotalContainer, UpperContainer } from './style'
 import { I18n } from 'react-redux-i18n'
 
 interface TotalSurchargeProps {
