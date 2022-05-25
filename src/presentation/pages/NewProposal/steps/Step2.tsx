@@ -124,7 +124,7 @@ const Step2 = ({
         .catch((err) => console.log(err))
     })()
 
-    if (proposal.id !== undefined && proposal.id !== null) {
+    if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
       const getOrigin = new Promise((resolve) => {
         if (modal === 'LAND') {
           API.getCityById(proposal.idOrigin)

@@ -92,13 +92,13 @@ const Step6 = ({
   useImperativeHandle(updateTableIdsRef, () => ({
     updateStep6Ids () {
       let tableDataId = 0
-      if (proposal?.id !== undefined && proposal?.id !== null) {
+      if (proposal?.idProposal !== undefined && proposal?.idProposal !== null) {
         const newTableData = [...tableData]
         const newLoadedTotalCostsIds: number[] = []
         for (const cost of proposal.costs) {
           if (cost.costType === 'Tarifa') {
             newTableData[tableDataId].idCost = cost.id
-            newTableData[tableDataId++].idProposal = proposal.id
+            newTableData[tableDataId++].idProposal = proposal.idProposal
           }
         }
         setTableData(newTableData)
@@ -128,7 +128,7 @@ const Step6 = ({
     const loadedData: FareModalData[] = []
 
     let id = 0
-    if (proposal.id !== undefined && proposal.id !== null) {
+    if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
       void new Promise<void>((resolve) => {
         setTimeout(() => resolve(), 1000)
       }).then(() => {
@@ -196,7 +196,7 @@ const Step6 = ({
             ]).then((response) => {
               const loadedItem: FareModalData = {
                 idCost: cost.id,
-                idProposal: proposal.id,
+                idProposal: proposal.idProposal,
                 id: id++,
                 saleCurrency:
                   cost.idCurrencySale === ''
@@ -249,7 +249,7 @@ const Step6 = ({
     tableData.forEach((row) => {
       newFareItems.push({
         id: row.idCost === undefined ? null : row.idCost,
-        idProposal: proposal?.id === undefined ? null : proposal?.id,
+        idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
         idService: serviceList.filter((serv) => serv.service === row.expense)[0]
           ?.id, // id Descricao
         containerType:
@@ -285,7 +285,7 @@ const Step6 = ({
           loadedTotalCostsIds[index] === undefined
             ? null
             : loadedTotalCostsIds[index],
-        idProposal: proposal?.id === undefined ? null : proposal?.id,
+        idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
         costType: 'Tarifa', // 'Origem''Destino''Tarifa'
         idCurrency: currency.name, // id moeda
         valueTotalSale: currency.value, // total sale da moeda
@@ -356,9 +356,9 @@ const Step6 = ({
     return {
       costType: item.type,
       quantityContainer:
-          specifications === 'fcl'
-            ? Number(containerItems[indexContainer].amount)
-            : 0,
+        specifications === 'fcl'
+          ? Number(containerItems[indexContainer].amount)
+          : 0,
       valueGrossWeight: isNaN(Number(calculationData?.weight))
         ? 0
         : calculationData?.weight,

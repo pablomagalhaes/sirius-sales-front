@@ -180,7 +180,7 @@ const Proposal = (): JSX.Element => {
       )
       const status = verifyStatus(proposal.status)
       const item = {
-        key: proposal.proposalId,
+        key: proposal.idProposal,
         reference: proposal.reference,
         client: getClientSimpleName(proposal.client),
         origin: proposal.originId,
@@ -192,7 +192,7 @@ const Proposal = (): JSX.Element => {
         responsible: proposal.responsible,
         status: status,
         type: proposal.modal,
-        menuItems: menuItemsList(status, proposal.proposalId),
+        menuItems: menuItemsList(status, proposal.idProposal),
         isLate: false // alterar o 'false' pela regra para quando o vencimento estiver proximo
       }
       array.push(item)
