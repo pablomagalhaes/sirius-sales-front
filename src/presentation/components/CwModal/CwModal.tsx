@@ -1,5 +1,5 @@
 import { Grid, Modal } from '@material-ui/core'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import CloseIcon from '../../../application/icons/CloseIcon'
 import FormatNumber from '../../../application/utils/formatNumber'
 import { NumberInput } from '../../pages/NewProposal/steps/StepsStyles'
@@ -26,42 +26,36 @@ import {
 import { I18n } from 'react-redux-i18n'
 import { Button } from 'fiorde-fe-components'
 import InfoIcon from '../../../application/icons/InfoIcon'
+import { CalculationDataProps } from '../ChargeTable'
 
-export interface CwData {
-  grossWeight?: string
-  cubageWeight?: string
-  cwSale?: string
-  cubage?: string
-}
 interface CwProps {
-  dataProp: CwData
+  dataProp: CalculationDataProps
   action: (item) => void
   open: boolean
   setClose: () => void
-}
-
-export const initialCwState = {
-  grossWeight: '50,00',
-  cubageWeight: '10,00',
-  cwSale: '32,00',
-  cubage: '100,00'
+  editValue: number | null
 }
 
 const CwModal = ({
   dataProp,
   action,
   open,
-  setClose
+  setClose,
+  editValue
 }: CwProps): JSX.Element => {
-  const [data, setData] = useState<CwData>(dataProp)
+  const [data, setData] = useState('')
+
+  useEffect(() => {
+    const value = editValue?.toFixed(2)
+    setData(String(value))
+  }, [open])
 
   const handleOnClose = (): void => {
-    setData(dataProp)
     setClose()
   }
 
   const HandleOnAction = (): void => {
-    if (data.cwSale !== undefined && data.cwSale?.length > 0) {
+    if (data !== undefined && data.length > 0) {
       action(data)
       setClose()
     }
@@ -84,19 +78,19 @@ const CwModal = ({
               <Label>{I18n.t('components.cwModal.grossWeight')}</Label>
             </Grid>
             <Grid item xs={8}>
-              <ValueLabel>{data.grossWeight}</ValueLabel>
+              <ValueLabel>{dataProp?.weight?.toFixed(2).replace('.', ',')}</ValueLabel>
             </Grid>
             <Grid item xs={4}>
               <Label>{I18n.t('components.cwModal.cubage')}</Label>
             </Grid>
             <Grid item xs={8}>
-              <ValueLabel>{data.cubage}</ValueLabel>
+              <ValueLabel>{dataProp?.cubage?.toFixed(2).replace('.', ',')}</ValueLabel>
             </Grid>
             <Grid item xs={4}>
               <Label>{I18n.t('components.cwModal.cubageWeight')}</Label>
             </Grid>
             <Grid item xs={8}>
-              <ValueLabel>{data.cubageWeight}</ValueLabel>
+              <ValueLabel>{dataProp?.cubageWeight?.toFixed(2).replace('.', ',')}</ValueLabel>
             </Grid>
             <Grid item xs={4}>
               <CwSaleLabel>
@@ -114,12 +108,10 @@ const CwModal = ({
                     FormatNumber.rightToLeftFormatter(value, 2)
                   }
                   customInput={ControlledInput}
-                  onChange={(e) => {
-                    setData({ ...data, cwSale: e.target.value })
-                  }}
+                  onChange={(e) => setData(e.target.value)}
                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                  invalid={data.cwSale?.length === 0}
-                  value={data.cwSale}
+                  invalid={data.length === 0}
+                  value={data}
                   variant="outlined"
                   size="small"
                   modal

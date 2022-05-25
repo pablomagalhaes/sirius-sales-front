@@ -39,6 +39,10 @@ const ChargeTable = ({ charges, onEdit, onDelete, specification, modal, setCalcu
     return specification === 'fcl' && modal === 'SEA'
   }
 
+  const isAir = (): boolean => {
+    return modal === 'AIR'
+  }
+
   return (
     <TableContainer>
       <Table>
@@ -72,7 +76,7 @@ const ChargeTable = ({ charges, onEdit, onDelete, specification, modal, setCalcu
             amount += Number(row.amount?.replace(',', '.'))
             cubage += Number(row.cubage?.replace(',', '.'))
             weight += Number(row.rawWeight?.replace(',', '.'))
-            cubageWeight += (Number(row.length?.replace(',', '.')) * Number(row.width?.replace(',', '.')) * Number(row.height?.replace(',', '.')))
+            cubageWeight += Number(cubage) / 0.006
             return (
               <StyledTableRow key={i} noBorder={i + 1 === charges.length}>
                 <TableCell component="th" scope="row">
@@ -103,7 +107,7 @@ const ChargeTable = ({ charges, onEdit, onDelete, specification, modal, setCalcu
             <TableCell />
             {!isFCL() ? <TableCell><b>{I18n.t('components.itemModal.rawWeight')}</b>{Number(weight).toFixed(2).replace('.', ',')} kg</TableCell> : <TableCell />}
             {!isFCL() ? <TableCell><b>{I18n.t('components.itemModal.cubage')}</b>{Number(cubage).toFixed(2).replace('.', ',')}</TableCell> : <TableCell />}
-            {!isFCL() ? <TableCell><b>{I18n.t('components.itemModal.cubageWeight')}</b>{Number(cubageWeight).toFixed(2).replace('.', ',')}</TableCell> : <TableCell />}
+            {isAir() ? <TableCell><b>{I18n.t('components.itemModal.cubageWeight')}</b>{Number(cubageWeight).toFixed(2).replace('.', ',')}</TableCell> : <TableCell />}
             <TableCell />
             <TableCell />
           </BottomRow>
