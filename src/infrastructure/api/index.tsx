@@ -188,7 +188,7 @@ const getBusinessPartnerCostumer = async (params): Promise<any> => {
 
 const getCountries = async (): Promise<any> => {
   try {
-    const res = await instance.get('/sirius-master-data-api/countries/')
+    const res = await instance.get('/sirius-master-data-api/countries/mercosul')
     return res.data
   } catch (error) {
     console.error(error)
