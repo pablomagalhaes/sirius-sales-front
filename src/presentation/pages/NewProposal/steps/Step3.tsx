@@ -95,7 +95,7 @@ const Step3 = ({
   useImperativeHandle(updateTableIdsRef, () => ({
     updateStep3Ids () {
       let tableDataId = 0
-      if (proposal?.id !== undefined && proposal?.id !== null) {
+      if (proposal?.idProposal !== undefined && proposal?.idProposal !== null) {
         const newTableData = [...tableRows]
         for (const cargo of proposal.cargo.cargoVolumes) {
           newTableData[tableDataId].idCargoVolume = cargo?.id
@@ -148,7 +148,7 @@ const Step3 = ({
     })
 
     void Promise.all([getPackagingList, getImoList, getTemperatureList]).then((response: any) => {
-      if (proposal.id !== undefined && proposal.id !== null) {
+      if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
         setData({
           description: proposal.cargo.cargo,
           specifications: proposal.idTransport === 'SEA' ? specificationsList[Number(proposal.cargo.idCargoContractingType) - 1].toLowerCase() : '',
@@ -515,15 +515,15 @@ const Step3 = ({
             goBack={() => { setTableRows(copyTable); setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false }) }}
             message={I18n.t('pages.newProposal.step3.messageDeleteItem')} />
         </MessageContainer>}
-        <CwModal dataProp={cwData} action={handleCwEdit} open={cwOpen} setClose={handleCwClose}/>
-        <Button
-         text={'abrir modal cw'}
-         disabled={false}
-         icon=""
-         onAction={() => setCwOpen(true)}
-         tooltip=""
-         backgroundGreen={true}
-        />
+      <CwModal dataProp={cwData} action={handleCwEdit} open={cwOpen} setClose={handleCwClose} />
+      <Button
+        text={'abrir modal cw'}
+        disabled={false}
+        icon=""
+        onAction={() => setCwOpen(true)}
+        tooltip=""
+        backgroundGreen={true}
+      />
     </Separator >
   )
 }

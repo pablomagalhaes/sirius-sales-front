@@ -3,7 +3,8 @@ import { Cost } from './Cost'
 import { TotalCost } from './TotalCost'
 
 export interface Proposal {
-  id?: number | null
+  idProposal?: number | null
+  idProposalImportFreight?: number | null
   referenceProposal: string // referencia proposta
   idBusinessPartnerCostumer: number // cliente step1
   operationType: string // FRETE IMPORTACAO
