@@ -103,7 +103,7 @@ const Step4 = ({
   }
 
   useEffect(() => {
-    if (proposal.id !== undefined && proposal.id !== null) {
+    if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
       const validityType = !duplicateMode ? '0' : ''
       const validityDateSplit = !duplicateMode ? proposal.validityDate.split('T')[0].split('-') : ''
       const validityDateFormat = !duplicateMode ? `${validityDateSplit[2]}/${validityDateSplit[1]}/${validityDateSplit[0]}` : ''

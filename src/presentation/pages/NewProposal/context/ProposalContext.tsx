@@ -2,7 +2,8 @@ import React, { createContext, useState, useMemo } from 'react'
 import { Proposal } from '../../../../domain/Proposal'
 
 export const emptyProposalValue: Proposal = {
-  id: null,
+  idProposal: null,
+  idProposalImportFreight: null,
   referenceProposal: 'Ref-000000', // referencia proposta
   idBusinessPartnerCostumer: 0, // step1 agent client
   operationType: 'FRETE - IMPORTAÇÃO', // FRETE IMPORTACAO

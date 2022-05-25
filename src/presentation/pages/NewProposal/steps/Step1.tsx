@@ -76,7 +76,7 @@ const Step1 = ({
         .catch((err) => console.log(err))
     })
 
-    if (proposal.id !== undefined && proposal.id !== null) {
+    if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
       const getPartnerCostumer = new Promise<void>((resolve) => {
         API.getBusinessPartnerCostumer(proposal.idBusinessPartnerCostumer)
           .then((response) => {

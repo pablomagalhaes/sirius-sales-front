@@ -72,7 +72,7 @@ const Step5 = ({
     updateStep5Ids () {
       let originId = 0
       let destinyId = 0
-      if (proposal?.id !== undefined && proposal?.id !== null) {
+      if (proposal?.idProposal !== undefined && proposal?.idProposal !== null) {
         const newOriginTable = [...dataOrigin]
         const newTotalCostOrigIds: number[] = []
         const newDestinyTable = [...dataDestiny]
@@ -80,10 +80,10 @@ const Step5 = ({
         for (const cost of proposal.costs) {
           if (cost.costType === 'Origem') {
             newOriginTable[originId].idCost = cost.id
-            newOriginTable[originId++].idProposal = proposal.id
+            newOriginTable[originId++].idProposal = proposal.idProposal
           } else if (cost.costType === 'Destino') {
             newDestinyTable[destinyId].idCost = cost.id
-            newDestinyTable[destinyId++].idProposal = proposal.id
+            newDestinyTable[destinyId++].idProposal = proposal.idProposal
           }
         }
         setDataOrigin(newOriginTable)
@@ -106,7 +106,7 @@ const Step5 = ({
     const loadedDataDestiny: CostTableItem[] = []
 
     let id = 0
-    if (proposal?.id !== undefined && proposal?.id !== null) {
+    if (proposal?.idProposal !== undefined && proposal?.idProposal !== null) {
       void new Promise<void>((resolve) => {
         setTimeout(() => resolve(), 1000)
       }).then(() => {
@@ -131,7 +131,7 @@ const Step5 = ({
             void await Promise.all([getContainer, getService]).then((response) => {
               const loadedItem: CostTableItem = {
                 idCost: cost.id,
-                idProposal: proposal.id,
+                idProposal: proposal.idProposal,
                 agent: agentList[Number(cost.idBusinessPartnerAgent) - 1],
                 buyCurrency: cost.idCurrencyPurchase === '' ? 'BRL' : String(cost.idCurrencyPurchase),
                 buyMin: cost.valueMinimumPurchase === 0 ? null : completeDecimalPlaces(cost.valueMinimumPurchase),
@@ -183,7 +183,7 @@ const Step5 = ({
     dataOrigin.forEach((row) => {
       newOriginTableData.push({
         id: row.idCost === undefined ? null : row.idCost,
-        idProposal: proposal?.id === undefined ? null : proposal?.id,
+        idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
         idService: serviceList.filter((serv) => serv.service === row.description)[0]?.id, // id Descricao
         containerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : null, // containerMODAL
         idBusinessPartnerAgent: agentList.indexOf(row.agent) + 1, // data.agent, // AgenteMODALcusto
@@ -205,7 +205,7 @@ const Step5 = ({
     dataDestiny.forEach((row) => {
       newDestinyTableData.push({
         id: row.idCost === undefined ? null : row.idCost,
-        idProposal: proposal?.id === undefined ? null : proposal?.id,
+        idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
         idService: serviceList.filter((serv) => serv.service === row.description)[0]?.id, // id Descricao
         containerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : null, // containerMODAL
         idBusinessPartnerAgent: 0, // AgenteMODALcusto
@@ -231,7 +231,7 @@ const Step5 = ({
       if (currency.value.buy !== 0 || currency.value.sale !== 0) {
         newTotalCostOrigin.push({
           id: loadedTotalCostsOrigIds[index] === undefined ? null : loadedTotalCostsOrigIds[index],
-          idProposal: proposal?.id === undefined ? null : proposal?.id,
+          idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
           costType: 'Origem', // 'Origem''Destino''Tarifa'
           idCurrency: currency.name, // id moeda
           valueTotalSale: currency.value.sale, // total sale da moeda
@@ -244,7 +244,7 @@ const Step5 = ({
       if (currency.value.buy !== 0 || currency.value.sale !== 0) {
         newTotalCostDestiny.push({
           id: loadedTotalCostsDestIds[index] === undefined ? null : loadedTotalCostsDestIds[index],
-          idProposal: loadedTotalCostsDestIds[index] === undefined ? null : proposal?.id,
+          idProposal: loadedTotalCostsDestIds[index] === undefined ? null : proposal?.idProposal,
           costType: 'Destino', // 'Origem''Destino''Tarifa'
           idCurrency: currency.name, // id moeda
           valueTotalSale: currency.value.sale, // total sale da moeda

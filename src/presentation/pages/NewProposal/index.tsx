@@ -214,8 +214,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       completed.step5 &&
       completed.step6
     ) {
-      if (proposal.id === undefined || proposal.id === null || location.state?.eventType === 'duplicate') {
-        proposal.id = null
+      if (proposal.idProposal === undefined || proposal.idProposal === null || location.state?.eventType === 'duplicate') {
+        proposal.idProposal = null
         API.postProposal(JSON.stringify(proposal)).then((response) => {
           setProposal(response)
           // @ts-expect-error
@@ -232,7 +232,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           console.trace(error)
         })
       } else {
-        API.putProposal(proposal.id, JSON.stringify(proposal)).then((response) => {
+        API.putProposal(proposal.idProposal, JSON.stringify(proposal)).then((response) => {
           setProposal(response)
           // @ts-expect-error
           updateTable3IdsRef?.current?.updateStep3Ids()
