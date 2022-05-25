@@ -15,9 +15,8 @@ import ControlledSelect from '../../../components/ControlledSelect'
 import ControlledInput from '../../../components/ControlledInput'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import API from '../../../../infrastructure/api'
-import { OriginDestLabel, SelectorIconAdornment, StyledPaper } from './StepsStyles'
+import { ErrorText, LineSeparator, OriginDestLabel, StyledPaper } from './StepsStyles'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 
 interface Step2Props {
   theme: any
@@ -110,7 +109,7 @@ const Step2 = ({
     void (async function () {
       await API.getAgents()
         .then((response) => {
-          response.forEach((agent: any) => {
+          response?.forEach((agent: any) => {
             newAgentsList.push(agent?.businessPartner?.simpleName)
           })
           return (setAgentsList(newAgentsList))
@@ -132,7 +131,7 @@ const Step2 = ({
             .catch((err) => console.log(err))
         } else {
           API.getOriginDestinationById(proposal.idOrigin)
-            .then((response) => resolve(`${String(response.id)} - ${String(response.name)}`))
+            .then((response) => resolve(`${String(response?.id)} - ${String(response?.name)}`))
             .catch((err) => console.log(err))
         }
       })
@@ -144,7 +143,7 @@ const Step2 = ({
             .catch((err) => console.log(err))
         } else {
           API.getOriginDestinationById(proposal.idDestination)
-            .then((response) => resolve(`${String(response.id)} - ${String(response.name)}`))
+            .then((response) => resolve(`${String(response?.id)} - ${String(response?.name)}`))
             .catch((err) => console.log(err))
         }
       })
@@ -215,7 +214,7 @@ const Step2 = ({
         return { ...currentState, step2: false }
       })
     }
-  }, [data, proposalType])
+  }, [data, proposalType, invalidOriDest])
 
   const originDestinyFullfilled = (): boolean => {
     return ((modal === 'LAND' &&
@@ -307,8 +306,10 @@ const Step2 = ({
   useEffect(() => {
     if (pageDidLoad > 1) {
       setData({ ...data, destCity: '' })
-    } else {
+    } else if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
       setPageDidLoad(prev => prev + 1)
+    } else {
+      setPageDidLoad(prev => prev + 2)
     }
     if (data.destState !== '' && data.destState !== null) {
       loadCitiesList('destiny')
@@ -447,11 +448,11 @@ const Step2 = ({
                     <RedColorSpan> *</RedColorSpan>
                   </FormLabel>
                   <Autocomplete
-                    freeSolo
                     onChange={(e, newValue) => setData({ ...data, oriCountry: String(newValue ?? '') })}
-                    options={countriesList.map((country) => (country.name))}
+                    options={['', ...countriesList.map((country) => (country.name))]}
                     value={data.oriCountry}
                     filterOptions={filterOptions}
+                    filterSelectedOptions
                     renderInput={(params) => (
                       <div ref={params.InputProps.ref}>
                         <ControlledInput
@@ -462,22 +463,12 @@ const Step2 = ({
                           variant="outlined"
                           size="small"
                           placeholder={I18n.t('pages.newProposal.step2.choose')}
-                          InputProps={{
-                            endAdornment: (
-                              <InputAdornment position='end'>
-                                <SelectorIconAdornment
-                                  {...params.inputProps}
-                                >
-                                  <ArrowDropDownIcon />
-                                </SelectorIconAdornment>
-                              </InputAdornment>
-                            )
-                          }}
                         />
                       </div>
                     )}
                     PaperComponent={(params: any) => <StyledPaper {...params} />}
                   />
+                  <LineSeparator />
                 </Grid>
                 <Grid item xs={2}>
                   <FormLabel component='legend'>
@@ -485,11 +476,14 @@ const Step2 = ({
                     <RedColorSpan> *</RedColorSpan>
                   </FormLabel>
                   <Autocomplete
-                    freeSolo
                     onChange={(e, newValue) => setData({ ...data, oriState: String(newValue ?? '') })}
-                    options={oriStatesList?.map((state) => state.initials)}
+                    options={['', ...oriStatesList?.map((state) => state.initials)]}
                     value={data.oriState}
                     filterOptions={filterOptions}
+                    filterSelectedOptions
+                    disabled={data.oriCountry === '' ||
+                      data.oriCountry === null}
+                    closeIcon={null}
                     renderInput={(params) => (
                       <div ref={params.InputProps.ref}>
                         <ControlledInput
@@ -500,19 +494,6 @@ const Step2 = ({
                           variant="outlined"
                           size="small"
                           placeholder={I18n.t('pages.newProposal.step2.choose')}
-                          disabled={data.oriCountry === '' ||
-                            data.oriCountry === null}
-                          InputProps={{
-                            endAdornment: (
-                              <InputAdornment position='end'>
-                                <SelectorIconAdornment
-                                  {...params.inputProps}
-                                >
-                                  <ArrowDropDownIcon />
-                                </SelectorIconAdornment>
-                              </InputAdornment>
-                            )
-                          }}
                         />
                       </div>
                     )}
@@ -525,33 +506,55 @@ const Step2 = ({
                     <RedColorSpan> *</RedColorSpan>
                   </FormLabel>
                   <Autocomplete
-                    freeSolo
                     onChange={(e, newValue) => setData({ ...data, oriCity: String(newValue ?? '') })}
-                    options={oriCitiesList?.map((city) => (city.name))}
+                    options={['', ...oriCitiesList?.map((city) => (city.name))]}
                     value={data.oriCity}
                     filterOptions={filterOptions}
+                    filterSelectedOptions
+                    disabled={data.oriState === '' ||
+                      data.oriState === null}
                     renderInput={(params) => (
                       <div ref={params.InputProps.ref}>
                         <ControlledInput
                           {...params}
                           id="search-city"
-                          toolTipTitle={(invalidOriDest === 'oriCity')
-                            ? I18n.t('pages.newProposal.step2.differentLocationsOrigin')
-                            : I18n.t('components.itemModal.requiredField')}
-                          invalid={(invalidInput && (data.oriCity.length === 0)) || (invalidOriDest === 'oriCity')}
+                          toolTipTitle={invalidInput ? I18n.t('components.itemModal.requiredField') : ''}
+                          invalid={(invalidInput && data.destCity.length === 0) || (invalidOriDest === 'oriCity')}
                           variant="outlined"
                           size="small"
                           placeholder={I18n.t('pages.newProposal.step2.choose')}
-                          disabled={data.oriState === '' ||
-                            data.oriState === null}
+                        />
+                      </div>
+                    )}
+                    PaperComponent={(params: any) => <StyledPaper {...params} />}
+                  />
+                  {(invalidOriDest === 'oriCity') &&
+                    <ErrorText>{I18n.t('pages.newProposal.step2.differentLocationsOrigin')}</ErrorText>}
+                </Grid>
+              </Grid>
+              : (
+                <>
+                  <Autocomplete
+                    freeSolo
+                    onChange={(e, newValue) => setData({ ...data, origin: String(newValue ?? '') })}
+                    options={getOriginDestinyList()}
+                    filterOptions={filterOptions}
+                    value={data.origin}
+                    renderInput={(params) => (
+                      <div ref={params.InputProps.ref}>
+                        <ControlledInput
+                          {...params}
+                          id="search-origin"
+                          toolTipTitle={invalidInput ? I18n.t('components.itemModal.requiredField') : ''}
+                          invalid={(invalidInput && data.origin.length === 0) || invalidOriDest === 'origin'}
+                          variant="outlined"
+                          size="small"
+                          placeholder={I18n.t('pages.newProposal.step2.searchPlaceholder')}
+                          $space
                           InputProps={{
                             endAdornment: (
-                              <InputAdornment position='end'>
-                                <SelectorIconAdornment
-                                  {...params.inputProps}
-                                >
-                                  <ArrowDropDownIcon />
-                                </SelectorIconAdornment>
+                              <InputAdornment position="end">
+                                <IconComponent name="search" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
                               </InputAdornment>
                             )
                           }}
@@ -560,39 +563,12 @@ const Step2 = ({
                     )}
                     PaperComponent={(params: any) => <StyledPaper {...params} />}
                   />
-                </Grid>
-              </Grid>
-              : <Autocomplete
-                freeSolo
-                onChange={(e, newValue) => setData({ ...data, origin: String(newValue ?? '') })}
-                options={getOriginDestinyList()}
-                filterOptions={filterOptions}
-                value={data.origin}
-                renderInput={(params) => (
-                  <div ref={params.InputProps.ref}>
-                    <ControlledInput
-                      {...params}
-                      id="search-origin"
-                      toolTipTitle={invalidOriDest === 'origin'
-                        ? I18n.t('pages.newProposal.step2.differentLocationsOrigin')
-                        : I18n.t('components.itemModal.requiredField')}
-                      invalid={(invalidInput && data.origin.length === 0) || invalidOriDest === 'origin'}
-                      variant="outlined"
-                      size="small"
-                      placeholder={I18n.t('pages.newProposal.step2.searchPlaceholder')}
-                      $space
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconComponent name="search" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
-                          </InputAdornment>
-                        )
-                      }}
-                    />
-                  </div>
-                )}
-                PaperComponent={(params: any) => <StyledPaper {...params} />}
-              />}
+                  {(invalidOriDest === 'origin')
+                    ? <ErrorText>{I18n.t('pages.newProposal.step2.differentLocationsOrigin')}</ErrorText>
+                    : <LineSeparator />}
+                </>
+                )
+            }
           </Grid>
           <Grid item xs={6}>
             <FormLabel component="legend">
@@ -609,11 +585,11 @@ const Step2 = ({
                     <RedColorSpan> *</RedColorSpan>
                   </FormLabel>
                   <Autocomplete
-                    freeSolo
                     onChange={(e, newValue) => setData({ ...data, destCountry: String(newValue ?? '') })}
-                    options={countriesList.map((country) => (country.name))}
+                    options={['', ...countriesList.map((country) => (country.name))]}
                     value={data.destCountry}
                     filterOptions={filterOptions}
+                    filterSelectedOptions
                     renderInput={(params) => (
                       <div ref={params.InputProps.ref}>
                         <ControlledInput
@@ -624,17 +600,6 @@ const Step2 = ({
                           variant="outlined"
                           size="small"
                           placeholder={I18n.t('pages.newProposal.step2.choose')}
-                          InputProps={{
-                            endAdornment: (
-                              <InputAdornment position='end'>
-                                <SelectorIconAdornment
-                                  {...params.inputProps}
-                                >
-                                  <ArrowDropDownIcon />
-                                </SelectorIconAdornment>
-                              </InputAdornment>
-                            )
-                          }}
                         />
                       </div>
                     )}
@@ -647,11 +612,14 @@ const Step2 = ({
                     <RedColorSpan> *</RedColorSpan>
                   </FormLabel>
                   <Autocomplete
-                    freeSolo
                     onChange={(e, newValue) => setData({ ...data, destState: String(newValue ?? '') })}
-                    options={destStatesList?.map((state) => state.initials)}
+                    options={['', ...destStatesList?.map((state) => state.initials)]}
                     value={data.destState}
                     filterOptions={filterOptions}
+                    filterSelectedOptions
+                    disabled={data.destCountry === '' ||
+                      data.destCountry === null}
+                    closeIcon={null}
                     renderInput={(params) => (
                       <div ref={params.InputProps.ref}>
                         <ControlledInput
@@ -662,19 +630,6 @@ const Step2 = ({
                           variant="outlined"
                           size="small"
                           placeholder={I18n.t('pages.newProposal.step2.choose')}
-                          disabled={data.destCountry === '' ||
-                            data.destCountry === null}
-                          InputProps={{
-                            endAdornment: (
-                              <InputAdornment position='end'>
-                                <SelectorIconAdornment
-                                  {...params.inputProps}
-                                >
-                                  <ArrowDropDownIcon />
-                                </SelectorIconAdornment>
-                              </InputAdornment>
-                            )
-                          }}
                         />
                       </div>
                     )}
@@ -687,44 +642,33 @@ const Step2 = ({
                     <RedColorSpan> *</RedColorSpan>
                   </FormLabel>
                   <Autocomplete
-                    freeSolo
                     onChange={(e, newValue) => setData({ ...data, destCity: String(newValue ?? '') })}
-                    options={destCitiesList?.map((city) => (city.name))}
                     value={data.destCity}
+                    options={['', ...destCitiesList?.map((city) => (city.name))]}
                     filterOptions={filterOptions}
+                    filterSelectedOptions
+                    disabled={data.destState === '' ||
+                      data.destState === null}
                     renderInput={(params) => (
                       <div ref={params.InputProps.ref}>
                         <ControlledInput
                           {...params}
                           id="search-city"
-                          toolTipTitle={invalidOriDest === 'destCity'
-                            ? I18n.t('pages.newProposal.step2.differentLocationsDestiny')
-                            : I18n.t('components.itemModal.requiredField')}
+                          toolTipTitle={invalidInput ? I18n.t('components.itemModal.requiredField') : ''}
                           invalid={(invalidInput && data.destCity.length === 0) || (invalidOriDest === 'destCity')}
                           variant="outlined"
                           size="small"
                           placeholder={I18n.t('pages.newProposal.step2.choose')}
-                          disabled={data.destState === '' ||
-                            data.destState === null}
-                          InputProps={{
-                            endAdornment: (
-                              <InputAdornment position='end'>
-                                <SelectorIconAdornment
-                                  {...params.inputProps}
-                                >
-                                  <ArrowDropDownIcon />
-                                </SelectorIconAdornment>
-                              </InputAdornment>
-                            )
-                          }}
                         />
                       </div>
                     )}
                     PaperComponent={(params: any) => <StyledPaper {...params} />}
                   />
+                  {(invalidOriDest === 'destCity') &&
+                    <ErrorText>{I18n.t('pages.newProposal.step2.differentLocationsDestiny')}</ErrorText>}
                 </Grid>
               </Grid>
-              : <Autocomplete
+              : (<><Autocomplete
                 freeSolo
                 onChange={(e, newValue) => setData({ ...data, destiny: String(newValue ?? '') })}
                 options={getOriginDestinyList()}
@@ -735,7 +679,7 @@ const Step2 = ({
                     <ControlledInput
                       {...params}
                       id="search-destiny"
-                      toolTipTitle={invalidOriDest === 'destiny' ? I18n.t('pages.newProposal.step2.differentLocationsDestiny') : I18n.t('components.itemModal.requiredField')}
+                      toolTipTitle={invalidInput ? I18n.t('components.itemModal.requiredField') : ''}
                       invalid={(invalidInput && data.destiny.length === 0) || (invalidOriDest === 'destiny')}
                       variant="outlined"
                       size="small"
@@ -752,7 +696,13 @@ const Step2 = ({
                   </div>
                 )}
                 PaperComponent={(params: any) => <StyledPaper {...params} />}
-              />}
+              />
+                {(invalidOriDest === 'destiny')
+                  ? <ErrorText>{I18n.t('pages.newProposal.step2.differentLocationsDestiny')}</ErrorText>
+                  : <LineSeparator />}
+              </>
+                )
+            }
           </Grid>
           {proposalType === 'client' &&
             (<Grid item xs={6}>
@@ -780,7 +730,8 @@ const Step2 = ({
                     />
                   </div>
                 )}
-                PaperComponent={(params: any) => <StyledPaper {...params} />} />
+                PaperComponent={(params: any) => <StyledPaper {...params} />}
+              />
             </Grid>)}
           <Grid item xs={2}>
             <FormLabel component="legend">
