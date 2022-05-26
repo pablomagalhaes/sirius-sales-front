@@ -54,7 +54,7 @@ const CwModal = ({
     setClose()
   }
 
-  const HandleOnAction = (): void => {
+  const handleOnAction = (): void => {
     if (data !== undefined && data.length > 0) {
       action(data)
       setClose()
@@ -126,7 +126,7 @@ const CwModal = ({
                 text={I18n.t('components.cwModal.save')}
                 disabled={false}
                 icon=""
-                onAction={HandleOnAction}
+                onAction={handleOnAction}
                 tooltip=""
               />
             </ButtonDiv>
