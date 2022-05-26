@@ -64,7 +64,9 @@
         "buttonAdd": "Add item to cargo",
         "buttonAddTooltip": "To add, select the fields \"Modal\" in the step \"Service\" and \"Specification\" in the step \"Cargo\"",
         "messageDeleteItem": "Item successfully deleted.",
-        "messageUndoDelete": "Undo"
+        "messageUndoDelete": "Undo",
+        "buy": "Buy",
+        "sale": "Sale"
       },
       "step4": {
         "title": "General data",

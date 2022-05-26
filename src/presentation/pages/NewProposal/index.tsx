@@ -55,6 +55,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [editMode, setEditMode] = useState(false)
   const [duplicateMode, setduplicateMode] = useState(false)
   const [agentList, setAgentList] = useState<any[]>([])
+  const [cw, setCw] = useState(0)
+  const [cwSale, setCwSale] = useState(0)
 
   const history = useHistory()
   const location = useLocation()
@@ -531,6 +533,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                 setCostData={setCostData}
                 setSpecifications={setSpecifications}
                 setStepLoaded={setStepLoaded}
+                setCw={setCw}
+                setCwSale={setCwSale}
               />
             </div>
             <div id="step4">
@@ -576,6 +580,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                   modal={modal}
                   specifications={specifications}
                   invalidInput={invalidInput}
+                  cw={cw}
+                  cwSale={cwSale}
                 />
               </div>
             </>}

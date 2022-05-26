@@ -200,6 +200,8 @@ const Separator = styled.div`
   input[type=number]::-webkit-inner-spin-button, 
   input[type=number]::-webkit-outer-spin-button {
     opacity: 1;
+  }
+
   .dropdown {
     margin-top: 12px;
     position: absolute;
@@ -265,6 +267,50 @@ const Status = styled.span`
   margin-left: 40px;
 `
 
+const ChargeText = styled.span`
+  color: #1470CC;
+  font-weight: 700;
+  font-size: 16px;
+`
+
+const BottomTitle = styled.span`
+  color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.subtitle};
+  font-weight: 400;
+  font-size: 14px;
+`
+
+const BottomTextValue = styled.span`
+  color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.font};
+  font-weight: 700;
+  font-size: 14px;
+`
+
+const BottomValueContainer = styled.div`
+  display: flex;
+  height: 45px;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-left: 50px;
+`
+
+const BottomContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`
+
+const ChargeContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const EditIconContainer = styled.div`
+  cursor: pointer;
+  height: 16px;
+  margin-top: 27px;
+  margin-left: 10px;
+`
+
 export {
   ButtonContainer,
   IconContainer,
@@ -284,5 +330,12 @@ export {
   InputContainer,
   WeekDay,
   WeekContainer,
-  Status
+  Status,
+  ChargeText,
+  BottomTitle,
+  BottomTextValue,
+  BottomValueContainer,
+  BottomContainer,
+  ChargeContainer,
+  EditIconContainer
 }

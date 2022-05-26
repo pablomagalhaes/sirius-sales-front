@@ -49,6 +49,8 @@ interface Step6Props {
   calculationData: CalculationDataProps
   invalidInput: boolean
   updateTableIdsRef: any
+  cw: number
+  cwSale: number
 }
 
 const Step6 = ({
@@ -65,7 +67,9 @@ const Step6 = ({
   theme,
   calculationData,
   invalidInput,
-  updateTableIdsRef
+  updateTableIdsRef,
+  cw,
+  cwSale
 }: Step6Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [tableData, setTableData] = useState<FareModalData[]>([])
@@ -632,6 +636,9 @@ const Step6 = ({
             currency={data.currency}
             value={data.value}
             totalOtherFare={getSumTotalItem()}
+            cw={cw}
+            cwSale={cwSale}
+            modal={modal}
           />
         )}
       </HeightDiv>
