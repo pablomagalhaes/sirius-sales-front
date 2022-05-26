@@ -35,7 +35,9 @@ export const emptyProposalValue: Proposal = {
     idTemperature: 0, // step 3 id temperatura
     idCargoContractingType: 1, // id especificacoes step3 (null observar comportamento)
     codeUn: 0, // step 3 codigo
-    cargoVolumes: []
+    cargoVolumes: [],
+    vlCwPurchase: null, // chargeable weight compra
+    vlCwSale: null // chargeable weight venda
   },
   transitTime: 0, // step4 transit time
   idFrequency: 0, // step 4 id frequency

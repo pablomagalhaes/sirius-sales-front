@@ -38,6 +38,8 @@ export interface Proposal {
     idCargoContractingType: number // id especificacoes step3 (null observar comportamento)
     codeUn: number // step 3 codigo
     cargoVolumes: CargoVolume[] // array de items adicionados
+    vlCwPurchase: number | null // chargeable weight compra
+    vlCwSale: number | null // chargeable weight venda
   }
   transitTime: number // step4 transit time
   idFrequency: number // step 4 id frequency
