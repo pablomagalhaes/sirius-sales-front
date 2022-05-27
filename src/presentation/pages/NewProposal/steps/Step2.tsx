@@ -540,6 +540,7 @@ const Step2 = ({
                     options={getOriginDestinyList()}
                     filterOptions={filterOptions}
                     value={data.origin}
+                    disabled={modal === '' || modal === null}
                     renderInput={(params) => (
                       <div ref={params.InputProps.ref}>
                         <ControlledInput
@@ -674,6 +675,7 @@ const Step2 = ({
                 options={getOriginDestinyList()}
                 filterOptions={filterOptions}
                 value={data.destiny}
+                disabled={modal === '' || modal === null}
                 renderInput={(params) => (
                   <div ref={params.InputProps.ref}>
                     <ControlledInput
@@ -747,6 +749,7 @@ const Step2 = ({
               disableUnderline
               invalid={invalidInput && data.incoterm.length === 0}
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
+              disabled={modal === '' || modal === null}
             >
               <MenuItem disabled value={data.incoterm}>
                 <SelectSpan placeholder={1}>{I18n.t('pages.newProposal.step2.choose')}</SelectSpan>
