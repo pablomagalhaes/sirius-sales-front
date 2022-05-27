@@ -54,6 +54,7 @@ const dark = {
         font: '#F2F3F7',
         placeholder: '#7B8A9E',
         weekComponent: '#151D28',
+        disabledBackground: '#364353',
         steps: {
           stepFare: '#B5B8C2',
           messageColor: '#222222',
@@ -123,6 +124,7 @@ const light = {
         font: '#222222',
         placeholder: '#999DAC',
         weekComponent: '#F0F1F5',
+        disabledBackground: '#E3E5EB',
         steps: {
           stepFare: '#545454',
           messageColor: '#222222',

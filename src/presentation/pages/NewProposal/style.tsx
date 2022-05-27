@@ -210,6 +210,15 @@ const Separator = styled.div`
     left: 78px;
     background: green;
   }
+
+  .MuiInputBase-root.Mui-disabled {
+    background: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.disabledBackground};
+    color: #999DAC;
+  }
+
+  .MuiTextField-root {
+    border-radius: 4px;
+  }
 `
 
 const SelectSpan = styled.span`

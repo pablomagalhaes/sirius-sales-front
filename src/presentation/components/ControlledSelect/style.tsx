@@ -14,10 +14,6 @@ export const StyledField = styled(Select)`
     border-radius: 4px;
     width: 100%;
 
-    &:hover {
-      border-color: ${primary};
-    }
-
     & .MuiSelect-root {
       font-size: 14px;
       color: ${(props) =>
@@ -28,6 +24,10 @@ export const StyledField = styled(Select)`
 
     & .MuiSvgIcon-root {
       margin-right: 5px;
+    }
+
+    & .MuiInputBase-input.Mui-disabled {
+      background: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.disabledBackground};
     }
   `
 
