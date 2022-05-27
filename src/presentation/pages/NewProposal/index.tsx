@@ -104,6 +104,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       const proposalObject = [proposal].reduce((index, object) => {
         object.cargo.id = null
         object.validityDate = ''
+        object.idStatus = 1
         object.openingDate = formatDate()
         object.cargo.cargoVolumes.map(cargoVolume => {
           cargoVolume.id = null; cargoVolume.idCargo = null; return cargoVolume
