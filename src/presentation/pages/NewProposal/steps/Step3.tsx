@@ -132,18 +132,21 @@ const Step3 = ({
   useEffect(() => {
     setCalculationData(calculation)
     if (calculation.weight !== null && calculation.cubageWeight !== null && calculation.weight !== 0 && calculation.cubageWeight !== 0) {
-      calculation.weight > calculation.cubageWeight
-        ? setChargeableWeight(calculation.weight)
-        : setChargeableWeight(calculation.cubageWeight)
+      if (calculation.weight > calculation.cubageWeight) {
+        if (!cwSaleEditMode) {
+          setChargeableWeightSale(calculation.weight)
+          setCw(calculation.weight)
+        }
+        setChargeableWeight(calculation.weight)
+      } else {
+        if (!cwSaleEditMode) {
+          setChargeableWeightSale(calculation.cubageWeight)
+          setCw(calculation.cubageWeight)
+        }
+        setChargeableWeight(calculation.cubageWeight)
+      }
     }
   }, [calculation])
-
-  useEffect(() => {
-    if (!cwSaleEditMode) {
-      setChargeableWeightSale(chargeableWeight)
-      setCw(chargeableWeight)
-    }
-  }, [chargeableWeight])
 
   useEffect(() => {
     setCwSale(chargeableWeightSale)
