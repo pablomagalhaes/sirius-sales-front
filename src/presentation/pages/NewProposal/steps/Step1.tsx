@@ -103,7 +103,6 @@ const Step1 = ({
   useEffect(() => {
     setProposal({
       ...proposal,
-      referenceProposal: data.requester, // TODO campo inserido para facilitar as buscas de propostas, depois sera retirado
       proposalType: data.proposal,
       idTransport: data.modal,
       idBusinessPartnerCostumer: data.proposal === 'routing'
