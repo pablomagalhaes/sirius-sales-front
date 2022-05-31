@@ -229,7 +229,7 @@ const Proposal = (): JSX.Element => {
         responsible: proposal.responsible,
         status: status,
         type: proposal.modal,
-        menuItems: menuItemsList(status, proposal.proposalId),
+        menuItems: menuItemsList(status, proposal.idProposal),
         isLate: showWarning
       }
       array.push(item)
