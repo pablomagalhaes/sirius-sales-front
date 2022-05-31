@@ -225,6 +225,20 @@ const getCityById = async (params): Promise<any> => {
   }
 }
 
+const getCountProposal = async (params): Promise<any> => {
+  try {
+    const res = await instance.get('/sirius-business-proposal-api/proposal/count', {
+      params,
+      paramsSerializer: params => {
+        return qs.stringify(params, { arrayFormat: 'comma' })
+      }
+    })
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const API = {
   getContainerType,
   getCurrencies,
@@ -249,7 +263,8 @@ const API = {
   getCountries,
   getStates,
   getCities,
-  getCityById
+  getCityById,
+  getCountProposal
 }
 
 export default API

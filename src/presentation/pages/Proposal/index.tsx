@@ -56,10 +56,9 @@ const Proposal = (): JSX.Element => {
   const [partnerSimpleNameList, setPartnerSimpleNameList] = useState<any[]>([])
   const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
   const [radioValue, setRadioValue] = useState('')
-
   const history = useHistory()
-
   const [filter, setFilter] = useState<any>(defaultFilter)
+  const [totalWarnings, setTotalWarnings] = useState<number>(0)
 
   useEffect(() => {
     const newIncotermList: any[] = []
@@ -126,6 +125,7 @@ const Proposal = (): JSX.Element => {
 
   useEffect(() => {
     getProposalByFilter()
+    getCountProposalByFilter()
   }, [filter])
 
   const getProposalByFilter = (): void => {
@@ -139,7 +139,17 @@ const Proposal = (): JSX.Element => {
     })()
   }
 
-  const verifyStatus = (status: any): any => {
+  const getCountProposalByFilter = (): void => {
+    void (async function () {
+      await API.getCountProposal(filter)
+        .then((response) => {
+          setTotalWarnings(response)
+        })
+        .catch((err) => console.log(err))
+    })()
+  }
+
+  const verifyStatus = (status): any => {
     switch (status) {
       case 'Aberta':
         return StatusProposalEnum.ABERTA
@@ -169,15 +179,42 @@ const Proposal = (): JSX.Element => {
     return finalList
   }
 
-  const getProposalItems = (proposalList: any[]): any => {
+  const checkBusinessDays = (date): any => {
+    const dateWeekday = date.getDay()
+    switch (dateWeekday) {
+      case 4:
+        date.setDate(Number(date.getDate()) + 4)
+        break
+      case 5:
+        date.setDate(Number(date.getDate()) + 4)
+        break
+      case 6:
+        date.setDate(Number(date.getDate()) + 3)
+        break
+      default:
+        date.setDate(Number(date.getDate()) + 2)
+        break
+    }
+    return date
+  }
+
+  const today = new Date()
+  const warningDate = checkBusinessDays(today)
+
+  const getProposalItems = (proposalList): any => {
     const array: any = []
     for (const proposal of proposalList) {
+      let showWarning = false
       const opening = new Date(proposal.openingDate).toLocaleDateString(
         'pt-BR'
       )
       const shelfLife = new Date(proposal.validityDate).toLocaleDateString(
         'pt-BR'
       )
+      const validityDate = new Date(proposal.validityDate)
+      if (proposal.status !== 'Aprovada' && proposal.status !== 'Rejeitada' && proposal.status !== 'Cancelada') {
+        showWarning = (validityDate <= warningDate) || (validityDate === warningDate)
+      }
       const status = verifyStatus(proposal.status)
       const item = {
         key: proposal.idProposal,
@@ -192,8 +229,8 @@ const Proposal = (): JSX.Element => {
         responsible: proposal.responsible,
         status: status,
         type: proposal.modal,
-        menuItems: menuItemsList(status, proposal.idProposal),
-        isLate: false // alterar o 'false' pela regra para quando o vencimento estiver proximo
+        menuItems: menuItemsList(status, proposal.proposalId),
+        isLate: showWarning
       }
       array.push(item)
     }
@@ -404,7 +441,6 @@ const Proposal = (): JSX.Element => {
 
       if (typeOrigin.length === 1 && typeDestination.length === 1) {
         const selectOriginsDestinations = selectedOriginsDestinations.split(' / ')
-
         const origins = selectOriginsDestinations[0].split(' - ')
         const destinations = selectOriginsDestinations[1].split(' - ')
 
@@ -652,7 +688,7 @@ const Proposal = (): JSX.Element => {
         <RightSideListHeaderContainer>
           <CloseExpirationContainer>
             <Warning />
-            <ListTextSpan>1 com vencimento proximo</ListTextSpan>
+            <ListTextSpan>{totalWarnings} com vencimento proximo</ListTextSpan>
           </CloseExpirationContainer>
           <OrderByContainer>
             <ListTextSpan>Ordenar:</ListTextSpan>
