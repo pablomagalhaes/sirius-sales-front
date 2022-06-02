@@ -183,38 +183,38 @@ const Proposal = (): JSX.Element => {
     const dateWeekday = date.getDay()
     switch (dateWeekday) {
       case 4:
-        date.setDate(Number(date.getDate()) + 4)
+        date.setDate(Number(date.getDate()) + 5)
         break
       case 5:
-        date.setDate(Number(date.getDate()) + 4)
+        date.setDate(Number(date.getDate()) + 5)
         break
       case 6:
-        date.setDate(Number(date.getDate()) + 3)
+        date.setDate(Number(date.getDate()) + 4)
         break
       default:
-        date.setDate(Number(date.getDate()) + 2)
+        date.setDate(Number(date.getDate()) + 3)
         break
     }
     return date
   }
 
-  const today = new Date()
-  const warningDate = checkBusinessDays(today)
+  const verifyWarning = (status: string, validityDate: Date): boolean => {
+    const warningDate = checkBusinessDays(new Date())
+
+    let showWarning = false
+    if (status !== 'Aprovada' && status !== 'Rejeitada' && status !== 'Cancelada' && status !== 'Cancelamento Automático') {
+      showWarning = (validityDate <= warningDate) || (validityDate === warningDate)
+    }
+    return showWarning
+  }
 
   const getProposalItems = (proposalList): any => {
     const array: any = []
     for (const proposal of proposalList) {
-      let showWarning = false
-      const opening = new Date(proposal.openingDate).toLocaleDateString(
-        'pt-BR'
-      )
-      const shelfLife = new Date(proposal.validityDate).toLocaleDateString(
-        'pt-BR'
-      )
+      const opening = new Date(proposal.openingDate).toLocaleDateString('pt-BR')
+      const shelfLife = new Date(proposal.validityDate).toLocaleDateString('pt-BR')
       const validityDate = new Date(proposal.validityDate)
-      if (proposal.status !== 'Aprovada' && proposal.status !== 'Rejeitada' && proposal.status !== 'Cancelada') {
-        showWarning = (validityDate <= warningDate) || (validityDate === warningDate)
-      }
+      const showWarning = verifyWarning(proposal.status, validityDate)
       const status = verifyStatus(proposal.status)
       const item = {
         key: proposal.idProposal,
