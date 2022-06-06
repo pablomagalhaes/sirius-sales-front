@@ -1,32 +1,32 @@
 import React, { useEffect, useState } from 'react'
 import {
-  QuickFilters,
-  Table,
-  RowFilter,
+  Button,
   Pagination,
-  Button
+  QuickFilters,
+  RowFilter,
+  Table
 } from 'fiorde-fe-components'
 import { Breadcrumbs, Link, Select, MenuItem } from '@material-ui/core/'
 import {
-  RootContainer,
-  ListHeaderContainer,
-  LeftSideListHeaderContainer,
-  RightSideListHeaderContainer,
-  TableContainer,
+  ArrowIconContainer,
   BottomSideContainer,
+  CloseExpirationContainer,
+  DropdownMenuContainer,
+  ExportListContainer,
+  ExportListSpan,
+  LeftSideListHeaderContainer,
+  ListHeaderContainer,
+  ListMainTitleSpan,
+  ListTextSpan,
+  OrderByContainer,
   PaginationContainer,
   PaginationMainContainer,
-  TopContainer,
-  TopButtonContainer,
-  ListTextSpan,
-  ExportListSpan,
-  ListMainTitleSpan,
-  ExportListContainer,
-  CloseExpirationContainer,
-  OrderByContainer,
-  DropdownMenuContainer,
+  RightSideListHeaderContainer,
+  RootContainer,
   RowFilterContainer,
-  ArrowIconContainer
+  TableContainer,
+  TopButtonContainer,
+  TopContainer
 } from './style'
 import { ExitToApp } from '@material-ui/icons/'
 import Warning from '../../../application/icons/WarningIcon'
@@ -39,26 +39,35 @@ import { I18n } from 'react-redux-i18n'
 import { StatusProposalEnum, StatusProposalStringEnum } from '../../../application/enum/statusProposalEnum'
 
 const defaultFilter = {
-  page: 0,
-  size: 10,
   direction: 'ASC',
-  orderByList: 'openingDate'
+  orderByList: 'openingDate',
+  page: 0,
+  size: 10
 }
 
 const Proposal = (): JSX.Element => {
-  const [orderBy, setOrderBy] = useState<string>('openingDate')
-  const [orderAsc, setOrderAsc] = useState(true)
-  const [openedOrderSelect, setOpenedOrderSelect] = useState(false)
-  const [proposalList, setProposalList] = useState<any[]>([])
-  const [totalProposalList, setTotalProposalList] = useState<number>(0)
+  const [filter, setFilter] = useState<any>(defaultFilter)
   const [incotermList, setIncotermList] = useState<any[]>([])
+  const [openedOrderSelect, setOpenedOrderSelect] = useState(false)
+  const [orderAsc, setOrderAsc] = useState(true)
+  const [orderBy, setOrderBy] = useState<string>('openingDate')
+  const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
   const [partnerList, setPartnerList] = useState<any[]>([])
   const [partnerSimpleNameList, setPartnerSimpleNameList] = useState<any[]>([])
-  const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
+  const [proposalList, setProposalList] = useState<any[]>([])
   const [radioValue, setRadioValue] = useState('')
-  const history = useHistory()
-  const [filter, setFilter] = useState<any>(defaultFilter)
+  const [totalProposalList, setTotalProposalList] = useState<number>(0)
   const [totalWarnings, setTotalWarnings] = useState<number>(0)
+
+  const history = useHistory()
+
+  useEffect(() => {
+    getProposalByFilter()
+  }, [filter])
+
+  useEffect(() => {
+    getCountProposalByFilter()
+  }, [proposalList])
 
   useEffect(() => {
     const newIncotermList: any[] = []
@@ -122,11 +131,6 @@ const Proposal = (): JSX.Element => {
 
     return actualList
   }
-
-  useEffect(() => {
-    getProposalByFilter()
-    getCountProposalByFilter()
-  }, [filter])
 
   const getProposalByFilter = (): void => {
     void (async function () {
@@ -217,20 +221,20 @@ const Proposal = (): JSX.Element => {
       const showWarning = verifyWarning(proposal.status, validityDate)
       const status = verifyStatus(proposal.status)
       const item = {
-        key: proposal.idProposal,
-        reference: proposal.reference,
         client: getClientSimpleName(proposal.client),
-        origin: proposal.originId,
         destination: proposal.destinationId,
-        opening,
-        shelfLife,
         iconterm: proposal.incotermId,
-        numio: proposal.numIO,
-        responsible: proposal.responsible,
-        status: status,
-        type: proposal.modal,
+        isLate: showWarning,
+        key: proposal.idProposal,
         menuItems: menuItemsList(status, proposal.idProposal),
-        isLate: showWarning
+        numio: proposal.numIO,
+        opening,
+        origin: proposal.originId,
+        reference: proposal.reference,
+        responsible: proposal.responsible,
+        shelfLife,
+        status: status,
+        type: proposal.modal
       }
       array.push(item)
     }
@@ -268,55 +272,61 @@ const Proposal = (): JSX.Element => {
         array.push({
           iconType: 'edit',
           label: I18n.t('pages.proposal.table.editLabel'),
-          onClick: () => {
-            editEventPage(id)
-          }
+          onClick: () => { editEventPage(id) }
         },
         {
           iconType: 'duplicate',
           label: I18n.t('pages.proposal.table.duplicateLabel'),
-          onClick: () => {
-            duplicateEventPage(id)
-          }
+          onClick: () => { duplicateEventPage(id) }
         },
         {
           iconType: 'forward',
           label: I18n.t('pages.proposal.table.confirmLabel'),
-          onClick: () => { setStatus(id, StatusProposalStringEnum.AGUARDANDO_RETORNO_CLIENTE) }
+          onClick: () => {
+            setStatus(id, StatusProposalStringEnum.AGUARDANDO_RETORNO_CLIENTE)
+          }
         },
         {
           iconType: 'cancel',
           label: I18n.t('pages.proposal.table.cancelLabel'),
-          onClick: () => { setStatus(id, StatusProposalStringEnum.CANCELADA) }
+          onClick: () => {
+            setStatus(id, StatusProposalStringEnum.CANCELADA)
+          }
         })
         return array
       case StatusProposalEnum.AGUARDANDO_RETORNO_CLIENTE:
         array.push({
           iconType: 'duplicate',
           label: I18n.t('pages.proposal.table.duplicateLabel'),
-          onClick: () => {
-            duplicateEventPage(id)
-          }
+          onClick: () => { duplicateEventPage(id) }
         },
         {
           iconType: 'fileReview',
           label: I18n.t('pages.proposal.table.reviewLabel'),
-          onClick: () => { setStatus(id, StatusProposalStringEnum.EM_REVISAO) }
+          onClick: () => {
+            setStatus(id, StatusProposalStringEnum.EM_REVISAO)
+          }
         },
         {
           iconType: 'cancel',
           label: I18n.t('pages.proposal.table.cancelLabel'),
-          onClick: () => { setStatus(id, StatusProposalStringEnum.CANCELADA) }
+          onClick: () => {
+            setStatus(id, StatusProposalStringEnum.CANCELADA)
+          }
         },
         {
           iconType: 'thumbsUp',
           label: I18n.t('pages.proposal.table.approveLabel'),
-          onClick: () => { setStatus(id, StatusProposalStringEnum.APROVADA) }
+          onClick: () => {
+            setStatus(id, StatusProposalStringEnum.APROVADA)
+          }
         },
         {
           iconType: 'thumbsDown',
           label: I18n.t('pages.proposal.table.rejectLabel'),
-          onClick: () => { setStatus(id, StatusProposalStringEnum.REJEITADA) }
+          onClick: () => {
+            setStatus(id, StatusProposalStringEnum.REJEITADA)
+          }
         })
         return array
       case StatusProposalEnum.EM_REVISAO:
@@ -337,12 +347,16 @@ const Proposal = (): JSX.Element => {
         {
           iconType: 'forward',
           label: I18n.t('pages.proposal.table.confirmLabel'),
-          onClick: () => { setStatus(id, StatusProposalStringEnum.AGUARDANDO_RETORNO_CLIENTE) }
+          onClick: () => {
+            setStatus(id, StatusProposalStringEnum.AGUARDANDO_RETORNO_CLIENTE)
+          }
         },
         {
           iconType: 'cancel',
           label: I18n.t('pages.proposal.table.cancelLabel'),
-          onClick: () => { setStatus(id, StatusProposalStringEnum.CANCELADA) }
+          onClick: () => {
+            setStatus(id, StatusProposalStringEnum.CANCELADA)
+          }
         })
         return array
       case StatusProposalEnum.APROVADA:
@@ -355,14 +369,6 @@ const Proposal = (): JSX.Element => {
         })
         return array
       case StatusProposalEnum.REJEITADA:
-        array.push({
-          iconType: 'duplicate',
-          label: I18n.t('pages.proposal.table.duplicateLabel'),
-          onClick: () => {
-            duplicateEventPage(id)
-          }
-        })
-        return array
       case StatusProposalEnum.CANCELADA:
         array.push({
           iconType: 'duplicate',
@@ -384,12 +390,9 @@ const Proposal = (): JSX.Element => {
     }
   }
 
-  const handleExportList = (): void => {
-    alert('export list')
-  }
+  const handleExportList = (): void => {}
 
-  const handleCardFiltersClick = (): void => {
-  }
+  const handleCardFiltersClick = (): void => {}
 
   const handleSelectedRowFilter = (selectedFiltersRowFilter: any): void => {
     cleanFilter()
@@ -537,10 +540,10 @@ const Proposal = (): JSX.Element => {
     delete filter['validityDate.dtEnd']
 
     setFilter(() => ({
-      page: 0,
-      size: 10,
       direction: 'ASC',
-      orderByList: 'openingDate'
+      orderByList: 'openingDate',
+      page: 0,
+      size: 10
     }))
   }
 
@@ -618,10 +621,10 @@ const Proposal = (): JSX.Element => {
     const keys = Object.keys(filter)
 
     /* eslint-disable no-prototype-builtins */
-    const page = filter.hasOwnProperty('page')
-    const size = filter.hasOwnProperty('size')
     const direction = filter.hasOwnProperty('direction')
     const orderByList = filter.hasOwnProperty('orderByList')
+    const page = filter.hasOwnProperty('page')
+    const size = filter.hasOwnProperty('size')
 
     if (keys.length === 4 && (Boolean(page)) && (Boolean(size)) && (Boolean(direction)) && (Boolean(orderByList))) {
       return `Propostas (${totalProposalList}) - Últimos 30 dias`
@@ -663,16 +666,16 @@ const Proposal = (): JSX.Element => {
       />
       <RowFilterContainer>
         <RowFilter
-          menuItemsSelector={menuItemsSelector}
-          cleanLabel="Limpar"
-          myFilterLabel="Meus Filtros"
+          addFilterLabel="Filtros avançados"
           applyLabel="Aplicar"
           approveLabel="Salvar Filtro"
-          addFilterLabel="Filtros avançados"
-          handleSelectedFilters={handleSelectedRowFilter}
-          setRadioValue={setRadioValue}
+          cleanLabel="Limpar"
           handleClean={handleChangeModal}
           handleCleanRow={handleCleanModal}
+          handleSelectedFilters={handleSelectedRowFilter}
+          menuItemsSelector={menuItemsSelector}
+          myFilterLabel="Meus Filtros"
+          setRadioValue={setRadioValue}
         />
       </RowFilterContainer>
       <ListHeaderContainer>
@@ -695,11 +698,11 @@ const Proposal = (): JSX.Element => {
             <DropdownMenuContainer showArrow={openedOrderSelect}>
               <Select
                 className="select-style"
-                onChange={(e) => handleOrderSelect(String(e.target.value))}
-                value={orderBy}
                 disableUnderline
-                placeholder={orderBy}
+                onChange={(e) => handleOrderSelect(String(e.target.value))}
                 onOpen={() => setOpenedOrderSelect(!openedOrderSelect)}
+                placeholder={orderBy}
+                value={orderBy}
               >
                 {orderButtonMenuItems.map((item) => (
                   <MenuItem
@@ -736,16 +739,16 @@ const Proposal = (): JSX.Element => {
         <PaginationContainer>
           <PaginationMainContainer>
             <Pagination
+              count={totalProposalList}
+              labelDisplay="exibindo"
+              labelDisplayedRows="de"
+              labelRowsPerPage="Propostas por página"
               onPageChange={(value) => setFilter((filter: any) => ({ ...filter, page: value }))}
               onRowsPerPageChange={(value) => setFilter((filter: any) => ({ ...filter, size: value, page: 0 }))}
-              labelDisplay="exibindo"
-              count={totalProposalList}
-              labelRowsPerPage="Propostas por página"
-              labelDisplayedRows="de"
-              tooltipFirst="Primeira"
               tooltipBack="Anterior"
-              tooltipNext="Próxima"
+              tooltipFirst="Primeira"
               tooltipLast="Última"
+              tooltipNext="Próxima"
             />
           </PaginationMainContainer>
         </PaginationContainer>
