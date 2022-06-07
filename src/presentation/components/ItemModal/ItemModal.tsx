@@ -15,21 +15,19 @@ import {
   CloseIconContainer,
   ButtonDiv
 } from '../StyledComponents/modalStyles'
-import NumberFormat from 'react-number-format'
-import API from '../../../infrastructure/api'
 import { Button } from 'fiorde-fe-components'
 import { Autocomplete } from '@material-ui/lab'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
-import { StyledPaper } from '../../pages/NewProposal/steps/StepsStyles'
+import { NumberInput, StyledPaper } from '../../pages/NewProposal/steps/StepsStyles'
+import FormatNumber from '../../../application/utils/formatNumber'
 
 export interface ItemModalData {
+  idCargoVolume?: number | null
+  idCargo?: number | null
   amount: string
-  codUn: string
   cubage: string | null
-  dangerous: boolean
   diameter: string | null
   height: string | null
-  imo: string | null
   length: string | null
   rawWeight: string | null
   type: string | null
@@ -45,16 +43,15 @@ interface ItemModalProps {
   title: string
   modal: string
   specifications: string
+  containerTypeList: any[]
+  packagingList: any[]
 }
 
 export const initialState = {
   amount: '',
-  codUn: '',
   cubage: null,
-  dangerous: false,
   diameter: null,
   height: null,
-  imo: null,
   length: null,
   rawWeight: null,
   type: null,
@@ -70,31 +67,15 @@ const ItemModal = ({
   setClose,
   title,
   modal,
-  specifications
+  specifications,
+  containerTypeList,
+  packagingList
 }: ItemModalProps): JSX.Element => {
-  const [containerTypeList, setContainerTypeList] = useState<any[]>([])
-  const [packagingList, setPackagingList] = useState<any[]>([])
   const rgxFloat = /^[0-9]*,?[0-9]*$/
   const rgxInt = /^[0-9]*$/
   const [data, setData] = useState<ItemModalData>(initialState)
   const [invalidInput, setInvalidInput] = useState(false)
   const [didMount, setDidMount] = useState(false)
-
-  useEffect(() => {
-    void (async function () {
-      await API.getContainerType()
-        .then((response) => setContainerTypeList(response))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
-
-  useEffect(() => {
-    void (async function () {
-      await API.getPackaging()
-        .then((response) => setPackagingList(response))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
 
   useEffect(() => {
     if (dataProp !== initialState) {
@@ -118,19 +99,6 @@ const ItemModal = ({
 
   const validateIntInput = (value: string): RegExpMatchArray | null => {
     return value.match(rgxInt)
-  }
-
-  const rightToLeftFormatter = (value: string, decimal: number): string => {
-    if (Number(value) === 0) return ''
-
-    let amount = ''
-    if (amount.length > decimal) {
-      amount = parseInt(value).toFixed(decimal)
-    } else {
-      amount = (parseInt(value) / 10 ** decimal).toFixed(decimal)
-    }
-
-    return String(amount).replace('.', ',')
   }
 
   const validateData = (): boolean => {
@@ -259,11 +227,11 @@ const ItemModal = ({
                 {(modal === 'AIR' ||
                   (modal === 'SEA' && specifications !== 'fcl') ||
                   modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}</FormLabel>
-              <NumberFormat
+              <NumberInput
                 decimalSeparator={','}
                 thousandSeparator={'.'}
                 decimalScale={2}
-                format={(value: string) => rightToLeftFormatter(value, 2)}
+                format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                 customInput={ControlledInput}
                 onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, rawWeight: e.target.value })) }}
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
@@ -279,7 +247,7 @@ const ItemModal = ({
             </Grid>}
             <Grid item xs={6}>
               <RadioGroup style={{ margin: '47px 10px 10px -15px' }} row aria-label="services" name="row-radio-buttons-group">
-                <FormControlLabel value="stack" control={<Checkbox checked={data.stack} onChange={e => setData({ ...data, stack: !data.stack })} />} label={I18n.t('components.itemModal.stack')} />
+                <FormControlLabel value="stack" control={<Checkbox checked={data.stack} onChange={() => setData({ ...data, stack: !data.stack })} />} label={I18n.t('components.itemModal.stack')} />
               </RadioGroup>
             </Grid>
             {marineFCL() && <Box width="100%" />}
@@ -289,11 +257,11 @@ const ItemModal = ({
                   (modal === 'SEA' && specifications !== 'fcl') ||
                   modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}</FormLabel>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <NumberFormat
+                <NumberInput
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
-                  format={(value: string) => rightToLeftFormatter(value, 2)}
+                  format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                   customInput={ControlledInput}
                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
                   invalid={
@@ -307,11 +275,11 @@ const ItemModal = ({
                   modal
                   style={{ marginRight: '8px' }}
                 />
-                <NumberFormat
+                <NumberInput
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
-                  format={(value: string) => rightToLeftFormatter(value, 2)}
+                  format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                   customInput={ControlledInput}
                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
                   value={data.width != null ? data.width : ''}
@@ -325,11 +293,11 @@ const ItemModal = ({
                   modal
                   style={{ marginRight: '8px' }}
                 />
-                <NumberFormat
+                <NumberInput
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
-                  format={(value: string) => rightToLeftFormatter(value, 2)}
+                  format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                   customInput={ControlledInput}
                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
                   value={data.height != null ? data.height : ''}
@@ -351,11 +319,11 @@ const ItemModal = ({
                   (modal === 'SEA' && specifications !== 'fcl') ||
                   modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}
               </FormLabel>
-              <NumberFormat
+              <NumberInput
                 decimalSeparator={','}
                 thousandSeparator={'.'}
                 decimalScale={2}
-                format={(value: string) => rightToLeftFormatter(value, 2)}
+                format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                 customInput={ControlledInput}
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 invalid={
@@ -371,11 +339,11 @@ const ItemModal = ({
             </Grid>}
             {hasDiameter() && <Grid item xs={3}>
               <FormLabel component="legend">{I18n.t('components.itemModal.diameter')}</FormLabel>
-              <NumberFormat
+              <NumberInput
                 decimalSeparator={','}
                 thousandSeparator={'.'}
                 decimalScale={2}
-                format={(value: string) => rightToLeftFormatter(value, 2)}
+                format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                 customInput={ControlledInput}
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 invalid={false}

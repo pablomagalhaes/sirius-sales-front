@@ -26,15 +26,19 @@
         "marine": "Marine",
         "road": "Road",
         "searchRequester": "Requester",
-        "searchRequesterPlaceholder": "Inform the name and e-mail (Ex: João - joao@cliente.com.br)"
+        "searchRequesterPlaceholder": "Inform the name and e-mail (Ex: João - joao@cliente.com.br)",
+        "popUpConfirmationTitle": "Are you sure you want to change the modal?",
+        "popUpConfirmationBody": "When selecting another modal, some information already filled in related to the current modal will be discarded. Confirm the change?",
+        "popUpConfirmationButton1": "Cancel",
+        "popUpConfirmationButton2": "Confirm"
       },
       "step2": {
         "title": "Section",
         "subtitle": "Define the origin, destination and specifics of the section.",
-        "origin": "Origin:",
+        "origin": "Origin",
         "searchPlaceholder": "Search by code/description of port OR country...",
         "collectionAddress": "Colletion Address:",
-        "destiny": "Destiny:",
+        "destiny": "Destiny",
         "destinyAirport": "Destiny Airport",
         "destinySeaport": "Destiny Seaport",
         "originAirport": "Origin Airport",
@@ -42,7 +46,12 @@
         "agents": "Agents:",
         "searchAgents": "Search by name...",
         "incoterm": "INCOTERM:",
-        "choose": "Choose ..."
+        "choose": "Choose ...",
+        "country": "Country",
+        "state": "State",
+        "city": "City",
+        "differentLocationsDestiny": "Select a destiny different from origin.",
+        "differentLocationsOrigin": "Select an origin different from destiny."
       },
       "step3": {
         "title": "Cargo",
@@ -53,14 +62,20 @@
         "temperature": "Temperature:",
         "choose": "Choose ...",
         "buttonAdd": "Add item to cargo",
-        "buttonAddTooltip": "To add, select the fields \"Modal\" in the step \"Service\" and \"Specification\" in the step \"Cargo\""
+        "buttonAddTooltip": "To add, select the fields \"Modal\" in the step \"Service\" and \"Specification\" in the step \"Cargo\"",
+        "messageDeleteItem": "Item successfully deleted.",
+        "messageUndoDelete": "Undo",
+        "buy": "Buy",
+        "sale": "Sale"
       },
       "step4": {
         "title": "General data",
         "subtitle": "Inform general details of your commercial proposal.",
         "validity": "Validity:",
         "time": "Transit. time:",
-        "freeTime": "Free Time",
+        "freeTimeDemurrage": "Free time demurrage:",
+        "freeTimeStorage": "Free time storage:",
+        "value": "Value (BRL):",
         "frequency": "Frequency:",
         "route": "Route:",
         "client": "Client ref.:",
@@ -70,7 +85,16 @@
         "notHired": "Not Hired",
         "deadline": "Deadline (days):",
         "internal": "Internal observations (this text is NOT sent in the proposal):",
-        "choose": "Choose ..."
+        "choose": "Choose ...",
+        "customDays": "Customize days:",
+        "times": "time(s)",
+        "sunday": "S",
+        "monday": "M",
+        "tuesday": "T",
+        "wednesday": "W",
+        "thursday": "T",
+        "friday": "F",
+        "saturday": "S"
       },
       "step5": {
         "title": "Costs",
@@ -80,7 +104,9 @@
         "destiny": "Destiny",
         "totalDestiny": "Total destiny costs:",
         "originCost": "New origin cost",
-        "destinationCost": "New destiny cost"
+        "destinationCost": "New destiny cost",
+        "errorOrigin": "It is mandatory to inform some origin cost.",
+        "errorDestiny": "It is mandatory to inform some destiny cost"
       },
       "step6": {
         "title": "Freight",
@@ -93,12 +119,49 @@
         "destinationCost": "New destiny cost",
         "addFare": "Add surcharge",
         "addFareTooltip": "To add, select agents in the \"Service\" step and include at least one item in the \"Cargo\" step",
-        "totalFares": "Total Surcharges:"
+        "totalFares": "Total Surcharges:",
+        "companySea": "Cia. Sea:",
+        "companyAir": "Cia. Air:",
+        "companyLand": "Cia. Land:",
+        "currency": "Currency:",
+        "value": "Value:",
+        "type": "Type",
+        "expense":"Expense/Service",
+        "colValue": "Value",
+        "minValue": "Min. Value",
+        "totalItem": "Total Item",
+        "cwBuySell": "CW Buy / Sell:",
+        "totalLoad": "Total load:",
+        "totalOtherFees": "Total other fees:",
+        "profit": "Profit:"
       },
       "saveMessage": {
         "message": "Proposal saved successfully, Ref. ",
         "closeMessage": "Continue editing",
         "buttonText": "Back to proposal list"
+      },
+      "unsavedChanges": {
+        "cancelMessage": "Cancel",
+        "confirmMessage": "Discard",
+        "message": "This page contains unsaved changes. Do you want to discard the proposal and leave the page?",
+        "title": "Are you sure you want to quit?"
+      }
+    },
+    "proposal":{
+      "table":{
+        "openLabel":"Open",
+        "waitingForCustomerReturnLabel": "Awai. customer return",
+        "inRevisionLabel":"Under review",
+        "approvedLabel":"Approved",
+        "rejectedLabel":"Discard",
+        "cancelledLabel":"Cancelled",
+        "editLabel": "Edit",
+        "duplicateLabel": "Duplicate",
+        "reviewLabel": "Set to \"Under review\"",
+        "confirmLabel": "Confirm shipment to customer",
+        "cancelLabel": "Cancel",
+        "approveLabel": "Set as approved",
+        "rejectLabel": "Set as rejected"
       }
     }
   },
@@ -109,6 +172,17 @@
       "tariff": "Tariff",
       "indicators": "Commercial Indicators"
     },
+    "cwModal": {
+      "title": "Change Chargeable Weight",
+      "grossWeight": "Gross weight (kg):",
+      "cubage": "Cubage:",
+      "cubageWeight": "Cubage weight (m3):",
+      "cwSales": "CW Sale:",
+      "cancel": "Cancel",
+      "save": "Save",
+      "attention": "ATTENTION:",
+      "infoText": "When changing the value manually, you will be disregarding the automatic calculation of the chargeable weight. The value entered must be greater than 0.00"
+    },
     "costTable": {
       "addCost": "Add cost",
       "addCostTooltip": "To add, select agents in the \"Service\" step and include at least one item in the \"Cargo\" step",
@@ -116,8 +190,8 @@
       "buy": "Buy",
       "description": "Expense/Service",
       "inform": "To inform",
-      "minBuy": "Min - Buy",
-      "minSale": "Min - Sale",
+      "minBuy": "Buy - Min",
+      "minSale": "Sale - Min",
       "sale": "Sale",
       "type":"Type"
     },
@@ -125,15 +199,16 @@
       "type": "Type:",
       "description": "Expense/Service:",
       "agent": "Agent:",
-      "buyValue": "Buy value",
+      "buyValue": "Buy Value",
       "container": "Container:",
-      "saleValue": "Sale value",
+      "saleValue": "Sale Value",
       "save": "Save",
       "replyForSale": "Reply for sale",
       "minimum": "Minimum",
       "value": "Value",
       "choose": "Choose...",
       "gotIt": "Got it",
+      "noValueError": "It is necessary to inform at least the Purchase Value or the Sale Value",
       "popUpMessageStart": "Inform ",
       "popUpMessageEnd": " or unmark the field if it isn't necessary"
     },
@@ -149,8 +224,7 @@
       "choose": "Choose ...",
       "container": "Container",
       "packaging": "Packaging",
-      "yes": "Yes",
-      "hazardous": "Hazardous?",
+      "hazardous": "Hazardous",
       "save": "Save",
       "requiredField": "Required field",
       "cubageWeight": "Cubage weight (m3): ",
@@ -160,10 +234,11 @@
     "fareModal":{
       "type": "Type:",
       "expense":"Expense/Service:",
-      "saleValue": "Sale value:",
+      "saleValue": "Sale Value:",
       "choose": "Choose...",
       "value": "Value",
-      "newFare": "New surcharge"
+      "newFare": "New surcharge",
+      "minimum": "Minimum:"
     }
   }
 }

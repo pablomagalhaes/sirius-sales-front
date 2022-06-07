@@ -1,8 +1,9 @@
 import instance from '../instance'
+import qs from 'qs'
 
-const getContainerType = async (): Promise<any> => {
+const getContainerType = async (params?): Promise<any> => {
   try {
-    const res = await instance.get('/sirius-master-data-api/container/type/')
+    const res = await instance.get(`/sirius-master-data-api/container/type/${params !== undefined ? String(params) : ''}`)
     return res.data
   } catch (error) {
     console.error(error)
@@ -18,7 +19,7 @@ const getCurrencies = async (): Promise<any> => {
   }
 }
 
-const getIncoterm = async (): Promise<any> => {
+const getIncoterms = async (): Promise<any> => {
   try {
     const res = await instance.get('/sirius-master-data-api/incoterms/')
     return res.data
@@ -45,6 +46,24 @@ const getOriginDestination = async (): Promise<any> => {
   }
 }
 
+const getOriginDestinationByModal = async (params): Promise<any> => {
+  try {
+    const res = await instance.get(`/sirius-master-data-api/origins/destinations/transport/${String(params)}`)
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const getOriginDestinationById = async (params): Promise<any> => {
+  try {
+    const res = await instance.get(`/sirius-master-data-api/origins/destinations/${String(params)}`)
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const getFrequency = async (): Promise<any> => {
   try {
     const res = await instance.get('/sirius-master-data-api/frequency')
@@ -63,18 +82,18 @@ const getAgents = async (): Promise<any> => {
   }
 }
 
-const getTemperature = async (): Promise<any> => {
+const getTemperature = async (params?): Promise<any> => {
   try {
-    const res = await instance.get('/sirius-master-data-api/temperature')
+    const res = await instance.get(`/sirius-master-data-api/temperature/${params !== undefined ? String(params) : ''}`)
     return res.data
   } catch (error) {
     console.error(error)
   }
 }
 
-const getImo = async (): Promise<any> => {
+const getImo = async (params?): Promise<any> => {
   try {
-    const res = await instance.get('/sirius-master-data-api/imo/type')
+    const res = await instance.get(`/sirius-master-data-api/imo/type/${params !== undefined ? String(params) : ''}`)
     return res.data
   } catch (error) {
     console.error(error)
@@ -90,9 +109,9 @@ const getPartner = async (): Promise<any> => {
   }
 }
 
-const getService = async (): Promise<any> => {
+const getService = async (params?): Promise<any> => {
   try {
-    const res = await instance.get('/sirius-business-proposal-api/service')
+    const res = await instance.get(`/sirius-business-proposal-api/service/${params !== undefined ? String(params) : ''}`)
     return res.data
   } catch (error) {
     console.error(error)
@@ -101,7 +120,119 @@ const getService = async (): Promise<any> => {
 
 const getProposals = async (params): Promise<any> => {
   try {
-    const res = await instance.get('/sirius-business-proposal-api/proposal/filter', { params })
+    const res = await instance.get('/sirius-business-proposal-api/proposal/filter', {
+      params,
+      paramsSerializer: params => {
+        return qs.stringify(params, { arrayFormat: 'comma' })
+      }
+    })
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const postProposal = async (params): Promise<any> => {
+  try {
+    const res = await instance.post('/sirius-business-proposal-api/proposalimportfreight', params)
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const postTotalCalculation = async (params): Promise<any> => {
+  try {
+    const res = await instance.post('/sirius-business-proposal-api/costs/calculation/total', params)
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const getProposal = async (params): Promise<any> => {
+  try {
+    const res = await instance.get(`/sirius-business-proposal-api/proposalimportfreight/${String(params)}`)
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const putProposal = async (id, params): Promise<any> => {
+  try {
+    const res = await instance.put(`/sirius-business-proposal-api/proposalimportfreight/${String(id)}`, params)
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const putStatus = async (id, status): Promise<any> => {
+  try {
+    const res = await instance.put(`/sirius-business-proposal-api/proposal/status/${String(id)}/${String(status)}`)
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const getBusinessPartnerCostumer = async (params): Promise<any> => {
+  try {
+    const res = await instance.get(`/sirius-business-partner-api/business/partner/${String(params)}`)
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const getCountries = async (): Promise<any> => {
+  try {
+    const res = await instance.get('/sirius-master-data-api/countries/mercosul')
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const getStates = async (params): Promise<any> => {
+  try {
+    const res = await instance.get(`/sirius-master-data-api/countries/${String(params)}/states`)
+    return res.data
+  } catch (error) {
+    console.error(error)
+    return ('error')
+  }
+}
+
+const getCities = async (params): Promise<any> => {
+  try {
+    const res = await instance.get(`https://qa.siriuslog.com/gateway/sirius-master-data-api/city/states/${String(params)}/cities`)
+    return res.data
+  } catch (error) {
+    console.error(error)
+    return ('error')
+  }
+}
+
+const getCityById = async (params): Promise<any> => {
+  try {
+    const res = await instance.get(`https://qa.siriuslog.com/gateway/sirius-master-data-api/city/${String(params)}`)
+    return res.data
+  } catch (error) {
+    console.error(error)
+    return ('error')
+  }
+}
+
+const getCountProposal = async (params): Promise<any> => {
+  try {
+    const res = await instance.get('/sirius-business-proposal-api/proposal/count', {
+      params,
+      paramsSerializer: params => {
+        return qs.stringify(params, { arrayFormat: 'comma' })
+      }
+    })
     return res.data
   } catch (error) {
     console.error(error)
@@ -111,7 +242,7 @@ const getProposals = async (params): Promise<any> => {
 const API = {
   getContainerType,
   getCurrencies,
-  getIncoterm,
+  getIncoterms,
   getPackaging,
   getOriginDestination,
   getPartner,
@@ -120,7 +251,20 @@ const API = {
   getTemperature,
   getImo,
   getService,
-  getProposals
+  getProposals,
+  postProposal,
+  postTotalCalculation,
+  getProposal,
+  getBusinessPartnerCostumer,
+  getOriginDestinationById,
+  getOriginDestinationByModal,
+  putProposal,
+  putStatus,
+  getCountries,
+  getStates,
+  getCities,
+  getCityById,
+  getCountProposal
 }
 
 export default API

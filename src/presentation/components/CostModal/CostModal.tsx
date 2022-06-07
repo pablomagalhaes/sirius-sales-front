@@ -1,11 +1,10 @@
 import React, { useReducer, useState, useEffect } from 'react'
-import { MenuItem, Modal, Box } from '@material-ui/core'
+import { MenuItem, Modal, Box, Container } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import CloseIcon from '../../../application/icons/CloseIcon'
 import { Button } from 'fiorde-fe-components'
 import {
-  StyledMenuSelect,
   CheckBox,
   CheckBoxLabel,
   Input,
@@ -13,7 +12,8 @@ import {
   ReplyIconDiv,
   WarningPopUp,
   WarningPopUpMessage,
-  WarningPopUpButtonDiv
+  WarningPopUpButtonDiv,
+  MainDiv
 } from './CostModalStyles'
 import { I18n } from 'react-redux-i18n'
 import CheckIcon from '../../../application/icons/CheckItem'
@@ -36,8 +36,14 @@ import {
 import API from '../../../infrastructure/api'
 import { CheckBoxArea } from '../ItemModal/ItemModalStyles'
 import { ItemModalData } from '../ItemModal/ItemModal'
-import { StyledPaper } from '../../pages/NewProposal/steps/StepsStyles'
+import { StyledPaper, NumberInput } from '../../pages/NewProposal/steps/StepsStyles'
+import ControlledSelect from '../ControlledSelect'
+import { MenuItemContent } from '../FareModal/FareModalStyles'
+import { CalculationDataProps } from '../ChargeTable'
+import FormatNumber from '../../../application/utils/formatNumber'
 export interface CostTableItem {
+  idCost?: number | null
+  idProposal?: number | null
   agent: string
   buyCurrency: string | null
   buyMin: string | null
@@ -49,9 +55,12 @@ export interface CostTableItem {
   saleValue: string | null
   selectedContainer: string | null
   type: string
+  buyValueCalculated: string | null
+  saleValueCalculated: string | null
 }
 
 interface CostModalProps {
+  agentList: string[]
   dataProp?: CostTableItem
   handleAdd: (item) => void
   open: boolean
@@ -60,6 +69,8 @@ interface CostModalProps {
   modal: string
   specifications: string
   containerItems: ItemModalData[]
+  serviceList: any[]
+  calculationData?: CalculationDataProps
 }
 
 export const initialState = {
@@ -73,10 +84,13 @@ export const initialState = {
   saleValue: null,
   selectedContainer: null,
   saleMin: null,
-  id: null
+  id: null,
+  buyValueCalculated: null,
+  saleValueCalculated: null
 }
 
 const CostModal = ({
+  agentList,
   dataProp,
   handleAdd,
   open,
@@ -84,7 +98,9 @@ const CostModal = ({
   title,
   modal,
   specifications,
-  containerItems
+  containerItems,
+  serviceList,
+  calculationData
 }: CostModalProps): JSX.Element => {
   const reducer = (state, action): CostTableItem => {
     switch (action.type) {
@@ -108,6 +124,10 @@ const CostModal = ({
         return { ...state, saleCurrency: action.value }
       case 'saleMin':
         return { ...state, saleMin: action.value }
+      case 'buyValueCalculated':
+        return { ...state, buyValueCalculated: action.value }
+      case 'saleValueCalculated':
+        return { ...state, saleValueCalculated: action.value }
       case 'replyForSale':
         return {
           ...state,
@@ -130,14 +150,14 @@ const CostModal = ({
     dataProp !== null && dataProp !== undefined ? dataProp : initialState
   )
   const [typeList, setTypeList] = useState<object[]>([])
-  // Listas são mock, serão alteradas posteriormente
-  const agentList = ['Agente1', 'Agente2', 'Agente3']
+
   const [buyCheckbox, setBuyCheckBox] = useState(state.buyValue != null)
   const [saleCheckbox, setSaleCheckBox] = useState(state.saleValue != null)
   const [invalidInput, setInvalidInput] = useState(false)
   const [invalidValueInput, setInvalidValueInput] = useState(false)
+  const [noValueInput, setNoValueInput] = useState(false)
   const [currencyList, setCurrencyList] = useState<any[]>([])
-  const [serviceList, setServiceList] = useState<any[]>([])
+  const [flag, setFlag] = useState(false)
 
   const verifyContainerItems = (): void => {
     if (containerItems.length === 1) {
@@ -179,15 +199,8 @@ const CostModal = ({
     })()
   }, [])
 
-  useEffect(() => {
-    void (async function () {
-      await API.getService()
-        .then((response) => setServiceList(response))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
-
   const handleOnClose = (): void => {
+    setFlag(false)
     dispatch({ type: 'reset' })
     setInvalidInput(false)
     setInvalidValueInput(false)
@@ -197,7 +210,8 @@ const CostModal = ({
   }
 
   const handleClickWarningButton = (): void => {
-    setInvalidValueInput(false)
+    if (invalidValueInput) setInvalidValueInput(false)
+    if (noValueInput) setNoValueInput(false)
   }
 
   const validateFloatInput = (value: string): RegExpMatchArray | null => {
@@ -250,6 +264,7 @@ const CostModal = ({
   const addHandler = (): void => {
     let invalid = false
     let item = state
+
     if (buyCheckbox) {
       if (item.buyValue === null || item.buyValue.length === 0) {
         invalid = true
@@ -257,6 +272,9 @@ const CostModal = ({
       }
     } else {
       item = { ...item, buyMin: '', buyCurrency: '', buyValue: '' }
+      dispatch({ type: 'buyValue', value: '' })
+      dispatch({ type: 'buyMin', value: '' })
+      dispatch({ type: 'buyCurrency', value: '' })
     }
     if (saleCheckbox) {
       if (item.saleValue === null || item.saleValue.length === 0) {
@@ -265,21 +283,88 @@ const CostModal = ({
       }
     } else {
       item = { ...item, saleMin: '', saleCurrency: '', saleValue: '' }
+      dispatch({ type: 'saleValue', value: '' })
+      dispatch({ type: 'saleMin', value: '' })
+      dispatch({ type: 'saleCurrency', value: '' })
     }
     if (
-      item.agent.length === 0 ||
       item.type.length === 0 ||
       (item.description === null || item.description?.length === 0)
     ) {
       invalid = true
     }
+    if (item.saleMin !== null) {
+      dispatch({ type: 'saleMin', value: item.saleMin.replace(',', '.') })
+      item.saleMin = item.saleMin.replace(',', '.')
+    }
+
+    if (item.saleValue !== null) {
+      dispatch({ type: 'saleValue', value: item.saleValue.replace(',', '.') })
+      item.saleValue = item.saleValue.replace(',', '.')
+    }
+
+    if (item.buyMin !== null) {
+      dispatch({ type: 'buyMin', value: item.buyMin.replace(',', '.') })
+      item.buyMin = item.buyMin.replace(',', '.')
+    }
+
+    if (item.buyValue !== null) {
+      dispatch({ type: 'buyValue', value: item.buyValue.replace(',', '.') })
+      item.buyValue = item.buyValue.replace(',', '.')
+    }
+
+    if (!buyCheckbox && !saleCheckbox) {
+      setNoValueInput(true)
+      invalid = true
+      item = { ...item, buyCurrency: 'BRL', saleCurrency: 'BRL' }
+      dispatch({ type: 'buyCurrency', value: 'BRL' })
+      dispatch({ type: 'saleCurrency', value: 'BRL' })
+    }
+
     if (!invalid) {
-      handleAdd(item)
-      handleOnClose()
+      const indexContainer = containerItems.findIndex(container => state.selectedContainer === container.type)
+
+      const data = {
+        costType: item.type,
+        quantityContainer: specifications === 'fcl' ? Number(containerItems[indexContainer]?.amount) : 0,
+        valueGrossWeight: isNaN(Number(calculationData?.weight)) ? 0 : calculationData?.weight,
+        valueCubage: isNaN(Number(calculationData?.cubage)) ? 0 : calculationData?.cubage,
+        valueWeightCubed: isNaN(Number(calculationData?.cubageWeight)) ? 0 : calculationData?.cubageWeight,
+        valuePurchase: Number(item.buyValue),
+        valueSale: Number(item.saleValue),
+        idCurrencyPurchase: item.buyCurrency,
+        idCurrencySale: item.saleCurrency
+      }
+
+      void (async function () {
+        await API.postTotalCalculation(data)
+          .then((response) => {
+            dispatch({ type: 'buyValueCalculated', value: response.valuePurchase })
+            dispatch({ type: 'saleValueCalculated', value: response.valueSale })
+          })
+          .catch((err) => console.log(err))
+      })()
     } else {
       setInvalidInput(true)
     }
   }
+
+  useEffect(() => {
+    if (state.buyValueCalculated !== null && state.saleValueCalculated !== null) {
+      setFlag(true)
+    }
+  }, [state.buyValueCalculated, state.saleValueCalculated])
+
+  useEffect(() => {
+    if (flag) {
+      handleAdd(state)
+      handleOnClose()
+    }
+  }, [flag])
+
+  const isOriginCost = title === I18n.t('pages.newProposal.step5.originCost')
+
+  state.agent === '' && agentList.length === 1 && dispatch({ type: 'agent', value: agentList[0] })
 
   return (
     <Modal open={open} onClose={handleOnClose}>
@@ -292,341 +377,372 @@ const CostModal = ({
             </CloseIconContainer>
           </RowReverseDiv>
         </HeaderDiv>
-        <Form>
-          <RowDiv>
-            <Label width="27%">
-              {I18n.t('components.costModal.type')}
-              <RedColorSpan> *</RedColorSpan>
-            </Label>
-            <Label width="73%">
-              {I18n.t('components.costModal.description')}
-              <RedColorSpan> *</RedColorSpan>
-            </Label>
-          </RowDiv>
-          <RowDiv margin={true}>
-            <StyledMenuSelect
-              width="122px"
-              onChange={(e) =>
-                dispatch({ type: 'type', value: e.target.value })
-              }
-              displayEmpty
-              value={state.type}
-              disableUnderline
-              placeholder={state.type}
-              large={1}
-              aria-label="type"
-              filled={state.type}
-              toolTipTitle={I18n.t('components.itemModal.requiredField')}
-              invalid={
-                invalidInput && (state.type === null || state.type.length === 0)
-              }
-            >
-              <MenuItem disabled value="">
-                {I18n.t('components.costModal.choose')}
-              </MenuItem>
-              {typeList.map((item: any) => {
-                return (
-                  <MenuItem key={item.value} value={item.value}>
-                    {item.name}
-                  </MenuItem>
-                )
-              })}
-            </StyledMenuSelect>
-            <ControlledToolTip
-              title={I18n.t('components.itemModal.requiredField')}
-              open={
-                invalidInput &&
-                (state.description === null || state.description.length === 0)
-              }
-            >
+        <MainDiv>
+          <Form>
+            <RowDiv>
+              <Label width="27%">
+                {I18n.t('components.costModal.type')}
+                <RedColorSpan> *</RedColorSpan>
+              </Label>
+              <Label width="73%">
+                {I18n.t('components.costModal.description')}
+                <RedColorSpan> *</RedColorSpan>
+              </Label>
+            </RowDiv>
+            <RowDiv margin={true}>
+              <ControlledSelect
+                onChange={(e) => dispatch({ type: 'type', value: e.target.value })}
+                displayEmpty
+                style={{ width: '122px', marginTop: '12px' }}
+                value={state.type}
+                disableUnderline
+                placeholder={state.type}
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                invalid={invalidInput && (state.type === null || state.type.length === 0)}
+              >
+                <MenuItem disabled value="">
+                  <MenuItemContent>
+                    {I18n.t('components.costModal.choose')}
+                  </MenuItemContent>
+                </MenuItem>
+                {typeList.map((item: any) => {
+                  return (
+                    <MenuItem key={item.value} value={item.value}>
+                      <MenuItemContent>{item.name}</MenuItemContent>
+                    </MenuItem>
+                  )
+                })}
+              </ControlledSelect>
+              <Container style={{ position: 'relative', marginRight: '368px' }}>
+                <ControlledToolTip
+                  title={I18n.t('components.itemModal.requiredField')}
+                  open={
+                    invalidInput &&
+                    (state.description === null ||
+                      state.description.length === 0)
+                  }
+                >
+                  <Autocomplete
+                    style={{ width: '368px' }}
+                    value={state.description}
+                    onChange={(event: any, newValue: string | null) => {
+                      dispatch({ type: 'description', value: newValue })
+                    }}
+                    options={serviceList.map((option) => option.service)}
+                    renderInput={(params) => (
+                      <div ref={params.InputProps.ref}>
+                        <Input
+                          {...params.inputProps}
+                          style={{ width: '368px' }}
+                          placeholder={I18n.t('components.costModal.choose')}
+                          toolTipTitle={I18n.t(
+                            'components.itemModal.requiredField'
+                          )}
+                          invalid={
+                            invalidInput &&
+                            (state.description === null ||
+                              state.description.length === 0)
+                          }
+                          filled={state.description}
+                        />
+                        <Box
+                          style={{ left: '360px' }}
+                          {...params.inputProps}
+                          className='dropdownIconAutoComplete'
+                        >
+                          <ArrowDropDownIcon />
+                        </Box>
+                      </div>
+                    )}
+                    PaperComponent={(params: any) => (
+                      <StyledPaper {...params} />
+                    )}
+                  />
+                </ControlledToolTip>
+              </Container>
+            </RowDiv>
+            {isOriginCost &&
+              <RowDiv>
+                <Label width="100%">
+                  {I18n.t('components.costModal.agent')}
+                  <RedColorSpan> *</RedColorSpan>
+                </Label>
+              </RowDiv>
+            }
+            {isOriginCost &&
+              <RowDiv margin={specifications === 'fcl' && true} style={{ position: 'relative' }}>
+                <ControlledToolTip
+                  title={I18n.t('components.itemModal.requiredField')}
+                  open={invalidInput && (state.agent === null || state.agent.length === 0)}
+                >
+                  <Autocomplete
+                    options={agentList.map((agent) => agent)}
+                    value={state.agent}
+                    onChange={(event: any, newValue: string | null) => {
+                      dispatch({ type: 'agent', value: newValue })
+                    }}
+                    renderInput={(params) => (
+                      <div ref={params.InputProps.ref}>
+                        <Input
+                          {...params.inputProps}
+                          filled={state.agent}
+                          placeholder={I18n.t('components.costModal.choose')}
+                          toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                          invalid={invalidInput && (state.agent === null || state.agent.length === 0)}
+                          style={{ width: '513px' }}
+                        />
+                        <Box {...params.inputProps} className="dropdownContainer">
+                          <ArrowDropDownIcon />
+                        </Box>
+                      </div>
+                    )}
+                    PaperComponent={(params: any) => <StyledPaper {...params} />}
+                  />
+                </ControlledToolTip>
+              </RowDiv>
+            }
+            {specifications === 'fcl' && (
+              <><RowDiv>
+                <Label width="100%">
+                  {I18n.t('components.costModal.container')}
+                  <RedColorSpan> *</RedColorSpan>
+                </Label>
+              </RowDiv>
+                <RowDiv style={{ position: 'relative' }}>
+                  <Autocomplete
+                    options={containerItems.map((item) => item.type)}
+                    value={state.selectedContainer}
+                    onChange={(event: any, newValue: string | null) => {
+                      dispatch({ type: 'selectedContainer', value: newValue })
+                    }}
+                    renderInput={(params) => (
+                      <div ref={params.InputProps.ref}>
+                        <Input
+                          {...params.inputProps}
+                          filled={state.selectedContainer}
+                          placeholder={I18n.t('components.costModal.choose')}
+                          toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                          invalid={invalidInput && state.selectedContainer === null}
+                          style={{ width: '513px' }}
+                        />
+                        <Box {...params.inputProps} className="dropdownContainer">
+                          <ArrowDropDownIcon />
+                        </Box>
+                      </div>
+                    )}
+                    PaperComponent={(params: any) => <StyledPaper {...params} />}
+                  />
+                </RowDiv></>
+            )}
+            <RowDiv>
+              <CheckBoxArea onClick={buyCheckboxHandler}>
+                <CheckBox
+                  aria-label="checkbox"
+                  checked={buyCheckbox}
+                >
+                  {buyCheckbox && <CheckIcon />}
+                </CheckBox>
+                <CheckBoxLabel
+                  invalid={
+                    buyCheckbox &&
+                    invalidInput &&
+                    (state.buyValue === null || state.buyValue.length === 0)
+                  }
+                >
+                  {I18n.t('components.costModal.buyValue')}:
+                </CheckBoxLabel>
+              </CheckBoxArea>
+            </RowDiv>
+            <RowDiv style={{ position: 'relative' }}>
               <Autocomplete
-                options={serviceList.map((option) => option.service)}
-                value={state.description}
+                options={currencyList.map((option) => option.id)}
+                value={state.buyCurrency}
                 onChange={(event: any, newValue: string | null) => {
-                  dispatch({ type: 'description', value: newValue })
+                  dispatch({ type: 'buyCurrency', value: newValue })
                 }}
                 renderInput={(params) => (
                   <div ref={params.InputProps.ref}>
                     <Input
                       {...params.inputProps}
-                      filled={state.description}
-                      placeholder={I18n.t('components.costModal.choose')}
-                      toolTipTitle={I18n.t(
-                        'components.itemModal.requiredField'
-                      )}
+                      width="84px"
+                      disabled={!buyCheckbox}
+                      filled={buyCheckbox ? state.buyCurrency : null}
+                      toolTipTitle={I18n.t('components.itemModal.requiredField')}
                       invalid={
+                        buyCheckbox &&
                         invalidInput &&
-                        (state.description === null ||
-                          state.description.length === 0)
+                        (state.buyCurrency === null || state.buyCurrency.length === 0)
                       }
-                      style={{ width: '368px' }}
                     />
-                    <Box {...params.inputProps} className="dropdownLargerInput">
+                    <Box {...params.inputProps} className="dropdown">
                       <ArrowDropDownIcon />
                     </Box>
                   </div>
                 )}
                 PaperComponent={(params: any) => <StyledPaper {...params} />}
               />
-            </ControlledToolTip>
-          </RowDiv>
-          <RowDiv>
-            <Label width="100%">
-              {I18n.t('components.costModal.agent')}
-              <RedColorSpan> *</RedColorSpan>
-            </Label>
-          </RowDiv>
-          <RowDiv margin={specifications === 'fcl' && true}>
-            <StyledMenuSelect
-              width="513px"
-              onChange={(e) =>
-                dispatch({ type: 'agent', value: e.target.value })
-              }
-              displayEmpty
-              value={state.agent}
-              disableUnderline
-              placeholder={state.agent}
-              filled={state.agent}
-              toolTipTitle={I18n.t('components.itemModal.requiredField')}
-              invalid={
-                invalidInput &&
-                (state.agent === null || state.agent.length === 0)
-              }
-            >
-              <MenuItem disabled value="">
-                {I18n.t('components.costModal.choose')}
-              </MenuItem>
-              {agentList.map((agent) => {
-                return (
-                  <MenuItem key={`${agent}_key`} value={agent}>
-                    {agent}
-                  </MenuItem>
-                )
-              })}
-            </StyledMenuSelect>
-          </RowDiv>
-          {specifications === 'fcl' && (
-            <><RowDiv>
-              <Label width="100%">
-                {I18n.t('components.costModal.container')}
-                <RedColorSpan> *</RedColorSpan>
-              </Label>
-            </RowDiv>
-              <RowDiv style={{ position: 'relative' }}>
-                <Autocomplete
-                  options={containerItems.map((item) => item.type)}
-                  value={state.selectedContainer}
-                  onChange={(event: any, newValue: string | null) => {
-                    dispatch({ type: 'selectedContainer', value: newValue })
-                  }}
-                  renderInput={(params) => (
-                    <div ref={params.InputProps.ref}>
-                      <Input
-                        {...params.inputProps}
-                        filled={state.selectedContainer}
-                        placeholder={I18n.t('components.costModal.choose')}
-                        toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                        invalid={invalidInput && state.selectedContainer === null}
-                        style={{ width: '513px' }}
-                      />
-                      <Box {...params.inputProps} className="dropdownContainer">
-                        <ArrowDropDownIcon />
-                      </Box>
-                    </div>
-                  )}
-                  PaperComponent={(params: any) => <StyledPaper {...params} />}
-                />
-              </RowDiv></>
-          )}
-          <RowDiv>
-            <CheckBoxArea onClick={buyCheckboxHandler}>
-              <CheckBox
-                aria-label="checkbox"
-                checked={buyCheckbox}
-              >
-                {buyCheckbox && <CheckIcon />}
-              </CheckBox>
-              <CheckBoxLabel
-                invalid={
+              <ControlledToolTip
+                title={I18n.t('components.itemModal.requiredField')}
+                open={
                   buyCheckbox &&
                   invalidInput &&
                   (state.buyValue === null || state.buyValue.length === 0)
                 }
               >
-                {I18n.t('components.costModal.buyValue')}:
-              </CheckBoxLabel>
-            </CheckBoxArea>
-          </RowDiv>
-          <RowDiv style={{ position: 'relative' }}>
-            <Autocomplete
-              options={currencyList.map((option) => option.id)}
-              value={state.buyCurrency}
-              onChange={(event: any, newValue: string | null) => {
-                dispatch({ type: 'buyCurrency', value: newValue })
-              }}
-              renderInput={(params) => (
-                <div ref={params.InputProps.ref}>
-                  <Input
-                    {...params.inputProps}
-                    width="84px"
-                    disabled={!buyCheckbox}
-                    filled={buyCheckbox ? state.buyCurrency : null}
-                    toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                    invalid={
-                      buyCheckbox &&
-                      invalidInput &&
-                      (state.buyCurrency === null || state.buyCurrency.length === 0)
-                    }
-                  />
-                  <Box {...params.inputProps} className="dropdown">
-                    <ArrowDropDownIcon />
-                  </Box>
-                </div>
-              )}
-              PaperComponent={(params: any) => <StyledPaper {...params} />}
-            />
-            <ControlledToolTip
-              title={I18n.t('components.itemModal.requiredField')}
-              open={
-                buyCheckbox &&
-                invalidInput &&
-                (state.buyValue === null || state.buyValue.length === 0)
-              }
-            >
-              <PlaceholderDiv>
-                <label>
-                  {(state.buyValue === null || state.buyValue.length === 0) && (
-                    <PlaceholderSpan>
-                      {I18n.t('components.costModal.value')}
-                      {buyCheckbox && <RedColorSpan> *</RedColorSpan>}
-                    </PlaceholderSpan>
-                  )}
-                  <Input
-                    value={state.buyValue != null ? state.buyValue : ''}
-                    onChange={buyValueHandler}
-                    disabled={!buyCheckbox}
-                    invalid={
-                      buyCheckbox &&
-                      invalidInput &&
-                      (state.buyValue === null || state.buyValue.length === 0)
-                    }
-                    filled={buyCheckbox ? state.buyValue : null}
-                  />
-                </label>
-              </PlaceholderDiv>
-            </ControlledToolTip>
-            <Input
-              aria-label="minimum"
-              value={state.buyMin != null ? state.buyMin : ''}
-              onChange={buyMinHandler}
-              placeholder={I18n.t('components.costModal.minimum')}
-              disabled={!buyCheckbox}
-              filled={buyCheckbox ? state.buyMin : null}
-            />
-            <ReplyDiv disabled={!buyCheckbox} onClick={replyForSaleHandler}>
-              <ReplyIconDiv>
-                <ReplyIcon />
-              </ReplyIconDiv>
-              {I18n.t('components.costModal.replyForSale')}
-            </ReplyDiv>
-          </RowDiv>
-          <RowDiv>
-            <CheckBoxArea onClick={saleCheckboxHandler}>
-              <CheckBox checked={saleCheckbox}>
-                {saleCheckbox && <CheckIcon />}
-              </CheckBox>
-              <CheckBoxLabel
-                checked={true}
-                invalid={
+                <PlaceholderDiv>
+                  <label>
+                    {(state.buyValue === null || state.buyValue.length === 0) && (
+                      <PlaceholderSpan>
+                        {I18n.t('components.costModal.value')}
+                        {buyCheckbox && <RedColorSpan> *</RedColorSpan>}
+                      </PlaceholderSpan>
+                    )}
+                    <NumberInput
+                      decimalSeparator={','}
+                      thousandSeparator={'.'}
+                      decimalScale={2}
+                      customInput={Input}
+                      format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                      onChange={buyValueHandler}
+                      value={state.buyValue != null ? state.buyValue : ''}
+                      disabled={!buyCheckbox}
+                      filled={buyCheckbox ? state.buyValue : null}
+                      invalid={
+                        buyCheckbox &&
+                        invalidInput &&
+                        (state.buyValue === null || state.buyValue.length === 0)
+                      }
+                    />
+                  </label>
+                </PlaceholderDiv>
+              </ControlledToolTip>
+              <NumberInput
+                placeholder={I18n.t('components.costModal.minimum')}
+                decimalSeparator={','}
+                thousandSeparator={'.'}
+                decimalScale={2}
+                customInput={Input}
+                format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                onChange={buyMinHandler}
+                value={state.buyMin != null ? state.buyMin : ''}
+                disabled={!buyCheckbox}
+                filled={buyCheckbox ? state.buyMin : null}
+              />
+              <ReplyDiv disabled={!buyCheckbox} onClick={replyForSaleHandler}>
+                <ReplyIconDiv>
+                  <ReplyIcon />
+                </ReplyIconDiv>
+                {I18n.t('components.costModal.replyForSale')}
+              </ReplyDiv>
+            </RowDiv>
+            <RowDiv>
+              <CheckBoxArea onClick={saleCheckboxHandler}>
+                <CheckBox checked={saleCheckbox}>
+                  {saleCheckbox && <CheckIcon />}
+                </CheckBox>
+                <CheckBoxLabel
+                  checked={true}
+                  invalid={
+                    saleCheckbox &&
+                    invalidInput &&
+                    (state.saleValue === null || state.saleValue.length === 0)
+                  }
+                >
+                  {I18n.t('components.costModal.saleValue')}:
+                </CheckBoxLabel>
+              </CheckBoxArea>
+            </RowDiv>
+            <RowDiv style={{ position: 'relative' }}>
+              <Autocomplete
+                options={currencyList.map((option) => option.id)}
+                value={state.saleCurrency}
+                onChange={(event: any, newValue: string | null) => {
+                  dispatch({ type: 'saleCurrency', value: newValue })
+                }}
+                renderInput={(params) => (
+                  <div ref={params.InputProps.ref}>
+                    <Input
+                      {...params.inputProps}
+                      width="84px"
+                      disabled={!saleCheckbox}
+                      filled={saleCheckbox ? state.saleCurrency : null}
+                      toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                      invalid={
+                        saleCheckbox &&
+                        invalidInput &&
+                        (state.saleCurrency === null || state.saleCurrency.length === 0)
+                      }
+                    />
+                    <Box {...params.inputProps} className="dropdown">
+                      <ArrowDropDownIcon />
+                    </Box>
+                  </div>
+                )}
+                PaperComponent={(params: any) => <StyledPaper {...params} />}
+              />
+              <ControlledToolTip
+                title={I18n.t('components.itemModal.requiredField')}
+                open={
                   saleCheckbox &&
                   invalidInput &&
                   (state.saleValue === null || state.saleValue.length === 0)
                 }
               >
-                {I18n.t('components.costModal.saleValue')}:
-              </CheckBoxLabel>
-            </CheckBoxArea>
-          </RowDiv>
-          <RowDiv style={{ position: 'relative' }}>
-            <Autocomplete
-              options={currencyList.map((option) => option.id)}
-              value={state.saleCurrency}
-              onChange={(event: any, newValue: string | null) => {
-                dispatch({ type: 'saleCurrency', value: newValue })
-              }}
-              renderInput={(params) => (
-                <div ref={params.InputProps.ref}>
-                  <Input
-                    {...params.inputProps}
-                    width="84px"
-                    disabled={!saleCheckbox}
-                    filled={saleCheckbox ? state.saleCurrency : null}
-                    toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                    invalid={
-                      saleCheckbox &&
-                      invalidInput &&
-                      (state.saleCurrency === null || state.saleCurrency.length === 0)
-                    }
-                  />
-                  <Box {...params.inputProps} className="dropdown">
-                    <ArrowDropDownIcon />
-                  </Box>
-                </div>
-              )}
-              PaperComponent={(params: any) => <StyledPaper {...params} />}
-            />
-            <ControlledToolTip
-              title={I18n.t('components.itemModal.requiredField')}
-              open={
-                saleCheckbox &&
-                invalidInput &&
-                (state.saleValue === null || state.saleValue.length === 0)
-              }
-            >
-              <PlaceholderDiv>
-                <label>
-                  {(state.saleValue === null ||
-                    state.saleValue.length === 0) && (
-                      <PlaceholderSpan>
-                        {I18n.t('components.costModal.value')}
-                        {saleCheckbox && <RedColorSpan> *</RedColorSpan>}
-                      </PlaceholderSpan>
-                  )}
-                  <Input
-                    value={state.saleValue != null ? state.saleValue : ''}
-                    onChange={saleValueHandler}
-                    disabled={!saleCheckbox}
-                    invalid={
-                      saleCheckbox &&
-                      invalidInput &&
-                      (state.saleValue === null || state.saleValue.length === 0)
-                    }
-                    filled={saleCheckbox ? state.saleValue : null}
-                  />
-                </label>
-              </PlaceholderDiv>
-            </ControlledToolTip>
-            <Input
-              placeholder={I18n.t('components.costModal.minimum')}
-              value={state.saleMin != null ? state.saleMin : ''}
-              onChange={saleMinHandler}
-              disabled={!saleCheckbox}
-              filled={saleCheckbox ? state.saleMin : null}
-            />
-          </RowDiv>
-          {!invalidValueInput && (
-            <ButtonDiv>
-              <Button
-                disabled={false}
-                backgroundGreen={true}
-                icon={''}
-                onAction={addHandler}
-                text={I18n.t('components.costModal.save')}
-                tooltip={I18n.t('components.costModal.save')}
+                <PlaceholderDiv>
+                  <label>
+                    {(state.saleValue === null ||
+                      state.saleValue.length === 0) && (
+                        <PlaceholderSpan>
+                          {I18n.t('components.costModal.value')}
+                          {saleCheckbox && <RedColorSpan> *</RedColorSpan>}
+                        </PlaceholderSpan>
+                    )}
+                    <NumberInput
+                      decimalSeparator={','}
+                      thousandSeparator={'.'}
+                      decimalScale={2}
+                      customInput={Input}
+                      format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                      onChange={saleValueHandler}
+                      value={state.saleValue != null ? state.saleValue : ''}
+                      disabled={!saleCheckbox}
+                      filled={saleCheckbox ? state.saleValue : null}
+                      invalid={
+                        saleCheckbox &&
+                        invalidInput &&
+                        (state.saleValue === null || state.saleValue.length === 0)
+                      }
+                    />
+                  </label>
+                </PlaceholderDiv>
+              </ControlledToolTip>
+              <NumberInput
+                placeholder={I18n.t('components.costModal.minimum')}
+                decimalSeparator={','}
+                thousandSeparator={'.'}
+                decimalScale={2}
+                customInput={Input}
+                format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                onChange={saleMinHandler}
+                value={state.saleMin != null ? state.saleMin : ''}
+                disabled={!saleCheckbox}
+                filled={saleCheckbox ? state.saleMin : null}
               />
-            </ButtonDiv>
-          )}
-        </Form>
+            </RowDiv>
+            {(!invalidValueInput && !noValueInput) && (
+              <ButtonDiv>
+                <Button
+                  disabled={false}
+                  backgroundGreen={true}
+                  icon={''}
+                  onAction={addHandler}
+                  text={I18n.t('components.costModal.save')}
+                  tooltip={I18n.t('components.costModal.save')}
+                />
+              </ButtonDiv>
+            )}
+          </Form>
+        </MainDiv>
         {invalidValueInput && (
           <WarningPopUp>
             <WarningPopUpMessage>
@@ -636,6 +752,23 @@ const CostModal = ({
                 ? I18n.t('components.costModal.buyValue')
                 : I18n.t('components.costModal.saleValue')}
               ”{I18n.t('components.costModal.popUpMessageEnd')}
+            </WarningPopUpMessage>
+            <WarningPopUpButtonDiv>
+              <Button
+                disabled={false}
+                backgroundGreen={false}
+                icon={''}
+                onAction={handleClickWarningButton}
+                text={I18n.t('components.costModal.gotIt')}
+                tooltip={I18n.t('components.costModal.gotIt')}
+              />
+            </WarningPopUpButtonDiv>
+          </WarningPopUp>
+        )}
+        {noValueInput && (
+          <WarningPopUp>
+            <WarningPopUpMessage>
+              {I18n.t('components.costModal.noValueError')}
             </WarningPopUpMessage>
             <WarningPopUpButtonDiv>
               <Button

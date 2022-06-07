@@ -131,7 +131,15 @@ const UserContainer = styled.div`
   display: flex;
   svg {
     margin-left: 18px;
-}
+  }
+
+  .open {
+    background: #50E5D9;
+  }
+
+  .inReview {
+    background: #F2D16D;
+  }
 `
 
 const ReferenceCode = styled.span`
@@ -178,6 +186,39 @@ const Separator = styled.div`
     props.theme?.commercial?.pages?.newProposal?.steps?.chips?.deleteBackground};
         }
     }
+
+  .disabledDay {
+    background: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.weekComponent};
+    color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.subtitle};
+  }
+
+  .activeDay {
+    background: #50E5D9;
+    color: #545454;
+  }
+
+  input[type=number]::-webkit-inner-spin-button, 
+  input[type=number]::-webkit-outer-spin-button {
+    opacity: 1;
+  }
+
+  .dropdown {
+    margin-top: 12px;
+    position: absolute;
+    top: 4px;
+    z-index: 10;
+    left: 78px;
+    background: green;
+  }
+
+  .MuiInputBase-root.Mui-disabled {
+    background: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.disabledBackground};
+    color: #999DAC;
+  }
+
+  .MuiTextField-root {
+    border-radius: 4px;
+  }
 `
 
 const SelectSpan = styled.span`
@@ -190,9 +231,6 @@ const SelectSpan = styled.span`
 const ButtonContainer = styled.div`
   height: 36px;
 `
-const BoldSpan = styled.span`
-  font-weight: ${(props: { checked: boolean }) => props.checked ? '600' : 'normal'};
-`
 
 const StyledRadio = styled(Radio)`
   color: ${({ color }: StyledRadioProps) => color} !important;
@@ -204,6 +242,82 @@ const MessageContainer = styled.div`
   bottom: 0;
   left: 0;
   width: 100%;
+  z-index: 99;
+`
+
+const InputContainer = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+const WeekDay = styled.button`
+  width: 32px;
+  height: 32px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 8px;
+  border: none;
+  cursor: pointer;
+`
+
+const WeekContainer = styled.div`
+  display: flex;
+`
+
+const Status = styled.span`
+  color: #222222;
+  padding: 1px 8px;
+  font-size: 12px;
+  border-radius: 50px;
+  margin-left: 40px;
+`
+
+const ChargeText = styled.span`
+  color: #1470CC;
+  font-weight: 700;
+  font-size: 16px;
+`
+
+const BottomTitle = styled.span`
+  color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.subtitle};
+  font-weight: 400;
+  font-size: 14px;
+`
+
+const BottomTextValue = styled.span`
+  color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.font};
+  font-weight: 700;
+  font-size: 14px;
+`
+
+const BottomValueContainer = styled.div`
+  display: flex;
+  height: 45px;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-left: 50px;
+`
+
+const BottomContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`
+
+const ChargeContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const EditIconContainer = styled.div`
+  cursor: pointer;
+  height: 16px;
+  margin-top: 27px;
+  margin-left: 10px;
 `
 
 export {
@@ -220,7 +334,17 @@ export {
   TopContainer,
   UserContainer,
   Username,
-  BoldSpan,
   StyledRadio,
-  MessageContainer
+  MessageContainer,
+  InputContainer,
+  WeekDay,
+  WeekContainer,
+  Status,
+  ChargeText,
+  BottomTitle,
+  BottomTextValue,
+  BottomValueContainer,
+  BottomContainer,
+  ChargeContainer,
+  EditIconContainer
 }

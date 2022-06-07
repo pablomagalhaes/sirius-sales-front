@@ -7,7 +7,7 @@ import CostModal from './CostModal'
 import '@testing-library/jest-dom'
 
 const props = {
-
+  agentList: ['Agente1', 'Agente2', 'Agente3'],
   dataProp: {
     type: 'Tipo1',
     description: 'Descrição1',
@@ -19,7 +19,9 @@ const props = {
     saleValue: null,
     saleMin: null,
     id: 5,
-    selectedContainer: null
+    selectedContainer: null,
+    buyValueCalculated: null,
+    saleValueCalculated: null
   },
 
   title: 'Editar item',
@@ -29,7 +31,8 @@ const props = {
   setClose: () => { },
   modal: '',
   specifications: '',
-  containerItems: []
+  containerItems: [],
+  serviceList: []
 }
 
 test('should show text Editar item', () => {

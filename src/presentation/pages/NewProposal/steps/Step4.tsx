@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import {
   FormControl,
   FormControlLabel,
@@ -8,19 +8,34 @@ import {
   RadioGroup
 } from '@material-ui/core/'
 import { I18n } from 'react-redux-i18n'
-import { Title, Subtitle, Separator, SelectSpan, StyledRadio } from '../style'
+import {
+  InputContainer,
+  SelectSpan,
+  Separator,
+  StyledRadio,
+  Subtitle,
+  Title,
+  WeekDay,
+  WeekContainer
+} from '../style'
 import ControlledSelect from '../../../components/ControlledSelect'
 import ControlledInput from '../../../components/ControlledInput'
 import ControlledToolTip from '../../../components/ControlledToolTip/ControlledToolTip'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import API from '../../../../infrastructure/api'
-import NumberFormat from 'react-number-format'
+import { NumberInput } from './StepsStyles'
 import { withTheme } from 'styled-components'
+import { ProposalContext, ProposalProps } from '../context/ProposalContext'
+import FormatNumber from '../../../../application/utils/formatNumber'
 
 interface Step4Props {
   invalidInput: boolean
   setCompleted: (completed: any) => void
+  setFilled: (filled: any) => void
   theme?: any
+  modal: string
+  specifications: string
+  duplicateMode: boolean
 }
 
 interface Frequency {
@@ -31,7 +46,11 @@ interface Frequency {
 const Step4 = ({
   invalidInput,
   setCompleted,
-  theme
+  setFilled,
+  theme,
+  modal,
+  specifications,
+  duplicateMode
 }: Step4Props): JSX.Element => {
   // mock para os selects
   const validityList = [
@@ -57,29 +76,84 @@ const Step4 = ({
     }
   ]
 
-  const [data, setData] = useState({
+  const initialState = {
     validity: '',
     validityDate: '',
     transitTime: '',
     frequency: '',
     route: '',
     client: '',
-    currency: '',
     freeTime: '',
     deadline: '',
+    value: '',
     generalObs: '',
-    internalObs: ''
-  })
+    internalObs: '',
+    recurrency: '1',
+    weeklyRecurrency: ''
+  }
+
+  const [data, setData] = useState(initialState)
 
   const [frequencyList, setFrequencyList] = useState<Frequency[]>([])
   const [disabledValidateDate, setDisabledValidateDate] = useState(true)
+  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+
+  const validateFloatInput = (value: string): RegExpMatchArray | null => {
+    return value.match(/^[0-9]*,?[0-9]*$/)
+  }
+
+  useEffect(() => {
+    if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
+      const validityType = !duplicateMode ? '0' : ''
+      const validityDateSplit = !duplicateMode ? proposal.validityDate.split('T')[0].split('-') : ''
+      const validityDateFormat = !duplicateMode ? `${validityDateSplit[2]}/${validityDateSplit[1]}/${validityDateSplit[0]}` : ''
+      void new Promise<void>((resolve) => {
+        setTimeout(() => resolve(), 1000)
+      }).then(() => {
+        setData({
+          validity: validityType,
+          validityDate: validityDateFormat,
+          transitTime: String(proposal.transitTime),
+          frequency: String(proposal.idFrequency),
+          route: proposal.route,
+          client: proposal.referenceClientProposal,
+          freeTime: proposal.freeTime ? 'hired' : 'notHired',
+          deadline: '',
+          generalObs: proposal.generalObservations,
+          internalObs: proposal.internalObservations,
+          value: '',
+          recurrency: String(proposal.recurrency),
+          weeklyRecurrency: proposal.weeklyRecurrency
+        })
+        filledWeekValue(proposal.weeklyRecurrency)
+      })
+    }
+  }, [])
+
+  useEffect(() => {
+    const splitedValidityDate = data.validityDate.trim().split('/')
+    setProposal({
+      ...proposal,
+      validityDate: `${splitedValidityDate[2]}-${splitedValidityDate[1]}-${splitedValidityDate[0]}T00:00:00.000Z`,
+      transitTime: Number(data.transitTime),
+      route: data.route,
+      freeTime: data.freeTime === 'hired',
+      idFrequency: Number(data.frequency),
+      recurrency: Number(data.recurrency),
+      weeklyRecurrency: data.weeklyRecurrency,
+      generalObservations: data.generalObs,
+      internalObservations: data.internalObs,
+      referenceClientProposal: data.client
+    })
+  }, [data])
 
   useEffect(() => {
     if (
       data.validity.length !== 0 &&
       data.validityDate.length !== 0 &&
       data.transitTime.length !== 0 &&
-      data.frequency.length !== 0
+      data.frequency.length !== 0 &&
+      data.recurrency.length !== 0
     ) {
       setCompleted((currentState) => {
         return { ...currentState, step4: true }
@@ -89,7 +163,33 @@ const Step4 = ({
         return { ...currentState, step4: false }
       })
     }
+    if (
+      data.validity.length > 0 ||
+      data.validityDate.length > 0 ||
+      data.transitTime.length > 0 ||
+      data.frequency !== '' ||
+      data.route.length > 0 ||
+      data.client.length > 0 ||
+      data.freeTime.length > 0 ||
+      data.deadline.length > 0 ||
+      data.value.length > 0 ||
+      data.generalObs.length > 0 ||
+      data.internalObs.length > 0
+    ) {
+      setFilled((currentState) => {
+        return { ...currentState, step4: true }
+      })
+    } else {
+      setFilled((currentState) => {
+        return { ...currentState, step4: false }
+      })
+    }
   }, [data])
+
+  useEffect(() => {
+    setData(initialState)
+    setDisabledValidateDate(true)
+  }, [modal])
 
   useEffect(() => {
     void (async function () {
@@ -118,13 +218,104 @@ const Step4 = ({
 
   const getColor = (value): any => {
     if (value === '' && invalidInput) {
-      console.log(theme?.commercial?.components?.itemModal?.redAsterisk)
       return theme?.commercial?.components?.itemModal?.redAsterisk
     }
   }
 
   const validateIntInput = (value: string): RegExpMatchArray | null => {
     return value.match(/^[0-9]*$/)
+  }
+
+  const weekDaysFrequency = (id: string): any => {
+    const element = (document.getElementById(id) as HTMLInputElement)
+    let weeklyValue: string
+
+    if ((element.classList.contains('disabledDay')) ?? false) {
+      element.classList.remove('disabledDay')
+      element.classList.add('activeDay')
+      element.value = '1'
+      weeklyValue = weekValue()
+      setData({ ...data, weeklyRecurrency: weeklyValue })
+    } else {
+      element.classList.remove('activeDay')
+      element.classList.add('disabledDay')
+      element.value = '0'
+      weeklyValue = weekValue()
+      setData({ ...data, weeklyRecurrency: weeklyValue })
+    }
+  }
+
+  const weekValue = (): string => {
+    const sunday = (document.getElementById('sunday') as HTMLInputElement).value
+    const monday = (document.getElementById('monday') as HTMLInputElement).value
+    const tuesday = (document.getElementById('tuesday') as HTMLInputElement).value
+    const wednesday = (document.getElementById('wednesday') as HTMLInputElement).value
+    const thursday = (document.getElementById('thursday') as HTMLInputElement).value
+    const friday = (document.getElementById('friday') as HTMLInputElement).value
+    const saturday = (document.getElementById('saturday') as HTMLInputElement).value
+    let weeklyRecurrency = '0000000'
+
+    weeklyRecurrency = `${sunday}${monday}${tuesday}${wednesday}${thursday}${friday}${saturday}`
+    return weeklyRecurrency
+  }
+
+  const filledWeekValue = (weeklyRecurrency: string): void => {
+    const sunday = (document.getElementById('sunday') as HTMLInputElement)
+    const monday = (document.getElementById('monday') as HTMLInputElement)
+    const tuesday = (document.getElementById('tuesday') as HTMLInputElement)
+    const wednesday = (document.getElementById('wednesday') as HTMLInputElement)
+    const thursday = (document.getElementById('thursday') as HTMLInputElement)
+    const friday = (document.getElementById('friday') as HTMLInputElement)
+    const saturday = (document.getElementById('saturday') as HTMLInputElement)
+
+    sunday.value = weeklyRecurrency.charAt(0)
+    if (sunday.value === '1') {
+      sunday.classList.remove('disabledDay')
+      sunday.classList.add('activeDay')
+    }
+
+    monday.value = weeklyRecurrency.charAt(1)
+    if (monday.value === '1') {
+      monday.classList.remove('disabledDay')
+      monday.classList.add('activeDay')
+    }
+
+    tuesday.value = weeklyRecurrency.charAt(2)
+    if (tuesday.value === '1') {
+      tuesday.classList.remove('disabledDay')
+      tuesday.classList.add('activeDay')
+    }
+
+    wednesday.value = weeklyRecurrency.charAt(3)
+    if (wednesday.value === '1') {
+      wednesday.classList.remove('disabledDay')
+      wednesday.classList.add('activeDay')
+    }
+
+    thursday.value = weeklyRecurrency.charAt(4)
+    if (thursday.value === '1') {
+      thursday.classList.remove('disabledDay')
+      thursday.classList.add('activeDay')
+    }
+
+    friday.value = weeklyRecurrency.charAt(5)
+    if (friday.value === '1') {
+      friday.classList.remove('disabledDay')
+      friday.classList.add('activeDay')
+    }
+
+    saturday.value = weeklyRecurrency.charAt(6)
+    if (saturday.value === '1') {
+      saturday.classList.remove('disabledDay')
+      saturday.classList.add('activeDay')
+    }
+  }
+
+  const valuesRecurrency = (e): any => {
+    let value = parseInt(e.target.value, 10)
+    if (value > 99) value = 99
+    if (value < 1) value = 1
+    setData({ ...data, recurrency: String(value) })
   }
 
   return (
@@ -164,7 +355,7 @@ const Step4 = ({
           </Grid>
           <Grid item xs={2}>
             <FormLabel component="legend">&nbsp;</FormLabel>
-            <NumberFormat
+            <NumberInput
               id="no-label-field"
               disabled={disabledValidateDate}
               format={'##/##/####'}
@@ -225,63 +416,116 @@ const Step4 = ({
               size="small"
             />
           </Grid>
-
-          <Grid item xs={4}>
-            <FormLabel component="legend">
-              {I18n.t('pages.newProposal.step4.freeTime')}
-              <RedColorSpan> *</RedColorSpan>
-            </FormLabel>
-            <RadioGroup
-              row
-              aria-label="proposal type"
-              name="row-radio-buttons-group"
-              value={data.freeTime}
-              onChange={(e) => setData({ ...data, freeTime: e.target.value })}
-            >
-              <ControlledToolTip
-                open={invalidInput && data.freeTime.length === 0}
-                title={I18n.t('components.itemModal.requiredField')}
+          {modal === 'SEA' && <Grid item xs={8} container spacing={2}>
+            <Grid item xs style={{ maxWidth: '330px' }}>
+              {
+                specifications === 'fcl'
+                  ? <FormLabel component="legend">{I18n.t('pages.newProposal.step4.freeTimeDemurrage')}<RedColorSpan> *</RedColorSpan></FormLabel>
+                  : <FormLabel component="legend">{I18n.t('pages.newProposal.step4.freeTimeStorage')}<RedColorSpan> *</RedColorSpan></FormLabel>
+              }
+              <RadioGroup
+                row
+                aria-label="proposal type"
+                name="row-radio-buttons-group"
+                value={data.freeTime}
+                onChange={(e) => setData({ ...data, freeTime: e.target.value })}
               >
-                <FormControlLabel
-                  value="notHired"
-                  control={<StyledRadio color={getColor(data.freeTime)} />}
-                  label={I18n.t('pages.newProposal.step4.notHired')}
-                  style={{ marginRight: '30px' }}
-                />
-              </ControlledToolTip>
-              <ControlledToolTip
-                open={invalidInput && data.freeTime.length === 0}
-                title={I18n.t('components.itemModal.requiredField')}
-              >
-                <FormControlLabel
-                  value="hired"
-                  control={<StyledRadio color={getColor(data.freeTime)} />}
-                  label={I18n.t('pages.newProposal.step4.hired')}
-                />
-              </ControlledToolTip>
-            </RadioGroup>
-          </Grid>
-          <Grid item xs={2}>
-            { data.freeTime === 'hired' && (
-              <><FormLabel component="legend">{I18n.t('pages.newProposal.step4.deadline')}<RedColorSpan> *</RedColorSpan></FormLabel>
-                <ControlledInput
-                id="deadline"
-                toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                invalid={invalidInput && data.deadline.length === 0}
-                variant="outlined"
-                onChange={(e) => validateIntInput(e.target.value) !== null && (setData({ ...data, deadline: e.target.value }))}
-                value={data.deadline}
-                size="small" />
+                <ControlledToolTip
+                  open={invalidInput && data.freeTime.length === 0}
+                  title={I18n.t('components.itemModal.requiredField')}
+                >
+                  <FormControlLabel
+                    value="notHired"
+                    control={<StyledRadio color={getColor(data.freeTime)} />}
+                    label={I18n.t('pages.newProposal.step4.notHired')}
+                    style={{ marginRight: '30px' }}
+                  />
+                </ControlledToolTip>
+                <ControlledToolTip
+                  open={invalidInput && data.freeTime.length === 0}
+                  title={I18n.t('components.itemModal.requiredField')}
+                >
+                  <FormControlLabel
+                    value="hired"
+                    control={<StyledRadio color={getColor(data.freeTime)} />}
+                    label={I18n.t('pages.newProposal.step4.hired')}
+                  />
+                </ControlledToolTip>
+              </RadioGroup>
+            </Grid>
+            {data.freeTime === 'hired' &&
+              <>
+                <Grid item xs={2}>
+                  <FormLabel component="legend">
+                    {I18n.t('pages.newProposal.step4.deadline')}
+                    <RedColorSpan> *</RedColorSpan>
+                  </FormLabel>
+                  <ControlledInput
+                    id="deadline"
+                    toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                    invalid={invalidInput && data.deadline.length === 0}
+                    variant="outlined"
+                    onChange={(e) => validateIntInput(e.target.value) !== null && (setData({ ...data, deadline: e.target.value }))}
+                    value={data.deadline}
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  {specifications !== 'fcl' &&
+                    <>
+                      <FormLabel component="legend">
+                        {I18n.t('pages.newProposal.step4.value')}
+                        <RedColorSpan> *</RedColorSpan>
+                      </FormLabel>
+                      <NumberInput
+                        decimalSeparator={','}
+                        thousandSeparator={'.'}
+                        decimalScale={2}
+                        format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                        customInput={ControlledInput}
+                        toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                        invalid={invalidInput && data.value === ''}
+                        value={data.value}
+                        onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, value: e.target.value })) }}
+                        variant="outlined"
+                        size="small"
+                      />
+                    </>
+                  }
+                </Grid>
               </>
-            )}
-          </Grid>
-
-          <Grid item xs={2} />
+            }
+          </Grid>}
+          {modal !== 'SEA' && <Grid item xs={8} />}
           <Grid item xs={2}>
             <FormLabel component="legend">
               {I18n.t('pages.newProposal.step4.frequency')}
               <RedColorSpan> *</RedColorSpan>
             </FormLabel>
+            <InputContainer>
+              <ControlledInput
+                id="recurrency"
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                invalid={invalidInput && data.recurrency.length === 0}
+                variant="outlined"
+                value={data.recurrency}
+                size="small"
+                InputProps={{
+                  inputProps: {
+                    max: 99,
+                    min: 1
+                  }
+                }}
+                type="number"
+                onChange={(e) => { valuesRecurrency(e) }}
+              />
+              <FormLabel component="span" style={{ margin: '0 0 0 10px' }}>
+                {I18n.t('pages.newProposal.step4.times')}
+              </FormLabel>
+            </InputContainer>
+          </Grid>
+          <Grid item xs={2}>
+            <FormLabel component="legend">&nbsp;</FormLabel>
             <ControlledSelect
               labelId="frequency-label"
               id="frequency"
@@ -304,7 +548,36 @@ const Step4 = ({
               ))}
             </ControlledSelect>
           </Grid>
-          <Grid item xs={8} />
+          {
+            Number(data.frequency) === 2 || Number(data.frequency) === 3
+              ? <Grid item xs={8}>
+                <FormLabel component="legend">{I18n.t('pages.newProposal.step4.customDays')}</FormLabel>
+                <WeekContainer>
+                  <WeekDay id="sunday" className="disabledDay" value="0" onClick={() => weekDaysFrequency('sunday')}>
+                    {I18n.t('pages.newProposal.step4.sunday')}
+                  </WeekDay>
+                  <WeekDay id="monday" className="disabledDay" value="0" onClick={() => weekDaysFrequency('monday')}>
+                    {I18n.t('pages.newProposal.step4.monday')}
+                  </WeekDay>
+                  <WeekDay id="tuesday" className="disabledDay" value="0" onClick={() => weekDaysFrequency('tuesday')}>
+                    {I18n.t('pages.newProposal.step4.tuesday')}
+                  </WeekDay>
+                  <WeekDay id="wednesday" className="disabledDay" value="0" onClick={() => weekDaysFrequency('wednesday')}>
+                    {I18n.t('pages.newProposal.step4.wednesday')}
+                  </WeekDay>
+                  <WeekDay id="thursday" className="disabledDay" value="0" onClick={() => weekDaysFrequency('thursday')}>
+                    {I18n.t('pages.newProposal.step4.thursday')}
+                  </WeekDay>
+                  <WeekDay id="friday" className="disabledDay" value="0" onClick={() => weekDaysFrequency('friday')}>
+                    {I18n.t('pages.newProposal.step4.friday')}
+                  </WeekDay>
+                  <WeekDay id="saturday" className="disabledDay" value="0" onClick={() => weekDaysFrequency('saturday')}>
+                    {I18n.t('pages.newProposal.step4.saturday')}
+                  </WeekDay>
+                </WeekContainer>
+              </Grid>
+              : <Grid item xs={8} />
+          }
           <Grid item xs={6}>
             <FormLabel component="legend">
               {I18n.t('pages.newProposal.step4.general')}

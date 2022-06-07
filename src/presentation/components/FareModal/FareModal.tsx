@@ -25,15 +25,20 @@ import ControlledToolTip from '../ControlledToolTip/ControlledToolTip'
 import { Container, MenuItemContent } from './FareModalStyles'
 import API from '../../../infrastructure/api'
 import { ItemModalData } from '../ItemModal/ItemModal'
-import { StyledPaper } from '../../pages/NewProposal/steps/StepsStyles'
+import { NumberInput, StyledPaper } from '../../pages/NewProposal/steps/StepsStyles'
+import FormatNumber from '../../../application/utils/formatNumber'
 
 export interface FareModalData {
+  idCost?: number | null
+  idProposal?: number | null
   id: number | null
   saleCurrency: string
   saleValue: string
+  minimumValue: string
   expense: string | null
   selectedContainer: string | null
   type: string
+  totalItem?: string
 }
 
 interface FareModalProps {
@@ -45,12 +50,14 @@ interface FareModalProps {
   modal: string
   specifications: string
   containerItems: ItemModalData[]
+  currency: any
 }
 
 export const initialState = {
   type: '',
   expense: null,
   saleValue: '',
+  minimumValue: '',
   saleCurrency: 'BRL',
   selectedContainer: null,
   id: null
@@ -64,7 +71,8 @@ const FareModal = ({
   title,
   modal,
   specifications,
-  containerItems
+  containerItems,
+  currency
 }: FareModalProps): JSX.Element => {
   const [data, setData] = useState<FareModalData>(initialState)
   const [invalidInput, setInvalidInput] = useState(false)
@@ -106,10 +114,16 @@ const FareModal = ({
     }
   }
 
+  const minimumValueHandler = (e): void => {
+    const validatedInput = validateFloatInput(e.target.value)
+    if (validatedInput !== null) {
+      setData({ ...data, minimumValue: validatedInput[0] })
+    }
+  }
+
   const handleOnClose = (): void => {
     setData(initialState)
     setInvalidInput(false)
-    verifyContainerItems()
     setClose()
   }
 
@@ -176,17 +190,40 @@ const FareModal = ({
         </HeaderDiv>
         <Form>
           <RowDiv>
-            <Label width="25%">
-              {I18n.t('components.fareModal.type')}
+            <Label width="350px">
+              {I18n.t('components.fareModal.expense')}
               <RedColorSpan> *</RedColorSpan>
             </Label>
-            <Label width="75%">
-              {I18n.t('components.fareModal.expense')}
+            <Label width="113px" paddingLeft="10px">
+              {I18n.t('components.fareModal.type')}
               <RedColorSpan> *</RedColorSpan>
             </Label>
           </RowDiv>
           <RowDiv margin={true}>
-            <Container width="113px" height="32px" margin="12px 0 5px 0">
+            <Container width="350px" height="32px">
+              <Autocomplete
+                onChange={(e, newValue) => setData({ ...data, expense: newValue })}
+                options={serviceList.map((option) => option.service)}
+                value={data.expense}
+                renderInput={(params) => (
+                  <div ref={params.InputProps.ref}>
+                    <Input
+                      {...params.inputProps}
+                      toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                      invalid={invalidInput && (data.expense === null || data.expense?.length === 0)}
+                      filled={data.expense}
+                      placeholder={I18n.t('components.fareModal.choose')}
+                      style={{ width: '350px' }}
+                    />
+                    <Box {...params.inputProps} className="dropdownCustom">
+                      <ArrowDropDownIcon />
+                    </Box>
+                  </div>
+                )}
+                PaperComponent={(params: any) => <StyledPaper {...params} />}
+              />
+            </Container>
+            <Container width="150px" height="32px" margin="12px 0 5px 10px">
               <ControlledSelect
                 onChange={(e) => setData({ ...data, type: e.target.value })}
                 displayEmpty
@@ -209,29 +246,6 @@ const FareModal = ({
                   )
                 })}
               </ControlledSelect>
-            </Container>
-            <Container width="350px" height="32px" margin="0 0 5px 23px">
-              <Autocomplete
-                onChange={(e, newValue) => setData({ ...data, expense: newValue })}
-                options={serviceList.map((option) => option.service)}
-                value={data.expense}
-                renderInput={(params) => (
-                  <div ref={params.InputProps.ref}>
-                    <Input
-                      {...params.inputProps}
-                      toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                      invalid={invalidInput && (data.expense === null || data.expense?.length === 0)}
-                      filled={data.expense}
-                      placeholder={I18n.t('components.fareModal.choose')}
-                      style={{ width: '350px' }}
-                    />
-                    <Box {...params.inputProps} className="dropdownCustom">
-                      <ArrowDropDownIcon />
-                    </Box>
-                  </div>
-                )}
-                PaperComponent={(params: any) => <StyledPaper {...params} />}
-              />
             </Container>
           </RowDiv>
           {specifications === 'fcl' && (
@@ -266,16 +280,20 @@ const FareModal = ({
               </RowDiv></>
           )}
           <RowDiv>
-            <Label width="100%">
+            <Label width="263px">
               {I18n.t('components.fareModal.saleValue')}
+              <RedColorSpan> *</RedColorSpan>
+            </Label>
+            <Label>
+              {I18n.t('components.fareModal.minimum')}
             </Label>
           </RowDiv>
           <RowDiv>
             <Container style={{ position: 'relative', marginRight: '14px' }}>
               <Autocomplete
-                value={data.saleCurrency}
-                onChange={(e, newValue) => setData({ ...data, saleCurrency: newValue })}
+                value={currency}
                 options={currencyList.map((option) => option.id)}
+                disabled={true}
                 renderInput={(params) => (
                   <div ref={params.InputProps.ref}>
                     <Input
@@ -284,8 +302,9 @@ const FareModal = ({
                       placeholder={data.saleCurrency}
                       toolTipTitle={I18n.t('components.itemModal.requiredField')}
                       invalid={invalidInput && data.saleCurrency.length === 0}
+                      disabled={true}
                     />
-                    <Box {...params.inputProps} className="dropdown">
+                    <Box className="dropdown">
                       <ArrowDropDownIcon />
                     </Box>
                   </div>
@@ -302,19 +321,41 @@ const FareModal = ({
                   {data.saleValue.length === 0 && (
                     <PlaceholderSpan>
                       {I18n.t('components.fareModal.value')}
-                      <RedColorSpan> *</RedColorSpan>
                     </PlaceholderSpan>
                   )}
-                  <Input
-                    value={data.saleValue}
+                  <NumberInput
+                    decimalSeparator={','}
+                    thousandSeparator={'.'}
+                    decimalScale={2}
+                    customInput={Input}
+                    format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                     onChange={saleValueHandler}
-                    invalid={invalidInput && data.saleValue.length === 0}
+                    value={data.saleValue}
                     filled={data.saleValue}
-                    aria-label="value"
+                    invalid={invalidInput && data.saleValue.length === 0}
                   />
                 </label>
               </PlaceholderDiv>
             </ControlledToolTip>
+            <PlaceholderDiv>
+              <label>
+                {data.minimumValue.length === 0 && (
+                  <PlaceholderSpan>
+                    {I18n.t('components.fareModal.value')}
+                  </PlaceholderSpan>
+                )}
+                <NumberInput
+                  decimalSeparator={','}
+                  thousandSeparator={'.'}
+                  decimalScale={2}
+                  customInput={Input}
+                  format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                  onChange={minimumValueHandler}
+                  value={data.minimumValue}
+                  filled={data.minimumValue}
+                />
+              </label>
+            </PlaceholderDiv>
           </RowDiv>
           <RowDiv>
             <ButtonDiv>

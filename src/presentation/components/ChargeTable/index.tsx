@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Table, TableBody, TableCell, TableContainer, TableHead } from '@material-ui/core/'
 import EditIcon from '../../../application/icons/EditIcon'
 import RemoveIcon from '../../../application/icons/RemoveIcon'
@@ -6,32 +6,41 @@ import { IconsContainer, IndividualIconContainer, TableHeader, StyledTableRow, B
 import { ItemModalData } from '../ItemModal/ItemModal'
 import { I18n } from 'react-redux-i18n'
 
+export interface CalculationDataProps {
+  weight: number | null
+  cubage: number | null
+  cubageWeight: number | null
+}
+
 interface ChargeTableProps {
   charges: ItemModalData[]
   onEdit: (row: ItemModalData) => void
   onDelete: (index: number) => void
   specification: string
   modal: string
+  setCalculation: (items: CalculationDataProps) => void
 }
 
-const ChargeTable = ({ charges, onEdit, onDelete, specification, modal }: ChargeTableProps): JSX.Element => {
+const ChargeTable = ({ charges, onEdit, onDelete, specification, modal, setCalculation }: ChargeTableProps): JSX.Element => {
   let amount = 0
   let weight = 0
   let cubage = 0
   let cubageWeight = 0
 
+  useEffect(() => {
+    setCalculation({ weight, cubage, cubageWeight })
+  }, [charges])
+
   const isLand = (): boolean => {
-    if (modal === 'LAND') {
-      return true
-    }
-    return false
+    return modal === 'LAND'
   }
 
   const isFCL = (): boolean => {
-    if (specification === 'fcl' && modal === 'SEA') {
-      return true
-    }
-    return false
+    return specification === 'fcl' && modal === 'SEA'
+  }
+
+  const isAir = (): boolean => {
+    return modal === 'AIR'
   }
 
   return (
@@ -67,7 +76,7 @@ const ChargeTable = ({ charges, onEdit, onDelete, specification, modal }: Charge
             amount += Number(row.amount?.replace(',', '.'))
             cubage += Number(row.cubage?.replace(',', '.'))
             weight += Number(row.rawWeight?.replace(',', '.'))
-            cubageWeight += (Number(row.length?.replace(',', '.')) * Number(row.width?.replace(',', '.')) * Number(row.height?.replace(',', '.')))
+            cubageWeight = Number(cubage) / 0.006
             return (
               <StyledTableRow key={i} noBorder={i + 1 === charges.length}>
                 <TableCell component="th" scope="row">
@@ -98,7 +107,7 @@ const ChargeTable = ({ charges, onEdit, onDelete, specification, modal }: Charge
             <TableCell />
             {!isFCL() ? <TableCell><b>{I18n.t('components.itemModal.rawWeight')}</b>{Number(weight).toFixed(2).replace('.', ',')} kg</TableCell> : <TableCell />}
             {!isFCL() ? <TableCell><b>{I18n.t('components.itemModal.cubage')}</b>{Number(cubage).toFixed(2).replace('.', ',')}</TableCell> : <TableCell />}
-            {!isFCL() ? <TableCell><b>{I18n.t('components.itemModal.cubageWeight')}</b>{Number(cubageWeight).toFixed(2).replace('.', ',')}</TableCell> : <TableCell />}
+            {isAir() ? <TableCell><b>{I18n.t('components.itemModal.cubageWeight')}</b>{Number(cubageWeight).toFixed(2).replace('.', ',')}</TableCell> : <TableCell />}
             <TableCell />
             <TableCell />
           </BottomRow>

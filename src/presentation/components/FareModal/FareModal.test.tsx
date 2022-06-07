@@ -7,9 +7,11 @@ const props = {
     type: 'CW',
     expense: 'Fuel - Security1',
     saleValue: '50,0',
+    minimumValue: '',
     saleCurrency: 'EUR',
     id: null,
-    selectedContainer: null
+    selectedContainer: null,
+    currency: 'EUR'
   },
   title: 'Editar item',
   action: () => { },
@@ -18,7 +20,8 @@ const props = {
   setClose: () => { },
   modal: '',
   specifications: '',
-  containerItems: []
+  containerItems: [],
+  currency: 'EUR'
 }
 
 test('should show text Editar item', () => {
