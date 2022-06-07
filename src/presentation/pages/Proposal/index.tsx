@@ -52,7 +52,7 @@ const Proposal = (): JSX.Element => {
   const [orderAsc, setOrderAsc] = useState(true)
   const [orderBy, setOrderBy] = useState<string>('openingDate')
   const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
-  const [partnerList, setPartnerList] = useState<any[]>([])
+  const [, setPartnerList] = useState<any[]>([])
   const [partnerSimpleNameList, setPartnerSimpleNameList] = useState<any[]>([])
   const [proposalList, setProposalList] = useState<any[]>([])
   const [radioValue, setRadioValue] = useState('')
@@ -172,17 +172,6 @@ const Proposal = (): JSX.Element => {
     }
   }
 
-  const getClientSimpleName = (clientId): string[] => {
-    const finalList: string[] = []
-
-    partnerList?.forEach((item): void => {
-      if (Number(item.id) === Number(clientId)) {
-        finalList.push(String(item.simpleName))
-      }
-    })
-    return finalList
-  }
-
   const checkBusinessDays = (date): any => {
     const dateWeekday = date.getDay()
     switch (dateWeekday) {
@@ -221,7 +210,7 @@ const Proposal = (): JSX.Element => {
       const showWarning = verifyWarning(proposal.status, validityDate)
       const status = verifyStatus(proposal.status)
       const item = {
-        client: getClientSimpleName(proposal.client),
+        client: proposal.clientName,
         destination: proposal.destinationId,
         iconterm: proposal.incotermId,
         isLate: showWarning,
