@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import {
   Checkbox,
   FormControlLabel,
@@ -15,18 +15,40 @@ import ControlledInput from '../../../components/ControlledInput'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import API from '../../../../infrastructure/api'
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import { Transport, TransportList } from '../../../../domain/transport'
+import { Transport, TransportList } from '../../../../domain/Transport'
 import { StyledPaper } from './StepsStyles'
+import { ExitDialog } from 'fiorde-fe-components'
+import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 
+export interface Filled {
+  step3: boolean
+  step4: boolean
+  step5: boolean
+  step6: boolean
+}
 export interface Step1Props {
   theme?: any
   invalidInput: boolean
   setCompleted: (completed: any) => void
+  setFilled: (filled: any) => void
   setProposalType: (proposal: string) => void
   setModal: (modal: string) => void
+  filled: Filled
+  setStepLoaded: (steps: any) => void
+  setAgentList: (agent: string[]) => void
 }
 
-const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }: Step1Props): JSX.Element => {
+const Step1 = ({
+  theme,
+  invalidInput,
+  setCompleted,
+  setFilled,
+  setProposalType,
+  setModal,
+  filled,
+  setStepLoaded,
+  setAgentList
+}: Step1Props): JSX.Element => {
   const [transportList] = useState<Transport[]>(TransportList)
   const [agentsList, setAgentsList] = useState<any[]>([])
   const [partnerList, setPartnerList] = useState<any[]>([])
@@ -37,22 +59,58 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
     modal: '',
     requester: ''
   })
+  const [showPopUp, setShowPopUp] = useState(false)
+  const [modalCopy, setModalCopy] = useState('')
+  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
   useEffect(() => {
-    void (async function () {
-      await API.getAgents()
-        .then((response) => setAgentsList(response))
+    const getAgents = new Promise<void>((resolve) => {
+      API.getAgents()
+        .then((response) => { setAgentsList(response); resolve() })
         .catch((err) => console.log(err))
-    })()
+    })
+
+    const getPartners = new Promise<void>((resolve) => {
+      API.getPartner()
+        .then((response) => { setPartnerList(response); resolve() })
+        .catch((err) => console.log(err))
+    })
+
+    if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
+      const getPartnerCostumer = new Promise<void>((resolve) => {
+        API.getBusinessPartnerCostumer(proposal.idBusinessPartnerCostumer)
+          .then((response) => {
+            resolve(response?.simpleName)
+          })
+          .catch((err) => console.log(err))
+      })
+
+      void Promise.all([getAgents, getPartners, getPartnerCostumer]).then((response) => {
+        setData({
+          proposal: proposal.proposalType,
+          services: '',
+          modal: proposal.idTransport,
+          proposalValue: String(response[2]),
+          requester: proposal.requester
+        })
+        setStepLoaded((currentState) => ({ ...currentState, step1: true }))
+      })
+    } else {
+      setStepLoaded((currentState) => ({ ...currentState, step1: true }))
+    }
   }, [])
 
   useEffect(() => {
-    void (async function () {
-      await API.getPartner()
-        .then((response) => setPartnerList(response))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
+    setProposal({
+      ...proposal,
+      proposalType: data.proposal,
+      idTransport: data.modal,
+      idBusinessPartnerCostumer: data.proposal === 'routing'
+        ? agentsList.filter((agt) => agt.businessPartner.simpleName === data.proposalValue)[0]?.businessPartner.id
+        : partnerList.filter((ptn) => ptn.businessPartner.simpleName === data.proposalValue)[0]?.businessPartner.id,
+      requester: data.requester
+    })
+  }, [data])
 
   useEffect(() => {
     setProposalType(data.proposal)
@@ -63,16 +121,42 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
   }, [data.modal])
 
   useEffect(() => {
+    if (data.proposal === 'routing') {
+      const agent: string[] = []
+      agent.push(data.proposalValue)
+      setAgentList(agent)
+    }
+  }, [data.proposalValue])
+
+  useEffect(() => {
     if (data.proposal !== '' && data.proposalValue !== '' && data.modal !== '') {
       setCompleted((currentState) => ({ ...currentState, step1: true }))
     } else {
       setCompleted((currentState) => ({ ...currentState, step1: false }))
+    }
+    if (data.proposal !== '' || data.proposalValue !== '' || data.modal !== '') {
+      setFilled((currentState) => {
+        return { ...currentState, step1: true }
+      })
+    } else {
+      setFilled((currentState) => {
+        return { ...currentState, step1: false }
+      })
     }
   }, [data])
 
   const getColor = (value): any => {
     if (value === '' && invalidInput) {
       return theme?.commercial?.components?.itemModal?.redAsterisk
+    }
+  }
+
+  const handleModalChange = (modal): void => {
+    if (filled.step3 || filled.step4 || filled.step5 || filled.step6) {
+      setModalCopy(modal)
+      setShowPopUp(true)
+    } else {
+      setData({ ...data, modal: modal })
     }
   }
 
@@ -91,8 +175,8 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
             value={data.proposal}
             onChange={e => setData({ ...data, proposal: e.target.value })}
           >
-            <FormControlLabel value="client" control={<StyledRadio color={getColor(data.proposal)} />} label={I18n.t('pages.newProposal.step1.client')} style={{ marginRight: '30px' }} />
-            <FormControlLabel value="routing" control={<StyledRadio color={getColor(data.proposal)} />} label={I18n.t('pages.newProposal.step1.routingOrder')} />
+            <FormControlLabel checked={data.proposal === 'client'} value="client" control={<StyledRadio color={getColor(data.proposal)} />} label={I18n.t('pages.newProposal.step1.client')} style={{ marginRight: '30px' }} />
+            <FormControlLabel checked={data.proposal === 'routing'} value="routing" control={<StyledRadio color={getColor(data.proposal)} />} label={I18n.t('pages.newProposal.step1.routingOrder')} />
           </RadioGroup>
         </Grid>
         {
@@ -123,7 +207,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
                   {...params}
                   id="search-client"
                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                  invalid={data.proposalValue === '' && invalidInput}
+                  invalid={(data.proposalValue === '') && invalidInput}
                   variant="outlined"
                   size="small"
                   placeholder={I18n.t('pages.newProposal.step1.searchClient')}
@@ -146,7 +230,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
           <ControlledInput
             id="search-requester"
             toolTipTitle={I18n.t('components.itemModal.requiredField')}
-            invalid={data.requester === '' && invalidInput}
+            invalid={(data.requester === '') && invalidInput}
             variant="outlined"
             size="small"
             placeholder={I18n.t('pages.newProposal.step1.searchRequesterPlaceholder')}
@@ -157,7 +241,7 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
         </Grid>
       </Grid>
       <FormLabel component="legend">{I18n.t('pages.newProposal.step1.modal')}<RedColorSpan> *</RedColorSpan></FormLabel>
-      <RadioGroup row aria-label="modal" name="row-radio-buttons-group" onChange={e => setData({ ...data, modal: e.target.value })}>
+      <RadioGroup row aria-label="modal" name="row-radio-buttons-group" value={data.modal} onChange={e => handleModalChange(e.target.value)}>
         {transportList.map((transport, i) => (
           <div key={`div-${i}`} style={{ display: 'flex' }}>
             <FormControlLabel
@@ -172,6 +256,14 @@ const Step1 = ({ theme, invalidInput, setCompleted, setProposalType, setModal }:
           </div>
         ))}
       </RadioGroup>
+      {showPopUp &&
+        <ExitDialog
+          cancelButtonText={I18n.t('pages.newProposal.step1.popUpConfirmationButton1')}
+          confirmButtonText={I18n.t('pages.newProposal.step1.popUpConfirmationButton2')}
+          message={I18n.t('pages.newProposal.step1.popUpConfirmationBody')}
+          title={I18n.t('pages.newProposal.step1.popUpConfirmationTitle')}
+          onPressCancel={() => setShowPopUp(false)}
+          onPressConfirm={() => { setData({ ...data, modal: modalCopy }); setShowPopUp(false) }} />}
     </Separator>
   )
 }

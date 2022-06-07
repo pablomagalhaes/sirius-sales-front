@@ -30,11 +30,12 @@ export const RedColorSpan = styled.span`
 `
 export const Label = styled.span`
   width: ${(props) => props.width};
+  padding-left: ${(props) => props.paddingLeft};
 `
 
 export const Title = styled.span`
   margin-left: 24px;
-  width: 70%;
+  width: 71%;
 `
 export const HeaderDiv = styled.div`
   display: flex;
@@ -71,6 +72,14 @@ export const RowDiv = styled.div`
     left: 78px;
   }
 
+  .dropdownIconAutoComplete {
+    margin-top: 12px;
+    position: absolute;
+    top: 4px;
+    z-index: 10;
+    left: 78px;
+  }
+
   .dropdownLargerInput {
     position: absolute;
     top: 137px;
@@ -82,7 +91,7 @@ export const RowDiv = styled.div`
     position: absolute;
     top: 137px;
     z-index: 10;
-    right: 58px;
+    left: 345px;
   }
 
   .dropdownContainer {
@@ -103,9 +112,10 @@ export const Form = styled.div`
   line-height: 150%;
   letter-spacing: 0.02em;
   color: ${(props: any) =>
-          props.theme?.commercial?.components?.itemModal?.fontColor};
+    props.theme?.commercial?.components?.itemModal?.fontColor};
 `
-export const ItemModalForm = styled(Form)`
+
+styled(Form)`
 margin-right: 24px;
 font-size: 14px;
 `

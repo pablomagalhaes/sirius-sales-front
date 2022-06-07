@@ -42,7 +42,7 @@ const Wrapper = ({ children }): JSX.Element => {
   return (
     <Root>
       <ExtensionMenuContainer>
-        <ExtensionMenu menuItems={menuItems} module="" onChange={handleChange} />
+        <ExtensionMenu menuItems={menuItems} module="" onChange={handleChange} selectedSubItem={undefined} selectedSubMenu={undefined} />
       </ExtensionMenuContainer>
       <ChildrenContainer isOpen={open}>{children}</ChildrenContainer>
     </Root>

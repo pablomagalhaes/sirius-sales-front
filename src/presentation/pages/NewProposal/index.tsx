@@ -1,5 +1,7 @@
-import React, { useState } from 'react'
-import { Button, FloatingMenu, Steps, Messages } from 'fiorde-fe-components'
+/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+import React, { useState, useCallback, useEffect, useContext, useRef } from 'react'
+import { Button, ExitDialog, FloatingMenu, Steps, Messages } from 'fiorde-fe-components'
 import { Breadcrumbs, Link } from '@material-ui/core/'
 import {
   ButtonContainer,
@@ -10,7 +12,8 @@ import {
   TopContainer,
   UserContainer,
   Username,
-  MessageContainer
+  MessageContainer,
+  Status
 } from './style'
 import { withTheme } from 'styled-components'
 import { I18n } from 'react-redux-i18n'
@@ -22,8 +25,11 @@ import Step4 from './steps/Step4'
 import Step5 from './steps/Step5'
 import Step6 from './steps/Step6'
 import { TableRows } from '../Proposal/constants'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { ItemModalData } from '../../components/ItemModal/ItemModal'
+import { ProposalContext, ProposalProps, emptyProposalValue } from './context/ProposalContext'
+import API from '../../../infrastructure/api'
+import { CalculationDataProps } from '../../components/ChargeTable'
 
 export interface NewProposalProps {
   theme: any
@@ -39,8 +45,101 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [showSaveMessage, setShowSaveMessage] = useState(false)
   const [specifications, setSpecifications] = useState('')
   const [step3TableItems, setStep3TableItems] = useState<ItemModalData[]>([])
+  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+  const [serviceList, setServiceList] = useState<any[]>([])
+  const [containerTypeList, setContainerTypeList] = useState<any[]>([])
+  const [leavingPage, setLeavingPage] = useState(false)
+  const [action, setAction] = useState('')
+  const [calculationData, setCalculationData] = useState<CalculationDataProps>({ weight: 0, cubage: 0, cubageWeight: 0 })
+  const [loadExistingProposal, setLoadExistingProposal] = useState(false)
+  const [editMode, setEditMode] = useState(false)
+  const [duplicateMode, setduplicateMode] = useState(false)
+  const [agentList, setAgentList] = useState<any[]>([])
+  const [cw, setCw] = useState(0)
+  const [cwSale, setCwSale] = useState(0)
 
   const history = useHistory()
+  const location = useLocation()
+  const updateTable3IdsRef = useRef()
+  const updateTable5IdsRef = useRef()
+  const updateTable6IdsRef = useRef()
+
+  useEffect(() => {
+    void (async function () {
+      await API.getContainerType()
+        .then((response) => setContainerTypeList(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
+
+  useEffect(() => {
+    void (async function () {
+      await API.getService()
+        .then((response) => setServiceList(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
+
+  useEffect(() => {
+    const proposalId = location.state?.proposalId
+    if (proposalId !== undefined && proposalId !== null) {
+      setEditMode(true)
+      void (async function () {
+        await API.getProposal(proposalId)
+          .then((response) => { setProposal(response); duplicateProposal(response); setLoadExistingProposal(true) })
+          .catch((err) => console.log(err))
+      })()
+    } else {
+      setLoadExistingProposal(true)
+      const today = new Date()
+      const timeNow = `${today.getFullYear()}-${('0' + String(today.getMonth() + 1).slice(-2))}-${('0' + String(today.getDate())).slice(-2)}T${('0' + String(today.getHours())).slice(-2)}:${('0' + String(today.getMinutes())).slice(-2)}:${('0' + String(today.getSeconds())).slice(-2)}.000Z`
+      setProposal({ ...emptyProposalValue, openingDate: timeNow })
+    }
+  }, [])
+
+  const duplicateProposal = (proposal): void => {
+    if (location.state?.eventType === 'duplicate') {
+      setEditMode(false)
+      setduplicateMode(true)
+      const proposalObject = [proposal].reduce((index, object) => {
+        object.cargo.id = null
+        object.validityDate = ''
+        object.idStatus = 1
+        object.openingDate = formatDate()
+        object.cargo.cargoVolumes.map(cargoVolume => {
+          cargoVolume.id = null; cargoVolume.idCargo = null; return cargoVolume
+        })
+        object.totalCosts.map(totalCost => {
+          totalCost.id = null; totalCost.idProposal = null; return totalCost
+        })
+        object.costs.map(cost => {
+          cost.id = null; cost.idProposal = null; return cost
+        })
+        return object
+      }, 0)
+      setProposal(proposalObject)
+    }
+  }
+
+  const formatDate = (): string => {
+    const year = new Date().getFullYear()
+    const month = new Date().getMonth()
+    const date = new Date().getDate()
+    const hour = new Date().getHours()
+    const minute = new Date().getMinutes()
+    const second = new Date().getSeconds()
+    const yearMonth = `${year}-${('0' + String(month + 1).slice(-2))}`
+    const dateHour = `-${('0' + String(date)).slice(-2)}T${('0' + String(hour)).slice(-2)}`
+    const minuteSecond = `:${('0' + String(minute)).slice(-2)}:${('0' + String(second)).slice(-2)}.000Z`
+    return yearMonth + dateHour + minuteSecond
+  }
+
+  const [undoMessage, setUndoMessage] = useState({
+    step3: false,
+    step5origin: false,
+    step5destiny: false,
+    step6: false
+  })
 
   const [completed, setCompleted] = useState({
     step1: false,
@@ -49,6 +148,23 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     step4: false,
     step5: false,
     step6: false
+  })
+
+  const [filled, setFilled] = useState({
+    step1: false,
+    step2: false,
+    step3: false,
+    step4: false,
+    step5: false,
+    step6: false
+  })
+
+  const [stepLoaded, setStepLoaded] = useState({
+    step1: false,
+    step2: false,
+    step3: false,
+    step4: false,
+    step5: false
   })
 
   const steps = [
@@ -101,8 +217,40 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       completed.step5 &&
       completed.step6
     ) {
-      setShowSaveMessage(true)
-      setInvalidInput(false)
+      if (proposal.idProposal === undefined || proposal.idProposal === null || location.state?.eventType === 'duplicate') {
+        proposal.idProposal = null
+        API.postProposal(JSON.stringify(proposal)).then((response) => {
+          setProposal(response)
+          // @ts-expect-error
+          updateTable3IdsRef?.current?.updateStep3Ids()
+          // @ts-expect-error
+          updateTable6IdsRef?.current?.updateStep6Ids()
+          // @ts-expect-error
+          updateTable5IdsRef?.current?.updateStep5Ids()
+          setShowSaveMessage(true)
+          setInvalidInput(false)
+        }).catch((error) => {
+          setShowSaveMessage(false)
+          setInvalidInput(true)
+          console.trace(error)
+        })
+      } else {
+        API.putProposal(proposal.idProposal, JSON.stringify(proposal)).then((response) => {
+          setProposal(response)
+          // @ts-expect-error
+          updateTable3IdsRef?.current?.updateStep3Ids()
+          // @ts-expect-error
+          updateTable6IdsRef?.current?.updateStep6Ids()
+          // @ts-expect-error
+          updateTable5IdsRef?.current?.updateStep5Ids()
+          setShowSaveMessage(true)
+          setInvalidInput(false)
+        }).catch((error) => {
+          setShowSaveMessage(false)
+          setInvalidInput(true)
+          console.trace(error)
+        })
+      }
     } else {
       setInvalidInput(true)
     }
@@ -130,6 +278,13 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
 
   const referenceCode = TableRows()
 
+  const getEnchargedFullname = (): string => {
+    const user = JSON.parse(localStorage.getItem('user') || '{}')
+    return `${String(user.firstname)}  ${String(user.lastname)}`
+  }
+
+  const fullname = getEnchargedFullname()
+
   const saveMessageInfo = {
     closable: true,
     severity: 'success',
@@ -137,9 +292,135 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     closeAlert: () => { setShowSaveMessage(false) },
     closeMessage: I18n.t('pages.newProposal.saveMessage.closeMessage'),
     goBack: () => { history.push('/proposta') },
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    message: `${I18n.t('pages.newProposal.saveMessage.message')} ${referenceCode[0].reference}.`
+    message: `${String(I18n.t('pages.newProposal.saveMessage.message'))} ${String(referenceCode[0].reference)}.`
   }
+
+  const MessageExitDialog = (): JSX.Element => {
+    useEffect(() => {
+      if (filled.step1 ||
+        filled.step2 ||
+        filled.step3 ||
+        filled.step4 ||
+        filled.step5 ||
+        filled.step6) {
+        setLeavingPage(true)
+      } else {
+        setLeavingPage(false)
+      }
+    }, [])
+
+    return (
+      <ExitDialog
+        cancelButtonText={I18n.t('pages.newProposal.unsavedChanges.cancelMessage')}
+        confirmButtonText={I18n.t('pages.newProposal.unsavedChanges.confirmMessage')}
+        message={I18n.t('pages.newProposal.unsavedChanges.message')}
+        title={I18n.t('pages.newProposal.unsavedChanges.title')}
+        onPressCancel={() => setLeavingPage(false)}
+        onPressConfirm={() => executeAction()}
+      />
+    )
+  }
+
+  const validateAction = (element): boolean => {
+    if (element.tagName !== 'HTML') {
+      if (element.id === 'button_home' || element.querySelector('#button_home')) {
+        setAction('home')
+        return true
+      }
+      if ((element.id === 'exportation' || element.querySelector('#exportation')) && element.tagName !== 'UL') {
+        setAction('home')
+        return true
+      }
+      if ((element.id === 'importation' || element.querySelector('#importation')) && element.tagName !== 'UL') {
+        setAction('home')
+        return true
+      }
+      if ((element.id === 'freight-forwarder' || element.querySelector('#freight-forwarder')) && element.tagName !== 'UL') {
+        setAction('home')
+        return true
+      }
+      if ((element.id === 'billing' || element.querySelector('#billing')) && element.tagName !== 'UL') {
+        setAction('home')
+        return true
+      }
+      if ((element.id === 'national-logistic' || element.querySelector('#national-logistic')) && element.tagName !== 'UL') {
+        setAction('home')
+        return true
+      }
+      if ((element.id === 'logo_sirius' || element.querySelector('#logo_sirius')) && element.tagName !== 'DIV') {
+        setAction('home')
+        return true
+      }
+      if (element.tagName === 'A' && !element.id.includes('step')) {
+        setAction('proposals')
+        return true
+      }
+      if ((element.id === 'home' || element.querySelector('#home')) && element.tagName !== 'DIV') {
+        setAction('commercial-home')
+        return true
+      }
+      if ((element.id === 'proposal' || element.querySelector('#proposal')) && element.tagName !== 'DIV') {
+        setAction('proposals')
+        return true
+      }
+      if ((element.id === 'tariff' || element.querySelector('#tariff')) && element.tagName !== 'DIV') {
+        setAction('commercial-home')
+        return true
+      }
+      if ((element.id === 'chart' || element.querySelector('#chart')) && element.tagName !== 'DIV') {
+        setAction('commercial-home')
+        return true
+      }
+      if (element.id === 'exit_button') {
+        setAction('logout')
+        return true
+      }
+    }
+    return false
+  }
+
+  const executeAction = (): void => {
+    switch (action) {
+      case 'home':
+        history.go(-4)
+        break
+      case 'commercial-home':
+        history.push('/')
+        break
+      case 'proposals':
+        history.push('/proposta')
+        break
+      case 'logout':
+        break
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', (event) => {
+      event.returnValue = setLeavingPage(true)
+    })
+  }, [])
+
+  const useOnClickOutside = (handler): void => {
+    useEffect(() => {
+      const listener = (event: any): void => {
+        if (!validateAction(event.target)) {
+          return
+        }
+        handler(event)
+      }
+      document.addEventListener('mousedown', listener)
+      document.addEventListener('touchstart', listener)
+      return () => {
+        document.removeEventListener('mousedown', listener)
+        document.removeEventListener('touchstart', listener)
+      }
+    }, [handler])
+  }
+  const divRef = useRef()
+
+  const handler = useCallback(() => { setLeavingPage(true) }, [])
+  useOnClickOutside(handler)
 
   return (
     <RootContainer>
@@ -164,15 +445,28 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           <span className="breadcrumbEnd">{I18n.t('pages.newProposal.newProposal')}</span>
         </Breadcrumbs>
         <UserContainer>
-          {I18n.t('pages.newProposal.reference')}
-          <ReferenceCode>
-            {referenceCode[0].reference}
-          </ReferenceCode>
+          {editMode
+            ? <>
+              {I18n.t('pages.newProposal.reference')}
+              <ReferenceCode>
+                {proposal?.referenceProposal}
+              </ReferenceCode>
+            </>
+            : null
+          }
           {I18n.t('pages.newProposal.encharged')}
           <IconComponent name="user" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
           <Username>
-            Cristina Alves
+            {fullname}
           </Username>
+          {editMode && proposal.idStatus === 1
+            ? <Status className="open">{I18n.t('pages.proposal.table.openLabel')}</Status>
+            : null
+          }
+          {editMode && proposal.idStatus === 3
+            ? <Status className="inReview">{I18n.t('pages.proposal.table.inRevisionLabel')}</Status>
+            : null
+          }
         </UserContainer>
       </Header>
       <TopContainer>
@@ -199,15 +493,103 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           </Button>
         </ButtonContainer>
       </TopContainer>
-      <MainContainer>
-        <div id="step1"><Step1 setModal={setModal} setCompleted={setCompleted} invalidInput={invalidInput} setProposalType={setProposalType} /></div>
-        <div id="step2"><Step2 proposalType={proposalType} setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} /></div>
-        <div id="step3"><Step3 setTableItems={setStep3TableItems} setCompleted={setCompleted} invalidInput={invalidInput} modal={modal} setCostData={setCostData} setSpecifications={setSpecifications} /></div>
-        <div id="step4"><Step4 setCompleted={setCompleted} invalidInput={invalidInput} /></div>
-        <div id="step5"><Step5 containerItems={step3TableItems} setCompleted={setCompleted} costData={costData} modal={modal} specifications={specifications} /></div>
-        <div id="step6"><Step6 containerItems={step3TableItems} setCompleted={setCompleted} costData={costData} modal={modal} specifications={specifications} /></div>
-      </MainContainer>
-
+      {leavingPage && <MessageExitDialog />}
+      {loadExistingProposal &&
+        <MainContainer ref={divRef}>
+          <div id="step1">
+            <Step1
+              filled={filled}
+              setModal={setModal}
+              setCompleted={setCompleted}
+              setFilled={setFilled}
+              invalidInput={invalidInput}
+              setProposalType={setProposalType}
+              setStepLoaded={setStepLoaded}
+              setAgentList={setAgentList}
+            />
+          </div>
+          {stepLoaded.step1 && <>
+            <div id="step2">
+              <Step2
+                proposalType={proposalType}
+                setCompleted={setCompleted}
+                setFilled={setFilled}
+                invalidInput={invalidInput}
+                modal={modal}
+                setAgentList={setAgentList}
+              />
+            </div>
+            <div id="step3">
+              <Step3
+                updateTableIdsRef={updateTable3IdsRef}
+                setCalculationData={setCalculationData}
+                containerTypeList={containerTypeList}
+                undoMessage={undoMessage}
+                setUndoMessage={setUndoMessage}
+                setFilled={setFilled}
+                setTableItems={setStep3TableItems}
+                setCompleted={setCompleted}
+                invalidInput={invalidInput}
+                modal={modal}
+                setCostData={setCostData}
+                setSpecifications={setSpecifications}
+                setStepLoaded={setStepLoaded}
+                setCw={setCw}
+                setCwSale={setCwSale}
+              />
+            </div>
+            <div id="step4">
+              <Step4
+                modal={modal}
+                setFilled={setFilled}
+                setCompleted={setCompleted}
+                invalidInput={invalidInput}
+                specifications={specifications}
+                duplicateMode={duplicateMode}
+              />
+            </div>
+            {stepLoaded.step3 && <> <div id="step5">
+              <Step5
+                updateTableIdsRef={updateTable5IdsRef}
+                calculationData={calculationData}
+                containerTypeList={containerTypeList}
+                serviceList={serviceList}
+                undoMessage={undoMessage}
+                setUndoMessage={setUndoMessage}
+                setFilled={setFilled}
+                containerItems={step3TableItems}
+                setCompleted={setCompleted}
+                costData={costData}
+                modal={modal}
+                specifications={specifications}
+                invalidInput={invalidInput}
+                agentList={agentList}
+              />
+            </div>
+              <div id="step6">
+                <Step6
+                  updateTableIdsRef={updateTable6IdsRef}
+                  calculationData={calculationData}
+                  containerTypeList={containerTypeList}
+                  serviceList={serviceList}
+                  undoMessage={undoMessage}
+                  setUndoMessage={setUndoMessage}
+                  setFilled={setFilled}
+                  containerItems={step3TableItems}
+                  setCompleted={setCompleted}
+                  costData={costData}
+                  modal={modal}
+                  specifications={specifications}
+                  invalidInput={invalidInput}
+                  cw={cw}
+                  cwSale={cwSale}
+                />
+              </div>
+            </>}
+          </>
+          }
+        </MainContainer>
+      }
       {showSaveMessage &&
         <MessageContainer>
           <Messages {...saveMessageInfo} />

@@ -5,8 +5,6 @@ pipelines:
     qa:
       - step:
           name: Build Artifact
-          caches:
-            - node
           script:
             - CI=false && npm install && npm run build:qa
           artifacts:
@@ -39,8 +37,6 @@ pipelines:
     uat:
       - step:
           name: Build Artifact
-          caches:
-            - node
           script:
             - CI=false && npm install && npm run build:uat
           artifacts:
@@ -74,8 +70,6 @@ pipelines:
     build-deploy-prod:
       - step:
           name: Build Artifact
-          caches:
-            - node
           script:
             - CI=false && npm install && npm run build:production
           artifacts:

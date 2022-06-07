@@ -26,15 +26,19 @@
         "marine": "Marítimo",
         "road": "Rodoviário",
         "searchRequester": "Solicitante",
-        "searchRequesterPlaceholder": "Informe o nome e e-mail (Ex: João - joao@cliente.com.br)"
+        "searchRequesterPlaceholder": "Informe o nome e e-mail (Ex: João - joao@cliente.com.br)",
+        "popUpConfirmationTitle": "Tem certeza que quer alterar o modal?",
+        "popUpConfirmationBody": "Ao selecionar outro modal, algumas informações já preenchidas relacionadas ao modal atual serão descartadas. Confirmar a alteração?",
+        "popUpConfirmationButton1": "Cancelar",
+        "popUpConfirmationButton2": "Confirmar"
       },
       "step2": {
         "title": "Trecho",
         "subtitle": "Defina origem, destino e especificidades do trecho.",
-        "origin": "Origem:",
+        "origin": "Origem",
         "searchPlaceholder": "Procurar por código/descrição do porto OU país...",
         "collectionAddress": "Endereço de coleta:",
-        "destiny": "Destino:",
+        "destiny": "Destino",
         "destinyAirport": "Aeroporto Destino",
         "destinySeaport": "Porto Destino",
         "originAirport": "Aeroporto Origem",
@@ -42,7 +46,12 @@
         "agents": "Agentes:",
         "searchAgents": "Procurar por nome...",
         "incoterm": "INCOTERM:",
-        "choose": "Escolha ..."
+        "choose": "Escolha ...",
+        "country": "País",
+        "state": "Estado",
+        "city": "Cidade",
+        "differentLocationsDestiny": "Selecione um destino diferente da origem.",
+        "differentLocationsOrigin": "Selecione uma origem diferente do destino."
       },
       "step3": {
         "title": "Carga",
@@ -53,14 +62,20 @@
         "temperature": "Temperatura:",
         "choose": "Escolha ...",
         "buttonAdd": "Adicionar item à carga",
-        "buttonAddTooltip": "Para adicionar, selecione os campos \"Modal\" na etapa \"Serviço\" e \"Especificação\" na etapa \"Carga\""
+        "buttonAddTooltip": "Para adicionar, selecione os campos \"Modal\" na etapa \"Serviço\" e \"Especificação\" na etapa \"Carga\"",
+        "messageDeleteItem": "Item excluído com sucesso.",
+        "messageUndoDelete": "Desfazer",
+        "buy": "Compra",
+        "sale": "Venda"
       },
       "step4": {
         "title": "Dados Gerais",
         "subtitle": "Informe detalhes gerais da sua proposta comercial.",
         "validity": "Validade:",
         "time": "Transit. time:",
-        "freeTime": "Free Time",
+        "freeTimeDemurrage": "Free time demurrage:",
+        "freeTimeStorage": "Free time armazenagem:",
+        "value": "Valor (BRL):",
         "frequency": "Frequência:",
         "route": "Rota:",
         "client": "Ref. Cliente:",
@@ -70,7 +85,16 @@
         "notHired": "Não Contratado",
         "deadline": "Prazo (dias):",
         "internal": "Observações internas (esse texto NÃO é enviado na proposta):",
-        "choose": "Escolha ..."
+        "choose": "Escolha ...",
+        "customDays": "Personalizar dias:",
+        "times": "vez(es)",
+        "sunday": "D",
+        "monday": "S",
+        "tuesday": "T",
+        "wednesday": "Q",
+        "thursday": "Q",
+        "friday": "S",
+        "saturday": "S"
       },
       "step5": {
         "title": "Custos",
@@ -80,7 +104,9 @@
         "destiny": "Destino",
         "totalDestiny": "Total custos destino:",
         "originCost": "Novo custo de origem",
-        "destinationCost": "Novo custo de destino"
+        "destinationCost": "Novo custo de destino",
+        "errorOrigin": "É obrigatório informar algum custo de origem.",
+        "errorDestiny": "É obrigatório informar algum custo de destino."
       },
       "step6": {
         "title": "Frete",
@@ -93,12 +119,49 @@
         "destinationCost": "New destiny cost",
         "addFare": "Adicionar tarifa",
         "addFareTooltip": "Para adicionar, selecione os agentes na etapa \"Serviço\" e inclua pelo menos um item na etapa \"Carga\"",
-        "totalFares": "Total Tarifas:"
+        "totalFares": "Total Tarifas:",
+        "companySea": "Cia. Maritima:",
+        "companyAir": "Cia. Aérea:",
+        "companyLand": "Cia. Rodoviária:",
+        "currency": "Moeda:",
+        "value": "Valor:",
+        "type": "Tipo",
+        "expense":"Despesa/Serviço",
+        "colValue": "Valor",
+        "minValue": "Valor-Min.",
+        "totalItem": "Total Item",
+        "cwBuySell": "CW Compra / Venda:",
+        "totalLoad": "Total carga:",
+        "totalOtherFees": "Total outras tarifas:",
+        "profit": "Profit:"
       },
       "saveMessage": {
         "message": "Proposta salva com sucesso, Ref: ",
         "closeMessage": "Continuar editando",
         "buttonText": "Voltar à lista de propostas"
+      },
+      "unsavedChanges": {
+        "cancelMessage": "Cancelar",
+        "confirmMessage": "Descartar",
+        "message": "Essa página contém alterações não salvas. Deseja descartar a proposta e sair da página?",
+        "title": "Tem certeza que deseja sair?"
+      }
+    },
+    "proposal":{
+      "table":{
+        "openLabel":"Aberta",
+        "waitingForCustomerReturnLabel": "Ag. ret. cliente",
+        "inRevisionLabel":"Em revisão",
+        "approvedLabel":"Aprovada",
+        "rejectedLabel":"Rejeitada",
+        "cancelledLabel":"Cancelada",
+        "editLabel": "Editar",
+        "duplicateLabel": "Duplicar",
+        "reviewLabel": "Definir como \"Em revisão\"",
+        "confirmLabel": "Confirmar envio ao cliente",
+        "cancelLabel": "Cancelar",
+        "approveLabel": "Definir como aprovada",
+        "rejectLabel": "Definir como rejeitada"
       }
     }
   },
@@ -116,16 +179,27 @@
       "buy": "Compra",
       "description": "Despesa/Serviço",
       "inform": "A informar",
-      "minBuy": "Mín - Compra",
-      "minSale": "Mín - Venda",
+      "minBuy": "Compra - Mín",
+      "minSale": "Venda - Mín",
       "sale": "Venda",
       "type":"Tipo"
+    },
+    "cwModal": {
+      "title": "Alterar Chargeable Weight",
+      "grossWeight": "Peso bruto (kg):",
+      "cubage": "Cubagem:",
+      "cubageWeight": "Peso cubado (m3):",
+      "cwSales": "CW Venda:",
+      "cancel": "Cancelar",
+      "save": "Salvar",
+      "attention": "ATENÇÃO:",
+      "infoText": "Ao alterar o valor manualmente, você estará desconsiderando o cálculo automático do chargeable weight. O valor preenchido deve ser maior que 0,00"
     },
     "costModal": {
       "type": "Tipo:",
       "description": "Despesa/Serviço:",
       "agent": "Agente:",
-      "buyValue": "Valor compra",
+      "buyValue": "Valor Compra",
       "container": "Container:",
       "saleValue": "Valor Venda",
       "save": "Salvar",
@@ -134,6 +208,7 @@
       "value": "Valor",
       "choose": "Escolha...",
       "gotIt": "Entendi",
+      "noValueError": "É necessário que seja informado pelo menos o Valor de Compra ou o Valor de Venda",
       "popUpMessageStart": "Informe o ",
       "popUpMessageEnd": " ou desmarque esse campo caso não seja necessário."
     },
@@ -149,8 +224,7 @@
       "choose": "Escolha ...",
       "container": "Container",
       "packaging": "Embalagem",
-      "yes": "Sim",
-      "hazardous": "Perigoso?",
+      "hazardous": "Perigosa",
       "save": "Salvar",
       "requiredField": "Campo obrigatório",
       "cubageWeight": "Peso cubado (m3): ",
@@ -160,10 +234,11 @@
     "fareModal":{
       "type": "Tipo:",
       "expense":"Despesa/Serviço:",
-      "saleValue": "Valor venda:",
+      "saleValue": "Valor Venda:",
       "choose": "Escolha...",
       "value": "Valor",
-      "newFare": "Nova tarifa"
+      "newFare": "Nova tarifa",
+      "minimum": "Mínimo:"
     }
   }
 }

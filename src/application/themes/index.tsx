@@ -19,7 +19,14 @@ const dark = {
         backgroundColor: '#151D28',
         title: '#F2F3F7',
         subtitle: '#B5B8C2',
-        emptyLabel: '#B5B8C2'
+        emptyLabel: '#B5B8C2',
+        border: '#364353',
+        errorText: '#FF7373'
+      },
+      totalSurchage: {
+        backgroundColor: '#151D28',
+        fontColor: '#F2F3F7',
+        borderColor: '#222E3E'
       }
     },
     pages: {
@@ -46,6 +53,8 @@ const dark = {
         border: '#505F73',
         font: '#F2F3F7',
         placeholder: '#7B8A9E',
+        weekComponent: '#151D28',
+        disabledBackground: '#364353',
         steps: {
           stepFare: '#B5B8C2',
           messageColor: '#222222',
@@ -80,7 +89,14 @@ const light = {
         backgroundColor: '#f0f1f5',
         title: '#222222',
         subtitle: '#545454',
-        emptyLabel: '#999DAC'
+        emptyLabel: '#999DAC',
+        border: '#D9DCE5',
+        errorText: '#FF4D4D'
+      },
+      totalSurchage: {
+        backgroundColor: '#F0F1F5',
+        fontColor: '#222222',
+        borderColor: '#999DAC'
       }
     },
     pages: {
@@ -107,6 +123,8 @@ const light = {
         border: '#F0F1F5',
         font: '#222222',
         placeholder: '#999DAC',
+        weekComponent: '#F0F1F5',
+        disabledBackground: '#E3E5EB',
         steps: {
           stepFare: '#545454',
           messageColor: '#222222',
