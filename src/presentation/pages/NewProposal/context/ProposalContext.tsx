@@ -43,6 +43,10 @@ export const emptyProposalValue: Proposal = {
   idFrequency: 0, // step 4 id frequency
   route: 'str', // step4 rota
   freeTime: false, // step4 freetime
+  vlFreeTime: 0, // step 4 value
+  nrFreeTimeDaysDeadline: 0, // step 4 deadline
+  transportIncluded: false,
+  clearenceIncluded: false,
   recurrency: 1, // 1
   weeklyRecurrency: 'str' // "0101100" segunda quarta e quinta
 }

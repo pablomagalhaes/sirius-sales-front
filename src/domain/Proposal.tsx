@@ -45,6 +45,10 @@ export interface Proposal {
   idFrequency: number // step 4 id frequency
   route: string // step4 rota
   freeTime: boolean // true step4
+  vlFreeTime: number
+  nrFreeTimeDaysDeadline: number
+  transportIncluded: boolean
+  clearenceIncluded: boolean
   recurrency: number// 1
   weeklyRecurrency: string // "0101100" segunda quarta e quinta
 }

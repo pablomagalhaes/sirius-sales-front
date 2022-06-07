@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react'
 import {
   Checkbox,
   FormControlLabel,
+  FormGroup,
   FormLabel,
   Grid,
   InputAdornment,
@@ -54,7 +55,8 @@ const Step1 = ({
   const [partnerList, setPartnerList] = useState<any[]>([])
   const [data, setData] = useState({
     proposal: '',
-    services: '',
+    serviceDesemb: '',
+    serviceTransport: '',
     proposalValue: '',
     modal: '',
     requester: ''
@@ -62,6 +64,8 @@ const Step1 = ({
   const [showPopUp, setShowPopUp] = useState(false)
   const [modalCopy, setModalCopy] = useState('')
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+
+  console.log(data)
 
   useEffect(() => {
     const getAgents = new Promise<void>((resolve) => {
@@ -88,7 +92,8 @@ const Step1 = ({
       void Promise.all([getAgents, getPartners, getPartnerCostumer]).then((response) => {
         setData({
           proposal: proposal.proposalType,
-          services: '',
+          serviceDesemb: proposal.clearenceIncluded ? 'desemb' : '',
+          serviceTransport: proposal.transportIncluded ? 'transport' : '',
           modal: proposal.idTransport,
           proposalValue: String(response[2]),
           requester: proposal.requester
@@ -108,7 +113,9 @@ const Step1 = ({
       idBusinessPartnerCostumer: data.proposal === 'routing'
         ? agentsList.filter((agt) => agt.businessPartner.simpleName === data.proposalValue)[0]?.businessPartner.id
         : partnerList.filter((ptn) => ptn.businessPartner.simpleName === data.proposalValue)[0]?.businessPartner.id,
-      requester: data.requester
+      requester: data.requester,
+      transportIncluded: data.serviceTransport === 'transport',
+      clearenceIncluded: data.serviceDesemb === 'desemb'
     })
   }, [data])
 
@@ -183,10 +190,10 @@ const Step1 = ({
           data.proposal === 'routing'
             ? <Grid item xs={6}>
               <FormLabel component="legend">{I18n.t('pages.newProposal.step1.services')}</FormLabel>
-              <RadioGroup row aria-label="services" name="row-radio-buttons-group" onChange={e => setData({ ...data, services: e.target.value })}>
-                <FormControlLabel value="transport" control={<Checkbox />} label={I18n.t('pages.newProposal.step1.transport')} />
-                <FormControlLabel value="desemb" control={<Checkbox />} label={I18n.t('pages.newProposal.step1.readiness')} />
-              </RadioGroup>
+              <FormGroup row aria-label="services">
+                <FormControlLabel value="transport" control={<Checkbox checked={data.serviceTransport === 'transport'} onChange={e => setData({ ...data, serviceTransport: e.target.value })} />} label={I18n.t('pages.newProposal.step1.transport')} />
+                <FormControlLabel value="desemb" control={<Checkbox checked={data.serviceDesemb === 'desemb'} onChange={e => setData({ ...data, serviceDesemb: e.target.value })}/>} label={I18n.t('pages.newProposal.step1.readiness')} />
+              </FormGroup>
             </Grid>
             : <Grid item xs={6}> </Grid>
         }
