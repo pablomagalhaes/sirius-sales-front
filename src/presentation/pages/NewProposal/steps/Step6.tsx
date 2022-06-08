@@ -262,7 +262,7 @@ const Step6 = ({
               (cont) => cont.description === row.selectedContainer
             )[0]?.id
             : null, // containerMODAL
-        idBusinessPartnerAgent: 0, // data.agent, // AgenteMODALcusto
+        idBusinessPartnerAgent: 0,
         costType: 'Tarifa', // 'Origem''Destino''Tarifa'
         billingType: row.type, // Tipo -MODAL
         valuePurchase: null, // valor compra

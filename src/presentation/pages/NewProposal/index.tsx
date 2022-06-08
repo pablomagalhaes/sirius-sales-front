@@ -63,6 +63,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const updateTable3IdsRef = useRef()
   const updateTable5IdsRef = useRef()
   const updateTable6IdsRef = useRef()
+  const updateAgentsIdsRef = useRef()
 
   useEffect(() => {
     void (async function () {
@@ -86,7 +87,11 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       setEditMode(true)
       void (async function () {
         await API.getProposal(proposalId)
-          .then((response) => { setProposal(response); duplicateProposal(response); setLoadExistingProposal(true) })
+          .then((response) => {
+            setProposal(response)
+            duplicateProposal(response)
+            setLoadExistingProposal(true)
+          })
           .catch((err) => console.log(err))
       })()
     } else {
@@ -101,7 +106,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     if (location.state?.eventType === 'duplicate') {
       setEditMode(false)
       setduplicateMode(true)
-      const proposalObject = [proposal].reduce((index, object) => {
+      const proposalObject = [proposal].reduce((object) => {
         object.cargo.id = null
         object.validityDate = ''
         object.idStatus = 1
@@ -114,6 +119,9 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         })
         object.costs.map(cost => {
           cost.id = null; cost.idProposal = null; return cost
+        })
+        object.agents.map(agt => {
+          agt.id = null; agt.proposalImportFreightId = null; return agt
         })
         return object
       }, 0)
@@ -222,6 +230,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         API.postProposal(JSON.stringify(proposal)).then((response) => {
           setProposal(response)
           // @ts-expect-error
+          updateAgentsIdsRef?.current?.updateAgentsIdsRef()
+          // @ts-expect-error
           updateTable3IdsRef?.current?.updateStep3Ids()
           // @ts-expect-error
           updateTable6IdsRef?.current?.updateStep6Ids()
@@ -237,6 +247,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       } else {
         API.putProposal(proposal.idProposal, JSON.stringify(proposal)).then((response) => {
           setProposal(response)
+          // @ts-expect-error
+          updateAgentsIdsRef?.current?.updateAgentsIdsRef()
           // @ts-expect-error
           updateTable3IdsRef?.current?.updateStep3Ids()
           // @ts-expect-error
@@ -255,7 +267,6 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       setInvalidInput(true)
     }
   }
-
   const floatingButtonMenuItems = [
     {
       iconType: 'save',
@@ -511,6 +522,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           {stepLoaded.step1 && <>
             <div id="step2">
               <Step2
+                updateAgentsIdsRef={updateAgentsIdsRef}
                 proposalType={proposalType}
                 setCompleted={setCompleted}
                 setFilled={setFilled}
