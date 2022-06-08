@@ -10,7 +10,7 @@ const orderButtonMenuItems = [
     description: 'Ref. proposta'
   },
   {
-    value: 'referenceClientProposal',
+    value: 'businessPartnerCostumerCostumerName',
     description: 'Nome do cliente'
   },
   {
