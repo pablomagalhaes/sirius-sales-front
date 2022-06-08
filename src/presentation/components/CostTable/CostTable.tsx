@@ -81,6 +81,7 @@ const CostTable = ({
   const currencyList = new Map()
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
+  const [agentsList, setAgentsList] = useState<any[]>([])
 
   const editClickHandler = (tableData: CostTableItem): void => {
     setChargeData({ ...tableData, buyValueCalculated: null, saleValueCalculated: null })
@@ -137,6 +138,12 @@ const CostTable = ({
           idCurrencyPurchase: item.buyCurrency,
           idCurrencySale: item.saleCurrency
         }
+
+        void (async function () {
+          await API.getAgents()
+            .then((agent) => setAgentsList(agent))
+            .catch((err) => console.log(err))
+        })()
 
         void (async function () {
           await API.postTotalCalculation(newData)
@@ -229,6 +236,16 @@ const CostTable = ({
     return item.type !== 'FIXO' && item.type !== 'BL'
   }
 
+  const getAgentName = (agentId): string => {
+    let name = ''
+    agentsList?.forEach((item): void => {
+      if (Number(item.businessPartner.id) === Number(agentId)) {
+        name = item.businessPartner.simpleName
+      }
+    })
+    return name
+  }
+
   return (
     <MainDiv>
       <CostModal
@@ -297,7 +314,7 @@ const CostTable = ({
                       ? null
                       : <StyledTableCell width="12%" align="left">
                         {dataMap.agent != null
-                          ? <Default>{dataMap.agent}</Default>
+                          ? <Default>{typeof (dataMap.agent) === 'string' ? dataMap.agent : getAgentName(dataMap.agent) }</Default>
                           : <Default>-</Default>
                         }
                       </StyledTableCell>
