@@ -211,6 +211,14 @@ const Proposal = (): JSX.Element => {
     }
   }
 
+  const verifyType = (type: String): string => {
+    if (type === 'FRETE - IMPORTAÇÃO') {
+      return 'importation'
+    } else {
+      return 'exportation'
+    }
+  }
+
   const getProposalItems = (proposalList): any => {
     const array: any = []
     for (const proposal of proposalList) {
@@ -220,6 +228,8 @@ const Proposal = (): JSX.Element => {
       const showWarning = verifyWarning(proposal.status, validityDate)
       const status = verifyStatus(proposal.status)
       const modal = verifyModal(proposal.modal)
+      const type = verifyType(proposal.operation)
+
       const item = {
         client: proposal.clientName,
         destination: proposal.destinationId,
@@ -227,6 +237,7 @@ const Proposal = (): JSX.Element => {
         isLate: showWarning,
         key: proposal.idProposal,
         menuItems: menuItemsList(status, proposal.idProposal),
+        modal,
         numio: proposal.numIO,
         opening,
         origin: proposal.originId,
@@ -234,8 +245,9 @@ const Proposal = (): JSX.Element => {
         responsible: proposal.responsible,
         shelfLife,
         status,
-        modal
+        type
       }
+
       array.push(item)
     }
     return array
