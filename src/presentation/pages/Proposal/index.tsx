@@ -201,6 +201,16 @@ const Proposal = (): JSX.Element => {
     return showWarning
   }
 
+  const verifyModal = (modal: string): string => {
+    if (modal === 'AIR') {
+      return 'aereo'
+    } else if (modal === 'SEA') {
+      return 'maritimo'
+    } else {
+      return 'rodoviario'
+    }
+  }
+
   const getProposalItems = (proposalList): any => {
     const array: any = []
     for (const proposal of proposalList) {
@@ -209,6 +219,7 @@ const Proposal = (): JSX.Element => {
       const validityDate = new Date(proposal.validityDate)
       const showWarning = verifyWarning(proposal.status, validityDate)
       const status = verifyStatus(proposal.status)
+      const modal = verifyModal(proposal.modal)
       const item = {
         client: proposal.clientName,
         destination: proposal.destinationId,
@@ -222,8 +233,8 @@ const Proposal = (): JSX.Element => {
         reference: proposal.reference,
         responsible: proposal.responsible,
         shelfLife,
-        status: status,
-        type: proposal.modal
+        status,
+        modal
       }
       array.push(item)
     }
