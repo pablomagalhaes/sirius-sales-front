@@ -52,7 +52,7 @@ const Proposal = (): JSX.Element => {
   const [orderAsc, setOrderAsc] = useState(true)
   const [orderBy, setOrderBy] = useState<string>('openingDate')
   const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
-  const [partnerList, setPartnerList] = useState<any[]>([])
+  const [, setPartnerList] = useState<any[]>([])
   const [partnerSimpleNameList, setPartnerSimpleNameList] = useState<any[]>([])
   const [proposalList, setProposalList] = useState<any[]>([])
   const [radioValue, setRadioValue] = useState('')
@@ -172,17 +172,6 @@ const Proposal = (): JSX.Element => {
     }
   }
 
-  const getClientSimpleName = (clientId): string[] => {
-    const finalList: string[] = []
-
-    partnerList?.forEach((item): void => {
-      if (Number(item.id) === Number(clientId)) {
-        finalList.push(String(item.simpleName))
-      }
-    })
-    return finalList
-  }
-
   const checkBusinessDays = (date): any => {
     const dateWeekday = date.getDay()
     switch (dateWeekday) {
@@ -212,6 +201,24 @@ const Proposal = (): JSX.Element => {
     return showWarning
   }
 
+  const verifyModal = (modal: string): string => {
+    if (modal === 'AIR') {
+      return 'aereo'
+    } else if (modal === 'SEA') {
+      return 'maritimo'
+    } else {
+      return 'rodoviario'
+    }
+  }
+
+  const verifyType = (type: String): string => {
+    if (type === 'FRETE - IMPORTAÇÃO') {
+      return 'importation'
+    } else {
+      return 'exportation'
+    }
+  }
+
   const getProposalItems = (proposalList): any => {
     const array: any = []
     for (const proposal of proposalList) {
@@ -220,22 +227,27 @@ const Proposal = (): JSX.Element => {
       const validityDate = new Date(proposal.validityDate)
       const showWarning = verifyWarning(proposal.status, validityDate)
       const status = verifyStatus(proposal.status)
+      const modal = verifyModal(proposal.modal)
+      const type = verifyType(proposal.operation)
+
       const item = {
-        client: getClientSimpleName(proposal.client),
+        client: proposal.clientName,
         destination: proposal.destinationId,
         iconterm: proposal.incotermId,
         isLate: showWarning,
         key: proposal.idProposal,
         menuItems: menuItemsList(status, proposal.idProposal),
+        modal,
         numio: proposal.numIO,
         opening,
         origin: proposal.originId,
         reference: proposal.reference,
         responsible: proposal.responsible,
         shelfLife,
-        status: status,
-        type: proposal.modal
+        status,
+        type
       }
+
       array.push(item)
     }
     return array

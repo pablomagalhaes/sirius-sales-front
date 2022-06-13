@@ -30,7 +30,7 @@ export interface ItemModalData {
   height: string | null
   length: string | null
   rawWeight: string | null
-  type: string | null
+  type: any | null
   width: string | null
   id: number | null
   stack: boolean

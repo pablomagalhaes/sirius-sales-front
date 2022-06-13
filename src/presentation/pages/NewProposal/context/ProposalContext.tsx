@@ -24,12 +24,11 @@ export const emptyProposalValue: Proposal = {
   idTransport: 'str', // step1 modal
   idOrigin: 'str', // id origem (if rod="NULL")
   idDestination: 'str', // id destino (if rod="NULL")
-  idBusinessPartnerAgent: 0, // step2 agent
+  idOriginCity: null,
+  idDestinationCity: null,
   idIncoterm: 'str', // step2 incoterm id
   cargo: {
     cargo: 'str', //
-    idPackaging: 0,
-    idContainerType: 'str',
     isDangerous: true, // step3 perigoso
     idImoType: 0, // id IMO
     idTemperature: 0, // step 3 id temperatura
@@ -43,12 +42,13 @@ export const emptyProposalValue: Proposal = {
   idFrequency: 0, // step 4 id frequency
   route: 'str', // step4 rota
   freeTime: false, // step4 freetime
-  vlFreeTime: 0, // step 4 value
-  nrFreeTimeDaysDeadline: 0, // step 4 deadline
-  transportIncluded: false,
-  clearenceIncluded: false,
+  vlFreeTime: null,
+  nrFreeTimeDaysDeadline: null,
   recurrency: 1, // 1
-  weeklyRecurrency: 'str' // "0101100" segunda quarta e quinta
+  weeklyRecurrency: 'str', // "0101100" segunda quarta e quinta
+  transportIncluded: false,
+  clearenceIncluded: null,
+  agents: []
 }
 
 interface ProposalContextProviderProps {

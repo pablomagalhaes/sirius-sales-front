@@ -216,7 +216,9 @@ const Step3 = ({
             height: completeDecimalPlaces(cargo.valueHeight),
             length: completeDecimalPlaces(cargo.valueLength),
             rawWeight: completeDecimalPlaces(cargo.valueGrossWeight),
-            type: marineFCL() ? '' : response[0].filter((pack) => Number(pack.id) === cargo.cdCargoType)[0]?.packaging, // TODO inserir esse campo depois de ajustada a tabela (container ou package)
+            type: marineFCL()
+              ? response[0].filter((cont) => cont.id === cargo.idContainerType)[0]?.id
+              : response[0].filter((pack) => Number(pack.id) === cargo.idPackaging)[0]?.id,
             width: completeDecimalPlaces(cargo.valueWidth),
             id: id++,
             stack: cargo.isStacked
@@ -240,8 +242,6 @@ const Step3 = ({
           ...proposal.cargo,
           cargo: data.description,
           idCargoContractingType: modal === 'SEA' ? (specificationsList.map((spe) => spe.toLowerCase()).indexOf(data.specifications) + 1) : 1,
-          idPackaging: 0, // esse campo vai ser realocado para CargoVolume
-          idContainerType: 'nul', // esse campo vai ser realocado para CargoVolume
           isDangerous: data.dangerous,
           idImoType: Number(data.imo),
           codeUn: Number(data.codUn),
@@ -260,7 +260,9 @@ const Step3 = ({
       newCargoVolumes.push({
         id: row.idCargoVolume === undefined ? null : row.idCargoVolume,
         idCargo: row.idCargo === undefined ? null : row.idCargo,
-        cdCargoType: marineFCL() ? 1 : packagingList.filter((pack) => pack.packaging === row.type)[0]?.id, // TODO quando for marineFCL salvar id (string 4 digitos)
+        cdCargoType: modal === 'SEA' ? (specificationsList.map((spe) => spe.toLowerCase()).indexOf(data.specifications) + 1) : 1,
+        idContainerType: 'str', // !marineFCL() ? null : containerTypeList.filter((cont) => cont.type === row.type)[0]?.id,
+        idPackaging: 0, // marineFCL() ? null : packagingList.filter((pack) => pack.packaging === row.type)[0]?.id,
         valueQuantity: Number(row.amount),
         valueGrossWeight: Number(row.rawWeight?.replace(',', '.')),
         valueCubage: Number(row.cubage?.replace(',', '.')),
