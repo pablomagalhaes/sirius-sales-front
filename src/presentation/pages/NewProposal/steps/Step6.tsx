@@ -93,6 +93,62 @@ const Step6 = ({
     tableData: []
   })
 
+  const getServiceType = (): any => {
+    let service
+
+    switch (proposal.idTransport) {
+      case 'AIR' :
+        service = 'FRETE AÉREO'
+        break
+      case 'LAND':
+        service = 'FRETE RODOVIÁRIO INTERNACIONAL'
+        break
+      case 'SEA':
+        service = 'FRETE MARITIMO'
+        break
+    }
+
+    return serviceList.filter((serv) => serv.service === service)[0]
+      ?.id
+  }
+
+  const getFreightCost = (): Cost => {
+    let freightCost = proposal.costs.find(
+      (cost) => cost.costType === 'Frete')
+    if (freightCost === undefined) {
+      freightCost = {
+        id: null,
+        idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
+        idService: getServiceType(),
+        billingType: '',
+        containerType: null,
+        valuePurchasePercent: null,
+        valueMinimumPurchase: null,
+        valueSalePercent: 0,
+        valueMinimumSale: null,
+        idBusinessPartnerAgent: 0,
+        costType: 'Frete',
+        idCurrencySale: data.currency,
+        idCurrencyPurchase: data.currency,
+        valueSale: Number(data.value.replace(',', '.')),
+        valuePurchase: 0,
+        isPurchase: false,
+        isSale: true
+      }
+    } else {
+      freightCost = {
+        ...freightCost,
+        idCurrencySale: data.currency,
+        idCurrencyPurchase: data.currency,
+        costType: 'Frete',
+        idService: getServiceType(),
+        valueSale: Number(data.value.replace(',', '.')
+        )
+      }
+    }
+    return freightCost
+  }
+
   useImperativeHandle(updateTableIdsRef, () => ({
     updateStep6Ids () {
       let tableDataId = 0
@@ -138,6 +194,9 @@ const Step6 = ({
       }).then(() => {
         const waitAllData = async (): Promise<void> => {
           for (const cost of proposal.costs) {
+            if (cost.costType === 'Frete') {
+              setData({ ...data, currency: String(cost.idCurrencySale), value: completeDecimalPlaces(cost.valueSale) })
+            }
             const getContainer = new Promise((resolve) => {
               if (specifications === 'fcl') {
                 API.getContainerType(cost.containerType)
@@ -247,7 +306,7 @@ const Step6 = ({
   useEffect(() => {
     let actualCostArray = proposal.costs
     actualCostArray = actualCostArray.filter(
-      (cost) => cost.costType !== 'Tarifa' && cost
+      (cost) => cost.costType !== 'Tarifa' && cost && cost.costType !== 'Frete'
     )
     const newFareItems: Cost[] = []
     tableData.forEach((row) => {
@@ -296,6 +355,7 @@ const Step6 = ({
         valueTotalPurchase: 0 // total compra da moeda
       })
     })
+    newFareItems.push(getFreightCost())
     setProposal({
       ...proposal,
       totalCosts: actualTotalCostArray.concat(newTotalCostFare),

@@ -210,7 +210,7 @@ const Step5 = ({
     }
 
     let actualCostArray = proposal.costs
-    actualCostArray = actualCostArray.filter((cost) => cost.costType === 'Tarifa' && cost)
+    actualCostArray = actualCostArray.filter((cost) => (cost.costType === 'Tarifa' || cost.costType === 'Frete') && cost)
     const newOriginTableData: Cost[] = []
     dataOrigin.forEach((row) => {
       newOriginTableData.push({

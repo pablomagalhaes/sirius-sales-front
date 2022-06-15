@@ -55,8 +55,8 @@ const Step1 = ({
   const [partnerList, setPartnerList] = useState<any[]>([])
   const [data, setData] = useState({
     proposal: '',
-    serviceDesemb: '',
-    serviceTransport: '',
+    serviceDesemb: false,
+    serviceTransport: false,
     proposalValue: '',
     modal: '',
     requester: ''
@@ -64,8 +64,6 @@ const Step1 = ({
   const [showPopUp, setShowPopUp] = useState(false)
   const [modalCopy, setModalCopy] = useState('')
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
-
-  console.log(data)
 
   useEffect(() => {
     const getAgents = new Promise<void>((resolve) => {
@@ -92,8 +90,8 @@ const Step1 = ({
       void Promise.all([getAgents, getPartners, getPartnerCostumer]).then((response) => {
         setData({
           proposal: proposal.proposalType,
-          serviceDesemb: proposal.clearenceIncluded ? 'desemb' : '',
-          serviceTransport: proposal.transportIncluded ? 'transport' : '',
+          serviceDesemb: proposal.clearenceIncluded,
+          serviceTransport: proposal.transportIncluded,
           modal: proposal.idTransport,
           proposalValue: String(response[2]),
           requester: proposal.requester
@@ -114,8 +112,8 @@ const Step1 = ({
         ? agentsList.filter((agt) => agt.businessPartner.simpleName === data.proposalValue)[0]?.businessPartner.id
         : partnerList.filter((ptn) => ptn.businessPartner.simpleName === data.proposalValue)[0]?.businessPartner.id,
       requester: data.requester,
-      transportIncluded: data.serviceTransport === 'transport',
-      clearenceIncluded: data.serviceDesemb === 'desemb'
+      transportIncluded: data.serviceTransport,
+      clearenceIncluded: data.serviceDesemb
     })
   }, [data])
 
@@ -191,8 +189,8 @@ const Step1 = ({
             ? <Grid item xs={6}>
               <FormLabel component="legend">{I18n.t('pages.newProposal.step1.services')}</FormLabel>
               <FormGroup row aria-label="services">
-                <FormControlLabel value="transport" control={<Checkbox checked={data.serviceTransport === 'transport'} onChange={e => setData({ ...data, serviceTransport: e.target.value })} />} label={I18n.t('pages.newProposal.step1.transport')} />
-                <FormControlLabel value="desemb" control={<Checkbox checked={data.serviceDesemb === 'desemb'} onChange={e => setData({ ...data, serviceDesemb: e.target.value })}/>} label={I18n.t('pages.newProposal.step1.readiness')} />
+                <FormControlLabel value="transport" control={<Checkbox checked={data.serviceTransport} onChange={e => setData({ ...data, serviceTransport: e.target.checked })} />} label={I18n.t('pages.newProposal.step1.transport')} />
+                <FormControlLabel value="desemb" control={<Checkbox checked={data.serviceDesemb} onChange={e => setData({ ...data, serviceDesemb: e.target.checked })}/>} label={I18n.t('pages.newProposal.step1.readiness')} />
               </FormGroup>
             </Grid>
             : <Grid item xs={6}> </Grid>
@@ -261,6 +259,7 @@ const Step1 = ({
               <IconComponent name={transport.id} defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} key={`icon-${i}`} />
             </IconContainer>
           </div>
+
         ))}
       </RadioGroup>
       {showPopUp &&

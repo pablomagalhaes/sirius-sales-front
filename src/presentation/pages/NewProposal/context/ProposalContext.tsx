@@ -47,7 +47,7 @@ export const emptyProposalValue: Proposal = {
   recurrency: 1, // 1
   weeklyRecurrency: 'str', // "0101100" segunda quarta e quinta
   transportIncluded: false,
-  clearenceIncluded: null,
+  clearenceIncluded: false,
   agents: []
 }
 
