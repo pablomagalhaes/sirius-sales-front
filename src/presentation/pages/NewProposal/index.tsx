@@ -24,7 +24,6 @@ import Step3 from './steps/Step3'
 import Step4 from './steps/Step4'
 import Step5 from './steps/Step5'
 import Step6 from './steps/Step6'
-import { TableRows } from '../Proposal/constants'
 import { useHistory, useLocation } from 'react-router-dom'
 import { ItemModalData } from '../../components/ItemModal/ItemModal'
 import { ProposalContext, ProposalProps, emptyProposalValue } from './context/ProposalContext'
@@ -45,7 +44,6 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [showSaveMessage, setShowSaveMessage] = useState(false)
   const [specifications, setSpecifications] = useState('')
   const [step3TableItems, setStep3TableItems] = useState<ItemModalData[]>([])
-  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
   const [serviceList, setServiceList] = useState<any[]>([])
   const [containerTypeList, setContainerTypeList] = useState<any[]>([])
   const [leavingPage, setLeavingPage] = useState(false)
@@ -58,8 +56,12 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [cw, setCw] = useState(0)
   const [cwSale, setCwSale] = useState(0)
 
+  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+
   const history = useHistory()
+
   const location = useLocation()
+
   const updateTable3IdsRef = useRef()
   const updateTable5IdsRef = useRef()
   const updateTable6IdsRef = useRef()
@@ -267,6 +269,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       setInvalidInput(true)
     }
   }
+
   const floatingButtonMenuItems = [
     {
       iconType: 'save',
@@ -287,23 +290,9 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     }
   ]
 
-  const referenceCode = TableRows()
-
   const getEnchargedFullname = (): string => {
     const user = JSON.parse(localStorage.getItem('user') || '{}')
     return `${String(user.firstname)}  ${String(user.lastname)}`
-  }
-
-  const fullname = getEnchargedFullname()
-
-  const saveMessageInfo = {
-    closable: true,
-    severity: 'success',
-    buttonText: I18n.t('pages.newProposal.saveMessage.buttonText'),
-    closeAlert: () => { setShowSaveMessage(false) },
-    closeMessage: I18n.t('pages.newProposal.saveMessage.closeMessage'),
-    goBack: () => { history.push('/proposta') },
-    message: `${String(I18n.t('pages.newProposal.saveMessage.message'))} ${String(referenceCode[0].reference)}.`
   }
 
   const MessageExitDialog = (): JSX.Element => {
@@ -468,7 +457,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           {I18n.t('pages.newProposal.encharged')}
           <IconComponent name="user" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
           <Username>
-            {fullname}
+            {getEnchargedFullname()}
           </Username>
           {editMode && proposal.idStatus === 1
             ? <Status className="open">{I18n.t('pages.proposal.table.openLabel')}</Status>
@@ -604,7 +593,15 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       }
       {showSaveMessage &&
         <MessageContainer>
-          <Messages {...saveMessageInfo} />
+          <Messages
+            closable={true}
+            severity={'success'}
+            buttonText={I18n.t('pages.newProposal.saveMessage.buttonText')}
+            closeAlert={() => { setShowSaveMessage(false) } }
+            closeMessage={I18n.t('pages.newProposal.saveMessage.closeMessage')}
+            goBack={() => { history.push('/proposta') } }
+            message={`${String(I18n.t('pages.newProposal.saveMessage.message'))} ${String(proposal?.referenceProposal)}.`}
+          />
         </MessageContainer>}
     </RootContainer>
   )
