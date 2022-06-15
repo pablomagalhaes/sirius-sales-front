@@ -118,10 +118,10 @@ const Step4 = ({
           route: proposal.route,
           client: proposal.referenceClientProposal,
           freeTime: proposal.freeTime ? 'hired' : 'notHired',
-          deadline: '',
+          deadline: String(proposal.nrFreeTimeDaysDeadline),
+          value: String(proposal.vlFreeTime),
           generalObs: proposal.generalObservations,
           internalObs: proposal.internalObservations,
-          value: '',
           recurrency: String(proposal.recurrency),
           weeklyRecurrency: proposal.weeklyRecurrency
         })
@@ -138,6 +138,8 @@ const Step4 = ({
       transitTime: Number(data.transitTime),
       route: data.route,
       freeTime: data.freeTime === 'hired',
+      nrFreeTimeDaysDeadline: Number(data.deadline),
+      vlFreeTime: Number(data.value.replace(',', '.')),
       idFrequency: Number(data.frequency),
       recurrency: Number(data.recurrency),
       weeklyRecurrency: data.weeklyRecurrency,

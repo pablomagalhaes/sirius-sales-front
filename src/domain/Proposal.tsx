@@ -50,6 +50,6 @@ export interface Proposal {
   recurrency: number// 1
   weeklyRecurrency: string // "0101100" segunda quarta e quinta
   transportIncluded: boolean
-  clearenceIncluded: number | null
+  clearenceIncluded: boolean
   agents: Agent[]
 }
