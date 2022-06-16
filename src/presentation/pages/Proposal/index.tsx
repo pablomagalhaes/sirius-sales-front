@@ -421,7 +421,7 @@ const Proposal = (): JSX.Element => {
     if (selectedClients !== undefined) {
       setFilter((filter: any) => ({
         ...filter,
-        idBusinessPartnerCostumer: [selectedClients]
+        customerId: [selectedClients]
       }))
     }
 
@@ -541,7 +541,7 @@ const Proposal = (): JSX.Element => {
 
   const cleanFilter = (): void => {
     delete filter.referenceProposal
-    delete filter.idBusinessPartnerCostumer
+    delete filter.customerId
     delete filter.operationType
     delete filter.idOrigin
     delete filter.idDestination

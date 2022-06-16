@@ -5,7 +5,7 @@ export const emptyProposalValue: Proposal = {
   idProposal: null,
   idProposalImportFreight: null,
   referenceProposal: 'Ref-000000', // referencia proposta
-  idBusinessPartnerCostumer: 0, // step1 agent client
+  customerId: 0, // step1 agent client
   operationType: 'FRETE - IMPORTAÇÃO', // FRETE IMPORTACAO
   idStatus: 1, // sempre passar 1
   codeUserCreation: 0, // codigo do usuario
