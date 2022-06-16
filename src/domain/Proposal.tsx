@@ -7,7 +7,7 @@ export interface Proposal {
   idProposal?: number | null
   idProposalImportFreight?: number | null
   referenceProposal: string // referencia proposta
-  idBusinessPartnerCostumer: number // cliente step1
+  customerId: number // cliente step1
   operationType: string // FRETE IMPORTACAO
   idStatus: number // sempre passar 1
   codeUserCreation: number // codigo do usuario

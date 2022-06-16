@@ -80,7 +80,7 @@ const Step1 = ({
 
     if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
       const getPartnerCostumer = new Promise<void>((resolve) => {
-        API.getBusinessPartnerCostumer(proposal.idBusinessPartnerCostumer)
+        API.getBusinessPartnerCostumer(proposal.customerId)
           .then((response) => {
             resolve(response?.simpleName)
           })
@@ -108,7 +108,7 @@ const Step1 = ({
       ...proposal,
       proposalType: data.proposal,
       idTransport: data.modal,
-      idBusinessPartnerCostumer: data.proposal === 'routing'
+      customerId: data.proposal === 'routing'
         ? agentsList.filter((agt) => agt.businessPartner.simpleName === data.proposalValue)[0]?.businessPartner.id
         : partnerList.filter((ptn) => ptn.businessPartner.simpleName === data.proposalValue)[0]?.businessPartner.id,
       requester: data.requester,
