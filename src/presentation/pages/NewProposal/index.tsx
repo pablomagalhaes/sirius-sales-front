@@ -108,25 +108,28 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     if (location.state?.eventType === 'duplicate') {
       setEditMode(false)
       setduplicateMode(true)
-      const proposalObject = [proposal].reduce((object) => {
-        object.cargo.id = null
-        object.validityDate = ''
-        object.idStatus = 1
-        object.openingDate = formatDate()
-        object.cargo.cargoVolumes.map(cargoVolume => {
-          cargoVolume.id = null; cargoVolume.idCargo = null; return cargoVolume
-        })
-        object.totalCosts.map(totalCost => {
+      const proposalObject = {
+        ...proposal,
+        validityDate: '',
+        idStatus: 1,
+        openingDate: formatDate(),
+        cargo: {
+          ...proposal.cargo,
+          id: null,
+          cargoVolumes: proposal.cargo.cargoVolumes.map(cargoVolume => {
+            cargoVolume.id = null; cargoVolume.idCargo = null; return cargoVolume
+          })
+        },
+        totalCosts: proposal.totalCosts.map(totalCost => {
           totalCost.id = null; totalCost.idProposal = null; return totalCost
-        })
-        object.costs.map(cost => {
+        }),
+        costs: proposal.costs.map(cost => {
           cost.id = null; cost.idProposal = null; return cost
-        })
-        object.agents.map(agt => {
+        }),
+        agents: proposal.agents.map(agt => {
           agt.id = null; agt.proposalImportFreightId = null; return agt
         })
-        return object
-      }, 0)
+      }
       setProposal(proposalObject)
     }
   }

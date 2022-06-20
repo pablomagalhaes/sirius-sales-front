@@ -33,7 +33,7 @@ const SurchargeTable = ({ data, dataFields, remove, edit }: TableData): JSX.Elem
     if (item.type === 'FIXO' || item.type === 'BL') {
       return (
         <FormatValue>
-          -
+          {dataFields.currency} {item.saleValue}
         </FormatValue>
       )
     } else {

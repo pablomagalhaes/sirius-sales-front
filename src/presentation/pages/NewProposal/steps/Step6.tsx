@@ -691,7 +691,7 @@ const Step6 = ({
           containerItems={containerItems}
           currency={data.currency}
         />
-        {tableData.length !== 0 && loadedTable && (
+        {data.value.length > 0 && data.currency.length > 0 && (
           <TotalSurcharge
             currency={data.currency}
             value={data.value}

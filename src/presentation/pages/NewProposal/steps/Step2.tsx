@@ -135,7 +135,7 @@ const Step2 = ({
   const loadAllAgents = async (agentList: Agent[]): Promise<AgentsProps[]> => {
     const newAgentsList: AgentsProps[] = []
     for (const agent of agentList) {
-      void getAgent(Number(agent.idBusinessPartnerAgent)).then((response) => {
+      await getAgent(Number(agent.idBusinessPartnerAgent)).then((response) => {
         newAgentsList.push({ name: String(response), id: agent.id })
       })
     }
@@ -240,7 +240,7 @@ const Step2 = ({
         : data.destiny.split(' - ')[0],
       idIncoterm: data.incoterm,
       cargoCollectionAddress: data.collection,
-      agents: newAgent
+      agents: newAgent.length > 0 ? newAgent : proposal.agents
     })
   }, [data])
 
