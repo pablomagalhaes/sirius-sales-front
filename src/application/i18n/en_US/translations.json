@@ -110,7 +110,7 @@
       },
       "step6": {
         "title": "Freight",
-        "subtitle": "Inform the rates for the freight service",
+        "subtitle": "Inform the rates for the freight service.",
         "origin": "Origin",
         "totalOrigin": "Total origin costs:",
         "destiny": "Destiny",
