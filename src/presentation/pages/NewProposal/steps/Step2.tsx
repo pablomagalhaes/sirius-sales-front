@@ -20,54 +20,49 @@ import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import { Agent } from '../../../../domain/Agent'
 
 interface Step2Props {
-  theme: any
-  proposalType: string
   invalidInput: boolean
+  modal: string
+  proposalType: string
+  setAgentList: (agent: string[]) => void
   setCompleted: (completed: any) => void
   setFilled: (filled: any) => void
-  modal: string
-  setAgentList: (agent: string[]) => void
+  theme: any
   updateAgentsIdsRef: any
 }
 
 interface AgentsProps {
-  name: string
   id?: number | null
+  name: string
 }
 
 interface DataProps {
-  origin: string
-  destiny: string
   agents: AgentsProps[]
-  incoterm: string
   collection: string
-  oriCountry: string
-  oriState: string
-  oriCity: string
+  destCity: string
   destCountry: string
   destState: string
-  destCity: string
+  destiny: string
+  incoterm: string
+  oriCity: string
+  oriCountry: string
+  oriState: string
+  origin: string
 }
 
 const Step2 = ({
-  theme,
-  proposalType,
   invalidInput,
+  modal,
+  proposalType,
+  setAgentList,
   setCompleted,
   setFilled,
-  modal,
-  setAgentList,
+  theme,
   updateAgentsIdsRef
 }: Step2Props): JSX.Element => {
-  const [incotermList, setIncotermList] = useState<any[]>([])
-  const [incotermFilteredList, setIncotermFilteredList] = useState<any[]>([])
-  const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
   const [agentsList, setAgentsList] = useState<any[]>([])
   const [countriesList, setCountriesList] = useState<any[]>([])
-  const [oriStatesList, setOriStatesList] = useState<any[]>([])
-  const [oriCitiesList, setOriCitiesList] = useState<any[]>([])
-  const [destStatesList, setDestStatesList] = useState<any[]>([])
   const [destCitiesList, setDestCitiesList] = useState<any[]>([])
+  const [destStatesList, setDestStatesList] = useState<any[]>([])
   const [data, setData] = useState<DataProps>({
     origin: '',
     destiny: '',
@@ -81,10 +76,16 @@ const Step2 = ({
     destState: '',
     destCity: ''
   })
-  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+  const [incotermFilteredList, setIncotermFilteredList] = useState<any[]>([])
+  const [incotermList, setIncotermList] = useState<any[]>([])
   const [invalidOriDest, setInvalidOriDest] = useState('')
-  const [pageDidLoad, setPageDidLoad] = useState(0)
   const [loadedAgentsData, setLoadedAgentsData] = useState(false)
+  const [oriCitiesList, setOriCitiesList] = useState<any[]>([])
+  const [oriStatesList, setOriStatesList] = useState<any[]>([])
+  const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
+  const [pageDidLoad, setPageDidLoad] = useState(0)
+
+  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
   useImperativeHandle(updateAgentsIdsRef, () => ({
     updateAgentsIdsRef () {
@@ -113,14 +114,14 @@ const Step2 = ({
     void getOriginDestinationListByModal(modal)
     setData({
       ...data,
-      destiny: '',
-      origin: '',
       destCity: '',
-      destState: '',
       destCountry: '',
+      destState: '',
+      destiny: '',
       oriCity: '',
+      oriCountry: '',
       oriState: '',
-      oriCountry: ''
+      origin: ''
     })
   }, [modal])
 
@@ -195,17 +196,17 @@ const Step2 = ({
       void loadAllAgents(proposal.agents).then((agentsList) => {
         void Promise.all([getOrigin, getDestiny]).then((values: any[]) => {
           setData({
-            origin: modal !== 'LAND' ? String(values[0]) : '',
-            destiny: modal !== 'LAND' ? String(values[1]) : '',
             agents: agentsList,
-            incoterm: proposal.idIncoterm,
             collection: proposal.cargoCollectionAddress,
-            oriCountry: modal === 'LAND' ? String(values[0]?.state?.country?.name) : '',
-            oriState: modal === 'LAND' ? String(values[0]?.state?.initials) : '',
-            oriCity: modal === 'LAND' ? String(values[0]?.name) : '',
+            destCity: modal === 'LAND' ? String(values[1]?.name) : '',
             destCountry: modal === 'LAND' ? String(values[1]?.state?.country?.name) : '',
             destState: modal === 'LAND' ? String(values[1]?.state?.initials) : '',
-            destCity: modal === 'LAND' ? String(values[1]?.name) : ''
+            destiny: modal !== 'LAND' ? String(values[1]) : '',
+            incoterm: proposal.idIncoterm,
+            oriCity: modal === 'LAND' ? String(values[0]?.name) : '',
+            oriCountry: modal === 'LAND' ? String(values[0]?.state?.country?.name) : '',
+            oriState: modal === 'LAND' ? String(values[0]?.state?.initials) : '',
+            origin: modal !== 'LAND' ? String(values[0]) : ''
           })
           loadStatesList('origin', String(values[0]?.state?.country?.id))
           loadStatesList('destiny', String(values[1]?.state?.country?.id))
@@ -245,12 +246,7 @@ const Step2 = ({
   }, [data])
 
   useEffect(() => {
-    if (
-      originDestinyFullfilled() &&
-      ((proposalType === 'client' && data.agents.length !== 0) ||
-        proposalType !== 'client') &&
-      data.incoterm.length !== 0
-    ) {
+    if (originDestinyFullfilled() && ((proposalType === 'client' && data.agents.length !== 0) || proposalType !== 'client') && data.incoterm.length !== 0) {
       setCompleted((currentState) => {
         return { ...currentState, step2: true }
       })
@@ -259,12 +255,7 @@ const Step2 = ({
         return { ...currentState, step2: false }
       })
     }
-    if (
-      originDestinyFullfilled() &&
-      (data.agents.length !== 0 ||
-        data.incoterm !== '' ||
-        data.collection !== '')
-    ) {
+    if (originDestinyFullfilled() && (data.agents.length !== 0 || data.incoterm !== '' || data.collection !== '')) {
       setFilled((currentState) => {
         return { ...currentState, step2: true }
       })

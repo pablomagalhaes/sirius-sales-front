@@ -110,7 +110,7 @@
       },
       "step6": {
         "title": "Frete",
-        "subtitle": "Informe as tarifas para o serviço de frete",
+        "subtitle": "Informe as tarifas para o serviço de frete.",
         "origin": "Origin",
         "totalOrigin": "Total origin costs:",
         "destiny": "Destiny",
