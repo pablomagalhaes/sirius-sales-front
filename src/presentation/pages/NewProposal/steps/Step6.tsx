@@ -597,7 +597,7 @@ const Step6 = ({
                 freeSolo
                 value={data.currency}
                 onChange={(e, newValue) =>
-                  setData({ ...data, currency: newValue })
+                  setData({ ...data, currency: String(newValue ?? '') })
                 }
                 options={currencyList.map((item) => item.id)}
                 renderInput={(params) => (
