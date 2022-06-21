@@ -246,7 +246,9 @@ const Step2 = ({
   }, [data])
 
   useEffect(() => {
-    if (originDestinyFullfilled() && ((proposalType === 'client' && data.agents.length !== 0) || proposalType !== 'client') && data.incoterm.length !== 0) {
+    if (originDestinyFullfilled() && ((proposalType === 'client' && data.agents.length !== 0) ||
+    proposalType !== 'client') && data.incoterm.length !== 0 && (data.collection !== '' &&
+    (data.incoterm === 'EXW' || data.incoterm === 'FCA' || data.incoterm === 'DAP'))) {
       setCompleted((currentState) => {
         return { ...currentState, step2: true }
       })
