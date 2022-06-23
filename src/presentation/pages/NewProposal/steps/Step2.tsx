@@ -245,27 +245,42 @@ const Step2 = ({
     })
   }, [data])
 
+  const validateIncoterm = (): boolean => {
+    return data.incoterm.length !== 0 && data.incoterm !== '' &&
+        (data.incoterm === 'EXW' || data.incoterm === 'FCA' || data.incoterm === 'DAP')
+  }
+
+  const validateClient = (): boolean => {
+    return ((proposalType === 'client' && data.agents.length !== 0) || (proposalType !== 'client' && data.agents.length !== 0))
+  }
+
+  const validateFormComplete = (): void => {
+    if (originDestinyFullfilled() && (validateClient() && validateIncoterm() && (data.collection !== ''))) {
+      setCompleted((currentState) => {
+        return { ...currentState, step2: true }
+      })
+    } else {
+      setCompleted((currentState) => {
+        return { ...currentState, step2: false }
+      })
+    }
+  }
+
+  const validateFilled = (): void => {
+    if (originDestinyFullfilled() && (data.agents.length !== 0 || data.collection !== '')) {
+      setFilled((currentState) => {
+        return { ...currentState, step2: true }
+      })
+    } else {
+      setFilled((currentState) => {
+        return { ...currentState, step2: false }
+      })
+    }
+  }
+
   useEffect(() => {
-    if (originDestinyFullfilled() && ((proposalType === 'client' && data.agents.length !== 0) ||
-    proposalType !== 'client') && data.incoterm.length !== 0 && (data.collection !== '' &&
-    (data.incoterm === 'EXW' || data.incoterm === 'FCA' || data.incoterm === 'DAP'))) {
-      setCompleted((currentState) => {
-        return { ...currentState, step2: true }
-      })
-    } else {
-      setCompleted((currentState) => {
-        return { ...currentState, step2: false }
-      })
-    }
-    if (originDestinyFullfilled() && (data.agents.length !== 0 || data.incoterm !== '' || data.collection !== '')) {
-      setFilled((currentState) => {
-        return { ...currentState, step2: true }
-      })
-    } else {
-      setFilled((currentState) => {
-        return { ...currentState, step2: false }
-      })
-    }
+    validateFormComplete()
+    validateFilled()
   }, [data, proposalType, invalidOriDest])
 
   const originDestinyFullfilled = (): boolean => {
