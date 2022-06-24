@@ -22,29 +22,30 @@ import { NumberInput, StyledPaper } from '../../pages/NewProposal/steps/StepsSty
 import FormatNumber from '../../../application/utils/formatNumber'
 
 export interface ItemModalData {
-  idCargoVolume?: number | null
-  idCargo?: number | null
   amount: string
   cubage: string | null
   diameter: string | null
   height: string | null
+  id: number | null
+  idCargo?: number | null
+  idCargoVolume?: number | null
   length: string | null
   rawWeight: string | null
-  type: string | null
-  width: string | null
-  id: number | null
   stack: boolean
+  type: any | null
+  width: string | null
 }
+
 interface ItemModalProps {
+  containerTypeList: any[]
   dataProp: ItemModalData
   handleAdd: (item) => void
-  open: boolean
-  setClose: () => void
-  title: string
   modal: string
-  specifications: string
-  containerTypeList: any[]
+  open: boolean
   packagingList: any[]
+  setClose: () => void
+  specifications: string
+  title: string
 }
 
 export const initialState = {
@@ -52,30 +53,31 @@ export const initialState = {
   cubage: null,
   diameter: null,
   height: null,
+  id: null,
   length: null,
   rawWeight: null,
+  stack: false,
   type: null,
-  width: null,
-  id: null,
-  stack: false
+  width: null
 }
 
 const ItemModal = ({
+  containerTypeList,
   dataProp,
   handleAdd,
-  open,
-  setClose,
-  title,
   modal,
+  open,
+  packagingList,
+  setClose,
   specifications,
-  containerTypeList,
-  packagingList
+  title
 }: ItemModalProps): JSX.Element => {
+  const [data, setData] = useState<ItemModalData>(initialState)
+  const [didMount, setDidMount] = useState(false)
+  const [invalidInput, setInvalidInput] = useState(false)
+
   const rgxFloat = /^[0-9]*,?[0-9]*$/
   const rgxInt = /^[0-9]*$/
-  const [data, setData] = useState<ItemModalData>(initialState)
-  const [invalidInput, setInvalidInput] = useState(false)
-  const [didMount, setDidMount] = useState(false)
 
   useEffect(() => {
     if (dataProp !== initialState) {
@@ -89,6 +91,7 @@ const ItemModal = ({
     setDidMount(false)
     setClose()
   }
+
   const marineFCL = (): boolean => {
     return modal === 'SEA' && specifications === 'fcl'
   }
@@ -130,6 +133,7 @@ const ItemModal = ({
       setInvalidInput(true)
     }
   }
+
   const getContainerTypeList = (): string[] => {
     const finalList: string[] = []
 
@@ -372,4 +376,5 @@ const ItemModal = ({
     </Modal >
   )
 }
+
 export default ItemModal

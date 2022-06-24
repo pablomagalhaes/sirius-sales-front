@@ -118,10 +118,10 @@ const Step4 = ({
           route: proposal.route,
           client: proposal.referenceClientProposal,
           freeTime: proposal.freeTime ? 'hired' : 'notHired',
-          deadline: '',
+          deadline: String(proposal.nrFreeTimeDaysDeadline),
+          value: String(proposal.vlFreeTime),
           generalObs: proposal.generalObservations,
           internalObs: proposal.internalObservations,
-          value: '',
           recurrency: String(proposal.recurrency),
           weeklyRecurrency: proposal.weeklyRecurrency
         })
@@ -138,6 +138,8 @@ const Step4 = ({
       transitTime: Number(data.transitTime),
       route: data.route,
       freeTime: data.freeTime === 'hired',
+      nrFreeTimeDaysDeadline: Number(data.deadline),
+      vlFreeTime: Number(data.value.replace(',', '.')),
       idFrequency: Number(data.frequency),
       recurrency: Number(data.recurrency),
       weeklyRecurrency: data.weeklyRecurrency,
@@ -268,46 +270,48 @@ const Step4 = ({
     const friday = (document.getElementById('friday') as HTMLInputElement)
     const saturday = (document.getElementById('saturday') as HTMLInputElement)
 
-    sunday.value = weeklyRecurrency.charAt(0)
-    if (sunday.value === '1') {
-      sunday.classList.remove('disabledDay')
-      sunday.classList.add('activeDay')
-    }
+    if (weeklyRecurrency.length > 0) {
+      sunday.value = weeklyRecurrency.charAt(0)
+      if (sunday.value === '1') {
+        sunday.classList.remove('disabledDay')
+        sunday.classList.add('activeDay')
+      }
 
-    monday.value = weeklyRecurrency.charAt(1)
-    if (monday.value === '1') {
-      monday.classList.remove('disabledDay')
-      monday.classList.add('activeDay')
-    }
+      monday.value = weeklyRecurrency.charAt(1)
+      if (monday.value === '1') {
+        monday.classList.remove('disabledDay')
+        monday.classList.add('activeDay')
+      }
 
-    tuesday.value = weeklyRecurrency.charAt(2)
-    if (tuesday.value === '1') {
-      tuesday.classList.remove('disabledDay')
-      tuesday.classList.add('activeDay')
-    }
+      tuesday.value = weeklyRecurrency.charAt(2)
+      if (tuesday.value === '1') {
+        tuesday.classList.remove('disabledDay')
+        tuesday.classList.add('activeDay')
+      }
 
-    wednesday.value = weeklyRecurrency.charAt(3)
-    if (wednesday.value === '1') {
-      wednesday.classList.remove('disabledDay')
-      wednesday.classList.add('activeDay')
-    }
+      wednesday.value = weeklyRecurrency.charAt(3)
+      if (wednesday.value === '1') {
+        wednesday.classList.remove('disabledDay')
+        wednesday.classList.add('activeDay')
+      }
 
-    thursday.value = weeklyRecurrency.charAt(4)
-    if (thursday.value === '1') {
-      thursday.classList.remove('disabledDay')
-      thursday.classList.add('activeDay')
-    }
+      thursday.value = weeklyRecurrency.charAt(4)
+      if (thursday.value === '1') {
+        thursday.classList.remove('disabledDay')
+        thursday.classList.add('activeDay')
+      }
 
-    friday.value = weeklyRecurrency.charAt(5)
-    if (friday.value === '1') {
-      friday.classList.remove('disabledDay')
-      friday.classList.add('activeDay')
-    }
+      friday.value = weeklyRecurrency.charAt(5)
+      if (friday.value === '1') {
+        friday.classList.remove('disabledDay')
+        friday.classList.add('activeDay')
+      }
 
-    saturday.value = weeklyRecurrency.charAt(6)
-    if (saturday.value === '1') {
-      saturday.classList.remove('disabledDay')
-      saturday.classList.add('activeDay')
+      saturday.value = weeklyRecurrency.charAt(6)
+      if (saturday.value === '1') {
+        saturday.classList.remove('disabledDay')
+        saturday.classList.add('activeDay')
+      }
     }
   }
 

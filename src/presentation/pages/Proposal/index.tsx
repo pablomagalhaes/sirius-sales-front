@@ -201,6 +201,24 @@ const Proposal = (): JSX.Element => {
     return showWarning
   }
 
+  const verifyModal = (modal: string): string => {
+    if (modal === 'AIR') {
+      return 'aereo'
+    } else if (modal === 'SEA') {
+      return 'maritimo'
+    } else {
+      return 'rodoviario'
+    }
+  }
+
+  const verifyType = (type: String): string => {
+    if (type === 'FRETE - IMPORTAÇÃO') {
+      return 'importation'
+    } else {
+      return 'exportation'
+    }
+  }
+
   const getProposalItems = (proposalList): any => {
     const array: any = []
     for (const proposal of proposalList) {
@@ -209,6 +227,9 @@ const Proposal = (): JSX.Element => {
       const validityDate = new Date(proposal.validityDate)
       const showWarning = verifyWarning(proposal.status, validityDate)
       const status = verifyStatus(proposal.status)
+      const modal = verifyModal(proposal.modal)
+      const type = verifyType(proposal.operation)
+
       const item = {
         client: proposal.clientName,
         destination: proposal.destinationId,
@@ -216,15 +237,17 @@ const Proposal = (): JSX.Element => {
         isLate: showWarning,
         key: proposal.idProposal,
         menuItems: menuItemsList(status, proposal.idProposal),
+        modal,
         numio: proposal.numIO,
         opening,
         origin: proposal.originId,
         reference: proposal.reference,
         responsible: proposal.responsible,
         shelfLife,
-        status: status,
-        type: proposal.modal
+        status,
+        type
       }
+
       array.push(item)
     }
     return array
@@ -398,7 +421,7 @@ const Proposal = (): JSX.Element => {
     if (selectedClients !== undefined) {
       setFilter((filter: any) => ({
         ...filter,
-        idBusinessPartnerCostumer: [selectedClients]
+        customerId: [selectedClients]
       }))
     }
 
@@ -518,7 +541,7 @@ const Proposal = (): JSX.Element => {
 
   const cleanFilter = (): void => {
     delete filter.referenceProposal
-    delete filter.idBusinessPartnerCostumer
+    delete filter.customerId
     delete filter.operationType
     delete filter.idOrigin
     delete filter.idDestination

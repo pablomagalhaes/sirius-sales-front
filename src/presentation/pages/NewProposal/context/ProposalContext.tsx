@@ -5,7 +5,7 @@ export const emptyProposalValue: Proposal = {
   idProposal: null,
   idProposalImportFreight: null,
   referenceProposal: 'Ref-000000', // referencia proposta
-  idBusinessPartnerCostumer: 0, // step1 agent client
+  customerId: 0, // step1 agent client
   operationType: 'FRETE - IMPORTAÇÃO', // FRETE IMPORTACAO
   idStatus: 1, // sempre passar 1
   codeUserCreation: 0, // codigo do usuario
@@ -24,12 +24,11 @@ export const emptyProposalValue: Proposal = {
   idTransport: 'str', // step1 modal
   idOrigin: 'str', // id origem (if rod="NULL")
   idDestination: 'str', // id destino (if rod="NULL")
-  idBusinessPartnerAgent: 0, // step2 agent
+  idOriginCity: null,
+  idDestinationCity: null,
   idIncoterm: 'str', // step2 incoterm id
   cargo: {
     cargo: 'str', //
-    idPackaging: 0,
-    idContainerType: 'str',
     isDangerous: true, // step3 perigoso
     idImoType: 0, // id IMO
     idTemperature: 0, // step 3 id temperatura
@@ -43,8 +42,13 @@ export const emptyProposalValue: Proposal = {
   idFrequency: 0, // step 4 id frequency
   route: 'str', // step4 rota
   freeTime: false, // step4 freetime
+  vlFreeTime: null,
+  nrFreeTimeDaysDeadline: null,
   recurrency: 1, // 1
-  weeklyRecurrency: 'str' // "0101100" segunda quarta e quinta
+  weeklyRecurrency: 'str', // "0101100" segunda quarta e quinta
+  transportIncluded: false,
+  clearenceIncluded: false,
+  agents: []
 }
 
 interface ProposalContextProviderProps {

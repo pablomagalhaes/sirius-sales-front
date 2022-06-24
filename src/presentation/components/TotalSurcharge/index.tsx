@@ -40,11 +40,17 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal }: 
         </TotalCargoContainer>
       </UpperContainer>
       <LowerContainer>
-        <ProfitLabel>{I18n.t('pages.newProposal.step6.profit')}</ProfitLabel>
-        <ProfitContainer>
-          <PositiveProfitIcon />
-          <PercentageLabel>5,74%</PercentageLabel>
-        </ProfitContainer>
+      {false &&
+          <>
+            <ProfitLabel>
+              {I18n.t('pages.newProposal.step6.profit')}
+            </ProfitLabel>
+            <ProfitContainer>
+              <PositiveProfitIcon />
+              <PercentageLabel>5,74%</PercentageLabel>
+            </ProfitContainer>
+          </>
+        }
         <TotalCargoContainer>
           <div>{I18n.t('pages.newProposal.step6.totalOtherFees')}</div>
           <div>{(totalOtherFare !== '0,00' && totalOtherFare !== '') ? `${currency} ${totalOtherFare}` : '-'}</div>

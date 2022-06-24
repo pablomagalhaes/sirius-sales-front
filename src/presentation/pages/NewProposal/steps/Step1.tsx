@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react'
 import {
   Checkbox,
   FormControlLabel,
+  FormGroup,
   FormLabel,
   Grid,
   InputAdornment,
@@ -54,7 +55,8 @@ const Step1 = ({
   const [partnerList, setPartnerList] = useState<any[]>([])
   const [data, setData] = useState({
     proposal: '',
-    services: '',
+    serviceDesemb: false,
+    serviceTransport: false,
     proposalValue: '',
     modal: '',
     requester: ''
@@ -78,7 +80,7 @@ const Step1 = ({
 
     if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
       const getPartnerCostumer = new Promise<void>((resolve) => {
-        API.getBusinessPartnerCostumer(proposal.idBusinessPartnerCostumer)
+        API.getBusinessPartnerCostumer(proposal.customerId)
           .then((response) => {
             resolve(response?.simpleName)
           })
@@ -88,7 +90,8 @@ const Step1 = ({
       void Promise.all([getAgents, getPartners, getPartnerCostumer]).then((response) => {
         setData({
           proposal: proposal.proposalType,
-          services: '',
+          serviceDesemb: proposal.clearenceIncluded,
+          serviceTransport: proposal.transportIncluded,
           modal: proposal.idTransport,
           proposalValue: String(response[2]),
           requester: proposal.requester
@@ -105,10 +108,12 @@ const Step1 = ({
       ...proposal,
       proposalType: data.proposal,
       idTransport: data.modal,
-      idBusinessPartnerCostumer: data.proposal === 'routing'
+      customerId: data.proposal === 'routing'
         ? agentsList.filter((agt) => agt.businessPartner.simpleName === data.proposalValue)[0]?.businessPartner.id
         : partnerList.filter((ptn) => ptn.businessPartner.simpleName === data.proposalValue)[0]?.businessPartner.id,
-      requester: data.requester
+      requester: data.requester,
+      transportIncluded: data.serviceTransport,
+      clearenceIncluded: data.serviceDesemb
     })
   }, [data])
 
@@ -183,10 +188,10 @@ const Step1 = ({
           data.proposal === 'routing'
             ? <Grid item xs={6}>
               <FormLabel component="legend">{I18n.t('pages.newProposal.step1.services')}</FormLabel>
-              <RadioGroup row aria-label="services" name="row-radio-buttons-group" onChange={e => setData({ ...data, services: e.target.value })}>
-                <FormControlLabel value="transport" control={<Checkbox />} label={I18n.t('pages.newProposal.step1.transport')} />
-                <FormControlLabel value="desemb" control={<Checkbox />} label={I18n.t('pages.newProposal.step1.readiness')} />
-              </RadioGroup>
+              <FormGroup row aria-label="services">
+                <FormControlLabel value="transport" control={<Checkbox checked={data.serviceTransport} onChange={e => setData({ ...data, serviceTransport: e.target.checked })} />} label={I18n.t('pages.newProposal.step1.transport')} />
+                <FormControlLabel value="desemb" control={<Checkbox checked={data.serviceDesemb} onChange={e => setData({ ...data, serviceDesemb: e.target.checked })}/>} label={I18n.t('pages.newProposal.step1.readiness')} />
+              </FormGroup>
             </Grid>
             : <Grid item xs={6}> </Grid>
         }
@@ -254,6 +259,7 @@ const Step1 = ({
               <IconComponent name={transport.id} defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} key={`icon-${i}`} />
             </IconContainer>
           </div>
+
         ))}
       </RadioGroup>
       {showPopUp &&

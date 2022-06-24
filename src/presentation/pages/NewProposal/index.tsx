@@ -24,7 +24,6 @@ import Step3 from './steps/Step3'
 import Step4 from './steps/Step4'
 import Step5 from './steps/Step5'
 import Step6 from './steps/Step6'
-import { TableRows } from '../Proposal/constants'
 import { useHistory, useLocation } from 'react-router-dom'
 import { ItemModalData } from '../../components/ItemModal/ItemModal'
 import { ProposalContext, ProposalProps, emptyProposalValue } from './context/ProposalContext'
@@ -36,33 +35,37 @@ export interface NewProposalProps {
 }
 
 const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
+  const [action, setAction] = useState('')
+  const [agentList, setAgentList] = useState<any[]>([])
+  const [calculationData, setCalculationData] = useState<CalculationDataProps>({ weight: 0, cubage: 0, cubageWeight: 0 })
   const [clicked, setClicked] = useState({ id: '', clicked: false })
+  const [containerTypeList, setContainerTypeList] = useState<any[]>([])
+  const [costData, setCostData] = useState(0)
+  const [cw, setCw] = useState(0)
+  const [cwSale, setCwSale] = useState(0)
+  const [duplicateMode, setduplicateMode] = useState(false)
+  const [editMode, setEditMode] = useState(false)
   const [hover, setHover] = useState({ id: '', hover: false })
   const [invalidInput, setInvalidInput] = useState(false)
-  const [costData, setCostData] = useState(0)
-  const [proposalType, setProposalType] = useState('')
+  const [leavingPage, setLeavingPage] = useState(false)
+  const [loadExistingProposal, setLoadExistingProposal] = useState(false)
   const [modal, setModal] = useState('')
+  const [proposalType, setProposalType] = useState('')
+  const [serviceList, setServiceList] = useState<any[]>([])
   const [showSaveMessage, setShowSaveMessage] = useState(false)
   const [specifications, setSpecifications] = useState('')
   const [step3TableItems, setStep3TableItems] = useState<ItemModalData[]>([])
+
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
-  const [serviceList, setServiceList] = useState<any[]>([])
-  const [containerTypeList, setContainerTypeList] = useState<any[]>([])
-  const [leavingPage, setLeavingPage] = useState(false)
-  const [action, setAction] = useState('')
-  const [calculationData, setCalculationData] = useState<CalculationDataProps>({ weight: 0, cubage: 0, cubageWeight: 0 })
-  const [loadExistingProposal, setLoadExistingProposal] = useState(false)
-  const [editMode, setEditMode] = useState(false)
-  const [duplicateMode, setduplicateMode] = useState(false)
-  const [agentList, setAgentList] = useState<any[]>([])
-  const [cw, setCw] = useState(0)
-  const [cwSale, setCwSale] = useState(0)
 
   const history = useHistory()
+
   const location = useLocation()
+
   const updateTable3IdsRef = useRef()
   const updateTable5IdsRef = useRef()
   const updateTable6IdsRef = useRef()
+  const updateAgentsIdsRef = useRef()
 
   useEffect(() => {
     void (async function () {
@@ -86,7 +89,11 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       setEditMode(true)
       void (async function () {
         await API.getProposal(proposalId)
-          .then((response) => { setProposal(response); duplicateProposal(response); setLoadExistingProposal(true) })
+          .then((response) => {
+            setProposal(response)
+            duplicateProposal(response)
+            setLoadExistingProposal(true)
+          })
           .catch((err) => console.log(err))
       })()
     } else {
@@ -101,22 +108,28 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     if (location.state?.eventType === 'duplicate') {
       setEditMode(false)
       setduplicateMode(true)
-      const proposalObject = [proposal].reduce((index, object) => {
-        object.cargo.id = null
-        object.validityDate = ''
-        object.idStatus = 1
-        object.openingDate = formatDate()
-        object.cargo.cargoVolumes.map(cargoVolume => {
-          cargoVolume.id = null; cargoVolume.idCargo = null; return cargoVolume
-        })
-        object.totalCosts.map(totalCost => {
+      const proposalObject = {
+        ...proposal,
+        validityDate: '',
+        idStatus: 1,
+        openingDate: formatDate(),
+        cargo: {
+          ...proposal.cargo,
+          id: null,
+          cargoVolumes: proposal.cargo.cargoVolumes.map(cargoVolume => {
+            cargoVolume.id = null; cargoVolume.idCargo = null; return cargoVolume
+          })
+        },
+        totalCosts: proposal.totalCosts.map(totalCost => {
           totalCost.id = null; totalCost.idProposal = null; return totalCost
-        })
-        object.costs.map(cost => {
+        }),
+        costs: proposal.costs.map(cost => {
           cost.id = null; cost.idProposal = null; return cost
+        }),
+        agents: proposal.agents.map(agt => {
+          agt.id = null; agt.proposalImportFreightId = null; return agt
         })
-        return object
-      }, 0)
+      }
       setProposal(proposalObject)
     }
   }
@@ -222,6 +235,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         API.postProposal(JSON.stringify(proposal)).then((response) => {
           setProposal(response)
           // @ts-expect-error
+          updateAgentsIdsRef?.current?.updateAgentsIdsRef()
+          // @ts-expect-error
           updateTable3IdsRef?.current?.updateStep3Ids()
           // @ts-expect-error
           updateTable6IdsRef?.current?.updateStep6Ids()
@@ -237,6 +252,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       } else {
         API.putProposal(proposal.idProposal, JSON.stringify(proposal)).then((response) => {
           setProposal(response)
+          // @ts-expect-error
+          updateAgentsIdsRef?.current?.updateAgentsIdsRef()
           // @ts-expect-error
           updateTable3IdsRef?.current?.updateStep3Ids()
           // @ts-expect-error
@@ -276,23 +293,9 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     }
   ]
 
-  const referenceCode = TableRows()
-
   const getEnchargedFullname = (): string => {
     const user = JSON.parse(localStorage.getItem('user') || '{}')
     return `${String(user.firstname)}  ${String(user.lastname)}`
-  }
-
-  const fullname = getEnchargedFullname()
-
-  const saveMessageInfo = {
-    closable: true,
-    severity: 'success',
-    buttonText: I18n.t('pages.newProposal.saveMessage.buttonText'),
-    closeAlert: () => { setShowSaveMessage(false) },
-    closeMessage: I18n.t('pages.newProposal.saveMessage.closeMessage'),
-    goBack: () => { history.push('/proposta') },
-    message: `${String(I18n.t('pages.newProposal.saveMessage.message'))} ${String(referenceCode[0].reference)}.`
   }
 
   const MessageExitDialog = (): JSX.Element => {
@@ -314,9 +317,9 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         cancelButtonText={I18n.t('pages.newProposal.unsavedChanges.cancelMessage')}
         confirmButtonText={I18n.t('pages.newProposal.unsavedChanges.confirmMessage')}
         message={I18n.t('pages.newProposal.unsavedChanges.message')}
-        title={I18n.t('pages.newProposal.unsavedChanges.title')}
         onPressCancel={() => setLeavingPage(false)}
         onPressConfirm={() => executeAction()}
+        title={I18n.t('pages.newProposal.unsavedChanges.title')}
       />
     )
   }
@@ -427,17 +430,17 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       <Header>
         <Breadcrumbs separator=">" aria-label="breadcrumb">
           <Link
+            className="breadcrumbInitial"
             color="inherit"
             onClick={() => history.push('/')}
-            className="breadcrumbInitial"
             style={{ cursor: 'pointer' }}
           >
             Home
           </Link>
           <Link
+            className="breadcrumbInitial"
             color="inherit"
             onClick={() => history.push('/proposta')}
-            className="breadcrumbInitial"
             style={{ cursor: 'pointer' }}
           >
             {I18n.t('pages.newProposal.proposal')}
@@ -457,7 +460,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           {I18n.t('pages.newProposal.encharged')}
           <IconComponent name="user" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
           <Username>
-            {fullname}
+            {getEnchargedFullname()}
           </Username>
           {editMode && proposal.idStatus === 1
             ? <Status className="open">{I18n.t('pages.proposal.table.openLabel')}</Status>
@@ -471,23 +474,23 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       </Header>
       <TopContainer>
         <Steps
-          steps={steps}
-          offset={-270}
           clicked={clicked}
-          hover={hover}
           handleClick={handleClick}
           handleHover={handleHover}
+          hover={hover}
+          offset={-270}
+          steps={steps}
         />
         <ButtonContainer>
           <Button
+            backgroundGreen
             disabled={false}
+            icon="arrow"
             onAction={() => { }}
+            popover
+            position="right"
             text={I18n.t('pages.newProposal.buttonFinish')}
             tooltip={I18n.t('pages.newProposal.buttonFinish')}
-            icon="arrow"
-            position="right"
-            backgroundGreen
-            popover
           >
             <FloatingMenu menuItems={floatingButtonMenuItems} />
           </Button>
@@ -499,90 +502,91 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           <div id="step1">
             <Step1
               filled={filled}
-              setModal={setModal}
+              invalidInput={invalidInput}
+              setAgentList={setAgentList}
               setCompleted={setCompleted}
               setFilled={setFilled}
-              invalidInput={invalidInput}
+              setModal={setModal}
               setProposalType={setProposalType}
               setStepLoaded={setStepLoaded}
-              setAgentList={setAgentList}
             />
           </div>
           {stepLoaded.step1 && <>
             <div id="step2">
               <Step2
-                proposalType={proposalType}
-                setCompleted={setCompleted}
-                setFilled={setFilled}
                 invalidInput={invalidInput}
                 modal={modal}
+                proposalType={proposalType}
                 setAgentList={setAgentList}
+                setCompleted={setCompleted}
+                setFilled={setFilled}
+                updateAgentsIdsRef={updateAgentsIdsRef}
               />
             </div>
             <div id="step3">
               <Step3
-                updateTableIdsRef={updateTable3IdsRef}
-                setCalculationData={setCalculationData}
                 containerTypeList={containerTypeList}
-                undoMessage={undoMessage}
-                setUndoMessage={setUndoMessage}
-                setFilled={setFilled}
-                setTableItems={setStep3TableItems}
-                setCompleted={setCompleted}
                 invalidInput={invalidInput}
                 modal={modal}
+                setCalculationData={setCalculationData}
+                setCompleted={setCompleted}
                 setCostData={setCostData}
-                setSpecifications={setSpecifications}
-                setStepLoaded={setStepLoaded}
                 setCw={setCw}
                 setCwSale={setCwSale}
+                setFilled={setFilled}
+                setSpecifications={setSpecifications}
+                setStepLoaded={setStepLoaded}
+                setTableItems={setStep3TableItems}
+                setUndoMessage={setUndoMessage}
+                undoMessage={undoMessage}
+                updateTableIdsRef={updateTable3IdsRef}
               />
             </div>
             <div id="step4">
               <Step4
-                modal={modal}
-                setFilled={setFilled}
-                setCompleted={setCompleted}
-                invalidInput={invalidInput}
-                specifications={specifications}
                 duplicateMode={duplicateMode}
+                invalidInput={invalidInput}
+                modal={modal}
+                setCompleted={setCompleted}
+                setFilled={setFilled}
+                specifications={specifications}
               />
             </div>
             {stepLoaded.step3 && <> <div id="step5">
               <Step5
-                updateTableIdsRef={updateTable5IdsRef}
-                calculationData={calculationData}
-                containerTypeList={containerTypeList}
-                serviceList={serviceList}
-                undoMessage={undoMessage}
-                setUndoMessage={setUndoMessage}
-                setFilled={setFilled}
-                containerItems={step3TableItems}
-                setCompleted={setCompleted}
-                costData={costData}
-                modal={modal}
-                specifications={specifications}
-                invalidInput={invalidInput}
                 agentList={agentList}
+                calculationData={calculationData}
+                containerItems={step3TableItems}
+                containerTypeList={containerTypeList}
+                costData={costData}
+                invalidInput={invalidInput}
+                modal={modal}
+                serviceList={serviceList}
+                setCompleted={setCompleted}
+                setFilled={setFilled}
+                setUndoMessage={setUndoMessage}
+                specifications={specifications}
+                undoMessage={undoMessage}
+                updateTableIdsRef={updateTable5IdsRef}
               />
             </div>
               <div id="step6">
                 <Step6
-                  updateTableIdsRef={updateTable6IdsRef}
                   calculationData={calculationData}
-                  containerTypeList={containerTypeList}
-                  serviceList={serviceList}
-                  undoMessage={undoMessage}
-                  setUndoMessage={setUndoMessage}
-                  setFilled={setFilled}
                   containerItems={step3TableItems}
-                  setCompleted={setCompleted}
+                  containerTypeList={containerTypeList}
                   costData={costData}
-                  modal={modal}
-                  specifications={specifications}
-                  invalidInput={invalidInput}
                   cw={cw}
                   cwSale={cwSale}
+                  invalidInput={invalidInput}
+                  modal={modal}
+                  serviceList={serviceList}
+                  setCompleted={setCompleted}
+                  setFilled={setFilled}
+                  setUndoMessage={setUndoMessage}
+                  specifications={specifications}
+                  undoMessage={undoMessage}
+                  updateTableIdsRef={updateTable6IdsRef}
                 />
               </div>
             </>}
@@ -592,7 +596,15 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       }
       {showSaveMessage &&
         <MessageContainer>
-          <Messages {...saveMessageInfo} />
+          <Messages
+            buttonText={I18n.t('pages.newProposal.saveMessage.buttonText')}
+            closable={true}
+            closeAlert={() => { setShowSaveMessage(false) } }
+            closeMessage={I18n.t('pages.newProposal.saveMessage.closeMessage')}
+            goBack={() => { history.push('/proposta') } }
+            message={`${String(I18n.t('pages.newProposal.saveMessage.message'))} ${String(proposal?.referenceProposal)}.`}
+            severity={'success'}
+          />
         </MessageContainer>}
     </RootContainer>
   )
