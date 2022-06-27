@@ -19,16 +19,21 @@ This project was bootstrapped with [single-spa](https://github.com/single-spa/si
 
 * run on port: 8600
 
-## build
+## prerequisites
 
-`yarn build` or `npm build`
-
-the build files will be found in dist folder.
+- [Node](https://nodejs.org/en/) v10.22.0 or latest (it is recommended to install it via (NVM)[https://github.com/creationix/nvm]).
+- (Yarn)[https://yarnpkg.com/en/].
 
 ## installation
 
 1. npm install
 2. npm start -- --port=8600
+
+## build
+
+`yarn build` or `npm build`
+
+the build files will be found in dist folder.
 
 ## run
 
