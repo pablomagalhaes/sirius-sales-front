@@ -149,43 +149,62 @@ const Step4 = ({
     })
   }, [data])
 
+  const validateFreeTime = (): boolean => {
+    return (modal !== 'SEA') ||
+           (modal === 'SEA' && (data.freeTime === 'notHired')) ||
+           (modal === 'SEA' && (data.freeTime === 'hired') &&
+           (data.deadline.length !== 0 && data.value.length !== 0))
+  }
+
+  const validateCompleteInputs = (): boolean => {
+    return data.validity.length !== 0 &&
+    data.validityDate.length !== 0 &&
+    data.transitTime.length !== 0 &&
+    data.frequency.length !== 0 &&
+    data.recurrency.length !== 0
+  }
+
+  const validateFilledInputs = (): boolean => {
+    return data.validity.length > 0 ||
+    data.validityDate.length > 0 ||
+    data.transitTime.length > 0 ||
+    data.frequency !== '' ||
+    data.route.length > 0 ||
+    data.client.length > 0 ||
+    data.freeTime.length > 0 ||
+    data.deadline.length > 0 ||
+    data.value.length > 0 ||
+    data.generalObs.length > 0 ||
+    data.internalObs.length > 0
+  }
+
+  const validateFormComplete = (): void => {
+    if (validateFreeTime() && validateCompleteInputs()) {
+      setCompleted((currentState) => {
+        return { ...currentState, step4: true }
+      })
+    } else {
+      setCompleted((currentState) => {
+        return { ...currentState, step4: false }
+      })
+    }
+  }
+
+  const validateFilled = (): void => {
+    if (validateFilledInputs()) {
+      setFilled((currentState) => {
+        return { ...currentState, step4: true }
+      })
+    } else {
+      setFilled((currentState) => {
+        return { ...currentState, step4: false }
+      })
+    }
+  }
+
   useEffect(() => {
-    if (
-      data.validity.length !== 0 &&
-      data.validityDate.length !== 0 &&
-      data.transitTime.length !== 0 &&
-      data.frequency.length !== 0 &&
-      data.recurrency.length !== 0
-    ) {
-      setCompleted((currentState) => {
-        return { ...currentState, step4: true }
-      })
-    } else {
-      setCompleted((currentState) => {
-        return { ...currentState, step4: false }
-      })
-    }
-    if (
-      data.validity.length > 0 ||
-      data.validityDate.length > 0 ||
-      data.transitTime.length > 0 ||
-      data.frequency !== '' ||
-      data.route.length > 0 ||
-      data.client.length > 0 ||
-      data.freeTime.length > 0 ||
-      data.deadline.length > 0 ||
-      data.value.length > 0 ||
-      data.generalObs.length > 0 ||
-      data.internalObs.length > 0
-    ) {
-      setFilled((currentState) => {
-        return { ...currentState, step4: true }
-      })
-    } else {
-      setFilled((currentState) => {
-        return { ...currentState, step4: false }
-      })
-    }
+    validateFormComplete()
+    validateFilled()
   }, [data])
 
   useEffect(() => {

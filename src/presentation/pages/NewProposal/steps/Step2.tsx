@@ -245,25 +245,52 @@ const Step2 = ({
     })
   }, [data])
 
+  const validateIncoterm = (): boolean => {
+    return (data.incoterm.length !== 0 && data.incoterm !== '' &&
+    (data.incoterm !== 'EXW' && data.incoterm !== 'DAP')) ||
+    (data.incoterm.length !== 0 && data.incoterm !== '' &&
+    (data.incoterm === 'EXW' || data.incoterm === 'DAP') && data.collection !== '')
+  }
+
+  const validateClient = (): boolean => {
+    return ((proposalType === 'client' && data.agents.length !== 0) || (proposalType !== 'client' && data.agents.length !== 0))
+  }
+
+  const validateOriginDestination = (): boolean => {
+    return (modal === 'LAND') || ((modal === 'SEA' || modal === 'AIR') && (data.origin !== data.destiny))
+  }
+
+  const validateFormComplete = (): void => {
+<<<<<<< HEAD
+    if (originDestinyFullfilled() && (validateClient() && validateIncoterm() && validateOriginDestination())) {
+=======
+    if (originDestinyFullfilled() && (validateClient() && validateIncoterm())) {
+>>>>>>> 83349e588243eb1cc64339bd94555d9e9178b39f
+      setCompleted((currentState) => {
+        return { ...currentState, step2: true }
+      })
+    } else {
+      setCompleted((currentState) => {
+        return { ...currentState, step2: false }
+      })
+    }
+  }
+
+  const validateFilled = (): void => {
+    if (originDestinyFullfilled() && (data.agents.length !== 0 || data.collection !== '')) {
+      setFilled((currentState) => {
+        return { ...currentState, step2: true }
+      })
+    } else {
+      setFilled((currentState) => {
+        return { ...currentState, step2: false }
+      })
+    }
+  }
+
   useEffect(() => {
-    if (originDestinyFullfilled() && ((proposalType === 'client' && data.agents.length !== 0) || proposalType !== 'client') && data.incoterm.length !== 0) {
-      setCompleted((currentState) => {
-        return { ...currentState, step2: true }
-      })
-    } else {
-      setCompleted((currentState) => {
-        return { ...currentState, step2: false }
-      })
-    }
-    if (originDestinyFullfilled() && (data.agents.length !== 0 || data.incoterm !== '' || data.collection !== '')) {
-      setFilled((currentState) => {
-        return { ...currentState, step2: true }
-      })
-    } else {
-      setFilled((currentState) => {
-        return { ...currentState, step2: false }
-      })
-    }
+    validateFormComplete()
+    validateFilled()
   }, [data, proposalType, invalidOriDest])
 
   const originDestinyFullfilled = (): boolean => {

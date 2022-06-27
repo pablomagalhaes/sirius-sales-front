@@ -345,22 +345,16 @@ const Step3 = ({
     setUndoMessage({ step3: true, step5origin: false, step5destiny: false, step6: false })
   }
 
-  useEffect(() => {
-    if (
-      data.description.length !== 0 &&
-      ((modal === 'SEA' && data.specifications.length !== 0) ||
-        modal !== 'SEA') &&
-      data.temperature.length !== 0
-    ) {
-      setCompleted((currentState) => {
-        return { ...currentState, step3: true }
-      })
-    } else {
-      setCompleted((currentState) => {
-        return { ...currentState, step3: false }
-      })
-    }
-    if (
+  const validateDangerous = (): boolean => {
+    return (!data.dangerous) || ((data.dangerous && data.imo.length !== 0 && data.codUn.length !== 0))
+  }
+
+  const validateEspecification = (): boolean => {
+    return ((modal === 'SEA' && data.specifications.length !== 0) || modal !== 'SEA')
+  }
+
+  const validateTableRows = (): boolean => {
+    return (
       tableRows.length > 0 ||
       data.description.length > 0 ||
       data.specifications.length > 0 ||
@@ -368,7 +362,23 @@ const Step3 = ({
       data.imo.length > 0 ||
       data.codUn.length > 0 ||
       data.dangerous
-    ) {
+    )
+  }
+
+  const validateFormComplete = (): void => {
+    if (validateDangerous() && validateEspecification() && (data.description.length !== 0 && data.temperature.length !== 0)) {
+      setCompleted((currentState) => {
+        return { ...currentState, step3: true }
+      })
+    } else {
+      setCompleted((currentState) => {
+        return { ...currentState, step3: false }
+      })
+    }
+  }
+
+  const validateFilled = (): void => {
+    if (validateTableRows()) {
       setFilled((currentState) => {
         return { ...currentState, step3: true }
       })
@@ -377,6 +387,11 @@ const Step3 = ({
         return { ...currentState, step3: false }
       })
     }
+  }
+
+  useEffect(() => {
+    validateFormComplete()
+    validateFilled()
   }, [data, modal, tableRows])
 
   return (
