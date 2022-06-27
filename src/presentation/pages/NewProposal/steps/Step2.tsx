@@ -261,11 +261,7 @@ const Step2 = ({
   }
 
   const validateFormComplete = (): void => {
-<<<<<<< HEAD
     if (originDestinyFullfilled() && (validateClient() && validateIncoterm() && validateOriginDestination())) {
-=======
-    if (originDestinyFullfilled() && (validateClient() && validateIncoterm())) {
->>>>>>> 83349e588243eb1cc64339bd94555d9e9178b39f
       setCompleted((currentState) => {
         return { ...currentState, step2: true }
       })
