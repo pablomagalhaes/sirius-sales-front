@@ -134,7 +134,7 @@ const Step1 = ({
   }, [data.proposalValue])
 
   useEffect(() => {
-    if (data.proposal !== '' && data.proposalValue !== '' && data.modal !== '') {
+    if (data.proposal !== '' && data.proposalValue !== '' && data.modal !== '' && data.requester !== '') {
       setCompleted((currentState) => ({ ...currentState, step1: true }))
     } else {
       setCompleted((currentState) => ({ ...currentState, step1: false }))
