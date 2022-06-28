@@ -247,17 +247,21 @@ const Step2 = ({
 
   const validateIncoterm = (): boolean => {
     return (data.incoterm.length !== 0 && data.incoterm !== '' &&
-    (data.incoterm !== 'EXW' && data.incoterm !== 'FCA' && data.incoterm !== 'DAP')) ||
+    (data.incoterm !== 'EXW' && data.incoterm !== 'DAP')) ||
     (data.incoterm.length !== 0 && data.incoterm !== '' &&
-    (data.incoterm === 'EXW' || data.incoterm === 'FCA' || data.incoterm === 'DAP') && data.collection !== '')
+    (data.incoterm === 'EXW' || data.incoterm === 'DAP') && data.collection !== '')
   }
 
   const validateClient = (): boolean => {
     return ((proposalType === 'client' && data.agents.length !== 0) || (proposalType !== 'client' && data.agents.length !== 0))
   }
 
+  const validateOriginDestination = (): boolean => {
+    return (modal === 'LAND') || ((modal === 'SEA' || modal === 'AIR') && (data.origin !== data.destiny))
+  }
+
   const validateFormComplete = (): void => {
-    if (originDestinyFullfilled() && (validateClient() && validateIncoterm())) {
+    if (originDestinyFullfilled() && (validateClient() && validateIncoterm() && validateOriginDestination())) {
       setCompleted((currentState) => {
         return { ...currentState, step2: true }
       })
