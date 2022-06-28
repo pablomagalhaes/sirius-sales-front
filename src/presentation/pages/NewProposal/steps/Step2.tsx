@@ -246,8 +246,10 @@ const Step2 = ({
   }, [data])
 
   const validateIncoterm = (): boolean => {
-    return data.incoterm.length !== 0 && data.incoterm !== '' &&
-        (data.incoterm === 'EXW' || data.incoterm === 'FCA' || data.incoterm === 'DAP')
+    return (data.incoterm.length !== 0 && data.incoterm !== '' &&
+    (data.incoterm !== 'EXW' && data.incoterm !== 'FCA' && data.incoterm !== 'DAP')) ||
+    (data.incoterm.length !== 0 && data.incoterm !== '' &&
+    (data.incoterm === 'EXW' || data.incoterm === 'FCA' || data.incoterm === 'DAP') && data.collection !== '')
   }
 
   const validateClient = (): boolean => {
@@ -255,7 +257,7 @@ const Step2 = ({
   }
 
   const validateFormComplete = (): void => {
-    if (originDestinyFullfilled() && (validateClient() && validateIncoterm() && (data.collection !== ''))) {
+    if (originDestinyFullfilled() && (validateClient() && validateIncoterm())) {
       setCompleted((currentState) => {
         return { ...currentState, step2: true }
       })
