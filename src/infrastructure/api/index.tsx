@@ -207,7 +207,7 @@ const getStates = async (params): Promise<any> => {
 
 const getCities = async (params): Promise<any> => {
   try {
-    const res = await instance.get(`https://qa.siriuslog.com/gateway/sirius-master-data-api/city/states/${String(params)}/cities`)
+    const res = await instance.get(`/sirius-master-data-api/city/states/${String(params)}/cities`)
     return res.data
   } catch (error) {
     console.error(error)
@@ -217,7 +217,7 @@ const getCities = async (params): Promise<any> => {
 
 const getCityById = async (params): Promise<any> => {
   try {
-    const res = await instance.get(`https://qa.siriuslog.com/gateway/sirius-master-data-api/city/${String(params)}`)
+    const res = await instance.get(`/sirius-master-data-api/city/${String(params)}`)
     return res.data
   } catch (error) {
     console.error(error)
