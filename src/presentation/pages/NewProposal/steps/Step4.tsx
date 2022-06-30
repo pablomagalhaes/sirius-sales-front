@@ -150,9 +150,12 @@ const Step4 = ({
   }, [data])
 
   const validateFreeTime = (): boolean => {
+    data.value = data.value !== '0' ? data.value : ''
     return (modal !== 'SEA') ||
            (modal === 'SEA' && (data.freeTime === 'notHired')) ||
-           (modal === 'SEA' && (data.freeTime === 'hired') &&
+           (modal === 'SEA' && specifications === 'fcl' && (data.freeTime === 'hired') &&
+           (data.deadline.length !== 0)) ||
+           (modal === 'SEA' && specifications !== 'fcl' && (data.freeTime === 'hired') &&
            (data.deadline.length !== 0 && data.value.length !== 0))
   }
 

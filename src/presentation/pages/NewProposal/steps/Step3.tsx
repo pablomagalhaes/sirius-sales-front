@@ -196,7 +196,7 @@ const Step3 = ({
           temperature: String(proposal.cargo.idTemperature),
           dangerous: proposal.cargo.isDangerous,
           imo: String(proposal.cargo.idImoType),
-          codUn: String(proposal.cargo.codeUn)
+          codUn: String(proposal.cargo.codeUn !== null ? proposal.cargo.codeUn : '')
         })
 
         if (isAir()) {
