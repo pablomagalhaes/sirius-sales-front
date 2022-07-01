@@ -1,4 +1,4 @@
-import React, { useReducer, useState, useEffect } from 'react'
+import React, { useReducer, useState, useEffect, useContext } from 'react'
 import { MenuItem, Modal, Box, Container } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
@@ -41,6 +41,7 @@ import ControlledSelect from '../ControlledSelect'
 import { MenuItemContent } from '../FareModal/FareModalStyles'
 import { CalculationDataProps } from '../ChargeTable'
 import FormatNumber from '../../../application/utils/formatNumber'
+import { ProposalContext, ProposalProps } from '../../pages/NewProposal/context/ProposalContext'
 export interface CostTableItem {
   idCost?: number | null
   idProposal?: number | null
@@ -158,6 +159,7 @@ const CostModal = ({
   const [noValueInput, setNoValueInput] = useState(false)
   const [currencyList, setCurrencyList] = useState<any[]>([])
   const [flag, setFlag] = useState(false)
+  const { proposal }: ProposalProps = useContext(ProposalContext)
 
   const verifyContainerItems = (): void => {
     if (containerItems.length === 1) {
@@ -337,7 +339,15 @@ const CostModal = ({
       }
 
       void (async function () {
-        await API.postTotalCalculation(data)
+        const totalCalculationData =
+          data.costType === 'CW'
+            ? {
+                ...data,
+                valuePurchaseCW: proposal.cargo.vlCwPurchase,
+                valueSaleCW: proposal.cargo.vlCwSale
+              }
+            : { ...data, valuePurchaseCW: null, valueSaleCW: null }
+        await API.postTotalCalculation(totalCalculationData)
           .then((response) => {
             dispatch({ type: 'buyValueCalculated', value: response.valuePurchase })
             dispatch({ type: 'saleValueCalculated', value: response.valueSale })
