@@ -238,7 +238,9 @@ const Step6 = ({
                     ? Number(cost.valueSale)
                     : Number(cost.valueMinimumSale),
                   idCurrencyPurchase: '',
-                  idCurrencySale: cost.idCurrencySale
+                  idCurrencySale: cost.idCurrencySale,
+                  valuePurchaseCW: cost.billingType === 'CW' ? Number(proposal.cargo.vlCwPurchase) : null,
+                  valueSaleCW: cost.billingType === 'CW' ? Number(proposal.cargo.vlCwSale) : null
                 }
 
                 API.postTotalCalculation(totalCostCalculationData).then(response => {
@@ -403,7 +405,7 @@ const Step6 = ({
       setTableData(newTableData)
     }
     void waitAllData()
-  }, [containerItems, calculationData])
+  }, [containerItems, calculationData, proposal.cargo])
 
   useEffect(() => {
     void (async function () {
@@ -437,7 +439,9 @@ const Step6 = ({
         ? Number(item.saleValue.replace(',', '.'))
         : Number(item.minimumValue.replace(',', '.')),
       idCurrencyPurchase: '',
-      idCurrencySale: item.saleCurrency
+      idCurrencySale: item.saleCurrency,
+      valuePurchaseCW: item.type === 'CW' ? Number(proposal.cargo.vlCwPurchase) : null,
+      valueSaleCW: item.type === 'CW' ? Number(proposal.cargo.vlCwSale) : null
     }
   }
 

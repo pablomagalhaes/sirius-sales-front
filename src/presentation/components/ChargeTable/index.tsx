@@ -106,7 +106,7 @@ const ChargeTable = ({ charges, onEdit, onDelete, specification, modal, setCalcu
             <TableCell>{amount} volume(s)</TableCell>
             <TableCell />
             {!isFCL() ? <TableCell><b>{I18n.t('components.itemModal.rawWeight')}</b>{Number(weight).toFixed(2).replace('.', ',')} kg</TableCell> : <TableCell />}
-            {!isFCL() ? <TableCell><b>{I18n.t('components.itemModal.cubage')}</b>{Number(cubage).toFixed(2).replace('.', ',')}</TableCell> : <TableCell />}
+            {!isFCL() ? <TableCell><b>{I18n.t('pages.newProposal.step3.cubage')}</b>{Number(cubage).toFixed(2).replace('.', ',')}</TableCell> : <TableCell />}
             {isAir() ? <TableCell><b>{I18n.t('components.itemModal.cubageWeight')}</b>{Number(cubageWeight).toFixed(2).replace('.', ',')}</TableCell> : <TableCell />}
             <TableCell />
             <TableCell />
