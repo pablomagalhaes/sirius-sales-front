@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import { TableBody, TableHead, TableRow } from '@material-ui/core'
 
@@ -32,6 +32,7 @@ import { CalculationDataProps } from '../ChargeTable'
 import { MessageContainer } from '../../pages/NewProposal/style'
 import { TotalCostTable } from '../../pages/NewProposal/steps/Step5'
 import API from '../../../infrastructure/api'
+import { ProposalProps, ProposalContext } from '../../pages/NewProposal/context/ProposalContext'
 
 interface CostTableProps {
   agentList: string[]
@@ -82,6 +83,7 @@ const CostTable = ({
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
   const [agentsList, setAgentsList] = useState<any[]>([])
+  const { proposal }: ProposalProps = useContext(ProposalContext)
 
   const editClickHandler = (tableData: CostTableItem): void => {
     setChargeData({ ...tableData, buyValueCalculated: null, saleValueCalculated: null })
@@ -136,7 +138,9 @@ const CostTable = ({
           valuePurchase: Number(item.buyValue),
           valueSale: Number(item.saleValue),
           idCurrencyPurchase: item.buyCurrency,
-          idCurrencySale: item.saleCurrency
+          idCurrencySale: item.saleCurrency,
+          valuePurchaseCW: item.type === 'CW' ? proposal.cargo.vlCwPurchase : null,
+          valueSaleCW: item.type === 'CW' ? proposal.cargo.vlCwSale : null
         }
 
         void (async function () {
@@ -160,7 +164,7 @@ const CostTable = ({
       })
       : []
     setData(copyData)
-  }, [calculationData, containerItems])
+  }, [calculationData, containerItems, proposal.cargo])
 
   useEffect(() => {
     setCopyTable([])
@@ -186,7 +190,15 @@ const CostTable = ({
             idCurrencySale: item.saleCurrency
           }
           void await new Promise<void>((resolve) => {
-            API.postTotalCalculation(data)
+            const totalCalculationData =
+            data.costType === 'CW'
+              ? {
+                  ...data,
+                  valuePurchaseCW: proposal.cargo.vlCwPurchase,
+                  valueSaleCW: proposal.cargo.vlCwSale
+                }
+              : { ...data, valuePurchaseCW: null, valueSaleCW: null }
+            API.postTotalCalculation(totalCalculationData)
               .then((response) => {
                 item.buyValueCalculated = response.valuePurchase
                 item.saleValueCalculated = response.valueSale
