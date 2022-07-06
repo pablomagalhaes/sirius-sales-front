@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react'
 import {
   Button,
   Pagination,
   QuickFilters,
   RowFilter,
-  Table,
-} from "fiorde-fe-components";
-import { Breadcrumbs, Link, Select, MenuItem } from "@material-ui/core/";
+  Table
+} from 'fiorde-fe-components'
+import { Breadcrumbs, Link, Select, MenuItem } from '@material-ui/core/'
 import {
   ArrowIconContainer,
   BottomSideContainer,
@@ -26,221 +26,221 @@ import {
   RowFilterContainer,
   TableContainer,
   TopButtonContainer,
-  TopContainer,
-} from "./style";
-import { ExitToApp } from "@material-ui/icons/";
-import Warning from "../../../application/icons/WarningIcon";
-import { useHistory } from "react-router-dom";
-import UpArrow from "../../../application/icons/UpArrow";
-import API from "../../../infrastructure/api";
-import ArrowDown from "../../../application/icons/ArrowDown";
-import { cardFilters, orderButtonMenuItems, menuItems } from "./constants";
-import { I18n } from "react-redux-i18n";
+  TopContainer
+} from './style'
+import { ExitToApp } from '@material-ui/icons/'
+import Warning from '../../../application/icons/WarningIcon'
+import { useHistory } from 'react-router-dom'
+import UpArrow from '../../../application/icons/UpArrow'
+import API from '../../../infrastructure/api'
+import ArrowDown from '../../../application/icons/ArrowDown'
+import { cardFilters, orderButtonMenuItems, menuItems } from './constants'
+import { I18n } from 'react-redux-i18n'
 import {
   StatusProposalEnum,
-  StatusProposalStringEnum,
-} from "../../../application/enum/statusProposalEnum";
+  StatusProposalStringEnum
+} from '../../../application/enum/statusProposalEnum'
 
 const defaultFilter = {
-  direction: "ASC",
-  orderByList: "openingDate",
+  direction: 'ASC',
+  orderByList: 'openingDate',
   page: 0,
-  size: 10,
-};
+  size: 10
+}
 
 const Proposal = (): JSX.Element => {
-  const [filter, setFilter] = useState<any>(defaultFilter);
-  const [incotermList, setIncotermList] = useState<any[]>([]);
-  const [openedOrderSelect, setOpenedOrderSelect] = useState(false);
-  const [orderAsc, setOrderAsc] = useState(true);
-  const [orderBy, setOrderBy] = useState<string>("openingDate");
-  const [originDestinationList, setOriginDestinationList] = useState<any[]>([]);
-  const [, setPartnerList] = useState<any[]>([]);
-  const [partnerSimpleNameList, setPartnerSimpleNameList] = useState<any[]>([]);
-  const [proposalList, setProposalList] = useState<any[]>([]);
-  const [radioValue, setRadioValue] = useState("");
-  const [totalProposalList, setTotalProposalList] = useState<number>(0);
-  const [totalWarnings, setTotalWarnings] = useState<number>(0);
+  const [filter, setFilter] = useState<any>(defaultFilter)
+  const [incotermList, setIncotermList] = useState<any[]>([])
+  const [openedOrderSelect, setOpenedOrderSelect] = useState(false)
+  const [orderAsc, setOrderAsc] = useState(true)
+  const [orderBy, setOrderBy] = useState<string>('openingDate')
+  const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
+  const [, setPartnerList] = useState<any[]>([])
+  const [partnerSimpleNameList, setPartnerSimpleNameList] = useState<any[]>([])
+  const [proposalList, setProposalList] = useState<any[]>([])
+  const [radioValue, setRadioValue] = useState('')
+  const [totalProposalList, setTotalProposalList] = useState<number>(0)
+  const [totalWarnings, setTotalWarnings] = useState<number>(0)
 
-  const history = useHistory();
-
-  useEffect(() => {
-    getProposalByFilter();
-  }, [filter]);
+  const history = useHistory()
 
   useEffect(() => {
-    getCountProposalByFilter();
-  }, [proposalList]);
+    getProposalByFilter()
+  }, [filter])
 
   useEffect(() => {
-    const newIncotermList: any[] = [];
+    getCountProposalByFilter()
+  }, [proposalList])
+
+  useEffect(() => {
+    const newIncotermList: any[] = []
     void (async function () {
       await API.getIncoterms()
         .then((response) => {
           response.forEach((item: any) => {
-            newIncotermList.push(item?.id);
-          });
-          return setIncotermList(newIncotermList);
+            newIncotermList.push(item?.id)
+          })
+          return setIncotermList(newIncotermList)
         })
-        .catch((err) => console.log(err));
-    })();
-  }, []);
+        .catch((err) => console.log(err))
+    })()
+  }, [])
 
   useEffect(() => {
-    const simpleNameList: any[] = [];
-    const newPartnerList: any[] = [];
+    const simpleNameList: any[] = []
+    const newPartnerList: any[] = []
     void (async function () {
       await API.getPartner()
         .then((response) => {
           response.forEach((item: any) => {
-            simpleNameList.push(item?.businessPartner?.simpleName);
-            newPartnerList.push(item?.businessPartner);
-          });
-          setPartnerSimpleNameList(simpleNameList);
-          setPartnerList(newPartnerList);
+            simpleNameList.push(item?.businessPartner?.simpleName)
+            newPartnerList.push(item?.businessPartner)
+          })
+          setPartnerSimpleNameList(simpleNameList)
+          setPartnerList(newPartnerList)
         })
-        .catch((err) => console.log(err));
-    })();
-  }, []);
+        .catch((err) => console.log(err))
+    })()
+  }, [])
 
   useEffect(() => {
     void (async function () {
       await API.getOriginDestination()
         .then((response) => setOriginDestinationList(response))
-        .catch((err) => console.log(err));
-    })();
-  }, []);
+        .catch((err) => console.log(err))
+    })()
+  }, [])
 
   const getOriginDestinyList = (): string[] => {
-    const actualList: string[] = [];
-    let type = "";
+    const actualList: string[] = []
+    let type = ''
 
     switch (radioValue) {
-      case "Aéreo":
-        type = "AEROPORTO";
-        break;
-      case "Marítimo":
-        type = "PORTO";
-        break;
+      case 'Aéreo':
+        type = 'AEROPORTO'
+        break
+      case 'Marítimo':
+        type = 'PORTO'
+        break
       default:
-        break;
+        break
     }
 
     originDestinationList?.forEach((item): void => {
       if (item.type === type) {
-        actualList.push(`${String(item.id)} - ${String(item.name)}`);
+        actualList.push(`${String(item.id)} - ${String(item.name)}`)
       }
-    });
+    })
 
-    return actualList;
-  };
+    return actualList
+  }
 
   const getProposalByFilter = (): void => {
     void (async function () {
       await API.getProposals(filter)
         .then((response) => {
-          setProposalList(response.content);
-          setTotalProposalList(response.totalElements);
+          setProposalList(response.content)
+          setTotalProposalList(response.totalElements)
         })
-        .catch((err) => console.log(err));
-    })();
-  };
+        .catch((err) => console.log(err))
+    })()
+  }
 
   const getCountProposalByFilter = (): void => {
     void (async function () {
       await API.getCountProposal(filter)
         .then((response) => {
-          setTotalWarnings(response);
+          setTotalWarnings(response)
         })
-        .catch((err) => console.log(err));
-    })();
-  };
+        .catch((err) => console.log(err))
+    })()
+  }
 
   const verifyStatus = (status): any => {
     switch (status) {
-      case "Aberta":
-        return StatusProposalEnum.ABERTA;
-      case "Ag. Retorno Cliente":
-        return StatusProposalEnum.AGUARDANDO_RETORNO_CLIENTE;
-      case "Em Revisao":
-        return StatusProposalEnum.EM_REVISAO;
-      case "Aprovada":
-        return StatusProposalEnum.APROVADA;
-      case "Rejeitada":
-        return StatusProposalEnum.REJEITADA;
-      case "Cancelada":
-        return StatusProposalEnum.CANCELADA;
-      case "Cancelamento Automático":
-        return StatusProposalEnum.CANCELAMENTO_AUTOMATICO;
+      case 'Aberta':
+        return StatusProposalEnum.ABERTA
+      case 'Ag. Retorno Cliente':
+        return StatusProposalEnum.AGUARDANDO_RETORNO_CLIENTE
+      case 'Em Revisao':
+        return StatusProposalEnum.EM_REVISAO
+      case 'Aprovada':
+        return StatusProposalEnum.APROVADA
+      case 'Rejeitada':
+        return StatusProposalEnum.REJEITADA
+      case 'Cancelada':
+        return StatusProposalEnum.CANCELADA
+      case 'Cancelamento Automático':
+        return StatusProposalEnum.CANCELAMENTO_AUTOMATICO
     }
-  };
+  }
 
   const checkBusinessDays = (date): any => {
-    const dateWeekday = date.getDay();
+    const dateWeekday = date.getDay()
     switch (dateWeekday) {
       case 4:
-        date.setDate(Number(date.getDate()) + 5);
-        break;
+        date.setDate(Number(date.getDate()) + 5)
+        break
       case 5:
-        date.setDate(Number(date.getDate()) + 5);
-        break;
+        date.setDate(Number(date.getDate()) + 5)
+        break
       case 6:
-        date.setDate(Number(date.getDate()) + 4);
-        break;
+        date.setDate(Number(date.getDate()) + 4)
+        break
       default:
-        date.setDate(Number(date.getDate()) + 3);
-        break;
+        date.setDate(Number(date.getDate()) + 3)
+        break
     }
-    return date;
-  };
+    return date
+  }
 
   const verifyWarning = (status: string, validityDate: Date): boolean => {
-    const warningDate = checkBusinessDays(new Date());
+    const warningDate = checkBusinessDays(new Date())
 
-    let showWarning = false;
+    let showWarning = false
     if (
-      status !== "Aprovada" &&
-      status !== "Rejeitada" &&
-      status !== "Cancelada" &&
-      status !== "Cancelamento Automático"
+      status !== 'Aprovada' &&
+      status !== 'Rejeitada' &&
+      status !== 'Cancelada' &&
+      status !== 'Cancelamento Automático'
     ) {
-      showWarning = validityDate <= warningDate || validityDate === warningDate;
+      showWarning = validityDate <= warningDate || validityDate === warningDate
     }
-    return showWarning;
-  };
+    return showWarning
+  }
 
   const verifyModal = (modal: string): string => {
-    if (modal === "AIR") {
-      return "aereo";
-    } else if (modal === "SEA") {
-      return "maritimo";
+    if (modal === 'AIR') {
+      return 'aereo'
+    } else if (modal === 'SEA') {
+      return 'maritimo'
     } else {
-      return "rodoviario";
+      return 'rodoviario'
     }
-  };
+  }
 
   const verifyType = (type: String): string => {
-    if (type === "FRETE - IMPORTAÇÃO") {
-      return "importation";
+    if (type === 'FRETE - IMPORTAÇÃO') {
+      return 'importation'
     } else {
-      return "exportation";
+      return 'exportation'
     }
-  };
+  }
 
   const getProposalItems = (proposalList): any => {
-    const array: any = [];
+    const array: any = []
     for (const proposal of proposalList) {
       const opening = new Date(proposal.openingDate).toLocaleDateString(
-        "pt-BR"
-      );
+        'pt-BR'
+      )
       const shelfLife = new Date(proposal.validityDate).toLocaleDateString(
-        "pt-BR"
-      );
-      const validityDate = new Date(proposal.validityDate);
-      const showWarning = verifyWarning(proposal.status, validityDate);
-      const status = verifyStatus(proposal.status);
-      const modal = verifyModal(proposal.modal);
-      const type = verifyType(proposal.operation);
+        'pt-BR'
+      )
+      const validityDate = new Date(proposal.validityDate)
+      const showWarning = verifyWarning(proposal.status, validityDate)
+      const status = verifyStatus(proposal.status)
+      const modal = verifyModal(proposal.modal)
+      const type = verifyType(proposal.operation)
 
       const item = {
         client: proposal.clientName,
@@ -257,335 +257,335 @@ const Proposal = (): JSX.Element => {
         responsible: proposal.responsible,
         shelfLife,
         status,
-        type,
-      };
+        type
+      }
 
-      array.push(item);
+      array.push(item)
     }
-    return array;
-  };
+    return array
+  }
 
   const setStatus = (id: any, status: String): void => {
     void (async function () {
       await API.putStatus(id, status)
         .then(() => {
-          getProposalByFilter();
+          getProposalByFilter()
         })
-        .catch((err) => console.log(err));
-    })();
-  };
+        .catch((err) => console.log(err))
+    })()
+  }
 
   const editEventPage = (id: any): void => {
     history.push({
-      pathname: "/novaProposta",
-      state: { proposalId: id },
-    });
-  };
+      pathname: '/novaProposta',
+      state: { proposalId: id }
+    })
+  }
 
   const duplicateEventPage = (id: any): void => {
     history.push({
-      pathname: "/novaProposta",
-      state: { proposalId: id, eventType: "duplicate" },
-    });
-  };
+      pathname: '/novaProposta',
+      state: { proposalId: id, eventType: 'duplicate' }
+    })
+  }
 
   const menuItemsList = (status: any, id: any): void => {
-    const array: any = [];
+    const array: any = []
     switch (status) {
       case StatusProposalEnum.ABERTA:
         array.push(
           {
-            iconType: "edit",
-            label: I18n.t("pages.proposal.table.editLabel"),
+            iconType: 'edit',
+            label: I18n.t('pages.proposal.table.editLabel'),
             onClick: () => {
-              editEventPage(id);
-            },
+              editEventPage(id)
+            }
           },
           {
-            iconType: "duplicate",
-            label: I18n.t("pages.proposal.table.duplicateLabel"),
+            iconType: 'duplicate',
+            label: I18n.t('pages.proposal.table.duplicateLabel'),
             onClick: () => {
-              duplicateEventPage(id);
-            },
+              duplicateEventPage(id)
+            }
           },
           {
-            iconType: "forward",
-            label: I18n.t("pages.proposal.table.confirmLabel"),
+            iconType: 'forward',
+            label: I18n.t('pages.proposal.table.confirmLabel'),
             onClick: () => {
               setStatus(
                 id,
                 StatusProposalStringEnum.AGUARDANDO_RETORNO_CLIENTE
-              );
-            },
+              )
+            }
           },
           {
-            iconType: "cancel",
-            label: I18n.t("pages.proposal.table.cancelLabel"),
+            iconType: 'cancel',
+            label: I18n.t('pages.proposal.table.cancelLabel'),
             onClick: () => {
-              setStatus(id, StatusProposalStringEnum.CANCELADA);
-            },
+              setStatus(id, StatusProposalStringEnum.CANCELADA)
+            }
           }
-        );
-        return array;
+        )
+        return array
       case StatusProposalEnum.AGUARDANDO_RETORNO_CLIENTE:
         array.push(
           {
-            iconType: "duplicate",
-            label: I18n.t("pages.proposal.table.duplicateLabel"),
+            iconType: 'duplicate',
+            label: I18n.t('pages.proposal.table.duplicateLabel'),
             onClick: () => {
-              duplicateEventPage(id);
-            },
+              duplicateEventPage(id)
+            }
           },
           {
-            iconType: "fileReview",
-            label: I18n.t("pages.proposal.table.reviewLabel"),
+            iconType: 'fileReview',
+            label: I18n.t('pages.proposal.table.reviewLabel'),
             onClick: () => {
-              setStatus(id, StatusProposalStringEnum.EM_REVISAO);
-            },
+              setStatus(id, StatusProposalStringEnum.EM_REVISAO)
+            }
           },
           {
-            iconType: "cancel",
-            label: I18n.t("pages.proposal.table.cancelLabel"),
+            iconType: 'cancel',
+            label: I18n.t('pages.proposal.table.cancelLabel'),
             onClick: () => {
-              setStatus(id, StatusProposalStringEnum.CANCELADA);
-            },
+              setStatus(id, StatusProposalStringEnum.CANCELADA)
+            }
           },
           {
-            iconType: "thumbsUp",
-            label: I18n.t("pages.proposal.table.approveLabel"),
+            iconType: 'thumbsUp',
+            label: I18n.t('pages.proposal.table.approveLabel'),
             onClick: () => {
-              setStatus(id, StatusProposalStringEnum.APROVADA);
-            },
+              setStatus(id, StatusProposalStringEnum.APROVADA)
+            }
           },
           {
-            iconType: "thumbsDown",
-            label: I18n.t("pages.proposal.table.rejectLabel"),
+            iconType: 'thumbsDown',
+            label: I18n.t('pages.proposal.table.rejectLabel'),
             onClick: () => {
-              setStatus(id, StatusProposalStringEnum.REJEITADA);
-            },
+              setStatus(id, StatusProposalStringEnum.REJEITADA)
+            }
           }
-        );
-        return array;
+        )
+        return array
       case StatusProposalEnum.EM_REVISAO:
         array.push(
           {
-            iconType: "edit",
-            label: I18n.t("pages.proposal.table.editLabel"),
+            iconType: 'edit',
+            label: I18n.t('pages.proposal.table.editLabel'),
             onClick: () => {
-              editEventPage(id);
-            },
+              editEventPage(id)
+            }
           },
           {
-            iconType: "duplicate",
-            label: I18n.t("pages.proposal.table.duplicateLabel"),
+            iconType: 'duplicate',
+            label: I18n.t('pages.proposal.table.duplicateLabel'),
             onClick: () => {
-              duplicateEventPage(id);
-            },
+              duplicateEventPage(id)
+            }
           },
           {
-            iconType: "forward",
-            label: I18n.t("pages.proposal.table.confirmLabel"),
+            iconType: 'forward',
+            label: I18n.t('pages.proposal.table.confirmLabel'),
             onClick: () => {
               setStatus(
                 id,
                 StatusProposalStringEnum.AGUARDANDO_RETORNO_CLIENTE
-              );
-            },
+              )
+            }
           },
           {
-            iconType: "cancel",
-            label: I18n.t("pages.proposal.table.cancelLabel"),
+            iconType: 'cancel',
+            label: I18n.t('pages.proposal.table.cancelLabel'),
             onClick: () => {
-              setStatus(id, StatusProposalStringEnum.CANCELADA);
-            },
+              setStatus(id, StatusProposalStringEnum.CANCELADA)
+            }
           }
-        );
-        return array;
+        )
+        return array
       case StatusProposalEnum.APROVADA:
         array.push({
-          iconType: "duplicate",
-          label: I18n.t("pages.proposal.table.duplicateLabel"),
+          iconType: 'duplicate',
+          label: I18n.t('pages.proposal.table.duplicateLabel'),
           onClick: () => {
-            duplicateEventPage(id);
-          },
-        });
-        return array;
+            duplicateEventPage(id)
+          }
+        })
+        return array
       case StatusProposalEnum.REJEITADA:
       case StatusProposalEnum.CANCELADA:
         array.push({
-          iconType: "duplicate",
-          label: I18n.t("pages.proposal.table.duplicateLabel"),
+          iconType: 'duplicate',
+          label: I18n.t('pages.proposal.table.duplicateLabel'),
           onClick: () => {
-            duplicateEventPage(id);
-          },
-        });
-        return array;
+            duplicateEventPage(id)
+          }
+        })
+        return array
       default:
         array.push({
-          iconType: "duplicate",
-          label: I18n.t("pages.proposal.table.duplicateLabel"),
+          iconType: 'duplicate',
+          label: I18n.t('pages.proposal.table.duplicateLabel'),
           onClick: () => {
-            duplicateEventPage(id);
-          },
-        });
-        return array;
+            duplicateEventPage(id)
+          }
+        })
+        return array
     }
-  };
+  }
 
-  const handleExportList = (): void => {};
+  const handleExportList = (): void => {}
 
-  const handleCardFiltersClick = (): void => {};
+  const handleCardFiltersClick = (): void => {}
 
   const handleSelectedRowFilter = (selectedFiltersRowFilter: any): void => {
-    cleanFilter();
+    cleanFilter()
 
     const selectedProposals = findKeyFilter(
       selectedFiltersRowFilter,
-      "Ref. proposta"
-    );
+      'Ref. proposta'
+    )
     if (selectedProposals !== undefined) {
       setFilter((filter: any) => ({
         ...filter,
-        referenceProposal: [selectedProposals],
-      }));
+        referenceProposal: [selectedProposals]
+      }))
     }
 
-    const selectedClients = findKeyFilter(selectedFiltersRowFilter, "Cliente");
+    const selectedClients = findKeyFilter(selectedFiltersRowFilter, 'Cliente')
     if (selectedClients !== undefined) {
       setFilter((filter: any) => ({
         ...filter,
-        customerName: [selectedClients],
-      }));
+        customerName: [selectedClients]
+      }))
     }
 
     const selectedProcessTypes = findKeyFilter(
       selectedFiltersRowFilter,
-      "Tipo de processo"
-    );
+      'Tipo de processo'
+    )
     if (selectedProcessTypes !== undefined) {
       setFilter((filter: any) => ({
         ...filter,
-        operationType: [selectedProcessTypes],
-      }));
+        operationType: [selectedProcessTypes]
+      }))
     }
 
     const selectedOriginsDestinations = findKeyFilter(
       selectedFiltersRowFilter,
-      "Origem/Destino"
-    );
+      'Origem/Destino'
+    )
     if (selectedOriginsDestinations !== undefined) {
-      const typeOrigin = selectedFiltersRowFilter[3].pickerSelecteds1;
-      const typeDestination = selectedFiltersRowFilter[3].pickerSelecteds2;
+      const typeOrigin = selectedFiltersRowFilter[3].pickerSelecteds1
+      const typeDestination = selectedFiltersRowFilter[3].pickerSelecteds2
 
       if (typeOrigin.length === 1 && typeDestination.length === 0) {
-        const origins = selectedOriginsDestinations[0].split(" - ");
+        const origins = selectedOriginsDestinations[0].split(' - ')
         setFilter((filter: any) => ({
           ...filter,
-          idOrigin: [origins],
-        }));
+          idOrigin: [origins]
+        }))
       }
 
       if (typeOrigin.length === 0 && typeDestination.length === 1) {
-        const destinations = selectedOriginsDestinations[0].split(" - ");
+        const destinations = selectedOriginsDestinations[0].split(' - ')
         setFilter({
           ...filter,
-          idDestination: [destinations],
-        });
+          idDestination: [destinations]
+        })
       }
 
       if (typeOrigin.length === 1 && typeDestination.length === 1) {
         const selectOriginsDestinations =
-          selectedOriginsDestinations.split(" / ");
-        const origins = selectOriginsDestinations[0].split(" - ");
-        const destinations = selectOriginsDestinations[1].split(" - ");
+          selectedOriginsDestinations.split(' / ')
+        const origins = selectOriginsDestinations[0].split(' - ')
+        const destinations = selectOriginsDestinations[1].split(' - ')
 
         setFilter((filter: any) => ({
           ...filter,
           idOrigin: [origins[0]],
-          idDestination: [destinations[0]],
-        }));
+          idDestination: [destinations[0]]
+        }))
       }
     }
 
     const selectedIncoterms = findKeyFilter(
       selectedFiltersRowFilter,
-      "Incoterm"
-    );
+      'Incoterm'
+    )
     if (selectedIncoterms !== undefined) {
       setFilter((filter: any) => ({
         ...filter,
-        idIncoterm: [selectedIncoterms],
-      }));
+        idIncoterm: [selectedIncoterms]
+      }))
     }
 
-    const selectedDates = findKeyFilter(selectedFiltersRowFilter, "Período");
+    const selectedDates = findKeyFilter(selectedFiltersRowFilter, 'Período')
     if (selectedDates !== undefined) {
-      const type = selectedFiltersRowFilter[5].checkBoxSelecteds;
-      const size = selectedDates.length;
+      const type = selectedFiltersRowFilter[5].checkBoxSelecteds
+      const size = selectedDates.length
 
-      if (type[0] === "Dt. Abertura") {
-        const openedDates = selectedDates[size - 1].split(" - ");
+      if (type[0] === 'Dt. Abertura') {
+        const openedDates = selectedDates[size - 1].split(' - ')
 
         const [openedDayBegin, openedMonthBegin, openedYearBegin] =
-          openedDates[0].split("/");
+          openedDates[0].split('/')
         const [openedDayEnd, openedMonthEnd, openedYearEnd] =
-          openedDates[1].split("/");
+          openedDates[1].split('/')
 
         const openedDtBeginFormated = `${String(openedYearBegin)}/${String(
           openedMonthBegin
-        )}/${String(openedDayBegin)}`;
+        )}/${String(openedDayBegin)}`
         const openedDtEndFormated = `${String(openedYearEnd)}/${String(
           openedMonthEnd
-        )}/${String(openedDayEnd)}`;
+        )}/${String(openedDayEnd)}`
 
         setFilter((filter: any) => ({
           ...filter,
-          "openingDate.dtBegin": openedDtBeginFormated,
-          "openingDate.dtEnd": openedDtEndFormated,
-        }));
+          'openingDate.dtBegin': openedDtBeginFormated,
+          'openingDate.dtEnd': openedDtEndFormated
+        }))
       }
 
-      if (type[0] === "Dt. Validade" || type[1] === "Dt. Validade") {
-        const validateDates = selectedDates[size - 1].split(" - ");
+      if (type[0] === 'Dt. Validade' || type[1] === 'Dt. Validade') {
+        const validateDates = selectedDates[size - 1].split(' - ')
 
         const [validateDayBegin, validateMonthBegin, validateYearBegin] =
-          validateDates[0].split("/");
+          validateDates[0].split('/')
         const [validateDayEnd, validateMonthEnd, validateYearEnd] =
-          validateDates[1].split("/");
+          validateDates[1].split('/')
 
         const validateDtBeginFormated = `${String(validateYearBegin)}/${String(
           validateMonthBegin
-        )}/${String(validateDayBegin)}`;
+        )}/${String(validateDayBegin)}`
         const validateDtEndFormated = `${String(validateYearEnd)}/${String(
           validateMonthEnd
-        )}/${String(validateDayEnd)}`;
+        )}/${String(validateDayEnd)}`
 
         setFilter((filter: any) => ({
           ...filter,
-          "validityDate.dtBegin": validateDtBeginFormated,
-          "validityDate.dtEnd": validateDtEndFormated,
-        }));
+          'validityDate.dtBegin': validateDtBeginFormated,
+          'validityDate.dtEnd': validateDtEndFormated
+        }))
       }
     }
-  };
+  }
 
   const findKeyFilter = (filterSelected: any, key: string): any => {
     for (const item of filterSelected) {
       if (item.filterName === key) {
-        if (item.textFieldValueSelected !== "") {
-          return item.textFieldValueSelected;
+        if (item.textFieldValueSelected !== '') {
+          return item.textFieldValueSelected
         }
         if (
           item.pickerSelecteds1.length > 0 &&
           item.pickerSelecteds2.length === 0
         ) {
-          return item.pickerSelecteds1;
+          return item.pickerSelecteds1
         }
         if (
           item.pickerSelecteds1.length === 0 &&
           item.pickerSelecteds2.length > 0
         ) {
-          return item.pickerSelecteds2;
+          return item.pickerSelecteds2
         }
         if (
           item.pickerSelecteds1.length > 0 &&
@@ -593,88 +593,88 @@ const Proposal = (): JSX.Element => {
         ) {
           return `${String(item.pickerSelecteds1)} / ${String(
             item.pickerSelecteds2
-          )}`;
+          )}`
         }
         if (item.checkBoxSelecteds1.length > 0) {
-          return item.checkBoxSelecteds1;
+          return item.checkBoxSelecteds1
         }
         if (item.selectedDates.length > 0) {
-          return item.selectedDates;
+          return item.selectedDates
         }
       }
     }
-  };
+  }
 
   const cleanFilter = (): void => {
-    delete filter.referenceProposal;
-    delete filter.customerId;
-    delete filter.operationType;
-    delete filter.idOrigin;
-    delete filter.idDestination;
-    delete filter.idIncoterm;
-    delete filter["openingDate.dtBegin"];
-    delete filter["openingDate.dtEnd"];
-    delete filter["validityDate.dtBegin"];
-    delete filter["validityDate.dtEnd"];
+    delete filter.referenceProposal
+    delete filter.customerId
+    delete filter.operationType
+    delete filter.idOrigin
+    delete filter.idDestination
+    delete filter.idIncoterm
+    delete filter['openingDate.dtBegin']
+    delete filter['openingDate.dtEnd']
+    delete filter['validityDate.dtBegin']
+    delete filter['validityDate.dtEnd']
 
     setFilter(() => ({
-      direction: "ASC",
-      orderByList: "openingDate",
+      direction: 'ASC',
+      orderByList: 'openingDate',
       page: 0,
-      size: 10,
-    }));
-  };
+      size: 10
+    }))
+  }
 
   const handleOrderSelect = (value: React.SetStateAction<string>): void => {
-    setFilter((filter: any) => ({ ...filter, orderByList: value }));
-    setOrderBy(value);
-  };
+    setFilter((filter: any) => ({ ...filter, orderByList: value }))
+    setOrderBy(value)
+  }
 
   const handleOrderDirection = (): void => {
     if (orderAsc) {
-      setFilter((filter: any) => ({ ...filter, direction: "DESC" }));
-      setOrderAsc(false);
+      setFilter((filter: any) => ({ ...filter, direction: 'DESC' }))
+      setOrderAsc(false)
     } else {
-      setFilter((filter: any) => ({ ...filter, direction: "ASC" }));
-      setOrderAsc(true);
+      setFilter((filter: any) => ({ ...filter, direction: 'ASC' }))
+      setOrderAsc(true)
     }
-  };
+  }
 
   const menuItemsSelector = [
     {
-      label: "Ref. proposta",
-      textField: "Ref. proposta",
+      label: 'Ref. proposta',
+      textField: 'Ref. proposta'
     },
     {
-      label: "Cliente",
+      label: 'Cliente',
       pickerListOptions1: partnerSimpleNameList,
-      pickerLabel1: "Cliente",
+      pickerLabel1: 'Cliente'
     },
     {
-      label: "Tipo de processo",
-      checkboxList1: menuItems.processTypes,
+      label: 'Tipo de processo',
+      checkboxList1: menuItems.processTypes
     },
     {
-      label: "Origem/Destino",
+      label: 'Origem/Destino',
       radioButtonList: menuItems.modal,
       pickerListOptions1: getOriginDestinyList(),
       pickerListOptions2: getOriginDestinyList(),
-      pickerLabel1: "Origem",
-      pickerLabel2: "Destino",
-      title1: "Modal",
+      pickerLabel1: 'Origem',
+      pickerLabel2: 'Destino',
+      title1: 'Modal'
     },
     {
-      label: "Incoterm",
+      label: 'Incoterm',
       pickerListOptions1: incotermList,
-      pickerLabel1: "Incoterm",
+      pickerLabel1: 'Incoterm'
     },
     {
-      label: "Período",
-      checkboxList: ["Dt. Abertura", "Dt. Validade"],
+      label: 'Período',
+      checkboxList: ['Dt. Abertura', 'Dt. Validade'],
       hasDatePicker: true,
-      dateRanges: menuItems.dateRanges,
-    },
-  ];
+      dateRanges: menuItems.dateRanges
+    }
+  ]
 
   const handleChangeModal = (
     handleCleanAll: () => void,
@@ -682,27 +682,27 @@ const Proposal = (): JSX.Element => {
     handlePickerChange1: (e: any, newValue: string[]) => void,
     handlePickerChange2: (e: any, newValue: string[]) => void
   ): void => {
-    if (radioValue !== "") {
-      handleCleanAll();
-      handleCleanButton();
-      handlePickerChange1(null, []);
-      handlePickerChange2(null, []);
+    if (radioValue !== '') {
+      handleCleanAll()
+      handleCleanButton()
+      handlePickerChange1(null, [])
+      handlePickerChange2(null, [])
     }
-  };
+  }
 
   const handleCleanModal = (handleCleanAll: () => void): void => {
-    setRadioValue("");
-    handleCleanAll();
-  };
+    setRadioValue('')
+    handleCleanAll()
+  }
 
   const showMsgTotalResult = (): string => {
-    const keys = Object.keys(filter);
+    const keys = Object.keys(filter)
 
     /* eslint-disable no-prototype-builtins */
-    const direction = filter.hasOwnProperty("direction");
-    const orderByList = filter.hasOwnProperty("orderByList");
-    const page = filter.hasOwnProperty("page");
-    const size = filter.hasOwnProperty("size");
+    const direction = filter.hasOwnProperty('direction')
+    const orderByList = filter.hasOwnProperty('orderByList')
+    const page = filter.hasOwnProperty('page')
+    const size = filter.hasOwnProperty('size')
 
     if (
       keys.length === 4 &&
@@ -711,10 +711,10 @@ const Proposal = (): JSX.Element => {
       Boolean(direction) &&
       Boolean(orderByList)
     ) {
-      return `Propostas (${totalProposalList}) - Últimos 30 dias`;
+      return `Propostas (${totalProposalList}) - Últimos 30 dias`
     }
-    return `Resultado do filtro (${totalProposalList})`;
-  };
+    return `Resultado do filtro (${totalProposalList})`
+  }
 
   return (
     <RootContainer>
@@ -722,9 +722,9 @@ const Proposal = (): JSX.Element => {
         <Breadcrumbs separator=">" aria-label="breadcrumb">
           <Link
             color="inherit"
-            onClick={() => history.push("/")}
+            onClick={() => history.push('/')}
             className="breadcrumbInitial"
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
           >
             Home
           </Link>
@@ -733,14 +733,14 @@ const Proposal = (): JSX.Element => {
         <TopButtonContainer>
           <Button
             disabled={false}
-            text={"Criar nova proposta..."}
-            tooltip={"Criar nova proposta"}
+            text={'Criar nova proposta...'}
+            tooltip={'Criar nova proposta'}
             backgroundGreen={true}
             icon="add"
             onAction={() =>
               history.push({
-                pathname: "/novaProposta",
-                state: { proposalId: null },
+                pathname: '/novaProposta',
+                state: { proposalId: null }
               })
             }
           />
@@ -810,15 +810,15 @@ const Proposal = (): JSX.Element => {
       <BottomSideContainer>
         <TableContainer>
           <Table
-            approvedLabel={I18n.t("pages.proposal.table.approvedLabel")}
-            cancelLabel={I18n.t("pages.proposal.table.cancelledLabel")}
-            inRevisionLabel={I18n.t("pages.proposal.table.inRevisionLabel")}
+            approvedLabel={I18n.t('pages.proposal.table.approvedLabel')}
+            cancelLabel={I18n.t('pages.proposal.table.cancelledLabel')}
+            inRevisionLabel={I18n.t('pages.proposal.table.inRevisionLabel')}
             isShowIconLate={true}
-            openLabel={I18n.t("pages.proposal.table.openLabel")}
-            rejectLabel={I18n.t("pages.proposal.table.rejectedLabel")}
+            openLabel={I18n.t('pages.proposal.table.openLabel')}
+            rejectLabel={I18n.t('pages.proposal.table.rejectedLabel')}
             rows={getProposalItems(proposalList)}
             waitingForCustomerReturnLabel={I18n.t(
-              "pages.proposal.table.waitingForCustomerReturnLabel"
+              'pages.proposal.table.waitingForCustomerReturnLabel'
             )}
           />
         </TableContainer>
@@ -836,7 +836,7 @@ const Proposal = (): JSX.Element => {
                 setFilter((filter: any) => ({
                   ...filter,
                   size: value,
-                  page: 0,
+                  page: 0
                 }))
               }
               tooltipBack="Anterior"
@@ -848,7 +848,7 @@ const Proposal = (): JSX.Element => {
         </PaginationContainer>
       </BottomSideContainer>
     </RootContainer>
-  );
-};
+  )
+}
 
-export default Proposal;
+export default Proposal
