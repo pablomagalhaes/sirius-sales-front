@@ -10,11 +10,11 @@ const orderButtonMenuItems = [
     description: 'Ref. proposta'
   },
   {
-    value: 'businessPartnerCostumerCostumerName',
+    value: 'customerName',
     description: 'Nome do cliente'
   },
   {
-    value: 'codeRespSeller',
+    value: 'userCreationName',
     description: 'Responsável'
   },
   {
@@ -98,11 +98,7 @@ const menuItems = {
     'Consultoria',
     'FTA'
   ],
-  modal: [
-    'Aéreo',
-    'Marítimo',
-    'Rodoviário'
-  ]
+  modal: ['Aéreo', 'Marítimo', 'Rodoviário']
 }
 
 // mock

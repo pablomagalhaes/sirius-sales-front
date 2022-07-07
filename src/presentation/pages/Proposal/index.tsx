@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import {
   Button,
   Pagination,
+  QuickFilters,
   RowFilter,
   Table
 } from 'fiorde-fe-components'
@@ -33,9 +34,12 @@ import { useHistory } from 'react-router-dom'
 import UpArrow from '../../../application/icons/UpArrow'
 import API from '../../../infrastructure/api'
 import ArrowDown from '../../../application/icons/ArrowDown'
-import { orderButtonMenuItems, menuItems } from './constants'
+import { cardFilters, orderButtonMenuItems, menuItems } from './constants'
 import { I18n } from 'react-redux-i18n'
-import { StatusProposalEnum, StatusProposalStringEnum } from '../../../application/enum/statusProposalEnum'
+import {
+  StatusProposalEnum,
+  StatusProposalStringEnum
+} from '../../../application/enum/statusProposalEnum'
 
 const defaultFilter = {
   direction: 'ASC',
@@ -51,7 +55,7 @@ const Proposal = (): JSX.Element => {
   const [orderAsc, setOrderAsc] = useState(true)
   const [orderBy, setOrderBy] = useState<string>('openingDate')
   const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
-  const [, setPartnerList] = useState<any[]>([])
+  const [partnerList, setPartnerList] = useState<any[]>([])
   const [partnerSimpleNameList, setPartnerSimpleNameList] = useState<any[]>([])
   const [proposalList, setProposalList] = useState<any[]>([])
   const [radioValue, setRadioValue] = useState('')
@@ -76,7 +80,7 @@ const Proposal = (): JSX.Element => {
           response.forEach((item: any) => {
             newIncotermList.push(item?.id)
           })
-          return (setIncotermList(newIncotermList))
+          return setIncotermList(newIncotermList)
         })
         .catch((err) => console.log(err))
     })()
@@ -194,8 +198,13 @@ const Proposal = (): JSX.Element => {
     const warningDate = checkBusinessDays(new Date())
 
     let showWarning = false
-    if (status !== 'Aprovada' && status !== 'Rejeitada' && status !== 'Cancelada' && status !== 'Cancelamento Automático') {
-      showWarning = (validityDate <= warningDate) || (validityDate === warningDate)
+    if (
+      status !== 'Aprovada' &&
+      status !== 'Rejeitada' &&
+      status !== 'Cancelada' &&
+      status !== 'Cancelamento Automático'
+    ) {
+      showWarning = validityDate <= warningDate || validityDate === warningDate
     }
     return showWarning
   }
@@ -222,7 +231,9 @@ const Proposal = (): JSX.Element => {
     const array: any = []
     for (const proposal of proposalList) {
       const opening = new Date(proposal.openingDate).toLocaleDateString('pt-BR')
-      const shelfLife = new Date(proposal.validityDate).toLocaleDateString('pt-BR')
+      const shelfLife = new Date(proposal.validityDate).toLocaleDateString(
+        'pt-BR'
+      )
       const validityDate = new Date(proposal.validityDate)
       const showWarning = verifyWarning(proposal.status, validityDate)
       const status = verifyStatus(proposal.status)
@@ -280,95 +291,107 @@ const Proposal = (): JSX.Element => {
     const array: any = []
     switch (status) {
       case StatusProposalEnum.ABERTA:
-        array.push({
-          iconType: 'edit',
-          label: I18n.t('pages.proposal.table.editLabel'),
-          onClick: () => { editEventPage(id) }
-        },
-        {
-          iconType: 'duplicate',
-          label: I18n.t('pages.proposal.table.duplicateLabel'),
-          onClick: () => { duplicateEventPage(id) }
-        },
-        {
-          iconType: 'forward',
-          label: I18n.t('pages.proposal.table.confirmLabel'),
-          onClick: () => {
-            setStatus(id, StatusProposalStringEnum.AGUARDANDO_RETORNO_CLIENTE)
+        array.push(
+          {
+            iconType: 'edit',
+            label: I18n.t('pages.proposal.table.editLabel'),
+            onClick: () => {
+              editEventPage(id)
+            }
+          },
+          {
+            iconType: 'duplicate',
+            label: I18n.t('pages.proposal.table.duplicateLabel'),
+            onClick: () => {
+              duplicateEventPage(id)
+            }
+          },
+          {
+            iconType: 'forward',
+            label: I18n.t('pages.proposal.table.confirmLabel'),
+            onClick: () => {
+              setStatus(id, StatusProposalStringEnum.AGUARDANDO_RETORNO_CLIENTE)
+            }
+          },
+          {
+            iconType: 'cancel',
+            label: I18n.t('pages.proposal.table.cancelLabel'),
+            onClick: () => {
+              setStatus(id, StatusProposalStringEnum.CANCELADA)
+            }
           }
-        },
-        {
-          iconType: 'cancel',
-          label: I18n.t('pages.proposal.table.cancelLabel'),
-          onClick: () => {
-            setStatus(id, StatusProposalStringEnum.CANCELADA)
-          }
-        })
+        )
         return array
       case StatusProposalEnum.AGUARDANDO_RETORNO_CLIENTE:
-        array.push({
-          iconType: 'duplicate',
-          label: I18n.t('pages.proposal.table.duplicateLabel'),
-          onClick: () => { duplicateEventPage(id) }
-        },
-        {
-          iconType: 'fileReview',
-          label: I18n.t('pages.proposal.table.reviewLabel'),
-          onClick: () => {
-            setStatus(id, StatusProposalStringEnum.EM_REVISAO)
+        array.push(
+          {
+            iconType: 'duplicate',
+            label: I18n.t('pages.proposal.table.duplicateLabel'),
+            onClick: () => {
+              duplicateEventPage(id)
+            }
+          },
+          {
+            iconType: 'fileReview',
+            label: I18n.t('pages.proposal.table.reviewLabel'),
+            onClick: () => {
+              setStatus(id, StatusProposalStringEnum.EM_REVISAO)
+            }
+          },
+          {
+            iconType: 'cancel',
+            label: I18n.t('pages.proposal.table.cancelLabel'),
+            onClick: () => {
+              setStatus(id, StatusProposalStringEnum.CANCELADA)
+            }
+          },
+          {
+            iconType: 'thumbsUp',
+            label: I18n.t('pages.proposal.table.approveLabel'),
+            onClick: () => {
+              setStatus(id, StatusProposalStringEnum.APROVADA)
+            }
+          },
+          {
+            iconType: 'thumbsDown',
+            label: I18n.t('pages.proposal.table.rejectLabel'),
+            onClick: () => {
+              setStatus(id, StatusProposalStringEnum.REJEITADA)
+            }
           }
-        },
-        {
-          iconType: 'cancel',
-          label: I18n.t('pages.proposal.table.cancelLabel'),
-          onClick: () => {
-            setStatus(id, StatusProposalStringEnum.CANCELADA)
-          }
-        },
-        {
-          iconType: 'thumbsUp',
-          label: I18n.t('pages.proposal.table.approveLabel'),
-          onClick: () => {
-            setStatus(id, StatusProposalStringEnum.APROVADA)
-          }
-        },
-        {
-          iconType: 'thumbsDown',
-          label: I18n.t('pages.proposal.table.rejectLabel'),
-          onClick: () => {
-            setStatus(id, StatusProposalStringEnum.REJEITADA)
-          }
-        })
+        )
         return array
       case StatusProposalEnum.EM_REVISAO:
-        array.push({
-          iconType: 'edit',
-          label: I18n.t('pages.proposal.table.editLabel'),
-          onClick: () => {
-            editEventPage(id)
+        array.push(
+          {
+            iconType: 'edit',
+            label: I18n.t('pages.proposal.table.editLabel'),
+            onClick: () => {
+              editEventPage(id)
+            }
+          },
+          {
+            iconType: 'duplicate',
+            label: I18n.t('pages.proposal.table.duplicateLabel'),
+            onClick: () => {
+              duplicateEventPage(id)
+            }
+          },
+          {
+            iconType: 'forward',
+            label: I18n.t('pages.proposal.table.confirmLabel'),
+            onClick: () => {
+              setStatus(id, StatusProposalStringEnum.AGUARDANDO_RETORNO_CLIENTE)
+            }
+          },
+          {
+            iconType: 'cancel',
+            label: I18n.t('pages.proposal.table.cancelLabel'),
+            onClick: () => {
+              setStatus(id, StatusProposalStringEnum.CANCELADA)
+            }
           }
-        },
-        {
-          iconType: 'duplicate',
-          label: I18n.t('pages.proposal.table.duplicateLabel'),
-          onClick: () => {
-            duplicateEventPage(id)
-          }
-        },
-        {
-          iconType: 'forward',
-          label: I18n.t('pages.proposal.table.confirmLabel'),
-          onClick: () => {
-            setStatus(id, StatusProposalStringEnum.AGUARDANDO_RETORNO_CLIENTE)
-          }
-        },
-        {
-          iconType: 'cancel',
-          label: I18n.t('pages.proposal.table.cancelLabel'),
-          onClick: () => {
-            setStatus(id, StatusProposalStringEnum.CANCELADA)
-          }
-        })
+        )
         return array
       case StatusProposalEnum.APROVADA:
         array.push({
@@ -403,10 +426,15 @@ const Proposal = (): JSX.Element => {
 
   const handleExportList = (): void => {}
 
+  const handleCardFiltersClick = (): void => {}
+
   const handleSelectedRowFilter = (selectedFiltersRowFilter: any): void => {
     cleanFilter()
 
-    const selectedProposals = findKeyFilter(selectedFiltersRowFilter, 'Ref. proposta')
+    const selectedProposals = findKeyFilter(
+      selectedFiltersRowFilter,
+      'Ref. proposta'
+    )
     if (selectedProposals !== undefined) {
       setFilter((filter: any) => ({
         ...filter,
@@ -416,13 +444,23 @@ const Proposal = (): JSX.Element => {
 
     const selectedClients = findKeyFilter(selectedFiltersRowFilter, 'Cliente')
     if (selectedClients !== undefined) {
+      
+      const clientIds: any = []
+      selectedClients.forEach(name => {
+        const client = partnerList.find(item => item.simpleName === name)
+        clientIds.push(client.id)
+      });
+
       setFilter((filter: any) => ({
         ...filter,
-        customerId: [selectedClients]
+        customerId: [clientIds]
       }))
     }
 
-    const selectedProcessTypes = findKeyFilter(selectedFiltersRowFilter, 'Tipo de processo')
+    const selectedProcessTypes = findKeyFilter(
+      selectedFiltersRowFilter,
+      'Tipo de processo'
+    )
     if (selectedProcessTypes !== undefined) {
       setFilter((filter: any) => ({
         ...filter,
@@ -430,7 +468,10 @@ const Proposal = (): JSX.Element => {
       }))
     }
 
-    const selectedOriginsDestinations = findKeyFilter(selectedFiltersRowFilter, 'Origem/Destino')
+    const selectedOriginsDestinations = findKeyFilter(
+      selectedFiltersRowFilter,
+      'Origem/Destino'
+    )
     if (selectedOriginsDestinations !== undefined) {
       const typeOrigin = selectedFiltersRowFilter[3].pickerSelecteds1
       const typeDestination = selectedFiltersRowFilter[3].pickerSelecteds2
@@ -452,7 +493,8 @@ const Proposal = (): JSX.Element => {
       }
 
       if (typeOrigin.length === 1 && typeDestination.length === 1) {
-        const selectOriginsDestinations = selectedOriginsDestinations.split(' / ')
+        const selectOriginsDestinations =
+          selectedOriginsDestinations.split(' / ')
         const origins = selectOriginsDestinations[0].split(' - ')
         const destinations = selectOriginsDestinations[1].split(' - ')
 
@@ -464,7 +506,10 @@ const Proposal = (): JSX.Element => {
       }
     }
 
-    const selectedIncoterms = findKeyFilter(selectedFiltersRowFilter, 'Incoterm')
+    const selectedIncoterms = findKeyFilter(
+      selectedFiltersRowFilter,
+      'Incoterm'
+    )
     if (selectedIncoterms !== undefined) {
       setFilter((filter: any) => ({
         ...filter,
@@ -480,11 +525,17 @@ const Proposal = (): JSX.Element => {
       if (type[0] === 'Dt. Abertura') {
         const openedDates = selectedDates[size - 1].split(' - ')
 
-        const [openedDayBegin, openedMonthBegin, openedYearBegin] = openedDates[0].split('/')
-        const [openedDayEnd, openedMonthEnd, openedYearEnd] = openedDates[1].split('/')
+        const [openedDayBegin, openedMonthBegin, openedYearBegin] =
+          openedDates[0].split('/')
+        const [openedDayEnd, openedMonthEnd, openedYearEnd] =
+          openedDates[1].split('/')
 
-        const openedDtBeginFormated = `${String(openedYearBegin)}/${String(openedMonthBegin)}/${String(openedDayBegin)}`
-        const openedDtEndFormated = `${String(openedYearEnd)}/${String(openedMonthEnd)}/${String(openedDayEnd)}`
+        const openedDtBeginFormated = `${String(openedYearBegin)}/${String(
+          openedMonthBegin
+        )}/${String(openedDayBegin)}`
+        const openedDtEndFormated = `${String(openedYearEnd)}/${String(
+          openedMonthEnd
+        )}/${String(openedDayEnd)}`
 
         setFilter((filter: any) => ({
           ...filter,
@@ -496,11 +547,17 @@ const Proposal = (): JSX.Element => {
       if (type[0] === 'Dt. Validade' || type[1] === 'Dt. Validade') {
         const validateDates = selectedDates[size - 1].split(' - ')
 
-        const [validateDayBegin, validateMonthBegin, validateYearBegin] = validateDates[0].split('/')
-        const [validateDayEnd, validateMonthEnd, validateYearEnd] = validateDates[1].split('/')
+        const [validateDayBegin, validateMonthBegin, validateYearBegin] =
+          validateDates[0].split('/')
+        const [validateDayEnd, validateMonthEnd, validateYearEnd] =
+          validateDates[1].split('/')
 
-        const validateDtBeginFormated = `${String(validateYearBegin)}/${String(validateMonthBegin)}/${String(validateDayBegin)}`
-        const validateDtEndFormated = `${String(validateYearEnd)}/${String(validateMonthEnd)}/${String(validateDayEnd)}`
+        const validateDtBeginFormated = `${String(validateYearBegin)}/${String(
+          validateMonthBegin
+        )}/${String(validateDayBegin)}`
+        const validateDtEndFormated = `${String(validateYearEnd)}/${String(
+          validateMonthEnd
+        )}/${String(validateDayEnd)}`
 
         setFilter((filter: any) => ({
           ...filter,
@@ -517,14 +574,25 @@ const Proposal = (): JSX.Element => {
         if (item.textFieldValueSelected !== '') {
           return item.textFieldValueSelected
         }
-        if (item.pickerSelecteds1.length > 0 && item.pickerSelecteds2.length === 0) {
+        if (
+          item.pickerSelecteds1.length > 0 &&
+          item.pickerSelecteds2.length === 0
+        ) {
           return item.pickerSelecteds1
         }
-        if (item.pickerSelecteds1.length === 0 && item.pickerSelecteds2.length > 0) {
+        if (
+          item.pickerSelecteds1.length === 0 &&
+          item.pickerSelecteds2.length > 0
+        ) {
           return item.pickerSelecteds2
         }
-        if (item.pickerSelecteds1.length > 0 && item.pickerSelecteds2.length > 0) {
-          return `${String(item.pickerSelecteds1)} / ${String(item.pickerSelecteds2)}`
+        if (
+          item.pickerSelecteds1.length > 0 &&
+          item.pickerSelecteds2.length > 0
+        ) {
+          return `${String(item.pickerSelecteds1)} / ${String(
+            item.pickerSelecteds2
+          )}`
         }
         if (item.checkBoxSelecteds1.length > 0) {
           return item.checkBoxSelecteds1
@@ -635,7 +703,13 @@ const Proposal = (): JSX.Element => {
     const page = filter.hasOwnProperty('page')
     const size = filter.hasOwnProperty('size')
 
-    if (keys.length === 4 && (Boolean(page)) && (Boolean(size)) && (Boolean(direction)) && (Boolean(orderByList))) {
+    if (
+      keys.length === 4 &&
+      Boolean(page) &&
+      Boolean(size) &&
+      Boolean(direction) &&
+      Boolean(orderByList)
+    ) {
       return `Propostas (${totalProposalList}) - Últimos 30 dias`
     }
     return `Resultado do filtro (${totalProposalList})`
@@ -662,13 +736,19 @@ const Proposal = (): JSX.Element => {
             tooltip={'Criar nova proposta'}
             backgroundGreen={true}
             icon="add"
-            onAction={() => history.push({
-              pathname: '/novaProposta',
-              state: { proposalId: null }
-            })}
+            onAction={() =>
+              history.push({
+                pathname: '/novaProposta',
+                state: { proposalId: null }
+              })
+            }
           />
         </TopButtonContainer>
       </TopContainer>
+      <QuickFilters
+        cardFilters={cardFilters}
+        onFilterClick={handleCardFiltersClick}
+      />
       <RowFilterContainer>
         <RowFilter
           addFilterLabel="Filtros avançados"
@@ -685,9 +765,7 @@ const Proposal = (): JSX.Element => {
       </RowFilterContainer>
       <ListHeaderContainer>
         <LeftSideListHeaderContainer>
-          <ListMainTitleSpan>
-            {showMsgTotalResult()}
-          </ListMainTitleSpan>
+          <ListMainTitleSpan>{showMsgTotalResult()}</ListMainTitleSpan>
           <ExportListContainer onClick={handleExportList}>
             <ExitToApp />
             <ExportListSpan>Exportar lista</ExportListSpan>
@@ -731,14 +809,16 @@ const Proposal = (): JSX.Element => {
       <BottomSideContainer>
         <TableContainer>
           <Table
-            approvedLabel={(I18n.t('pages.proposal.table.approvedLabel'))}
-            cancelLabel={(I18n.t('pages.proposal.table.cancelledLabel'))}
-            inRevisionLabel={(I18n.t('pages.proposal.table.inRevisionLabel'))}
+            approvedLabel={I18n.t('pages.proposal.table.approvedLabel')}
+            cancelLabel={I18n.t('pages.proposal.table.cancelledLabel')}
+            inRevisionLabel={I18n.t('pages.proposal.table.inRevisionLabel')}
             isShowIconLate={true}
-            openLabel={(I18n.t('pages.proposal.table.openLabel'))}
-            rejectLabel={(I18n.t('pages.proposal.table.rejectedLabel'))}
+            openLabel={I18n.t('pages.proposal.table.openLabel')}
+            rejectLabel={I18n.t('pages.proposal.table.rejectedLabel')}
             rows={getProposalItems(proposalList)}
-            waitingForCustomerReturnLabel={(I18n.t('pages.proposal.table.waitingForCustomerReturnLabel'))}
+            waitingForCustomerReturnLabel={I18n.t(
+              'pages.proposal.table.waitingForCustomerReturnLabel'
+            )}
           />
         </TableContainer>
         <PaginationContainer>
@@ -748,8 +828,16 @@ const Proposal = (): JSX.Element => {
               labelDisplay="exibindo"
               labelDisplayedRows="de"
               labelRowsPerPage="Propostas por página"
-              onPageChange={(value) => setFilter((filter: any) => ({ ...filter, page: value }))}
-              onRowsPerPageChange={(value) => setFilter((filter: any) => ({ ...filter, size: value, page: 0 }))}
+              onPageChange={(value) =>
+                setFilter((filter: any) => ({ ...filter, page: value }))
+              }
+              onRowsPerPageChange={(value) =>
+                setFilter((filter: any) => ({
+                  ...filter,
+                  size: value,
+                  page: 0
+                }))
+              }
               tooltipBack="Anterior"
               tooltipFirst="Primeira"
               tooltipLast="Última"
