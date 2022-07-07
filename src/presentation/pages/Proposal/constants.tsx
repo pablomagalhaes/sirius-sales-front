@@ -14,7 +14,7 @@ const orderButtonMenuItems = [
     description: 'Nome do cliente'
   },
   {
-    value: 'codeRespSeller',
+    value: 'userCreationName',
     description: 'Responsável'
   },
   {
