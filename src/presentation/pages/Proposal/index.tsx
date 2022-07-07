@@ -230,9 +230,7 @@ const Proposal = (): JSX.Element => {
   const getProposalItems = (proposalList): any => {
     const array: any = []
     for (const proposal of proposalList) {
-      const opening = new Date(proposal.openingDate).toLocaleDateString(
-        'pt-BR'
-      )
+      const opening = new Date(proposal.openingDate).toLocaleDateString('pt-BR')
       const shelfLife = new Date(proposal.validityDate).toLocaleDateString(
         'pt-BR'
       )
@@ -312,10 +310,7 @@ const Proposal = (): JSX.Element => {
             iconType: 'forward',
             label: I18n.t('pages.proposal.table.confirmLabel'),
             onClick: () => {
-              setStatus(
-                id,
-                StatusProposalStringEnum.AGUARDANDO_RETORNO_CLIENTE
-              )
+              setStatus(id, StatusProposalStringEnum.AGUARDANDO_RETORNO_CLIENTE)
             }
           },
           {
@@ -386,10 +381,7 @@ const Proposal = (): JSX.Element => {
             iconType: 'forward',
             label: I18n.t('pages.proposal.table.confirmLabel'),
             onClick: () => {
-              setStatus(
-                id,
-                StatusProposalStringEnum.AGUARDANDO_RETORNO_CLIENTE
-              )
+              setStatus(id, StatusProposalStringEnum.AGUARDANDO_RETORNO_CLIENTE)
             }
           },
           {
@@ -451,10 +443,11 @@ const Proposal = (): JSX.Element => {
     }
 
     const selectedClients = findKeyFilter(selectedFiltersRowFilter, 'Cliente')
+    console.log(selectedClients)
     if (selectedClients !== undefined) {
       setFilter((filter: any) => ({
         ...filter,
-        customerName: [selectedClients]
+        customerId: [selectedClients]
       }))
     }
 
