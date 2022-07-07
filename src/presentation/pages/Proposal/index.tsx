@@ -55,7 +55,7 @@ const Proposal = (): JSX.Element => {
   const [orderAsc, setOrderAsc] = useState(true)
   const [orderBy, setOrderBy] = useState<string>('openingDate')
   const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
-  const [, setPartnerList] = useState<any[]>([])
+  const [partnerList, setPartnerList] = useState<any[]>([])
   const [partnerSimpleNameList, setPartnerSimpleNameList] = useState<any[]>([])
   const [proposalList, setProposalList] = useState<any[]>([])
   const [radioValue, setRadioValue] = useState('')
@@ -443,11 +443,17 @@ const Proposal = (): JSX.Element => {
     }
 
     const selectedClients = findKeyFilter(selectedFiltersRowFilter, 'Cliente')
-    console.log(selectedClients)
     if (selectedClients !== undefined) {
+      
+      const clientIds: any = []
+      selectedClients.forEach(name => {
+        const client = partnerList.find(item => item.simpleName === name)
+        clientIds.push(client.id)
+      });
+
       setFilter((filter: any) => ({
         ...filter,
-        customerId: [selectedClients]
+        customerId: [clientIds]
       }))
     }
 
