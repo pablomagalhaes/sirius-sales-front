@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import {
   Button,
   Pagination,
-  QuickFilters,
   RowFilter,
   Table
 } from 'fiorde-fe-components'
@@ -34,7 +33,7 @@ import { useHistory } from 'react-router-dom'
 import UpArrow from '../../../application/icons/UpArrow'
 import API from '../../../infrastructure/api'
 import ArrowDown from '../../../application/icons/ArrowDown'
-import { cardFilters, orderButtonMenuItems, menuItems } from './constants'
+import { orderButtonMenuItems, menuItems } from './constants'
 import { I18n } from 'react-redux-i18n'
 import {
   StatusProposalEnum,
@@ -426,8 +425,6 @@ const Proposal = (): JSX.Element => {
 
   const handleExportList = (): void => {}
 
-  const handleCardFiltersClick = (): void => {}
-
   const handleSelectedRowFilter = (selectedFiltersRowFilter: any): void => {
     cleanFilter()
 
@@ -444,12 +441,11 @@ const Proposal = (): JSX.Element => {
 
     const selectedClients = findKeyFilter(selectedFiltersRowFilter, 'Cliente')
     if (selectedClients !== undefined) {
-      
       const clientIds: any = []
       selectedClients.forEach(name => {
         const client = partnerList.find(item => item.simpleName === name)
         clientIds.push(client.id)
-      });
+      })
 
       setFilter((filter: any) => ({
         ...filter,
@@ -745,10 +741,6 @@ const Proposal = (): JSX.Element => {
           />
         </TopButtonContainer>
       </TopContainer>
-      <QuickFilters
-        cardFilters={cardFilters}
-        onFilterClick={handleCardFiltersClick}
-      />
       <RowFilterContainer>
         <RowFilter
           addFilterLabel="Filtros avançados"

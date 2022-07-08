@@ -1,9 +1,3 @@
-interface CardFilterProps {
-  iconType: string
-  status: string
-  value: string
-}
-
 const orderButtonMenuItems = [
   {
     value: 'referenceProposal',
@@ -36,49 +30,6 @@ const orderButtonMenuItems = [
   {
     value: 'validityDate',
     description: 'Dt. validade'
-  }
-]
-
-const cardFilters: CardFilterProps[] = [
-  {
-    iconType: '',
-    value: '170',
-    status: 'Abertas'
-  },
-  {
-    iconType: '',
-    value: '61',
-    status: 'Ag. ret. cliente'
-  },
-  {
-    iconType: '',
-    value: '5',
-    status: 'Renegociação'
-  },
-  {
-    iconType: '',
-    value: '12',
-    status: 'Rejeitadas'
-  },
-  {
-    iconType: '',
-    value: '28',
-    status: 'Aprovadas'
-  },
-  {
-    iconType: 'truck',
-    value: '10',
-    status: 'Rodoviário'
-  },
-  {
-    iconType: 'plane',
-    value: '40',
-    status: 'Aéreo'
-  },
-  {
-    iconType: 'ship',
-    value: '160',
-    status: 'Marítimo'
   }
 ]
 
@@ -124,4 +75,4 @@ const TableRows = (): any => {
   return array
 }
 
-export { cardFilters, TableRows, orderButtonMenuItems, menuItems }
+export { TableRows, orderButtonMenuItems, menuItems }
