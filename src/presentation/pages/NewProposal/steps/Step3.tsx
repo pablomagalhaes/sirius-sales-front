@@ -285,15 +285,7 @@ const Step3 = ({
   }
 
   const completeDecimalPlaces = (num: number): string => {
-    const decimalPlaces = String(num).split('.')[1]
-    let completeNumber = String(num)
-    if ((decimalPlaces === undefined) || decimalPlaces.length < 2) {
-      completeNumber = completeNumber + ','
-      for (let i = 0; i < 2 - (decimalPlaces === undefined ? 0 : decimalPlaces.length); i++) {
-        completeNumber = completeNumber + '0'
-      }
-    }
-    return completeNumber
+    return num.toFixed(2).replace('.', ',')
   }
 
   const handleCwClose = (): void => {
