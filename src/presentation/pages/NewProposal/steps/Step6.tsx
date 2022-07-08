@@ -521,19 +521,7 @@ const Step6 = ({
 
   const completeDecimalPlaces = (num: number | null): string => {
     if (num === null) return '0'
-    const decimalPlaces = String(num).split('.')[1]
-    let completeNumber = String(num)
-    if (decimalPlaces === undefined || decimalPlaces.length < 2) {
-      completeNumber = completeNumber + ','
-      for (
-        let i = 0;
-        i < 2 - (decimalPlaces === undefined ? 0 : decimalPlaces.length);
-        i++
-      ) {
-        completeNumber = completeNumber + '0'
-      }
-    }
-    return completeNumber.replace('.', ',')
+    return num.toFixed(2).replace('.', ',')
   }
 
   const getSumTotalItem = (): string => {

@@ -151,6 +151,7 @@ const Step5 = ({
             })
 
             void await Promise.all([getContainer, getService, getAgent]).then((response) => {
+              console.log(cost.valuePurchase)
               const loadedItem: CostTableItem = {
                 idCost: cost.id,
                 idProposal: proposal.idProposal,
@@ -308,15 +309,7 @@ const Step5 = ({
 
   const completeDecimalPlaces = (num: number | null): string | null => {
     if (num === null) return null
-    const decimalPlaces = String(num).split('.')[1]
-    let completeNumber = String(num)
-    if ((decimalPlaces === undefined) || decimalPlaces.length < 2) {
-      completeNumber = completeNumber + '.'
-      for (let i = 0; i < 2 - (decimalPlaces === undefined ? 0 : decimalPlaces.length); i++) {
-        completeNumber = completeNumber + '0'
-      }
-    }
-    return completeNumber
+    return num.toFixed(2)
   }
 
   return (
