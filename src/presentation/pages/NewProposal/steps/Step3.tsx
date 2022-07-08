@@ -285,7 +285,7 @@ const Step3 = ({
   }
 
   const completeDecimalPlaces = (num: number): string => {
-    return num.toFixed(2)
+    return num.toFixed(2).replace('.', ',')
   }
 
   const handleCwClose = (): void => {
