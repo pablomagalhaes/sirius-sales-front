@@ -43,7 +43,7 @@
         "destinySeaport": "Destiny Seaport",
         "originAirport": "Origin Airport",
         "originSeaport": "Origin Seaport",
-        "agents": "Agents:",
+        "agents": "Agent",
         "searchAgents": "Search by name...",
         "incoterm": "INCOTERM:",
         "choose": "Choose ...",
@@ -51,7 +51,15 @@
         "state": "State",
         "city": "City",
         "differentLocationsDestiny": "Select a destiny different from origin.",
-        "differentLocationsOrigin": "Select an origin different from destiny."
+        "differentLocationsOrigin": "Select an origin different from destiny.",
+        "differentAgent": "Select a different agent",
+        "differentShippingCompany": "Select a different Shipping company",
+        "differentColoader": "Select a different Shipowner/Coloader",
+        "differentTransporterer": "Select a different Transporter",
+        "shippingCompany": "Shipping Company",
+        "addAgent": "Add agent",
+        "transporter": "Transporter",
+        "coloader": "Shipowner/Coloader"
       },
       "step3": {
         "title": "Cargo",

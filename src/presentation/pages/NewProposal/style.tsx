@@ -319,8 +319,17 @@ const EditIconContainer = styled.div`
   margin-top: 27px;
   margin-left: 10px;
 `
+const AddAgentButtonWrapper = styled.div`
+  margin-left: 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-top: 20px;
+`
 
 export {
+  AddAgentButtonWrapper,
   ButtonContainer,
   IconContainer,
   Header,
