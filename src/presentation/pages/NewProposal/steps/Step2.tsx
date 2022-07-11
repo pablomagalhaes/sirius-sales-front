@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core/'
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete'
 import { I18n } from 'react-redux-i18n'
-import { Title, Subtitle, Separator, SelectSpan } from '../style'
+import { Title, Subtitle, Separator, SelectSpan, AddAgentButtonWrapper } from '../style'
 import IconComponent from '../../../../application/icons/IconComponent'
 import { withTheme } from 'styled-components'
 import ControlledSelect from '../../../components/ControlledSelect'
@@ -308,7 +308,7 @@ const Step2 = ({
 
   const validateAgent = (value: string, index: number): boolean => {
     for (let currentIndex = 0; currentIndex < selectedAgents.length; currentIndex++) {
-      if (selectedAgents[currentIndex].agent === value && currentIndex !== index) {
+      if (selectedAgents[currentIndex].agent === value && currentIndex !== index && value.length > 0) {
         return true
       }
     }
@@ -1012,16 +1012,7 @@ const Step2 = ({
 
             {modal === 'AIR' && proposalType === 'client' && (
             <>
-              <div
-                style={{
-                  marginLeft: '20px',
-                  width: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'flex-start',
-                  marginTop: '20px'
-                }}
-              >
+              <AddAgentButtonWrapper>
                 <Button
                   onAction={() => { setSelectedAgents([...selectedAgents, { agent: '', shippingCompany: '' }]) }}
                   text={I18n.t('pages.newProposal.step2.addAgent')}
@@ -1030,7 +1021,7 @@ const Step2 = ({
                   tooltip={I18n.t('pages.newProposal.step2.addAgent')}
                   disabled={false}
                 />
-              </div>
+              </AddAgentButtonWrapper>
               <LineSeparator />
             </>
             )}
