@@ -43,7 +43,7 @@
         "destinySeaport": "Porto Destino",
         "originAirport": "Aeroporto Origem",
         "originSeaport": "Porto Origem",
-        "agents": "Agentes:",
+        "agents": "Agente",
         "searchAgents": "Procurar por nome...",
         "incoterm": "INCOTERM:",
         "choose": "Escolha ...",
@@ -51,7 +51,15 @@
         "state": "Estado",
         "city": "Cidade",
         "differentLocationsDestiny": "Selecione um destino diferente da origem.",
-        "differentLocationsOrigin": "Selecione uma origem diferente do destino."
+        "differentAgent": "Selecione um agente diferente",
+        "differentShippingCompany": "Selecione uma Cia. Aérea diferente",
+        "differentColoader": "Selecione um Armador/Coloade diferente",
+        "differentTransporterer": "Selecione uma transportadora diferente",
+        "differentLocationsOrigin": "Selecione uma origem diferente do destino.",
+        "shippingCompany": "Cia. marítima",
+        "addAgent": "Adicionar agente",
+        "transporter": "Transportadora",
+        "coloader": "Armador/Coloader"
       },
       "step3": {
         "title": "Carga",

@@ -22,6 +22,7 @@ import { ExitDialog } from 'fiorde-fe-components'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 
 export interface Filled {
+  step2: boolean
   step3: boolean
   step4: boolean
   step5: boolean
@@ -157,7 +158,7 @@ const Step1 = ({
   }
 
   const handleModalChange = (modal): void => {
-    if (filled.step3 || filled.step4 || filled.step5 || filled.step6) {
+    if (filled.step2 || filled.step3 || filled.step4 || filled.step5 || filled.step6) {
       setModalCopy(modal)
       setShowPopUp(true)
     } else {
