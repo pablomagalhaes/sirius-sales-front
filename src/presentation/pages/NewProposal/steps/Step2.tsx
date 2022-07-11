@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core/'
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete'
 import { I18n } from 'react-redux-i18n'
-import { Title, Subtitle, Separator, SelectSpan } from '../style'
+import { Title, Subtitle, Separator, SelectSpan, AddAgentButtonWrapper } from '../style'
 import IconComponent from '../../../../application/icons/IconComponent'
 import { withTheme } from 'styled-components'
 import ControlledSelect from '../../../components/ControlledSelect'
@@ -18,6 +18,7 @@ import API from '../../../../infrastructure/api'
 import { ErrorText, LineSeparator, OriginDestLabel, StyledPaper } from './StepsStyles'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import { Agent } from '../../../../domain/Agent'
+import { Button } from 'fiorde-fe-components'
 
 interface Step2Props {
   invalidInput: boolean
@@ -60,6 +61,7 @@ const Step2 = ({
   updateAgentsIdsRef
 }: Step2Props): JSX.Element => {
   const [agentsList, setAgentsList] = useState<any[]>([])
+  const [businessPartnerList, setBusinessPartnerList] = useState<any[]>([])
   const [countriesList, setCountriesList] = useState<any[]>([])
   const [destCitiesList, setDestCitiesList] = useState<any[]>([])
   const [destStatesList, setDestStatesList] = useState<any[]>([])
@@ -80,10 +82,12 @@ const Step2 = ({
   const [incotermList, setIncotermList] = useState<any[]>([])
   const [invalidOriDest, setInvalidOriDest] = useState('')
   const [loadedAgentsData, setLoadedAgentsData] = useState(false)
+  const [invalidAgent, setInvalidAgent] = useState(false)
   const [oriCitiesList, setOriCitiesList] = useState<any[]>([])
   const [oriStatesList, setOriStatesList] = useState<any[]>([])
   const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
   const [pageDidLoad, setPageDidLoad] = useState(0)
+  const [selectedAgents, setSelectedAgents] = useState([{ agent: '', shippingCompany: '' }])
 
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
@@ -123,6 +127,14 @@ const Step2 = ({
       oriState: '',
       origin: ''
     })
+    setSelectedAgents([{ agent: '', shippingCompany: '' }])
+    if (modal !== '') {
+      if (modal === 'SEA') {
+        void getBusinessPartnerSea()
+      } else {
+        void getBusinessPartner(getBusinessPartnerType())
+      }
+    }
   }, [modal])
 
   const getAgent = async (id: number): Promise<void> => {
@@ -143,11 +155,36 @@ const Step2 = ({
     return newAgentsList
   }
 
+  const getBusinessPartner = async (type: string): Promise<any> => {
+    const response = await API.getBusinessPartnerByType(type)
+    if (response !== undefined) {
+      setBusinessPartnerList(response)
+    }
+  }
+
+  const getBusinessPartnerSea = async (): Promise<any> => {
+    const responseShipOwner = await API.getBusinessPartnerByType('ARMADOR')
+    const responseColoader = await API.getBusinessPartnerByType('COLOADER')
+    if (responseShipOwner !== undefined && responseColoader !== undefined) {
+      setBusinessPartnerList([...responseColoader, ...responseShipOwner])
+    }
+  }
+
+  const getBusinessPartnerType = (): string => {
+    switch (modal) {
+      case 'AIR':
+        return 'CIA. AEREA'
+      case 'LAND':
+        return 'TRANS. INTERNACIONAL'
+    }
+    return ''
+  }
+
   useEffect(() => {
     if (proposalType === 'client' && loadedAgentsData) {
-      setAgentList(data.agents.map((item) => item.name))
+      setAgentList(selectedAgents.map((item) => item.agent))
     }
-  }, [data.agents, agentsList])
+  }, [selectedAgents, agentsList])
 
   useEffect(() => {
     void (async function () {
@@ -260,8 +297,30 @@ const Step2 = ({
     return (modal === 'LAND') || ((modal === 'SEA' || modal === 'AIR') && (data.origin !== data.destiny))
   }
 
+  const validateShippingCompany = (value: string, index: number): boolean => {
+    for (let currentIndex = 0; currentIndex < selectedAgents.length; currentIndex++) {
+      if (selectedAgents[currentIndex].shippingCompany === value && currentIndex !== index && value.length !== 0) {
+        return true
+      }
+    }
+    return false
+  }
+
+  const validateAgent = (value: string, index: number): boolean => {
+    for (let currentIndex = 0; currentIndex < selectedAgents.length; currentIndex++) {
+      if (selectedAgents[currentIndex].agent === value && currentIndex !== index && value.length > 0) {
+        return true
+      }
+    }
+    return false
+  }
+
+  const validateCompleteShippingCompany = (): boolean => {
+    return selectedAgents.every(selectedAgent => selectedAgent.shippingCompany.length !== 0)
+  }
+
   const validateFormComplete = (): void => {
-    if (originDestinyFullfilled() && (validateClient() && validateIncoterm() && validateOriginDestination())) {
+    if (!invalidAgent && validateCompleteShippingCompany() && originDestinyFullfilled() && (validateClient() && validateIncoterm() && validateOriginDestination())) {
       setCompleted((currentState) => {
         return { ...currentState, step2: true }
       })
@@ -273,7 +332,17 @@ const Step2 = ({
   }
 
   const validateFilled = (): void => {
-    if (originDestinyFullfilled() && (data.agents.length !== 0 || data.collection !== '')) {
+    if (
+      data.origin !== '' ||
+      data.destiny !== '' ||
+      data.oriCity !== '' ||
+      data.oriState !== '' ||
+      data.oriCountry !== '' ||
+      data.destCity !== '' ||
+      data.destState !== '' ||
+      data.destCountry !== '' ||
+      data.incoterm !== '' ||
+      validateClient()) {
       setFilled((currentState) => {
         return { ...currentState, step2: true }
       })
@@ -287,7 +356,7 @@ const Step2 = ({
   useEffect(() => {
     validateFormComplete()
     validateFilled()
-  }, [data, proposalType, invalidOriDest])
+  }, [data, proposalType, invalidOriDest, selectedAgents, invalidAgent])
 
   const originDestinyFullfilled = (): boolean => {
     return ((modal === 'LAND' &&
@@ -402,6 +471,16 @@ const Step2 = ({
   }, [data.oriCity, data.origin])
 
   useEffect(() => {
+    const uniqueAgents = new Set(selectedAgents.map(selectedAgent => selectedAgent.shippingCompany))
+    const uniqueshippingCompanies = new Set(selectedAgents.map(selectedAgent => selectedAgent.shippingCompany))
+    if (uniqueAgents.size !== selectedAgents.length || uniqueshippingCompanies.size !== selectedAgents.length) {
+      setInvalidAgent(true)
+    } else {
+      setInvalidAgent(false)
+    }
+  }, [selectedAgents])
+
+  useEffect(() => {
     if (data.oriCity === data.destCity && data.oriCity.length > 0 && data.destCity.length > 0) {
       setInvalidOriDest('destCity')
     } else if (data.origin === data.destiny && data.origin.length > 0 && data.destiny.length > 0) {
@@ -444,6 +523,30 @@ const Step2 = ({
           })
       })()
     }
+  }
+
+  const setshippingCompanyLabel = (): string => {
+    switch (modal) {
+      case 'AIR':
+        return String(I18n.t('pages.newProposal.step2.shippingCompany'))
+      case 'SEA':
+        return String(I18n.t('pages.newProposal.step2.coloader'))
+      case 'LAND':
+        return String(I18n.t('pages.newProposal.step2.transporter'))
+    }
+    return String(I18n.t('pages.newProposal.step2.shippingCompany'))
+  }
+
+  const setshippingCompanyErrorLabel = (): string => {
+    switch (modal) {
+      case 'AIR':
+        return String(I18n.t('pages.newProposal.step2.differentShippingCompany'))
+      case 'SEA':
+        return String(I18n.t('pages.newProposal.step2.differentColoader'))
+      case 'LAND':
+        return String(I18n.t('pages.newProposal.step2.differentTransporter'))
+    }
+    return String(I18n.t('pages.newProposal.step2.differentShippingCompany'))
   }
 
   const setOriginDestinyLabel = (type: string): string => {
@@ -491,6 +594,13 @@ const Step2 = ({
     })
 
     return actualList
+  }
+
+  const getAgentCounter = (index: number): String => {
+    if (selectedAgents.length > 1) {
+      return ` ${index + 1} :`
+    }
+    return ' :'
   }
 
   const filterOptions = createFilterOptions({
@@ -789,35 +899,132 @@ const Step2 = ({
                 )
             }
           </Grid>
-          {(proposalType === 'client' && loadedAgentsData) &&
-            (<Grid item xs={6}>
-              <FormLabel component="legend">
-                {I18n.t('pages.newProposal.step2.agents')}
-                {proposalType === 'client' && <RedColorSpan> *</RedColorSpan>}
-              </FormLabel>
-              <Autocomplete
-                multiple
-                size="small"
-                options={agentsList.map((item) => item.businessPartner.simpleName)}
-                onChange={(e, newValue) => fillAgentsList(newValue)}
-                value={data.agents.map((item) => item.name)}
-                renderInput={(params: any) => (
-                  <div ref={params.InputProps.ref}>
-                    <ControlledInput
-                      {...params}
-                      id="search-name"
-                      toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                      value={data.agents.map((item) => item.name)}
-                      invalid={proposalType === 'client' && invalidInput && data.agents.length === 0}
-                      variant="outlined"
-                      placeholder={data.agents.length === 0 && I18n.t('pages.newProposal.step2.searchAgents')}
-                      $space
+          {selectedAgents.map((selectedAgent, index) => {
+            return (
+              <>
+                {proposalType === 'client' && loadedAgentsData && (
+                  <Grid item xs={6}>
+                    <FormLabel component="legend">
+                      {I18n.t('pages.newProposal.step2.agents')}
+                      {getAgentCounter(index)}
+                      {proposalType === 'client' && (
+                        <RedColorSpan> *</RedColorSpan>
+                      )}
+                    </FormLabel>
+                    <Autocomplete
+                      disabled={modal === ''}
+                      size="small"
+                      options={agentsList.map(
+                        (item) => item.businessPartner.simpleName
+                      )}
+                      onChange={(e, newValue) => {
+                        fillAgentsList([newValue])
+                        setSelectedAgents(
+                          selectedAgents.map((value, currentIndex) => (currentIndex === index ? { ...value, agent: newValue } : value))
+                        )
+                      }}
+                      value={selectedAgent.agent}
+                      renderInput={(params: any) => (
+                        <div ref={params.InputProps.ref}>
+                          <ControlledInput
+                            {...params}
+                            id="search-name"
+                            toolTipTitle={I18n.t(
+                              'components.itemModal.requiredField'
+                            )}
+                            value={selectedAgent.agent}
+                            invalid={
+                              proposalType === 'client' &&
+                              invalidInput &&
+                              selectedAgent.agent.length === 0
+                            }
+                            variant="outlined"
+                            placeholder={
+                              selectedAgent.agent.length === 0 &&
+                              I18n.t('pages.newProposal.step2.searchAgents')
+                            }
+                            $space
+                          />
+                        </div>
+                      )}
+                      PaperComponent={(params: any) => (
+                        <StyledPaper {...params} />
+                      )}
                     />
-                  </div>
+                  {invalidAgent && validateAgent(selectedAgent.agent, index) &&
+                    <ErrorText>{I18n.t('pages.newProposal.step2.differentAgent')}</ErrorText>
+                  }
+                  </Grid>
                 )}
-                PaperComponent={(params: any) => <StyledPaper {...params} />}
-              />
-            </Grid>)}
+                <Grid item xs={6}>
+                  <FormLabel component="legend">
+                    {setshippingCompanyLabel()}
+                    {getAgentCounter(index)}
+                    {<RedColorSpan> *</RedColorSpan>}
+                  </FormLabel>
+                  <Autocomplete
+                    disabled={modal === ''}
+                    size="small"
+                    options={businessPartnerList.map(
+                      (item) => item.businessPartner.simpleName
+                    )}
+                    onChange={(e, newValue) => {
+                      setSelectedAgents(
+                        selectedAgents.map((value, currentIndex) => (currentIndex === index ? { ...value, shippingCompany: newValue } : value))
+                      )
+                    }}
+                    value={selectedAgent.shippingCompany}
+                    renderInput={(params: any) => (
+                      <div ref={params.InputProps.ref}>
+                        <ControlledInput
+                          {...params}
+                          id="search-name"
+                          toolTipTitle={I18n.t(
+                            'components.itemModal.requiredField'
+                          )}
+                          value={selectedAgent.shippingCompany}
+                          invalid={
+                            proposalType === 'client' &&
+                            invalidInput &&
+                            selectedAgent.shippingCompany.length === 0
+                          }
+                          variant="outlined"
+                          placeholder={
+                            selectedAgent.shippingCompany.length === 0 &&
+                            I18n.t('pages.newProposal.step2.searchAgents')
+                          }
+                          $space
+                        />
+                      </div>
+                    )}
+                    PaperComponent={(params: any) => (
+                      <StyledPaper {...params} />
+                    )}
+                  />
+                  {invalidAgent && validateShippingCompany(selectedAgent.shippingCompany, index) &&
+                    <ErrorText>{setshippingCompanyErrorLabel()}</ErrorText>
+                  }
+                </Grid>
+                <LineSeparator />
+              </>
+            )
+          })}
+
+            {modal === 'AIR' && proposalType === 'client' && (
+            <>
+              <AddAgentButtonWrapper>
+                <Button
+                  onAction={() => { setSelectedAgents([...selectedAgents, { agent: '', shippingCompany: '' }]) }}
+                  text={I18n.t('pages.newProposal.step2.addAgent')}
+                  icon="add"
+                  backgroundGreen={false}
+                  tooltip={I18n.t('pages.newProposal.step2.addAgent')}
+                  disabled={false}
+                />
+              </AddAgentButtonWrapper>
+              <LineSeparator />
+            </>
+            )}
           <Grid item xs={2}>
             <FormLabel component="legend">
               {I18n.t('pages.newProposal.step2.incoterm')}

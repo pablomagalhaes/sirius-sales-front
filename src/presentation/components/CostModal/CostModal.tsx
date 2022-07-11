@@ -373,8 +373,11 @@ const CostModal = ({
   }, [flag])
 
   const isOriginCost = title === I18n.t('pages.newProposal.step5.originCost')
-
-  state.agent === '' && agentList.length === 1 && dispatch({ type: 'agent', value: agentList[0] })
+  useEffect(() => {
+    if (open) {
+      state.agent === '' && agentList.length === 1 && dispatch({ type: 'agent', value: agentList[0] })
+    }
+  }, [open])
 
   return (
     <Modal open={open} onClose={handleOnClose}>
@@ -486,6 +489,7 @@ const CostModal = ({
                   open={invalidInput && (state.agent === null || state.agent.length === 0)}
                 >
                   <Autocomplete
+                    disabled={agentList.length === 1}
                     options={agentList.map((agent) => agent)}
                     value={state.agent}
                     onChange={(event: any, newValue: string | null) => {

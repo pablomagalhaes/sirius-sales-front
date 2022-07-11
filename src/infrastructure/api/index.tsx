@@ -82,6 +82,15 @@ const getAgents = async (): Promise<any> => {
   }
 }
 
+const getBusinessPartnerByType = async (type: string): Promise<any> => {
+  try {
+    const res = await instance.get(`/sirius-business-partner-api/business/partner/class/classification/${type}`)
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const getTemperature = async (params?): Promise<any> => {
   try {
     const res = await instance.get(`/sirius-master-data-api/temperature/${params !== undefined ? String(params) : ''}`)
@@ -256,6 +265,7 @@ const API = {
   postTotalCalculation,
   getProposal,
   getBusinessPartnerCostumer,
+  getBusinessPartnerByType,
   getOriginDestinationById,
   getOriginDestinationByModal,
   putProposal,
