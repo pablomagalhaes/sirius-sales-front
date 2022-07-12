@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useImperativeHandle } from 'react'
+import React, { useEffect, useState, useContext, useImperativeHandle, Fragment } from 'react'
 import {
   FormControl,
   FormLabel,
@@ -901,7 +901,7 @@ const Step2 = ({
           </Grid>
           {selectedAgents.map((selectedAgent, index) => {
             return (
-              <>
+              <Fragment key={index}>
                 {proposalType === 'client' && loadedAgentsData && (
                   <Grid item xs={6}>
                     <FormLabel component="legend">
@@ -1006,7 +1006,7 @@ const Step2 = ({
                   }
                 </Grid>
                 <LineSeparator />
-              </>
+              </Fragment>
             )
           })}
 
