@@ -60,6 +60,13 @@ const Step2 = ({
   theme,
   updateAgentsIdsRef
 }: Step2Props): JSX.Element => {
+  const testValues = [
+    { businessPartner: { simpleName: 'teste 1' } },
+    { businessPartner: { simpleName: 'teste 2' } },
+    { businessPartner: { simpleName: 'teste 3' } },
+    { businessPartner: { simpleName: 'teste 4' } },
+    { businessPartner: { simpleName: 'teste 5' } }
+  ] // valores para teste Cia aérea
   const [agentsList, setAgentsList] = useState<any[]>([])
   const [businessPartnerList, setBusinessPartnerList] = useState<any[]>([])
   const [countriesList, setCountriesList] = useState<any[]>([])
@@ -158,7 +165,7 @@ const Step2 = ({
   const getBusinessPartner = async (type: string): Promise<any> => {
     const response = await API.getBusinessPartnerByType(type)
     if (response !== undefined) {
-      setBusinessPartnerList(response)
+      setBusinessPartnerList([...response, ...testValues])
     }
   }
 
@@ -166,7 +173,7 @@ const Step2 = ({
     const responseShipOwner = await API.getBusinessPartnerByType('ARMADOR')
     const responseColoader = await API.getBusinessPartnerByType('COLOADER')
     if (responseShipOwner !== undefined && responseColoader !== undefined) {
-      setBusinessPartnerList([...responseColoader, ...responseShipOwner])
+      setBusinessPartnerList([...responseColoader, ...responseShipOwner, ...testValues])
     }
   }
 
@@ -914,6 +921,7 @@ const Step2 = ({
                     <Autocomplete
                       disabled={modal === ''}
                       size="small"
+                      closeIcon={null}
                       options={agentsList.map(
                         (item) => item.businessPartner.simpleName
                       )}
@@ -944,6 +952,13 @@ const Step2 = ({
                               I18n.t('pages.newProposal.step2.searchAgents')
                             }
                             $space
+                            InputProps={{
+                              endAdornment: (
+                                <InputAdornment position="end">
+                                  <IconComponent name="search" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
+                                </InputAdornment>
+                              )
+                            }}
                           />
                         </div>
                       )}
@@ -965,6 +980,7 @@ const Step2 = ({
                   <Autocomplete
                     disabled={modal === ''}
                     size="small"
+                    closeIcon={null}
                     options={businessPartnerList.map(
                       (item) => item.businessPartner.simpleName
                     )}
@@ -994,6 +1010,13 @@ const Step2 = ({
                             I18n.t('pages.newProposal.step2.searchAgents')
                           }
                           $space
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <IconComponent name="search" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
+                              </InputAdornment>
+                            )
+                          }}
                         />
                       </div>
                     )}
