@@ -901,7 +901,7 @@ const Step2 = ({
           </Grid>
           {selectedAgents.map((selectedAgent, index) => {
             return (
-              <>
+              <React.Fragment key={index}>
                 {proposalType === 'client' && loadedAgentsData && (
                   <Grid item xs={6}>
                     <FormLabel component="legend">
@@ -1006,7 +1006,7 @@ const Step2 = ({
                   }
                 </Grid>
                 <LineSeparator />
-              </>
+              </React.Fragment>
             )
           })}
 
