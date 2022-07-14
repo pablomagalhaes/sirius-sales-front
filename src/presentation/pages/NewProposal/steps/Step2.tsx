@@ -478,7 +478,7 @@ const Step2 = ({
   }, [data.oriCity, data.origin])
 
   useEffect(() => {
-    const uniqueAgents = new Set(selectedAgents.map(selectedAgent => selectedAgent.shippingCompany))
+    const uniqueAgents = new Set(selectedAgents.map(selectedAgent => selectedAgent.agent))
     const uniqueshippingCompanies = new Set(selectedAgents.map(selectedAgent => selectedAgent.shippingCompany))
     if (uniqueAgents.size !== selectedAgents.length || uniqueshippingCompanies.size !== selectedAgents.length) {
       setInvalidAgent(true)
@@ -928,7 +928,7 @@ const Step2 = ({
                       onChange={(e, newValue) => {
                         fillAgentsList([newValue])
                         setSelectedAgents(
-                          selectedAgents.map((value, currentIndex) => (currentIndex === index ? { ...value, agent: newValue } : value))
+                          selectedAgents.map((value, currentIndex) => (currentIndex === index ? { ...value, agent: newValue ?? '' } : value))
                         )
                       }}
                       value={selectedAgent.agent}
@@ -986,7 +986,7 @@ const Step2 = ({
                     )}
                     onChange={(e, newValue) => {
                       setSelectedAgents(
-                        selectedAgents.map((value, currentIndex) => (currentIndex === index ? { ...value, shippingCompany: newValue } : value))
+                        selectedAgents.map((value, currentIndex) => (currentIndex === index ? { ...value, shippingCompany: newValue ?? '' } : value))
                       )
                     }}
                     value={selectedAgent.shippingCompany}
