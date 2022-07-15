@@ -170,7 +170,8 @@
         "confirmLabel": "Confirmar envio ao cliente",
         "cancelLabel": "Cancelar",
         "approveLabel": "Definir como aprovada",
-        "rejectLabel": "Definir como rejeitada"
+        "rejectLabel": "Definir como rejeitada",
+        "overdueClientResponse": "Sem retorno há mais de 3 dias"
       }
     }
   },

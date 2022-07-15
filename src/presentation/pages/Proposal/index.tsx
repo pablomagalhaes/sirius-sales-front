@@ -254,7 +254,8 @@ const Proposal = (): JSX.Element => {
         responsible: proposal.responsible,
         shelfLife,
         status,
-        type
+        type,
+        isClientReturnLate: proposal.overdueClientResponse
       }
 
       array.push(item)
@@ -804,14 +805,16 @@ const Proposal = (): JSX.Element => {
             approvedLabel={I18n.t('pages.proposal.table.approvedLabel')}
             cancelLabel={I18n.t('pages.proposal.table.cancelledLabel')}
             inRevisionLabel={I18n.t('pages.proposal.table.inRevisionLabel')}
-            isShowIconLate={true}
             openLabel={I18n.t('pages.proposal.table.openLabel')}
             rejectLabel={I18n.t('pages.proposal.table.rejectedLabel')}
             rows={getProposalItems(proposalList)}
             waitingForCustomerReturnLabel={I18n.t(
               'pages.proposal.table.waitingForCustomerReturnLabel'
             )}
-          />
+            tooltipTitle={I18n.t(
+              'pages.proposal.table.overdueClientResponse'
+            )}
+            />
         </TableContainer>
         <PaginationContainer>
           <PaginationMainContainer>
