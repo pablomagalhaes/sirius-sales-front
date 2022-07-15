@@ -170,7 +170,8 @@
         "confirmLabel": "Confirm shipment to customer",
         "cancelLabel": "Cancel",
         "approveLabel": "Set as approved",
-        "rejectLabel": "Set as rejected"
+        "rejectLabel": "Set as rejected",
+        "overdueClientResponse": "No reply for more than 3 days"
       }
     }
   },
