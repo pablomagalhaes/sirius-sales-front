@@ -33,9 +33,10 @@ import { MessageContainer } from '../../pages/NewProposal/style'
 import { TotalCostTable } from '../../pages/NewProposal/steps/Step5'
 import API from '../../../infrastructure/api'
 import { ProposalProps, ProposalContext } from '../../pages/NewProposal/context/ProposalContext'
+import { Agents } from '../../pages/NewProposal/steps/Step2'
 
 interface CostTableProps {
-  agentList: string[]
+  agentList: Agents[]
   title: string
   totalCostLabel: string
   modalTitle: string
@@ -82,7 +83,6 @@ const CostTable = ({
   const currencyList = new Map()
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
-  const [agentsList, setAgentsList] = useState<any[]>([])
   const { proposal }: ProposalProps = useContext(ProposalContext)
 
   const editClickHandler = (tableData: CostTableItem): void => {
@@ -142,12 +142,6 @@ const CostTable = ({
           valuePurchaseCW: item.type === 'CW' ? proposal.cargo.vlCwPurchase : null,
           valueSaleCW: item.type === 'CW' ? proposal.cargo.vlCwSale : null
         }
-
-        void (async function () {
-          await API.getAgents()
-            .then((agent) => setAgentsList(agent))
-            .catch((err) => console.log(err))
-        })()
 
         void (async function () {
           await API.postTotalCalculation(newData)
@@ -250,9 +244,9 @@ const CostTable = ({
 
   const getAgentName = (agentId): string => {
     let name = ''
-    agentsList?.forEach((item): void => {
-      if (Number(item.businessPartner.id) === Number(agentId)) {
-        name = item.businessPartner.simpleName
+    agentList?.forEach((item): void => {
+      if (Number(item.agentId) === Number(agentId)) {
+        name = item.agent
       }
     })
     return name
@@ -325,8 +319,8 @@ const CostTable = ({
                     title === I18n.t('pages.newProposal.step5.destiny')
                       ? null
                       : <StyledTableCell width="12%" align="left">
-                        {dataMap.agent != null
-                          ? <Default>{typeof (dataMap.agent) === 'string' ? dataMap.agent : getAgentName(dataMap.agent) }</Default>
+                        {dataMap.agent.agentId != null
+                          ? <Default>{getAgentName(dataMap.agent.agentId) }</Default>
                           : <Default>-</Default>
                         }
                       </StyledTableCell>

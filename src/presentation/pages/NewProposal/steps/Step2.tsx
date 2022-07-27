@@ -17,27 +17,21 @@ import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import API from '../../../../infrastructure/api'
 import { ErrorText, LineSeparator, OriginDestLabel, StyledPaper } from './StepsStyles'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
-import { Agent } from '../../../../domain/Agent'
 import { Button } from 'fiorde-fe-components'
+import RemoveIcon from '../../../../application/icons/RemoveIcon'
 
 interface Step2Props {
   invalidInput: boolean
   modal: string
   proposalType: string
-  setAgentList: (agent: string[]) => void
+  setAgentList: (agent: Agents[]) => void
   setCompleted: (completed: any) => void
   setFilled: (filled: any) => void
   theme: any
   updateAgentsIdsRef: any
 }
 
-interface AgentsProps {
-  id?: number | null
-  name: string
-}
-
 interface DataProps {
-  agents: AgentsProps[]
   collection: string
   destCity: string
   destCountry: string
@@ -48,6 +42,14 @@ interface DataProps {
   oriCountry: string
   oriState: string
   origin: string
+}
+
+export interface Agents {
+  id?: number | null
+  agent: string
+  agentId?: number | null
+  shippingCompany: string
+  transportCompanyId?: number | null
 }
 
 const Step2 = ({
@@ -75,7 +77,6 @@ const Step2 = ({
   const [data, setData] = useState<DataProps>({
     origin: '',
     destiny: '',
-    agents: [],
     incoterm: '',
     collection: '',
     oriCountry: '',
@@ -94,30 +95,41 @@ const Step2 = ({
   const [oriStatesList, setOriStatesList] = useState<any[]>([])
   const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
   const [pageDidLoad, setPageDidLoad] = useState(0)
-  const [selectedAgents, setSelectedAgents] = useState([{ agent: '', shippingCompany: '' }])
+  const [selectedAgents, setSelectedAgents] = useState<Agents[]>([{ id: null, agent: '', agentId: null, shippingCompany: '', transportCompanyId: null }])
 
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
   useImperativeHandle(updateAgentsIdsRef, () => ({
     updateAgentsIdsRef () {
-      let dataId = 0
-      if (proposal?.idProposalImportFreight !== undefined && proposal?.idProposalImportFreight !== null) {
-        const newAgentData = [...data.agents]
-        for (const agents of proposal.agents) {
-          newAgentData[dataId++].id = agents?.id
-        }
-        setData({ ...data, agents: newAgentData })
-      }
+      setSelectedAgents(selectedAgents.map((agent, index) => { return { ...agent, id: proposal.agents[index].id } }))
     }
   }))
 
-  const getAgentId = (agentName: string): number => {
-    let id = 0
-    agentsList?.forEach((item): void => {
-      if (String(item.businessPartner.simpleName) === String(agentName)) {
-        id = item.businessPartner.id
-      }
-    })
+  const removeAgent = (indexRemove: number): void => {
+    setSelectedAgents(selectedAgents.filter((_value, index) => index !== indexRemove))
+  }
+
+  const getAgentId = (agentName: string): number | undefined => {
+    let id
+    if (agentName !== '') {
+      agentsList?.forEach((item): void => {
+        if (String(item.businessPartner.simpleName) === String(agentName)) {
+          id = item.businessPartner.id
+        }
+      })
+    }
+    return id
+  }
+
+  const getShippingCompanyId = (shippingCompanyName: string): number | undefined => {
+    let id
+    if (shippingCompanyName !== '') {
+      businessPartnerList?.forEach((item): void => {
+        if (String(item.businessPartner.simpleName) === String(shippingCompanyName)) {
+          id = item.businessPartner.id
+        }
+      })
+    }
     return id
   }
 
@@ -134,7 +146,7 @@ const Step2 = ({
       oriState: '',
       origin: ''
     })
-    setSelectedAgents([{ agent: '', shippingCompany: '' }])
+    setSelectedAgents([{ id: null, agent: '', agentId: null, shippingCompany: '', transportCompanyId: null }])
     if (modal !== '') {
       if (modal === 'SEA') {
         void getBusinessPartnerSea()
@@ -143,24 +155,6 @@ const Step2 = ({
       }
     }
   }, [modal])
-
-  const getAgent = async (id: number): Promise<void> => {
-    return await new Promise(resolve => {
-      API.getBusinessPartnerCostumer(id)
-        .then((response) => { resolve(response.simpleName) })
-        .catch((err) => { console.log(err); resolve() })
-    })
-  }
-
-  const loadAllAgents = async (agentList: Agent[]): Promise<AgentsProps[]> => {
-    const newAgentsList: AgentsProps[] = []
-    for (const agent of agentList) {
-      await getAgent(Number(agent.idBusinessPartnerAgent)).then((response) => {
-        newAgentsList.push({ name: String(response), id: agent.id })
-      })
-    }
-    return newAgentsList
-  }
 
   const getBusinessPartner = async (type: string): Promise<any> => {
     const response = await API.getBusinessPartnerByType(type)
@@ -189,7 +183,7 @@ const Step2 = ({
 
   useEffect(() => {
     if (proposalType === 'client' && loadedAgentsData) {
-      setAgentList(selectedAgents.map((item) => item.agent))
+      setAgentList(selectedAgents)
     }
   }, [selectedAgents, agentsList])
 
@@ -237,44 +231,61 @@ const Step2 = ({
         }
       })
 
-      void loadAllAgents(proposal.agents).then((agentsList) => {
-        void Promise.all([getOrigin, getDestiny]).then((values: any[]) => {
-          setData({
-            agents: agentsList,
-            collection: proposal.cargoCollectionAddress,
-            destCity: modal === 'LAND' ? String(values[1]?.name) : '',
-            destCountry: modal === 'LAND' ? String(values[1]?.state?.country?.name) : '',
-            destState: modal === 'LAND' ? String(values[1]?.state?.initials) : '',
-            destiny: modal !== 'LAND' ? String(values[1]) : '',
-            incoterm: proposal.idIncoterm,
-            oriCity: modal === 'LAND' ? String(values[0]?.name) : '',
-            oriCountry: modal === 'LAND' ? String(values[0]?.state?.country?.name) : '',
-            oriState: modal === 'LAND' ? String(values[0]?.state?.initials) : '',
-            origin: modal !== 'LAND' ? String(values[0]) : ''
-          })
-          loadStatesList('origin', String(values[0]?.state?.country?.id))
-          loadStatesList('destiny', String(values[1]?.state?.country?.id))
-          loadCitiesList('origin', String(values[0]?.state?.id))
-          loadCitiesList('destiny', String(values[1]?.state?.id))
-          setLoadedAgentsData(true)
+      void Promise.all([getOrigin, getDestiny]).then((values: any[]) => {
+        setData({
+          collection: proposal.cargoCollectionAddress,
+          destCity: modal === 'LAND' ? String(values[1]?.name) : '',
+          destCountry: modal === 'LAND' ? String(values[1]?.state?.country?.name) : '',
+          destState: modal === 'LAND' ? String(values[1]?.state?.initials) : '',
+          destiny: modal !== 'LAND' ? String(values[1]) : '',
+          incoterm: proposal.idIncoterm,
+          oriCity: modal === 'LAND' ? String(values[0]?.name) : '',
+          oriCountry: modal === 'LAND' ? String(values[0]?.state?.country?.name) : '',
+          oriState: modal === 'LAND' ? String(values[0]?.state?.initials) : '',
+          origin: modal !== 'LAND' ? String(values[0]) : ''
         })
+        loadStatesList('origin', String(values[0]?.state?.country?.id))
+        loadStatesList('destiny', String(values[1]?.state?.country?.id))
+        loadCitiesList('origin', String(values[0]?.state?.id))
+        loadCitiesList('destiny', String(values[1]?.state?.id))
+        setLoadedAgentsData(true)
       })
     } else {
       setLoadedAgentsData(true)
     }
   }, [])
 
-  useEffect(() => {
-    const newAgent: Agent[] = []
-    if (loadedAgentsData) {
-      data.agents.forEach((row) => {
-        newAgent.push({
-          id: (row.id === undefined || row.id === null) ? undefined : row.id,
-          idBusinessPartnerAgent: getAgentId(row.name),
-          proposalImportFreightId: (row.id === undefined || row.id === null) ? undefined : proposal?.idProposalImportFreight
-        })
-      })
+  const getAgentById = (id: number | null | undefined): string => {
+    if (id !== null && id !== undefined) {
+      const agent = agentsList.find(agent => agent.businessPartner.id === id)
+      if (agent !== undefined) {
+        return agent.businessPartner.simpleName
+      }
     }
+    return ''
+  }
+
+  const getBusinessPartnerById = (id: number | null | undefined): string => {
+    if (id !== null && id !== undefined) {
+      const businessPartner = businessPartnerList.find(businessPartner => businessPartner.businessPartner.id === id)
+      if (businessPartner !== undefined) {
+        return businessPartner.businessPartner.simpleName
+      }
+    }
+    return ''
+  }
+
+  useEffect(() => {
+    if (proposal.agents.length > 0) {
+      setSelectedAgents(
+        proposal.agents.map((agent, index) => {
+          return { id: agent.id, agentId: agent.agentId, shippingCompany: getBusinessPartnerById(agent.transportCompanyId), agent: getAgentById(agent.agentId), transportCompanyId: agent.transportCompanyId }
+        })
+      )
+    }
+  }, [agentsList, businessPartnerList])
+
+  useEffect(() => {
     setProposal({
       ...proposal,
       idOrigin: modal === 'LAND'
@@ -284,10 +295,16 @@ const Step2 = ({
         ? String(destCitiesList.filter((city) => city.name === data.destCity)[0]?.id)
         : data.destiny.split(' - ')[0],
       idIncoterm: data.incoterm,
-      cargoCollectionAddress: data.collection,
-      agents: newAgent.length > 0 ? newAgent : proposal.agents
+      cargoCollectionAddress: data.collection
     })
   }, [data])
+
+  useEffect(() => {
+    setProposal({
+      ...proposal,
+      agents: selectedAgents.map(({ shippingCompany, agent, ...otherProperties }) => otherProperties)
+    })
+  }, [selectedAgents])
 
   const validateIncoterm = (): boolean => {
     return (data.incoterm.length !== 0 && data.incoterm !== '' &&
@@ -297,7 +314,7 @@ const Step2 = ({
   }
 
   const validateClient = (): boolean => {
-    return ((proposalType === 'client' && data.agents.length !== 0) || (proposalType !== 'client' && data.agents.length !== 0))
+    return ((proposalType === 'client' && selectedAgents[0].agent.length !== 0) || (proposalType !== 'client'))
   }
 
   const validateOriginDestination = (): boolean => {
@@ -615,16 +632,6 @@ const Step2 = ({
     limit: 500
   })
 
-  const fillAgentsList = (list: string[]): void => {
-    if (list.length > data.agents.length) {
-      const addedAgent = list.filter((item) => !data.agents.map((agent) => agent.name).includes(item))
-      setData({ ...data, agents: [...data.agents].concat(addedAgent.map((item) => ({ name: item, id: null }))) })
-    } else {
-      const newAgentsList = data.agents.filter((item) => list.includes(item.name))
-      setData({ ...data, agents: newAgentsList })
-    }
-  }
-
   return (
     <Separator>
       <Title>
@@ -926,9 +933,8 @@ const Step2 = ({
                         (item) => item.businessPartner.simpleName
                       )}
                       onChange={(e, newValue) => {
-                        fillAgentsList([newValue])
                         setSelectedAgents(
-                          selectedAgents.map((value, currentIndex) => (currentIndex === index ? { ...value, agent: newValue ?? '' } : value))
+                          selectedAgents.map((value, currentIndex) => (currentIndex === index ? { ...value, agent: newValue ?? '', agentId: getAgentId(newValue) } : value))
                         )
                       }}
                       value={selectedAgent.agent}
@@ -977,6 +983,8 @@ const Step2 = ({
                     {getAgentCounter(index)}
                     {<RedColorSpan> *</RedColorSpan>}
                   </FormLabel>
+                  <div style={{ display: 'flex' }}>
+                  <div style={{ width: '95%' }}>
                   <Autocomplete
                     disabled={modal === ''}
                     size="small"
@@ -986,7 +994,7 @@ const Step2 = ({
                     )}
                     onChange={(e, newValue) => {
                       setSelectedAgents(
-                        selectedAgents.map((value, currentIndex) => (currentIndex === index ? { ...value, shippingCompany: newValue ?? '' } : value))
+                        selectedAgents.map((value, currentIndex) => (currentIndex === index ? { ...value, shippingCompany: newValue ?? '', transportCompanyId: getShippingCompanyId(newValue) } : value))
                       )
                     }}
                     value={selectedAgent.shippingCompany}
@@ -1024,6 +1032,11 @@ const Step2 = ({
                       <StyledPaper {...params} />
                     )}
                   />
+                  </div>
+                  { index !== 0 && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: '5px' }}>
+                  <RemoveIcon onClick={() => { removeAgent(index) }}/>
+                  </div>}
+                  </div>
                   {invalidAgent && validateShippingCompany(selectedAgent.shippingCompany, index) &&
                     <ErrorText>{setshippingCompanyErrorLabel()}</ErrorText>
                   }
@@ -1037,7 +1050,7 @@ const Step2 = ({
             <>
               <AddAgentButtonWrapper>
                 <Button
-                  onAction={() => { setSelectedAgents([...selectedAgents, { agent: '', shippingCompany: '' }]) }}
+                  onAction={() => { setSelectedAgents([...selectedAgents, { id: null, agent: '', agentId: null, shippingCompany: '', transportCompanyId: null }]) }}
                   text={I18n.t('pages.newProposal.step2.addAgent')}
                   icon="add"
                   backgroundGreen={false}
