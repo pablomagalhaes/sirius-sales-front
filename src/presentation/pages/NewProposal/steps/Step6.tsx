@@ -126,7 +126,10 @@ const Step6 = ({
         valueMinimumPurchase: null,
         valueSalePercent: 0,
         valueMinimumSale: null,
-        idBusinessPartnerAgent: 0,
+        agent: {
+          agentId: null,
+          transportCompanyId: null
+        },
         costType: 'Frete',
         idCurrencySale: data.currency,
         idCurrencyPurchase: data.currency,
@@ -323,7 +326,10 @@ const Step6 = ({
               (cont) => cont.description === row.selectedContainer
             )[0]?.id
             : null, // containerMODAL
-        idBusinessPartnerAgent: 0,
+        agent: {
+          agentId: null,
+          transportCompanyId: null
+        },
         costType: 'Tarifa', // 'Origem''Destino''Tarifa'
         billingType: row.type, // Tipo -MODAL
         valuePurchase: null, // valor compra

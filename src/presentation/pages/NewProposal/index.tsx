@@ -19,7 +19,7 @@ import { withTheme } from 'styled-components'
 import { I18n } from 'react-redux-i18n'
 import IconComponent from '../../../application/icons/IconComponent'
 import Step1 from './steps/Step1'
-import Step2 from './steps/Step2'
+import Step2, { Agents } from './steps/Step2'
 import Step3 from './steps/Step3'
 import Step4 from './steps/Step4'
 import Step5 from './steps/Step5'
@@ -36,7 +36,7 @@ export interface NewProposalProps {
 
 const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [action, setAction] = useState('')
-  const [agentList, setAgentList] = useState<any[]>([])
+  const [agentList, setAgentList] = useState<Agents[]>([])
   const [calculationData, setCalculationData] = useState<CalculationDataProps>({ weight: 0, cubage: 0, cubageWeight: 0 })
   const [clicked, setClicked] = useState({ id: '', clicked: false })
   const [containerTypeList, setContainerTypeList] = useState<any[]>([])

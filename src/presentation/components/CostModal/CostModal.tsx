@@ -42,10 +42,12 @@ import { MenuItemContent } from '../FareModal/FareModalStyles'
 import { CalculationDataProps } from '../ChargeTable'
 import FormatNumber from '../../../application/utils/formatNumber'
 import { ProposalContext, ProposalProps } from '../../pages/NewProposal/context/ProposalContext'
+import { CostAgent } from '../../../domain/Cost'
+import { Agents } from '../../pages/NewProposal/steps/Step2'
 export interface CostTableItem {
   idCost?: number | null
   idProposal?: number | null
-  agent: string
+  agent: CostAgent
   buyCurrency: string | null
   buyMin: string | null
   buyValue: string | null
@@ -61,7 +63,7 @@ export interface CostTableItem {
 }
 
 interface CostModalProps {
-  agentList: string[]
+  agentList: Agents[]
   dataProp?: CostTableItem
   handleAdd: (item) => void
   open: boolean
@@ -77,7 +79,10 @@ interface CostModalProps {
 export const initialState = {
   type: '',
   description: null,
-  agent: '',
+  agent: {
+    agentId: undefined,
+    transportCompanyId: undefined
+  },
   buyCurrency: 'BRL',
   buyValue: null,
   buyMin: null,
@@ -103,6 +108,10 @@ const CostModal = ({
   serviceList,
   calculationData
 }: CostModalProps): JSX.Element => {
+  const getAgentByName = (name: string): CostAgent => {
+    const agent = agentList.find(agent => agent.agent === name)
+    return { agentId: agent?.agentId, transportCompanyId: agent?.transportCompanyId }
+  }
   const reducer = (state, action): CostTableItem => {
     switch (action.type) {
       case 'type':
@@ -110,7 +119,7 @@ const CostModal = ({
       case 'description':
         return { ...state, description: action.value }
       case 'agent':
-        return { ...state, agent: action.value }
+        return { ...state, agent: getAgentByName(action.value) }
       case 'buyValue':
         return { ...state, buyValue: action.value }
       case 'buyCurrency':
@@ -375,9 +384,14 @@ const CostModal = ({
   const isOriginCost = title === I18n.t('pages.newProposal.step5.originCost')
   useEffect(() => {
     if (open) {
-      state.agent === '' && agentList.length === 1 && dispatch({ type: 'agent', value: agentList[0] })
+      state.agent.agentId === undefined && agentList.length === 1 && dispatch({ type: 'agent', value: agentList[0].agent })
     }
   }, [open])
+
+  const getAgentName = (id: number): string => {
+    const agent = agentList.find(agents => agents.agentId === id)
+    return String(agent?.agent ?? '')
+  }
 
   return (
     <Modal open={open} onClose={handleOnClose}>
@@ -486,12 +500,12 @@ const CostModal = ({
               <RowDiv margin={specifications === 'fcl' && true} style={{ position: 'relative' }}>
                 <ControlledToolTip
                   title={I18n.t('components.itemModal.requiredField')}
-                  open={invalidInput && (state.agent === null || state.agent.length === 0)}
+                  open={invalidInput && (state.agent === null || state.agent.agentId !== null)}
                 >
                   <Autocomplete
                     disabled={agentList.length === 1}
-                    options={agentList.map((agent) => agent)}
-                    value={state.agent}
+                    options={agentList.map((agent) => agent.agent)}
+                    value={getAgentName(Number(state.agent.agentId))}
                     onChange={(event: any, newValue: string | null) => {
                       dispatch({ type: 'agent', value: newValue })
                     }}
@@ -499,10 +513,10 @@ const CostModal = ({
                       <div ref={params.InputProps.ref}>
                         <Input
                           {...params.inputProps}
-                          filled={state.agent}
+                          filled={state.agent.agentId}
                           placeholder={I18n.t('components.costModal.choose')}
                           toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                          invalid={invalidInput && (state.agent === null || state.agent.length === 0)}
+                          invalid={invalidInput && (state.agent === null || state.agent.agentId !== null)}
                           style={{ width: '513px' }}
                         />
                         <Box {...params.inputProps} className="dropdownContainer">
