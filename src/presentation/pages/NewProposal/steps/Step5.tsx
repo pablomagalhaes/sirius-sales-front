@@ -9,6 +9,7 @@ import { Cost } from '../../../../domain/Cost'
 import { TotalCost } from '../../../../domain/TotalCost'
 import { CalculationDataProps } from '../../../components/ChargeTable'
 import API from '../../../../infrastructure/api'
+import { Agents } from './Step2'
 
 interface Step5Props {
   costData: any
@@ -29,7 +30,7 @@ interface Step5Props {
   calculationData: CalculationDataProps
   invalidInput: boolean
   updateTableIdsRef: any
-  agentList: string[]
+  agentList: Agents[]
 }
 
 export interface TotalCostTable {
@@ -64,19 +65,9 @@ const Step5 = ({
   const [loadedTotalCostsOrigIds, setLoadedTotalCostsOrigIds] = useState<number[]>([])
   const [loadedTotalCostsDestIds, setLoadedTotalCostsDestIds] = useState<number[]>([])
 
-  const [agentsListSuper, setAgentsListSuper] = useState<any[]>([])
-
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
   const [loadedTable, setLoadedTable] = useState(false)
-
-  useEffect(() => {
-    void (async function () {
-      await API.getAgents()
-        .then((response) => setAgentsListSuper(response))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
 
   useImperativeHandle(updateTableIdsRef, () => ({
     updateStep5Ids () {
@@ -138,24 +129,11 @@ const Step5 = ({
                 .catch((err) => console.log(err))
             })
 
-            const getAgent = new Promise(resolve => {
-              if (cost.idBusinessPartnerAgent !== 0) {
-                API.getBusinessPartnerCostumer(cost.idBusinessPartnerAgent)
-                  .then((response) => {
-                    resolve(response.simpleName)
-                  })
-                  .catch((err) => console.log(err))
-              } else {
-                resolve('')
-              }
-            })
-
-            void await Promise.all([getContainer, getService, getAgent]).then((response) => {
-              console.log(cost.valuePurchase)
+            void await Promise.all([getContainer, getService]).then((response) => {
               const loadedItem: CostTableItem = {
                 idCost: cost.id,
                 idProposal: proposal.idProposal,
-                agent: String(response[2]),
+                agent: cost.agent,
                 buyCurrency: cost.idCurrencyPurchase === '' ? 'BRL' : String(cost.idCurrencyPurchase),
                 buyMin: cost.valueMinimumPurchase === 0 ? null : completeDecimalPlaces(cost.valueMinimumPurchase),
                 buyValue: cost.valuePurchase === 0 ? '' : completeDecimalPlaces(cost.valuePurchase),
@@ -200,16 +178,6 @@ const Step5 = ({
   }, [])
 
   useEffect(() => {
-    const getAgentId = (agentName): number => {
-      let id = 0
-      agentsListSuper?.forEach((item): void => {
-        if (String(item.businessPartner.simpleName) === String(agentName)) {
-          id = item.businessPartner.id
-        }
-      })
-      return id
-    }
-
     let actualCostArray = proposal.costs
     actualCostArray = actualCostArray.filter((cost) => (cost.costType === 'Tarifa' || cost.costType === 'Frete') && cost)
     const newOriginTableData: Cost[] = []
@@ -219,7 +187,7 @@ const Step5 = ({
         idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
         idService: serviceList.filter((serv) => serv.service === row.description)[0]?.id, // id Descricao
         containerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : null, // containerMODAL
-        idBusinessPartnerAgent: getAgentId(row.agent),
+        agent: row.agent,
         costType: 'Origem', // 'Origem''Destino''Tarifa'
         billingType: row.type, // Tipo -MODAL
         valuePurchase: Number(row.buyValue), // valor compra
@@ -241,7 +209,7 @@ const Step5 = ({
         idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
         idService: serviceList.filter((serv) => serv.service === row.description)[0]?.id, // id Descricao
         containerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : null, // containerMODAL
-        idBusinessPartnerAgent: getAgentId(row.agent),
+        agent: row.agent,
         costType: 'Destino', // 'Origem''Destino''Tarifa'
         billingType: row.type, // Tipo -MODAL
         valuePurchase: Number(row.buyValue), // valor compra

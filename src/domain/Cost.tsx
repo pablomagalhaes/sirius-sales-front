@@ -1,9 +1,13 @@
+export interface CostAgent {
+  agentId?: number | null
+  transportCompanyId?: number | null
+}
 export interface Cost {
   id?: number | null
   idProposal?: number | null
   idService: number // id Descricao
   containerType: string | null// containerMODAL
-  idBusinessPartnerAgent: number // AgenteMODALcusto
+  agent: CostAgent
   costType: string // 'Origem''Destino''Tarifa'
   billingType: string // Tipo -MODAL
   valuePurchase: number | null // valor compra

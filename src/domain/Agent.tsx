@@ -1,5 +1,5 @@
 export interface Agent {
   id?: number | null
-  idBusinessPartnerAgent: number
-  proposalImportFreightId?: number | null
+  agentId?: number | null
+  transportCompanyId?: number | null
 }
