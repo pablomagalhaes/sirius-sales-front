@@ -42,6 +42,10 @@ interface DataProps {
   oriCountry: string
   oriState: string
   origin: string
+  originCityName: string
+  originCityId: string
+  destinationCityName: string
+  destinationCityId: string
 }
 
 export interface Agents {
@@ -84,7 +88,11 @@ const Step2 = ({
     oriCity: '',
     destCountry: '',
     destState: '',
-    destCity: ''
+    destCity: '',
+    originCityName: '',
+    originCityId: '',
+    destinationCityName: '',
+    destinationCityId: ''
   })
   const [incotermFilteredList, setIncotermFilteredList] = useState<any[]>([])
   const [incotermList, setIncotermList] = useState<any[]>([])
@@ -209,7 +217,7 @@ const Step2 = ({
     if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
       const getOrigin = new Promise((resolve) => {
         if (modal === 'LAND') {
-          API.getCityById(proposal.idOrigin)
+          API.getCityById(proposal.originCityId)
             .then((response) => resolve(response))
             .catch((err) => console.log(err))
         } else {
@@ -221,7 +229,7 @@ const Step2 = ({
 
       const getDestiny = new Promise((resolve) => {
         if (modal === 'LAND') {
-          API.getCityById(proposal.idDestination)
+          API.getCityById(proposal.destinationCityId)
             .then((response) => resolve(response))
             .catch((err) => console.log(err))
         } else {
@@ -242,7 +250,11 @@ const Step2 = ({
           oriCity: modal === 'LAND' ? String(values[0]?.name) : '',
           oriCountry: modal === 'LAND' ? String(values[0]?.state?.country?.name) : '',
           oriState: modal === 'LAND' ? String(values[0]?.state?.initials) : '',
-          origin: modal !== 'LAND' ? String(values[0]) : ''
+          origin: modal !== 'LAND' ? String(values[0]) : '',
+          originCityName: modal === 'LAND' ? String(values[0]?.name) : '',
+          originCityId: modal === 'LAND' ? String(values[0]?.state?.id) : '',
+          destinationCityName: modal === 'LAND' ? String(values[1]?.name) : '',
+          destinationCityId: modal === 'LAND' ? String(values[1]?.state?.id) : ''
         })
         loadStatesList('origin', String(values[0]?.state?.country?.id))
         loadStatesList('destiny', String(values[1]?.state?.country?.id))
@@ -288,12 +300,10 @@ const Step2 = ({
   useEffect(() => {
     setProposal({
       ...proposal,
-      idOrigin: modal === 'LAND'
-        ? String(oriCitiesList.filter((city) => city.name === data.oriCity)[0]?.id)
-        : data.origin.split(' - ')[0],
-      idDestination: modal === 'LAND'
-        ? String(destCitiesList.filter((city) => city.name === data.destCity)[0]?.id)
-        : data.destiny.split(' - ')[0],
+      originCityId: modal === 'LAND' ? String(oriCitiesList.filter((city) => city.name === data.oriCity)[0]?.id) : data.origin.split(' - ')[0],
+      originCityName: modal === 'LAND' ? String(oriCitiesList.filter((city) => city.name === data.oriCity)[0]?.name) : data.origin.split(' - ')[0],
+      destinationCityId: modal === 'LAND' ? String(destCitiesList.filter((city) => city.name === data.destCity)[0]?.id) : data.destiny.split(' - ')[0],
+      destinationCityName: modal === 'LAND' ? String(destCitiesList.filter((city) => city.name === data.destCity)[0]?.name) : data.destiny.split(' - ')[0],
       idIncoterm: data.incoterm,
       cargoCollectionAddress: data.collection
     })

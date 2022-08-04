@@ -26,6 +26,10 @@ export const emptyProposalValue: Proposal = {
   idDestination: 'str', // id destino (if rod="NULL")
   idOriginCity: null,
   idDestinationCity: null,
+  originCityName: 'str',
+  originCityId: 'str',
+  destinationCityName: 'str',
+  destinationCityId: 'str',
   idIncoterm: 'str', // step2 incoterm id
   cargo: {
     cargo: 'str', //
