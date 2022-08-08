@@ -28,6 +28,10 @@ export interface Proposal {
   idDestination: string // id destino (if rod="NULL") step2
   idOriginCity: number | null
   idDestinationCity: number | null
+  originCityName: string
+  originCityId: string
+  destinationCityName: string
+  destinationCityId: string
   idIncoterm: string // step2 incoterm id
   cargo: {
     id?: number
