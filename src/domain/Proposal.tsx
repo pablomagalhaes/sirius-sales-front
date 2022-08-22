@@ -26,8 +26,6 @@ export interface Proposal {
   idTransport: string // step1 modal
   idOrigin: string // id origem (if rod="NULL") step2
   idDestination: string // id destino (if rod="NULL") step2
-  idOriginCity: number | null
-  idDestinationCity: number | null
   originCityName: string
   originCityId: string
   destinationCityName: string
