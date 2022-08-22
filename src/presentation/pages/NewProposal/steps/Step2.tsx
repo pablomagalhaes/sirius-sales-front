@@ -46,6 +46,8 @@ interface DataProps {
   originCityId: string
   destinationCityName: string
   destinationCityId: string
+  idOrigin: string,
+  idDestination: string
 }
 
 export interface Agents {
@@ -66,13 +68,6 @@ const Step2 = ({
   theme,
   updateAgentsIdsRef
 }: Step2Props): JSX.Element => {
-  const testValues = [
-    { businessPartner: { simpleName: 'teste 1' } },
-    { businessPartner: { simpleName: 'teste 2' } },
-    { businessPartner: { simpleName: 'teste 3' } },
-    { businessPartner: { simpleName: 'teste 4' } },
-    { businessPartner: { simpleName: 'teste 5' } }
-  ] // valores para teste Cia aérea
   const [agentsList, setAgentsList] = useState<any[]>([])
   const [businessPartnerList, setBusinessPartnerList] = useState<any[]>([])
   const [countriesList, setCountriesList] = useState<any[]>([])
@@ -92,7 +87,9 @@ const Step2 = ({
     originCityName: '',
     originCityId: '',
     destinationCityName: '',
-    destinationCityId: ''
+    destinationCityId: '',
+    idOrigin:'',
+    idDestination: ''
   })
   const [incotermFilteredList, setIncotermFilteredList] = useState<any[]>([])
   const [incotermList, setIncotermList] = useState<any[]>([])
@@ -167,7 +164,7 @@ const Step2 = ({
   const getBusinessPartner = async (type: string): Promise<any> => {
     const response = await API.getBusinessPartnerByType(type)
     if (response !== undefined) {
-      setBusinessPartnerList([...response, ...testValues])
+      setBusinessPartnerList([...response])
     }
   }
 
@@ -175,7 +172,7 @@ const Step2 = ({
     const responseShipOwner = await API.getBusinessPartnerByType('ARMADOR')
     const responseColoader = await API.getBusinessPartnerByType('COLOADER')
     if (responseShipOwner !== undefined && responseColoader !== undefined) {
-      setBusinessPartnerList([...responseColoader, ...responseShipOwner, ...testValues])
+      setBusinessPartnerList([...responseColoader, ...responseShipOwner])
     }
   }
 
@@ -254,7 +251,9 @@ const Step2 = ({
           originCityName: modal === 'LAND' ? String(values[0]?.name) : '',
           originCityId: modal === 'LAND' ? String(values[0]?.state?.id) : '',
           destinationCityName: modal === 'LAND' ? String(values[1]?.name) : '',
-          destinationCityId: modal === 'LAND' ? String(values[1]?.state?.id) : ''
+          destinationCityId: modal === 'LAND' ? String(values[1]?.state?.id) : '',
+          idOrigin: modal !== 'LAND' ? String(values[1]?.state?.id) : '',
+          idDestination: modal !== 'LAND' ? String(values[1]?.state?.id) : '',
         })
         loadStatesList('origin', String(values[0]?.state?.country?.id))
         loadStatesList('destiny', String(values[1]?.state?.country?.id))
@@ -300,10 +299,12 @@ const Step2 = ({
   useEffect(() => {
     setProposal({
       ...proposal,
-      originCityId: modal === 'LAND' ? String(oriCitiesList.filter((city) => city.name === data.oriCity)[0]?.id) : data.origin.split(' - ')[0],
-      originCityName: modal === 'LAND' ? String(oriCitiesList.filter((city) => city.name === data.oriCity)[0]?.name) : data.origin.split(' - ')[0],
-      destinationCityId: modal === 'LAND' ? String(destCitiesList.filter((city) => city.name === data.destCity)[0]?.id) : data.destiny.split(' - ')[0],
-      destinationCityName: modal === 'LAND' ? String(destCitiesList.filter((city) => city.name === data.destCity)[0]?.name) : data.destiny.split(' - ')[0],
+      originCityId: modal === 'LAND' ? String(oriCitiesList.filter((city) => city.name === data.oriCity)[0]?.id) : '',
+      originCityName: modal === 'LAND' ? String(oriCitiesList.filter((city) => city.name === data.oriCity)[0]?.name) : '',
+      destinationCityId: modal === 'LAND' ? String(destCitiesList.filter((city) => city.name === data.destCity)[0]?.id) : '',
+      destinationCityName: modal === 'LAND' ? String(destCitiesList.filter((city) => city.name === data.destCity)[0]?.name) : '',
+      idOrigin: modal !== 'LAND' ? data.origin.split(' - ')[0] : '',
+      idDestination: modal !== 'LAND' ? data.destiny.split(' - ')[0] : '',
       idIncoterm: data.incoterm,
       cargoCollectionAddress: data.collection
     })

@@ -13,26 +13,24 @@ export const emptyProposalValue: Proposal = {
   openingDate: '2022-04-12T13:03:46.340Z', // 2022-03-17T13:03:46.340Z//DiaDeHoje
   validityDate: '2022-05-12T13:03:46.340Z', // 2022-03-17T13:03:46.340Z//Step4Validade
   approvalDate: null, // 2022-03-17T13:03:46.340Z//null
-  referenceClientProposal: 'str', // step1 cliente
-  generalObservations: 'str', // Step4ObservacoesGerais
-  internalObservations: 'str', // Step4ObservacoesInternas
-  requester: 'str', // solicitante step1
-  cargoCollectionAddress: 'str', // nao sabe
+  referenceClientProposal: '', // step1 cliente
+  generalObservations: '', // Step4ObservacoesGerais
+  internalObservations: '', // Step4ObservacoesInternas
+  requester: '', // solicitante step1
+  cargoCollectionAddress: '', // nao sabe
   costs: [],
   totalCosts: [],
-  proposalType: 'str', // step1 tipo proposta 'cliente' 'routing order'
-  idTransport: 'str', // step1 modal
-  idOrigin: 'str', // id origem (if rod="NULL")
-  idDestination: 'str', // id destino (if rod="NULL")
-  idOriginCity: null,
-  idDestinationCity: null,
-  originCityName: 'str',
-  originCityId: 'str',
-  destinationCityName: 'str',
-  destinationCityId: 'str',
-  idIncoterm: 'str', // step2 incoterm id
+  proposalType: '', // step1 tipo proposta 'cliente' 'routing order'
+  idTransport: '', // step1 modal
+  idOrigin: '', // id origem (if rod="NULL")
+  idDestination: '', // id destino (if rod="NULL")
+  originCityName: '',
+  originCityId: '',
+  destinationCityName: '',
+  destinationCityId: '',
+  idIncoterm: '', // step2 incoterm id
   cargo: {
-    cargo: 'str', //
+    cargo: '', //
     isDangerous: true, // step3 perigoso
     idImoType: 0, // id IMO
     idTemperature: 0, // step 3 id temperatura
@@ -44,12 +42,12 @@ export const emptyProposalValue: Proposal = {
   },
   transitTime: 0, // step4 transit time
   idFrequency: 0, // step 4 id frequency
-  route: 'str', // step4 rota
+  route: '', // step4 rota
   freeTime: false, // step4 freetime
   vlFreeTime: null,
   nrFreeTimeDaysDeadline: null,
   recurrency: 1, // 1
-  weeklyRecurrency: 'str', // "0101100" segunda quarta e quinta
+  weeklyRecurrency: '', // "0101100" segunda quarta e quinta
   transportIncluded: false,
   clearenceIncluded: false,
   agents: []
