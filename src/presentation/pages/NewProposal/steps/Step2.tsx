@@ -66,13 +66,6 @@ const Step2 = ({
   theme,
   updateAgentsIdsRef
 }: Step2Props): JSX.Element => {
-  const testValues = [
-    { businessPartner: { simpleName: 'teste 1' } },
-    { businessPartner: { simpleName: 'teste 2' } },
-    { businessPartner: { simpleName: 'teste 3' } },
-    { businessPartner: { simpleName: 'teste 4' } },
-    { businessPartner: { simpleName: 'teste 5' } }
-  ] // valores para teste Cia aérea
   const [agentsList, setAgentsList] = useState<any[]>([])
   const [businessPartnerList, setBusinessPartnerList] = useState<any[]>([])
   const [countriesList, setCountriesList] = useState<any[]>([])
@@ -167,7 +160,7 @@ const Step2 = ({
   const getBusinessPartner = async (type: string): Promise<any> => {
     const response = await API.getBusinessPartnerByType(type)
     if (response !== undefined) {
-      setBusinessPartnerList([...response, ...testValues])
+      setBusinessPartnerList([...response])
     }
   }
 
@@ -175,7 +168,7 @@ const Step2 = ({
     const responseShipOwner = await API.getBusinessPartnerByType('ARMADOR')
     const responseColoader = await API.getBusinessPartnerByType('COLOADER')
     if (responseShipOwner !== undefined && responseColoader !== undefined) {
-      setBusinessPartnerList([...responseColoader, ...responseShipOwner, ...testValues])
+      setBusinessPartnerList([...responseColoader, ...responseShipOwner])
     }
   }
 
