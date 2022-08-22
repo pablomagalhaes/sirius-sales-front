@@ -46,7 +46,7 @@ interface DataProps {
   originCityId: string
   destinationCityName: string
   destinationCityId: string
-  idOrigin: string,
+  idOrigin: string
   idDestination: string
 }
 
@@ -88,7 +88,7 @@ const Step2 = ({
     originCityId: '',
     destinationCityName: '',
     destinationCityId: '',
-    idOrigin:'',
+    idOrigin: '',
     idDestination: ''
   })
   const [incotermFilteredList, setIncotermFilteredList] = useState<any[]>([])
@@ -253,7 +253,7 @@ const Step2 = ({
           destinationCityName: modal === 'LAND' ? String(values[1]?.name) : '',
           destinationCityId: modal === 'LAND' ? String(values[1]?.state?.id) : '',
           idOrigin: modal !== 'LAND' ? String(values[1]?.state?.id) : '',
-          idDestination: modal !== 'LAND' ? String(values[1]?.state?.id) : '',
+          idDestination: modal !== 'LAND' ? String(values[1]?.state?.id) : ''
         })
         loadStatesList('origin', String(values[0]?.state?.country?.id))
         loadStatesList('destiny', String(values[1]?.state?.country?.id))
