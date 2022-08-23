@@ -249,9 +249,9 @@ const Step2 = ({
           oriState: modal === 'LAND' ? String(values[0]?.state?.initials) : '',
           origin: modal !== 'LAND' ? String(values[0]) : '',
           originCityName: modal === 'LAND' ? String(values[0]?.name) : '',
-          originCityId: modal === 'LAND' ? String(values[0]?.state?.id) : '',
+          originCityId: modal === 'LAND' ? values[0]?.state?.id : null,
           destinationCityName: modal === 'LAND' ? String(values[1]?.name) : '',
-          destinationCityId: modal === 'LAND' ? String(values[1]?.state?.id) : '',
+          destinationCityId: modal === 'LAND' ? values[1]?.state?.id : null,
           idOrigin: modal !== 'LAND' ? String(values[1]?.state?.id) : '',
           idDestination: modal !== 'LAND' ? String(values[1]?.state?.id) : ''
         })
@@ -299,9 +299,9 @@ const Step2 = ({
   useEffect(() => {
     setProposal({
       ...proposal,
-      originCityId: modal === 'LAND' ? String(oriCitiesList.filter((city) => city.name === data.oriCity)[0]?.id) : '',
+      originCityId: modal === 'LAND' ? oriCitiesList.filter((city) => city.name === data.oriCity)[0]?.id : null,
       originCityName: modal === 'LAND' ? String(oriCitiesList.filter((city) => city.name === data.oriCity)[0]?.name) : '',
-      destinationCityId: modal === 'LAND' ? String(destCitiesList.filter((city) => city.name === data.destCity)[0]?.id) : '',
+      destinationCityId: modal === 'LAND' ? destCitiesList.filter((city) => city.name === data.destCity)[0]?.id : null,
       destinationCityName: modal === 'LAND' ? String(destCitiesList.filter((city) => city.name === data.destCity)[0]?.name) : '',
       idOrigin: modal !== 'LAND' ? data.origin.split(' - ')[0] : '',
       idDestination: modal !== 'LAND' ? data.destiny.split(' - ')[0] : '',
