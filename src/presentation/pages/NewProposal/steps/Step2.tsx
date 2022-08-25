@@ -132,7 +132,7 @@ const Step2 = ({
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
   useImperativeHandle(updateAgentsIdsRef, () => ({
-    updateAgentsIdsRef() {
+    updateAgentsIdsRef () {
       setSelectedAgents(
         selectedAgents.map((agent, index) => {
           return { ...agent, id: proposal.agents[index].id }
@@ -366,9 +366,9 @@ const Step2 = ({
       originCityName:
         modal === 'LAND'
           ? String(
-              oriCitiesList.filter((city) => city.name === data.oriCity)[0]
-                ?.name
-            )
+            oriCitiesList.filter((city) => city.name === data.oriCity)[0]
+              ?.name
+          )
           : '',
       destinationCityId:
         modal === 'LAND'
@@ -377,9 +377,9 @@ const Step2 = ({
       destinationCityName:
         modal === 'LAND'
           ? String(
-              destCitiesList.filter((city) => city.name === data.destCity)[0]
-                ?.name
-            )
+            destCitiesList.filter((city) => city.name === data.destCity)[0]
+              ?.name
+          )
           : '',
       idOrigin: modal !== 'LAND' ? data.origin.split(' - ')[0] : '',
       idDestination: modal !== 'LAND' ? data.destiny.split(' - ')[0] : '',
@@ -725,8 +725,8 @@ const Step2 = ({
     const countryId =
       countryLoadedId === undefined
         ? countriesList?.filter(
-            (country) => country.name === selectedCountry
-          )[0]?.id
+          (country) => country.name === selectedCountry
+        )[0]?.id
         : countryLoadedId
     if (countryId !== undefined && modal === 'LAND') {
       void (async function () {
@@ -864,7 +864,8 @@ const Step2 = ({
               </OriginDestLabel>
               {modal !== 'LAND' && <RedColorSpan> *</RedColorSpan>}
             </FormLabel>
-            {modal === 'LAND' ? (
+            {modal === 'LAND'
+              ? (
               <Grid container spacing={2}>
                 <Grid item xs={5}>
                   <FormLabel component="legend">
@@ -990,7 +991,8 @@ const Step2 = ({
                   )}
                 </Grid>
               </Grid>
-            ) : (
+                )
+              : (
               <>
                 <Autocomplete
                   freeSolo
@@ -1039,15 +1041,17 @@ const Step2 = ({
                   )}
                   PaperComponent={(params: any) => <StyledPaper {...params} />}
                 />
-                {invalidOriDest === 'origin' ? (
+                {invalidOriDest === 'origin'
+                  ? (
                   <ErrorText>
                     {I18n.t('pages.newProposal.step2.differentLocationsOrigin')}
                   </ErrorText>
-                ) : (
+                    )
+                  : (
                   <LineSeparator />
-                )}
+                    )}
               </>
-            )}
+                )}
           </Grid>
           <Grid item xs={6}>
             <FormLabel component="legend">
@@ -1056,7 +1060,8 @@ const Step2 = ({
               </OriginDestLabel>
               {modal !== 'LAND' && <RedColorSpan> *</RedColorSpan>}
             </FormLabel>
-            {modal === 'LAND' ? (
+            {modal === 'LAND'
+              ? (
               <Grid container spacing={2}>
                 <Grid item xs={5}>
                   <FormLabel component="legend">
@@ -1183,7 +1188,8 @@ const Step2 = ({
                   )}
                 </Grid>
               </Grid>
-            ) : (
+                )
+              : (
               <>
                 <Autocomplete
                   freeSolo
@@ -1232,17 +1238,19 @@ const Step2 = ({
                   )}
                   PaperComponent={(params: any) => <StyledPaper {...params} />}
                 />
-                {invalidOriDest === 'destiny' ? (
+                {invalidOriDest === 'destiny'
+                  ? (
                   <ErrorText>
                     {I18n.t(
                       'pages.newProposal.step2.differentLocationsDestiny'
                     )}
                   </ErrorText>
-                ) : (
+                    )
+                  : (
                   <LineSeparator />
-                )}
+                    )}
               </>
-            )}
+                )}
           </Grid>
           {selectedAgents.map((selectedAgent, index) => {
             return (
@@ -1322,7 +1330,7 @@ const Step2 = ({
                         <ErrorText>
                           {I18n.t('pages.newProposal.step2.differentAgent')}
                         </ErrorText>
-                      )}
+                    )}
                   </Grid>
                 )}
                 <Grid item xs={6}>
@@ -1419,7 +1427,7 @@ const Step2 = ({
                       index
                     ) && (
                       <ErrorText>{setshippingCompanyErrorLabel()}</ErrorText>
-                    )}
+                  )}
                 </Grid>
                 <LineSeparator />
               </Fragment>

@@ -55,12 +55,12 @@ interface Step3Props {
   setSpecifications: (specifications: string) => void
   setTableItems: (tableItems: ItemModalData[]) => void
   setUndoMessage: React.Dispatch<
-    React.SetStateAction<{
-      step3: boolean
-      step5origin: boolean
-      step5destiny: boolean
-      step6: boolean
-    }>
+  React.SetStateAction<{
+    step3: boolean
+    step5origin: boolean
+    step5destiny: boolean
+    step6: boolean
+  }>
   >
   undoMessage: {
     step3: boolean
@@ -121,13 +121,13 @@ const Step3 = ({
   const [data, setData] = useState(initialData)
   const [chargeableWeight, setChargeableWeight] = useState<number | null>(null)
   const [chargeableWeightSale, setChargeableWeightSale] = useState<
-    number | null
+  number | null
   >(null)
   const [cwSaleEditMode, setCwSaleEditMode] = useState(false)
   const [copyCwSale, setCopyCwSale] = useState<number | null>(null)
 
   useImperativeHandle(updateTableIdsRef, () => ({
-    updateStep3Ids() {
+    updateStep3Ids () {
       let tableDataId = 0
       if (proposal?.idProposal !== undefined && proposal?.idProposal !== null) {
         const newTableData = [...tableRows]
@@ -235,8 +235,8 @@ const Step3 = ({
             specifications:
               proposal.idTransport === 'SEA'
                 ? specificationsList[
-                    Number(proposal.cargo.idCargoContractingType) - 1
-                  ].toLowerCase()
+                  Number(proposal.cargo.idCargoContractingType) - 1
+                ].toLowerCase()
                 : '',
             temperature: String(proposal.cargo.idTemperature),
             dangerous: proposal.cargo.isDangerous,
@@ -265,11 +265,11 @@ const Step3 = ({
               rawWeight: completeDecimalPlaces(cargo.valueGrossWeight),
               type: marineFCL()
                 ? response[0].filter(
-                    (cont) => cont.id === cargo.idContainerType
-                  )[0]?.id
+                  (cont) => cont.id === cargo.idContainerType
+                )[0]?.id
                 : response[0].filter(
-                    (pack) => Number(pack.id) === cargo.idPackaging
-                  )[0]?.id,
+                  (pack) => Number(pack.id) === cargo.idPackaging
+                )[0]?.id,
               width: completeDecimalPlaces(cargo.valueWidth),
               id: id++,
               stack: cargo.isStacked
@@ -295,8 +295,8 @@ const Step3 = ({
         idCargoContractingType:
           modal === 'SEA'
             ? specificationsList
-                .map((spe) => spe.toLowerCase())
-                .indexOf(data.specifications) + 1
+              .map((spe) => spe.toLowerCase())
+              .indexOf(data.specifications) + 1
             : 1,
         isDangerous: data.dangerous,
         idImoType: Number(data.imo),
@@ -319,8 +319,8 @@ const Step3 = ({
         cdCargoType:
           modal === 'SEA'
             ? specificationsList
-                .map((spe) => spe.toLowerCase())
-                .indexOf(data.specifications) + 1
+              .map((spe) => spe.toLowerCase())
+              .indexOf(data.specifications) + 1
             : 1,
         idContainerType: 'str', // !marineFCL() ? null : containerTypeList.filter((cont) => cont.type === row.type)[0]?.id,
         idPackaging: 0, // marineFCL() ? null : packagingList.filter((pack) => pack.packaging === row.type)[0]?.id,
@@ -670,7 +670,8 @@ const Step3 = ({
                 containerTypeList={containerTypeList}
                 packagingList={packagingList}
               />
-              {isAir() && tableRows.length > 0 ? (
+              {isAir() && tableRows.length > 0
+                ? (
                 <ChargeContainer>
                   <BottomValueContainer>
                     <BottomTitle>&nbsp;</BottomTitle>
@@ -710,7 +711,8 @@ const Step3 = ({
                     </EditIconContainer>
                   </ChargeContainer>
                 </ChargeContainer>
-              ) : null}
+                  )
+                : null}
             </BottomContainer>
           </Grid>
         </Grid>

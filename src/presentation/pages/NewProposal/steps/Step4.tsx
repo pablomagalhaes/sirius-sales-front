@@ -470,17 +470,19 @@ const Step4 = ({
           {modal === 'SEA' && (
             <Grid item xs={8} container spacing={2}>
               <Grid item xs style={{ maxWidth: '330px' }}>
-                {specifications === 'fcl' ? (
+                {specifications === 'fcl'
+                  ? (
                   <FormLabel component="legend">
                     {I18n.t('pages.newProposal.step4.freeTimeDemurrage')}
                     <RedColorSpan> *</RedColorSpan>
                   </FormLabel>
-                ) : (
+                    )
+                  : (
                   <FormLabel component="legend">
                     {I18n.t('pages.newProposal.step4.freeTimeStorage')}
                     <RedColorSpan> *</RedColorSpan>
                   </FormLabel>
-                )}
+                    )}
                 <RadioGroup
                   row
                   aria-label="proposal type"
@@ -623,7 +625,8 @@ const Step4 = ({
               ))}
             </ControlledSelect>
           </Grid>
-          {Number(data.frequency) === 2 || Number(data.frequency) === 3 ? (
+          {Number(data.frequency) === 2 || Number(data.frequency) === 3
+            ? (
             <Grid item xs={8}>
               <FormLabel component="legend">
                 {I18n.t('pages.newProposal.step4.customDays')}
@@ -687,9 +690,10 @@ const Step4 = ({
                 </WeekDay>
               </WeekContainer>
             </Grid>
-          ) : (
+              )
+            : (
             <Grid item xs={8} />
-          )}
+              )}
           <Grid item xs={6}>
             <FormLabel component="legend">
               {I18n.t('pages.newProposal.step4.general')}
