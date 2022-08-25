@@ -126,11 +126,11 @@ const Step1 = ({
       customerId:
         data.proposal === 'routing'
           ? agentsList.filter(
-            (agt) => agt.businessPartner.simpleName === data.proposalValue
-          )[0]?.businessPartner.id
+              (agt) => agt.businessPartner.simpleName === data.proposalValue
+            )[0]?.businessPartner.id
           : partnerList.filter(
-            (ptn) => ptn.businessPartner.simpleName === data.proposalValue
-          )[0]?.businessPartner.id,
+              (ptn) => ptn.businessPartner.simpleName === data.proposalValue
+            )[0]?.businessPartner.id,
       requester: data.requester,
       transportIncluded: data.serviceTransport,
       clearenceIncluded: data.serviceDesemb
@@ -228,7 +228,6 @@ const Step1 = ({
             <FormControlLabel
               checked={data.proposal === 'client'}
               value="client"
-              // onChange={() => setData({ ...data, serviceTransport: false })}
               control={<StyledRadio color={getColor(data.proposal)} />}
               label={I18n.t('pages.newProposal.step1.client')}
               style={{ marginRight: '30px' }}
@@ -236,14 +235,12 @@ const Step1 = ({
             <FormControlLabel
               checked={data.proposal === 'routing'}
               value="routing"
-              // onChange={() => setData({ ...data, serviceTransport: false })}
               control={<StyledRadio color={getColor(data.proposal)} />}
               label={I18n.t('pages.newProposal.step1.routingOrder')}
             />
           </RadioGroup>
         </Grid>
-        {data.proposal === 'routing'
-          ? (
+        {data.proposal === 'routing' ? (
           <Grid item xs={6}>
             <FormLabel component="legend">
               {I18n.t('pages.newProposal.step1.services')}
@@ -275,26 +272,23 @@ const Step1 = ({
               />
             </FormGroup>
           </Grid>
-            )
-          : (
+        ) : (
           <Grid item xs={6}>
             {' '}
           </Grid>
-            )}
+        )}
         <Grid item xs={6}>
-          {data.proposal === 'routing'
-            ? (
+          {data.proposal === 'routing' ? (
             <FormLabel component="legend">
               {I18n.t('pages.newProposal.step1.agents')}
               <RedColorSpan> *</RedColorSpan>
             </FormLabel>
-              )
-            : (
+          ) : (
             <FormLabel component="legend">
               {I18n.t('pages.newProposal.step1.client')}:
               <RedColorSpan> *</RedColorSpan>
             </FormLabel>
-              )}
+          )}
           <Autocomplete
             freeSolo
             onChange={(e, newValue) =>
