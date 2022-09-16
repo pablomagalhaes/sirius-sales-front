@@ -264,9 +264,7 @@ const Step3 = ({
               length: completeDecimalPlaces(cargo.valueLength),
               rawWeight: completeDecimalPlaces(cargo.valueGrossWeight),
               type: marineFCL()
-                ? response[0].filter(
-                  (cont) => cont.id === cargo.idContainerType
-                )[0]?.id
+                ? verifyContainerById(cargo.idContainerType as string)
                 : response[0].filter(
                   (pack) => Number(pack.id) === cargo.idPackaging
                 )[0]?.id,
@@ -322,7 +320,7 @@ const Step3 = ({
               .map((spe) => spe.toLowerCase())
               .indexOf(data.specifications) + 1
             : 1,
-        idContainerType: 'str', // !marineFCL() ? null : containerTypeList.filter((cont) => cont.type === row.type)[0]?.id,
+        idContainerType: !marineFCL() ? null : verifyContainerByType(row.type), // !marineFCL() ? null : containerTypeList.filter((cont) => cont.type === row.type)[0]?.id,
         idPackaging: 0, // marineFCL() ? null : packagingList.filter((pack) => pack.packaging === row.type)[0]?.id,
         valueQuantity: Number(row.amount),
         valueGrossWeight: Number(row.rawWeight?.replace(',', '.')),
@@ -338,7 +336,11 @@ const Step3 = ({
   }, [tableRows])
 
   const marineFCL = (): boolean => {
-    return modal === 'SEA' && data.specifications === 'fcl'
+    const specification =
+      specificationsList[
+        Number(proposal.cargo.idCargoContractingType) - 1
+      ].toLowerCase()
+    return modal === 'SEA' && specification === 'fcl'
   }
 
   const isAir = (): boolean => {
@@ -462,6 +464,28 @@ const Step3 = ({
         return { ...currentState, step3: false }
       })
     }
+  }
+
+  const verifyContainerByType = (container: string): string => {
+    let id: string = ''
+    for (let index = 0; index < containerTypeList.length; index++) {
+      const element = containerTypeList[index]
+      if (container === element.description) {
+        id = element.id
+      }
+    }
+    return id
+  }
+
+  const verifyContainerById = (containerId: string): string => {
+    let name: string = ''
+    for (let index = 0; index < containerTypeList.length; index++) {
+      const element = containerTypeList[index]
+      if (containerId === element.id) {
+        name = element.description
+      }
+    }
+    return name
   }
 
   useEffect(() => {
