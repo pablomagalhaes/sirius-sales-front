@@ -187,7 +187,9 @@ const Step2 = ({
       oriCity: '',
       oriCountry: '',
       oriState: '',
-      origin: ''
+      origin: '',
+      incoterm: '',
+      collection: ''
     })
     setSelectedAgents([
       {
@@ -709,10 +711,6 @@ const Step2 = ({
       }
     ])
   }, [proposalType])
-
-  useEffect(() => {
-    setData({ ...data, incoterm: '', collection: '' })
-  }, [modal])
 
   const loadStatesList = (
     departure: string,
