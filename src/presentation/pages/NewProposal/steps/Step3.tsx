@@ -125,6 +125,7 @@ const Step3 = ({
   >(null)
   const [cwSaleEditMode, setCwSaleEditMode] = useState(false)
   const [copyCwSale, setCopyCwSale] = useState<number | null>(null)
+  let packagingListVar
 
   useImperativeHandle(updateTableIdsRef, () => ({
     updateStep3Ids () {
@@ -202,6 +203,7 @@ const Step3 = ({
       API.getPackaging()
         .then((response) => {
           setPackagingList(response)
+          packagingListVar = response
           resolve(response)
         })
         .catch((err) => console.log(err))
@@ -265,9 +267,7 @@ const Step3 = ({
               rawWeight: completeDecimalPlaces(cargo.valueGrossWeight),
               type: marineFCL()
                 ? verifyContainerById(cargo.idContainerType as string)
-                : response[0].filter(
-                  (pack) => Number(pack.id) === cargo.idPackaging
-                )[0]?.id,
+                : verifyPackagingById(cargo.idPackaging as number),
               width: completeDecimalPlaces(cargo.valueWidth),
               id: id++,
               stack: cargo.isStacked
@@ -321,7 +321,7 @@ const Step3 = ({
               .indexOf(data.specifications) + 1
             : 1,
         idContainerType: !marineFCL() ? null : verifyContainerByType(row.type), // !marineFCL() ? null : containerTypeList.filter((cont) => cont.type === row.type)[0]?.id,
-        idPackaging: 0, // marineFCL() ? null : packagingList.filter((pack) => pack.packaging === row.type)[0]?.id,
+        idPackaging: marineFCL() ? null : verifyPackagingByType(row.type),
         valueQuantity: Number(row.amount),
         valueGrossWeight: Number(row.rawWeight?.replace(',', '.')),
         valueCubage: Number(row.cubage?.replace(',', '.')),
@@ -486,6 +486,28 @@ const Step3 = ({
       }
     }
     return name
+  }
+
+  const verifyPackagingById = (packagingId: number): string => {
+    let name: string = ''
+    for (let index = 0; index < packagingListVar.length; index++) {
+      const element = packagingListVar[index]
+      if (packagingId === element.id) {
+        name = element.packaging
+      }
+    }
+    return name
+  }
+
+  const verifyPackagingByType = (packaging: string): number => {
+    let id: number = 0
+    for (let index = 0; index < packagingList.length; index++) {
+      const element = packagingList[index]
+      if (packaging === element.packaging) {
+        id = element.id
+      }
+    }
+    return id
   }
 
   useEffect(() => {
