@@ -54,6 +54,9 @@ const SurchargeTable = ({ data, dataFields, remove, edit }: TableData): JSX.Elem
               <TableHeader>{I18n.t('pages.newProposal.step6.expense')}</TableHeader>
             </TableCell>
             <TableCell>
+              <TableHeader>{I18n.t('pages.newProposal.step6.agent')}</TableHeader>
+            </TableCell>
+            <TableCell>
               <TableHeader>{I18n.t('pages.newProposal.step6.type')}</TableHeader>
             </TableCell>
             <TableCell>
@@ -79,6 +82,9 @@ const SurchargeTable = ({ data, dataFields, remove, edit }: TableData): JSX.Elem
               <StyledRow id={item.id} key={item.id}>
                 <StyledTableCell width="30%" color={1} component="th" scope="row">
                   {item.expense}
+                </StyledTableCell>
+                <StyledTableCell width="30%" align="left">
+                  {item?.agent?.agent}
                 </StyledTableCell>
                 <StyledTableCell width="30%" align="left">
                   {item.type}
