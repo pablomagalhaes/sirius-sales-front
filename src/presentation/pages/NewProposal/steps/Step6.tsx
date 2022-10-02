@@ -118,7 +118,15 @@ const Step6 = ({
         return false
       })?.valuePurchase,
       tableData: []
-    })))
+    }))
+  )
+  const [dataContainer, setDataContainer] = useState(proposal.cargo.cargoVolumes.map(item => ({
+    idContainerType: item.idContainerType,
+    currencySale: '',
+    currencyPurchase: '',
+    valueSale: '',
+    valuePurchase: ''
+  })))
 
   const [dataSales, setDataSales] = useState<any>({
     currencySale: null,
@@ -150,6 +158,23 @@ const Step6 = ({
     const newTableData = tableData.filter(row => getAgentIds.includes(row.agent.agentId))
     setTableData(newTableData)
   }, [proposal.agents])
+
+  useEffect(() => {
+    const currentContainer = dataContainer.map(currentContainer => currentContainer.idContainerType)
+    const getNewCargos = proposal.cargo.cargoVolumes.filter(cargo => !currentContainer.includes(cargo.idContainerType))
+    const newDataWithNewCargos = getNewCargos.map(newCargo => ({
+      idContainerType: newCargo.idContainerType,
+      currencySale: '',
+      currencyPurchase: '',
+      valueSale: '',
+      valuePurchase: ''
+    }))
+    const unionCargos = [...dataContainer, ...newDataWithNewCargos]
+    const getAllCargos = unionCargos.map(unionAgent => unionAgent.idContainerType)
+    const getOnlyCargosExists = proposal.cargo.cargoVolumes.filter(currentProsalCargoVolumes => getAllCargos.includes(currentProsalCargoVolumes.idContainerType)).map(cargo => cargo.idContainerType)
+    const getOnlyDataExists = unionCargos.filter(unionAgent => getOnlyCargosExists.includes(unionAgent.idContainerType))
+    setDataContainer(getOnlyDataExists)
+  }, [proposal.cargo])
 
   useEffect(() => {
     console.log(tableData)
@@ -610,6 +635,66 @@ const Step6 = ({
     return totalSum.toFixed(2).replace('.', ',')
   }
 
+  function disabledAddFareButton (): boolean {
+    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === 2)) {
+      if (dataSales.currencySale !== null) {
+        return false
+      }
+    }
+    if (proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === 1) {
+      if (dataContainer[0]?.currencySale !== '' && dataContainer.every(row => row.currencySale === dataContainer[0].currencySale)) {
+        return false
+      }
+    }
+    return true
+  }
+
+  function renderTotalSurchage (): JSX.Element | undefined {
+    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === 2)) {
+      if (dataSales.valueSale !== '' && dataSales.currencySale !== null) {
+        return (
+          <TotalSurcharge
+            currency={dataSales.currencySale}
+            value={dataSales.valueSale}
+            totalOtherFare={getSumTotalItem()}
+            cw={cw}
+            cwSale={cwSale}
+            modal={modal}
+          />
+        )
+      }
+    }
+    if ((proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === 1)) {
+      if (dataContainer.every(row => row.valueSale !== '') && // algum campo de venda nao preenchido
+        dataContainer.every(row => row.currencySale !== '' && row.currencySale !== null) && // algum campo de moeda nao preenchido
+        dataContainer.every(row => row.currencySale === dataContainer[0].currencySale) // todos os campos de moeda precisam ter o mesmo valor
+      ) {
+        return (
+          <TotalSurcharge
+            currency={dataContainer[0]?.currencySale}
+            value={dataContainer.reduce((total, item) => Number(item.valueSale?.replace(',', '.')) + total, 0).toFixed(2).replace('.', ',')}
+            totalOtherFare={getSumTotalItem()}
+            cw={cw}
+            cwSale={cwSale}
+            modal={modal}
+          />
+        )
+      }
+    }
+  }
+
+  function makeCurrencyOnFareModal (): string {
+    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === 2)) {
+      return dataSales.currencySale
+    }
+    if ((proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === 1)) {
+      if (dataContainer.length > 0) {
+        return dataContainer[0]?.currencySale
+      }
+    }
+    return ''
+  }
+
   return (
 
     <Separator>
@@ -794,8 +879,8 @@ const Step6 = ({
                       <FormLabel component="legend">{'Agente: '}<strong>{proposal.agents[0].agent}</strong>{' / Cia. Marítima: '}<strong>{proposal.agents[0].shippingCompany}</strong></FormLabel>
                     </Grid>
 
-                    {proposal.cargo.cargoVolumes.map((cargoVolume, index) => {
-                      return (
+                    {proposal.cargo.cargoVolumes.map((cargoVolume, index, array) => {
+                      return (dataContainer.length === array.length) && (
 
                         <>
                           <Fragment key={index}>
@@ -812,7 +897,7 @@ const Step6 = ({
                                   }
                                 })()}
 
-                                <FormLabel component='legend'>{cargoVolume.id}</FormLabel>
+                                <FormLabel component='legend'>{cargoVolume.type}</FormLabel>
                               </Grid>
 
                               <Grid item xs={2}>
@@ -828,15 +913,25 @@ const Step6 = ({
                                   }
                                 })()}
 
-                                <Autocomplete freeSolo value={data[index].currencyPurchase} onChange={(e, newValue) => {
-                                  const newData = data
-                                  newData[index].currencyPurchase = String(newValue ?? '')
-                                  setData(newData)
-                                }}
-                                  options={currencyList.map((item) => item.id)} renderInput={(params) => (
+                                <Autocomplete
+                                  freeSolo
+                                  value={dataContainer[index].currencyPurchase}
+                                  onChange={(e, newValue) => {
+                                    const newData = [...dataContainer]
+                                    newData[index].currencyPurchase = String(newValue ?? '')
+                                    setDataContainer(newData)
+                                  }}
+                                  options={currencyList.map((item) => item.id)}
+                                  renderInput={(params) => (
                                     <div ref={params.InputProps.ref}>
-                                      <ControlledInput {...params} id="currencies" toolTipTitle={I18n.t('components.itemModal.requiredField')} invalid={invalidInput && data[index].currencyPurchase === ''}
-                                        variant="outlined" size="small" placeholder={I18n.t('components.itemModal.choose')}
+                                      <ControlledInput
+                                        {...params}
+                                        id="currencies"
+                                        toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                        invalid={invalidInput && dataContainer[index].currencyPurchase === ''}
+                                        variant="outlined"
+                                        size="small"
+                                        placeholder={I18n.t('components.itemModal.choose')}
                                         InputProps={{
                                           endAdornment: (
                                             <InputAdornment position='end'>
@@ -866,13 +961,23 @@ const Step6 = ({
                                   }
                                 })()}
 
-                                <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
-                                  customInput={ControlledInput} onChange={(e) => {
-                                    const newData = data
+                                <NumberInput
+                                  decimalSeparator={','}
+                                  thousandSeparator={'.'}
+                                  decimalScale={2}
+                                  format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                                  customInput={ControlledInput}
+                                  onChange={(e) => {
+                                    const newData = [...dataContainer]
                                     newData[index].valuePurchase = e.target.value
-                                    setData(newData)
-                                  }} toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                  invalid={invalidInput && (data[index].valuePurchase === '' || data[index].valuePurchase === '0')} value={data[index].valuePurchase} variant='outlined' size='small' />
+                                    setDataContainer(newData)
+                                  }}
+                                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                  invalid={invalidInput && (dataContainer[index].valuePurchase === '' || dataContainer[index].valuePurchase === '0')}
+                                  value={dataContainer[index].valuePurchase}
+                                  variant='outlined'
+                                  size='small'
+                                />
                               </Grid>
 
                               <Grid item xs={2}>
@@ -888,15 +993,25 @@ const Step6 = ({
                                   }
                                 })()}
 
-                                <Autocomplete freeSolo value={data[index].currencySale} onChange={(e, newValue) => {
-                                  const newData = data
-                                  newData[index].currencySale = String(newValue ?? '')
-                                  setData(newData)
-                                }}
-                                  options={currencyList.map((item) => item.id)} renderInput={(params) => (
+                                <Autocomplete
+                                  freeSolo
+                                  value={dataContainer[index].currencySale}
+                                  onChange={(e, newValue) => {
+                                    const newData = [...dataContainer]
+                                    newData[index].currencySale = String(newValue ?? '')
+                                    setDataContainer(newData)
+                                  }}
+                                  options={currencyList.map((item) => item.id)}
+                                  renderInput={(params) => (
                                     <div ref={params.InputProps.ref}>
-                                      <ControlledInput {...params} id="currencies" toolTipTitle={I18n.t('components.itemModal.requiredField')} invalid={invalidInput && data[index].currencySale === ''}
-                                        variant="outlined" size="small" placeholder={I18n.t('components.itemModal.choose')}
+                                      <ControlledInput
+                                        {...params}
+                                        id="currencies"
+                                        toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                        invalid={invalidInput && dataContainer.some(row => row.currencySale !== dataContainer[0].currencySale)}
+                                        variant="outlined"
+                                        size="small"
+                                        placeholder={I18n.t('components.itemModal.choose')}
                                         InputProps={{
                                           endAdornment: (
                                             <InputAdornment position='end'>
@@ -926,13 +1041,23 @@ const Step6 = ({
                                   }
                                 })()}
 
-                                <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
-                                  customInput={ControlledInput} onChange={(e) => {
-                                    const newData = data
+                                <NumberInput
+                                  decimalSeparator={','}
+                                  thousandSeparator={'.'}
+                                  decimalScale={2}
+                                  format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                                  customInput={ControlledInput}
+                                  onChange={(e) => {
+                                    const newData = [...dataContainer]
                                     newData[index].valueSale = e.target.value
-                                    setData(newData)
-                                  }} toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                  invalid={invalidInput && (data[index].valueSale === '' || data[index].valueSale === '0')} value={data[index].valueSale} variant='outlined' size='small' />
+                                    setDataContainer(newData)
+                                  }}
+                                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                  invalid={invalidInput && (dataContainer[index].valueSale === '' || dataContainer[index].valueSale === '0')}
+                                  value={dataContainer[index].valueSale}
+                                  variant='outlined'
+                                  size='small'
+                                />
                               </Grid>
 
                             </Grid>
@@ -978,7 +1103,7 @@ const Step6 = ({
                 ? I18n.t('pages.newProposal.step6.addFareTooltip')
                 : I18n.t('pages.newProposal.step6.addFare')
             }
-            disabled={costData === 0 || dataSales.currencySale === null}
+            disabled={costData === 0 || disabledAddFareButton()}
           />
         </ButtonWrapper>
         <FareModal
@@ -990,18 +1115,9 @@ const Step6 = ({
           modal={modal}
           specifications={specifications}
           containerItems={containerItems}
-          currency={dataSales.currencySale}
+          currency={makeCurrencyOnFareModal()}
         />
-        {dataSales.valueSale !== '' && dataSales.currencySale !== null && (
-          <TotalSurcharge
-            currency={dataSales.currencySale}
-            value={dataSales.valueSale}
-            totalOtherFare={getSumTotalItem()}
-            cw={cw}
-            cwSale={cwSale}
-            modal={modal}
-          />
-        )}
+        {renderTotalSurchage()}
       </HeightDiv>
       {undoMessage.step6 && (
         <MessageContainer>

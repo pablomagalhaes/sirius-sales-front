@@ -323,7 +323,8 @@ const Step3 = ({
         valueHeight: Number(row.height?.replace(',', '.')),
         valueWidth: Number(row.width?.replace(',', '.')),
         valueDiameter: Number(row.diameter?.replace(',', '.')),
-        isStacked: row.stack
+        isStacked: row.stack,
+        type: row.type
       })
     })
     setCargoVolume(newCargoVolumes)
