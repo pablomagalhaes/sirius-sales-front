@@ -33,13 +33,13 @@ const SurchargeTable = ({ data, dataFields, remove, edit }: TableData): JSX.Elem
     if (item.type === 'FIXO' || item.type === 'BL') {
       return (
         <FormatValue>
-          {dataFields.currency} {item.saleValue}
+          {dataFields.currencySale} {item.saleValue}
         </FormatValue>
       )
     } else {
       return (
         <FormatValue>
-          {dataFields.currency} {item.totalItem}
+          {dataFields.currencySale} {item.totalItem}
         </FormatValue>
       )
     }
@@ -91,12 +91,12 @@ const SurchargeTable = ({ data, dataFields, remove, edit }: TableData): JSX.Elem
                 </StyledTableCell>
                 <StyledTableCell width="100%" align="left">
                   <FormatValue>
-                    {item.minimumValue !== '' ? `${String(item.saleCurrency)} ${item.minimumValue}` : '-'}
+                    {item.minimumValue !== '' ? `${String(dataFields.currencySale)} ${item.minimumValue}` : '-'}
                   </FormatValue>
                 </StyledTableCell>
                 <StyledTableCell width="100%" align="left">
                   <FormatValue>
-                    {dataFields.currency} {item.saleValue}
+                    {dataFields.currencySale} {item.saleValue}
                   </FormatValue>
                 </StyledTableCell>
                 <StyledTableCell width="100%" align="left">
