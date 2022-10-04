@@ -14,7 +14,7 @@ import {
   withTheme
 } from '@material-ui/core'
 import { ItemModalData } from '../../../components/ItemModal/ItemModal'
-import { ButtonWrapper, HeightDiv, NumberInput, StyledPaper, LineSeparator } from './StepsStyles'
+import { ButtonWrapper, HeightDiv, NumberInput, StyledPaper, LineSeparator, ErrorText } from './StepsStyles'
 import { Button, Messages } from 'fiorde-fe-components'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import { Cost } from '../../../../domain/Cost'
@@ -60,6 +60,20 @@ interface Step6Props {
   cwSale: number
 }
 
+const enum ID_CARGO_CONTRACTING_TYPE {
+  FCL = 1,
+  LCL = 2,
+  BREAK_BULK = 3,
+  RO_RO = 4
+}
+
+const FclCargoContractingType = ID_CARGO_CONTRACTING_TYPE.FCL
+const ContractingTypeWithoutFcl = [
+  ID_CARGO_CONTRACTING_TYPE.LCL,
+  ID_CARGO_CONTRACTING_TYPE.BREAK_BULK,
+  ID_CARGO_CONTRACTING_TYPE.RO_RO
+]
+
 const Step6 = ({
   setFilled,
   costData,
@@ -86,7 +100,6 @@ const Step6 = ({
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
   const [dataTotalCost, setDataTotalCost] = useState<any[]>([])
   const [loadedTotalCostsIds, setLoadedTotalCostsIds] = useState<number[]>([])
-  const [loadedTable, setLoadedTable] = useState(false)
 
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
@@ -134,8 +147,9 @@ const Step6 = ({
   })
 
   useEffect(() => {
-    const currentAgents = data.map(currentAgent => currentAgent.agent.agentId)
-    const getNewAgents = proposal.agents.filter(agent => !currentAgents.includes(agent.agentId))
+    const currentAgentsId = data.map(currentAgent => currentAgent.agent.agentId)
+    const currentAgentsTransportCompanyId = data.map(currentAgent => currentAgent.agent.transportCompanyId)
+    const getNewAgents = proposal.agents.filter(agent => !currentAgentsId.includes(agent.agentId) && !currentAgentsTransportCompanyId.includes(agent.transportCompanyId))
     const newDataWithNewAgents = getNewAgents.map(newAgent => ({
       company: '',
       agent: {
@@ -379,7 +393,6 @@ const Step6 = ({
             }))
           }
           setTableData(loadedData)
-          setLoadedTable(true)
         }
         void waitAllData()
 
@@ -391,10 +404,7 @@ const Step6 = ({
         })
         setLoadedTotalCostsIds(loadedTotalCosts)
         setTableData(loadedData)
-        setLoadedTable(true)
       })
-    } else {
-      setLoadedTable(true)
     }
   }, [])
 
@@ -420,7 +430,7 @@ const Step6 = ({
             : null, // containerMODAL
         agent: {
           agentId: row.agent?.agentId,
-          transportCompanyId: row.agent.transportCompanyId
+          transportCompanyId: row.agent?.transportCompanyId
         },
         costType: 'Tarifa', // 'Origem''Destino''Tarifa'
         billingType: row.type, // Tipo -MODAL
@@ -636,12 +646,12 @@ const Step6 = ({
   }
 
   function disabledAddFareButton (): boolean {
-    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === 2)) {
+    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && ContractingTypeWithoutFcl.includes(proposal.cargo.idCargoContractingType))) {
       if (dataSales.currencySale !== null) {
         return false
       }
     }
-    if (proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === 1) {
+    if (proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === FclCargoContractingType) {
       if (dataContainer[0]?.currencySale !== '' && dataContainer.every(row => row.currencySale === dataContainer[0].currencySale)) {
         return false
       }
@@ -650,7 +660,7 @@ const Step6 = ({
   }
 
   function renderTotalSurchage (): JSX.Element | undefined {
-    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === 2)) {
+    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && ContractingTypeWithoutFcl.includes(proposal.cargo.idCargoContractingType))) {
       if (dataSales.valueSale !== '' && dataSales.currencySale !== null) {
         return (
           <TotalSurcharge
@@ -664,7 +674,7 @@ const Step6 = ({
         )
       }
     }
-    if ((proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === 1)) {
+    if ((proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === FclCargoContractingType)) {
       if (dataContainer.every(row => row.valueSale !== '') && // algum campo de venda nao preenchido
         dataContainer.every(row => row.currencySale !== '' && row.currencySale !== null) && // algum campo de moeda nao preenchido
         dataContainer.every(row => row.currencySale === dataContainer[0].currencySale) // todos os campos de moeda precisam ter o mesmo valor
@@ -684,15 +694,49 @@ const Step6 = ({
   }
 
   function makeCurrencyOnFareModal (): string {
-    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === 2)) {
+    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && ContractingTypeWithoutFcl.includes(proposal.cargo.idCargoContractingType))) {
       return dataSales.currencySale
     }
-    if ((proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === 1)) {
+    if ((proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === FclCargoContractingType)) {
       if (dataContainer.length > 0) {
         return dataContainer[0]?.currencySale
       }
     }
     return ''
+  }
+
+  function makeSurchargeTable (): JSX.Element | undefined {
+    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && ContractingTypeWithoutFcl.includes(proposal.cargo.idCargoContractingType))) {
+      return (
+        <SurchargeTable
+          data={tableData}
+          costData={costData}
+          modal={modal}
+          specifications={specifications}
+          remove={removeClickHandler}
+          edit={editClickHandler}
+          dataFields={dataSales}
+        />
+      )
+    }
+    if ((proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === FclCargoContractingType)) {
+      return (
+        <SurchargeTable
+          data={tableData}
+          costData={costData}
+          modal={modal}
+          specifications={specifications}
+          remove={removeClickHandler}
+          edit={editClickHandler}
+          dataFields={data[0]}
+        />
+      )
+    }
+  }
+
+  function handleCurrencySale (newValue): void {
+    setDataSales({ ...dataSales, currencySale: newValue })
+    setTableData(tableData.map(row => ({ ...row, saleCurrency: newValue })))
   }
 
   return (
@@ -708,63 +752,51 @@ const Step6 = ({
           <>
 
             {(() => {
-              if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === 2)) {
+              if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && ContractingTypeWithoutFcl.includes(proposal.cargo.idCargoContractingType))) {
                 return (
                   <>
 
                     <Grid item xs={6}>
                       <FormLabel component="legend"><strong>{'Tarifas de compra por agente'}</strong></FormLabel>
                     </Grid>
-
+                    {proposal.agents.length > 0 &&
+                      ((proposal.agents[0].agentId !== null) && (proposal.agents[0].transportCompanyId !== null)) && (
+                        <Grid container spacing={5}>
+                          <Grid item xs={3}>
+                            <FormLabel component='legend'>
+                              {I18n.t('pages.newProposal.step6.agent')}
+                            </FormLabel>
+                          </Grid>
+                          <Grid item xs={3}>
+                            <FormLabel component='legend'>{selectTypeModal()}</FormLabel>
+                          </Grid>
+                          <Grid item xs={2}>
+                            <FormLabel component='legend'>
+                              {I18n.t('pages.newProposal.step6.currencyPurchase')}
+                              <RedColorSpan> *</RedColorSpan>
+                            </FormLabel>
+                          </Grid>
+                          <Grid item xs={2}>
+                            <FormLabel component='legend'>
+                              {I18n.t('pages.newProposal.step6.valuePurchase')}
+                              <RedColorSpan> *</RedColorSpan>
+                            </FormLabel>
+                          </Grid>
+                        </Grid>
+                    )}
                     {proposal.agents.map((selectedAgent, index) => {
-                      return (selectedAgent.agentId !== null) && (
-
+                      return ((selectedAgent.agentId !== null) && (selectedAgent.transportCompanyId !== null)) && (
                         <>
                           <Fragment key={index}>
-
                             <Grid container spacing={5}>
-
                               <Grid item xs={3}>
-
-                                {(() => {
-                                  if (index === 0) {
-                                    return (
-                                      <FormLabel component='legend'>
-                                        {I18n.t('pages.newProposal.step6.agent')}
-                                      </FormLabel>
-                                    )
-                                  }
-                                })()}
-
                                 <FormLabel component='legend'>{selectedAgent.agent}</FormLabel>
                               </Grid>
-
                               <Grid item xs={3}>
-                                {(() => {
-                                  if (index === 0) {
-                                    return (
-                                      <FormLabel component='legend'>{selectTypeModal()}</FormLabel>
-                                    )
-                                  }
-                                })()}
-
                                 <FormLabel component='legend'>{selectedAgent.shippingCompany}</FormLabel>
                               </Grid>
-
                               <Grid item xs={2}>
-
-                                {(() => {
-                                  if (index === 0) {
-                                    return (
-                                      <FormLabel component='legend'>
-                                        {I18n.t('pages.newProposal.step6.currencyPurchase')}
-                                        <RedColorSpan> *</RedColorSpan>
-                                      </FormLabel>
-                                    )
-                                  }
-                                })()}
-
-                                <Autocomplete freeSolo value={data[index].currencyPurchase} onChange={(e, newValue) => {
+                                <Autocomplete freeSolo value={data[index]?.currencyPurchase} onChange={(e, newValue) => {
                                   const newData = data
                                   newData[index].currencyPurchase = String(newValue ?? '')
                                   setData(newData)
@@ -788,47 +820,30 @@ const Step6 = ({
                                   PaperComponent={(params: any) => <StyledPaper {...params} />}
                                 />
                               </Grid>
-
                               <Grid item xs={2}>
-
-                                {(() => {
-                                  if (index === 0) {
-                                    return (
-                                      <FormLabel component='legend'>
-                                        {I18n.t('pages.newProposal.step6.valuePurchase')}
-                                        <RedColorSpan> *</RedColorSpan>
-                                      </FormLabel>
-                                    )
-                                  }
-                                })()}
-
                                 <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                                   customInput={ControlledInput} onChange={(e) => {
                                     const newData = data
                                     newData[index].valuePurchase = e.target.value
                                     setData(newData)
                                   }} toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                  invalid={invalidInput && (data[index].valuePurchase === '' || data[index].valuePurchase === '0')} value={data[index].valuePurchase} variant='outlined' size='small' />
+                                  invalid={invalidInput && (data[index]?.valuePurchase === '' || data[index]?.valuePurchase === '0')} value={data[index]?.valuePurchase} variant='outlined' size='small' />
                               </Grid>
-
                             </Grid>
-
                           </Fragment>
-
                         </>
                       )
                     })}
                     <Fragment>
                       <Grid container spacing={5}>
-
                         <Grid item xs={6}>
                           <FormLabel component='legend' style={{ textAlign: 'right' }}>Especificar o valor do frete para venda:</FormLabel>
                         </Grid>
-
                         <Grid item xs={2} style={{ alignSelf: 'end' }}>
-                          <Autocomplete freeSolo value={dataSales.currencyPurchase} onChange={(e, newValue) => {
-                            setDataSales({ ...dataSales, currencySale: newValue })
-                          }}
+                          <Autocomplete
+                            freeSolo
+                            value={dataSales.currencySale}
+                            onChange={(e, newValue) => handleCurrencySale(newValue)}
                             options={currencyList.map((item) => item.id)} renderInput={(params) => (
                               <div ref={params.InputProps.ref}>
                                 <ControlledInput {...params} id="currencies" toolTipTitle={I18n.t('components.itemModal.requiredField')} invalid={invalidInput}
@@ -848,7 +863,6 @@ const Step6 = ({
                             PaperComponent={(params: any) => <StyledPaper {...params} />}
                           />
                         </Grid>
-
                         <Grid item xs={2} style={{ alignSelf: 'end' }}>
                           <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                             customInput={ControlledInput} onChange={(e, newValue) => {
@@ -856,7 +870,6 @@ const Step6 = ({
                             }} toolTipTitle={I18n.t('components.itemModal.requiredField')}
                             invalid={invalidInput} value={dataSales.valuePurchase} variant='outlined' size='small' />
                         </Grid>
-
                       </Grid>
                     </Fragment>
                   </>
@@ -865,7 +878,7 @@ const Step6 = ({
             })()}
 
             {(() => {
-              if ((proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === 1)) {
+              if ((proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === FclCargoContractingType)) {
                 return (
                   <>
 
@@ -879,6 +892,40 @@ const Step6 = ({
                       <FormLabel component="legend">{'Agente: '}<strong>{proposal.agents[0].agent}</strong>{' / Cia. Marítima: '}<strong>{proposal.agents[0].shippingCompany}</strong></FormLabel>
                     </Grid>
 
+                    {proposal.cargo.cargoVolumes.length > 0 &&
+                      dataContainer.length === proposal.cargo.cargoVolumes.length && (
+                        <Grid container spacing={5}>
+                          <Grid item xs={3}>
+                            <FormLabel component='legend'>
+                              Container
+                            </FormLabel>
+                          </Grid>
+                          <Grid item xs={2}>
+                            <FormLabel component='legend'>
+                              {I18n.t('pages.newProposal.step6.currencyPurchase')}
+                              <RedColorSpan> *</RedColorSpan>
+                            </FormLabel>
+                          </Grid>
+                          <Grid item xs={2}>
+                            <FormLabel component='legend'>
+                              {I18n.t('pages.newProposal.step6.valuePurchase')}
+                              <RedColorSpan> *</RedColorSpan>
+                            </FormLabel>
+                          </Grid>
+                          <Grid item xs={2}>
+                            <FormLabel component='legend'>
+                              {I18n.t('pages.newProposal.step6.currencySale')}
+                              <RedColorSpan> *</RedColorSpan>
+                            </FormLabel>
+                          </Grid>
+                          <Grid item xs={2}>
+                            <FormLabel component='legend'>
+                              {I18n.t('pages.newProposal.step6.valueSale')}
+                              <RedColorSpan> *</RedColorSpan>
+                            </FormLabel>
+                          </Grid>
+                        </Grid>
+                    )}
                     {proposal.cargo.cargoVolumes.map((cargoVolume, index, array) => {
                       return (dataContainer.length === array.length) && (
 
@@ -886,36 +933,14 @@ const Step6 = ({
                           <Fragment key={index}>
 
                             <Grid container spacing={5}>
-
                               <Grid item xs={3}>
-
-                                {(() => {
-                                  if (index === 0) {
-                                    return (
-                                      <FormLabel component='legend'>{'Container'}</FormLabel>
-                                    )
-                                  }
-                                })()}
-
                                 <FormLabel component='legend'>{cargoVolume.type}</FormLabel>
                               </Grid>
 
                               <Grid item xs={2}>
-
-                                {(() => {
-                                  if (index === 0) {
-                                    return (
-                                      <FormLabel component='legend'>
-                                        {I18n.t('pages.newProposal.step6.currencyPurchase')}
-                                        <RedColorSpan> *</RedColorSpan>
-                                      </FormLabel>
-                                    )
-                                  }
-                                })()}
-
                                 <Autocomplete
                                   freeSolo
-                                  value={dataContainer[index].currencyPurchase}
+                                  value={dataContainer[index]?.currencyPurchase}
                                   onChange={(e, newValue) => {
                                     const newData = [...dataContainer]
                                     newData[index].currencyPurchase = String(newValue ?? '')
@@ -928,7 +953,7 @@ const Step6 = ({
                                         {...params}
                                         id="currencies"
                                         toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                        invalid={invalidInput && dataContainer[index].currencyPurchase === ''}
+                                        invalid={invalidInput && dataContainer[index]?.currencyPurchase === ''}
                                         variant="outlined"
                                         size="small"
                                         placeholder={I18n.t('components.itemModal.choose')}
@@ -949,18 +974,6 @@ const Step6 = ({
                               </Grid>
 
                               <Grid item xs={2}>
-
-                                {(() => {
-                                  if (index === 0) {
-                                    return (
-                                      <FormLabel component='legend'>
-                                        {I18n.t('pages.newProposal.step6.valuePurchase')}
-                                        <RedColorSpan> *</RedColorSpan>
-                                      </FormLabel>
-                                    )
-                                  }
-                                })()}
-
                                 <NumberInput
                                   decimalSeparator={','}
                                   thousandSeparator={'.'}
@@ -981,66 +994,49 @@ const Step6 = ({
                               </Grid>
 
                               <Grid item xs={2}>
-
-                                {(() => {
-                                  if (index === 0) {
-                                    return (
-                                      <FormLabel component='legend'>
-                                        {I18n.t('pages.newProposal.step6.currencySale')}
-                                        <RedColorSpan> *</RedColorSpan>
-                                      </FormLabel>
-                                    )
+                                <>
+                                  <Autocomplete
+                                    freeSolo
+                                    value={dataContainer[index].currencySale}
+                                    onChange={(e, newValue) => {
+                                      const newData = [...dataContainer]
+                                      newData[index].currencySale = String(newValue ?? '')
+                                      setDataContainer(newData)
+                                    }}
+                                    options={currencyList.map((item) => item.id)}
+                                    renderInput={(params) => (
+                                      <div ref={params.InputProps.ref}>
+                                        <ControlledInput
+                                          {...params}
+                                          id="currencies"
+                                          toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                          invalid={invalidInput && dataContainer.some(row => row.currencySale !== dataContainer[0].currencySale)}
+                                          variant="outlined"
+                                          size="small"
+                                          placeholder={I18n.t('components.itemModal.choose')}
+                                          InputProps={{
+                                            endAdornment: (
+                                              <InputAdornment position='end'>
+                                                <Box style={{ position: 'absolute', top: '7px', right: '0' }} {...params.inputProps} >
+                                                  <ArrowDropDownIcon />
+                                                </Box>
+                                              </InputAdornment>
+                                            )
+                                          }}
+                                        />
+                                      </div>
+                                    )}
+                                    PaperComponent={(params: any) => <StyledPaper {...params} />}
+                                  />
+                                  {dataContainer.some(row => row.currencySale !== dataContainer[0].currencySale) &&
+                                    <ErrorText>
+                                      {I18n.t('pages.newProposal.step6.differentCurrencySale')}
+                                    </ErrorText>
                                   }
-                                })()}
-
-                                <Autocomplete
-                                  freeSolo
-                                  value={dataContainer[index].currencySale}
-                                  onChange={(e, newValue) => {
-                                    const newData = [...dataContainer]
-                                    newData[index].currencySale = String(newValue ?? '')
-                                    setDataContainer(newData)
-                                  }}
-                                  options={currencyList.map((item) => item.id)}
-                                  renderInput={(params) => (
-                                    <div ref={params.InputProps.ref}>
-                                      <ControlledInput
-                                        {...params}
-                                        id="currencies"
-                                        toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                        invalid={invalidInput && dataContainer.some(row => row.currencySale !== dataContainer[0].currencySale)}
-                                        variant="outlined"
-                                        size="small"
-                                        placeholder={I18n.t('components.itemModal.choose')}
-                                        InputProps={{
-                                          endAdornment: (
-                                            <InputAdornment position='end'>
-                                              <Box style={{ position: 'absolute', top: '7px', right: '0' }} {...params.inputProps} >
-                                                <ArrowDropDownIcon />
-                                              </Box>
-                                            </InputAdornment>
-                                          )
-                                        }}
-                                      />
-                                    </div>
-                                  )}
-                                  PaperComponent={(params: any) => <StyledPaper {...params} />}
-                                />
+                                </>
                               </Grid>
 
                               <Grid item xs={2}>
-
-                                {(() => {
-                                  if (index === 0) {
-                                    return (
-                                      <FormLabel component='legend'>
-                                        {I18n.t('pages.newProposal.step6.valueSale')}
-                                        <RedColorSpan> *</RedColorSpan>
-                                      </FormLabel>
-                                    )
-                                  }
-                                })()}
-
                                 <NumberInput
                                   decimalSeparator={','}
                                   thousandSeparator={'.'}
@@ -1081,17 +1077,7 @@ const Step6 = ({
           </Grid>
 
         </FormControl>
-        {loadedTable && (
-          <SurchargeTable
-            data={tableData}
-            costData={costData}
-            modal={modal}
-            specifications={specifications}
-            remove={removeClickHandler}
-            edit={editClickHandler}
-            dataFields={data}
-          />
-        )}
+        {makeSurchargeTable()}
         <ButtonWrapper>
           <Button
             onAction={handleOpen}
