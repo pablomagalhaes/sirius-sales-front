@@ -1,5 +1,11 @@
 {
   "components": {
+    "agentDeleteModal": {
+      "cancelMessage": "Cancel",
+      "confirmMessage": "Confirm",
+      "message": "When selecting another modal, some information already filled in related to the current modal will be discarded. Confirm the change?",
+      "title": "Are you sure you want to change the modal?"
+    },
     "costModal": {
       "agent": "Agent:",
       "buyValue": "Buy Value",
@@ -209,6 +215,7 @@
         "cwBuySell": "CW Buy / Sell:",
         "destinationCost": "New destiny cost",
         "destiny": "Destiny",
+        "differentCurrencySale": "Sale Currency must be the same for everyone",
         "expense": "Expense/Service",
         "minValue": "Min. Value",
         "origin": "Origin",
