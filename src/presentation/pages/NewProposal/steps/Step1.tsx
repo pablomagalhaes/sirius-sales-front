@@ -68,6 +68,7 @@ const Step1 = ({
     modal: '',
     requester: ''
   })
+
   const [showPopUp, setShowPopUp] = useState(false)
   const [modalCopy, setModalCopy] = useState('')
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
@@ -119,6 +120,25 @@ const Step1 = ({
   }, [])
 
   useEffect(() => {
+    let firstAgent!: any[]
+    let listCostsWithoutAgents!: any[]
+
+    if (data.modal === 'LAND' || data.modal === 'SEA') {
+      if (proposal.idTransport != '') {
+        if (proposal.idTransport = 'AIR') {
+          if (proposal.agents.length > 0 && proposal.agents[0].agentId !== null) {
+            firstAgent = proposal.agents
+            proposal.agents = []
+            proposal.agents[0] = firstAgent[0]
+            proposal.agents[0].transportCompanyId = null
+            listCostsWithoutAgents = proposal.costs.filter(cost => cost.agent === null)
+            proposal.costs = []
+            proposal.costs = listCostsWithoutAgents
+          }
+        }
+      }
+    }
+
     setProposal({
       ...proposal,
       proposalType: data.proposal,
@@ -242,57 +262,57 @@ const Step1 = ({
         </Grid>
         {data.proposal === 'routing'
           ? (
-          <Grid item xs={6}>
-            <FormLabel component="legend">
-              {I18n.t('pages.newProposal.step1.services')}
-            </FormLabel>
-            <FormGroup row aria-label="services">
-              <FormControlLabel
-                value="transport"
-                control={
-                  <Checkbox
-                    checked={data.serviceTransport}
-                    onChange={(e) =>
-                      setData({ ...data, serviceTransport: e.target.checked })
-                    }
-                  />
-                }
-                label={I18n.t('pages.newProposal.step1.transport')}
-              />
-              <FormControlLabel
-                value="desemb"
-                control={
-                  <Checkbox
-                    checked={data.serviceDesemb}
-                    onChange={(e) =>
-                      setData({ ...data, serviceDesemb: e.target.checked })
-                    }
-                  />
-                }
-                label={I18n.t('pages.newProposal.step1.readiness')}
-              />
-            </FormGroup>
-          </Grid>
-            )
+            <Grid item xs={6}>
+              <FormLabel component="legend">
+                {I18n.t('pages.newProposal.step1.services')}
+              </FormLabel>
+              <FormGroup row aria-label="services">
+                <FormControlLabel
+                  value="transport"
+                  control={
+                    <Checkbox
+                      checked={data.serviceTransport}
+                      onChange={(e) =>
+                        setData({ ...data, serviceTransport: e.target.checked })
+                      }
+                    />
+                  }
+                  label={I18n.t('pages.newProposal.step1.transport')}
+                />
+                <FormControlLabel
+                  value="desemb"
+                  control={
+                    <Checkbox
+                      checked={data.serviceDesemb}
+                      onChange={(e) =>
+                        setData({ ...data, serviceDesemb: e.target.checked })
+                      }
+                    />
+                  }
+                  label={I18n.t('pages.newProposal.step1.readiness')}
+                />
+              </FormGroup>
+            </Grid>
+          )
           : (
-          <Grid item xs={6}>
-            {' '}
-          </Grid>
-            )}
+            <Grid item xs={6}>
+              {' '}
+            </Grid>
+          )}
         <Grid item xs={6}>
           {data.proposal === 'routing'
             ? (
-            <FormLabel component="legend">
-              {I18n.t('pages.newProposal.step1.agents')}
-              <RedColorSpan> *</RedColorSpan>
-            </FormLabel>
-              )
+              <FormLabel component="legend">
+                {I18n.t('pages.newProposal.step1.agents')}
+                <RedColorSpan> *</RedColorSpan>
+              </FormLabel>
+            )
             : (
-            <FormLabel component="legend">
-              {I18n.t('pages.newProposal.step1.client')}:
-              <RedColorSpan> *</RedColorSpan>
-            </FormLabel>
-              )}
+              <FormLabel component="legend">
+                {I18n.t('pages.newProposal.step1.client')}:
+                <RedColorSpan> *</RedColorSpan>
+              </FormLabel>
+            )}
           <Autocomplete
             freeSolo
             onChange={(e, newValue) =>
@@ -406,3 +426,6 @@ const Step1 = ({
 }
 
 export default withTheme(Step1)
+function removeAgents(arg0: () => void) {
+  throw new Error('Function not implemented.')
+}
