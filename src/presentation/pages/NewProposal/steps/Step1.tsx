@@ -124,8 +124,8 @@ const Step1 = ({
     let listCostsWithoutAgents!: any[]
 
     if (data.modal === 'LAND' || data.modal === 'SEA') {
-      if (proposal.idTransport != '') {
-        if (proposal.idTransport = 'AIR') {
+      if (proposal.idTransport !== '') {
+        if (proposal.idTransport === 'AIR') {
           if (proposal.agents.length > 0 && proposal.agents[0].agentId !== null) {
             firstAgent = proposal.agents
             proposal.agents = []
@@ -293,12 +293,12 @@ const Step1 = ({
                 />
               </FormGroup>
             </Grid>
-          )
+            )
           : (
             <Grid item xs={6}>
               {' '}
             </Grid>
-          )}
+            )}
         <Grid item xs={6}>
           {data.proposal === 'routing'
             ? (
@@ -306,13 +306,13 @@ const Step1 = ({
                 {I18n.t('pages.newProposal.step1.agents')}
                 <RedColorSpan> *</RedColorSpan>
               </FormLabel>
-            )
+              )
             : (
               <FormLabel component="legend">
                 {I18n.t('pages.newProposal.step1.client')}:
                 <RedColorSpan> *</RedColorSpan>
               </FormLabel>
-            )}
+              )}
           <Autocomplete
             freeSolo
             onChange={(e, newValue) =>
@@ -426,6 +426,3 @@ const Step1 = ({
 }
 
 export default withTheme(Step1)
-function removeAgents(arg0: () => void) {
-  throw new Error('Function not implemented.')
-}
