@@ -50,12 +50,12 @@ interface Step6Props {
   setFilled: (filled: any) => void
   specifications: string
   setUndoMessage: React.Dispatch<
-    React.SetStateAction<{
-      step3: boolean
-      step5origin: boolean
-      step5destiny: boolean
-      step6: boolean
-    }>
+  React.SetStateAction<{
+    step3: boolean
+    step5origin: boolean
+    step5destiny: boolean
+    step6: boolean
+  }>
   >
   undoMessage: {
     step3: boolean
@@ -171,7 +171,7 @@ const Step6 = ({
   }
 
   useImperativeHandle(updateTableIdsRef, () => ({
-    updateStep6Ids() {
+    updateStep6Ids () {
       let tableDataId = 0
       if (proposal?.idProposal !== undefined && proposal?.idProposal !== null) {
         const newTableData = [...tableData]
@@ -356,8 +356,8 @@ const Step6 = ({
         containerType:
           specifications === 'fcl'
             ? containerTypeList.filter(
-                (cont) => cont.description === row.selectedContainer
-              )[0]?.id
+              (cont) => cont.description === row.selectedContainer
+            )[0]?.id
             : null, // containerMODAL
         agent: {
           agentId: null,
