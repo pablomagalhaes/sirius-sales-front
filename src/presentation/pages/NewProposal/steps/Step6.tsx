@@ -259,10 +259,7 @@ const Step6 = ({
                     ? 0
                     : calculationData?.cubageWeight,
                   valuePurchase: 0,
-                  valueSale:
-                    Number(cost.valueSale) > Number(cost.valueMinimumSale)
-                      ? Number(cost.valueSale)
-                      : Number(cost.valueMinimumSale),
+                  valueSale: Number(cost.valueSale),
                   idCurrencyPurchase: '',
                   idCurrencySale: cost.idCurrencySale,
                   valuePurchaseCW:
@@ -277,11 +274,7 @@ const Step6 = ({
 
                 API.postTotalCalculation(totalCostCalculationData)
                   .then((response) => {
-                    resolve(
-                      cost.billingType === 'FIXO' || cost.billingType === 'BL'
-                        ? '0'
-                        : Number(response?.valueSale)
-                    )
+                    resolve(Number(response?.valueSale))
                   })
                   .catch((err) => {
                     resolve('')
@@ -441,10 +434,9 @@ const Step6 = ({
           const totalCostCalculationData = getTotalCalculationData(item)
           API.postTotalCalculation(totalCostCalculationData)
             .then((response) => {
-              item.totalItem =
-                item.type === 'FIXO' || item.type === 'BL'
-                  ? '0'
-                  : Number(response?.valueSale)?.toFixed(2).replace('.', ',')
+              item.totalItem = Number(response?.valueSale)
+                ?.toFixed(2)
+                .replace('.', ',')
               resolve(newTableData.push(item))
             })
             .catch((err) => {
@@ -486,11 +478,7 @@ const Step6 = ({
         ? 0
         : calculationData?.cubageWeight,
       valuePurchase: 0,
-      valueSale:
-        Number(item.saleValue.replace(',', '.')) >
-        Number(item.minimumValue.replace(',', '.'))
-          ? Number(item.saleValue.replace(',', '.'))
-          : Number(item.minimumValue.replace(',', '.')),
+      valueSale: Number(item.saleValue.replace(',', '.')),
       idCurrencyPurchase: '',
       idCurrencySale: item.saleCurrency,
       valuePurchaseCW:
@@ -512,10 +500,9 @@ const Step6 = ({
     void (async function () {
       await API.postTotalCalculation(totalCostCalculationData)
         .then((response) => {
-          item.totalItem =
-            item.type === 'FIXO' || item.type === 'BL'
-              ? '0'
-              : Number(response.valueSale).toFixed(2).replace('.', ',')
+          item.totalItem = Number(response.valueSale)
+            .toFixed(2)
+            .replace('.', ',')
           item.saleCurrency = response.idCurrencySale
 
           if (item.id !== null) {
@@ -578,10 +565,16 @@ const Step6 = ({
   }
 
   const getSumTotalItem = (): string => {
-    const totalSum = tableData.reduce(
-      (total, item) => Number(item.totalItem?.replace(',', '.')) + total,
-      0
-    )
+    let totalSum: number = 0
+    for (let index = 0; index < tableData.length; index++) {
+      const item = tableData[index]
+      if (item.minimumValue > item.saleValue) {
+        totalSum = totalSum + Number(item.minimumValue?.replace(',', '.'))
+      }
+      if (item.minimumValue < item.saleValue) {
+        totalSum = totalSum + Number(item.saleValue?.replace(',', '.'))
+      }
+    }
     return totalSum.toFixed(2).replace('.', ',')
   }
 
