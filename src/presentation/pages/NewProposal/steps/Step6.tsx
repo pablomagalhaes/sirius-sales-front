@@ -50,12 +50,12 @@ interface Step6Props {
   setFilled: (filled: any) => void
   specifications: string
   setUndoMessage: React.Dispatch<
-  React.SetStateAction<{
-    step3: boolean
-    step5origin: boolean
-    step5destiny: boolean
-    step6: boolean
-  }>
+    React.SetStateAction<{
+      step3: boolean
+      step5origin: boolean
+      step5destiny: boolean
+      step6: boolean
+    }>
   >
   undoMessage: {
     step3: boolean
@@ -171,7 +171,7 @@ const Step6 = ({
   }
 
   useImperativeHandle(updateTableIdsRef, () => ({
-    updateStep6Ids () {
+    updateStep6Ids() {
       let tableDataId = 0
       if (proposal?.idProposal !== undefined && proposal?.idProposal !== null) {
         const newTableData = [...tableData]
@@ -259,10 +259,10 @@ const Step6 = ({
                     ? 0
                     : calculationData?.cubageWeight,
                   valuePurchase: 0,
-                  valueSale:
-                    Number(cost.valueSale) > Number(cost.valueMinimumSale)
-                      ? Number(cost.valueSale)
-                      : Number(cost.valueMinimumSale),
+                  valueSale: Number(cost.valueSale),
+                  // Number(cost.valueSale) > Number(cost.valueMinimumSale)
+                  //   ? Number(cost.valueSale)
+                  //   : Number(cost.valueMinimumSale),
                   idCurrencyPurchase: '',
                   idCurrencySale: cost.idCurrencySale,
                   valuePurchaseCW:
@@ -277,11 +277,7 @@ const Step6 = ({
 
                 API.postTotalCalculation(totalCostCalculationData)
                   .then((response) => {
-                    resolve(
-                      cost.billingType === 'FIXO' || cost.billingType === 'BL'
-                        ? '0'
-                        : Number(response?.valueSale)
-                    )
+                    resolve(Number(response?.valueSale))
                   })
                   .catch((err) => {
                     resolve('')
@@ -297,6 +293,8 @@ const Step6 = ({
               getService,
               getTotalItemValue
             ]).then((response) => {
+              console.log('TESTANDO')
+              console.log(response)
               const loadedItem: FareModalData = {
                 idCost: cost.id,
                 idProposal: proposal.idProposal,
@@ -363,8 +361,8 @@ const Step6 = ({
         containerType:
           specifications === 'fcl'
             ? containerTypeList.filter(
-              (cont) => cont.description === row.selectedContainer
-            )[0]?.id
+                (cont) => cont.description === row.selectedContainer
+              )[0]?.id
             : null, // containerMODAL
         agent: {
           agentId: null,
@@ -441,10 +439,9 @@ const Step6 = ({
           const totalCostCalculationData = getTotalCalculationData(item)
           API.postTotalCalculation(totalCostCalculationData)
             .then((response) => {
-              item.totalItem =
-                item.type === 'FIXO' || item.type === 'BL'
-                  ? '0'
-                  : Number(response?.valueSale)?.toFixed(2).replace('.', ',')
+              item.totalItem = Number(response?.valueSale)
+                ?.toFixed(2)
+                .replace('.', ',')
               resolve(newTableData.push(item))
             })
             .catch((err) => {
@@ -486,11 +483,11 @@ const Step6 = ({
         ? 0
         : calculationData?.cubageWeight,
       valuePurchase: 0,
-      valueSale:
-        Number(item.saleValue.replace(',', '.')) >
-        Number(item.minimumValue.replace(',', '.'))
-          ? Number(item.saleValue.replace(',', '.'))
-          : Number(item.minimumValue.replace(',', '.')),
+      valueSale: Number(item.saleValue.replace(',', '.')),
+      // Number(item.saleValue.replace(',', '.')) >
+      // Number(item.minimumValue.replace(',', '.'))
+      //   ? Number(item.saleValue.replace(',', '.'))
+      //   : Number(item.minimumValue.replace(',', '.')),
       idCurrencyPurchase: '',
       idCurrencySale: item.saleCurrency,
       valuePurchaseCW:
@@ -512,10 +509,12 @@ const Step6 = ({
     void (async function () {
       await API.postTotalCalculation(totalCostCalculationData)
         .then((response) => {
-          item.totalItem =
-            item.type === 'FIXO' || item.type === 'BL'
-              ? '0'
-              : Number(response.valueSale).toFixed(2).replace('.', ',')
+          item.totalItem = Number(response.valueSale)
+            .toFixed(2)
+            .replace('.', ',')
+          // item.type === 'FIXO' || item.type === 'BL'
+          //   ? '0'
+          //   : Number(response.valueSale).toFixed(2).replace('.', ',')
           item.saleCurrency = response.idCurrencySale
 
           if (item.id !== null) {
@@ -578,10 +577,16 @@ const Step6 = ({
   }
 
   const getSumTotalItem = (): string => {
-    const totalSum = tableData.reduce(
-      (total, item) => Number(item.totalItem?.replace(',', '.')) + total,
-      0
-    )
+    let totalSum: number = 0
+    for (let index = 0; index < tableData.length; index++) {
+      const item = tableData[index]
+      if (item.minimumValue > item.saleValue) {
+        totalSum = totalSum + Number(item.minimumValue?.replace(',', '.'))
+      }
+      if (item.minimumValue < item.saleValue) {
+        totalSum = totalSum + Number(item.saleValue?.replace(',', '.'))
+      }
+    }
     return totalSum.toFixed(2).replace('.', ',')
   }
 
