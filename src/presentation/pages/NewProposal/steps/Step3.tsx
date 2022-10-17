@@ -55,12 +55,12 @@ interface Step3Props {
   setSpecifications: (specifications: string) => void
   setTableItems: (tableItems: ItemModalData[]) => void
   setUndoMessage: React.Dispatch<
-    React.SetStateAction<{
-      step3: boolean
-      step5origin: boolean
-      step5destiny: boolean
-      step6: boolean
-    }>
+  React.SetStateAction<{
+    step3: boolean
+    step5origin: boolean
+    step5destiny: boolean
+    step6: boolean
+  }>
   >
   undoMessage: {
     step3: boolean
@@ -121,14 +121,14 @@ const Step3 = ({
   const [data, setData] = useState(initialData)
   const [chargeableWeight, setChargeableWeight] = useState<number | null>(null)
   const [chargeableWeightSale, setChargeableWeightSale] = useState<
-    number | null
+  number | null
   >(null)
   const [cwSaleEditMode, setCwSaleEditMode] = useState(false)
   const [copyCwSale, setCopyCwSale] = useState<number | null>(null)
   let packagingListVar
 
   useImperativeHandle(updateTableIdsRef, () => ({
-    updateStep3Ids() {
+    updateStep3Ids () {
       let tableDataId = 0
       if (proposal?.idProposal !== undefined && proposal?.idProposal !== null) {
         const newTableData = [...tableRows]
@@ -514,10 +514,9 @@ const Step3 = ({
   }, [data, modal, tableRows])
 
   useEffect(() => {
-    if(data.dangerous === false){
+    if (!data.dangerous) {
       setData({ ...data, imo: '', codUn: '' })
     }
-    
   }, [data.dangerous])
 
   return (
@@ -758,7 +757,7 @@ const Step3 = ({
                       </EditIconContainer>
                     </ChargeContainer>
                   </ChargeContainer>
-                )
+                  )
                 : null}
             </BottomContainer>
           </Grid>
