@@ -1512,7 +1512,7 @@ const Step2 = ({
               </>
             )}
           </Grid>
-        </Grid> {/* FECHA O GRID PRINCIPAL AQUI */}
+        </Grid>
       </FormControl>
     </Separator>
   )
