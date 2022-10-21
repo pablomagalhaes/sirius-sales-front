@@ -132,7 +132,7 @@ const Step2 = ({
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
   useImperativeHandle(updateAgentsIdsRef, () => ({
-    updateAgentsIdsRef() {
+    updateAgentsIdsRef () {
       setSelectedAgents(
         selectedAgents.map((agent, index) => {
           return { ...agent, id: proposal.agents[index].id }
