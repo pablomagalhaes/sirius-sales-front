@@ -730,8 +730,6 @@ const Step2 = ({
       void (async function () {
         await API.getStates(countryId)
           .then((response) => {
-            console.log('TESTEEE')
-            console.log(response)
             response !== 'error' ? setStateList(response) : setStateList([])
           })
           .catch((err) => {
