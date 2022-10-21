@@ -294,13 +294,13 @@ const Step2 = ({
           destCity: modal === 'LAND' ? String(values[1]?.name) : '',
           destCountry:
             modal === 'LAND' ? String(values[1]?.state?.country?.name) : '',
-          destState: modal === 'LAND' ? String(values[1]?.state?.initials) : '',
+          destState: modal === 'LAND' ? String(values[1]?.state?.name) : '',
           destiny: modal !== 'LAND' ? String(values[1]) : '',
           incoterm: proposal.idIncoterm,
           oriCity: modal === 'LAND' ? String(values[0]?.name) : '',
           oriCountry:
             modal === 'LAND' ? String(values[0]?.state?.country?.name) : '',
-          oriState: modal === 'LAND' ? String(values[0]?.state?.initials) : '',
+          oriState: modal === 'LAND' ? String(values[0]?.state?.name) : '',
           origin: modal !== 'LAND' ? String(values[0]) : '',
           originCityName: modal === 'LAND' ? String(values[0]?.name) : '',
           originCityId: modal === 'LAND' ? values[0]?.state?.id : null,
@@ -747,7 +747,7 @@ const Step2 = ({
       departure === 'origin' ? setOriCitiesList : setDestCitiesList
     const stateId =
       stateLoadedId === undefined
-        ? statesList?.filter((state) => state.initials === selectedState)[0]?.id
+        ? statesList?.filter((state) => state.name === selectedState)[0]?.id
         : stateLoadedId
     if (stateId !== undefined && modal === 'LAND') {
       void (async function () {
@@ -855,7 +855,7 @@ const Step2 = ({
       </Title>
       <FormControl variant="outlined" size="small" className="form-size">
         <Grid container spacing={5}>
-          <Grid item xs={6}>
+        <Grid item xs={modal === 'LAND' ? 12 : 6}>
             <FormLabel component="legend">
               <OriginDestLabel isLand={modal === 'LAND'}>
                 {setOriginDestinyLabel('origin')}
@@ -865,7 +865,7 @@ const Step2 = ({
             {modal === 'LAND'
               ? (
               <Grid container spacing={2}>
-                <Grid item xs={5}>
+                <Grid item xs={2}>
                   <FormLabel component="legend">
                     {I18n.t('pages.newProposal.step2.country')}
                     <RedColorSpan> *</RedColorSpan>
@@ -902,7 +902,7 @@ const Step2 = ({
                   />
                   <LineSeparator />
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={4}>
                   <FormLabel component="legend">
                     {I18n.t('pages.newProposal.step2.state')}
                     <RedColorSpan> *</RedColorSpan>
@@ -911,10 +911,7 @@ const Step2 = ({
                     onChange={(e, newValue) =>
                       setData({ ...data, oriState: String(newValue ?? '') })
                     }
-                    options={[
-                      '',
-                      ...oriStatesList?.map((state) => state.initials)
-                    ]}
+                    options={['', ...oriStatesList?.map((state) => state.name)]}
                     value={data.oriState}
                     filterOptions={filterOptions}
                     filterSelectedOptions
@@ -942,7 +939,7 @@ const Step2 = ({
                     )}
                   />
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item xs={4}>
                   <FormLabel component="legend">
                     {I18n.t('pages.newProposal.step2.city')}
                     <RedColorSpan> *</RedColorSpan>
@@ -991,7 +988,7 @@ const Step2 = ({
               </Grid>
                 )
               : (
-              <>
+              <Grid item xs={12}>
                 <Autocomplete
                   freeSolo
                   onChange={(e, newValue) =>
@@ -1048,10 +1045,10 @@ const Step2 = ({
                   : (
                   <LineSeparator />
                     )}
-              </>
+              </Grid>
                 )}
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={modal === 'LAND' ? 12 : 6}>
             <FormLabel component="legend">
               <OriginDestLabel isLand={modal === 'LAND'}>
                 {setOriginDestinyLabel('destiny')}
@@ -1061,7 +1058,7 @@ const Step2 = ({
             {modal === 'LAND'
               ? (
               <Grid container spacing={2}>
-                <Grid item xs={5}>
+                <Grid item xs={2}>
                   <FormLabel component="legend">
                     {I18n.t('pages.newProposal.step2.country')}
                     <RedColorSpan> *</RedColorSpan>
@@ -1099,7 +1096,7 @@ const Step2 = ({
                     )}
                   />
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={4}>
                   <FormLabel component="legend">
                     {I18n.t('pages.newProposal.step2.state')}
                     <RedColorSpan> *</RedColorSpan>
@@ -1110,7 +1107,7 @@ const Step2 = ({
                     }
                     options={[
                       '',
-                      ...destStatesList?.map((state) => state.initials)
+                      ...destStatesList?.map((state) => state.name)
                     ]}
                     value={data.destState}
                     filterOptions={filterOptions}
@@ -1139,7 +1136,7 @@ const Step2 = ({
                     )}
                   />
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item xs={4}>
                   <FormLabel component="legend">
                     {I18n.t('pages.newProposal.step2.city')}
                     <RedColorSpan> *</RedColorSpan>
@@ -1188,7 +1185,7 @@ const Step2 = ({
               </Grid>
                 )
               : (
-              <>
+              <Grid item xs={12}>
                 <Autocomplete
                   freeSolo
                   onChange={(e, newValue) =>
@@ -1247,7 +1244,7 @@ const Step2 = ({
                   : (
                   <LineSeparator />
                     )}
-              </>
+              </Grid>
                 )}
           </Grid>
           {selectedAgents.map((selectedAgent, index) => {
