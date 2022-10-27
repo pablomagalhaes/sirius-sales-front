@@ -13,23 +13,31 @@ import {
   Title,
   CloseIconContainer
 } from '../StyledComponents/modalStyles'
+import { StatusProposalStringEnum } from '../../../application/enum/statusProposalEnum'
 import { Button } from 'fiorde-fe-components'
 
 interface RejectModalProps {
   open: boolean
   setClose: () => void
+  setStatus: (id: any, status: string, reason?: string) => void
   title: string
+  reference: string
+  proposalId: string
 }
 
 const RejectModal = ({
   open,
   setClose,
-  title
+  setStatus,
+  title,
+  reference,
+  proposalId
 }: RejectModalProps): JSX.Element => {
   const [value, setValue] = useState('')
 
   const handleOnClose = (): void => {
     setClose()
+    setValue('')
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -67,19 +75,19 @@ const RejectModal = ({
                   direction="column"
                   justify="center">
               <Typography variant="body1" gutterBottom>
-                {I18n.t('components.rejectModal.definition')}
-                {I18n.t('components.rejectModal.rejection')}
+                {I18n.t('components.rejectModal.definition')} Ref. {reference} {I18n.t('components.rejectModal.rejection')}
               </Typography>
               <Typography variant="subtitle1" gutterBottom>
                 {I18n.t('components.rejectModal.display')}
               </Typography>
               <Button
-                    disabled={false}
-                    text={I18n.t('components.rejectModal.confirm')}
-                    tooltip={I18n.t('components.rejectModal.confirm')}
-                    backgroundGreen={true}
-                    icon=""
-                  />
+                disabled={value === ''}
+                text={I18n.t('components.rejectModal.confirm')}
+                tooltip={I18n.t('components.rejectModal.confirm')}
+                backgroundGreen={true}
+                icon=""
+                onAction={() => { setStatus(proposalId, StatusProposalStringEnum.REJEITADA, value); handleOnClose() } }
+              />
             </Grid>
           </Grid>
         </MainDiv>
