@@ -363,7 +363,6 @@ const Proposal = (): JSX.Element => {
               setOpen(true)
               setReference(ref)
               setProposalId(id)
-              // setStatus(id, StatusProposalStringEnum.REJEITADA)
             }
           }
         )

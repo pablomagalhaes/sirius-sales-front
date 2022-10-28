@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Box } from '@material-ui/core'
+import { Box, Radio } from '@material-ui/core'
 import { primary } from '../../../application/themes'
 
 styled(Box)`
@@ -7,6 +7,13 @@ styled(Box)`
   top: 13px;
   left: 171px;
   background: white;
+`
+interface StyledRadioProps {
+  color?: string
+}
+
+export const StyledRadio = styled(Radio)`
+  color: ${({ color }: StyledRadioProps) => color} !important;
 `
 
 export const ModalDiv = styled.div`
@@ -66,13 +73,14 @@ export const MainDiv = styled.div`
 
   .MuiTypography-root{
   line-height: 21px !important;
-  font-size: 12px !important;
+  font-size: 14px !important;
   font-weight: 600 !important;
   letter-spacing: 2% !important;
+  text-align: center !important;
   }
 
   .MuiTypography-subtitle1 {
-    font-size: 12px !important;
+    font-size: 14px !important;
     font-weight: 100 !important;
     margin-top: 10px !important;
   }
