@@ -241,6 +241,17 @@
       "qnt": "Qtd",
       "stack": "Permite empilhar"
     },
+    "rejectModal": {
+      "title": "Rejeitar Proposta",
+      "reason": "Selecione o motivo de rejeição",
+      "price": "Preço",
+      "service": "Serviço",
+      "definition": "Você está definindo a proposta",
+      "rejection": "como rejeitada pelo cliente.",
+      "display": "Ela será exibida na área de Propostas Concluídas como “Rejeitada”.",
+      "cancel": "Cancelar",
+      "confirm": "Confirmar rejeição"
+    },
     "fareModal":{
       "type": "Tipo:",
       "expense":"Despesa/Serviço:",
