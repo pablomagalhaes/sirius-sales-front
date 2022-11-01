@@ -326,7 +326,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
 
   const validateAction = (element): boolean => {
     if (element.tagName !== 'HTML') {
-      if (element.id === 'button_home' || element.querySelector('#button_home')) {
+      if (element.id === 'button_home' || element.querySelector('#button_home') || element.id === 'mini-logo' || element.querySelector('#mini-logo')) {
         setAction('home')
         return true
       }
