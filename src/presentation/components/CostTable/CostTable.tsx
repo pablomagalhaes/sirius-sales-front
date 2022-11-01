@@ -252,6 +252,10 @@ const CostTable = ({
     return name
   }
 
+  const costValidation = (): boolean => {
+    return costData === 0 || agentList.length < 1 || agentList[0].agent === ''
+  }
+
   return (
     <MainDiv>
       <CostModal
@@ -395,9 +399,9 @@ const CostTable = ({
               backgroundGreen={false}
               icon={'add'}
               onAction={addClickHandler}
-              disabled={costData === 0}
+              disabled={costValidation()}
               tooltip={
-                costData === 0
+                costValidation()
                   ? I18n.t('components.costTable.addCostTooltip')
                   : I18n.t('components.costTable.addCost')
               }
@@ -417,9 +421,9 @@ const CostTable = ({
                             backgroundGreen={false}
                             icon={'add'}
                             onAction={addClickHandler}
-                            disabled={costData === 0}
+                            disabled={costValidation()}
                             tooltip={
-                              costData === 0
+                              costValidation()
                                 ? I18n.t('components.costTable.addCostTooltip')
                                 : I18n.t('components.costTable.addCost')
                             }
