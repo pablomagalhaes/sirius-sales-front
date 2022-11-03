@@ -138,7 +138,7 @@ const Step4 = ({
     const splitedValidityDate = data.validityDate.trim().split('/')
     setProposal({
       ...proposal,
-      validityDate: `${splitedValidityDate[2]}-${splitedValidityDate[1]}-${splitedValidityDate[0]}T00:00:00.000Z`,
+      validityDate: `${splitedValidityDate[2]}-${splitedValidityDate[1]}-${splitedValidityDate[0]}T00:00-03:00`,
       transitTime: Number(data.transitTime),
       route: data.route,
       freeTime: data.freeTime === 'hired',
