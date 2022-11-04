@@ -649,7 +649,7 @@ const Step3 = ({
                 {imoList.map((item) => {
                   return (
                     <MenuItem key={item.id} value={item.id}>
-                      <SelectSpan>{item.type}</SelectSpan>
+                      <SelectSpan>{item.id} - {item.type}</SelectSpan>
                     </MenuItem>
                   )
                 })}

@@ -39,6 +39,7 @@ import {
   StatusProposalEnum,
   StatusProposalStringEnum
 } from '../../../application/enum/statusProposalEnum'
+import RejectModal from '../../components/RejectModal/RejectModal'
 
 const defaultFilter = {
   direction: 'ASC',
@@ -49,6 +50,9 @@ const defaultFilter = {
 
 const Proposal = (): JSX.Element => {
   const [filter, setFilter] = useState<any>(defaultFilter)
+  const [open, setOpen] = useState(false)
+  const [reference, setReference] = useState('')
+  const [proposalId, setProposalId] = useState('')
   const [incotermList, setIncotermList] = useState<any[]>([])
   const [openedOrderSelect, setOpenedOrderSelect] = useState(false)
   const [orderAsc, setOrderAsc] = useState(true)
@@ -245,7 +249,7 @@ const Proposal = (): JSX.Element => {
         iconterm: proposal.incotermId,
         isLate: showWarning,
         key: proposal.idProposal,
-        menuItems: menuItemsList(status, proposal.idProposal),
+        menuItems: menuItemsList(status, proposal.idProposal, proposal.reference),
         modal,
         numio: proposal.numIO,
         opening,
@@ -263,9 +267,9 @@ const Proposal = (): JSX.Element => {
     return array
   }
 
-  const setStatus = (id: any, status: String): void => {
+  const setStatus = (id: any, status: string, reason?: string): void => {
     void (async function () {
-      await API.putStatus(id, status)
+      await API.putStatus(id, status, reason)
         .then(() => {
           getProposalByFilter()
         })
@@ -287,7 +291,7 @@ const Proposal = (): JSX.Element => {
     })
   }
 
-  const menuItemsList = (status: any, id: any): void => {
+  const menuItemsList = (status: any, id: any, ref: any): void => {
     const array: any = []
     switch (status) {
       case StatusProposalEnum.ABERTA:
@@ -356,7 +360,9 @@ const Proposal = (): JSX.Element => {
             iconType: 'thumbsDown',
             label: I18n.t('pages.proposal.table.rejectLabel'),
             onClick: () => {
-              setStatus(id, StatusProposalStringEnum.REJEITADA)
+              setOpen(true)
+              setReference(ref)
+              setProposalId(id)
             }
           }
         )
@@ -711,6 +717,11 @@ const Proposal = (): JSX.Element => {
     }
     return `Resultado do filtro (${totalProposalList})`
   }
+  const handleClose = (): void => {
+    setOpen(false)
+    setReference('')
+    setProposalId('')
+  }
 
   return (
     <RootContainer>
@@ -815,6 +826,14 @@ const Proposal = (): JSX.Element => {
               'pages.proposal.table.overdueClientResponse'
             )}
             />
+            <RejectModal
+                open={open}
+                setClose={handleClose}
+                title={I18n.t('components.rejectModal.title')}
+                reference={reference}
+                proposalId={proposalId}
+                setStatus={setStatus}
+              />
         </TableContainer>
         <PaginationContainer>
           <PaginationMainContainer>
