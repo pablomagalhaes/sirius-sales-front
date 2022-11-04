@@ -138,7 +138,7 @@ const Step4 = ({
     const splitedValidityDate = data.validityDate.trim().split('/')
     setProposal({
       ...proposal,
-      validityDate: `${splitedValidityDate[2]}-${splitedValidityDate[1]}-${splitedValidityDate[0]}T00:00-02:00`,
+      validityDate: `${splitedValidityDate[2]}-${splitedValidityDate[1]}-${splitedValidityDate[0]}T00:00-03:00`,
       transitTime: Number(data.transitTime),
       route: data.route,
       freeTime: data.freeTime === 'hired',
@@ -472,17 +472,17 @@ const Step4 = ({
               <Grid item xs style={{ maxWidth: '330px' }}>
                 {specifications === 'fcl'
                   ? (
-                  <FormLabel component="legend">
-                    {I18n.t('pages.newProposal.step4.freeTimeDemurrage')}
-                    <RedColorSpan> *</RedColorSpan>
-                  </FormLabel>
-                    )
+                    <FormLabel component="legend">
+                      {I18n.t('pages.newProposal.step4.freeTimeDemurrage')}
+                      <RedColorSpan> *</RedColorSpan>
+                    </FormLabel>
+                  )
                   : (
-                  <FormLabel component="legend">
-                    {I18n.t('pages.newProposal.step4.freeTimeStorage')}
-                    <RedColorSpan> *</RedColorSpan>
-                  </FormLabel>
-                    )}
+                    <FormLabel component="legend">
+                      {I18n.t('pages.newProposal.step4.freeTimeStorage')}
+                      <RedColorSpan> *</RedColorSpan>
+                    </FormLabel>
+                  )}
                 <RadioGroup
                   row
                   aria-label="proposal type"
@@ -627,73 +627,73 @@ const Step4 = ({
           </Grid>
           {Number(data.frequency) === 2 || Number(data.frequency) === 3
             ? (
-            <Grid item xs={8}>
-              <FormLabel component="legend">
-                {I18n.t('pages.newProposal.step4.customDays')}
-              </FormLabel>
-              <WeekContainer>
-                <WeekDay
-                  id="sunday"
-                  className="disabledDay"
-                  value="0"
-                  onClick={() => weekDaysFrequency('sunday')}
-                >
-                  {I18n.t('pages.newProposal.step4.sunday')}
-                </WeekDay>
-                <WeekDay
-                  id="monday"
-                  className="disabledDay"
-                  value="0"
-                  onClick={() => weekDaysFrequency('monday')}
-                >
-                  {I18n.t('pages.newProposal.step4.monday')}
-                </WeekDay>
-                <WeekDay
-                  id="tuesday"
-                  className="disabledDay"
-                  value="0"
-                  onClick={() => weekDaysFrequency('tuesday')}
-                >
-                  {I18n.t('pages.newProposal.step4.tuesday')}
-                </WeekDay>
-                <WeekDay
-                  id="wednesday"
-                  className="disabledDay"
-                  value="0"
-                  onClick={() => weekDaysFrequency('wednesday')}
-                >
-                  {I18n.t('pages.newProposal.step4.wednesday')}
-                </WeekDay>
-                <WeekDay
-                  id="thursday"
-                  className="disabledDay"
-                  value="0"
-                  onClick={() => weekDaysFrequency('thursday')}
-                >
-                  {I18n.t('pages.newProposal.step4.thursday')}
-                </WeekDay>
-                <WeekDay
-                  id="friday"
-                  className="disabledDay"
-                  value="0"
-                  onClick={() => weekDaysFrequency('friday')}
-                >
-                  {I18n.t('pages.newProposal.step4.friday')}
-                </WeekDay>
-                <WeekDay
-                  id="saturday"
-                  className="disabledDay"
-                  value="0"
-                  onClick={() => weekDaysFrequency('saturday')}
-                >
-                  {I18n.t('pages.newProposal.step4.saturday')}
-                </WeekDay>
-              </WeekContainer>
-            </Grid>
-              )
+              <Grid item xs={8}>
+                <FormLabel component="legend">
+                  {I18n.t('pages.newProposal.step4.customDays')}
+                </FormLabel>
+                <WeekContainer>
+                  <WeekDay
+                    id="sunday"
+                    className="disabledDay"
+                    value="0"
+                    onClick={() => weekDaysFrequency('sunday')}
+                  >
+                    {I18n.t('pages.newProposal.step4.sunday')}
+                  </WeekDay>
+                  <WeekDay
+                    id="monday"
+                    className="disabledDay"
+                    value="0"
+                    onClick={() => weekDaysFrequency('monday')}
+                  >
+                    {I18n.t('pages.newProposal.step4.monday')}
+                  </WeekDay>
+                  <WeekDay
+                    id="tuesday"
+                    className="disabledDay"
+                    value="0"
+                    onClick={() => weekDaysFrequency('tuesday')}
+                  >
+                    {I18n.t('pages.newProposal.step4.tuesday')}
+                  </WeekDay>
+                  <WeekDay
+                    id="wednesday"
+                    className="disabledDay"
+                    value="0"
+                    onClick={() => weekDaysFrequency('wednesday')}
+                  >
+                    {I18n.t('pages.newProposal.step4.wednesday')}
+                  </WeekDay>
+                  <WeekDay
+                    id="thursday"
+                    className="disabledDay"
+                    value="0"
+                    onClick={() => weekDaysFrequency('thursday')}
+                  >
+                    {I18n.t('pages.newProposal.step4.thursday')}
+                  </WeekDay>
+                  <WeekDay
+                    id="friday"
+                    className="disabledDay"
+                    value="0"
+                    onClick={() => weekDaysFrequency('friday')}
+                  >
+                    {I18n.t('pages.newProposal.step4.friday')}
+                  </WeekDay>
+                  <WeekDay
+                    id="saturday"
+                    className="disabledDay"
+                    value="0"
+                    onClick={() => weekDaysFrequency('saturday')}
+                  >
+                    {I18n.t('pages.newProposal.step4.saturday')}
+                  </WeekDay>
+                </WeekContainer>
+              </Grid>
+            )
             : (
-            <Grid item xs={8} />
-              )}
+              <Grid item xs={8} />
+            )}
           <Grid item xs={6}>
             <FormLabel component="legend">
               {I18n.t('pages.newProposal.step4.general')}
