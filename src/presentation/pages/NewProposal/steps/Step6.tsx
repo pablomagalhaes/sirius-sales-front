@@ -406,7 +406,6 @@ const Step6 = ({
   }, [data, dataTotalCost])
 
   useEffect(() => {
-
     if (data.currency !== '' && data.value !== '') {
       setCompleted((currentState) => {
         return { ...currentState, step6: true }

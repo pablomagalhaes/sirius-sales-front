@@ -106,7 +106,7 @@ const CostTable = ({
     setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false })
     handleOpen()
   }
-
+ 
   const handleAdd = (item: CostTableItem): void => {
     if (item.id !== null) {
       const editData = [...data]
@@ -114,7 +114,8 @@ const CostTable = ({
       editData[index] = item
       setData(editData)
     } else {
-      const newItem = { ...item, id: data.length }
+      const MaxValue = Math.max.apply(Math, data.map(function (o) { return o.id }))
+      const newItem = { ...item, id: MaxValue + 1 }
       setData([...data, newItem])
     }
   }
