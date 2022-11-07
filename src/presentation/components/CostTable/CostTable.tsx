@@ -114,7 +114,8 @@ const CostTable = ({
       editData[index] = item
       setData(editData)
     } else {
-      const newItem = { ...item, id: data.length }
+      const MaxValue = Math.max.apply(Math, data.map(function (o) { return o.id }))
+      const newItem = { ...item, id: parseInt(MaxValue) + 1 }
       setData([...data, newItem])
     }
   }
