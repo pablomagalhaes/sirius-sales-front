@@ -24,6 +24,10 @@ const RowFilterContainer = styled.div`
   margin: 25px 0;
 `
 
+const ButtonContainer = styled.div`
+  height: 36px;
+`
+
 // list header styles
 
 const ListHeaderContainer = styled.div`
@@ -214,5 +218,6 @@ export {
   OrderByContainer,
   DropdownMenuContainer,
   RowFilterContainer,
-  ArrowIconContainer
+  ArrowIconContainer,
+  ButtonContainer
 }

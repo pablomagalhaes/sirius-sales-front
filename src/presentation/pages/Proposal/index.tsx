@@ -3,7 +3,8 @@ import {
   Button,
   Pagination,
   RowFilter,
-  Table
+  Table,
+  FloatingMenu
 } from 'fiorde-fe-components'
 import { Breadcrumbs, Link, Select, MenuItem } from '@material-ui/core/'
 import {
@@ -25,7 +26,8 @@ import {
   RowFilterContainer,
   TableContainer,
   TopButtonContainer,
-  TopContainer
+  TopContainer,
+  ButtonContainer
 } from './style'
 import { ExitToApp } from '@material-ui/icons/'
 import Warning from '../../../application/icons/WarningIcon'
@@ -66,6 +68,26 @@ const Proposal = (): JSX.Element => {
   const [totalWarnings, setTotalWarnings] = useState<number>(0)
 
   const history = useHistory()
+
+  const floatingButtonMenuItems = [
+    {
+      label: 'Frete Internacional',
+      // onClick: () => handleSave()
+      onClick: () => { },
+      subMenuItems: [
+        {
+          label: 'Importação',
+          // onClick: () => handleSave()
+          // onClick: () => { }
+        },
+        {
+          label: 'Importação',
+          // onClick: () => handleSave()
+          // onClick: () => { }
+        }
+      ]
+    }  
+  ]
 
   useEffect(() => {
     getProposalByFilter()
@@ -738,19 +760,27 @@ const Proposal = (): JSX.Element => {
           <span className="breadcrumbEnd">Propostas</span>
         </Breadcrumbs>
         <TopButtonContainer>
-          <Button
-            disabled={false}
-            text={'Criar nova proposta...'}
-            tooltip={'Criar nova proposta'}
-            backgroundGreen={true}
-            icon="add"
-            onAction={() =>
-              history.push({
-                pathname: '/novaProposta',
-                state: { proposalId: null }
-              })
-            }
-          />
+          <ButtonContainer>
+            <Button
+              disabled={false}
+              text={'Criar nova proposta...'}
+              tooltip={'Criar nova proposta'}
+              backgroundGreen={true}
+              icon="arrow"
+              onAction={() => { }}
+              popover
+              position="right"
+              // icon="add"
+              // onAction={() =>
+              //   history.push({
+              //     pathname: '/novaProposta',
+              //     state: { proposalId: null }
+              //   })
+              // }
+              >
+              <FloatingMenu menuItems={floatingButtonMenuItems} />
+            </Button>
+          </ButtonContainer>
         </TopButtonContainer>
       </TopContainer>
       <RowFilterContainer>
