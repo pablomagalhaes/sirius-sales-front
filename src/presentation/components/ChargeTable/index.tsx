@@ -83,7 +83,7 @@ const ChargeTable = ({ charges, onEdit, onDelete, specification, modal, setCalcu
                   {i + 1}
                 </TableCell>
                 <TableCell>{row.amount}</TableCell>
-                <TableCell>{row.type?.toUpperCase()}</TableCell>
+                <TableCell>{String(row.type).toUpperCase()}</TableCell>
                 {!isFCL() ? <TableCell>{row.rawWeight !== null ? Number(row.rawWeight.replace(',', '.')).toFixed(2).replace('.', ',') : '-'}</TableCell> : <TableCell />}
                 {!isFCL() ? <TableCell>{row.cubage !== null ? Number(row.cubage.replace(',', '.')).toFixed(2).replace('.', ',') : '-'}</TableCell> : <TableCell />}
                 {!isFCL() ? <TableCell>{row.length !== null && row.width !== null && row.height !== null ? `${Number(row.length.replace(',', '.')).toFixed(2).replace('.', ',')} x ${Number(row.width.replace(',', '.')).toFixed(2).replace('.', ',')} x ${Number(row.height.replace(',', '.')).toFixed(2).replace('.', ',')}` : '-'}</TableCell> : <TableCell />}

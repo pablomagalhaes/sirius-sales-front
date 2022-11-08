@@ -152,7 +152,6 @@ const FareModal = ({
     if (isValid()) {
       const newData = data
       newData.agent = agentList.find(a => a.agent === newData.selectedAgent)
-      console.log(newData)
       action(newData)
       handleOnClose()
     } else {

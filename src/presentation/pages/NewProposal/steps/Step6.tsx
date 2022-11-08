@@ -115,35 +115,35 @@ const Step6 = ({
       currencySale: '',
       currencyPurchase: proposal.costs.find((cost): any => {
         if (cost.costType === 'Frete') {
-          if (cost.agent.agentId === newAgent.agentId) {
+          if (cost?.agent?.agentId === newAgent?.agentId) {
             return true
           }
         }
         return false
       })?.idCurrencyPurchase,
       valueSale: '',
-      valuePurchase: proposal.costs.find((cost): any => {
+      valuePurchase: String(proposal.costs.find((cost): any => {
         if (cost.costType === 'Frete') {
-          if (cost.agent.agentId === newAgent.agentId) {
+          if (cost?.agent?.agentId === newAgent?.agentId) {
             return true
           }
         }
         return false
-      })?.valuePurchase,
+      })?.valuePurchase).replace('.', ','),
       tableData: []
     }))
   )
-  const [dataContainer, setDataContainer] = useState(proposal.cargo.cargoVolumes.map(item => ({
+  const [dataContainer, setDataContainer] = useState(proposal.cargo.cargoVolumes.map((item, index) => ({
     idContainerType: item.idContainerType,
-    currencySale: '',
-    currencyPurchase: '',
-    valueSale: '',
-    valuePurchase: ''
+    currencySale: proposal.costs.filter(cost => cost.costType === 'Frete')[index].idCurrencySale ?? '',
+    currencyPurchase: proposal.costs.filter(cost => cost.costType === 'Frete')[index].idCurrencyPurchase ?? '',
+    valueSale: String(proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.valueSale).replace('.', ','),
+    valuePurchase: String(proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.valuePurchase).replace('.', ',')
   })))
 
   const [dataSales, setDataSales] = useState<any>({
-    currencySale: null,
-    valueSale: ''
+    currencySale: String(proposal.costs.find(cost => cost.costType === 'Frete' && (cost.agent === null || cost.agent.agentId === null))?.idCurrencySale ?? ''),
+    valueSale: String(proposal.costs.find(cost => cost.costType === 'Frete' && (cost.agent === null || cost.agent.agentId === null))?.valueSale ?? '')
   })
 
   useEffect(() => {
@@ -236,13 +236,39 @@ const Step6 = ({
         costType: 'Frete',
         idCurrencySale: item.currencySale,
         idCurrencyPurchase: item.currencyPurchase,
-        valueSale: Number(item.valueSale.replace(',', '.')),
-        valuePurchase: Number(item.valueSale.replace(',', '.')),
+        valueSale: Number(String(item.valueSale).replace(',', '.')),
+        valuePurchase: Number(String(item.valuePurchase).replace(',', '.')),
         isPurchase: false,
         isSale: true
       }
       freightCostArrayNew.push(freightCostNew)
     })
+    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && ContractingTypeWithoutFcl.includes(proposal.cargo.idCargoContractingType))) {
+      const freightCostSale = {
+        id: null,
+        idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
+        idService: getServiceType(),
+        billingType: '',
+        containerType: null,
+        valuePurchasePercent: null,
+        valueMinimumPurchase: null,
+        valueSalePercent: 0,
+        valueMinimumSale: null,
+        agent: {
+          agentId: null,
+          transportCompanyId: null
+        },
+        costType: 'Frete',
+        idCurrencySale: dataSales.currencySale,
+        idCurrencyPurchase: dataSales.currencySale,
+        valueSale: Number(dataSales.valueSale.replace(',', '.')),
+        valuePurchase: Number(dataSales.valueSale.replace(',', '.')),
+        isPurchase: false,
+        isSale: true
+      }
+      freightCostArrayNew.push(freightCostSale)
+    }
+
     return freightCostArrayNew
   }
 
@@ -268,6 +294,10 @@ const Step6 = ({
       }
     }
   }))
+
+  useEffect(() => {
+    console.log('PROPOSTA', proposal)
+  }, [proposal])
 
   useEffect(() => {
     setTableData([])
@@ -386,8 +416,13 @@ const Step6 = ({
                     ? ''
                     : Number(response[2]).toFixed(2).replace('.', ',')
               }
+              if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && ContractingTypeWithoutFcl.includes(proposal.cargo.idCargoContractingType))) {
+                if (cost.costType === 'Tarifa') {
+                  const getAgentByTarifaAgent = proposal.agents.find(agent => agent.agentId === cost.agent.agentId)
+                  loadedItem.agent = getAgentByTarifaAgent // novo agente vinculado ao custo
+                }
+              }
               if (cost.costType === 'Tarifa') {
-                // loadedItem.agent = cost.agent // novo agente vinculado ao custo
                 loadedData.push(loadedItem)
               }
             }))
@@ -734,9 +769,158 @@ const Step6 = ({
     }
   }
 
-  function handleCurrencySale (newValue): void {
-    setDataSales({ ...dataSales, currencySale: newValue })
-    setTableData(tableData.map(row => ({ ...row, saleCurrency: newValue })))
+  function handleValueSale (newValue: string): void {
+    const getCosts = [...proposal.costs]
+    const verifyIfCostsHasNullAgent = getCosts.some(cost => cost.costType === 'Frete' && cost.agent.agentId === null)
+    if (verifyIfCostsHasNullAgent) {
+      const handleCosts = getCosts.map(cost => {
+        if (cost.costType === 'Frete' && cost.agent.agentId === null) {
+          return {
+            ...cost,
+            valueSale: Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, ''))
+          }
+        }
+        return cost
+      })
+      setProposal({
+        ...proposal,
+        costs: handleCosts
+      })
+      setDataSales({ ...dataSales, valueSale: newValue })
+      setTableData(tableData.map(row => ({ ...row, saleCurrency: newValue })))
+    } else {
+      const newCost = {
+        valueSale: Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, '')),
+        idCurrencySale: null,
+        agent: {
+          agentId: null,
+          transportCompanyId: null
+        },
+        billingType: '',
+        containerType: null,
+        costType: 'Frete',
+        id: null,
+        idCurrencyPurchase: '',
+        idProposal: null,
+        idService: getCosts[0].idService,
+        isPurchase: false,
+        isSale: true,
+        valueMinimumPurchase: null,
+        valueMinimumSale: null,
+        valuePurchase: 0,
+        valuePurchasePercent: null,
+        valueSalePercent: 0
+      }
+      setProposal({
+        ...proposal,
+        costs: [...proposal.costs, newCost]
+      })
+      setDataSales({ ...dataSales, valueSale: Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, '')) })
+      setTableData(tableData.map(row => ({ ...row, saleCurrency: newValue })))
+    }
+  }
+
+  function handleCurrencySale (newValue: string): void {
+    const getCosts = [...proposal.costs]
+    const verifyIfCostsHasNullAgent = getCosts.some(cost => cost.costType === 'Frete' && cost.agent.agentId === null)
+    if (verifyIfCostsHasNullAgent) {
+      const handleCosts = getCosts.map(cost => {
+        if (cost.costType === 'Frete' && cost.agent.agentId === null) {
+          return {
+            ...cost,
+            idCurrencySale: newValue
+          }
+        }
+        return cost
+      })
+      setProposal({
+        ...proposal,
+        costs: handleCosts
+      })
+      setDataSales({ ...dataSales, currencySale: newValue })
+      setTableData(tableData.map(row => ({ ...row, saleCurrency: newValue })))
+    } else {
+      const newCost = {
+        idCurrencySale: newValue,
+        agent: {
+          agentId: null,
+          transportCompanyId: null
+        },
+        billingType: '',
+        containerType: null,
+        costType: 'Frete',
+        id: null,
+        idCurrencyPurchase: '',
+        idProposal: null,
+        idService: getCosts[0].idService,
+        isPurchase: false,
+        isSale: true,
+        valueMinimumPurchase: null,
+        valueMinimumSale: null,
+        valuePurchase: 0,
+        valuePurchasePercent: null,
+        valueSale: 0,
+        valueSalePercent: 0
+      }
+      setProposal({
+        ...proposal,
+        costs: [...proposal.costs, newCost]
+      })
+      setDataSales({ ...dataSales, currencySale: newValue })
+      setTableData(tableData.map(row => ({ ...row, saleCurrency: newValue })))
+    }
+  }
+
+  function handleCurrencyPurchase (agentId, newData: any, newValue: string): void {
+    const getCosts = proposal.costs
+    const handleCosts = getCosts.map(cost => {
+      if (cost.costType === 'Frete' && cost.agent.agentId === agentId) {
+        return {
+          ...cost,
+          idCurrencyPurchase: newValue
+        }
+      }
+      return cost
+    })
+    setProposal({
+      ...proposal,
+      costs: handleCosts
+    })
+    setData(newData)
+  }
+
+  function handleValuePurchase (agentId, newData: any, newValue: string): void {
+    const getCosts = proposal.costs
+    const handleCosts = getCosts.map(cost => {
+      if (cost.costType === 'Frete' && cost.agent.agentId === agentId) {
+        return {
+          ...cost,
+          valuePurchase: Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, ''))
+        }
+      }
+      return cost
+    })
+    setProposal({
+      ...proposal,
+      costs: handleCosts
+    })
+    setData(newData)
+  }
+
+  function handleContainerChange (newData, field, newValue, index, hasNumber: boolean): void {
+    const getCostsCostTypeFrete = proposal.costs.filter(cost => cost.costType === 'Frete')
+    const getCostsAnotherCostType = proposal.costs.filter(cost => cost.costType !== 'Frete')
+    if (hasNumber) {
+      getCostsCostTypeFrete[index][field] = Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, ''))
+    } else {
+      getCostsCostTypeFrete[index][field] = newValue
+    }
+    const handleCosts = [...getCostsAnotherCostType, ...getCostsCostTypeFrete]
+    setProposal({
+      ...proposal,
+      costs: handleCosts
+    })
+    setDataContainer(newData)
   }
 
   return (
@@ -799,7 +983,7 @@ const Step6 = ({
                                 <Autocomplete freeSolo value={data[index]?.currencyPurchase} onChange={(e, newValue) => {
                                   const newData = data
                                   newData[index].currencyPurchase = String(newValue ?? '')
-                                  setData(newData)
+                                  handleCurrencyPurchase(newData[index].agent.agentId, newData, newValue)
                                 }}
                                   options={currencyList.map((item) => item.id)} renderInput={(params) => (
                                     <div ref={params.InputProps.ref}>
@@ -825,7 +1009,7 @@ const Step6 = ({
                                   customInput={ControlledInput} onChange={(e) => {
                                     const newData = data
                                     newData[index].valuePurchase = e.target.value
-                                    setData(newData)
+                                    handleValuePurchase(newData[index].agent.agentId, newData, e.target.value)
                                   }} toolTipTitle={I18n.t('components.itemModal.requiredField')}
                                   invalid={invalidInput && (data[index]?.valuePurchase === '' || data[index]?.valuePurchase === '0')} value={data[index]?.valuePurchase} variant='outlined' size='small' />
                               </Grid>
@@ -865,10 +1049,8 @@ const Step6 = ({
                         </Grid>
                         <Grid item xs={2} style={{ alignSelf: 'end' }}>
                           <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
-                            customInput={ControlledInput} onChange={(e, newValue) => {
-                              setDataSales({ ...dataSales, valueSale: e.target.value })
-                            }} toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                            invalid={invalidInput} value={dataSales.valuePurchase} variant='outlined' size='small' />
+                            customInput={ControlledInput} onChange={(e, newValue) => handleValueSale(e.target.value)} toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                            invalid={invalidInput} value={dataSales.valueSale} variant='outlined' size='small' />
                         </Grid>
                       </Grid>
                     </Fragment>
@@ -944,7 +1126,7 @@ const Step6 = ({
                                   onChange={(e, newValue) => {
                                     const newData = [...dataContainer]
                                     newData[index].currencyPurchase = String(newValue ?? '')
-                                    setDataContainer(newData)
+                                    handleContainerChange(newData, 'currencyPurchase', newValue, index, false)
                                   }}
                                   options={currencyList.map((item) => item.id)}
                                   renderInput={(params) => (
@@ -983,7 +1165,7 @@ const Step6 = ({
                                   onChange={(e) => {
                                     const newData = [...dataContainer]
                                     newData[index].valuePurchase = e.target.value
-                                    setDataContainer(newData)
+                                    handleContainerChange(newData, 'valuePurchase', e.target.value, index, true)
                                   }}
                                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
                                   invalid={invalidInput && (dataContainer[index].valuePurchase === '' || dataContainer[index].valuePurchase === '0')}
@@ -1001,7 +1183,7 @@ const Step6 = ({
                                     onChange={(e, newValue) => {
                                       const newData = [...dataContainer]
                                       newData[index].currencySale = String(newValue ?? '')
-                                      setDataContainer(newData)
+                                      handleContainerChange(newData, 'currencySale', newValue, index, false)
                                     }}
                                     options={currencyList.map((item) => item.id)}
                                     renderInput={(params) => (
@@ -1047,6 +1229,7 @@ const Step6 = ({
                                     const newData = [...dataContainer]
                                     newData[index].valueSale = e.target.value
                                     setDataContainer(newData)
+                                    handleContainerChange(newData, 'valueSale', e.target.value, index, true)
                                   }}
                                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
                                   invalid={invalidInput && (dataContainer[index].valueSale === '' || dataContainer[index].valueSale === '0')}
