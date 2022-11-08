@@ -135,8 +135,8 @@ const Step6 = ({
   )
   const [dataContainer, setDataContainer] = useState(proposal.cargo.cargoVolumes.map((item, index) => ({
     idContainerType: item.idContainerType,
-    currencySale: proposal.costs.filter(cost => cost.costType === 'Frete')[index].idCurrencySale ?? '',
-    currencyPurchase: proposal.costs.filter(cost => cost.costType === 'Frete')[index].idCurrencyPurchase ?? '',
+    currencySale: proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.idCurrencySale ?? '',
+    currencyPurchase: proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.idCurrencyPurchase ?? '',
     valueSale: String(proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.valueSale).replace('.', ','),
     valuePurchase: String(proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.valuePurchase).replace('.', ',')
   })))
@@ -217,56 +217,85 @@ const Step6 = ({
     const resultado = proposal.costs.filter(cost => cost.costType !== 'Frete')
     proposal.costs = resultado
 
-    data.forEach((item): void => {
-      const freightCostNew = {
-        id: null,
-        idProposal:
-          proposal?.idProposal === undefined ? null : proposal?.idProposal,
-        idService: getServiceType(),
-        billingType: '',
-        containerType: null,
-        valuePurchasePercent: null,
-        valueMinimumPurchase: null,
-        valueSalePercent: 0,
-        valueMinimumSale: null,
-        agent: {
-          agentId: item.agent.agentId,
-          transportCompanyId: item.agent.transportCompanyId
-        },
-        costType: 'Frete',
-        idCurrencySale: item.currencySale,
-        idCurrencyPurchase: item.currencyPurchase,
-        valueSale: Number(String(item.valueSale).replace(',', '.')),
-        valuePurchase: Number(String(item.valuePurchase).replace(',', '.')),
-        isPurchase: false,
-        isSale: true
-      }
-      freightCostArrayNew.push(freightCostNew)
-    })
     if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && ContractingTypeWithoutFcl.includes(proposal.cargo.idCargoContractingType))) {
-      const freightCostSale = {
-        id: null,
-        idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
-        idService: getServiceType(),
-        billingType: '',
-        containerType: null,
-        valuePurchasePercent: null,
-        valueMinimumPurchase: null,
-        valueSalePercent: 0,
-        valueMinimumSale: null,
-        agent: {
-          agentId: null,
-          transportCompanyId: null
-        },
-        costType: 'Frete',
-        idCurrencySale: dataSales.currencySale,
-        idCurrencyPurchase: dataSales.currencySale,
-        valueSale: Number(dataSales.valueSale.replace(',', '.')),
-        valuePurchase: Number(dataSales.valueSale.replace(',', '.')),
-        isPurchase: false,
-        isSale: true
+      data.forEach((item): void => {
+        const freightCostNew = {
+          id: null,
+          idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
+          idService: getServiceType(),
+          billingType: '',
+          containerType: null,
+          valuePurchasePercent: null,
+          valueMinimumPurchase: null,
+          valueSalePercent: 0,
+          valueMinimumSale: null,
+          agent: {
+            agentId: item.agent.agentId,
+            transportCompanyId: item.agent.transportCompanyId
+          },
+          costType: 'Frete',
+          idCurrencySale: item.currencySale,
+          idCurrencyPurchase: item.currencyPurchase,
+          valueSale: Number(String(item.valueSale).replace(',', '.')),
+          valuePurchase: Number(String(item.valuePurchase).replace(',', '.')),
+          isPurchase: false,
+          isSale: true
+        }
+        freightCostArrayNew.push(freightCostNew)
+      })
+      if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && ContractingTypeWithoutFcl.includes(proposal.cargo.idCargoContractingType))) {
+        const freightCostSale = {
+          id: null,
+          idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
+          idService: getServiceType(),
+          billingType: '',
+          containerType: null,
+          valuePurchasePercent: null,
+          valueMinimumPurchase: null,
+          valueSalePercent: 0,
+          valueMinimumSale: null,
+          agent: {
+            agentId: null,
+            transportCompanyId: null
+          },
+          costType: 'Frete',
+          idCurrencySale: dataSales.currencySale,
+          idCurrencyPurchase: dataSales.currencySale,
+          valueSale: Number(dataSales.valueSale.replace(',', '.')),
+          valuePurchase: Number(dataSales.valueSale.replace(',', '.')),
+          isPurchase: false,
+          isSale: true
+        }
+        freightCostArrayNew.push(freightCostSale)
       }
-      freightCostArrayNew.push(freightCostSale)
+    }
+
+    if ((proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === FclCargoContractingType)) {
+      dataContainer.forEach((item): void => {
+        const freightCostNew = {
+          id: null,
+          idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
+          idService: getServiceType(),
+          billingType: '',
+          containerType: null,
+          valuePurchasePercent: null,
+          valueMinimumPurchase: null,
+          valueSalePercent: 0,
+          valueMinimumSale: null,
+          agent: {
+            agentId: proposal.agents[0].agentId,
+            transportCompanyId: proposal.agents[0].transportCompanyId
+          },
+          costType: 'Frete',
+          idCurrencySale: item.currencySale,
+          idCurrencyPurchase: item.currencyPurchase,
+          valueSale: Number(String(item.valueSale).replace(',', '.')),
+          valuePurchase: Number(String(item.valuePurchase).replace(',', '.')),
+          isPurchase: false,
+          isSale: true
+        }
+        freightCostArrayNew.push(freightCostNew)
+      })
     }
 
     return freightCostArrayNew
@@ -509,7 +538,7 @@ const Step6 = ({
       totalCosts: actualTotalCostArray.concat(newTotalCostFare),
       costs: actualCostArray.concat(newFareItems)
     })
-  }, [data, dataTotalCost])
+  }, [data, dataTotalCost, dataContainer])
 
   useEffect(() => {
     if (data.currency !== '' && data.value !== '') {
@@ -741,6 +770,14 @@ const Step6 = ({
   }
 
   function makeSurchargeTable (): JSX.Element | undefined {
+    const [agentList, setAgentsList] = useState([])
+
+    useEffect(() => {
+      API.getAgents()
+        .then((response) => setAgentsList(response))
+        .catch((err) => console.log(err))
+    }, [])
+
     if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && ContractingTypeWithoutFcl.includes(proposal.cargo.idCargoContractingType))) {
       return (
         <SurchargeTable
@@ -751,6 +788,7 @@ const Step6 = ({
           remove={removeClickHandler}
           edit={editClickHandler}
           dataFields={dataSales}
+          agentList={agentList}
         />
       )
     }
@@ -764,6 +802,7 @@ const Step6 = ({
           remove={removeClickHandler}
           edit={editClickHandler}
           dataFields={data[0]}
+          agentList={agentList}
         />
       )
     }
