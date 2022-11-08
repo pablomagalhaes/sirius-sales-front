@@ -159,6 +159,10 @@ const FareModal = ({
   }, [])
 
   useEffect(() => {
+    setAgentList(proposal.agents)
+  }, [proposal])
+
+  useEffect(() => {
     switch (true) {
       case modal === 'SEA' && specifications === 'fcl':
         setTypeList([{ name: 'Container', value: 'CONTAINER' }, { name: 'BL', value: 'BL' }])

@@ -85,7 +85,7 @@ const SurchargeTable = ({ data, dataFields, remove, edit }: TableData): JSX.Elem
                 </StyledTableCell>
                 <StyledTableCell width="100%" align="left">
                   <FormatValue>
-                    {item.minimumValue !== '' ? `${String(dataFields.currency)} ${item.minimumValue}` : '-'}
+                    {item.minimumValue !== '' ? `${String(item.saleCurrency)} ${item.minimumValue}` : '-'}
                   </FormatValue>
                 </StyledTableCell>
                 <StyledTableCell width="100%" align="left">
