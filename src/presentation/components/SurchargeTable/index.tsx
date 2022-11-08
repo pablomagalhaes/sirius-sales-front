@@ -26,9 +26,10 @@ interface TableData {
   modal: string
   remove?: (id: number | null) => void
   specifications: string
+  agentList: any[]
 }
 
-const SurchargeTable = ({ data, dataFields, remove, edit }: TableData): JSX.Element => {
+const SurchargeTable = ({ data, dataFields, remove, edit, agentList }: TableData): JSX.Element => {
   const verifyType = (item): JSX.Element => {
     if (item.type === 'FIXO' || item.type === 'BL') {
       return (
@@ -43,6 +44,10 @@ const SurchargeTable = ({ data, dataFields, remove, edit }: TableData): JSX.Elem
         </FormatValue>
       )
     }
+  }
+
+  function getAgentNameByAgentId (agentId: string): string {
+    return agentList.find((agent) => agent.businessPartner.id === agentId)?.businessPartner?.simpleName
   }
 
   if (data != null && data.length > 0) {
@@ -84,7 +89,7 @@ const SurchargeTable = ({ data, dataFields, remove, edit }: TableData): JSX.Elem
                   {item.expense}
                 </StyledTableCell>
                 <StyledTableCell width="30%" align="left">
-                  {item?.agent?.agent}
+                  {getAgentNameByAgentId(item?.agent?.agentId)}
                 </StyledTableCell>
                 <StyledTableCell width="30%" align="left">
                   {item.type}
