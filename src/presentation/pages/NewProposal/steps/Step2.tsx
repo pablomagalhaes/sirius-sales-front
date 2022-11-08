@@ -393,7 +393,9 @@ const Step2 = ({
   useEffect(() => {
     setProposal({
       ...proposal,
-      agents: selectedAgents
+      agents: selectedAgents.map(
+        ({ shippingCompany, agent, ...otherProperties }) => otherProperties
+      )
     })
   }, [selectedAgents])
 

@@ -54,6 +54,7 @@ interface FareModalProps {
   specifications: string
   containerItems: ItemModalData[]
   currency: any
+  AllAgents?: any[]
 }
 
 export const initialState = {
@@ -83,7 +84,8 @@ const FareModal = ({
   modal,
   specifications,
   containerItems,
-  currency
+  currency,
+  AllAgents
 }: FareModalProps): JSX.Element => {
   const [data, setData] = useState<FareModalData>(initialState)
   const [invalidInput, setInvalidInput] = useState(false)
@@ -186,8 +188,19 @@ const FareModal = ({
   }, [])
 
   useEffect(() => {
-    setAgentList(proposal.agents)
-  }, [proposal])
+    if (AllAgents !== undefined) {
+      const proposalAgentsAgentId = proposal.agents.map(a => a.agentId)
+      let getSomeAgents = AllAgents.map(a => proposalAgentsAgentId.includes(a?.businessPartner?.id)
+        ? ({
+            agentId: a?.businessPartner?.id,
+            agent: a?.businessPartner?.simpleName,
+            transportCompanyId: proposal.agents.find(find => find.agentId === a?.businessPartner?.id)?.transportCompanyId
+          })
+        : null)
+      getSomeAgents = getSomeAgents.filter(f => f != null)
+      setAgentList(getSomeAgents)
+    }
+  }, [proposal, AllAgents])
 
   useEffect(() => {
     switch (true) {
