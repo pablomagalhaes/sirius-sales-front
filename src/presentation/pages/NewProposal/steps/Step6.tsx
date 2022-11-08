@@ -22,7 +22,6 @@ import { TotalCost } from '../../../../domain/TotalCost'
 import API from '../../../../infrastructure/api'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import ControlledInput from '../../../components/ControlledInput'
-import IconComponent from '../../../../application/icons/IconComponent'
 import FormatNumber from '../../../../application/utils/formatNumber'
 import SurchargeTable from '../../../components/SurchargeTable/index'
 import TotalSurcharge from '../../../components/TotalSurcharge'
@@ -38,12 +37,12 @@ interface Step6Props {
   setFilled: (filled: any) => void
   specifications: string
   setUndoMessage: React.Dispatch<
-    React.SetStateAction<{
-      step3: boolean
-      step5origin: boolean
-      step5destiny: boolean
-      step6: boolean
-    }>
+  React.SetStateAction<{
+    step3: boolean
+    step5origin: boolean
+    step5destiny: boolean
+    step6: boolean
+  }>
   >
   undoMessage: {
     step3: boolean
@@ -79,8 +78,6 @@ const Step6 = ({
   cw,
   cwSale
 }: Step6Props): JSX.Element => {
-  const [agentsList, setAgentsList] = useState<any[]>([])
-  const [businessPartnerList, setBusinessPartnerList] = useState<any[]>([])
   const [open, setOpen] = useState(false)
   const [tableData, setTableData] = useState<FareModalData[]>([])
   const [copyTable, setCopyTable] = useState<FareModalData[]>([])
@@ -103,12 +100,30 @@ const Step6 = ({
         transportCompanyId: newAgent.transportCompanyId
       },
       currencySale: '',
-      currencyPurchase: '',
+      currencyPurchase: proposal.costs.find((cost): any => {
+        if (cost.costType === 'Frete') {
+          if (cost.agent.agentId === newAgent.agentId) {
+            return true
+          }
+        }
+        return false
+      })?.idCurrencyPurchase,
       valueSale: '',
-      valuePurchase: '',
+      valuePurchase: proposal.costs.find((cost): any => {
+        if (cost.costType === 'Frete') {
+          if (cost.agent.agentId === newAgent.agentId) {
+            return true
+          }
+        }
+        return false
+      })?.valuePurchase,
       tableData: []
-    })
-  ))
+    })))
+
+  const [dataSales, setDataSales] = useState<any>({
+    currencySale: null,
+    valueSale: ''
+  })
 
   useEffect(() => {
     const currentAgents = data.map(currentAgent => currentAgent.agent.agentId)
@@ -127,14 +142,18 @@ const Step6 = ({
     }))
     const unionAgents = [...data, ...newDataWithNewAgents]
     const getAllAgents = unionAgents.map(unionAgent => unionAgent.agent.agentId)
-
     const getOnlyAgentsExists = proposal.agents.filter(currentProposalAgent => getAllAgents.includes(currentProposalAgent.agentId)).map(agent => agent.agentId)
-
     const getOnlyDataExists = unionAgents.filter(unionAgent => getOnlyAgentsExists.includes(unionAgent.agent.agentId))
-
     setData(getOnlyDataExists)
 
+    const getAgentIds = proposal.agents.map(agent => agent.agentId)
+    const newTableData = tableData.filter(row => getAgentIds.includes(row.agent.agentId))
+    setTableData(newTableData)
   }, [proposal.agents])
+
+  useEffect(() => {
+    console.log(tableData)
+  }, [tableData])
 
   const getServiceType = (): any => {
     let service
@@ -154,38 +173,13 @@ const Step6 = ({
     return serviceList.filter((serv) => serv.service === service)[0]?.id
   }
 
-  const getAgentId = (agentName: string): number | undefined => {
-    let id
-    if (agentName !== '') {
-      agentsList?.forEach((item): void => {
-        if (String(item.businessPartner.simpleName) === String(agentName)) {
-          id = item.businessPartner.id
-        }
-      })
-    }
-    return id
-  }
-
-  const getShippingCompanyId = (shippingCompanyName: string): number | undefined => {
-    let id
-    if (shippingCompanyName !== '') {
-      businessPartnerList?.forEach((item): void => {
-        if (String(item.businessPartner.simpleName) === String(shippingCompanyName)) {
-          id = item.businessPartner.id
-        }
-      })
-    }
-    return id
-  }
-
   const getFreightCost = (): Cost[] => {
-
-    let freightCostArrayNew: Cost[] = [];
-    let resultado = proposal.costs.filter(cost => cost.costType !== 'Frete')
+    const freightCostArrayNew: Cost[] = []
+    const resultado = proposal.costs.filter(cost => cost.costType !== 'Frete')
     proposal.costs = resultado
 
     data.forEach((item): void => {
-      let freightCostNew = {
+      const freightCostNew = {
         id: null,
         idProposal:
           proposal?.idProposal === undefined ? null : proposal?.idProposal,
@@ -214,7 +208,7 @@ const Step6 = ({
   }
 
   useImperativeHandle(updateTableIdsRef, () => ({
-    updateStep6Ids() {
+    updateStep6Ids () {
       let tableDataId = 0
       if (proposal?.idProposal !== undefined && proposal?.idProposal !== null) {
         const newTableData = [...tableData]
@@ -258,12 +252,6 @@ const Step6 = ({
       }).then(() => {
         const waitAllData = async (): Promise<void> => {
           for (const cost of proposal.costs) {
-            if (cost.costType === 'Frete') {
-              const newData = data
-              newData[0].currencySale = String(0.00 ?? '')
-              setData(newData)
-
-            }
             const getContainer = new Promise((resolve) => {
               if (specifications === 'fcl') {
                 API.getContainerType(cost.containerType)
@@ -360,6 +348,7 @@ const Step6 = ({
                     : Number(response[2]).toFixed(2).replace('.', ',')
               }
               if (cost.costType === 'Tarifa') {
+                // loadedItem.agent = cost.agent // novo agente vinculado ao custo
                 loadedData.push(loadedItem)
               }
             }))
@@ -405,7 +394,7 @@ const Step6 = ({
             )[0]?.id
             : null, // containerMODAL
         agent: {
-          agentId: row.agent.agentId,
+          agentId: row.agent?.agentId,
           transportCompanyId: row.agent.transportCompanyId
         },
         costType: 'Tarifa', // 'Origem''Destino''Tarifa'
@@ -590,10 +579,6 @@ const Step6 = ({
     handleOpen()
   }
 
-  const getCompany = (): string[] => {
-    return ['teste 1', 'teste 2']
-  }
-
   const selectTypeModal = (): string => {
     switch (modal) {
       case 'AIR':
@@ -639,10 +624,6 @@ const Step6 = ({
 
             {(() => {
               if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === 2)) {
-
-                if (proposal.agents[0].agentId !== null && proposal.agents[0].transportCompanyId !== null && data.length !== 0){
-
-
                 return (
                   <>
 
@@ -651,8 +632,7 @@ const Step6 = ({
                     </Grid>
 
                     {proposal.agents.map((selectedAgent, index) => {
-
-                       return (selectedAgent.agentId !== null) && (
+                      return (selectedAgent.agentId !== null) && (
 
                         <>
                           <Fragment key={index}>
@@ -664,7 +644,9 @@ const Step6 = ({
                                 {(() => {
                                   if (index === 0) {
                                     return (
-                                      <FormLabel component='legend'>{'Agente'}</FormLabel>
+                                      <FormLabel component='legend'>
+                                        {I18n.t('pages.newProposal.step6.agent')}
+                                      </FormLabel>
                                     )
                                   }
                                 })()}
@@ -749,16 +731,53 @@ const Step6 = ({
                           </Fragment>
 
                         </>
-
                       )
                     })}
+                    <Fragment>
+                      <Grid container spacing={5}>
+
+                        <Grid item xs={6}>
+                          <FormLabel component='legend' style={{ textAlign: 'right' }}>Especificar o valor do frete para venda:</FormLabel>
+                        </Grid>
+
+                        <Grid item xs={2} style={{ alignSelf: 'end' }}>
+                          <Autocomplete freeSolo value={dataSales.currencyPurchase} onChange={(e, newValue) => {
+                            setDataSales({ ...dataSales, currencySale: newValue })
+                          }}
+                            options={currencyList.map((item) => item.id)} renderInput={(params) => (
+                              <div ref={params.InputProps.ref}>
+                                <ControlledInput {...params} id="currencies" toolTipTitle={I18n.t('components.itemModal.requiredField')} invalid={invalidInput}
+                                  variant="outlined" size="small" placeholder={I18n.t('components.itemModal.choose')}
+                                  InputProps={{
+                                    endAdornment: (
+                                      <InputAdornment position='end'>
+                                        <Box style={{ position: 'absolute', top: '7px', right: '0' }} {...params.inputProps} >
+                                          <ArrowDropDownIcon />
+                                        </Box>
+                                      </InputAdornment>
+                                    )
+                                  }}
+                                />
+                              </div>
+                            )}
+                            PaperComponent={(params: any) => <StyledPaper {...params} />}
+                          />
+                        </Grid>
+
+                        <Grid item xs={2} style={{ alignSelf: 'end' }}>
+                          <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                            customInput={ControlledInput} onChange={(e, newValue) => {
+                              setDataSales({ ...dataSales, valueSale: e.target.value })
+                            }} toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                            invalid={invalidInput} value={dataSales.valuePurchase} variant='outlined' size='small' />
+                        </Grid>
+
+                      </Grid>
+                    </Fragment>
                   </>
                 )
-              }}
+              }
             })()}
-
-
-
 
             {(() => {
               if ((proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === 1)) {
@@ -928,9 +947,6 @@ const Step6 = ({
                 )
               }
             })()}
-
-
-
           </>
 
           <LineSeparator />
@@ -962,7 +978,7 @@ const Step6 = ({
                 ? I18n.t('pages.newProposal.step6.addFareTooltip')
                 : I18n.t('pages.newProposal.step6.addFare')
             }
-            disabled={costData === 0}
+            disabled={costData === 0 || dataSales.currencySale === null}
           />
         </ButtonWrapper>
         <FareModal
@@ -974,12 +990,12 @@ const Step6 = ({
           modal={modal}
           specifications={specifications}
           containerItems={containerItems}
-          currency={data.length === 0 ? '' : data[0].currencySale}
+          currency={dataSales.currencySale}
         />
-        {data.value.length > 0 && data.currency.length > 0 && (
+        {dataSales.valueSale !== '' && dataSales.currencySale !== null && (
           <TotalSurcharge
-            currency={data.length === 0 ? '' : data[0].currencySale}
-            value={data.length === 0 ? '' : data[0].valueSale}
+            currency={dataSales.currencySale}
+            value={dataSales.valueSale}
             totalOtherFare={getSumTotalItem()}
             cw={cw}
             cwSale={cwSale}
