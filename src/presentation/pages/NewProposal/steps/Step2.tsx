@@ -393,9 +393,7 @@ const Step2 = ({
   useEffect(() => {
     setProposal({
       ...proposal,
-      agents: selectedAgents.map(
-        ({ shippingCompany, agent, ...otherProperties }) => otherProperties
-      )
+      agents: selectedAgents
     })
   }, [selectedAgents])
 
@@ -1347,8 +1345,6 @@ const Step2 = ({
                           setSelectedAgents(
                             selectedAgents.map((value, currentIndex) => (currentIndex === index ? { ...value, shippingCompany: newValue ?? '', transportCompanyId: getShippingCompanyId(newValue) } : value))
                           )
-
-                          console.log('AGENTS', proposal);
                         }}
                         value={selectedAgent.shippingCompany}
                         renderInput={(params: any) => (
@@ -1374,41 +1370,14 @@ const Step2 = ({
                               InputProps={{
                                 endAdornment: (
                                   <InputAdornment position="end">
-                                    <IconComponent
-                                      name="search"
-                                      defaultColor={
-                                        theme?.commercial?.pages?.newProposal
-                                          ?.subtitle
-                                      }
-                                    />
+                                    <IconComponent name="search" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
                                   </InputAdornment>
                                 )
                               }}
                             />
                           </div>
-                        )}
-                        PaperComponent={(params: any) => (
-                          <StyledPaper {...params} />
-                        )}
-                      />
+                        )} />
                     </div>
-                    {index !== 0 && (
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          marginLeft: '5px'
-                        }}
-                      >
-                        <RemoveIcon
-                          onClick={() => {
-                            removeAgent(index)
-                          }}
-                        />
-                      </div>
-                    )}
-                  </div>
                   {invalidAgent &&
                     validateShippingCompany(
                       selectedAgent.shippingCompany,
@@ -1416,6 +1385,7 @@ const Step2 = ({
                     ) && (
                       <ErrorText>{setshippingCompanyErrorLabel()}</ErrorText>
                   )}
+                  </div>
                 </Grid>
                 <LineSeparator />
               </Fragment>

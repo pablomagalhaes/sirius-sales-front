@@ -226,9 +226,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       completed.step1 &&
       completed.step2 &&
       completed.step3 &&
-      completed.step4 &&
-      completed.step5 &&
-      completed.step6
+      completed.step4 
     ) {
       if (proposal.idProposal === undefined || proposal.idProposal === null || location.state?.eventType === 'duplicate') {
         proposal.idProposal = null

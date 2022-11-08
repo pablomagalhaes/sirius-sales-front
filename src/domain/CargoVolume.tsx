@@ -1,6 +1,7 @@
 export interface CargoVolume {
   id?: number | null
   idCargo?: number | null
+  description: string // descricao
   cdCargoType: number// modal tipo
   idContainerType: string | null
   idPackaging: number | null

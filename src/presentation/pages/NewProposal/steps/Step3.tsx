@@ -312,14 +312,10 @@ const Step3 = ({
       newCargoVolumes.push({
         id: row.idCargoVolume === undefined ? null : row.idCargoVolume,
         idCargo: row.idCargo === undefined ? null : row.idCargo,
-        cdCargoType:
-          modal === 'SEA'
-            ? specificationsList
-              .map((spe) => spe.toLowerCase())
-              .indexOf(data.specifications) + 1
-            : 1,
-        idContainerType: !marineFCL() ? null : verifyContainerByType(row.type), // !marineFCL() ? null : containerTypeList.filter((cont) => cont.type === row.type)[0]?.id,
-        idPackaging: marineFCL() ? null : verifyPackagingByType(row.type),
+        description: data.description,
+        cdCargoType: modal === 'SEA' ? (specificationsList.map((spe) => spe.toLowerCase()).indexOf(data.specifications) + 1) : 1,
+        idContainerType: 'str', // !marineFCL() ? null : containerTypeList.filter((cont) => cont.type === row.type)[0]?.id,
+        idPackaging: 0, // marineFCL() ? null : packagingList.filter((pack) => pack.packaging === row.type)[0]?.id,
         valueQuantity: Number(row.amount),
         valueGrossWeight: Number(row.rawWeight?.replace(',', '.')),
         valueCubage: Number(row.cubage?.replace(',', '.')),
