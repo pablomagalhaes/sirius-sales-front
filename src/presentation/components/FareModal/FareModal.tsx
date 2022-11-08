@@ -27,7 +27,6 @@ import API from '../../../infrastructure/api'
 import { ItemModalData } from '../ItemModal/ItemModal'
 import { NumberInput, StyledPaper } from '../../pages/NewProposal/steps/StepsStyles'
 import FormatNumber from '../../../application/utils/formatNumber'
-import { Agent } from '../../../domain/Agent'
 import { ProposalContext, ProposalProps } from '../../../presentation/pages/NewProposal/context/ProposalContext'
 
 export interface FareModalData {
@@ -39,8 +38,10 @@ export interface FareModalData {
   minimumValue: string
   expense: string | null
   selectedContainer: string | null
+  selectedAgent?: string | null
   type: string
   totalItem?: string
+  agent?: any
 }
 
 interface FareModalProps {
@@ -58,6 +59,14 @@ interface FareModalProps {
 export const initialState = {
   type: '',
   expense: null,
+  agent: {
+    agent: '',
+    id: null,
+    agentId: null,
+    shippingCompany: '',
+    transportCompanyId: null
+  },
+  selectedAgent: '',
   saleValue: '',
   minimumValue: '',
   saleCurrency: 'BRL',
@@ -89,6 +98,14 @@ const FareModal = ({
       setData({ ...data, selectedContainer: containerItems[0].type })
     } else {
       setData({ ...data, selectedContainer: '' })
+    }
+  }
+
+  const verifyAgents = (): void => {
+    if (proposal.agents.length === 1) {
+      setData({ ...data, selectedAgent: proposal.agents[0]?.agent })
+    } else {
+      setData({ ...data, selectedAgent: initialState?.agent?.agent })
     }
   }
 
@@ -134,7 +151,8 @@ const FareModal = ({
   const handleAction = (): void => {
     if (isValid()) {
       const newData = data
-      newData.agent = agentList.find(a => a.agent === newData.agent)
+      newData.agent = agentList.find(a => a.agent === newData.selectedAgent)
+      console.log(newData)
       action(newData)
       handleOnClose()
     } else {
@@ -144,7 +162,11 @@ const FareModal = ({
 
   useEffect(() => {
     if (dataProp !== initialState) {
+      console.log('dataProp', dataProp)
       setData(dataProp)
+    }
+    if (proposal.agents.length > 0) {
+      verifyAgents()
     }
   }, [open])
 
@@ -259,6 +281,42 @@ const FareModal = ({
               </ControlledSelect>
             </Container>
           </RowDiv>
+
+          <RowDiv>
+            <Label width="513px">
+              {I18n.t('components.fareModal.agent')}
+              <RedColorSpan> *</RedColorSpan>
+            </Label>
+          </RowDiv>
+
+          <RowDiv margin={true}>
+
+            <Container width="513px" height="32px">
+              <Autocomplete
+                onChange={(e, newValue) => setData({ ...data, selectedAgent: newValue })}
+                options={agentList.map(agent => agent.agent)}
+                value={data.selectedAgent}
+                renderInput={(params) => (
+                  <div ref={params.InputProps.ref}>
+                    <Input
+                      {...params.inputProps}
+                      filled={data.selectedAgent}
+                      toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                      invalid={invalidInput && (data.agent?.agent === '' || data.agent?.agent === null)}
+                      placeholder={I18n.t('components.fareModal.choose')}
+                      style={{ width: '513px' }}
+                    />
+                    <Box {...params.inputProps} className="dropdownCustom">
+                      <ArrowDropDownIcon />
+                    </Box>
+                  </div>
+                )}
+                PaperComponent={(params: any) => <StyledPaper {...params} />}
+              />
+            </Container>
+
+          </RowDiv>
+
           {specifications === 'fcl' && (
             <><RowDiv>
               <Label width="100%">
