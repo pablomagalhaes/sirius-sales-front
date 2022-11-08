@@ -203,10 +203,7 @@ const FareModal = ({
               <RedColorSpan> *</RedColorSpan>
             </Label>
           </RowDiv>
-          <>
-          {console.log('PROPOSAL-FAREMODAL', proposal)}
-            {console.log('AGENT-LIST', agentList)}
-          </>
+
           <RowDiv margin={true}>
             <Container width="350px" height="32px">
               <Autocomplete

@@ -96,12 +96,44 @@ const Step6 = ({
 
   const currencyArray = new Map()
 
+<<<<<<< HEAD
   const [data, setData] = useState({
     company: '',
     currency: '',
     value: '',
     tableData: []
   })
+=======
+  const [data, setData] = useState<any[]>([])
+
+  useEffect(() => {
+    const currentAgents = data.map(currentAgent => currentAgent.agent.agentId)
+    const getNewAgents = proposal.agents.filter(agent => !currentAgents.includes(agent.agentId))
+    const newDataWithNewAgents = getNewAgents.map(newAgent => ({
+      company: '',
+      agent: {
+        agentId: newAgent.agentId,
+        transportCompanyId: newAgent.transportCompanyId
+      },
+      currencySale: '',
+      currencyPurchase: '',
+      valueSale: '',
+      valuePurchase: '',
+      tableData: []
+    }))
+    const unionAgents = [...data, ...newDataWithNewAgents]
+    setData(unionAgents)
+  }, [proposal.agents])
+
+  useEffect(() => {
+    const currentProposalAgents = proposal.agents.map(agent => agent.agentId)
+    const getOnlyExistAgentsOnProposal = data.filter(currentDataAgent => currentProposalAgents.includes(currentDataAgent.agent.agentId))
+
+    setData(getOnlyExistAgentsOnProposal)
+  }, [proposal.agents])
+
+
+>>>>>>> 839f0aa (SIRPLT-1236 ajustes 4)
 
   const getServiceType = (): any => {
     let service
@@ -145,10 +177,22 @@ const Step6 = ({
     return id
   }
 
+<<<<<<< HEAD
   const getFreightCost = (): Cost => {
     let freightCost = proposal.costs.find((cost) => cost.costType === 'Frete')
     if (freightCost === undefined) {
       freightCost = {
+=======
+  const getFreightCost = (): Cost[] => {
+
+    let freightCostArrayNew: Cost[] = [];
+    let resultado = proposal.costs.filter(cost => cost.costType !== 'Frete')
+    proposal.costs = resultado
+
+    data.forEach((item): void => {
+
+      let freightCostNew = {
+>>>>>>> 839f0aa (SIRPLT-1236 ajustes 4)
         id: null,
         idProposal:
           proposal?.idProposal === undefined ? null : proposal?.idProposal,
@@ -160,13 +204,19 @@ const Step6 = ({
         valueSalePercent: 0,
         valueMinimumSale: null,
         agent: {
-          agentId: null,
-          transportCompanyId: null
+          agentId: item.agent.agentId,
+          transportCompanyId: item.agent.transportCompanyId
         },
         costType: 'Frete',
+<<<<<<< HEAD
         idCurrencySale: data.currency,
         idCurrencyPurchase: data.currency,
         valueSale: Number(data.value.replace(',', '.')),
+=======
+        idCurrencySale: item.currencySale,
+        idCurrencyPurchase: item.currencyPurchase,
+        valueSale: Number(item.valueSale.replace(',', '.')),
+>>>>>>> 839f0aa (SIRPLT-1236 ajustes 4)
         valuePurchase: 0,
         isPurchase: false,
         isSale: true
@@ -183,6 +233,7 @@ const Step6 = ({
     }
     return freightCost
   }
+  
 
   useImperativeHandle(updateTableIdsRef, () => ({
     updateStep6Ids() {
@@ -230,11 +281,18 @@ const Step6 = ({
         const waitAllData = async (): Promise<void> => {
           for (const cost of proposal.costs) {
             if (cost.costType === 'Frete') {
+<<<<<<< HEAD
               setData({
                 ...data,
                 currency: String(cost.idCurrencySale),
                 value: completeDecimalPlaces(cost.valueSale)
               })
+=======
+              const newData = data
+              newData[0].currencySale = String(0.00 ?? '')
+              setData(newData)
+
+>>>>>>> 839f0aa (SIRPLT-1236 ajustes 4)
             }
             const getContainer = new Promise((resolve) => {
               if (specifications === 'fcl') {
@@ -362,6 +420,9 @@ const Step6 = ({
       (cost) => cost.costType !== 'Tarifa' && cost && cost.costType !== 'Frete'
     )
     const newFareItems: Cost[] = []
+
+    console.log('TABLEDATA', tableData)
+
     tableData.forEach((row) => {
       newFareItems.push({
         id: row.idCost === undefined ? null : row.idCost,
@@ -376,8 +437,8 @@ const Step6 = ({
             )[0]?.id
             : null, // containerMODAL
         agent: {
-          agentId: null,
-          transportCompanyId: null
+          agentId: row.agent.agentId,
+          transportCompanyId: row.agent.transportCompanyId
         },
         costType: 'Tarifa', // 'Origem''Destino''Tarifa'
         billingType: row.type, // Tipo -MODAL
@@ -607,6 +668,7 @@ const Step6 = ({
         <FormControl variant='outlined' size='small' className='form-size'>
 
           <>
+            {console.log('DATA-ARRAY', data)}
             {console.log('PROPOSAL-STEP6', proposal)}
           </>
 
@@ -614,6 +676,10 @@ const Step6 = ({
 
             {(() => {
               if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === 2)) {
+
+                if (proposal.agents[0].agentId !== null && proposal.agents[0].transportCompanyId !== null && data.length !== 0){
+
+
                 return (
                   <>
 
@@ -667,10 +733,21 @@ const Step6 = ({
                                   }
                                 })()}
 
+<<<<<<< HEAD
                                 <Autocomplete freeSolo value={data.currency} onChange={(e, newValue) => setData({ ...data, currency: String(newValue ?? '') })}
                                   options={currencyList.map((item) => item.id)} renderInput={(params) => (
                                     <div ref={params.InputProps.ref}>
                                       <ControlledInput {...params} id="currencies" toolTipTitle={I18n.t('components.itemModal.requiredField')} invalid={invalidInput && data.currency === ''}
+=======
+                                <Autocomplete freeSolo value={data[index].currencyPurchase} onChange={(e, newValue) => {
+                                  const newData = data
+                                  newData[index].currencyPurchase = String(newValue ?? '')
+                                  setData(newData)
+                                }}
+                                  options={currencyList.map((item) => item.id)} renderInput={(params) => (
+                                    <div ref={params.InputProps.ref}>
+                                      <ControlledInput {...params} id="currencies" toolTipTitle={I18n.t('components.itemModal.requiredField')} invalid={invalidInput && data[index].currencyPurchase === ''}
+>>>>>>> 839f0aa (SIRPLT-1236 ajustes 4)
                                         variant="outlined" size="small" placeholder={I18n.t('components.itemModal.choose')}
                                         InputProps={{
                                           endAdornment: (
@@ -702,8 +779,17 @@ const Step6 = ({
                                 })()}
 
                                 <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+<<<<<<< HEAD
                                   customInput={ControlledInput} onChange={(e) => setData({ ...data, value: e.target.value })} toolTipTitle={I18n.t('components.itemModal.requiredField')}
                                   invalid={invalidInput && (data.value === '' || data.value === '0')} value={data.value} variant='outlined' size='small' />
+=======
+                                  customInput={ControlledInput} onChange={(e) => {
+                                    const newData = data
+                                    newData[index].valuePurchase = e.target.value
+                                    setData(newData)
+                                  }} toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                  invalid={invalidInput && (data[index].valuePurchase === '' || data[index].valuePurchase === '0')} value={data[index].valuePurchase} variant='outlined' size='small' />
+>>>>>>> 839f0aa (SIRPLT-1236 ajustes 4)
                               </Grid>
 
                             </Grid>
@@ -716,10 +802,8 @@ const Step6 = ({
                     })}
                   </>
                 )
-              }
+              }}
             })()}
-
-
 
 
 
@@ -773,10 +857,21 @@ const Step6 = ({
                                   }
                                 })()}
 
+<<<<<<< HEAD
                                 <Autocomplete freeSolo value={data.currency} onChange={(e, newValue) => setData({ ...data, currency: String(newValue ?? '') })}
                                   options={currencyList.map((item) => item.id)} renderInput={(params) => (
                                     <div ref={params.InputProps.ref}>
                                       <ControlledInput {...params} id="currencies" toolTipTitle={I18n.t('components.itemModal.requiredField')} invalid={invalidInput && data.currency === ''}
+=======
+                                <Autocomplete freeSolo value={data[index].currencyPurchase} onChange={(e, newValue) => {
+                                  const newData = data
+                                  newData[index].currencyPurchase = String(newValue ?? '')
+                                  setData(newData)
+                                }}
+                                  options={currencyList.map((item) => item.id)} renderInput={(params) => (
+                                    <div ref={params.InputProps.ref}>
+                                      <ControlledInput {...params} id="currencies" toolTipTitle={I18n.t('components.itemModal.requiredField')} invalid={invalidInput && data[index].currencyPurchase === ''}
+>>>>>>> 839f0aa (SIRPLT-1236 ajustes 4)
                                         variant="outlined" size="small" placeholder={I18n.t('components.itemModal.choose')}
                                         InputProps={{
                                           endAdornment: (
@@ -808,8 +903,17 @@ const Step6 = ({
                                 })()}
 
                                 <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+<<<<<<< HEAD
                                   customInput={ControlledInput} onChange={(e) => setData({ ...data, value: e.target.value })} toolTipTitle={I18n.t('components.itemModal.requiredField')}
                                   invalid={invalidInput && (data.value === '' || data.value === '0')} value={data.value} variant='outlined' size='small' />
+=======
+                                  customInput={ControlledInput} onChange={(e) => {
+                                    const newData = data
+                                    newData[index].valuePurchase = e.target.value
+                                    setData(newData)
+                                  }} toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                  invalid={invalidInput && (data[index].valuePurchase === '' || data[index].valuePurchase === '0')} value={data[index].valuePurchase} variant='outlined' size='small' />
+>>>>>>> 839f0aa (SIRPLT-1236 ajustes 4)
                               </Grid>
 
                               <Grid item xs={2}>
@@ -825,10 +929,21 @@ const Step6 = ({
                                   }
                                 })()}
 
+<<<<<<< HEAD
                                 <Autocomplete freeSolo value={data.currency} onChange={(e, newValue) => setData({ ...data, currency: String(newValue ?? '') })}
                                   options={currencyList.map((item) => item.id)} renderInput={(params) => (
                                     <div ref={params.InputProps.ref}>
                                       <ControlledInput {...params} id="currencies" toolTipTitle={I18n.t('components.itemModal.requiredField')} invalid={invalidInput && data.currency === ''}
+=======
+                                <Autocomplete freeSolo value={data[index].currencySale} onChange={(e, newValue) => {
+                                  const newData = data
+                                  newData[index].currencySale = String(newValue ?? '')
+                                  setData(newData)
+                                }}
+                                  options={currencyList.map((item) => item.id)} renderInput={(params) => (
+                                    <div ref={params.InputProps.ref}>
+                                      <ControlledInput {...params} id="currencies" toolTipTitle={I18n.t('components.itemModal.requiredField')} invalid={invalidInput && data[index].currencySale === ''}
+>>>>>>> 839f0aa (SIRPLT-1236 ajustes 4)
                                         variant="outlined" size="small" placeholder={I18n.t('components.itemModal.choose')}
                                         InputProps={{
                                           endAdornment: (
@@ -860,8 +975,17 @@ const Step6 = ({
                                 })()}
 
                                 <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+<<<<<<< HEAD
                                   customInput={ControlledInput} onChange={(e) => setData({ ...data, value: e.target.value })} toolTipTitle={I18n.t('components.itemModal.requiredField')}
                                   invalid={invalidInput && (data.value === '' || data.value === '0')} value={data.value} variant='outlined' size='small' />
+=======
+                                  customInput={ControlledInput} onChange={(e) => {
+                                    const newData = data
+                                    newData[index].valueSale = e.target.value
+                                    setData(newData)
+                                  }} toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                  invalid={invalidInput && (data[index].valueSale === '' || data[index].valueSale === '0')} value={data[index].valueSale} variant='outlined' size='small' />
+>>>>>>> 839f0aa (SIRPLT-1236 ajustes 4)
                               </Grid>
 
                             </Grid>
@@ -922,12 +1046,21 @@ const Step6 = ({
           modal={modal}
           specifications={specifications}
           containerItems={containerItems}
+<<<<<<< HEAD
           currency={data.currency}
+=======
+          currency={data.length === 0 ? '' : data[0].currencySale}
+>>>>>>> 839f0aa (SIRPLT-1236 ajustes 4)
         />
         {data.value.length > 0 && data.currency.length > 0 && (
           <TotalSurcharge
+<<<<<<< HEAD
             currency={data.currency}
             value={data.value}
+=======
+            currency={data.length === 0 ? '' : data[0].currencySale}
+            value={data.length === 0 ? '' : data[0].valueSale}
+>>>>>>> 839f0aa (SIRPLT-1236 ajustes 4)
             totalOtherFare={getSumTotalItem()}
             cw={cw}
             cwSale={cwSale}
