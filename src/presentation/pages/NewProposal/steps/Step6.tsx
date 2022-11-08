@@ -273,8 +273,10 @@ const Step6 = ({
                     ? 0
                     : calculationData?.cubageWeight,
                   valuePurchase: 0,
-                  valueSale: Number(cost.valueSale),
-                  idCurrencyPurchase: '',
+                  valueSale: Number(cost.valueSale) > Number(cost.valueMinimumSale)
+                    ? Number(cost.valueSale)
+                    : Number(cost.valueMinimumSale),
+                  idCurrencyPurchase: cost.idCurrencyPurchase,
                   idCurrencySale: cost.idCurrencySale,
                   valuePurchaseCW:
                     cost.billingType === 'CW'
@@ -411,9 +413,11 @@ const Step6 = ({
         valueTotalPurchase: 0 // total compra da moeda
       })
     })
-    newFareItems.push(getFreightCost())
+    newFareItems.push(...getFreightCost())
+
     setProposal({
       ...proposal,
+      agents: proposal.agents,
       totalCosts: actualTotalCostArray.concat(newTotalCostFare),
       costs: actualCostArray.concat(newFareItems)
     })
@@ -603,7 +607,7 @@ const Step6 = ({
         <FormControl variant='outlined' size='small' className='form-size'>
 
           <>
-            {console.log('AGENTES-CIA', proposal)}
+            {console.log('PROPOSAL-STEP6', proposal)}
           </>
 
           <>
