@@ -1345,17 +1345,10 @@ const Step2 = ({
                         )}
                         onChange={(e, newValue) => {
                           setSelectedAgents(
-                            selectedAgents.map((value, currentIndex) =>
-                              currentIndex === index
-                                ? {
-                                    ...value,
-                                    shippingCompany: newValue ?? '',
-                                    transportCompanyId:
-                                      getShippingCompanyId(newValue)
-                                  }
-                                : value
-                            )
+                            selectedAgents.map((value, currentIndex) => (currentIndex === index ? { ...value, shippingCompany: newValue ?? '', transportCompanyId: getShippingCompanyId(newValue) } : value))
                           )
+
+                          console.log('AGENTS', proposal);
                         }}
                         value={selectedAgent.shippingCompany}
                         renderInput={(params: any) => (

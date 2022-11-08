@@ -1,9 +1,4 @@
-import React, {
-  useContext,
-  useEffect,
-  useImperativeHandle,
-  useState
-} from 'react'
+import React, { useContext, useEffect, useImperativeHandle, useState, Fragment } from 'react'
 import { I18n } from 'react-redux-i18n'
 import { MessageContainer, Separator, Subtitle, Title } from '../style'
 import FareModal, {
@@ -19,14 +14,7 @@ import {
   withTheme
 } from '@material-ui/core'
 import { ItemModalData } from '../../../components/ItemModal/ItemModal'
-
-import {
-  ButtonWrapper,
-  HeightDiv,
-  NumberInput,
-  StyledPaper
-} from './StepsStyles'
-
+import { ButtonWrapper, HeightDiv, NumberInput, StyledPaper, LineSeparator } from './StepsStyles'
 import { Button, Messages } from 'fiorde-fe-components'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import { Cost } from '../../../../domain/Cost'
@@ -50,12 +38,12 @@ interface Step6Props {
   setFilled: (filled: any) => void
   specifications: string
   setUndoMessage: React.Dispatch<
-  React.SetStateAction<{
-    step3: boolean
-    step5origin: boolean
-    step5destiny: boolean
-    step6: boolean
-  }>
+    React.SetStateAction<{
+      step3: boolean
+      step5origin: boolean
+      step5destiny: boolean
+      step6: boolean
+    }>
   >
   undoMessage: {
     step3: boolean
@@ -91,6 +79,8 @@ const Step6 = ({
   cw,
   cwSale
 }: Step6Props): JSX.Element => {
+  const [agentsList, setAgentsList] = useState<any[]>([])
+  const [businessPartnerList, setBusinessPartnerList] = useState<any[]>([])
   const [open, setOpen] = useState(false)
   const [tableData, setTableData] = useState<FareModalData[]>([])
   const [copyTable, setCopyTable] = useState<FareModalData[]>([])
@@ -130,6 +120,31 @@ const Step6 = ({
 
     return serviceList.filter((serv) => serv.service === service)[0]?.id
   }
+
+  const getAgentId = (agentName: string): number | undefined => {
+    let id
+    if (agentName !== '') {
+      agentsList?.forEach((item): void => {
+        if (String(item.businessPartner.simpleName) === String(agentName)) {
+          id = item.businessPartner.id
+        }
+      })
+    }
+    return id
+  }
+
+  const getShippingCompanyId = (shippingCompanyName: string): number | undefined => {
+    let id
+    if (shippingCompanyName !== '') {
+      businessPartnerList?.forEach((item): void => {
+        if (String(item.businessPartner.simpleName) === String(shippingCompanyName)) {
+          id = item.businessPartner.id
+        }
+      })
+    }
+    return id
+  }
+
 
   const getFreightCost = (): Cost => {
     let freightCost = proposal.costs.find((cost) => cost.costType === 'Frete')
@@ -171,7 +186,7 @@ const Step6 = ({
   }
 
   useImperativeHandle(updateTableIdsRef, () => ({
-    updateStep6Ids () {
+    updateStep6Ids() {
       let tableDataId = 0
       if (proposal?.idProposal !== undefined && proposal?.idProposal !== null) {
         const newTableData = [...tableData]
@@ -578,93 +593,147 @@ const Step6 = ({
     return totalSum.toFixed(2).replace('.', ',')
   }
 
-  useEffect(() => {
-    setData({ ...data, company: '', currency: '', value: '' })
-  }, [modal])
 
   return (
+
     <Separator>
       <HeightDiv>
         <Title>
           6. {I18n.t('pages.newProposal.step6.title')}
           <Subtitle>{I18n.t('pages.newProposal.step6.subtitle')}</Subtitle>
         </Title>
-        <FormControl variant="outlined" size="small" className="form-size">
-          <Grid container spacing={5}>
-            <Grid item xs={4}>
-              <FormLabel component="legend">{selectTypeModal()}</FormLabel>
-              <Autocomplete
-                freeSolo
-                onChange={(e, newValue) =>
-                  setData({ ...data, company: String(newValue) })
-                }
-                options={getCompany()}
-                value={data.company}
-                renderInput={(params) => (
-                  <div ref={params.InputProps.ref}>
-                    <ControlledInput
-                      {...params}
-                      id="search-destiny"
-                      toolTipTitle={I18n.t(
-                        'components.itemModal.requiredField'
-                      )}
-                      invalid={false}
-                      variant="outlined"
-                      size="small"
-                      $space
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconComponent
-                              name="search"
-                              defaultColor={
-                                theme?.commercial?.pages?.newProposal?.subtitle
-                              }
-                            />
-                          </InputAdornment>
-                        )
-                      }}
-                    />
-                  </div>
-                )}
-                PaperComponent={(params: any) => <StyledPaper {...params} />}
-              />
+        <FormControl variant='outlined' size='small' className='form-size'>
+
+          <>
+            {console.log('AGENTES-CIA', proposal)}
+          </>
+
+          <>
+
+            <Grid item xs={6}>
+              <FormLabel component="legend"><strong>{'Tarifas de compra por agente'}</strong></FormLabel>
             </Grid>
+
+            {proposal.agents.map((selectedAgent, index) => {
+              return (
+
+
+
+                <Fragment key={index}>
+
+                  <Grid container spacing={5}>
+
+                    <Grid item xs={3}>
+
+                      {(() => {
+                        if (index === 0) {
+                          return (
+                            <FormLabel component='legend'>{'Agente'}</FormLabel>
+                          )
+                        }
+                      })()}
+
+                      <FormLabel component='legend'>{(index + 1) + ' - ' + selectedAgent.agentId}</FormLabel>
+                    </Grid>
+
+                    <Grid item xs={3}>
+                      {(() => {
+                        if (index === 0) {
+                          return (
+                            <FormLabel component='legend'>{selectTypeModal()}</FormLabel>
+                          )
+                        }
+                      })()}
+
+
+                      <FormLabel component='legend'>{'CODIGO: ' + selectedAgent.transportCompanyId}</FormLabel>
+                    </Grid>
+
+                    <Grid item xs={2}>
+
+                      {(() => {
+                        if (index === 0) {
+                          return (
+                            <FormLabel component='legend'>
+                              {I18n.t('pages.newProposal.step6.currencyPurchase')}
+                              <RedColorSpan> *</RedColorSpan>
+                            </FormLabel>
+                          )
+                        }
+                      })()}
+
+
+
+                      <Autocomplete freeSolo value={data.currency} onChange={(e, newValue) => setData({ ...data, currency: String(newValue ?? '') })}
+                        options={currencyList.map((item) => item.id)} renderInput={(params) => (
+                          <div ref={params.InputProps.ref}>
+                            <ControlledInput {...params} id="currencies" toolTipTitle={I18n.t('components.itemModal.requiredField')} invalid={invalidInput && data.currency === ''}
+                              variant="outlined" size="small" placeholder={I18n.t('components.itemModal.choose')}
+                              InputProps={{
+                                endAdornment: (
+                                  <InputAdornment position='end'>
+                                    <Box style={{ position: 'absolute', top: '7px', right: '0' }} {...params.inputProps} >
+                                      <ArrowDropDownIcon />
+                                    </Box>
+                                  </InputAdornment>
+                                )
+                              }}
+                            />
+                          </div>
+                        )}
+                        PaperComponent={(params: any) => <StyledPaper {...params} />}
+                      />
+                    </Grid>
+
+                    <Grid item xs={2}>
+
+                      {(() => {
+                        if (index === 0) {
+                          return (
+                            <FormLabel component='legend'>
+                              {I18n.t('pages.newProposal.step6.valuePurchase')}
+                              <RedColorSpan> *</RedColorSpan>
+                            </FormLabel>
+                          )
+                        }
+                      })()}
+
+                      <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                        customInput={ControlledInput} onChange={(e) => setData({ ...data, value: e.target.value })} toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                        invalid={invalidInput && (data.value === '' || data.value === '0')} value={data.value} variant='outlined' size='small' />
+                    </Grid>
+
+                  </Grid>
+
+
+
+                </Fragment>
+              )
+            })}
+
+          </>
+
+
+          <Grid container spacing={5}>
+
+            <Grid item xs={3}>
+              <></>
+            </Grid>
+
+            <Grid item xs={3}>
+              <FormLabel component='legend'>{'Especificar o valor do frete para venda:'}</FormLabel>
+            </Grid>
+
             <Grid item xs={2}>
-              <FormLabel component="legend">
-                {I18n.t('pages.newProposal.step6.currency')}
-                <RedColorSpan> *</RedColorSpan>
-              </FormLabel>
-              <Autocomplete
-                freeSolo
-                value={data.currency}
-                onChange={(e, newValue) =>
-                  setData({ ...data, currency: String(newValue ?? '') })
-                }
-                options={currencyList.map((item) => item.id)}
-                renderInput={(params) => (
+              <Autocomplete freeSolo value={data.currency} onChange={(e, newValue) => setData({ ...data, currency: String(newValue ?? '') })}
+                options={currencyList.map((item) => item.id)} renderInput={(params) => (
                   <div ref={params.InputProps.ref}>
-                    <ControlledInput
-                      {...params}
-                      id="currencies"
-                      toolTipTitle={I18n.t(
-                        'components.itemModal.requiredField'
-                      )}
-                      invalid={invalidInput && data.currency === ''}
-                      variant="outlined"
-                      size="small"
-                      placeholder={I18n.t('components.itemModal.choose')}
+                    <ControlledInput {...params} id="currencies" toolTipTitle={I18n.t('components.itemModal.requiredField')} invalid={invalidInput && data.currency === ''}
+                      variant="outlined" size="small" placeholder={I18n.t('components.itemModal.choose')}
                       InputProps={{
                         endAdornment: (
-                          <InputAdornment position="end">
-                            <Box
-                              style={{
-                                position: 'absolute',
-                                top: '7px',
-                                right: '0'
-                              }}
-                              {...params.inputProps}
-                            >
+                          <InputAdornment position='end'>
+                            <Box style={{ position: 'absolute', top: '7px', right: '0' }} {...params.inputProps} >
                               <ArrowDropDownIcon />
                             </Box>
                           </InputAdornment>
@@ -676,30 +745,27 @@ const Step6 = ({
                 PaperComponent={(params: any) => <StyledPaper {...params} />}
               />
             </Grid>
+
             <Grid item xs={2}>
-              <FormLabel component="legend">
-                {I18n.t('pages.newProposal.step6.value')}
-                <RedColorSpan> *</RedColorSpan>
-              </FormLabel>
-              <NumberInput
-                decimalSeparator={','}
-                thousandSeparator={'.'}
-                decimalScale={2}
-                format={(value: string) =>
-                  FormatNumber.rightToLeftFormatter(value, 2)
-                }
-                customInput={ControlledInput}
-                onChange={(e) => setData({ ...data, value: e.target.value })}
-                toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                invalid={
-                  invalidInput && (data.value === '' || data.value === '0')
-                }
-                value={data.value}
-                variant="outlined"
-                size="small"
-              />
+              <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                customInput={ControlledInput} onChange={(e) => setData({ ...data, value: e.target.value })} toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                invalid={invalidInput && (data.value === '' || data.value === '0')} value={data.value} variant='outlined' size='small' />
             </Grid>
+
           </Grid>
+
+
+
+          <LineSeparator />
+
+          <Grid item xs={6}>
+            <FormLabel component="legend"><strong>{'Outras tarifas / surcharges'}</strong></FormLabel>
+          </Grid>
+
+
+
+
+
         </FormControl>
         {loadedTable && (
           <SurchargeTable
