@@ -37,7 +37,7 @@ import {
 } from './StepsStyles'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import { Button } from 'fiorde-fe-components'
-import RemoveIcon from '../../../../application/icons/RemoveIcon'
+import AgentDeleteModal from '../../../components/AgentDeleteModal'
 
 interface Step2Props {
   invalidInput: boolean
@@ -1378,6 +1378,10 @@ const Step2 = ({
                           </div>
                         )} />
                     </div>
+                    {index !== 0 && (
+                      <AgentDeleteModal handleConfirm={() => removeAgent(index)} />
+                    )}
+                  </div>
                   {invalidAgent &&
                     validateShippingCompany(
                       selectedAgent.shippingCompany,
