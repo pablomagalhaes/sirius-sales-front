@@ -27,6 +27,8 @@ import API from '../../../infrastructure/api'
 import { ItemModalData } from '../ItemModal/ItemModal'
 import { NumberInput, StyledPaper } from '../../pages/NewProposal/steps/StepsStyles'
 import FormatNumber from '../../../application/utils/formatNumber'
+import { Agent } from '../../../domain/Agent'
+import { ProposalContext, ProposalProps } from '../../../presentation/pages/NewProposal/context/ProposalContext'
 
 export interface FareModalData {
   idCost?: number | null
@@ -79,6 +81,8 @@ const FareModal = ({
   const [typeList, setTypeList] = useState<object[]>([])
   const [serviceList, setServiceList] = useState<any[]>([])
   const [currencyList, setCurrencyList] = useState<any[]>([])
+  const [agentList, setAgentList] = useState<any[]>([])
+  const { proposal }: ProposalProps = useContext(ProposalContext)
 
   const verifyContainerItems = (): void => {
     if (containerItems.length === 1) {
@@ -129,7 +133,9 @@ const FareModal = ({
 
   const handleAction = (): void => {
     if (isValid()) {
-      action(data)
+      const newData = data
+      newData.agent = agentList.find(a => a.agent === newData.agent)
+      action(newData)
       handleOnClose()
     } else {
       setInvalidInput(true)
