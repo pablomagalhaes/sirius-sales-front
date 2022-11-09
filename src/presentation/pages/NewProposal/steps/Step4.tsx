@@ -27,6 +27,7 @@ import { NumberInput } from './StepsStyles'
 import { withTheme } from 'styled-components'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import FormatNumber from '../../../../application/utils/formatNumber'
+import { FilterFrames } from '@material-ui/icons'
 
 interface Step4Props {
   invalidInput: boolean
@@ -239,7 +240,10 @@ const Step4 = ({
   }, [])
 
   useEffect(() => {
-    setData({ ...data, deadline: '', value: '' })
+    if(data.freeTime === 'notHired'){
+      setData({ ...data, deadline: '', value: '' })
+    }
+    
   }, [data.freeTime])
 
   const calculateValidityDate = (value): void => {
