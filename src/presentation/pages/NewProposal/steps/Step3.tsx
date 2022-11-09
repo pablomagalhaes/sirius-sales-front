@@ -319,7 +319,7 @@ const Step3 = ({
               .indexOf(data.specifications) + 1
             : 1,
         idContainerType: !marineFCL() ? null : verifyContainerByType(row.type), // !marineFCL() ? null : containerTypeList.filter((cont) => cont.type === row.type)[0]?.id,
-        idPackaging: marineFCL() ? null : verifyPackagingByType(row.type),
+        idPackaging: 0, // marineFCL() ? null : packagingList.filter((pack) => pack.packaging === row.type)[0]?.id,
         valueQuantity: Number(row.amount),
         valueGrossWeight: Number(row.rawWeight?.replace(',', '.')),
         valueCubage: Number(row.cubage?.replace(',', '.')),
@@ -327,7 +327,8 @@ const Step3 = ({
         valueHeight: Number(row.height?.replace(',', '.')),
         valueWidth: Number(row.width?.replace(',', '.')),
         valueDiameter: Number(row.diameter?.replace(',', '.')),
-        isStacked: row.stack
+        isStacked: row.stack,
+        type: row.type
       })
     })
     setCargoVolume(newCargoVolumes)
