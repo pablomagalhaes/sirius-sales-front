@@ -1,6 +1,8 @@
 export interface CostAgent {
+  id?: number | null
   agentId?: number | null
   transportCompanyId?: number | null
+  proposalId?: number | null
 }
 export interface Cost {
   id?: number | null

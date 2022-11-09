@@ -12,4 +12,5 @@ export interface CargoVolume {
   valueWidth: number // largura
   valueDiameter: number // diametro
   isStacked: boolean // empilhar
+  type: string // nome do tipo
 }

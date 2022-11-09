@@ -37,7 +37,7 @@ import {
 } from './StepsStyles'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import { Button } from 'fiorde-fe-components'
-import RemoveIcon from '../../../../application/icons/RemoveIcon'
+import AgentDeleteModal from '../../../components/AgentDeleteModal'
 
 interface Step2Props {
   invalidInput: boolean
@@ -1345,16 +1345,7 @@ const Step2 = ({
                         )}
                         onChange={(e, newValue) => {
                           setSelectedAgents(
-                            selectedAgents.map((value, currentIndex) =>
-                              currentIndex === index
-                                ? {
-                                    ...value,
-                                    shippingCompany: newValue ?? '',
-                                    transportCompanyId:
-                                      getShippingCompanyId(newValue)
-                                  }
-                                : value
-                            )
+                            selectedAgents.map((value, currentIndex) => (currentIndex === index ? { ...value, shippingCompany: newValue ?? '', transportCompanyId: getShippingCompanyId(newValue) } : value))
                           )
                         }}
                         value={selectedAgent.shippingCompany}
@@ -1381,39 +1372,16 @@ const Step2 = ({
                               InputProps={{
                                 endAdornment: (
                                   <InputAdornment position="end">
-                                    <IconComponent
-                                      name="search"
-                                      defaultColor={
-                                        theme?.commercial?.pages?.newProposal
-                                          ?.subtitle
-                                      }
-                                    />
+                                    <IconComponent name="search" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
                                   </InputAdornment>
                                 )
                               }}
                             />
                           </div>
-                        )}
-                        PaperComponent={(params: any) => (
-                          <StyledPaper {...params} />
-                        )}
-                      />
+                        )} />
                     </div>
                     {index !== 0 && (
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          marginLeft: '5px'
-                        }}
-                      >
-                        <RemoveIcon
-                          onClick={() => {
-                            removeAgent(index)
-                          }}
-                        />
-                      </div>
+                      <AgentDeleteModal handleConfirm={() => removeAgent(index)} />
                     )}
                   </div>
                   {invalidAgent &&
@@ -1423,6 +1391,7 @@ const Step2 = ({
                     ) && (
                       <ErrorText>{setshippingCompanyErrorLabel()}</ErrorText>
                   )}
+                  </div>
                 </Grid>
                 <LineSeparator />
               </Fragment>
