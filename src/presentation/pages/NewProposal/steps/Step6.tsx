@@ -198,7 +198,7 @@ const Step6 = ({
     setData(getOnlyDataExists)
 
     const getAgentIds = proposal.agents.map(agent => agent.agentId)
-    const newTableData = tableData.filter(row => getAgentIds.includes(row.agent.agentId))
+    const newTableData = tableData.filter(row => getAgentIds.includes(row?.agent?.agentId))
     setTableData(newTableData)
   }, [proposal.agents])
 
@@ -620,7 +620,7 @@ const Step6 = ({
   }, [data, dataTotalCost, dataContainer])
 
   useEffect(() => {
-    if (data.currency !== '' && data.value !== '') {
+    if (data.every(d => d.currencyPurchase !== '') && data.every(d => d.valuePurchase !== '')) {
       setCompleted((currentState) => {
         return { ...currentState, step6: true }
       })

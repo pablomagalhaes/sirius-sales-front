@@ -1383,14 +1383,13 @@ const Step2 = ({
                     {index !== 0 && (
                       <AgentDeleteModal handleConfirm={() => removeAgent(index)} />
                     )}
-                  </div>
-                  {invalidAgent &&
-                    validateShippingCompany(
-                      selectedAgent.shippingCompany,
-                      index
-                    ) && (
-                      <ErrorText>{setshippingCompanyErrorLabel()}</ErrorText>
-                  )}
+                    {invalidAgent &&
+                      validateShippingCompany(
+                        selectedAgent.shippingCompany,
+                        index
+                      ) && (
+                        <ErrorText>{setshippingCompanyErrorLabel()}</ErrorText>
+                    )}
                   </div>
                 </Grid>
                 <LineSeparator />
