@@ -498,17 +498,6 @@ const Step3 = ({
     return name
   }
 
-  const verifyPackagingByType = (packaging: string): number => {
-    let id: number = 0
-    for (let index = 0; index < packagingList.length; index++) {
-      const element = packagingList[index]
-      if (packaging === element.packaging) {
-        id = element.id
-      }
-    }
-    return id
-  }
-
   useEffect(() => {
     validateFormComplete()
     validateFilled()
