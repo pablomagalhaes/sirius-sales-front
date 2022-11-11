@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import moment from 'moment';
+import moment from 'moment'
 import {
   FormControl,
   FormControlLabel,
@@ -28,7 +28,6 @@ import { NumberInput, ErrorText } from './StepsStyles'
 import { withTheme } from 'styled-components'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import FormatNumber from '../../../../application/utils/formatNumber'
-import { FilterFrames } from '@material-ui/icons'
 
 interface Step4Props {
   invalidInput: boolean
@@ -223,9 +222,9 @@ const Step4 = ({
   }
 
   const validateDate = (): boolean => {
-    const validityDate = moment(data.validityDate, 'DD/MM/YYYY',true);
-    const today = moment().startOf("day");
-    return invalidInput && (!validityDate.isValid() || !validityDate.isSameOrAfter(today));
+    const validityDate = moment(data.validityDate, 'DD/MM/YYYY', true)
+    const today = moment().startOf('day')
+    return invalidInput && (!validityDate.isValid() || !validityDate.isSameOrAfter(today))
   }
 
   useEffect(() => {
@@ -247,10 +246,9 @@ const Step4 = ({
   }, [])
 
   useEffect(() => {
-    if(data.freeTime === 'notHired'){
+    if (data.freeTime === 'notHired') {
       setData({ ...data, deadline: '', value: '' })
     }
-    
   }, [data.freeTime])
 
   const calculateValidityDate = (value): void => {
