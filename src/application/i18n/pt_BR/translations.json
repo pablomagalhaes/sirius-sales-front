@@ -170,6 +170,7 @@
         "currency": "Moeda para envio dos custos:",
         "customDays": "Personalizar dias:",
         "deadline": "Prazo (dias):",
+        "errorMessage": "Insira uma data válida, igual ou maior que a data atual.",
         "freeTimeDemurrage": "Free time demurrage:",
         "freeTimeStorage": "Free time armazenagem:",
         "frequency": "Frequência:",
