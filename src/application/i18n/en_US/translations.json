@@ -169,6 +169,7 @@
         "currency": "Currency for sending costs:",
         "customDays": "Customize days:",
         "deadline": "Deadline (days):",
+        "errorMessage": "Enter a valid date, equal to or greater than the current date.",
         "freeTimeDemurrage": "Free time demurrage:",
         "freeTimeStorage": "Free time storage:",
         "frequency": "Frequency:",

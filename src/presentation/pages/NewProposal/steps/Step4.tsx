@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
+import moment from 'moment'
 import {
   FormControl,
   FormControlLabel,
@@ -23,11 +24,10 @@ import ControlledInput from '../../../components/ControlledInput'
 import ControlledToolTip from '../../../components/ControlledToolTip/ControlledToolTip'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import API from '../../../../infrastructure/api'
-import { NumberInput } from './StepsStyles'
+import { NumberInput, ErrorText } from './StepsStyles'
 import { withTheme } from 'styled-components'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import FormatNumber from '../../../../application/utils/formatNumber'
-import { FilterFrames } from '@material-ui/icons'
 
 interface Step4Props {
   invalidInput: boolean
@@ -221,6 +221,12 @@ const Step4 = ({
     }
   }
 
+  const validateDate = (): boolean => {
+    const validityDate = moment(data.validityDate, 'DD/MM/YYYY', true)
+    const today = moment().startOf('day')
+    return invalidInput && (!validityDate.isValid() || !validityDate.isSameOrAfter(today))
+  }
+
   useEffect(() => {
     validateFormComplete()
     validateFilled()
@@ -240,10 +246,9 @@ const Step4 = ({
   }, [])
 
   useEffect(() => {
-    if(data.freeTime === 'notHired'){
+    if (data.freeTime === 'notHired') {
       setData({ ...data, deadline: '', value: '' })
     }
-    
   }, [data.freeTime])
 
   const calculateValidityDate = (value): void => {
@@ -415,7 +420,7 @@ const Step4 = ({
               placeholder="DD/MM/YYYY"
               customInput={ControlledInput}
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
-              invalid={invalidInput && data.validityDate.length === 0}
+              invalid={validateDate()}
               value={data.validityDate}
               onChange={(e) =>
                 setData({ ...data, validityDate: e.target.value })
@@ -423,6 +428,7 @@ const Step4 = ({
               variant="outlined"
               size="small"
             />
+            <ErrorText>{validateDate() && I18n.t('pages.newProposal.step4.errorMessage')}</ErrorText>
           </Grid>
           <Grid item xs={2}>
             <FormLabel component="legend">
