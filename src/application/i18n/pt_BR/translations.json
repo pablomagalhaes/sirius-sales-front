@@ -46,6 +46,17 @@
       "save": "Salvar",
       "title": "Alterar Chargeable Weight"
     },
+    "rejectModal": {
+      "title": "Rejeitar Proposta",
+      "reason": "Selecione o motivo de rejeição",
+      "price": "Preço",
+      "service": "Serviço",
+      "definition": "Você está definindo a proposta",
+      "rejection": "como rejeitada pelo cliente.",
+      "display": "Ela será exibida na área de Propostas Concluídas como “Rejeitada”.",
+      "cancel": "Cancelar",
+      "confirm": "Confirmar rejeição"
+    },
     "fareModal": {
       "agent": "Agente:",
       "choose": "Escolha...",
