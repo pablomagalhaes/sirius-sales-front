@@ -46,6 +46,17 @@
       "save": "Save",
       "title": "Change Chargeable Weight"
     },
+    "rejectModal": {
+      "title": "Reject Proposal",
+      "reason": "Select rejection reason:",
+      "price": "Price",
+      "service": "Service",
+      "definition": "You are defining the proposal",
+      "rejection": "as rejected by the customer.",
+      "display": "It will be displayed as “Rejected”.",
+      "cancel": "Cancel",
+      "confirm": "Confirm Rejected"
+    },
     "fareModal": {
       "choose": "Choose...",
       "expense": "Expense/Service:",
