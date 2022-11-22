@@ -26,23 +26,28 @@ interface TableData {
   modal: string
   remove?: (id: number | null) => void
   specifications: string
+  agentList: any[]
 }
 
-const SurchargeTable = ({ data, dataFields, remove, edit }: TableData): JSX.Element => {
+const SurchargeTable = ({ data, dataFields, remove, edit, agentList }: TableData): JSX.Element => {
   const verifyType = (item): JSX.Element => {
     if (item.type === 'FIXO' || item.type === 'BL') {
       return (
         <FormatValue>
-          {dataFields.currency} {item.saleValue}
+          {dataFields.currencySale} {item.saleValue}
         </FormatValue>
       )
     } else {
       return (
         <FormatValue>
-          {dataFields.currency} {item.totalItem}
+          {dataFields.currencySale} {item.totalItem}
         </FormatValue>
       )
     }
+  }
+
+  function getAgentNameByAgentId (agentId: string): string {
+    return agentList.find((agent) => agent.businessPartner.id === agentId)?.businessPartner?.simpleName
   }
 
   if (data != null && data.length > 0) {
@@ -52,6 +57,9 @@ const SurchargeTable = ({ data, dataFields, remove, edit }: TableData): JSX.Elem
           <StyledTableRow noBorder>
             <TableCell>
               <TableHeader>{I18n.t('pages.newProposal.step6.expense')}</TableHeader>
+            </TableCell>
+            <TableCell>
+              <TableHeader>{I18n.t('pages.newProposal.step6.agent')}</TableHeader>
             </TableCell>
             <TableCell>
               <TableHeader>{I18n.t('pages.newProposal.step6.type')}</TableHeader>
@@ -81,16 +89,19 @@ const SurchargeTable = ({ data, dataFields, remove, edit }: TableData): JSX.Elem
                   {item.expense}
                 </StyledTableCell>
                 <StyledTableCell width="30%" align="left">
+                  {getAgentNameByAgentId(item?.agent?.agentId)}
+                </StyledTableCell>
+                <StyledTableCell width="30%" align="left">
                   {item.type}
                 </StyledTableCell>
                 <StyledTableCell width="100%" align="left">
                   <FormatValue>
-                    {item.minimumValue !== '' ? `${String(dataFields.currency)} ${item.minimumValue}` : '-'}
+                    {item.minimumValue !== '' ? `${String(dataFields.currencySale)} ${item.minimumValue}` : '-'}
                   </FormatValue>
                 </StyledTableCell>
                 <StyledTableCell width="100%" align="left">
                   <FormatValue>
-                    {dataFields.currency} {item.saleValue}
+                    {dataFields.currencySale} {item.saleValue}
                   </FormatValue>
                 </StyledTableCell>
                 <StyledTableCell width="100%" align="left">

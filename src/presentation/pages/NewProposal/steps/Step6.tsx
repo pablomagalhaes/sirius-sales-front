@@ -1,9 +1,4 @@
-import React, {
-  useContext,
-  useEffect,
-  useImperativeHandle,
-  useState
-} from 'react'
+import React, { useContext, useEffect, useImperativeHandle, useState, Fragment } from 'react'
 import { I18n } from 'react-redux-i18n'
 import { MessageContainer, Separator, Subtitle, Title } from '../style'
 import FareModal, {
@@ -19,14 +14,7 @@ import {
   withTheme
 } from '@material-ui/core'
 import { ItemModalData } from '../../../components/ItemModal/ItemModal'
-
-import {
-  ButtonWrapper,
-  HeightDiv,
-  NumberInput,
-  StyledPaper
-} from './StepsStyles'
-
+import { ButtonWrapper, HeightDiv, NumberInput, StyledPaper, LineSeparator, ErrorText } from './StepsStyles'
 import { Button, Messages } from 'fiorde-fe-components'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import { Cost } from '../../../../domain/Cost'
@@ -34,7 +22,6 @@ import { TotalCost } from '../../../../domain/TotalCost'
 import API from '../../../../infrastructure/api'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import ControlledInput from '../../../components/ControlledInput'
-import IconComponent from '../../../../application/icons/IconComponent'
 import FormatNumber from '../../../../application/utils/formatNumber'
 import SurchargeTable from '../../../components/SurchargeTable/index'
 import TotalSurcharge from '../../../components/TotalSurcharge'
@@ -73,6 +60,33 @@ interface Step6Props {
   cwSale: number
 }
 
+const enum ID_CARGO_CONTRACTING_TYPE {
+  FCL = 1,
+  LCL = 2,
+  BREAK_BULK = 3,
+  RO_RO = 4
+}
+
+const FclCargoContractingType = ID_CARGO_CONTRACTING_TYPE.FCL
+const ContractingTypeWithoutFcl = [
+  ID_CARGO_CONTRACTING_TYPE.LCL,
+  ID_CARGO_CONTRACTING_TYPE.BREAK_BULK,
+  ID_CARGO_CONTRACTING_TYPE.RO_RO
+]
+
+const makeTableData = (costs): any => {
+  const getTarifas = costs.filter(cost => cost.costType === 'Tarifa')
+  return getTarifas.map(cost => ({
+    idCost: cost.id,
+    selectedContainer: cost.containerType,
+    agent: cost.agent,
+    type: cost.billingType,
+    saleCurrency: cost.idCurrencySale,
+    saleValue: String(cost.valueSale).replace('.', ',') ?? '',
+    minimumValue: String(cost.valueMinimumSale).replace('.', ',') ?? ''
+  }))
+}
+
 const Step6 = ({
   setFilled,
   costData,
@@ -92,26 +106,162 @@ const Step6 = ({
   cwSale
 }: Step6Props): JSX.Element => {
   const [open, setOpen] = useState(false)
-  const [tableData, setTableData] = useState<FareModalData[]>([])
   const [copyTable, setCopyTable] = useState<FareModalData[]>([])
   const [chargeData, setChargeData] = useState<FareModalData>(initialState)
   const [currencyList, setCurrencyList] = useState<any[]>([])
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
   const [dataTotalCost, setDataTotalCost] = useState<any[]>([])
   const [loadedTotalCostsIds, setLoadedTotalCostsIds] = useState<number[]>([])
-  const [loadedTable, setLoadedTable] = useState(false)
+  const [agentList, setAgentsList] = useState<any[]>([])
+  const [businessPartner, setBusinessPartner] = useState<any[]>([])
 
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
 
   const currencyArray = new Map()
 
-  const [data, setData] = useState({
-    company: '',
-    currency: '',
-    value: '',
-    tableData: []
+  // const [tableData, setTableData] = useState<FareModalData[]>([])
+  const [tableData, setTableData] = useState<FareModalData[]>(makeTableData(proposal.costs))
+  const [data, setData] = useState<any[]>(
+    proposal.agents.map(newAgent => ({
+      idCost: proposal.costs.find((cost): any => {
+        if (cost.costType === 'Frete') {
+          if (cost?.agent?.agentId === newAgent?.agentId) {
+            return true
+          }
+        }
+        return false
+      })?.id,
+      company: '',
+      agent: {
+        id: newAgent.id,
+        agentId: newAgent.agentId,
+        transportCompanyId: newAgent.transportCompanyId,
+        proposalId: null
+      },
+      currencySale: '',
+      currencyPurchase: proposal.costs.find((cost): any => {
+        if (cost.costType === 'Frete') {
+          if (cost?.agent?.agentId === newAgent?.agentId) {
+            return true
+          }
+        }
+        return false
+      })?.idCurrencyPurchase,
+      valueSale: '',
+      valuePurchase: String(proposal.costs.find((cost): any => {
+        if (cost.costType === 'Frete') {
+          if (cost?.agent?.agentId === newAgent?.agentId) {
+            return true
+          }
+        }
+        return false
+      })?.valuePurchase).replace('.', ','),
+      tableData: []
+    }))
+  )
+  const [dataContainer, setDataContainer] = useState(proposal.cargo.cargoVolumes.map((item, index) => ({
+    idCost: proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.id ?? null,
+    idContainerType: item.idContainerType,
+    currencySale: proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.idCurrencySale ?? '',
+    currencyPurchase: proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.idCurrencyPurchase ?? '',
+    valueSale: String(proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.valueSale).replace('.', ','),
+    valuePurchase: String(proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.valuePurchase).replace('.', ',')
+  })))
+
+  const [dataSales, setDataSales] = useState<any>({
+    idCost: proposal.costs.find(cost => cost.costType === 'Frete' && (cost.agent === null || cost.agent.agentId === null))?.id ?? null,
+    currencySale: String(proposal.costs.find(cost => cost.costType === 'Frete' && (cost.agent === null || cost.agent.agentId === null))?.idCurrencySale ?? ''),
+    valueSale: String(proposal.costs.find(cost => cost.costType === 'Frete' && (cost.agent === null || cost.agent.agentId === null))?.valueSale ?? '')
   })
+
+  useEffect(() => {
+    const currentAgentsId = data.map(currentAgent => currentAgent.agent.agentId)
+    const currentAgentsTransportCompanyId = data.map(currentAgent => currentAgent.agent.transportCompanyId)
+    const getNewAgents = proposal.agents.filter(agent => !currentAgentsId.includes(agent.agentId) && !currentAgentsTransportCompanyId.includes(agent.transportCompanyId))
+    const newDataWithNewAgents = getNewAgents.map(newAgent => ({
+      company: '',
+      agent: {
+        agentId: newAgent.agentId,
+        transportCompanyId: newAgent.transportCompanyId
+      },
+      currencySale: '',
+      currencyPurchase: '',
+      valueSale: '',
+      valuePurchase: '',
+      tableData: []
+    }))
+    const unionAgents = [...data, ...newDataWithNewAgents]
+    const getAllAgents = unionAgents.map(unionAgent => unionAgent.agent.agentId)
+    const getOnlyAgentsExists = proposal.agents.filter(currentProposalAgent => getAllAgents.includes(currentProposalAgent.agentId)).map(agent => agent.agentId)
+    const getOnlyDataExists = unionAgents.filter(unionAgent => getOnlyAgentsExists.includes(unionAgent.agent.agentId))
+    setData(getOnlyDataExists)
+
+    const getAgentIds = proposal.agents.map(agent => agent.agentId)
+    const newTableData = tableData.filter(row => getAgentIds.includes(row?.agent?.agentId))
+    setTableData(newTableData)
+  }, [proposal.agents])
+
+  useEffect(() => {
+    const currentContainer = dataContainer.map(currentContainer => currentContainer.idContainerType)
+    const getNewCargos = proposal.cargo.cargoVolumes.filter(cargo => !currentContainer.includes(cargo.idContainerType))
+    const newDataWithNewCargos = getNewCargos.map(newCargo => ({
+      idCost: null,
+      idContainerType: newCargo.idContainerType,
+      currencySale: '',
+      currencyPurchase: '',
+      valueSale: '',
+      valuePurchase: ''
+    }))
+    const unionCargos = [...dataContainer, ...newDataWithNewCargos]
+    const getAllCargos = unionCargos.map(unionAgent => unionAgent.idContainerType)
+    const getOnlyCargosExists = proposal.cargo.cargoVolumes.filter(currentProsalCargoVolumes => getAllCargos.includes(currentProsalCargoVolumes.idContainerType)).map(cargo => cargo.idContainerType)
+    const getOnlyDataExists = unionCargos.filter(unionAgent => getOnlyCargosExists.includes(unionAgent.idContainerType))
+    setDataContainer(getOnlyDataExists)
+  }, [proposal.cargo])
+
+  useEffect(() => {
+    console.log(tableData)
+  }, [tableData])
+
+  useEffect(() => {
+    loadAgentsList()
+
+    void loadBusinessPartner()
+  }, [proposal.idTransport])
+
+  const loadAgentsList = (): void => {
+    API.getAgents()
+      .then((response) => setAgentsList(response))
+      .catch((err) => console.log(err))
+  }
+
+  const loadBusinessPartner = async (): Promise<void> => {
+    if (proposal.idTransport === 'SEA') {
+      await getBusinessPartnerSea()
+    } else {
+      const response = await API.getBusinessPartnerByType(getBusinessPartnerType())
+      setBusinessPartner(response)
+    }
+  }
+
+  const getBusinessPartnerSea = async (): Promise<void> => {
+    const responseShipOwner = await API.getBusinessPartnerByType('ARMADOR')
+    const responseColoader = await API.getBusinessPartnerByType('COLOADER')
+    if (responseShipOwner !== undefined && responseColoader !== undefined) {
+      setBusinessPartner([...responseColoader, ...responseShipOwner])
+    }
+  }
+
+  const getBusinessPartnerType = (): string => {
+    switch (proposal.idTransport) {
+      case 'AIR':
+        return 'CIA. AEREA'
+      case 'LAND':
+        return 'TRANS. INTERNACIONAL'
+    }
+    return ''
+  }
 
   const getServiceType = (): any => {
     let service
@@ -131,43 +281,99 @@ const Step6 = ({
     return serviceList.filter((serv) => serv.service === service)[0]?.id
   }
 
-  const getFreightCost = (): Cost => {
-    let freightCost = proposal.costs.find((cost) => cost.costType === 'Frete')
-    if (freightCost === undefined) {
-      freightCost = {
-        id: null,
-        idProposal:
-          proposal?.idProposal === undefined ? null : proposal?.idProposal,
-        idService: getServiceType(),
-        billingType: '',
-        containerType: null,
-        valuePurchasePercent: null,
-        valueMinimumPurchase: null,
-        valueSalePercent: 0,
-        valueMinimumSale: null,
-        agent: {
-          agentId: null,
-          transportCompanyId: null
-        },
-        costType: 'Frete',
-        idCurrencySale: data.currency,
-        idCurrencyPurchase: data.currency,
-        valueSale: Number(data.value.replace(',', '.')),
-        valuePurchase: 0,
-        isPurchase: false,
-        isSale: true
-      }
-    } else {
-      freightCost = {
-        ...freightCost,
-        idCurrencySale: data.currency,
-        idCurrencyPurchase: data.currency,
-        costType: 'Frete',
-        idService: getServiceType(),
-        valueSale: Number(data.value.replace(',', '.'))
+  const getFreightCost = (): Cost[] => {
+    const freightCostArrayNew: Cost[] = []
+    const resultado = proposal.costs.filter(cost => cost.costType !== 'Frete')
+    proposal.costs = resultado
+
+    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && ContractingTypeWithoutFcl.includes(proposal.cargo.idCargoContractingType))) {
+      data.forEach((item): void => {
+        const freightCostNew = {
+          id: item?.idCost,
+          idProposal: proposal.idProposal,
+          idService: getServiceType(),
+          billingType: '',
+          containerType: null,
+          valuePurchasePercent: null,
+          valueMinimumPurchase: null,
+          valueSalePercent: 0,
+          valueMinimumSale: null,
+          agent: {
+            id: item.agent.id,
+            agentId: item.agent.agentId,
+            transportCompanyId: item.agent.transportCompanyId,
+            proposalId: item.agent.proposalId
+          },
+          costType: 'Frete',
+          idCurrencySale: item.currencySale,
+          idCurrencyPurchase: item.currencyPurchase,
+          valueSale: Number(String(item.valueSale).replace(',', '.')),
+          valuePurchase: Number(String(item.valuePurchase).replace(',', '.')),
+          isPurchase: false,
+          isSale: true
+        }
+        freightCostArrayNew.push(freightCostNew)
+      })
+      if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && ContractingTypeWithoutFcl.includes(proposal.cargo.idCargoContractingType))) {
+        const freightCostSale = {
+          id: dataSales.idCost,
+          idProposal: proposal.idProposal,
+          idService: getServiceType(),
+          billingType: '',
+          containerType: null,
+          valuePurchasePercent: null,
+          valueMinimumPurchase: null,
+          valueSalePercent: 0,
+          valueMinimumSale: null,
+          agent: {
+            id: null,
+            agentId: null,
+            transportCompanyId: null,
+            proposalId: null
+          },
+          costType: 'Frete',
+          idCurrencySale: dataSales.currencySale,
+          idCurrencyPurchase: dataSales.currencySale,
+          valueSale: Number(dataSales.valueSale.replace(',', '.')),
+          valuePurchase: Number(dataSales.valueSale.replace(',', '.')),
+          isPurchase: false,
+          isSale: true
+        }
+        freightCostArrayNew.push(freightCostSale)
       }
     }
-    return freightCost
+
+    if ((proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === FclCargoContractingType)) {
+      dataContainer.forEach((item): void => {
+        const freightCostNew = {
+          id: item?.idCost,
+          idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
+          idService: getServiceType(),
+          billingType: '',
+          containerType: null,
+          valuePurchasePercent: null,
+          valueMinimumPurchase: null,
+          valueSalePercent: 0,
+          valueMinimumSale: null,
+          agent: {
+            id: proposal.agents[0].id,
+            agentId: proposal.agents[0].agentId,
+            transportCompanyId: proposal.agents[0].transportCompanyId,
+            proposalId: null
+          },
+          costType: 'Frete',
+          idCurrencySale: item.currencySale,
+          idCurrencyPurchase: item.currencyPurchase,
+          valueSale: Number(String(item.valueSale).replace(',', '.')),
+          valuePurchase: Number(String(item.valuePurchase).replace(',', '.')),
+          isPurchase: false,
+          isSale: true
+        }
+        freightCostArrayNew.push(freightCostNew)
+      })
+    }
+
+    return freightCostArrayNew
   }
 
   useImperativeHandle(updateTableIdsRef, () => ({
@@ -194,6 +400,10 @@ const Step6 = ({
   }))
 
   useEffect(() => {
+    console.log('PROPOSTA', proposal)
+  }, [proposal])
+
+  useEffect(() => {
     setTableData([])
     setCopyTable([])
     setChargeData(initialState)
@@ -215,15 +425,8 @@ const Step6 = ({
       }).then(() => {
         const waitAllData = async (): Promise<void> => {
           for (const cost of proposal.costs) {
-            if (cost.costType === 'Frete') {
-              setData({
-                ...data,
-                currency: String(cost.idCurrencySale),
-                value: completeDecimalPlaces(cost.valueSale)
-              })
-            }
-            const getContainer = new Promise((resolve) => {
-              if (specifications === 'fcl') {
+            const getContainer: any = new Promise((resolve) => {
+              if (specifications === 'fcl' && cost.containerType !== null) {
                 API.getContainerType(cost.containerType)
                   .then((response) => resolve(String(response?.description)))
                   .catch((err) => console.log(err))
@@ -238,16 +441,18 @@ const Step6 = ({
                 .catch((err) => console.log(err))
             })
 
+            const getDescription = await getContainer
+
             const getTotalItemValue = new Promise((resolve) => {
               if (cost.costType === 'Tarifa') {
                 const indexContainer = containerItems.findIndex(
-                  (container) => cost.containerType === container.type
+                  (container) => getDescription === container.type
                 )
                 const totalCostCalculationData = {
                   costType: cost.billingType,
                   quantityContainer:
                     specifications === 'fcl'
-                      ? Number(containerItems[indexContainer].amount)
+                      ? Number(containerItems[indexContainer]?.amount)
                       : 0,
                   valueGrossWeight: isNaN(Number(calculationData?.weight))
                     ? 0
@@ -259,8 +464,10 @@ const Step6 = ({
                     ? 0
                     : calculationData?.cubageWeight,
                   valuePurchase: 0,
-                  valueSale: Number(cost.valueSale),
-                  idCurrencyPurchase: '',
+                  valueSale: Number(cost.valueSale) > Number(cost.valueMinimumSale)
+                    ? Number(cost.valueSale)
+                    : Number(cost.valueMinimumSale),
+                  idCurrencyPurchase: cost.idCurrencyPurchase,
                   idCurrencySale: cost.idCurrencySale,
                   valuePurchaseCW:
                     cost.billingType === 'CW'
@@ -315,13 +522,18 @@ const Step6 = ({
                     ? ''
                     : Number(response[2]).toFixed(2).replace('.', ',')
               }
+              if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && ContractingTypeWithoutFcl.includes(proposal.cargo.idCargoContractingType))) {
+                if (cost.costType === 'Tarifa') {
+                  const getAgentByTarifaAgent = proposal.agents.find(agent => agent.agentId === cost.agent.agentId)
+                  loadedItem.agent = getAgentByTarifaAgent // novo agente vinculado ao custo
+                }
+              }
               if (cost.costType === 'Tarifa') {
                 loadedData.push(loadedItem)
               }
             }))
           }
           setTableData(loadedData)
-          setLoadedTable(true)
         }
         void waitAllData()
 
@@ -333,10 +545,7 @@ const Step6 = ({
         })
         setLoadedTotalCostsIds(loadedTotalCosts)
         setTableData(loadedData)
-        setLoadedTable(true)
       })
-    } else {
-      setLoadedTable(true)
     }
   }, [])
 
@@ -346,6 +555,7 @@ const Step6 = ({
       (cost) => cost.costType !== 'Tarifa' && cost && cost.costType !== 'Frete'
     )
     const newFareItems: Cost[] = []
+
     tableData.forEach((row) => {
       newFareItems.push({
         id: row.idCost === undefined ? null : row.idCost,
@@ -360,8 +570,10 @@ const Step6 = ({
             )[0]?.id
             : null, // containerMODAL
         agent: {
-          agentId: null,
-          transportCompanyId: null
+          id: row.agent?.id,
+          agentId: row.agent?.agentId,
+          transportCompanyId: row.agent?.transportCompanyId,
+          proposalId: row.agent?.proposalId ?? null
         },
         costType: 'Tarifa', // 'Origem''Destino''Tarifa'
         billingType: row.type, // Tipo -MODAL
@@ -397,16 +609,18 @@ const Step6 = ({
         valueTotalPurchase: 0 // total compra da moeda
       })
     })
-    newFareItems.push(getFreightCost())
+    newFareItems.push(...getFreightCost())
+
     setProposal({
       ...proposal,
+      agents: proposal.agents,
       totalCosts: actualTotalCostArray.concat(newTotalCostFare),
       costs: actualCostArray.concat(newFareItems)
     })
-  }, [data, dataTotalCost])
+  }, [data, dataTotalCost, dataContainer])
 
   useEffect(() => {
-    if (data.currency !== '' && data.value !== '') {
+    if (data.every(d => d.currencyPurchase !== '') && data.every(d => d.valuePurchase !== '')) {
       setCompleted((currentState) => {
         return { ...currentState, step6: true }
       })
@@ -543,10 +757,6 @@ const Step6 = ({
     handleOpen()
   }
 
-  const getCompany = (): string[] => {
-    return ['teste 1', 'teste 2']
-  }
-
   const selectTypeModal = (): string => {
     switch (modal) {
       case 'AIR':
@@ -578,140 +788,597 @@ const Step6 = ({
     return totalSum.toFixed(2).replace('.', ',')
   }
 
-  useEffect(() => {
-    setData({ ...data, company: '', currency: '', value: '' })
-  }, [modal])
+  function disabledAddFareButton (): boolean {
+    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && ContractingTypeWithoutFcl.includes(proposal.cargo.idCargoContractingType))) {
+      if (dataSales.currencySale !== null) {
+        return false
+      }
+    }
+    if (proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === FclCargoContractingType) {
+      if (dataContainer[0]?.currencySale !== '' && dataContainer.every(row => row.currencySale === dataContainer[0].currencySale)) {
+        return false
+      }
+    }
+    return true
+  }
+
+  function renderTotalSurchage (): JSX.Element | undefined {
+    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && ContractingTypeWithoutFcl.includes(proposal.cargo.idCargoContractingType))) {
+      if (dataSales.valueSale !== '' && dataSales.currencySale !== null) {
+        return (
+          <TotalSurcharge
+            currency={dataSales.currencySale}
+            value={dataSales.valueSale}
+            totalOtherFare={getSumTotalItem()}
+            cw={cw}
+            cwSale={cwSale}
+            modal={modal}
+          />
+        )
+      }
+    }
+    if ((proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === FclCargoContractingType)) {
+      if (dataContainer.every(row => row.valueSale !== '') && // algum campo de venda nao preenchido
+        dataContainer.every(row => row.currencySale !== '' && row.currencySale !== null) && // algum campo de moeda nao preenchido
+        dataContainer.every(row => row.currencySale === dataContainer[0].currencySale) // todos os campos de moeda precisam ter o mesmo valor
+      ) {
+        return (
+          <TotalSurcharge
+            currency={dataContainer[0]?.currencySale}
+            value={dataContainer.reduce((total, item) => Number(item.valueSale?.replace(',', '.')) + total, 0).toFixed(2).replace('.', ',')}
+            totalOtherFare={getSumTotalItem()}
+            cw={cw}
+            cwSale={cwSale}
+            modal={modal}
+          />
+        )
+      }
+    }
+  }
+
+  function makeCurrencyOnFareModal (): string {
+    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && ContractingTypeWithoutFcl.includes(proposal.cargo.idCargoContractingType))) {
+      return dataSales.currencySale
+    }
+    if ((proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === FclCargoContractingType)) {
+      if (dataContainer.length > 0) {
+        return dataContainer[0]?.currencySale
+      }
+    }
+    return ''
+  }
+
+  function makeSurchargeTable (agentList: any[]): JSX.Element | undefined {
+    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && ContractingTypeWithoutFcl.includes(proposal.cargo.idCargoContractingType))) {
+      return (
+        <SurchargeTable
+          data={tableData}
+          costData={costData}
+          modal={modal}
+          specifications={specifications}
+          remove={removeClickHandler}
+          edit={editClickHandler}
+          dataFields={dataSales}
+          agentList={agentList}
+        />
+      )
+    }
+    if ((proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === FclCargoContractingType)) {
+      return (
+        <SurchargeTable
+          data={tableData}
+          costData={costData}
+          modal={modal}
+          specifications={specifications}
+          remove={removeClickHandler}
+          edit={editClickHandler}
+          dataFields={data[0]}
+          agentList={agentList}
+        />
+      )
+    }
+  }
+
+  function handleValueSale (newValue: string): void {
+    const getCosts = [...proposal.costs]
+    const verifyIfCostsHasNullAgent = getCosts.some(cost => cost.costType === 'Frete' && cost.agent.agentId === null)
+    if (verifyIfCostsHasNullAgent) {
+      const handleCosts = getCosts.map(cost => {
+        if (cost.costType === 'Frete' && cost.agent.agentId === null) {
+          return {
+            ...cost,
+            valueSale: Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, ''))
+          }
+        }
+        return cost
+      })
+      setProposal({
+        ...proposal,
+        costs: handleCosts
+      })
+      setDataSales({ ...dataSales, valueSale: newValue })
+    } else {
+      const newCost = {
+        valueSale: Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, '')),
+        idCurrencySale: null,
+        agent: {
+          agentId: null,
+          transportCompanyId: null
+        },
+        billingType: '',
+        containerType: null,
+        costType: 'Frete',
+        id: null,
+        idCurrencyPurchase: '',
+        idProposal: null,
+        idService: getCosts[0].idService,
+        isPurchase: false,
+        isSale: true,
+        valueMinimumPurchase: null,
+        valueMinimumSale: null,
+        valuePurchase: 0,
+        valuePurchasePercent: null,
+        valueSalePercent: 0
+      }
+      setProposal({
+        ...proposal,
+        costs: [...proposal.costs, newCost]
+      })
+      setDataSales({ ...dataSales, valueSale: Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, '')) })
+    }
+  }
+
+  function handleCurrencySale (newValue: string): void {
+    const getCosts = [...proposal.costs]
+    const verifyIfCostsHasNullAgent = getCosts.some(cost => cost.costType === 'Frete' && cost.agent.agentId === null)
+    if (verifyIfCostsHasNullAgent) {
+      const handleCosts = getCosts.map(cost => {
+        if (cost.costType === 'Frete' && cost.agent.agentId === null) {
+          return {
+            ...cost,
+            idCurrencySale: newValue
+          }
+        }
+        return cost
+      })
+      setProposal({
+        ...proposal,
+        costs: handleCosts
+      })
+      setDataSales({ ...dataSales, currencySale: newValue })
+      setTableData(tableData.map(row => ({ ...row, saleCurrency: newValue })))
+    } else {
+      const newCost = {
+        idCurrencySale: newValue,
+        agent: {
+          id: null,
+          agentId: null,
+          transportCompanyId: null,
+          proposalId: null
+        },
+        billingType: '',
+        containerType: null,
+        costType: 'Frete',
+        id: null,
+        idCurrencyPurchase: '',
+        idProposal: null,
+        idService: getCosts[0].idService,
+        isPurchase: false,
+        isSale: true,
+        valueMinimumPurchase: null,
+        valueMinimumSale: null,
+        valuePurchase: 0,
+        valuePurchasePercent: null,
+        valueSale: 0,
+        valueSalePercent: 0
+      }
+      setProposal({
+        ...proposal,
+        costs: [...proposal.costs, newCost]
+      })
+      setDataSales({ ...dataSales, currencySale: newValue })
+      setTableData(tableData.map(row => ({ ...row, saleCurrency: newValue })))
+    }
+  }
+
+  function handleCurrencyPurchase (agentId, newData: any, newValue: string): void {
+    const getCosts = proposal.costs
+    const handleCosts = getCosts.map(cost => {
+      if (cost.costType === 'Frete' && cost.agent.agentId === agentId) {
+        return {
+          ...cost,
+          idCurrencyPurchase: newValue
+        }
+      }
+      return cost
+    })
+    setProposal({
+      ...proposal,
+      costs: handleCosts
+    })
+    setData(newData)
+  }
+
+  function handleValuePurchase (agentId, newData: any, newValue: string): void {
+    const getCosts = proposal.costs
+    const handleCosts = getCosts.map(cost => {
+      if (cost.costType === 'Frete' && cost.agent.agentId === agentId) {
+        return {
+          ...cost,
+          valuePurchase: Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, ''))
+        }
+      }
+      return cost
+    })
+    setProposal({
+      ...proposal,
+      costs: handleCosts
+    })
+    setData(newData)
+  }
+
+  function handleContainerChange (newData, field, newValue, index, hasNumber: boolean): void {
+    const getCostsCostTypeFrete = proposal.costs.filter(cost => cost.costType === 'Frete')
+    const getCostsAnotherCostType = proposal.costs.filter(cost => cost.costType !== 'Frete')
+    if (hasNumber) {
+      getCostsCostTypeFrete[index][field] = Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, ''))
+    } else {
+      getCostsCostTypeFrete[index][field] = newValue
+    }
+    const handleCosts = [...getCostsAnotherCostType, ...getCostsCostTypeFrete]
+    setProposal({
+      ...proposal,
+      costs: handleCosts
+    })
+    setDataContainer(newData)
+  }
+
+  function getAgentNameByAgentId (agentId: any): string {
+    return agentList.find((agent: any) => agent.businessPartner.id === agentId)?.businessPartner?.simpleName
+  }
+
+  function getCorporateNameByAgentId (transportCompanyId: any): string {
+    return businessPartner?.find((partner: any) => partner?.businessPartner?.id === transportCompanyId)?.businessPartner?.simpleName
+  }
 
   return (
+
     <Separator>
       <HeightDiv>
         <Title>
           6. {I18n.t('pages.newProposal.step6.title')}
           <Subtitle>{I18n.t('pages.newProposal.step6.subtitle')}</Subtitle>
         </Title>
-        <FormControl variant="outlined" size="small" className="form-size">
-          <Grid container spacing={5}>
-            <Grid item xs={4}>
-              <FormLabel component="legend">{selectTypeModal()}</FormLabel>
-              <Autocomplete
-                freeSolo
-                onChange={(e, newValue) =>
-                  setData({ ...data, company: String(newValue) })
-                }
-                options={getCompany()}
-                value={data.company}
-                renderInput={(params) => (
-                  <div ref={params.InputProps.ref}>
-                    <ControlledInput
-                      {...params}
-                      id="search-destiny"
-                      toolTipTitle={I18n.t(
-                        'components.itemModal.requiredField'
-                      )}
-                      invalid={false}
-                      variant="outlined"
-                      size="small"
-                      $space
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconComponent
-                              name="search"
-                              defaultColor={
-                                theme?.commercial?.pages?.newProposal?.subtitle
-                              }
-                            />
-                          </InputAdornment>
-                        )
-                      }}
-                    />
-                  </div>
-                )}
-                PaperComponent={(params: any) => <StyledPaper {...params} />}
-              />
-            </Grid>
-            <Grid item xs={2}>
-              <FormLabel component="legend">
-                {I18n.t('pages.newProposal.step6.currency')}
-                <RedColorSpan> *</RedColorSpan>
-              </FormLabel>
-              <Autocomplete
-                freeSolo
-                value={data.currency}
-                onChange={(e, newValue) =>
-                  setData({ ...data, currency: String(newValue ?? '') })
-                }
-                options={currencyList.map((item) => item.id)}
-                renderInput={(params) => (
-                  <div ref={params.InputProps.ref}>
-                    <ControlledInput
-                      {...params}
-                      id="currencies"
-                      toolTipTitle={I18n.t(
-                        'components.itemModal.requiredField'
-                      )}
-                      invalid={invalidInput && data.currency === ''}
-                      variant="outlined"
-                      size="small"
-                      placeholder={I18n.t('components.itemModal.choose')}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <Box
-                              style={{
-                                position: 'absolute',
-                                top: '7px',
-                                right: '0'
-                              }}
-                              {...params.inputProps}
-                            >
-                              <ArrowDropDownIcon />
-                            </Box>
-                          </InputAdornment>
-                        )
-                      }}
-                    />
-                  </div>
-                )}
-                PaperComponent={(params: any) => <StyledPaper {...params} />}
-              />
-            </Grid>
-            <Grid item xs={2}>
-              <FormLabel component="legend">
-                {I18n.t('pages.newProposal.step6.value')}
-                <RedColorSpan> *</RedColorSpan>
-              </FormLabel>
-              <NumberInput
-                decimalSeparator={','}
-                thousandSeparator={'.'}
-                decimalScale={2}
-                format={(value: string) =>
-                  FormatNumber.rightToLeftFormatter(value, 2)
-                }
-                customInput={ControlledInput}
-                onChange={(e) => setData({ ...data, value: e.target.value })}
-                toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                invalid={
-                  invalidInput && (data.value === '' || data.value === '0')
-                }
-                value={data.value}
-                variant="outlined"
-                size="small"
-              />
-            </Grid>
+        <FormControl variant='outlined' size='small' className='form-size'>
+
+          <>
+
+            {(() => {
+              if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && ContractingTypeWithoutFcl.includes(proposal.cargo.idCargoContractingType))) {
+                return (
+                  <>
+
+                    <Grid item xs={6}>
+                      <FormLabel component="legend"><strong>{'Tarifas de compra por agente'}</strong></FormLabel>
+                    </Grid>
+                    {proposal.agents.length > 0 &&
+                      ((proposal.agents[0].agentId !== null) && (proposal.agents[0].transportCompanyId !== null)) && (
+                        <Grid container spacing={5}>
+                          <Grid item xs={3}>
+                            <FormLabel component='legend'>
+                              {I18n.t('pages.newProposal.step6.agent')}
+                            </FormLabel>
+                          </Grid>
+                          <Grid item xs={3}>
+                            <FormLabel component='legend'>{selectTypeModal()}</FormLabel>
+                          </Grid>
+                          <Grid item xs={2}>
+                            <FormLabel component='legend'>
+                              {I18n.t('pages.newProposal.step6.currencyPurchase')}
+                              <RedColorSpan> *</RedColorSpan>
+                            </FormLabel>
+                          </Grid>
+                          <Grid item xs={2}>
+                            <FormLabel component='legend'>
+                              {I18n.t('pages.newProposal.step6.valuePurchase')}
+                              <RedColorSpan> *</RedColorSpan>
+                            </FormLabel>
+                          </Grid>
+                        </Grid>
+                    )}
+                    {proposal.agents.map((selectedAgent, index) => {
+                      return ((selectedAgent.agentId !== null) && (selectedAgent.transportCompanyId !== null)) && (
+                        <>
+                          <Fragment key={index}>
+                            <Grid container spacing={5}>
+                              <Grid item xs={3}>
+                                <FormLabel component='legend'>{getAgentNameByAgentId(selectedAgent.agentId)}</FormLabel>
+                              </Grid>
+                              <Grid item xs={3}>
+                                <FormLabel component='legend'>{getCorporateNameByAgentId(selectedAgent.transportCompanyId)}</FormLabel>
+                              </Grid>
+                              <Grid item xs={2}>
+                                <Autocomplete freeSolo value={data[index]?.currencyPurchase} onChange={(e, newValue) => {
+                                  const newData = data
+                                  newData[index].currencyPurchase = String(newValue ?? '')
+                                  handleCurrencyPurchase(newData[index].agent.agentId, newData, newValue)
+                                }}
+                                  options={currencyList.map((item) => item.id)} renderInput={(params) => (
+                                    <div ref={params.InputProps.ref}>
+                                      <ControlledInput {...params} id="currencies" toolTipTitle={I18n.t('components.itemModal.requiredField')} invalid={invalidInput && data[index].currencyPurchase === ''}
+                                        variant="outlined" size="small" placeholder={I18n.t('components.itemModal.choose')}
+                                        InputProps={{
+                                          endAdornment: (
+                                            <InputAdornment position='end'>
+                                              <Box style={{ position: 'absolute', top: '7px', right: '0' }} {...params.inputProps} >
+                                                <ArrowDropDownIcon />
+                                              </Box>
+                                            </InputAdornment>
+                                          )
+                                        }}
+                                      />
+                                    </div>
+                                  )}
+                                  PaperComponent={(params: any) => <StyledPaper {...params} />}
+                                />
+                              </Grid>
+                              <Grid item xs={2}>
+                                <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                                  customInput={ControlledInput} onChange={(e) => {
+                                    const newData = data
+                                    newData[index].valuePurchase = e.target.value
+                                    handleValuePurchase(newData[index].agent.agentId, newData, e.target.value)
+                                  }} toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                  invalid={invalidInput && (data[index]?.valuePurchase === '' || data[index]?.valuePurchase === '0')} value={data[index]?.valuePurchase} variant='outlined' size='small' />
+                              </Grid>
+                            </Grid>
+                          </Fragment>
+                        </>
+                      )
+                    })}
+                    <Fragment>
+                      <Grid container spacing={5}>
+                        <Grid item xs={6}>
+                          <FormLabel component='legend' style={{ textAlign: 'right' }}>Especificar o valor do frete para venda:</FormLabel>
+                        </Grid>
+                        <Grid item xs={2} style={{ alignSelf: 'end' }}>
+                          <Autocomplete
+                            freeSolo
+                            value={dataSales.currencySale}
+                            onChange={(e, newValue) => handleCurrencySale(newValue)}
+                            options={currencyList.map((item) => item.id)} renderInput={(params) => (
+                              <div ref={params.InputProps.ref}>
+                                <ControlledInput {...params} id="currencies" toolTipTitle={I18n.t('components.itemModal.requiredField')} invalid={invalidInput && (dataSales.currencySale === '' || dataSales.currencySale === '0')}
+                                  variant="outlined" size="small" placeholder={I18n.t('components.itemModal.choose')}
+                                  InputProps={{
+                                    endAdornment: (
+                                      <InputAdornment position='end'>
+                                        <Box style={{ position: 'absolute', top: '7px', right: '0' }} {...params.inputProps} >
+                                          <ArrowDropDownIcon />
+                                        </Box>
+                                      </InputAdornment>
+                                    )
+                                  }}
+                                />
+                              </div>
+                            )}
+                            PaperComponent={(params: any) => <StyledPaper {...params} />}
+                          />
+                        </Grid>
+                        <Grid item xs={2} style={{ alignSelf: 'end' }}>
+                          <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                            customInput={ControlledInput} onChange={(e, newValue) => handleValueSale(e.target.value)} toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                            invalid={invalidInput && (dataSales.valueSale === '' || dataSales.valueSale === '0')} value={dataSales.valueSale} variant='outlined' size='small' />
+                        </Grid>
+                      </Grid>
+                    </Fragment>
+                  </>
+                )
+              }
+            })()}
+
+            {(() => {
+              if ((proposal.idTransport === 'SEA' && proposal.cargo.idCargoContractingType === FclCargoContractingType)) {
+                return (
+                  <>
+
+                    <Grid item xs={6}>
+                      <FormLabel component="legend"><strong>{'Tarifas de compra e venda por container'}</strong></FormLabel>
+                    </Grid>
+
+                    <LineSeparator />
+
+                    <Grid item xs={6}>
+                      <FormLabel component="legend">{'Agente: '}<strong>{getAgentNameByAgentId(proposal.agents[0].agentId)}</strong>{' / Cia. Marítima: '}<strong>{getCorporateNameByAgentId(proposal.agents[0].transportCompanyId)}</strong></FormLabel>
+                    </Grid>
+
+                    {proposal.cargo.cargoVolumes.length > 0 &&
+                      dataContainer.length === proposal.cargo.cargoVolumes.length && (
+                        <Grid container spacing={5}>
+                          <Grid item xs={3}>
+                            <FormLabel component='legend'>
+                              Container
+                            </FormLabel>
+                          </Grid>
+                          <Grid item xs={2}>
+                            <FormLabel component='legend'>
+                              {I18n.t('pages.newProposal.step6.currencyPurchase')}
+                              <RedColorSpan> *</RedColorSpan>
+                            </FormLabel>
+                          </Grid>
+                          <Grid item xs={2}>
+                            <FormLabel component='legend'>
+                              {I18n.t('pages.newProposal.step6.valuePurchase')}
+                              <RedColorSpan> *</RedColorSpan>
+                            </FormLabel>
+                          </Grid>
+                          <Grid item xs={2}>
+                            <FormLabel component='legend'>
+                              {I18n.t('pages.newProposal.step6.currencySale')}
+                              <RedColorSpan> *</RedColorSpan>
+                            </FormLabel>
+                          </Grid>
+                          <Grid item xs={2}>
+                            <FormLabel component='legend'>
+                              {I18n.t('pages.newProposal.step6.valueSale')}
+                              <RedColorSpan> *</RedColorSpan>
+                            </FormLabel>
+                          </Grid>
+                        </Grid>
+                    )}
+                    {proposal.cargo.cargoVolumes.map((cargoVolume, index, array) => {
+                      return (dataContainer.length === array.length) && (
+
+                        <>
+                          <Fragment key={index}>
+
+                            <Grid container spacing={5}>
+                              <Grid item xs={3}>
+                                <FormLabel component='legend'>{cargoVolume.type}</FormLabel>
+                              </Grid>
+
+                              <Grid item xs={2}>
+                                <Autocomplete
+                                  freeSolo
+                                  value={dataContainer[index]?.currencyPurchase}
+                                  onChange={(e, newValue) => {
+                                    const newData = [...dataContainer]
+                                    newData[index].currencyPurchase = String(newValue ?? '')
+                                    handleContainerChange(newData, 'currencyPurchase', newValue, index, false)
+                                  }}
+                                  options={currencyList.map((item) => item.id)}
+                                  renderInput={(params) => (
+                                    <div ref={params.InputProps.ref}>
+                                      <ControlledInput
+                                        {...params}
+                                        id="currencies"
+                                        toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                        invalid={invalidInput && dataContainer[index]?.currencyPurchase === ''}
+                                        variant="outlined"
+                                        size="small"
+                                        placeholder={I18n.t('components.itemModal.choose')}
+                                        InputProps={{
+                                          endAdornment: (
+                                            <InputAdornment position='end'>
+                                              <Box style={{ position: 'absolute', top: '7px', right: '0' }} {...params.inputProps} >
+                                                <ArrowDropDownIcon />
+                                              </Box>
+                                            </InputAdornment>
+                                          )
+                                        }}
+                                      />
+                                    </div>
+                                  )}
+                                  PaperComponent={(params: any) => <StyledPaper {...params} />}
+                                />
+                              </Grid>
+
+                              <Grid item xs={2}>
+                                <NumberInput
+                                  decimalSeparator={','}
+                                  thousandSeparator={'.'}
+                                  decimalScale={2}
+                                  format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                                  customInput={ControlledInput}
+                                  onChange={(e) => {
+                                    const newData = [...dataContainer]
+                                    newData[index].valuePurchase = e.target.value
+                                    handleContainerChange(newData, 'valuePurchase', e.target.value, index, true)
+                                  }}
+                                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                  invalid={invalidInput && (dataContainer[index].valuePurchase === '' || dataContainer[index].valuePurchase === '0')}
+                                  value={dataContainer[index].valuePurchase}
+                                  variant='outlined'
+                                  size='small'
+                                />
+                              </Grid>
+
+                              <Grid item xs={2}>
+                                <>
+                                  <Autocomplete
+                                    freeSolo
+                                    value={dataContainer[index].currencySale}
+                                    onChange={(e, newValue) => {
+                                      const newData = [...dataContainer]
+                                      newData[index].currencySale = String(newValue ?? '')
+                                      handleContainerChange(newData, 'currencySale', newValue, index, false)
+                                    }}
+                                    options={currencyList.map((item) => item.id)}
+                                    renderInput={(params) => (
+                                      <div ref={params.InputProps.ref}>
+                                        <ControlledInput
+                                          {...params}
+                                          id="currencies"
+                                          toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                          invalid={invalidInput && dataContainer.some(row => row.currencySale !== dataContainer[0].currencySale)}
+                                          variant="outlined"
+                                          size="small"
+                                          placeholder={I18n.t('components.itemModal.choose')}
+                                          InputProps={{
+                                            endAdornment: (
+                                              <InputAdornment position='end'>
+                                                <Box style={{ position: 'absolute', top: '7px', right: '0' }} {...params.inputProps} >
+                                                  <ArrowDropDownIcon />
+                                                </Box>
+                                              </InputAdornment>
+                                            )
+                                          }}
+                                        />
+                                      </div>
+                                    )}
+                                    PaperComponent={(params: any) => <StyledPaper {...params} />}
+                                  />
+                                  {dataContainer.some(row => row.currencySale !== dataContainer[0].currencySale) &&
+                                    <ErrorText>
+                                      {I18n.t('pages.newProposal.step6.differentCurrencySale')}
+                                    </ErrorText>
+                                  }
+                                </>
+                              </Grid>
+
+                              <Grid item xs={2}>
+                                <NumberInput
+                                  decimalSeparator={','}
+                                  thousandSeparator={'.'}
+                                  decimalScale={2}
+                                  format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                                  customInput={ControlledInput}
+                                  onChange={(e) => {
+                                    const newData = [...dataContainer]
+                                    newData[index].valueSale = e.target.value
+                                    setDataContainer(newData)
+                                    handleContainerChange(newData, 'valueSale', e.target.value, index, true)
+                                  }}
+                                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                  invalid={invalidInput && (dataContainer[index].valueSale === '' || dataContainer[index].valueSale === '0')}
+                                  value={dataContainer[index].valueSale}
+                                  variant='outlined'
+                                  size='small'
+                                />
+                              </Grid>
+
+                            </Grid>
+
+                          </Fragment>
+
+                        </>
+
+                      )
+                    })}
+                  </>
+                )
+              }
+            })()}
+          </>
+
+          <LineSeparator />
+
+          <Grid item xs={6}>
+            <FormLabel component="legend"><strong>{'Outras tarifas / surcharges'}</strong></FormLabel>
           </Grid>
+
         </FormControl>
-        {loadedTable && (
-          <SurchargeTable
-            data={tableData}
-            costData={costData}
-            modal={modal}
-            specifications={specifications}
-            remove={removeClickHandler}
-            edit={editClickHandler}
-            dataFields={data}
-          />
-        )}
+        {makeSurchargeTable(agentList)}
         <ButtonWrapper>
           <Button
             onAction={handleOpen}
@@ -723,7 +1390,7 @@ const Step6 = ({
                 ? I18n.t('pages.newProposal.step6.addFareTooltip')
                 : I18n.t('pages.newProposal.step6.addFare')
             }
-            disabled={costData === 0}
+            disabled={costData === 0 || disabledAddFareButton()}
           />
         </ButtonWrapper>
         <FareModal
@@ -735,18 +1402,10 @@ const Step6 = ({
           modal={modal}
           specifications={specifications}
           containerItems={containerItems}
-          currency={data.currency}
+          currency={makeCurrencyOnFareModal()}
+          AllAgents={agentList}
         />
-        {data.value.length > 0 && data.currency.length > 0 && (
-          <TotalSurcharge
-            currency={data.currency}
-            value={data.value}
-            totalOtherFare={getSumTotalItem()}
-            cw={cw}
-            cwSale={cwSale}
-            modal={modal}
-          />
-        )}
+        {renderTotalSurchage()}
       </HeightDiv>
       {undoMessage.step6 && (
         <MessageContainer>

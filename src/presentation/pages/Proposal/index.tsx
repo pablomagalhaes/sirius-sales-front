@@ -72,7 +72,7 @@ const Proposal = (): JSX.Element => {
   const floatingButtonMenuItems = [
     {
       label: 'Frete Internacional',
-       // onClick: () => handleSave()
+      // onClick: () => handleSave()
       // onClick: () => { }
       subMenuItems: [
         {
@@ -82,8 +82,8 @@ const Proposal = (): JSX.Element => {
               pathname: '/novaProposta',
               state: { proposalId: null }
             })
-          },
-          
+          }
+
         },
         {
           label: 'Exportação',
@@ -92,7 +92,7 @@ const Proposal = (): JSX.Element => {
               pathname: '/novaPropostaExportacao',
               state: { proposalId: null }
             })
-          },
+          }
         }
       ]
     }
@@ -779,7 +779,7 @@ const Proposal = (): JSX.Element => {
               onAction={() => { }}
               popover
               position="right"
-              
+
               // icon="add"
               // onAction={() =>
               //   history.push({

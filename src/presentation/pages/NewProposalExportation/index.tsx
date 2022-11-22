@@ -26,7 +26,7 @@ import Step5 from './steps/Step5'
 import Step6 from './steps/Step6'
 import { useHistory, useLocation } from 'react-router-dom'
 import { ItemModalData } from '../../components/ItemModal/ItemModal'
-import { ProposalContext, ProposalProps, emptyProposalValue } from '../NewProposal/context/ProposalContext';
+import { ProposalContext, ProposalProps, emptyProposalValue } from '../NewProposal/context/ProposalContext'
 import API from '../../../infrastructure/api'
 import { CalculationDataProps } from '../../components/ChargeTable'
 
@@ -424,9 +424,6 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
 
   const handler = useCallback(() => { setLeavingPage(true) }, [])
   useOnClickOutside(handler)
-
-
-
 
   return (
     <RootContainer>

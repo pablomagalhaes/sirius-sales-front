@@ -1,4 +1,4 @@
-image: node:12.18.4
+image: node:14.15.1
 
 pipelines:
   branches:
