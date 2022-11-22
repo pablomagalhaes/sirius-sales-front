@@ -97,9 +97,11 @@
     "newProposal": {
       "buttonFinish": "Concluir proposta",
       "download": "Fazer download",
-      "encharged": "Responsável:",
-      "newProposal": "Nova proposta frete internacional - Importação",
+      "send": "Enviar por e-mail",
       "proposal": "Propostas",
+      "newProposal": "Nova proposta frete nacional - Importação",
+      "newProposalExportation": "Nova proposta frete internacional - Exportação",
+      "encharged": "Responsável:",
       "reference": "Referência:",
       "save": "Salvar",
       "saveMessage": {
@@ -107,7 +109,6 @@
         "closeMessage": "Continuar editando",
         "message": "Proposta salva com sucesso, Ref: "
       },
-      "send": "Enviar por e-mail",
       "step1": {
         "agents": "Agentes:",
         "air": "Aéreo",
