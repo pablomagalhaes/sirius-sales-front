@@ -1148,7 +1148,7 @@ const Step6 = ({
                             onChange={(e, newValue) => handleCurrencySale(newValue)}
                             options={currencyList.map((item) => item.id)} renderInput={(params) => (
                               <div ref={params.InputProps.ref}>
-                                <ControlledInput {...params} id="currencies" toolTipTitle={I18n.t('components.itemModal.requiredField')} invalid={invalidInput}
+                                <ControlledInput {...params} id="currencies" toolTipTitle={I18n.t('components.itemModal.requiredField')} invalid={invalidInput && (dataSales.currencySale === '' || dataSales.currencySale === '0')}
                                   variant="outlined" size="small" placeholder={I18n.t('components.itemModal.choose')}
                                   InputProps={{
                                     endAdornment: (
@@ -1168,7 +1168,7 @@ const Step6 = ({
                         <Grid item xs={2} style={{ alignSelf: 'end' }}>
                           <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                             customInput={ControlledInput} onChange={(e, newValue) => handleValueSale(e.target.value)} toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                            invalid={invalidInput} value={dataSales.valueSale} variant='outlined' size='small' />
+                            invalid={invalidInput && (dataSales.valueSale === '' || dataSales.valueSale === '0')} value={dataSales.valueSale} variant='outlined' size='small' />
                         </Grid>
                       </Grid>
                     </Fragment>

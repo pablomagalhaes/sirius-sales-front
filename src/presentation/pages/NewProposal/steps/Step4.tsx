@@ -154,6 +154,12 @@ const Step4 = ({
     })
   }, [data])
 
+  const validateDate = (): boolean => {
+    const validityDate = moment(data.validityDate, 'DD/MM/YYYY', true)
+    const today = moment().startOf('day')
+    return  validityDate.isValid() && validityDate.isSameOrAfter(today)
+  }
+
   const validateFreeTime = (): boolean => {
     data.value = data.value !== '0' ? data.value : ''
     return (
@@ -198,7 +204,7 @@ const Step4 = ({
   }
 
   const validateFormComplete = (): void => {
-    if (validateFreeTime() && validateCompleteInputs()) {
+    if (validateFreeTime() && validateCompleteInputs() && validateDate()) {
       setCompleted((currentState) => {
         return { ...currentState, step4: true }
       })
@@ -219,12 +225,6 @@ const Step4 = ({
         return { ...currentState, step4: false }
       })
     }
-  }
-
-  const validateDate = (): boolean => {
-    const validityDate = moment(data.validityDate, 'DD/MM/YYYY', true)
-    const today = moment().startOf('day')
-    return invalidInput && (!validityDate.isValid() || !validityDate.isSameOrAfter(today))
   }
 
   useEffect(() => {
@@ -420,7 +420,7 @@ const Step4 = ({
               placeholder="DD/MM/YYYY"
               customInput={ControlledInput}
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
-              invalid={validateDate()}
+              invalid={invalidInput && !validateDate()}
               value={data.validityDate}
               onChange={(e) =>
                 setData({ ...data, validityDate: e.target.value })
@@ -428,7 +428,7 @@ const Step4 = ({
               variant="outlined"
               size="small"
             />
-            <ErrorText>{validateDate() && I18n.t('pages.newProposal.step4.errorMessage')}</ErrorText>
+            <ErrorText>{invalidInput && !validateDate() && I18n.t('pages.newProposal.step4.errorMessage')}</ErrorText>
           </Grid>
           <Grid item xs={2}>
             <FormLabel component="legend">
