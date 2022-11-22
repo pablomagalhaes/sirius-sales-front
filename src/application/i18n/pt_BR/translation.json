@@ -9,7 +9,8 @@
       "download": "Fazer download",
       "send": "Enviar por e-mail",
       "proposal": "Propostas",
-      "newProposal": "Nova proposta frete internacional - Importação",
+      "newProposal": "Nova proposta frete nacional - Importação",
+      "newProposalExportation": "Nova proposta frete internacional - Exportação",
       "step1": {
         "title": "Serviço",
         "subtitle": "Escolha o cliente e informe as particularidades do serviço.",

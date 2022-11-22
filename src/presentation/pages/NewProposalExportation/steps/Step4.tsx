@@ -25,7 +25,7 @@ import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import API from '../../../../infrastructure/api'
 import { NumberInput } from './StepsStyles'
 import { withTheme } from 'styled-components'
-import { ProposalContext, ProposalProps } from '../context/ProposalContext'
+import { ProposalContext, ProposalProps } from '../../NewProposal/context/ProposalContext'
 import FormatNumber from '../../../../application/utils/formatNumber'
 
 interface Step4Props {

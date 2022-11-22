@@ -28,7 +28,7 @@ import {
 } from './StepsStyles'
 
 import { Button, Messages } from 'fiorde-fe-components'
-import { ProposalContext, ProposalProps } from '../context/ProposalContext'
+import { ProposalContext, ProposalProps } from '../../NewProposal/context/ProposalContext'
 import { Cost } from '../../../../domain/Cost'
 import { TotalCost } from '../../../../domain/TotalCost'
 import API from '../../../../infrastructure/api'

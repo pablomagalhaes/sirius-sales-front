@@ -72,21 +72,30 @@ const Proposal = (): JSX.Element => {
   const floatingButtonMenuItems = [
     {
       label: 'Frete Internacional',
-      // onClick: () => handleSave()
-      onClick: () => { },
+       // onClick: () => handleSave()
+      // onClick: () => { }
       subMenuItems: [
         {
           label: 'Importação',
-          // onClick: () => handleSave()
-          // onClick: () => { }
+          onClick: () => {
+            history.push({
+              pathname: '/novaProposta',
+              state: { proposalId: null }
+            })
+          },
+          
         },
         {
-          label: 'Importação',
-          // onClick: () => handleSave()
-          // onClick: () => { }
+          label: 'Exportação',
+          onClick: () => {
+            history.push({
+              pathname: '/novaPropostaExportacao',
+              state: { proposalId: null }
+            })
+          },
         }
       ]
-    }  
+    }
   ]
 
   useEffect(() => {
@@ -770,6 +779,7 @@ const Proposal = (): JSX.Element => {
               onAction={() => { }}
               popover
               position="right"
+              
               // icon="add"
               // onAction={() =>
               //   history.push({
