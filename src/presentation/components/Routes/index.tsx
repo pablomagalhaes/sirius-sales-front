@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
-import { Home, NewProposal, Proposal } from '../../pages'
+import { Home, NewProposal, Proposal, NewProposalExportation } from '../../pages'
 import Wrapper from '../Wrapper'
 import { ProposalContextProvider } from '../../pages/NewProposal/context/ProposalContext'
 
@@ -22,6 +22,11 @@ const Routes = (): JSX.Element => (
         <Route exact path="/novaProposta">
           <Wrapper>
             <NewProposal />
+          </Wrapper>
+        </Route>
+        <Route exact path="/novaPropostaExportacao">
+          <Wrapper>
+            <NewProposalExportation />
           </Wrapper>
         </Route>
       </Switch>
