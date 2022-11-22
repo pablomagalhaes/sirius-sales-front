@@ -24,7 +24,7 @@ import ControlledInput from '../../../components/ControlledInput'
 import ControlledToolTip from '../../../components/ControlledToolTip/ControlledToolTip'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import API from '../../../../infrastructure/api'
-import { NumberInput, ErrorText } from './StepsStyles'
+import { NumberInput } from './StepsStyles'
 import { withTheme } from 'styled-components'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import FormatNumber from '../../../../application/utils/formatNumber'
@@ -157,7 +157,7 @@ const Step4 = ({
   const validateDate = (): boolean => {
     const validityDate = moment(data.validityDate, 'DD/MM/YYYY', true)
     const today = moment().startOf('day')
-    return  validityDate.isValid() && validityDate.isSameOrAfter(today)
+    return validityDate.isValid() && validityDate.isSameOrAfter(today)
   }
 
   const validateFreeTime = (): boolean => {
@@ -384,7 +384,7 @@ const Step4 = ({
       <FormControl variant="outlined" size="small">
         <Grid container spacing={2}>
           <Grid item xs={2}>
-            <FormLabel component="legend">
+            <FormLabel component="legend" error={invalidInput && data.validity.length === 0}>
               {I18n.t('pages.newProposal.step4.validity')}
               <RedColorSpan> *</RedColorSpan>
             </FormLabel>
@@ -419,7 +419,7 @@ const Step4 = ({
               mask={['D', 'D', 'M', 'M', 'Y', 'Y', 'Y', 'Y']}
               placeholder="DD/MM/YYYY"
               customInput={ControlledInput}
-              toolTipTitle={I18n.t('components.itemModal.requiredField')}
+              toolTipTitle={I18n.t('pages.newProposal.step4.errorMessage')}
               invalid={invalidInput && !validateDate()}
               value={data.validityDate}
               onChange={(e) =>
@@ -428,7 +428,6 @@ const Step4 = ({
               variant="outlined"
               size="small"
             />
-            <ErrorText>{invalidInput && !validateDate() && I18n.t('pages.newProposal.step4.errorMessage')}</ErrorText>
           </Grid>
           <Grid item xs={2}>
             <FormLabel component="legend">
@@ -446,7 +445,7 @@ const Step4 = ({
           </Grid>
           <Grid item xs={6} />
           <Grid item xs={2}>
-            <FormLabel component="legend">
+            <FormLabel component="legend" error={invalidInput && data.transitTime.length === 0}>
               {I18n.t('pages.newProposal.step4.time')}
               <RedColorSpan> *</RedColorSpan>
             </FormLabel>

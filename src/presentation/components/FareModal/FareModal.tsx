@@ -234,11 +234,11 @@ const FareModal = ({
         </HeaderDiv>
         <Form>
           <RowDiv>
-            <Label width="350px">
+            <Label width="350px" color={invalidInput && (data.expense === null || data.expense?.length === 0) ? 'red' : ''}>
               {I18n.t('components.fareModal.expense')}
               <RedColorSpan> *</RedColorSpan>
             </Label>
-            <Label width="113px" paddingLeft="10px">
+            <Label width="113px" paddingLeft="10px" color={invalidInput && (data.type === null || data.type.length === 0) ? 'red' : ''}>
               {I18n.t('components.fareModal.type')}
               <RedColorSpan> *</RedColorSpan>
             </Label>
@@ -295,7 +295,7 @@ const FareModal = ({
           </RowDiv>
 
           <RowDiv>
-            <Label width="513px">
+            <Label width="513px" color={invalidInput && (data.agent?.agent === '' || data.agent?.agent === null) ? 'red' : ''}>
               {I18n.t('components.fareModal.agent')}
               <RedColorSpan> *</RedColorSpan>
             </Label>
@@ -361,7 +361,7 @@ const FareModal = ({
               </RowDiv></>
           )}
           <RowDiv>
-            <Label width="263px">
+            <Label width="263px" color={invalidInput && data.saleValue.length === 0 ? 'red' : ''} >
               {I18n.t('components.fareModal.saleValue')}
               <RedColorSpan> *</RedColorSpan>
             </Label>

@@ -31,6 +31,7 @@ export const RedColorSpan = styled.span`
 export const Label = styled.span`
   width: ${(props) => props.width};
   padding-left: ${(props) => props.paddingLeft};
+  color: ${(props) => props.color};
 `
 
 export const Title = styled.span`

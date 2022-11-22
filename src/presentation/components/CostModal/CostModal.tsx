@@ -426,6 +426,7 @@ const CostModal = ({
                 placeholder={state.type}
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 invalid={invalidInput && (state.type === null || state.type.length === 0)}
+                costModal={true}
               >
                 <MenuItem disabled value="">
                   <MenuItemContent>

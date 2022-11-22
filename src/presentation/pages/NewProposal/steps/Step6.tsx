@@ -1073,13 +1073,13 @@ const Step6 = ({
                             <FormLabel component='legend'>{selectTypeModal()}</FormLabel>
                           </Grid>
                           <Grid item xs={2}>
-                            <FormLabel component='legend'>
+                            <FormLabel component='legend' error={invalidInput && data.some((each) => each.currencyPurchase === '')}>
                               {I18n.t('pages.newProposal.step6.currencyPurchase')}
                               <RedColorSpan> *</RedColorSpan>
                             </FormLabel>
                           </Grid>
                           <Grid item xs={2}>
-                            <FormLabel component='legend'>
+                            <FormLabel component='legend' error={invalidInput && data.some((each) => each.valuePurchase === '' || each.valuePurchase === '0')}>
                               {I18n.t('pages.newProposal.step6.valuePurchase')}
                               <RedColorSpan> *</RedColorSpan>
                             </FormLabel>
@@ -1139,7 +1139,9 @@ const Step6 = ({
                     <Fragment>
                       <Grid container spacing={5}>
                         <Grid item xs={6}>
-                          <FormLabel component='legend' style={{ textAlign: 'right' }}>Especificar o valor do frete para venda:</FormLabel>
+                          <FormLabel component='legend' error={invalidInput && (dataSales.currencySale === '' || dataSales.currencySale === '0')} style={{ textAlign: 'right' }}>
+                            Especificar o valor do frete para venda:
+                            </FormLabel>
                         </Grid>
                         <Grid item xs={2} style={{ alignSelf: 'end' }}>
                           <Autocomplete
