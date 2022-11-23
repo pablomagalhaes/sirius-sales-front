@@ -400,7 +400,7 @@ const CostTable = ({
               backgroundGreen={false}
               icon={'add'}
               onAction={addClickHandler}
-              disabled={costValidation()}
+              disabled={false}
               tooltip={
                 costValidation()
                   ? I18n.t('components.costTable.addCostTooltip')

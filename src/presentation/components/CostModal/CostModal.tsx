@@ -493,7 +493,6 @@ const CostModal = ({
               <RowDiv>
                 <Label width="100%">
                   {I18n.t('components.costModal.agent')}
-                  <RedColorSpan> *</RedColorSpan>
                 </Label>
               </RowDiv>
             }
@@ -517,7 +516,7 @@ const CostModal = ({
                           filled={state.agent.agentId}
                           placeholder={I18n.t('components.costModal.choose')}
                           toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                          invalid={invalidInput && (state.agent === null || state.agent.agentId !== null)}
+                          // invalid={invalidInput && (state.agent === null || state.agent.agentId !== null)}
                           style={{ width: '513px' }}
                         />
                         <Box {...params.inputProps} className="dropdownContainer">
