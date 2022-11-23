@@ -1,8 +1,8 @@
+/* eslint-disable */
 import React from 'react'
 import styled from 'styled-components'
 import { Select } from '@material-ui/core'
 import { primary } from '../../../application/themes'
-import ControlledToolTip from '../ControlledToolTip/ControlledToolTip'
 
 export const StyledField = styled(Select)`
     border: 1px solid ${(props: { invalid: boolean, value: string | null, theme: any }) =>
@@ -30,11 +30,18 @@ export const StyledField = styled(Select)`
       background: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.disabledBackground};
     }
   `
+export const ErrorText = styled.span`
+  color: ${(props: any) => props.theme?.commercial?.components?.costTable?.errorText};
+  font-weight: normal;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  line-height: 150%;
+`
 
 export const StyledSelect = styled(
   ({ className, toolTipTitle, title, invalid, ...props }) => {
     return (
-      <ControlledToolTip title={toolTipTitle} open={invalid}>
+      <>
         <StyledField
           {...props}
           invalid={invalid}
@@ -51,7 +58,8 @@ export const StyledSelect = styled(
             getContentAnchorEl: null
           } }
         />
-      </ControlledToolTip>
+        {invalid && !props.costModal && <ErrorText>{toolTipTitle}</ErrorText> }
+      </>
     )
   }
 )`

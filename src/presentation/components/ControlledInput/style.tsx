@@ -51,3 +51,11 @@ export const SpaceContainer = styled.div`
 export const SpaceIconContainer = styled.div`
   margin: 0 16px; 
 `
+
+export const ErrorText = styled.span`
+  color: ${(props: any) => props.theme?.commercial?.components?.costTable?.errorText};
+  font-weight: normal;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  line-height: 150%;
+`

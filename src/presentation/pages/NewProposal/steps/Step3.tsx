@@ -518,7 +518,7 @@ const Step3 = ({
       <FormControl variant="outlined" size="small" className="form-size">
         <Grid container spacing={5}>
           <Grid item xs={4}>
-            <FormLabel component="legend">
+            <FormLabel component="legend" error={invalidInput && data.description.length === 0}>
               {I18n.t('pages.newProposal.step3.description')}
               {<RedColorSpan> *</RedColorSpan>}
             </FormLabel>
@@ -536,7 +536,7 @@ const Step3 = ({
           </Grid>
           {modal === 'SEA' && (
             <Grid item xs={2}>
-              <FormLabel component="legend">
+              <FormLabel component="legend" error={invalidInput && data.specifications === ''}>
                 {I18n.t('pages.newProposal.step3.specifications')}
                 {modal === 'SEA' && <RedColorSpan> *</RedColorSpan>}
               </FormLabel>
@@ -568,7 +568,7 @@ const Step3 = ({
             </Grid>
           )}
           <Grid item xs={2}>
-            <FormLabel component="legend">
+            <FormLabel component="legend" error={invalidInput && data.temperature.length === 0}>
               {I18n.t('pages.newProposal.step3.temperature')}
               {<RedColorSpan> *</RedColorSpan>}
             </FormLabel>
@@ -614,7 +614,11 @@ const Step3 = ({
           </Grid>
           {data.dangerous && (
             <Grid item xs={3}>
-              <FormLabel component="legend">
+              <FormLabel component="legend" error={
+                  invalidInput &&
+                  data.dangerous &&
+                  (data.imo === null || data.imo.length === 0)
+                }>
                 {I18n.t('components.itemModal.imo')}
                 {data.dangerous && <RedColorSpan> *</RedColorSpan>}
               </FormLabel>
@@ -648,7 +652,10 @@ const Step3 = ({
           )}
           {data.dangerous && (
             <Grid item xs={2}>
-              <FormLabel component="legend">
+              <FormLabel component="legend" error={
+                  invalidInput &&
+                  (data.codUn === null || data.codUn.length === 0)
+                }>
                 {I18n.t('components.itemModal.codUn')}
                 <RedColorSpan> *</RedColorSpan>
               </FormLabel>
