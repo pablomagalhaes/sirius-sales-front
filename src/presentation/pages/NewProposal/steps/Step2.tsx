@@ -856,7 +856,10 @@ const Step2 = ({
       <FormControl variant="outlined" size="small" className="form-size">
         <Grid container spacing={5}>
         <Grid item xs={modal === 'LAND' ? 12 : 6}>
-            <FormLabel component="legend">
+            <FormLabel component="legend" error={
+              ((invalidInput && data.origin.length === 0) ||
+              invalidOriDest === 'origin') && modal !== 'LAND'
+            }>
               <OriginDestLabel isLand={modal === 'LAND'}>
                 {setOriginDestinyLabel('origin')}
               </OriginDestLabel>
@@ -866,7 +869,7 @@ const Step2 = ({
               ? (
               <Grid container spacing={2}>
                 <Grid item xs={2}>
-                  <FormLabel component="legend">
+                  <FormLabel component="legend" error={data.oriCountry.length === 0 && invalidInput}>
                     {I18n.t('pages.newProposal.step2.country')}
                     <RedColorSpan> *</RedColorSpan>
                   </FormLabel>
@@ -903,7 +906,7 @@ const Step2 = ({
                   <LineSeparator />
                 </Grid>
                 <Grid item xs={4}>
-                  <FormLabel component="legend">
+                  <FormLabel component="legend" error={data.oriState.length === 0 && invalidInput}>
                     {I18n.t('pages.newProposal.step2.state')}
                     <RedColorSpan> *</RedColorSpan>
                   </FormLabel>
@@ -940,7 +943,7 @@ const Step2 = ({
                   />
                 </Grid>
                 <Grid item xs={4}>
-                  <FormLabel component="legend">
+                  <FormLabel component="legend" error={(invalidInput && data.destCity.length === 0) || invalidOriDest === 'oriCity'}>
                     {I18n.t('pages.newProposal.step2.city')}
                     <RedColorSpan> *</RedColorSpan>
                   </FormLabel>
@@ -1049,7 +1052,10 @@ const Step2 = ({
                 )}
           </Grid>
           <Grid item xs={modal === 'LAND' ? 12 : 6}>
-            <FormLabel component="legend">
+          <FormLabel component="legend" error={
+              ((invalidInput && data.destiny.length === 0) ||
+              invalidOriDest === 'destiny') && modal !== 'LAND'
+            }>
               <OriginDestLabel isLand={modal === 'LAND'}>
                 {setOriginDestinyLabel('destiny')}
               </OriginDestLabel>
@@ -1059,7 +1065,7 @@ const Step2 = ({
               ? (
               <Grid container spacing={2}>
                 <Grid item xs={2}>
-                  <FormLabel component="legend">
+                  <FormLabel component="legend" error={data.destCountry.length === 0 && invalidInput}>
                     {I18n.t('pages.newProposal.step2.country')}
                     <RedColorSpan> *</RedColorSpan>
                   </FormLabel>
@@ -1097,7 +1103,7 @@ const Step2 = ({
                   />
                 </Grid>
                 <Grid item xs={4}>
-                  <FormLabel component="legend">
+                  <FormLabel component="legend" error={data.destState.length === 0 && invalidInput}>
                     {I18n.t('pages.newProposal.step2.state')}
                     <RedColorSpan> *</RedColorSpan>
                   </FormLabel>
@@ -1137,7 +1143,7 @@ const Step2 = ({
                   />
                 </Grid>
                 <Grid item xs={4}>
-                  <FormLabel component="legend">
+                  <FormLabel component="legend" error={(invalidInput && data.destCity.length === 0) || invalidOriDest === 'destCity'}>
                     {I18n.t('pages.newProposal.step2.city')}
                     <RedColorSpan> *</RedColorSpan>
                   </FormLabel>
@@ -1252,7 +1258,7 @@ const Step2 = ({
               <Fragment key={index}>
                 {proposalType === 'client' && loadedAgentsData && (
                   <Grid item xs={6}>
-                    <FormLabel component="legend">
+                    <FormLabel component="legend" error={proposalType === 'client' && invalidInput && selectedAgent.agent.length === 0}>
                       {I18n.t('pages.newProposal.step2.agents')}
                       {getAgentCounter(index)}
                       {proposalType === 'client' && (
@@ -1329,7 +1335,7 @@ const Step2 = ({
                   </Grid>
                 )}
                 <Grid item xs={6}>
-                  <FormLabel component="legend">
+                  <FormLabel component="legend" error={ invalidInput && selectedAgent.shippingCompany.length === 0}>
                     {setshippingCompanyLabel()}
                     {getAgentCounter(index)}
                     {<RedColorSpan> *</RedColorSpan>}
@@ -1359,7 +1365,6 @@ const Step2 = ({
                               )}
                               value={selectedAgent.shippingCompany}
                               invalid={
-                                proposalType === 'client' &&
                                 invalidInput &&
                                 selectedAgent.shippingCompany.length === 0
                               }
@@ -1424,7 +1429,7 @@ const Step2 = ({
             </>
           )}
           <Grid item xs={2}>
-            <FormLabel component="legend">
+            <FormLabel component="legend" error={invalidInput && data.incoterm.length === 0}>
               {I18n.t('pages.newProposal.step2.incoterm')}
               <RedColorSpan> *</RedColorSpan>
             </FormLabel>
@@ -1456,7 +1461,11 @@ const Step2 = ({
               data.incoterm === 'FCA' ||
               data.incoterm === 'DAP') && (
               <>
-                <FormLabel component="legend">
+                <FormLabel component="legend" error={
+                    invalidInput &&
+                    data.incoterm !== 'FCA' &&
+                    data.collection.length === 0
+                  }>
                   {I18n.t('pages.newProposal.step2.collectionAddress')}
                   {data.incoterm !== 'FCA' && <RedColorSpan> *</RedColorSpan>}
                 </FormLabel>

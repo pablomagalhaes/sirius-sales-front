@@ -234,7 +234,7 @@ const Step1 = ({
       </Title>
       <Grid container spacing={5}>
         <Grid item xs={6}>
-          <FormLabel component="legend">
+          <FormLabel component="legend" error={data.proposal === '' && invalidInput}>
             {I18n.t('pages.newProposal.step1.proposalType')}
             <RedColorSpan> *</RedColorSpan>
           </FormLabel>
@@ -302,13 +302,13 @@ const Step1 = ({
         <Grid item xs={6}>
           {data.proposal === 'routing'
             ? (
-              <FormLabel component="legend">
+              <FormLabel component="legend" error={data.proposalValue === '' && invalidInput}>
                 {I18n.t('pages.newProposal.step1.agents')}
                 <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               )
             : (
-              <FormLabel component="legend">
+              <FormLabel component="legend" error={data.proposalValue === '' && invalidInput}>
                 {I18n.t('pages.newProposal.step1.client')}:
                 <RedColorSpan> *</RedColorSpan>
               </FormLabel>
@@ -354,7 +354,7 @@ const Step1 = ({
           />
         </Grid>
         <Grid item xs={6}>
-          <FormLabel component="legend">
+          <FormLabel component="legend" error={data.requester === '' && invalidInput}>
             {I18n.t('pages.newProposal.step1.searchRequester')}:
             <RedColorSpan> *</RedColorSpan>
           </FormLabel>
@@ -373,7 +373,7 @@ const Step1 = ({
           />
         </Grid>
       </Grid>
-      <FormLabel component="legend">
+      <FormLabel component="legend" error={data.modal === '' && invalidInput}>
         {I18n.t('pages.newProposal.step1.modal')}
         <RedColorSpan> *</RedColorSpan>
       </FormLabel>

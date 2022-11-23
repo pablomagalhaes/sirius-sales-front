@@ -176,7 +176,13 @@ const ItemModal = ({
         <MainDiv>
           <Grid container spacing={2} style={{ width: '100%' }}>
             <Grid item xs={10}>
-              <FormLabel component="legend">{marineFCL() ? I18n.t('components.itemModal.container') : I18n.t('components.itemModal.packaging')}<RedColorSpan> *</RedColorSpan></FormLabel>
+              <FormLabel
+                component="legend"
+                error={
+                  invalidInput &&
+                  (data.length === null || data.length.length === 0)
+                }>
+                {marineFCL() ? I18n.t('components.itemModal.container') : I18n.t('components.itemModal.packaging')}<RedColorSpan> *</RedColorSpan></FormLabel>
               <Autocomplete
                 freeSolo
                 value={data.type}
@@ -212,7 +218,15 @@ const ItemModal = ({
               />
             </Grid>
             <Grid item xs={2}>
-              <FormLabel component="legend">{I18n.t('components.itemModal.amount')}<RedColorSpan> *</RedColorSpan></FormLabel>
+              <FormLabel
+                component="legend"
+                error={
+                  invalidInput &&
+                  (data.amount === null || data.amount.length === 0)
+                }>
+                  {I18n.t('components.itemModal.amount')}
+                  <RedColorSpan> *</RedColorSpan>
+              </FormLabel>
               <ControlledInput
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 invalid={
@@ -227,7 +241,11 @@ const ItemModal = ({
               />
             </Grid>
             {!marineFCL() && <Grid item xs={4}>
-              <FormLabel component="legend">{I18n.t('components.itemModal.rawWeight')}
+              <FormLabel component="legend" error={
+                  invalidInput && (!marineFCL()) &&
+                  (data.rawWeight === null || data.rawWeight.length === 0)
+                }>
+                {I18n.t('components.itemModal.rawWeight')}
                 {(modal === 'AIR' ||
                   (modal === 'SEA' && specifications !== 'fcl') ||
                   modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}</FormLabel>
@@ -256,7 +274,10 @@ const ItemModal = ({
             </Grid>
             {marineFCL() && <Box width="100%" />}
             {!marineFCL() && <Grid item xs={6}>
-              <FormLabel component="legend">{I18n.t('components.itemModal.hwl')}
+              <FormLabel component="legend" error={
+                    invalidInput && !(marineFCL()) &&
+                    (data.length === null || data.length.length === 0)
+                  }>{I18n.t('components.itemModal.hwl')}
                 {(modal === 'AIR' ||
                   (modal === 'SEA' && specifications !== 'fcl') ||
                   modal === 'LAND') && <RedColorSpan> *</RedColorSpan>}</FormLabel>
@@ -278,6 +299,7 @@ const ItemModal = ({
                   size="small"
                   modal
                   style={{ marginRight: '8px' }}
+                  hwl={true}
                 />
                 <NumberInput
                   decimalSeparator={','}
@@ -296,6 +318,7 @@ const ItemModal = ({
                   size="small"
                   modal
                   style={{ marginRight: '8px' }}
+                  hwl={true}
                 />
                 <NumberInput
                   decimalSeparator={','}
@@ -313,11 +336,15 @@ const ItemModal = ({
                   variant="outlined"
                   size="small"
                   modal
+                  hwl={true}
                 />
               </div>
             </Grid>}
             {!(marineFCL()) && <Grid item xs={3}>
-              <FormLabel component="legend">
+              <FormLabel component="legend" error={
+                  invalidInput && !(marineFCL()) &&
+                  (data.cubage === null || data.cubage.length === 0)
+                }>
                 {I18n.t('components.itemModal.cubage')}
                 {(modal === 'AIR' ||
                   (modal === 'SEA' && specifications !== 'fcl') ||
