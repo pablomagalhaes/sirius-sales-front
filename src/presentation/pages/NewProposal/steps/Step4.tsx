@@ -157,7 +157,7 @@ const Step4 = ({
   const validateDate = (): boolean => {
     const validityDate = moment(data.validityDate, 'DD/MM/YYYY', true)
     const today = moment().startOf('day')
-    return  validityDate.isValid() && validityDate.isSameOrAfter(today)
+    return validityDate.isValid() && validityDate.isSameOrAfter(today)
   }
 
   const validateFreeTime = (): boolean => {
