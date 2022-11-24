@@ -258,17 +258,17 @@ const Step3 = ({
               idCargoVolume: cargo.id,
               idCargo: proposal.cargo.id,
               amount: String(cargo.valueQuantity),
-              cubage: completeDecimalPlaces(cargo.valueCubage),
-              diameter: completeDecimalPlaces(cargo.valueDiameter),
-              height: completeDecimalPlaces(cargo.valueHeight),
-              length: completeDecimalPlaces(cargo.valueLength),
-              rawWeight: completeDecimalPlaces(cargo.valueGrossWeight),
+              cubage: completeDecimalPlaces(cargo?.valueCubage),
+              diameter: completeDecimalPlaces(cargo?.valueDiameter),
+              height: completeDecimalPlaces(cargo?.valueHeight),
+              length: completeDecimalPlaces(cargo?.valueLength),
+              rawWeight: completeDecimalPlaces(cargo?.valueGrossWeight),
               type: marineFCL()
                 ? verifyContainerById(cargo.idContainerType as string)
                 : verifyPackagingById(cargo.idPackaging as number),
-              width: completeDecimalPlaces(cargo.valueWidth),
+              width: completeDecimalPlaces(cargo?.valueWidth),
               id: id++,
-              stack: cargo.isStacked
+              stack: cargo?.isStacked as any
             })
           })
           setTableRows(loadedTableRows)
@@ -346,7 +346,7 @@ const Step3 = ({
     return modal === 'AIR'
   }
 
-  const completeDecimalPlaces = (num: number): string => {
+  const completeDecimalPlaces = (num: any): string => {
     return num.toFixed(2).replace('.', ',')
   }
 
