@@ -41,7 +41,7 @@ import ChargeTable, {
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import { withTheme } from 'styled-components'
 import API from '../../../../infrastructure/api'
-import { ProposalContext, ProposalProps } from '../../NewProposal/context/ProposalContext'
+import { ProposalContext, ProposalProps } from '../context/ProposalContext';
 import { CargoVolume } from '../../../../domain/CargoVolume'
 import CwModal from '../../../components/CwModal/CwModal'
 
@@ -258,17 +258,17 @@ const Step3 = ({
               idCargoVolume: cargo.id,
               idCargo: proposal.cargo.id,
               amount: String(cargo.valueQuantity),
-              cubage: completeDecimalPlaces(cargo.valueCubage),
-              diameter: completeDecimalPlaces(cargo.valueDiameter),
-              height: completeDecimalPlaces(cargo.valueHeight),
-              length: completeDecimalPlaces(cargo.valueLength),
-              rawWeight: completeDecimalPlaces(cargo.valueGrossWeight),
+              cubage: completeDecimalPlaces(cargo?.valueCubage),
+              diameter: completeDecimalPlaces(cargo?.valueDiameter),
+              height: completeDecimalPlaces(cargo?.valueHeight),
+              length: completeDecimalPlaces(cargo?.valueLength),
+              rawWeight: completeDecimalPlaces(cargo?.valueGrossWeight),
               type: marineFCL()
-                ? verifyContainerById(cargo.idContainerType as string)
-                : verifyPackagingById(cargo.idPackaging as number),
-              width: completeDecimalPlaces(cargo.valueWidth),
+                ? verifyContainerById(cargo?.idContainerType as string)
+                : verifyPackagingById(cargo?.idPackaging as number),
+              width: completeDecimalPlaces(cargo?.valueWidth),
               id: id++,
-              stack: cargo.isStacked
+              stack: cargo?.isStacked as any
             })
           })
           setTableRows(loadedTableRows)
@@ -314,9 +314,7 @@ const Step3 = ({
         idCargo: row.idCargo === undefined ? null : row.idCargo,
         cdCargoType:
           modal === 'SEA'
-            ? specificationsList
-              .map((spe) => spe.toLowerCase())
-              .indexOf(data.specifications) + 1
+            ? specificationsList.map((spe) => spe.toLowerCase()).indexOf(data.specifications) + 1
             : 1,
         idContainerType: !marineFCL() ? null : verifyContainerByType(row.type), // !marineFCL() ? null : containerTypeList.filter((cont) => cont.type === row.type)[0]?.id,
         idPackaging: marineFCL() ? null : verifyPackagingByType(row.type),
@@ -345,7 +343,7 @@ const Step3 = ({
     return modal === 'AIR'
   }
 
-  const completeDecimalPlaces = (num: number): string => {
+  const completeDecimalPlaces = (num: any): string => {
     return num.toFixed(2).replace('.', ',')
   }
 
