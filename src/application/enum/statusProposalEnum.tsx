@@ -15,5 +15,5 @@ export enum StatusProposalStringEnum {
   APROVADA = 'Approved',
   REJEITADA = 'Discard',
   CANCELADA = 'Canceled',
-  CANCELAMENTO_AUTOMATICO = 'Canceled',
+  CANCELAMENTO_AUTOMATICO = 'Automatically Canceled',
 }
