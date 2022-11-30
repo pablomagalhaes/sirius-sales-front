@@ -88,13 +88,13 @@ const RejectModal = ({
                 style={{ justifyContent: 'left', marginLeft: '10px' }}
               >
                 <FormControlLabel
-                  value="price"
+                  value="Price"
                   control={<StyledRadio color={getColor()} />}
                   label={I18n.t('components.rejectModal.price')}
                 />
                 <FormControlLabel
                   style={{ marginLeft: '20px' }}
-                  value="service"
+                  value="Service"
                   control={<StyledRadio color={getColor()} />}
                   label={I18n.t('components.rejectModal.service')}
                 />
