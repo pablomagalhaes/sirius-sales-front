@@ -503,7 +503,7 @@ const CostModal = ({
                   open={invalidInput && (state.agent === null || state.agent.agentId !== null)}
                 >
                   <Autocomplete
-                    disabled={agentList.length === 1}
+                    disabled={agentList.length === 0}
                     options={agentList.map((agent) => agent.agent)}
                     value={getAgentName(Number(state.agent.agentId))}
                     onChange={(event: any, newValue: string | null) => {

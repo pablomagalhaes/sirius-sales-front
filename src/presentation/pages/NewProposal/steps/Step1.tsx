@@ -220,7 +220,13 @@ const Step1 = ({
       filled.step6
     ) {
       setModalCopy(modal)
-      setShowPopUp(true)
+
+      if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
+        setShowPopUp(true)
+      } else {
+        setData({ ...data, modal: modal })
+        setShowPopUp(false)
+      }
     } else {
       setData({ ...data, modal: modal })
     }
