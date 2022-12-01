@@ -192,19 +192,19 @@ const Proposal = (): JSX.Element => {
 
   const verifyStatus = (status): any => {
     switch (status) {
-      case 'Aberta':
+      case 'Open':
         return StatusProposalEnum.ABERTA
-      case 'Ag. Retorno Cliente':
+      case 'Awaiting Customer Return':
         return StatusProposalEnum.AGUARDANDO_RETORNO_CLIENTE
-      case 'Em Revisao':
+      case 'Revision':
         return StatusProposalEnum.EM_REVISAO
-      case 'Aprovada':
+      case 'Approved':
         return StatusProposalEnum.APROVADA
-      case 'Rejeitada':
+      case 'Discard':
         return StatusProposalEnum.REJEITADA
-      case 'Cancelada':
+      case 'Canceled':
         return StatusProposalEnum.CANCELADA
-      case 'Cancelamento Automático':
+      case 'Automatically Canceled':
         return StatusProposalEnum.CANCELAMENTO_AUTOMATICO
     }
   }
