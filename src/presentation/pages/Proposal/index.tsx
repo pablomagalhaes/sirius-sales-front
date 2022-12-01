@@ -140,7 +140,7 @@ const Proposal = (): JSX.Element => {
   useEffect(() => {
     void (async function () {
       await API.getOriginDestination()
-        .then((response) => setOriginDestinationList(response))
+        .then((response) => { setOriginDestinationList(response); console.log(response) })
         .catch((err) => console.log(err))
     })()
   }, [])
@@ -154,6 +154,9 @@ const Proposal = (): JSX.Element => {
         type = 'AEROPORTO'
         break
       case 'Marítimo':
+        type = 'PORTO'
+        break
+      case 'Rodoviário':
         type = 'PORTO'
         break
       default:
@@ -173,6 +176,7 @@ const Proposal = (): JSX.Element => {
     void (async function () {
       await API.getProposals(filter)
         .then((response) => {
+          console.log(response.content)
           setProposalList(response.content)
           setTotalProposalList(response.totalElements)
         })
@@ -504,7 +508,7 @@ const Proposal = (): JSX.Element => {
 
     const selectedOriginsDestinations = findKeyFilter(
       selectedFiltersRowFilter,
-      'Origem/Destino'
+      'Modal/Origem/Destino'
     )
     if (selectedOriginsDestinations !== undefined) {
       const typeOrigin = selectedFiltersRowFilter[3].pickerSelecteds1
@@ -688,7 +692,7 @@ const Proposal = (): JSX.Element => {
       checkboxList1: menuItems.processTypes
     },
     {
-      label: 'Origem/Destino',
+      label: 'Modal/Origem/Destino',
       radioButtonList: menuItems.modal,
       pickerListOptions1: getOriginDestinyList(),
       pickerListOptions2: getOriginDestinyList(),
