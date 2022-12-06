@@ -13,7 +13,7 @@ export enum StatusProposalStringEnum {
   AGUARDANDO_RETORNO_CLIENTE = 'Awaiting Customer Return',
   EM_REVISAO = 'Revision',
   APROVADA = 'Approved',
-  REJEITADA = 'Discard',
+  REJEITADA = 'discard',
   CANCELADA = 'Canceled',
   CANCELAMENTO_AUTOMATICO = 'Automatically Canceled',
 }
