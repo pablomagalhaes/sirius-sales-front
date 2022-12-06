@@ -41,7 +41,7 @@ import ChargeTable, {
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import { withTheme } from 'styled-components'
 import API from '../../../../infrastructure/api'
-import { ProposalContext, ProposalProps } from '../../NewProposal/context/ProposalContext';
+import { ProposalContext, ProposalProps } from '../../NewProposal/context/ProposalContext'
 import { CargoVolume } from '../../../../domain/CargoVolume'
 import CwModal from '../../../components/CwModal/CwModal'
 
