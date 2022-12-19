@@ -163,7 +163,6 @@ const FareModal = ({
 
   useEffect(() => {
     if (dataProp !== initialState) {
-      console.log('dataProp', dataProp)
       setData(dataProp)
     }
     if (proposal.agents.length > 0) {
