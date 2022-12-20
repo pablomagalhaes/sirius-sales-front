@@ -98,6 +98,27 @@ const Proposal = (): JSX.Element => {
     }
   ]
 
+  const getLandList = async (land: string, params: string): Promise<string[]> => {
+    const landList: string[] = []
+    if (land === 'País') {
+      await API.getCountries()
+        .then((response) => response.forEach((item: any) => landList.push(`${String(item.id)}-${String(item.name)}`)))
+        .catch((err) => console.log(err))
+    }
+    if (land === 'Estado') {
+      await API.getStates(params)
+        .then((response) => response.forEach((item: any) => landList.push(`${String(item.id)}-${String(item.name)}`)))
+        .catch((err) => console.log(err))
+    }
+    if (land === 'Cidade') {
+      await API.getCities(params)
+        .then((response) => response.forEach((item: any) => landList.push(`${String(item.id)}-${String(item.name)}`)))
+        .catch((err) => console.log(err))
+    }
+    console.log(landList)
+    return landList
+  }
+
   useEffect(() => {
     getProposalByFilter()
   }, [filter])
@@ -140,7 +161,7 @@ const Proposal = (): JSX.Element => {
   useEffect(() => {
     void (async function () {
       await API.getOriginDestination()
-        .then((response) => { setOriginDestinationList(response); console.log(response) })
+        .then((response) => { setOriginDestinationList(response) })
         .catch((err) => console.log(err))
     })()
   }, [])
@@ -157,7 +178,6 @@ const Proposal = (): JSX.Element => {
         type = 'PORTO'
         break
       case 'Rodoviário':
-        type = 'PORTO'
         break
       default:
         break
@@ -172,11 +192,16 @@ const Proposal = (): JSX.Element => {
     return actualList
   }
 
+  const getLandLabels = (): string[] => {
+    let landLabels: string[] = []
+    if (radioValue === 'Rodoviário') landLabels = ['País', 'Estado', 'Cidade']
+    return landLabels
+  }
+
   const getProposalByFilter = (): void => {
     void (async function () {
       await API.getProposals(filter)
         .then((response) => {
-          console.log(response.content)
           setProposalList(response.content)
           setTotalProposalList(response.totalElements)
         })
@@ -698,7 +723,10 @@ const Proposal = (): JSX.Element => {
       pickerListOptions2: getOriginDestinyList(),
       pickerLabel1: 'Origem',
       pickerLabel2: 'Destino',
-      title1: 'Modal'
+      title1: 'Modal',
+      getLandList: getLandList,
+      pickerLandLabels: getLandLabels()
+
     },
     {
       label: 'Incoterm',
