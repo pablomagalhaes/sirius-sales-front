@@ -72,9 +72,9 @@ interface DataProps {
 export interface Agents {
   id?: number | null
   agent: string
-  agentId?: number | null
+  idBusinessPartnerAgent?: number | null
   shippingCompany: string
-  transportCompanyId?: number | null
+  idBusinessPartnerTransportCompany?: number | null
 }
 
 const Step2 = ({
@@ -123,9 +123,9 @@ const Step2 = ({
     {
       id: null,
       agent: '',
-      agentId: null,
+      idBusinessPartnerAgent: null,
       shippingCompany: '',
-      transportCompanyId: null
+      idBusinessPartnerTransportCompany: null
     }
   ])
 
@@ -147,7 +147,7 @@ const Step2 = ({
     )
   }
 
-  const getAgentId = (agentName: string): number | undefined => {
+  const getidBusinessPartnerAgent = (agentName: string): number | undefined => {
     let id
     if (agentName !== '') {
       agentsList?.forEach((item): void => {
@@ -195,9 +195,9 @@ const Step2 = ({
       {
         id: null,
         agent: '',
-        agentId: null,
+        idBusinessPartnerAgent: null,
         shippingCompany: '',
-        transportCompanyId: null
+        idBusinessPartnerTransportCompany: null
       }
     ])
     if (modal !== '') {
@@ -235,7 +235,7 @@ const Step2 = ({
   }
 
   useEffect(() => {
-    if (proposalType === 'client' && loadedAgentsData) {
+    if (proposalType === 'CLIENT' && loadedAgentsData) {
       setAgentList(selectedAgents)
     }
   }, [selectedAgents, agentsList])
@@ -262,11 +262,11 @@ const Step2 = ({
     if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
       const getOrigin = new Promise((resolve) => {
         if (modal === 'LAND') {
-          API.getCityById(proposal.originCityId)
+          API.getCityById(proposal.originDestiny[0].originCityId)
             .then((response) => resolve(response))
             .catch((err) => console.log(err))
         } else {
-          API.getOriginDestinationById(proposal.idOrigin)
+          API.getOriginDestinationById(proposal.originDestiny[0].idOrigin)
             .then((response) =>
               resolve(`${String(response?.id)} - ${String(response?.name)}`)
             )
@@ -276,11 +276,11 @@ const Step2 = ({
 
       const getDestiny = new Promise((resolve) => {
         if (modal === 'LAND') {
-          API.getCityById(proposal.destinationCityId)
+          API.getCityById(proposal.originDestiny[0].destinationCityId)
             .then((response) => resolve(response))
             .catch((err) => console.log(err))
         } else {
-          API.getOriginDestinationById(proposal.idDestination)
+          API.getOriginDestinationById(proposal.originDestiny[0].idDestination)
             .then((response) =>
               resolve(`${String(response?.id)} - ${String(response?.name)}`)
             )
@@ -348,10 +348,10 @@ const Step2 = ({
         proposal.agents.map((agent, index) => {
           return {
             id: agent.id,
-            agentId: agent.agentId,
-            shippingCompany: getBusinessPartnerById(agent.transportCompanyId),
-            agent: getAgentById(agent.agentId),
-            transportCompanyId: agent.transportCompanyId
+            idBusinessPartnerAgent: agent.idBusinessPartnerAgent,
+            shippingCompany: getBusinessPartnerById(agent.idBusinessPartnerTransportCompany),
+            agent: getAgentById(agent.idBusinessPartnerAgent),
+            idBusinessPartnerTransportCompany: agent.idBusinessPartnerTransportCompany
           }
         })
       )
@@ -359,35 +359,34 @@ const Step2 = ({
   }, [agentsList, businessPartnerList])
 
   useEffect(() => {
-    setProposal({
-      ...proposal,
-      originCityId:
-        modal === 'LAND'
-          ? oriCitiesList.filter((city) => city.name === data.oriCity)[0]?.id
-          : null,
-      originCityName:
-        modal === 'LAND'
-          ? String(
-            oriCitiesList.filter((city) => city.name === data.oriCity)[0]
-              ?.name
-          )
-          : '',
-      destinationCityId:
-        modal === 'LAND'
-          ? destCitiesList.filter((city) => city.name === data.destCity)[0]?.id
-          : null,
-      destinationCityName:
-        modal === 'LAND'
-          ? String(
-            destCitiesList.filter((city) => city.name === data.destCity)[0]
-              ?.name
-          )
-          : '',
-      idOrigin: modal !== 'LAND' ? data.origin.split(' - ')[0] : '',
-      idDestination: modal !== 'LAND' ? data.destiny.split(' - ')[0] : '',
-      idIncoterm: data.incoterm,
-      cargoCollectionAddress: data.collection
-    })
+    if(modal === 'LAND') {
+      setProposal({
+        ...proposal,
+        originDestiny: 
+          [
+            {
+              originCityId: oriCitiesList.filter((city) => city.name === data.oriCity)[0]?.id,
+              destinationCityId: destCitiesList.filter((city) => city.name === data.destCity)[0]?.id,
+            }
+          ],
+        idIncoterm: data.incoterm,
+        cargoCollectionAddress: data.collection
+      })
+    } else {
+      setProposal({
+        ...proposal,
+        originDestiny: 
+        [
+          {
+            idOrigin: data.origin.split(' - ')[0],
+            idDestination: data.destiny.split(' - ')[0],
+          }
+        ],
+        idIncoterm: data.incoterm,
+        cargoCollectionAddress: data.collection
+      })
+    }
+    
   }, [data])
 
   useEffect(() => {
@@ -414,8 +413,8 @@ const Step2 = ({
 
   const validateClient = (): boolean => {
     return (
-      (proposalType === 'client' && selectedAgents[0].agent.length !== 0) ||
-      proposalType !== 'client'
+      (proposalType === 'CLIENT' && selectedAgents[0].agent.length !== 0) ||
+      proposalType !== 'CLIENT'
     )
   }
 
@@ -705,9 +704,9 @@ const Step2 = ({
       {
         id: null,
         agent: '',
-        agentId: null,
+        idBusinessPartnerAgent: null,
         shippingCompany: '',
-        transportCompanyId: null
+        idBusinessPartnerTransportCompany: null
       }
     ])
   }, [proposalType])
@@ -1250,7 +1249,7 @@ const Step2 = ({
           {selectedAgents.map((selectedAgent, index) => {
             return (
               <Fragment key={index}>
-                {proposalType === 'client' && loadedAgentsData && (
+                {proposalType === 'CLIENT' && loadedAgentsData && (
                   <Grid item xs={6}>
                     <FormLabel component="legend">
                       {I18n.t('pages.newProposal.step2.agents')}
@@ -1270,7 +1269,7 @@ const Step2 = ({
                               ? {
                                   ...value,
                                   agent: newValue ?? '',
-                                  agentId: getAgentId(newValue)
+                                  idBusinessPartnerAgent: getidBusinessPartnerAgent(newValue)
                                 }
                               : value
                           )
@@ -1287,7 +1286,7 @@ const Step2 = ({
                             )}
                             value={selectedAgent.agent}
                             invalid={
-                              proposalType === 'client' &&
+                              proposalType === 'CLIENT' &&
                               invalidInput &&
                               selectedAgent.agent.length === 0
                             }
@@ -1347,7 +1346,7 @@ const Step2 = ({
                                 ? {
                                     ...value,
                                     shippingCompany: newValue ?? '',
-                                    transportCompanyId:
+                                    idBusinessPartnerTransportCompany:
                                       getShippingCompanyId(newValue)
                                   }
                                 : value
@@ -1365,7 +1364,7 @@ const Step2 = ({
                               )}
                               value={selectedAgent.shippingCompany}
                               invalid={
-                                proposalType === 'client' &&
+                                proposalType === 'CLIENT' &&
                                 invalidInput &&
                                 selectedAgent.shippingCompany.length === 0
                               }
@@ -1426,7 +1425,7 @@ const Step2 = ({
             )
           })}
 
-          {modal === 'AIR' && proposalType === 'client' && (
+          {modal === 'AIR' && proposalType === 'CLIENT' && (
             <>
               <AddAgentButtonWrapper>
                 <Button
@@ -1436,9 +1435,9 @@ const Step2 = ({
                       {
                         id: null,
                         agent: '',
-                        agentId: null,
+                        idBusinessPartnerAgent: null,
                         shippingCompany: '',
-                        transportCompanyId: null
+                        idBusinessPartnerTransportCompany: null
                       }
                     ])
                   }}

@@ -94,7 +94,7 @@ const Step1 = ({
 
     if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
       const getPartnerCostumer = new Promise<void>((resolve) => {
-        API.getBusinessPartnerCostumer(proposal.customerId)
+        API.getBusinessPartnerCostumer(proposal.idBusinessPartnerCustomer)
           .then((response) => {
             resolve(response?.simpleName)
           })
@@ -126,11 +126,11 @@ const Step1 = ({
     if (data.modal === 'LAND' || data.modal === 'SEA') {
       if (proposal.idTransport !== '') {
         if (proposal.idTransport === 'AIR') {
-          if (proposal.agents.length > 0 && proposal.agents[0].agentId !== null) {
+          if (proposal.agents.length > 0 && proposal.agents[0].idBusinessPartnerAgent !== null) {
             firstAgent = proposal.agents
             proposal.agents = []
             proposal.agents[0] = firstAgent[0]
-            proposal.agents[0].transportCompanyId = null
+            proposal.agents[0].idBusinessPartnerTransportCompany = null
             listCostsWithoutAgents = proposal.costs.filter(cost => cost.agent === null)
             proposal.costs = []
             proposal.costs = listCostsWithoutAgents
@@ -143,8 +143,8 @@ const Step1 = ({
       ...proposal,
       proposalType: data.proposal,
       idTransport: data.modal,
-      customerId:
-        data.proposal === 'routing'
+      idBusinessPartnerCustomer:
+        data.proposal === 'ROUTING ORDER'
           ? agentsList.filter(
             (agt) => agt.businessPartner.simpleName === data.proposalValue
           )[0]?.businessPartner.id
@@ -166,7 +166,7 @@ const Step1 = ({
   }, [data.modal])
 
   useEffect(() => {
-    if (data.proposal === 'routing') {
+    if (data.proposal === 'ROUTING ORDER') {
       const agent: string[] = []
       agent.push(data.proposalValue)
       setAgentList(agent)
@@ -200,7 +200,7 @@ const Step1 = ({
   }, [data])
 
   useEffect(() => {
-    if (data.proposal === 'client') {
+    if (data.proposal === 'CLIENT') {
       setData({ ...data, serviceTransport: false, serviceDesemb: false })
     }
   }, [data.proposal])
@@ -252,21 +252,21 @@ const Step1 = ({
             onChange={(e) => setData({ ...data, proposal: e.target.value })}
           >
             <FormControlLabel
-              checked={data.proposal === 'client'}
-              value="client"
+              checked={data.proposal === 'CLIENT'}
+              value="CLIENT"
               control={<StyledRadio color={getColor(data.proposal)} />}
               label={I18n.t('pages.newProposal.step1.client')}
               style={{ marginRight: '30px' }}
             />
             <FormControlLabel
-              checked={data.proposal === 'routing'}
-              value="routing"
+              checked={data.proposal === 'ROUTING ORDER'}
+              value="ROUTING ORDER"
               control={<StyledRadio color={getColor(data.proposal)} />}
               label={I18n.t('pages.newProposal.step1.routingOrder')}
             />
           </RadioGroup>
         </Grid>
-        {data.proposal === 'routing'
+        {data.proposal === 'ROUTING ORDER'
           ? (
             <Grid item xs={6}>
               <FormLabel component="legend">
@@ -306,7 +306,7 @@ const Step1 = ({
             </Grid>
             )}
         <Grid item xs={6}>
-          {data.proposal === 'routing'
+          {data.proposal === 'ROUTING ORDER'
             ? (
               <FormLabel component="legend" error={data.proposalValue === '' && invalidInput}>
                 {I18n.t('pages.newProposal.step1.agents')}
@@ -325,7 +325,7 @@ const Step1 = ({
               setData({ ...data, proposalValue: String(newValue) })
             }
             options={
-              data.proposal === 'routing'
+              data.proposal === 'ROUTING ORDER'
                 ? agentsList.map((item) => item.businessPartner.simpleName)
                 : partnerList.map((item) => item.businessPartner.simpleName)
             }

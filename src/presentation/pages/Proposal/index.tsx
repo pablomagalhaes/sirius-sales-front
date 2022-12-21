@@ -254,7 +254,7 @@ const Proposal = (): JSX.Element => {
   }
 
   const verifyType = (type: String): string => {
-    if (type === 'FRETE - IMPORTAÇÃO') {
+    if (type === 'IMPORT FREIGHT') {
       return 'importation'
     } else {
       return 'exportation'
@@ -276,7 +276,7 @@ const Proposal = (): JSX.Element => {
 
       const item = {
         client: proposal.clientName,
-        destination: proposal.modal === 'LAND' ? proposal.destinationCityName : proposal.destinationId,
+        destination: proposal.modal === 'LAND' ? proposal.originDestiny[0].destinationCityName : proposal.originDestiny[0].idDestination,
         iconterm: proposal.incotermId,
         isLate: showWarning,
         key: proposal.idProposal,
@@ -284,7 +284,7 @@ const Proposal = (): JSX.Element => {
         modal,
         numio: proposal.numIO,
         opening,
-        origin: proposal.modal === 'LAND' ? proposal.originCityName : proposal.originId,
+        origin: proposal.modal === 'LAND' ? proposal.originDestiny[0].originCityName : proposal.originDestiny[0].idOrigin,
         reference: proposal.reference,
         responsible: proposal.responsible,
         shelfLife,
@@ -487,7 +487,7 @@ const Proposal = (): JSX.Element => {
 
       setFilter((filter: any) => ({
         ...filter,
-        customerId: [clientIds]
+        idBusinessPartnerCustomer: [clientIds]
       }))
     }
 
@@ -640,7 +640,7 @@ const Proposal = (): JSX.Element => {
 
   const cleanFilter = (): void => {
     delete filter.referenceProposal
-    delete filter.customerId
+    delete filter.idBusinessPartnerCustomer
     delete filter.operationType
     delete filter.idOrigin
     delete filter.idDestination

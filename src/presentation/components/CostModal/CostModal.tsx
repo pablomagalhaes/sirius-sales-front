@@ -80,8 +80,8 @@ export const initialState = {
   type: '',
   description: null,
   agent: {
-    agentId: undefined,
-    transportCompanyId: undefined
+    idBusinessPartnerAgent: undefined,
+    idBusinessPartnerTransportCompany: undefined
   },
   buyCurrency: 'BRL',
   buyValue: null,
@@ -110,7 +110,7 @@ const CostModal = ({
 }: CostModalProps): JSX.Element => {
   const getAgentByName = (name: string): CostAgent => {
     const agent = agentList.find(agent => agent.agent === name)
-    return { agentId: agent?.agentId, transportCompanyId: agent?.transportCompanyId }
+    return { idBusinessPartnerAgent: agent?.idBusinessPartnerAgent, idBusinessPartnerTransportCompany: agent?.idBusinessPartnerTransportCompany }
   }
   const reducer = (state, action): CostTableItem => {
     switch (action.type) {
@@ -352,8 +352,8 @@ const CostModal = ({
           data.costType === 'CW'
             ? {
                 ...data,
-                valuePurchaseCW: proposal.cargo.vlCwPurchase,
-                valueSaleCW: proposal.cargo.vlCwSale
+                valuePurchaseCW: proposal.cargo[0].vlCwPurchase,
+                valueSaleCW: proposal.cargo[0].vlCwSale
               }
             : { ...data, valuePurchaseCW: null, valueSaleCW: null }
         await API.postTotalCalculation(totalCalculationData)
@@ -384,12 +384,12 @@ const CostModal = ({
   const isOriginCost = title === I18n.t('pages.newProposal.step5.originCost')
   useEffect(() => {
     if (open) {
-      state.agent.agentId === undefined && agentList.length === 1 && dispatch({ type: 'agent', value: agentList[0].agent })
+      state.agent.idBusinessPartnerAgent === undefined && agentList.length === 1 && dispatch({ type: 'agent', value: agentList[0].agent })
     }
   }, [open])
 
   const getAgentName = (id: number): string => {
-    const agent = agentList.find(agents => agents.agentId === id)
+    const agent = agentList.find(agents => agents.idBusinessPartnerAgent === id)
     return String(agent?.agent ?? '')
   }
 
@@ -500,12 +500,12 @@ const CostModal = ({
               <RowDiv margin={specifications === 'fcl' && true} style={{ position: 'relative' }}>
                 <ControlledToolTip
                   title={I18n.t('components.itemModal.requiredField')}
-                  open={invalidInput && (state.agent === null || state.agent.agentId !== null)}
+                  open={invalidInput && (state.agent === null || state.agent.idBusinessPartnerAgent !== null)}
                 >
                   <Autocomplete
                     disabled={agentList.length === 0}
                     options={agentList.map((agent) => agent.agent)}
-                    value={getAgentName(Number(state.agent.agentId))}
+                    value={getAgentName(Number(state.agent.idBusinessPartnerAgent))}
                     onChange={(event: any, newValue: string | null) => {
                       dispatch({ type: 'agent', value: newValue })
                     }}
@@ -513,10 +513,10 @@ const CostModal = ({
                       <div ref={params.InputProps.ref}>
                         <Input
                           {...params.inputProps}
-                          filled={state.agent.agentId}
+                          filled={state.agent.idBusinessPartnerAgent}
                           placeholder={I18n.t('components.costModal.choose')}
                           toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                          // invalid={invalidInput && (state.agent === null || state.agent.agentId !== null)}
+                          // invalid={invalidInput && (state.agent === null || state.agent.idBusinessPartnerAgent !== null)}
                           style={{ width: '513px' }}
                         />
                         <Box {...params.inputProps} className="dropdownContainer">
