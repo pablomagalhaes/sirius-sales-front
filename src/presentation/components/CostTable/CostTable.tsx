@@ -440,7 +440,7 @@ const CostTable = ({
                       {
                         currency.value.buy !== null && currency.value.buy !== '' && currency.value.buy !== 0
                           ? <TotalCostLabel>
-                            {currency.name} {Number(currency.value.buy).toFixed(2).replace('.', ',')}
+                            {Number(currency.value.buy).toFixed(2).replace('.', ',')}
                           </TotalCostLabel>
                           : <TotalCostLabel>-</TotalCostLabel>
                       }
@@ -450,7 +450,7 @@ const CostTable = ({
                       {
                         currency.value.sale !== null && currency.value.sale !== '' && currency.value.sale !== 0
                           ? <TotalCostLabel>
-                            {currency.name} {Number(currency.value.sale).toFixed(2).replace('.', ',')}
+                            {Number(currency.value.sale).toFixed(2).replace('.', ',')}
                           </TotalCostLabel>
                           : <TotalCostLabel>-</TotalCostLabel>
                       }
