@@ -563,7 +563,7 @@ const Step6 = ({
           proposal?.idProposal === undefined ? null : proposal?.idProposal,
         idService: serviceList.filter((serv) => serv.service === row.expense)[0]
           ?.id, // id Descricao
-          idContainerType:
+        idContainerType:
           specifications === 'fcl'
             ? containerTypeList.filter(
               (cont) => cont.description === row.selectedContainer

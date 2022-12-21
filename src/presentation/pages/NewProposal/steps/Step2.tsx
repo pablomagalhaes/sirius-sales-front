@@ -359,14 +359,14 @@ const Step2 = ({
   }, [agentsList, businessPartnerList])
 
   useEffect(() => {
-    if(modal === 'LAND') {
+    if (modal === 'LAND') {
       setProposal({
         ...proposal,
-        originDestiny: 
+        originDestiny:
           [
             {
               originCityId: oriCitiesList.filter((city) => city.name === data.oriCity)[0]?.id,
-              destinationCityId: destCitiesList.filter((city) => city.name === data.destCity)[0]?.id,
+              destinationCityId: destCitiesList.filter((city) => city.name === data.destCity)[0]?.id
             }
           ],
         idIncoterm: data.incoterm,
@@ -375,18 +375,17 @@ const Step2 = ({
     } else {
       setProposal({
         ...proposal,
-        originDestiny: 
+        originDestiny:
         [
           {
             idOrigin: data.origin.split(' - ')[0],
-            idDestination: data.destiny.split(' - ')[0],
+            idDestination: data.destiny.split(' - ')[0]
           }
         ],
         idIncoterm: data.incoterm,
         cargoCollectionAddress: data.collection
       })
     }
-    
   }, [data])
 
   useEffect(() => {

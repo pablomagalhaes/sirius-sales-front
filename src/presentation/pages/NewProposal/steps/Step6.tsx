@@ -563,7 +563,7 @@ const Step6 = ({
           proposal?.idProposal === undefined ? null : proposal?.idProposal,
         idService: serviceList.filter((serv) => serv.service === row.expense)[0]
           ?.id, // id Descricao
-          idContainerType:
+        idContainerType:
           specifications === 'fcl'
             ? containerTypeList.filter(
               (cont) => cont.description === row.selectedContainer
@@ -654,7 +654,7 @@ const Step6 = ({
           return { ...currentState, step6: false }
         })
       }
-    }  
+    }
 
     setDataTotalCost(
       Array.from(currencyArray, ([name, value]) => ({ name, value }))
@@ -811,7 +811,7 @@ const Step6 = ({
 
   function disabledAddFareButton (): boolean {
     if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
-    if (dataSales.currencySale !== null) {
+      if (dataSales.currencySale !== null) {
         return false
       }
     }
