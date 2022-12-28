@@ -115,7 +115,7 @@ const Step5 = ({
           for (const cost of proposal.costs) {
             const getContainer = new Promise((resolve) => {
               if (specifications === 'fcl') {
-                API.getContainerType(cost.containerType)
+                API.getContainerType(cost.idContainerType)
                   .then((response) => resolve(String(response?.description)))
                   .catch((err) => console.log(err))
               } else {
@@ -186,7 +186,7 @@ const Step5 = ({
         id: row.idCost === undefined ? null : row.idCost,
         idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
         idService: serviceList.filter((serv) => serv.service === row.description)[0]?.id, // id Descricao
-        containerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : null, // containerMODAL
+        idContainerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : null, // containerMODAL
         agent: row.agent,
         costType: 'Origem', // 'Origem''Destino''Tarifa'
         billingType: row.type, // Tipo -MODAL
@@ -208,7 +208,7 @@ const Step5 = ({
         id: row.idCost === undefined ? null : row.idCost,
         idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
         idService: serviceList.filter((serv) => serv.service === row.description)[0]?.id, // id Descricao
-        containerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : null, // containerMODAL
+        idContainerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : null, // containerMODAL
         agent: row.agent,
         costType: 'Destino', // 'Origem''Destino''Tarifa'
         billingType: row.type, // Tipo -MODAL

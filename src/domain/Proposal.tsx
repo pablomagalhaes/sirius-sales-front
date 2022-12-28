@@ -7,14 +7,12 @@ export interface Proposal {
   idProposal?: number | null
   idProposalImportFreight?: number | null
   referenceProposal: string // referencia proposta
-  customerId: number // cliente step1
-  operationType: string // FRETE IMPORTACAO
-  idStatus: number // sempre passar 1
+  idBusinessPartnerCustomer: number // cliente step1
+  operationType: string // IMPORT FREIGHT
+  idProposalStatus: number // sempre passar 1
   codeUserCreation: number // codigo do usuario
-  codeRespSeller: number // 0 por enquanto nao sabemos
   openingDate: string // 2022-03-17T13:03:46.340Z//DiaDeHoje
   validityDate: string // 2022-03-17T13:03:46.340Z//Step4Validade
-  approvalDate: Date | null // 2022-03-17T13:03:46.340Z//null
   referenceClientProposal: string // step4 referencia
   generalObservations: string // Step4ObservacoesGerais
   internalObservations: string // Step4ObservacoesInternas
@@ -24,6 +22,7 @@ export interface Proposal {
   totalCosts: TotalCost[]
   proposalType: string // step1 tipo proposta 'cliente' 'routing order'
   idTransport: string // step1 modal
+  originDestiny: any
   idOrigin: string // id origem (if rod="NULL") step2
   idDestination: string // id destino (if rod="NULL") step2
   originCityName: string
@@ -31,18 +30,18 @@ export interface Proposal {
   destinationCityName: string
   destinationCityId: string
   idIncoterm: string // step2 incoterm id
-  cargo: {
+  cargo: [{
     id?: number
     cargo: string // descricao
     isDangerous: boolean // step3 perigoso
     idImoType: number // id IMO
     idTemperature: number // step 3 id temperatura
     idCargoContractingType: number // id especificacoes step3 (null observar comportamento)
-    codeUn: number // step 3 codigo
+    codeUnDangerous: number // step 3 codigo
     cargoVolumes: CargoVolume[] // array de items adicionados
     vlCwPurchase: number | null // chargeable weight compra
     vlCwSale: number | null // chargeable weight venda
-  }
+  }]
   transitTime: number // step4 transit time
   idFrequency: number // step 4 id frequency
   route: string // step4 rota

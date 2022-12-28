@@ -63,9 +63,9 @@ export const initialState = {
   agent: {
     agent: '',
     id: null,
-    agentId: null,
+    idBusinessPartnerAgent: null,
     shippingCompany: '',
-    transportCompanyId: null
+    idBusinessPartnerTransportCompany: null
   },
   selectedAgent: '',
   saleValue: '',
@@ -188,12 +188,12 @@ const FareModal = ({
 
   useEffect(() => {
     if (AllAgents !== undefined) {
-      const proposalAgentsAgentId = proposal.agents.map(a => a.agentId)
-      let getSomeAgents = AllAgents.map(a => proposalAgentsAgentId.includes(a?.businessPartner?.id)
+      const proposalAgentsidBusinessPartnerAgent = proposal.agents.map(a => a.idBusinessPartnerAgent)
+      let getSomeAgents = AllAgents.map(a => proposalAgentsidBusinessPartnerAgent.includes(a?.businessPartner?.id)
         ? ({
-            agentId: a?.businessPartner?.id,
+            idBusinessPartnerAgent: a?.businessPartner?.id,
             agent: a?.businessPartner?.simpleName,
-            transportCompanyId: proposal.agents.find(find => find.agentId === a?.businessPartner?.id)?.transportCompanyId
+            idBusinessPartnerTransportCompany: proposal.agents.find(find => find.idBusinessPartnerAgent === a?.businessPartner?.id)?.idBusinessPartnerTransportCompany
           })
         : null)
       getSomeAgents = getSomeAgents.filter(f => f != null)

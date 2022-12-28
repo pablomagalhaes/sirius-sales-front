@@ -111,12 +111,12 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
       const proposalObject = {
         ...proposal,
         validityDate: '',
-        idStatus: 1,
+        idProposalStatus: 1,
         openingDate: formatDate(),
         cargo: {
-          ...proposal.cargo,
+          ...proposal.cargo[0],
           id: null,
-          cargoVolumes: proposal.cargo.cargoVolumes.map(cargoVolume => {
+          cargoVolumes: proposal.cargo[0].cargoVolumes.map(cargoVolume => {
             cargoVolume.id = null; cargoVolume.idCargo = null; return cargoVolume
           })
         },
@@ -462,11 +462,11 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
           <Username>
             {getEnchargedFullname()}
           </Username>
-          {editMode && proposal.idStatus === 1
+          {editMode && proposal.idProposalStatus === 1
             ? <Status className="open">{I18n.t('pages.proposal.table.openLabel')}</Status>
             : null
           }
-          {editMode && proposal.idStatus === 3
+          {editMode && proposal.idProposalStatus === 3
             ? <Status className="inReview">{I18n.t('pages.proposal.table.inRevisionLabel')}</Status>
             : null
           }
