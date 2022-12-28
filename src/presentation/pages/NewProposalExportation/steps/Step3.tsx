@@ -233,7 +233,7 @@ const Step3 = ({
           setCopyCwSale(proposal.cargo[0].vlCwSale)
           setCwSaleEditMode(true)
           setData({
-            description: proposal.cargo[0].cargo,
+            description: proposal.cargo[0].txCargo,
             specifications:
               proposal.idTransport === 'SEA'
                 ? specificationsList[
@@ -287,7 +287,7 @@ const Step3 = ({
       ...proposal,
       cargo: [{
         ...proposal.cargo[0],
-        cargo: data.description,
+        txCargo: data.description,
         idCargoContractingType:
           modal === 'SEA'
             ? specificationsList

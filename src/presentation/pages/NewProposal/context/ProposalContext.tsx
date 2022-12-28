@@ -29,7 +29,7 @@ export const emptyProposalValue: Proposal = {
   destinationCityId: '',
   idIncoterm: '', // step2 incoterm id
   cargo: [{
-    cargo: '', //
+    txCargo: '', //
     isDangerous: true, // step3 perigoso
     idImoType: 0, // id IMO
     idTemperature: 0, // step 3 id temperatura

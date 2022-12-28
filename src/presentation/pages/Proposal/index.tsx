@@ -273,10 +273,10 @@ const Proposal = (): JSX.Element => {
       const status = verifyStatus(proposal.status)
       const modal = verifyModal(proposal.modal)
       const type = verifyType(proposal.operation)
-
+      console.log(proposal)
       const item = {
         client: proposal.clientName,
-        destination: proposal.modal === 'LAND' ? proposal.originDestiny[0].destinationCityName : proposal.originDestiny[0].idDestination,
+        destination: proposal.modal === 'LAND' ? proposal.destinationCityName : proposal.idDestination,
         iconterm: proposal.incotermId,
         isLate: showWarning,
         key: proposal.idProposal,
@@ -284,7 +284,7 @@ const Proposal = (): JSX.Element => {
         modal,
         numio: proposal.numIO,
         opening,
-        origin: proposal.modal === 'LAND' ? proposal.originDestiny[0].originCityName : proposal.originDestiny[0].idOrigin,
+        origin: proposal.modal === 'LAND' ? proposal.originCityName : proposal.idOrigin,
         reference: proposal.reference,
         responsible: proposal.responsible,
         shelfLife,

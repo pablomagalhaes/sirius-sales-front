@@ -98,9 +98,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
       })()
     } else {
       setLoadExistingProposal(true)
-      const today = new Date()
-      const timeNow = `${today.getFullYear()}-${('0' + String(today.getMonth() + 1).slice(-2))}-${('0' + String(today.getDate())).slice(-2)}T${('0' + String(today.getHours())).slice(-2)}:${('0' + String(today.getMinutes())).slice(-2)}:${('0' + String(today.getSeconds())).slice(-2)}.000Z`
-      setProposal({ ...emptyProposalValue, openingDate: timeNow })
+      setProposal({ ...emptyProposalValue, openingDate: formatDate() })
     }
   }, [])
 
