@@ -91,6 +91,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         await API.getProposal(proposalId)
           .then((response) => {
             setProposal(response)
+            console.log(response)
             duplicateProposal(response)
             setLoadExistingProposal(true)
           })
@@ -252,7 +253,6 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       if (proposal.idProposal === undefined || proposal.idProposal === null || location.state?.eventType === 'duplicate') {
         proposal.idProposal = null
         const newProposal = removeNullProperties()
-        console.log(newProposal)
         API.postProposal(JSON.stringify(newProposal)).then((response) => {
           setProposal(response)
           // @ts-expect-error
@@ -272,6 +272,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         })
       } else {
         const newProposal = removeNullProperties()
+        console.log(newProposal)
         API.putProposal(proposal.idProposal, JSON.stringify(newProposal)).then((response) => {
           setProposal(response)
           // @ts-expect-error
