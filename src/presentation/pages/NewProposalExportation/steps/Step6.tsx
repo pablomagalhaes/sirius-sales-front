@@ -278,7 +278,7 @@ const Step6 = ({
         break
     }
 
-    return serviceList.filter((serv) => serv.service === service)[0]?.id
+    return serviceList.filter((serv) => serv.service === service)[0]?.idService
   }
 
   const getFreightCost = (): Cost[] => {
@@ -562,7 +562,7 @@ const Step6 = ({
         idProposal:
           proposal?.idProposal === undefined ? null : proposal?.idProposal,
         idService: serviceList.filter((serv) => serv.service === row.expense)[0]
-          ?.id, // id Descricao
+          ?.idService, // id Descricao
         idContainerType:
           specifications === 'fcl'
             ? containerTypeList.filter(

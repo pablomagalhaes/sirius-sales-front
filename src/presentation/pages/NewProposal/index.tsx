@@ -98,9 +98,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       })()
     } else {
       setLoadExistingProposal(true)
-      const today = new Date()
-      const timeNow = `${today.getFullYear()}-${('0' + String(today.getMonth() + 1).slice(-2))}-${('0' + String(today.getDate())).slice(-2)}T${('0' + String(today.getHours())).slice(-2)}:${('0' + String(today.getMinutes())).slice(-2)}:${('0' + String(today.getSeconds())).slice(-2)}.000Z`
-      setProposal({ ...emptyProposalValue, openingDate: timeNow })
+      setProposal({ ...emptyProposalValue, openingDate: formatDate() })
     }
   }, [])
 
@@ -141,7 +139,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     const hour = new Date().getHours()
     const minute = new Date().getMinutes()
     const second = new Date().getSeconds()
-    const yearMonth = `${year}-${('0' + String(month + 1).slice(-2))}`
+    const yearMonth = `${year}-${month < 10 ? ('0' + String(month + 1).slice(-2)) : (String(month + 1).slice(-2))}`
     const dateHour = `-${('0' + String(date)).slice(-2)}T${('0' + String(hour)).slice(-2)}`
     const minuteSecond = `:${('0' + String(minute)).slice(-2)}:${('0' + String(second)).slice(-2)}.000Z`
     return yearMonth + dateHour + minuteSecond
@@ -254,6 +252,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       if (proposal.idProposal === undefined || proposal.idProposal === null || location.state?.eventType === 'duplicate') {
         proposal.idProposal = null
         const newProposal = removeNullProperties()
+        console.log(newProposal)
         API.postProposal(JSON.stringify(newProposal)).then((response) => {
           setProposal(response)
           // @ts-expect-error

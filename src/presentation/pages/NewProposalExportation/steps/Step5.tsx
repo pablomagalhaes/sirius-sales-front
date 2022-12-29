@@ -185,7 +185,7 @@ const Step5 = ({
       newOriginTableData.push({
         id: row.idCost === undefined ? null : row.idCost,
         idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
-        idService: serviceList.filter((serv) => serv.service === row.description)[0]?.id, // id Descricao
+        idService: serviceList.filter((serv) => serv.service === row.description)[0]?.idService, // id Descricao
         idContainerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : null, // containerMODAL
         agent: row.agent,
         costType: 'Origem', // 'Origem''Destino''Tarifa'
@@ -207,7 +207,7 @@ const Step5 = ({
       newDestinyTableData.push({
         id: row.idCost === undefined ? null : row.idCost,
         idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
-        idService: serviceList.filter((serv) => serv.service === row.description)[0]?.id, // id Descricao
+        idService: serviceList.filter((serv) => serv.service === row.description)[0]?.idService, // id Descricao
         idContainerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : null, // containerMODAL
         agent: row.agent,
         costType: 'Destino', // 'Origem''Destino''Tarifa'

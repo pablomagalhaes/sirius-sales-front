@@ -32,7 +32,7 @@ export interface Proposal {
   idIncoterm: string // step2 incoterm id
   cargo: [{
     id?: number
-    cargo: string // descricao
+    txCargo: string // descricao
     isDangerous: boolean // step3 perigoso
     idImoType: number // id IMO
     idTemperature: number // step 3 id temperatura
