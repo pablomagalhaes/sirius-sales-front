@@ -273,7 +273,6 @@ const Proposal = (): JSX.Element => {
       const status = verifyStatus(proposal.status)
       const modal = verifyModal(proposal.modal)
       const type = verifyType(proposal.operation)
-      console.log(proposal)
       const item = {
         client: proposal.clientName,
         destination: proposal.modal === 'LAND' ? proposal.destinationCityName : proposal.idDestination,

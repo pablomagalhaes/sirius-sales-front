@@ -77,7 +77,7 @@ const ContractingTypeWithoutFcl = [
 const makeTableData = (costs): any => {
   const getTarifas = costs.filter(cost => cost.costType === 'Tarifa')
   return getTarifas.map(cost => ({
-    idCost: cost.id,
+    idCost: cost.idCost,
     selectedContainer: cost.idContainerType,
     agent: cost.agent,
     type: cost.billingType,
@@ -131,7 +131,7 @@ const Step6 = ({
           }
         }
         return false
-      })?.id,
+      })?.idCost,
       company: '',
       agent: {
         id: newAgent.id,
@@ -161,7 +161,7 @@ const Step6 = ({
     }))
   )
   const [dataContainer, setDataContainer] = useState(proposal.cargo[0].cargoVolumes.map((item, index) => ({
-    idCost: proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.id ?? null,
+    idCost: proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.idCost ?? null,
     idContainerType: item.idContainerType,
     currencySale: proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.idCurrencySale ?? '',
     currencyPurchase: proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.idCurrencyPurchase ?? '',
@@ -170,7 +170,7 @@ const Step6 = ({
   })))
 
   const [dataSales, setDataSales] = useState<any>({
-    idCost: proposal.costs.find(cost => cost.costType === 'Frete' && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.id ?? null,
+    idCost: proposal.costs.find(cost => cost.costType === 'Frete' && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.idCost ?? null,
     currencySale: String(proposal.costs.find(cost => cost.costType === 'Frete' && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.idCurrencySale ?? ''),
     valueSale: String(proposal.costs.find(cost => cost.costType === 'Frete' && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.valueSale ?? '')
   })
@@ -219,10 +219,6 @@ const Step6 = ({
     const getOnlyDataExists = unionCargos.filter(unionAgent => getOnlyCargosExists.includes(unionAgent.idContainerType))
     setDataContainer(getOnlyDataExists)
   }, [proposal.cargo[0]])
-
-  useEffect(() => {
-    console.log(tableData)
-  }, [tableData])
 
   useEffect(() => {
     loadAgentsList()
@@ -290,6 +286,7 @@ const Step6 = ({
       data.forEach((item): void => {
         const freightCostNew = {
           id: item?.idCost,
+          idCost: item?.idCost,
           idProposal: proposal.idProposal,
           idService: getServiceType(),
           billingType: '',
@@ -317,6 +314,7 @@ const Step6 = ({
       if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
         const freightCostSale = {
           id: dataSales.idCost,
+          idCost: dataSales.idCost,
           idProposal: proposal.idProposal,
           idService: getServiceType(),
           billingType: '',
@@ -347,6 +345,7 @@ const Step6 = ({
       dataContainer.forEach((item): void => {
         const freightCostNew = {
           id: item?.idCost,
+          idCost: item?.idCost,
           idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
           idService: getServiceType(),
           billingType: '',
@@ -384,7 +383,7 @@ const Step6 = ({
         const newLoadedTotalCostsIds: number[] = []
         for (const cost of proposal.costs) {
           if (cost.costType === 'Tarifa') {
-            newTableData[tableDataId].idCost = cost.id
+            newTableData[tableDataId].idCost = cost.idCost
             newTableData[tableDataId++].idProposal = proposal.idProposal
           }
         }
@@ -398,10 +397,6 @@ const Step6 = ({
       }
     }
   }))
-
-  useEffect(() => {
-    console.log('PROPOSTA', proposal)
-  }, [proposal])
 
   useEffect(() => {
     setTableData([])
@@ -498,7 +493,7 @@ const Step6 = ({
               getTotalItemValue
             ]).then((response) => {
               const loadedItem: FareModalData = {
-                idCost: cost.id,
+                idCost: cost.idCost,
                 idProposal: proposal.idProposal,
                 id: id++,
                 saleCurrency:
@@ -559,6 +554,7 @@ const Step6 = ({
     tableData.forEach((row) => {
       newFareItems.push({
         id: row.idCost === undefined ? null : row.idCost,
+        idCost: row.idCost === undefined ? null : row.idCost,
         idProposal:
           proposal?.idProposal === undefined ? null : proposal?.idProposal,
         idService: serviceList.filter((serv) => serv.service === row.expense)[0]
@@ -930,6 +926,7 @@ const Step6 = ({
         idContainerType: null,
         costType: 'Frete',
         id: null,
+        idCost: null,
         idCurrencyPurchase: '',
         idProposal: null,
         idService: getCosts[0].idService,
@@ -981,6 +978,7 @@ const Step6 = ({
         idContainerType: null,
         costType: 'Frete',
         id: null,
+        idCost: null,
         idCurrencyPurchase: '',
         idProposal: null,
         idService: getCosts[0].idService,

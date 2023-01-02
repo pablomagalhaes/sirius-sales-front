@@ -1,5 +1,6 @@
 export interface TotalCost {
   id?: number | null
+  idTotalCost?: number | null
   idProposal?: number | null
   costType: string // 'Origem''Destino''Tarifa'
   idCurrency: string // id moeda

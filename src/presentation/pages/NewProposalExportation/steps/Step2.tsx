@@ -71,6 +71,7 @@ interface DataProps {
 
 export interface Agents {
   id?: number | null
+  idProposalAgent?: number | null
   agent: string
   idBusinessPartnerAgent?: number | null
   shippingCompany: string
@@ -122,6 +123,7 @@ const Step2 = ({
   const [selectedAgents, setSelectedAgents] = useState<Agents[]>([
     {
       id: null,
+      idProposalAgent: null,
       agent: '',
       idBusinessPartnerAgent: null,
       shippingCompany: '',
@@ -135,7 +137,7 @@ const Step2 = ({
     updateAgentsIdsRef () {
       setSelectedAgents(
         selectedAgents.map((agent, index) => {
-          return { ...agent, id: proposal.agents[index].id }
+          return { ...agent, idProposalAgent: proposal.agents[index].idProposalAgent }
         })
       )
     }
@@ -194,6 +196,7 @@ const Step2 = ({
     setSelectedAgents([
       {
         id: null,
+        idProposalAgent: null,
         agent: '',
         idBusinessPartnerAgent: null,
         shippingCompany: '',
@@ -320,9 +323,9 @@ const Step2 = ({
     }
   }, [])
 
-  const getAgentById = (id: number | null | undefined): string => {
-    if (id !== null && id !== undefined) {
-      const agent = agentsList.find((agent) => agent.businessPartner.id === id)
+  const getAgentById = (idProposalAgent: number | null | undefined): string => {
+    if (idProposalAgent !== null && idProposalAgent !== undefined) {
+      const agent = agentsList.find((agent) => agent.businessPartner.id === idProposalAgent)
       if (agent !== undefined) {
         return agent.businessPartner.simpleName
       }
@@ -347,7 +350,7 @@ const Step2 = ({
       setSelectedAgents(
         proposal.agents.map((agent, index) => {
           return {
-            id: agent.id,
+            idProposalAgent: agent.idProposalAgent,
             idBusinessPartnerAgent: agent.idBusinessPartnerAgent,
             shippingCompany: getBusinessPartnerById(agent.idBusinessPartnerTransportCompany),
             agent: getAgentById(agent.idBusinessPartnerAgent),
@@ -702,6 +705,7 @@ const Step2 = ({
     setSelectedAgents([
       {
         id: null,
+        idProposalAgent: null,
         agent: '',
         idBusinessPartnerAgent: null,
         shippingCompany: '',
@@ -1433,6 +1437,7 @@ const Step2 = ({
                       ...selectedAgents,
                       {
                         id: null,
+                        idProposalAgent: null,
                         agent: '',
                         idBusinessPartnerAgent: null,
                         shippingCompany: '',

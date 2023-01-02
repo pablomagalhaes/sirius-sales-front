@@ -252,7 +252,6 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       if (proposal.idProposal === undefined || proposal.idProposal === null || location.state?.eventType === 'duplicate') {
         proposal.idProposal = null
         const newProposal = removeNullProperties()
-        console.log(newProposal)
         API.postProposal(JSON.stringify(newProposal)).then((response) => {
           setProposal(response)
           // @ts-expect-error

@@ -80,19 +80,19 @@ const Step5 = ({
         const newTotalCostDestIds: number[] = []
         for (const totalCost of proposal.totalCosts) {
           if (totalCost.costType === 'Origem') {
-            newTotalCostOrigIds.push(Number(totalCost.id))
+            newTotalCostOrigIds.push(Number(totalCost.idTotalCost))
           } else if (totalCost.costType === 'Destino') {
-            newTotalCostDestIds.push(Number(totalCost.id))
+            newTotalCostDestIds.push(Number(totalCost.idTotalCost))
           }
         }
         setLoadedTotalCostsOrigIds(newTotalCostOrigIds)
         setLoadedTotalCostsDestIds(newTotalCostDestIds)
         for (const cost of proposal.costs) {
           if (cost.costType === 'Origem') {
-            newOriginTable[originId].idCost = cost.id
+            newOriginTable[originId].idCost = cost.idCost
             newOriginTable[originId++].idProposal = proposal.idProposal
           } else if (cost.costType === 'Destino') {
-            newDestinyTable[destinyId].idCost = cost.id
+            newDestinyTable[destinyId].idCost = cost.idCost
             newDestinyTable[destinyId++].idProposal = proposal.idProposal
           }
         }
@@ -131,7 +131,7 @@ const Step5 = ({
 
             void await Promise.all([getContainer, getService]).then((response) => {
               const loadedItem: CostTableItem = {
-                idCost: cost.id,
+                idCost: cost.idCost,
                 idProposal: proposal.idProposal,
                 agent: cost.agent,
                 buyCurrency: cost.idCurrencyPurchase === '' ? 'BRL' : String(cost.idCurrencyPurchase),
@@ -164,9 +164,9 @@ const Step5 = ({
         const loadedTotalCostsDest: any[] = []
         proposal.totalCosts.forEach((totalCost: TotalCost) => {
           if (totalCost.costType === 'Origem') {
-            loadedTotalCostsOrig.push(totalCost.id)
+            loadedTotalCostsOrig.push(totalCost.idTotalCost)
           } if (totalCost.costType === 'Destino') {
-            loadedTotalCostsDest.push(totalCost.id)
+            loadedTotalCostsDest.push(totalCost.idTotalCost)
           }
         })
         setLoadedTotalCostsOrigIds(loadedTotalCostsOrig)
@@ -184,6 +184,7 @@ const Step5 = ({
     dataOrigin.forEach((row) => {
       newOriginTableData.push({
         id: row.idCost === undefined ? null : row.idCost,
+        idCost: row.idCost === undefined ? null : row.idCost,
         idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
         idService: serviceList.filter((serv) => serv.service === row.description)[0]?.idService, // id Descricao
         idContainerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : null, // containerMODAL
@@ -206,6 +207,7 @@ const Step5 = ({
     dataDestiny.forEach((row) => {
       newDestinyTableData.push({
         id: row.idCost === undefined ? null : row.idCost,
+        idCost: row.idCost === undefined ? null : row.idCost,
         idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
         idService: serviceList.filter((serv) => serv.service === row.description)[0]?.idService, // id Descricao
         idContainerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : null, // containerMODAL
@@ -231,7 +233,7 @@ const Step5 = ({
     dataTotalCostOrigin.forEach((currency, index) => {
       if (currency.value.buy !== 0 || currency.value.sale !== 0) {
         newTotalCostOrigin.push({
-          id: loadedTotalCostsOrigIds[index] === undefined ? null : loadedTotalCostsOrigIds[index],
+          idTotalCost: loadedTotalCostsOrigIds[index] === undefined ? null : loadedTotalCostsOrigIds[index],
           idProposal: loadedTotalCostsOrigIds[index] === undefined ? null : proposal?.idProposal,
           costType: 'Origem', // 'Origem''Destino''Tarifa'
           idCurrency: currency.name, // id moeda
@@ -244,7 +246,7 @@ const Step5 = ({
     dataTotalCostDestiny.forEach((currency, index) => {
       if (currency.value.buy !== 0 || currency.value.sale !== 0) {
         newTotalCostDestiny.push({
-          id: loadedTotalCostsDestIds[index] === undefined ? null : loadedTotalCostsDestIds[index],
+          idTotalCost: loadedTotalCostsDestIds[index] === undefined ? null : loadedTotalCostsDestIds[index],
           idProposal: loadedTotalCostsDestIds[index] === undefined ? null : proposal?.idProposal,
           costType: 'Destino', // 'Origem''Destino''Tarifa'
           idCurrency: currency.name, // id moeda

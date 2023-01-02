@@ -6,6 +6,7 @@ export interface CostAgent {
 }
 export interface Cost {
   id?: number | null
+  idCost: number | null
   idProposal?: number | null
   idService: number // id Descricao
   idContainerType: string | null// containerMODAL
