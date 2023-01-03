@@ -1107,8 +1107,8 @@ const Step6 = ({
                     )}
                     {proposal.agents.map((selectedAgent, index) => {
                       return ((selectedAgent.idBusinessPartnerAgent !== null) && (selectedAgent.idBusinessPartnerTransportCompany !== null)) && (
-                        <>
-                          <Fragment key={index}>
+                        <div key={index}>
+                          <Fragment>
                             <Grid container spacing={5}>
                               <Grid item xs={3}>
                                 <FormLabel component='legend'>{getAgentNameByidBusinessPartnerAgent(selectedAgent.idBusinessPartnerAgent)}</FormLabel>
@@ -1152,7 +1152,7 @@ const Step6 = ({
                               </Grid>
                             </Grid>
                           </Fragment>
-                        </>
+                        </div>
                       )
                     })}
                     <Fragment>
@@ -1250,8 +1250,8 @@ const Step6 = ({
                     {proposal.cargo[0].cargoVolumes.map((cargoVolume, index, array) => {
                       return (dataContainer.length === array.length) && (
 
-                        <>
-                          <Fragment key={index}>
+                        <div key={index}>
+                          <Fragment>
 
                             <Grid container spacing={5}>
                               <Grid item xs={3}>
@@ -1382,7 +1382,7 @@ const Step6 = ({
 
                           </Fragment>
 
-                        </>
+                        </div>
 
                       )
                     })}
