@@ -158,7 +158,8 @@
         "state": "Estado",
         "subtitle": "Defina origem, destino e especificidades do trecho.",
         "title": "Trecho",
-        "transporter": "Transportadora"
+        "transporter": "Transportadora",
+        "collectionAddressDap": "Endereço de entrega:"
       },
       "step3": {
         "buttonAdd": "Adicionar item à carga",

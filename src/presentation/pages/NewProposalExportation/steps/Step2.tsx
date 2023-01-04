@@ -1482,12 +1482,20 @@ const Step2 = ({
           </Grid>
           <Grid item xs={4}>
             {(data.incoterm === 'EXW' ||
-              data.incoterm === 'FCA' ||
               data.incoterm === 'DAP') && (
               <>
                 <FormLabel component="legend">
-                  {I18n.t('pages.newProposal.step2.collectionAddress')}
-                  {data.incoterm !== 'FCA' && <RedColorSpan> *</RedColorSpan>}
+                  {data.incoterm === 'DAP' ?
+                      (
+                        <>
+                          {I18n.t('pages.newProposal.step2.collectionAddressDap')}
+                        </>
+                     ):(
+                      <>
+                      {I18n.t('pages.newProposal.step2.collectionAddress')}
+                      </>
+                    )}
+                  
                 </FormLabel>
                 <ControlledInput
                   id="description"
@@ -1497,7 +1505,6 @@ const Step2 = ({
                   }
                   invalid={
                     invalidInput &&
-                    data.incoterm !== 'FCA' &&
                     data.collection.length === 0
                   }
                   value={data.collection.length !== 0 ? data.collection : ''}
