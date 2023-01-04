@@ -234,11 +234,11 @@ const Step2 = ({
     return ''
   }
 
-  // useEffect(() => {
-  //   if (proposalType === 'CLIENT' && loadedAgentsData) {
-  //     setAgentList(selectedAgents)
-  //   }
-  // }, [selectedAgents, agentsList, loadedAgentsData])
+  useEffect(() => {
+    if (proposalType === 'CLIENT' && loadedAgentsData) {
+      setAgentList(selectedAgents)
+    }
+  }, [selectedAgents, agentsList, loadedAgentsData])
 
   useEffect(() => {
     void (async function () {

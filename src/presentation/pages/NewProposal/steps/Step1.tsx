@@ -51,7 +51,8 @@ export interface Step1Props {
   setModal: (modal: string) => void
   filled: Filled
   setStepLoaded: (steps: any) => void
-  setAgentList: (agent: string[]) => void
+  setAgentList: (agent: Agents[]) => void
+  // setAgentList: (agent: string[]) => void
 }
 
 const Step1 = ({
@@ -184,14 +185,7 @@ const Step1 = ({
     setModal(data.modal)
   }, [data.modal])
 
-  // useEffect(() => {
-  //   if (data.proposal === 'ROUTING ORDER') {
-  //     const agent: string[] = []
-  //     agent.push(data.proposalValue)
-  //     setAgentList(agent)
-  //     // setAgentList(selectedAgents)
-  //   }
-  // }, [data.proposalValue, selectedAgents, agentsList])
+
 
   useEffect(() => {
     if (
@@ -251,6 +245,34 @@ const Step1 = ({
       setData({ ...data, modal: modal })
     }
   }
+
+  const getidBusinessPartnerAgent = (agentName: string): number | undefined => {
+    let id
+    if (agentName !== '') {
+      agentsList?.forEach((item): void => {
+        if (String(item.businessPartner.simpleName) === String(agentName)) {
+          id = item.businessPartner.id
+        }
+      })
+    }
+    return id
+  }
+
+  useEffect(() => {
+    setProposal({
+      ...proposal,
+      agents: selectedAgents.map(
+        ({ shippingCompany, agent, ...otherProperties }) => otherProperties
+      )
+    })
+  }, [selectedAgents])
+
+  useEffect(() => {
+    if (data.proposal === 'ROUTING ORDER') {
+      setAgentList(selectedAgents)
+    }
+  }, [data.proposalValue, selectedAgents, agentsList])
+
 
   return (
     <Separator>
