@@ -156,7 +156,8 @@
         "state": "State",
         "subtitle": "Define the origin, destination and specifics of the section.",
         "title": "Section",
-        "transporter": "Transporter"
+        "transporter": "Transporter",
+        "collectionAddressDap": "Delivery address:"
       },
       "step3": {
         "buttonAdd": "Add item to cargo",

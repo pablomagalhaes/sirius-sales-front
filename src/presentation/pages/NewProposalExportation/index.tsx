@@ -550,24 +550,28 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
                 specifications={specifications}
               />
             </div>
-            {stepLoaded.step3 && <> <div id="step5">
-              <Step5
-                agentList={agentList}
-                calculationData={calculationData}
-                containerItems={step3TableItems}
-                containerTypeList={containerTypeList}
-                costData={costData}
-                invalidInput={invalidInput}
-                modal={modal}
-                serviceList={serviceList}
-                setCompleted={setCompleted}
-                setFilled={setFilled}
-                setUndoMessage={setUndoMessage}
-                specifications={specifications}
-                undoMessage={undoMessage}
-                updateTableIdsRef={updateTable5IdsRef}
-              />
-            </div>
+            {stepLoaded.step3 &&
+              <>
+                {proposal.idTransport !== 'LAND' &&
+                  <div id="step5">
+                    <Step5
+                      agentList={agentList}
+                      calculationData={calculationData}
+                      containerItems={step3TableItems}
+                      containerTypeList={containerTypeList}
+                      costData={costData}
+                      invalidInput={invalidInput}
+                      modal={modal}
+                      serviceList={serviceList}
+                      setCompleted={setCompleted}
+                      setFilled={setFilled}
+                      setUndoMessage={setUndoMessage}
+                      specifications={specifications}
+                      undoMessage={undoMessage}
+                      updateTableIdsRef={updateTable5IdsRef}
+                    />
+                  </div>
+                }
               <div id="step6">
                 <Step6
                   calculationData={calculationData}
