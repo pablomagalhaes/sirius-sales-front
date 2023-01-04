@@ -1046,8 +1046,9 @@ const Step6 = ({
     <Separator>
       <HeightDiv>
         <Title>
-        {proposal.idTransport === 'LAND' ? 
-        ( <> 5. </> ) : ( <> 6. </>)} 
+        {proposal.idTransport === 'LAND'
+          ? (<> 5. </>)
+          : (<> 6. </>)}
           {I18n.t('pages.newProposal.step6.title')}
           <Subtitle>{I18n.t('pages.newProposal.step6.subtitle')}</Subtitle>
         </Title>

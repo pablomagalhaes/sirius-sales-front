@@ -1485,17 +1485,18 @@ const Step2 = ({
               data.incoterm === 'DAP') && (
               <>
                 <FormLabel component="legend">
-                  {data.incoterm === 'DAP' ?
-                      (
+                  {data.incoterm === 'DAP'
+                    ? (
                         <>
                           {I18n.t('pages.newProposal.step2.collectionAddressDap')}
                         </>
-                     ):(
+                      )
+                    : (
                       <>
                       {I18n.t('pages.newProposal.step2.collectionAddress')}
                       </>
-                    )}
-                  
+                      )}
+
                 </FormLabel>
                 <ControlledInput
                   id="description"
