@@ -82,9 +82,9 @@ const SurchargeTable = ({ data, dataFields, remove, edit, agentList }: TableData
           </StyledTableRow>
         </TableHead>
         <TableBody>
-          {data?.map((item: FareModalData) => {
+          {data?.map((item: FareModalData, key) => {
             return (
-              <StyledRow id={item.id} key={item.id}>
+              <StyledRow id={item.id} key={key}>
                 <StyledTableCell width="30%" color={1} component="th" scope="row">
                   {item.expense}
                 </StyledTableCell>
