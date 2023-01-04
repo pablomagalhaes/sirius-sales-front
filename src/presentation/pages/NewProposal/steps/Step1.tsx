@@ -185,8 +185,6 @@ const Step1 = ({
     setModal(data.modal)
   }, [data.modal])
 
-
-
   useEffect(() => {
     if (
       data.proposal !== '' &&
@@ -272,7 +270,6 @@ const Step1 = ({
       setAgentList(selectedAgents)
     }
   }, [data.proposalValue, selectedAgents, agentsList])
-
 
   return (
     <Separator>
@@ -364,27 +361,16 @@ const Step1 = ({
               )}
 
           {selectedAgents.map((selectedAgent, index) => {
-            console.log('selectedAgent', selectedAgent)
             return (
               <Fragment key={index}>
                 <Autocomplete
                   freeSolo
-
                   options={
                     data.proposal === 'ROUTING ORDER'
                       ? agentsList.map((item) => item.businessPartner.simpleName)
                       : partnerList.map((item) => item.businessPartner.simpleName)
                   }
-                  // onChange={(e, newValue) =>
-                  //   setData({ ...data, proposalValue: String(newValue) })
-                  // }
-                  // value={data.proposalValue}
-
-                  // options={agentsList.map(
-                  //   (item) => item.businessPartner.simpleName
-                  // )}
                   onChange={(e, newValue) => {
-                    // console.log('newValue', newValue)
                     setSelectedAgents(
                       selectedAgents.map((value, currentIndex) =>
                         currentIndex === index
@@ -398,7 +384,6 @@ const Step1 = ({
                     )
                   }}
                   value={selectedAgent.agent}
-
                   renderInput={(params) => (
                     <div ref={params.InputProps.ref}>
                       <ControlledInput
