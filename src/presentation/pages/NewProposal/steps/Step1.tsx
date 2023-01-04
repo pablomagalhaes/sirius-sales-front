@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext, Fragment } from 'react'
 import {
   Checkbox,
   FormControlLabel,
@@ -26,6 +26,14 @@ import { Transport, TransportList } from '../../../../domain/Transport'
 import { StyledPaper } from './StepsStyles'
 import { ExitDialog } from 'fiorde-fe-components'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
+
+export interface Agents {
+  id?: number | null
+  agent: string
+  idBusinessPartnerAgent?: number | null
+  shippingCompany: string
+  idBusinessPartnerTransportCompany?: number | null
+}
 
 export interface Filled {
   step2: boolean
@@ -71,6 +79,17 @@ const Step1 = ({
 
   const [showPopUp, setShowPopUp] = useState(false)
   const [modalCopy, setModalCopy] = useState('')
+
+  const [selectedAgents, setSelectedAgents] = useState<Agents[]>([
+    {
+      id: null,
+      agent: '',
+      idBusinessPartnerAgent: null,
+      shippingCompany: '',
+      idBusinessPartnerTransportCompany: null
+    }
+  ])
+
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
   useEffect(() => {
@@ -165,13 +184,14 @@ const Step1 = ({
     setModal(data.modal)
   }, [data.modal])
 
-  useEffect(() => {
-    if (data.proposal === 'ROUTING ORDER') {
-      const agent: string[] = []
-      agent.push(data.proposalValue)
-      setAgentList(agent)
-    }
-  }, [data.proposalValue])
+  // useEffect(() => {
+  //   if (data.proposal === 'ROUTING ORDER') {
+  //     const agent: string[] = []
+  //     agent.push(data.proposalValue)
+  //     setAgentList(agent)
+  //     // setAgentList(selectedAgents)
+  //   }
+  // }, [data.proposalValue, selectedAgents, agentsList])
 
   useEffect(() => {
     if (
@@ -306,6 +326,7 @@ const Step1 = ({
             </Grid>
             )}
         <Grid item xs={6}>
+
           {data.proposal === 'ROUTING ORDER'
             ? (
               <FormLabel component="legend" error={data.proposalValue === '' && invalidInput}>
@@ -319,45 +340,75 @@ const Step1 = ({
                 <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               )}
-          <Autocomplete
-            freeSolo
-            onChange={(e, newValue) =>
-              setData({ ...data, proposalValue: String(newValue) })
-            }
-            options={
-              data.proposal === 'ROUTING ORDER'
-                ? agentsList.map((item) => item.businessPartner.simpleName)
-                : partnerList.map((item) => item.businessPartner.simpleName)
-            }
-            value={data.proposalValue}
-            renderInput={(params) => (
-              <div ref={params.InputProps.ref}>
-                <ControlledInput
-                  {...params}
-                  id="search-client"
-                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                  invalid={data.proposalValue === '' && invalidInput}
-                  variant="outlined"
-                  size="small"
-                  placeholder={I18n.t('pages.newProposal.step1.searchClient')}
-                  $space
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconComponent
-                          name="search"
-                          defaultColor={
-                            theme?.commercial?.pages?.newProposal?.subtitle
-                          }
-                        />
-                      </InputAdornment>
+
+          {selectedAgents.map((selectedAgent, index) => {
+            console.log('selectedAgent', selectedAgent)
+            return (
+              <Fragment key={index}>
+                <Autocomplete
+                  freeSolo
+
+                  options={
+                    data.proposal === 'ROUTING ORDER'
+                      ? agentsList.map((item) => item.businessPartner.simpleName)
+                      : partnerList.map((item) => item.businessPartner.simpleName)
+                  }
+                  // onChange={(e, newValue) =>
+                  //   setData({ ...data, proposalValue: String(newValue) })
+                  // }
+                  // value={data.proposalValue}
+
+                  // options={agentsList.map(
+                  //   (item) => item.businessPartner.simpleName
+                  // )}
+                  onChange={(e, newValue) => {
+                    // console.log('newValue', newValue)
+                    setSelectedAgents(
+                      selectedAgents.map((value, currentIndex) =>
+                        currentIndex === index
+                          ? {
+                              ...value,
+                              agent: newValue ?? '',
+                              idBusinessPartnerAgent: getidBusinessPartnerAgent(newValue)
+                            }
+                          : value
+                      )
                     )
                   }}
+                  value={selectedAgent.agent}
+
+                  renderInput={(params) => (
+                    <div ref={params.InputProps.ref}>
+                      <ControlledInput
+                        {...params}
+                        id="search-client"
+                        toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                        invalid={data.proposalValue === '' && invalidInput}
+                        variant="outlined"
+                        size="small"
+                        placeholder={I18n.t('pages.newProposal.step1.searchClient')}
+                        $space
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconComponent
+                                name="search"
+                                defaultColor={
+                                  theme?.commercial?.pages?.newProposal?.subtitle
+                                }
+                              />
+                            </InputAdornment>
+                          )
+                        }}
+                      />
+                    </div>
+                  )}
+                  PaperComponent={(params: any) => <StyledPaper {...params} />}
                 />
-              </div>
-            )}
-            PaperComponent={(params: any) => <StyledPaper {...params} />}
-          />
+              </Fragment>
+            )
+          })}
+
         </Grid>
         <Grid item xs={6}>
           <FormLabel component="legend" error={data.requester === '' && invalidInput}>
