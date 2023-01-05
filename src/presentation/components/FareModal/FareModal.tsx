@@ -155,7 +155,7 @@ const FareModal = ({
 
   const getAgents = (): any => {
     const proposalAgentsidBusinessPartnerAgent = proposal.agents.map(a => a.idBusinessPartnerAgent)
-    let getSomeAgents = AllAgents?.map(a => proposalAgentsidBusinessPartnerAgent.includes(a?.businessPartner?.id)
+    const getSomeAgents = AllAgents?.map(a => proposalAgentsidBusinessPartnerAgent.includes(a?.businessPartner?.id)
       ? ({
           idBusinessPartnerAgent: a?.businessPartner?.id,
           agent: a?.businessPartner?.simpleName,
