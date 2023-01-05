@@ -60,6 +60,9 @@ const Proposal = (): JSX.Element => {
   const [orderAsc, setOrderAsc] = useState(true)
   const [orderBy, setOrderBy] = useState<string>('openingDate')
   const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
+  const [originDestinationCountries, setoriginDestinationCountries] = useState<any[]>([])
+  const [originDestinationStates, setoriginDestinationStates] = useState<any[]>([])
+  const [originDestinationCities, setoriginDestinationCities] = useState<any[]>([])
   const [partnerList, setPartnerList] = useState<any[]>([])
   const [partnerSimpleNameList, setPartnerSimpleNameList] = useState<any[]>([])
   const [proposalList, setProposalList] = useState<any[]>([])
@@ -98,35 +101,6 @@ const Proposal = (): JSX.Element => {
     }
   ]
 
-  const getLandList = async (land: string, params: string): Promise<string[]> => {
-    const landList: string[] = []
-    if (land === 'País') {
-      await API.getCountries()
-        .then((response) => response.forEach((item: any) => landList.push(`${String(item.id)}-${String(item.name)}`)))
-        .catch((err) => console.log(err))
-    }
-    if (land === 'Estado') {
-      await API.getStates(params)
-        .then((response) => response.forEach((item: any) => landList.push(`${String(item.id)}-${String(item.name)}`)))
-        .catch((err) => console.log(err))
-    }
-    if (land === 'Cidade') {
-      await API.getCities(params)
-        .then((response) => response.forEach((item: any) => landList.push(`${String(item.id)}-${String(item.name)}`)))
-        .catch((err) => console.log(err))
-    }
-    console.log(landList)
-    return landList
-  }
-
-  useEffect(() => {
-    getProposalByFilter()
-  }, [filter])
-
-  useEffect(() => {
-    getCountProposalByFilter()
-  }, [proposalList])
-
   useEffect(() => {
     const newIncotermList: any[] = []
     void (async function () {
@@ -164,9 +138,30 @@ const Proposal = (): JSX.Element => {
         .then((response) => { setOriginDestinationList(response) })
         .catch((err) => console.log(err))
     })()
+    void (async function () {
+      const actualList: any[] = []
+      await API.getCountries()
+        .then((response) => response.forEach((item: any) => actualList.push(`${String(item.id)}-${String(item.name)}`)))
+        .then(() => setoriginDestinationCountries(actualList))
+        .catch((err) => console.log(err))
+    })()
+    void (async function () {
+      const actualList: any[] = []
+      await API.getMercosulCities()
+        .then((response) => response.forEach((item: any) => actualList.push(String(item.txState))))
+        .then(() => setoriginDestinationStates(actualList))
+        .catch((err) => console.log(err))
+    })()
+    void (async function () {
+      const actualList: any[] = []
+      await API.getMercosulCities()
+        .then((response) => response.forEach((item: any) => actualList.push(String(item.txCity))))
+        .then(() => setoriginDestinationCities(actualList))
+        .catch((err) => console.log(err))
+    })()
   }, [])
 
-  const getOriginDestinyList = (): string[] => {
+  const getOriginDestinyList = (land: string): string[] => {
     const actualList: string[] = []
     let type = ''
 
@@ -178,23 +173,57 @@ const Proposal = (): JSX.Element => {
         type = 'PORTO'
         break
       case 'Rodoviário':
+        type = 'RODOVIARIO'
+        break
+      default:
+        break
+    }
+    if (type !== 'RODOVIARIO') {
+      originDestinationList?.forEach((item): void => {
+        if (item.type === type) {
+          actualList.push(`${String(item.id)} - ${String(item.name)}`)
+        }
+      })
+    } else {
+      if (land === 'País') {
+        originDestinationCountries?.forEach((item): void => {
+          actualList.push(item)
+        })
+      }
+      if (land === 'Estado') {
+        originDestinationStates?.forEach((item): void => {
+          actualList.push(item)
+        })
+      }
+      if (land === 'Cidade') {
+        originDestinationCities?.forEach((item): void => {
+          actualList.push(item)
+        })
+      }
+    }
+    return actualList
+  }
+
+  const getLandLabels = (): string[] => {
+    let type = ''
+    let landLabels: string[] = []
+    switch (radioValue) {
+      case 'Aéreo':
+        type = 'AEROPORTO'
+        break
+      case 'Marítimo':
+        type = 'PORTO'
+        break
+      case 'Rodoviário':
+        type = 'RODOVIARIO'
         break
       default:
         break
     }
 
-    originDestinationList?.forEach((item): void => {
-      if (item.type === type) {
-        actualList.push(`${String(item.id)} - ${String(item.name)}`)
-      }
-    })
-
-    return actualList
-  }
-
-  const getLandLabels = (): string[] => {
-    let landLabels: string[] = []
-    if (radioValue === 'Rodoviário') landLabels = ['País', 'Estado', 'Cidade']
+    if (type === 'RODOVIARIO') {
+      landLabels = ['País', 'Estado', 'Cidade']
+    }
     return landLabels
   }
 
@@ -218,6 +247,14 @@ const Proposal = (): JSX.Element => {
         .catch((err) => console.log(err))
     })()
   }
+
+  useEffect(() => {
+    getProposalByFilter()
+  }, [filter])
+
+  useEffect(() => {
+    getCountProposalByFilter()
+  }, [proposalList])
 
   const verifyStatus = (status): any => {
     switch (status) {
@@ -719,12 +756,12 @@ const Proposal = (): JSX.Element => {
     {
       label: 'Modal/Origem/Destino',
       radioButtonList: menuItems.modal,
-      pickerListOptions1: getOriginDestinyList(),
-      pickerListOptions2: getOriginDestinyList(),
+      pickerListOptions1: getOriginDestinyList('País'),
+      pickerListOptions2: getOriginDestinyList('Estado'),
+      pickerListOptions3: getOriginDestinyList('Cidade'),
       pickerLabel1: 'Origem',
       pickerLabel2: 'Destino',
       title1: 'Modal',
-      getLandList: getLandList,
       pickerLandLabels: getLandLabels()
 
     },
