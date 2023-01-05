@@ -103,14 +103,6 @@ const FareModal = ({
     }
   }
 
-  const verifyAgents = (): void => {
-    if (proposal.agents.length === 1) {
-      setData({ ...data, selectedAgent: proposal.agents[0]?.agent })
-    } else {
-      setData({ ...data, selectedAgent: initialState?.agent?.agent })
-    }
-  }
-
   useEffect(() => {
     verifyContainerItems()
   }, [containerItems])
@@ -164,9 +156,6 @@ const FareModal = ({
   useEffect(() => {
     if (dataProp !== initialState) {
       setData(dataProp)
-    }
-    if (proposal.agents.length > 0) {
-      verifyAgents()
     }
   }, [open])
 
