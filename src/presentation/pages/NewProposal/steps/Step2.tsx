@@ -1260,6 +1260,7 @@ const Step2 = ({
               <Fragment key={index}>
                 {proposalType === 'CLIENT' && loadedAgentsData && (
                   <Grid item xs={6}>
+
                     <FormLabel component="legend" error={proposalType === 'CLIENT' && invalidInput && selectedAgent.agent.length === 0}>
                       {I18n.t('pages.newProposal.step2.agents')}
                       {getAgentCounter(index)}
@@ -1267,6 +1268,7 @@ const Step2 = ({
                         <RedColorSpan> *</RedColorSpan>
                       )}
                     </FormLabel>
+
                     <Autocomplete
                       disabled={modal === ''}
                       size="small"
