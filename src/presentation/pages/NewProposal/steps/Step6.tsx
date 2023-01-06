@@ -801,6 +801,9 @@ const Step6 = ({
       if (item.minimumValue < item.saleValue) {
         totalSum = totalSum + Number(item.saleValue?.replace(',', '.'))
       }
+      if (item.minimumValue === item.saleValue) {
+        totalSum = totalSum + Number(item.saleValue?.replace(',', '.'))
+      }
     }
     return totalSum.toFixed(2).replace('.', ',')
   }
