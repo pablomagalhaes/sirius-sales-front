@@ -5,14 +5,12 @@ export const emptyProposalValue: Proposal = {
   idProposal: null,
   idProposalImportFreight: null,
   referenceProposal: 'Ref-000000', // referencia proposta
-  customerId: 0, // step1 agent client
-  operationType: 'FRETE - IMPORTAÇÃO', // FRETE IMPORTACAO
-  idStatus: 1, // sempre passar 1
+  idBusinessPartnerCustomer: 0, // step1 agent client
+  operationType: 'IMPORT FREIGHT', // FRETE IMPORTACAO
+  idProposalStatus: 1, // sempre passar 1
   codeUserCreation: 0, // codigo do usuario
-  codeRespSeller: 0, // 0 por enquanto nao sabemos
   openingDate: '2022-04-12T13:03:46.340Z', // 2022-03-17T13:03:46.340Z//DiaDeHoje
   validityDate: '2022-05-12T13:03:46.340Z', // 2022-03-17T13:03:46.340Z//Step4Validade
-  approvalDate: null, // 2022-03-17T13:03:46.340Z//null
   referenceClientProposal: '', // step1 cliente
   generalObservations: '', // Step4ObservacoesGerais
   internalObservations: '', // Step4ObservacoesInternas
@@ -24,22 +22,23 @@ export const emptyProposalValue: Proposal = {
   idTransport: '', // step1 modal
   idOrigin: '', // id origem (if rod="NULL")
   idDestination: '', // id destino (if rod="NULL")
+  originDestiny: [],
   originCityName: '',
   originCityId: '',
   destinationCityName: '',
   destinationCityId: '',
   idIncoterm: '', // step2 incoterm id
-  cargo: {
-    cargo: '', //
+  cargo: [{
+    txCargo: '', //
     isDangerous: true, // step3 perigoso
     idImoType: 0, // id IMO
     idTemperature: 0, // step 3 id temperatura
     idCargoContractingType: 1, // id especificacoes step3 (null observar comportamento)
-    codeUn: 0, // step 3 codigo
+    codeUnDangerous: 0, // step 3 codigo
     cargoVolumes: [],
     vlCwPurchase: null, // chargeable weight compra
     vlCwSale: null // chargeable weight venda
-  },
+  }],
   transitTime: 0, // step4 transit time
   idFrequency: 0, // step 4 id frequency
   route: '', // step4 rota

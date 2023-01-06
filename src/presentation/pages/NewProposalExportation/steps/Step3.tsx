@@ -41,7 +41,7 @@ import ChargeTable, {
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import { withTheme } from 'styled-components'
 import API from '../../../../infrastructure/api'
-import { ProposalContext, ProposalProps } from '../context/ProposalContext'
+import { ProposalContext, ProposalProps } from '../../NewProposal/context/ProposalContext'
 import { CargoVolume } from '../../../../domain/CargoVolume'
 import CwModal from '../../../components/CwModal/CwModal'
 
@@ -132,7 +132,7 @@ const Step3 = ({
       let tableDataId = 0
       if (proposal?.idProposal !== undefined && proposal?.idProposal !== null) {
         const newTableData = [...tableRows]
-        for (const cargo of proposal.cargo.cargoVolumes) {
+        for (const cargo of proposal.cargo[0].cargoVolumes) {
           newTableData[tableDataId].idCargoVolume = cargo?.id
           newTableData[tableDataId++].idCargo = cargo?.idCargo
           setTableRows(newTableData)
@@ -180,8 +180,8 @@ const Step3 = ({
 
   useEffect(() => {
     setChargeableWeightSale(copyCwSale)
-    setCw(proposal.cargo.vlCwPurchase)
-    setChargeableWeight(proposal.cargo.vlCwPurchase)
+    setCw(proposal.cargo[0].vlCwPurchase)
+    setChargeableWeight(proposal.cargo[0].vlCwPurchase)
   }, [copyCwSale])
 
   useEffect(() => {
@@ -230,33 +230,33 @@ const Step3 = ({
     void Promise.all([getPackagingList, getImoList, getTemperatureList]).then(
       (response: any) => {
         if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
-          setCopyCwSale(proposal.cargo.vlCwSale)
+          setCopyCwSale(proposal.cargo[0].vlCwSale)
           setCwSaleEditMode(true)
           setData({
-            description: proposal.cargo.cargo,
+            description: proposal.cargo[0].txCargo,
             specifications:
               proposal.idTransport === 'SEA'
                 ? specificationsList[
-                  Number(proposal.cargo.idCargoContractingType) - 1
+                  Number(proposal.cargo[0].idCargoContractingType) - 1
                 ].toLowerCase()
                 : '',
-            temperature: String(proposal.cargo.idTemperature),
-            dangerous: proposal.cargo.isDangerous,
-            imo: String(proposal.cargo.idImoType),
-            codUn: String(proposal.cargo.codeUn !== null ? proposal.cargo.codeUn : '')
+            temperature: String(proposal.cargo[0].idTemperature),
+            dangerous: proposal.cargo[0].isDangerous,
+            imo: String(proposal.cargo[0].idImoType),
+            codUn: String(proposal.cargo[0].codeUnDangerous !== null ? proposal.cargo[0].codeUnDangerous : '')
           })
 
           if (isAir()) {
-            setChargeableWeight(proposal.cargo.vlCwPurchase)
-            setChargeableWeightSale(proposal.cargo.vlCwSale)
+            setChargeableWeight(proposal.cargo[0].vlCwPurchase)
+            setChargeableWeightSale(proposal.cargo[0].vlCwSale)
           }
 
           let id = 0
           const loadedTableRows: ItemModalData[] = []
-          proposal.cargo.cargoVolumes.forEach((cargo: CargoVolume) => {
+          proposal.cargo[0].cargoVolumes.forEach((cargo: CargoVolume) => {
             loadedTableRows.push({
               idCargoVolume: cargo.id,
-              idCargo: proposal.cargo.id,
+              idCargo: proposal.cargo[0].id,
               amount: String(cargo.valueQuantity),
               cubage: completeDecimalPlaces(cargo?.valueCubage),
               diameter: completeDecimalPlaces(cargo?.valueDiameter),
@@ -285,9 +285,9 @@ const Step3 = ({
   useEffect(() => {
     setProposal({
       ...proposal,
-      cargo: {
-        ...proposal.cargo,
-        cargo: data.description,
+      cargo: [{
+        ...proposal.cargo[0],
+        txCargo: data.description,
         idCargoContractingType:
           modal === 'SEA'
             ? specificationsList
@@ -296,12 +296,12 @@ const Step3 = ({
             : 1,
         isDangerous: data.dangerous,
         idImoType: Number(data.imo),
-        codeUn: Number(data.codUn),
+        codeUnDangerous: Number(data.codUn),
         idTemperature: Number(data.temperature),
         cargoVolumes: cargoVolume,
         vlCwPurchase: isAir() ? chargeableWeight : null,
         vlCwSale: isAir() ? chargeableWeightSale : null
-      }
+      }]
     })
   }, [data, cargoVolume, chargeableWeight, chargeableWeightSale])
 
@@ -334,7 +334,7 @@ const Step3 = ({
   const marineFCL = (): boolean => {
     const specification =
       specificationsList[
-        Number(proposal.cargo.idCargoContractingType) - 1
+        Number(proposal.cargo[0].idCargoContractingType) - 1
       ].toLowerCase()
     return modal === 'SEA' && specification === 'fcl'
   }

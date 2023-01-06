@@ -46,8 +46,8 @@ const SurchargeTable = ({ data, dataFields, remove, edit, agentList }: TableData
     }
   }
 
-  function getAgentNameByAgentId (agentId: string): string {
-    return agentList.find((agent) => agent.businessPartner.id === agentId)?.businessPartner?.simpleName
+  function getAgentNameByidBusinessPartnerAgent (idBusinessPartnerAgent: string): string {
+    return agentList.find((agent) => agent.businessPartner.id === idBusinessPartnerAgent)?.businessPartner?.simpleName
   }
 
   if (data != null && data.length > 0) {
@@ -82,14 +82,14 @@ const SurchargeTable = ({ data, dataFields, remove, edit, agentList }: TableData
           </StyledTableRow>
         </TableHead>
         <TableBody>
-          {data?.map((item: FareModalData) => {
+          {data?.map((item: FareModalData, key) => {
             return (
-              <StyledRow id={item.id} key={item.id}>
+              <StyledRow id={item.id} key={key}>
                 <StyledTableCell width="30%" color={1} component="th" scope="row">
                   {item.expense}
                 </StyledTableCell>
                 <StyledTableCell width="30%" align="left">
-                  {getAgentNameByAgentId(item?.agent?.agentId)}
+                  {getAgentNameByidBusinessPartnerAgent(item?.agent?.idBusinessPartnerAgent)}
                 </StyledTableCell>
                 <StyledTableCell width="30%" align="left">
                   {item.type}

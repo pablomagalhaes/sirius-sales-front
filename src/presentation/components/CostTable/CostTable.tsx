@@ -140,8 +140,8 @@ const CostTable = ({
           valueSale: Number(item.saleValue),
           idCurrencyPurchase: item.buyCurrency,
           idCurrencySale: item.saleCurrency,
-          valuePurchaseCW: item.type === 'CW' ? proposal.cargo.vlCwPurchase : null,
-          valueSaleCW: item.type === 'CW' ? proposal.cargo.vlCwSale : null
+          valuePurchaseCW: item.type === 'CW' ? proposal.cargo[0].vlCwPurchase : null,
+          valueSaleCW: item.type === 'CW' ? proposal.cargo[0].vlCwSale : null
         }
 
         void (async function () {
@@ -159,7 +159,7 @@ const CostTable = ({
       })
       : []
     setData(copyData)
-  }, [calculationData, containerItems, proposal.cargo])
+  }, [calculationData, containerItems, proposal.cargo[0]])
 
   useEffect(() => {
     setCopyTable([])
@@ -189,8 +189,8 @@ const CostTable = ({
             data.costType === 'CW'
               ? {
                   ...data,
-                  valuePurchaseCW: proposal.cargo.vlCwPurchase,
-                  valueSaleCW: proposal.cargo.vlCwSale
+                  valuePurchaseCW: proposal.cargo[0].vlCwPurchase,
+                  valueSaleCW: proposal.cargo[0].vlCwSale
                 }
               : { ...data, valuePurchaseCW: null, valueSaleCW: null }
             API.postTotalCalculation(totalCalculationData)
@@ -243,10 +243,10 @@ const CostTable = ({
     return item.type !== 'FIXO' && item.type !== 'BL'
   }
 
-  const getAgentName = (agentId): string => {
+  const getAgentName = (idBusinessPartnerAgent): string => {
     let name = ''
     agentList?.forEach((item): void => {
-      if (Number(item.agentId) === Number(agentId)) {
+      if (Number(item.idBusinessPartnerAgent) === Number(idBusinessPartnerAgent)) {
         name = item.agent
       }
     })
@@ -324,8 +324,8 @@ const CostTable = ({
                     title === I18n.t('pages.newProposal.step5.destiny')
                       ? null
                       : <StyledTableCell width="12%" align="left">
-                        {dataMap.agent.agentId != null
-                          ? <Default>{getAgentName(dataMap.agent.agentId) }</Default>
+                        {dataMap.agent.idBusinessPartnerAgent != null
+                          ? <Default>{getAgentName(dataMap.agent.idBusinessPartnerAgent) }</Default>
                           : <Default>-</Default>
                         }
                       </StyledTableCell>
@@ -440,7 +440,7 @@ const CostTable = ({
                       {
                         currency.value.buy !== null && currency.value.buy !== '' && currency.value.buy !== 0
                           ? <TotalCostLabel>
-                            {currency.name} {Number(currency.value.buy).toFixed(2).replace('.', ',')}
+                            {Number(currency.value.buy).toFixed(2).replace('.', ',')}
                           </TotalCostLabel>
                           : <TotalCostLabel>-</TotalCostLabel>
                       }
@@ -450,7 +450,7 @@ const CostTable = ({
                       {
                         currency.value.sale !== null && currency.value.sale !== '' && currency.value.sale !== 0
                           ? <TotalCostLabel>
-                            {currency.name} {Number(currency.value.sale).toFixed(2).replace('.', ',')}
+                            {Number(currency.value.sale).toFixed(2).replace('.', ',')}
                           </TotalCostLabel>
                           : <TotalCostLabel>-</TotalCostLabel>
                       }

@@ -98,9 +98,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
       })()
     } else {
       setLoadExistingProposal(true)
-      const today = new Date()
-      const timeNow = `${today.getFullYear()}-${('0' + String(today.getMonth() + 1).slice(-2))}-${('0' + String(today.getDate())).slice(-2)}T${('0' + String(today.getHours())).slice(-2)}:${('0' + String(today.getMinutes())).slice(-2)}:${('0' + String(today.getSeconds())).slice(-2)}.000Z`
-      setProposal({ ...emptyProposalValue, openingDate: timeNow })
+      setProposal({ ...emptyProposalValue, openingDate: formatDate() })
     }
   }, [])
 
@@ -111,12 +109,12 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
       const proposalObject = {
         ...proposal,
         validityDate: '',
-        idStatus: 1,
+        idProposalStatus: 1,
         openingDate: formatDate(),
         cargo: {
-          ...proposal.cargo,
+          ...proposal.cargo[0],
           id: null,
-          cargoVolumes: proposal.cargo.cargoVolumes.map(cargoVolume => {
+          cargoVolumes: proposal.cargo[0].cargoVolumes.map(cargoVolume => {
             cargoVolume.id = null; cargoVolume.idCargo = null; return cargoVolume
           })
         },
@@ -462,11 +460,11 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
           <Username>
             {getEnchargedFullname()}
           </Username>
-          {editMode && proposal.idStatus === 1
+          {editMode && proposal.idProposalStatus === 1
             ? <Status className="open">{I18n.t('pages.proposal.table.openLabel')}</Status>
             : null
           }
-          {editMode && proposal.idStatus === 3
+          {editMode && proposal.idProposalStatus === 3
             ? <Status className="inReview">{I18n.t('pages.proposal.table.inRevisionLabel')}</Status>
             : null
           }
@@ -552,24 +550,28 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
                 specifications={specifications}
               />
             </div>
-            {stepLoaded.step3 && <> <div id="step5">
-              <Step5
-                agentList={agentList}
-                calculationData={calculationData}
-                containerItems={step3TableItems}
-                containerTypeList={containerTypeList}
-                costData={costData}
-                invalidInput={invalidInput}
-                modal={modal}
-                serviceList={serviceList}
-                setCompleted={setCompleted}
-                setFilled={setFilled}
-                setUndoMessage={setUndoMessage}
-                specifications={specifications}
-                undoMessage={undoMessage}
-                updateTableIdsRef={updateTable5IdsRef}
-              />
-            </div>
+            {stepLoaded.step3 &&
+              <>
+                {proposal.idTransport !== 'LAND' &&
+                  <div id="step5">
+                    <Step5
+                      agentList={agentList}
+                      calculationData={calculationData}
+                      containerItems={step3TableItems}
+                      containerTypeList={containerTypeList}
+                      costData={costData}
+                      invalidInput={invalidInput}
+                      modal={modal}
+                      serviceList={serviceList}
+                      setCompleted={setCompleted}
+                      setFilled={setFilled}
+                      setUndoMessage={setUndoMessage}
+                      specifications={specifications}
+                      undoMessage={undoMessage}
+                      updateTableIdsRef={updateTable5IdsRef}
+                    />
+                  </div>
+                }
               <div id="step6">
                 <Step6
                   calculationData={calculationData}

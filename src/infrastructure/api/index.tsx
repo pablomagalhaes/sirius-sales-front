@@ -143,7 +143,7 @@ const getProposals = async (params): Promise<any> => {
 
 const postProposal = async (params): Promise<any> => {
   try {
-    const res = await instance.post('/sirius-business-proposal-api/proposalimportfreight', params)
+    const res = await instance.post('/sirius-business-proposal-api/proposal', params)
     return res.data
   } catch (error) {
     console.error(error)
@@ -161,7 +161,7 @@ const postTotalCalculation = async (params): Promise<any> => {
 
 const getProposal = async (params): Promise<any> => {
   try {
-    const res = await instance.get(`/sirius-business-proposal-api/proposalimportfreight/${String(params)}`)
+    const res = await instance.get(`/sirius-business-proposal-api/proposal/${String(params)}`)
     return res.data
   } catch (error) {
     console.error(error)
@@ -170,7 +170,7 @@ const getProposal = async (params): Promise<any> => {
 
 const putProposal = async (id, params): Promise<any> => {
   try {
-    const res = await instance.put(`/sirius-business-proposal-api/proposalimportfreight/${String(id)}`, params)
+    const res = await instance.put(`/sirius-business-proposal-api/proposal/${String(id)}`, params)
     return res.data
   } catch (error) {
     console.error(error)

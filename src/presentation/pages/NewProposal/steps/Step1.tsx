@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext, Fragment } from 'react'
 import {
   Checkbox,
   FormControlLabel,
@@ -27,6 +27,14 @@ import { StyledPaper } from './StepsStyles'
 import { ExitDialog } from 'fiorde-fe-components'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 
+export interface Agents {
+  id?: number | null
+  agent: string
+  idBusinessPartnerAgent?: number | null
+  shippingCompany: string
+  idBusinessPartnerTransportCompany?: number | null
+}
+
 export interface Filled {
   step2: boolean
   step3: boolean
@@ -43,7 +51,8 @@ export interface Step1Props {
   setModal: (modal: string) => void
   filled: Filled
   setStepLoaded: (steps: any) => void
-  setAgentList: (agent: string[]) => void
+  setAgentList: (agent: Agents[]) => void
+  // setAgentList: (agent: string[]) => void
 }
 
 const Step1 = ({
@@ -71,6 +80,17 @@ const Step1 = ({
 
   const [showPopUp, setShowPopUp] = useState(false)
   const [modalCopy, setModalCopy] = useState('')
+
+  const [selectedAgents, setSelectedAgents] = useState<Agents[]>([
+    {
+      id: null,
+      agent: '',
+      idBusinessPartnerAgent: null,
+      shippingCompany: '',
+      idBusinessPartnerTransportCompany: null
+    }
+  ])
+
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
   useEffect(() => {
@@ -94,7 +114,7 @@ const Step1 = ({
 
     if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
       const getPartnerCostumer = new Promise<void>((resolve) => {
-        API.getBusinessPartnerCostumer(proposal.customerId)
+        API.getBusinessPartnerCostumer(proposal.idBusinessPartnerCustomer)
           .then((response) => {
             resolve(response?.simpleName)
           })
@@ -126,11 +146,11 @@ const Step1 = ({
     if (data.modal === 'LAND' || data.modal === 'SEA') {
       if (proposal.idTransport !== '') {
         if (proposal.idTransport === 'AIR') {
-          if (proposal.agents.length > 0 && proposal.agents[0].agentId !== null) {
+          if (proposal.agents.length > 0 && proposal.agents[0].idBusinessPartnerAgent !== null) {
             firstAgent = proposal.agents
             proposal.agents = []
             proposal.agents[0] = firstAgent[0]
-            proposal.agents[0].transportCompanyId = null
+            proposal.agents[0].idBusinessPartnerTransportCompany = null
             listCostsWithoutAgents = proposal.costs.filter(cost => cost.agent === null)
             proposal.costs = []
             proposal.costs = listCostsWithoutAgents
@@ -143,8 +163,8 @@ const Step1 = ({
       ...proposal,
       proposalType: data.proposal,
       idTransport: data.modal,
-      customerId:
-        data.proposal === 'routing'
+      idBusinessPartnerCustomer:
+        data.proposal === 'ROUTING ORDER'
           ? agentsList.filter(
             (agt) => agt.businessPartner.simpleName === data.proposalValue
           )[0]?.businessPartner.id
@@ -164,14 +184,6 @@ const Step1 = ({
   useEffect(() => {
     setModal(data.modal)
   }, [data.modal])
-
-  useEffect(() => {
-    if (data.proposal === 'routing') {
-      const agent: string[] = []
-      agent.push(data.proposalValue)
-      setAgentList(agent)
-    }
-  }, [data.proposalValue])
 
   useEffect(() => {
     if (
@@ -200,7 +212,7 @@ const Step1 = ({
   }, [data])
 
   useEffect(() => {
-    if (data.proposal === 'client') {
+    if (data.proposal === 'CLIENT') {
       setData({ ...data, serviceTransport: false, serviceDesemb: false })
     }
   }, [data.proposal])
@@ -220,11 +232,44 @@ const Step1 = ({
       filled.step6
     ) {
       setModalCopy(modal)
-      setShowPopUp(true)
+
+      if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
+        setShowPopUp(true)
+      } else {
+        setData({ ...data, modal: modal })
+        setShowPopUp(false)
+      }
     } else {
       setData({ ...data, modal: modal })
     }
   }
+
+  const getidBusinessPartnerAgent = (agentName: string): number | undefined => {
+    let id
+    if (agentName !== '') {
+      agentsList?.forEach((item): void => {
+        if (String(item.businessPartner.simpleName) === String(agentName)) {
+          id = item.businessPartner.id
+        }
+      })
+    }
+    return id
+  }
+
+  useEffect(() => {
+    setProposal({
+      ...proposal,
+      agents: selectedAgents.map(
+        ({ shippingCompany, agent, ...otherProperties }) => otherProperties
+      )
+    })
+  }, [selectedAgents])
+
+  useEffect(() => {
+    if (data.proposal === 'ROUTING ORDER') {
+      setAgentList(selectedAgents)
+    }
+  }, [data.proposalValue, selectedAgents, agentsList])
 
   return (
     <Separator>
@@ -246,21 +291,21 @@ const Step1 = ({
             onChange={(e) => setData({ ...data, proposal: e.target.value })}
           >
             <FormControlLabel
-              checked={data.proposal === 'client'}
-              value="client"
+              checked={data.proposal === 'CLIENT'}
+              value="CLIENT"
               control={<StyledRadio color={getColor(data.proposal)} />}
               label={I18n.t('pages.newProposal.step1.client')}
               style={{ marginRight: '30px' }}
             />
             <FormControlLabel
-              checked={data.proposal === 'routing'}
-              value="routing"
+              checked={data.proposal === 'ROUTING ORDER'}
+              value="ROUTING ORDER"
               control={<StyledRadio color={getColor(data.proposal)} />}
               label={I18n.t('pages.newProposal.step1.routingOrder')}
             />
           </RadioGroup>
         </Grid>
-        {data.proposal === 'routing'
+        {data.proposal === 'ROUTING ORDER'
           ? (
             <Grid item xs={6}>
               <FormLabel component="legend">
@@ -300,7 +345,8 @@ const Step1 = ({
             </Grid>
             )}
         <Grid item xs={6}>
-          {data.proposal === 'routing'
+
+          {data.proposal === 'ROUTING ORDER'
             ? (
               <FormLabel component="legend" error={data.proposalValue === '' && invalidInput}>
                 {I18n.t('pages.newProposal.step1.agents')}
@@ -313,45 +359,63 @@ const Step1 = ({
                 <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               )}
-          <Autocomplete
-            freeSolo
-            onChange={(e, newValue) =>
-              setData({ ...data, proposalValue: String(newValue) })
-            }
-            options={
-              data.proposal === 'routing'
-                ? agentsList.map((item) => item.businessPartner.simpleName)
-                : partnerList.map((item) => item.businessPartner.simpleName)
-            }
-            value={data.proposalValue}
-            renderInput={(params) => (
-              <div ref={params.InputProps.ref}>
-                <ControlledInput
-                  {...params}
-                  id="search-client"
-                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                  invalid={data.proposalValue === '' && invalidInput}
-                  variant="outlined"
-                  size="small"
-                  placeholder={I18n.t('pages.newProposal.step1.searchClient')}
-                  $space
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconComponent
-                          name="search"
-                          defaultColor={
-                            theme?.commercial?.pages?.newProposal?.subtitle
-                          }
-                        />
-                      </InputAdornment>
+
+          {selectedAgents.map((selectedAgent, index) => {
+            return (
+              <Fragment key={index}>
+                <Autocomplete
+                  freeSolo
+                  options={
+                    data.proposal === 'ROUTING ORDER'
+                      ? agentsList.map((item) => item.businessPartner.simpleName)
+                      : partnerList.map((item) => item.businessPartner.simpleName)
+                  }
+                  onChange={(e, newValue) => {
+                    setSelectedAgents(
+                      selectedAgents.map((value, currentIndex) =>
+                        currentIndex === index
+                          ? {
+                              ...value,
+                              agent: newValue ?? '',
+                              idBusinessPartnerAgent: getidBusinessPartnerAgent(newValue)
+                            }
+                          : value
+                      )
                     )
                   }}
+                  value={selectedAgent.agent}
+                  renderInput={(params) => (
+                    <div ref={params.InputProps.ref}>
+                      <ControlledInput
+                        {...params}
+                        id="search-client"
+                        toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                        invalid={data.proposalValue === '' && invalidInput}
+                        variant="outlined"
+                        size="small"
+                        placeholder={I18n.t('pages.newProposal.step1.searchClient')}
+                        $space
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconComponent
+                                name="search"
+                                defaultColor={
+                                  theme?.commercial?.pages?.newProposal?.subtitle
+                                }
+                              />
+                            </InputAdornment>
+                          )
+                        }}
+                      />
+                    </div>
+                  )}
+                  PaperComponent={(params: any) => <StyledPaper {...params} />}
                 />
-              </div>
-            )}
-            PaperComponent={(params: any) => <StyledPaper {...params} />}
-          />
+              </Fragment>
+            )
+          })}
+
         </Grid>
         <Grid item xs={6}>
           <FormLabel component="legend" error={data.requester === '' && invalidInput}>

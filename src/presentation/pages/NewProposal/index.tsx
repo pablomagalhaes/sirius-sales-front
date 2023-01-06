@@ -98,9 +98,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       })()
     } else {
       setLoadExistingProposal(true)
-      const today = new Date()
-      const timeNow = `${today.getFullYear()}-${('0' + String(today.getMonth() + 1).slice(-2))}-${('0' + String(today.getDate())).slice(-2)}T${('0' + String(today.getHours())).slice(-2)}:${('0' + String(today.getMinutes())).slice(-2)}:${('0' + String(today.getSeconds())).slice(-2)}.000Z`
-      setProposal({ ...emptyProposalValue, openingDate: timeNow })
+      setProposal({ ...emptyProposalValue, openingDate: formatDate() })
     }
   }, [])
 
@@ -111,12 +109,12 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       const proposalObject = {
         ...proposal,
         validityDate: '',
-        idStatus: 1,
+        idProposalStatus: 1,
         openingDate: formatDate(),
         cargo: {
-          ...proposal.cargo,
+          ...proposal.cargo[0],
           id: null,
-          cargoVolumes: proposal.cargo.cargoVolumes.map(cargoVolume => {
+          cargoVolumes: proposal.cargo[0].cargoVolumes.map(cargoVolume => {
             cargoVolume.id = null; cargoVolume.idCargo = null; return cargoVolume
           })
         },
@@ -141,7 +139,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     const hour = new Date().getHours()
     const minute = new Date().getMinutes()
     const second = new Date().getSeconds()
-    const yearMonth = `${year}-${('0' + String(month + 1).slice(-2))}`
+    const yearMonth = `${year}-${month < 10 ? ('0' + String(month + 1).slice(-2)) : (String(month + 1).slice(-2))}`
     const dateHour = `-${('0' + String(date)).slice(-2)}T${('0' + String(hour)).slice(-2)}`
     const minuteSecond = `:${('0' + String(minute)).slice(-2)}:${('0' + String(second)).slice(-2)}.000Z`
     return yearMonth + dateHour + minuteSecond
@@ -221,6 +219,27 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     setHover(hoverState)
   }
 
+  const removeNullProperties = (): any => {
+    const newProposal = { ...proposal };
+    ['id', 'idProposal', 'idCargo', 'proposalId', 'idProposalImportFreight'].forEach(e => {
+      // eslint-disable-next-line
+      newProposal[e] !== undefined && newProposal[e] === null && delete newProposal[e]
+      // eslint-disable-next-line
+      newProposal.costs.forEach(cost => cost[e] !== undefined && cost[e] === null && delete cost[e])
+      // eslint-disable-next-line
+      newProposal.totalCosts.forEach(total => total[e] !== undefined && total[e] === null && delete total[e])
+      // eslint-disable-next-line
+      newProposal.agents.forEach(agent => agent[e] !== undefined && agent[e] === null && delete agent[e])
+      // eslint-disable-next-line
+      newProposal.cargo[0].cargoVolumes.forEach(volume => volume[e] !== undefined && volume[e] === null && delete volume[e])
+      // eslint-disable-next-line
+      newProposal.costs.forEach(cost => cost.agent[e] !== undefined && cost.agent[e] === null && delete cost.agent[e])
+    });
+    // eslint-disable-next-line
+    ['originCityName', 'originCityId', 'destinationCityName', 'destinationCityId'].forEach(e => newProposal[e] !== undefined && delete newProposal[e])
+    return newProposal
+  }
+
   const handleSave = (): void => {
     if (
       completed.step1 &&
@@ -232,7 +251,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     ) {
       if (proposal.idProposal === undefined || proposal.idProposal === null || location.state?.eventType === 'duplicate') {
         proposal.idProposal = null
-        API.postProposal(JSON.stringify(proposal)).then((response) => {
+        const newProposal = removeNullProperties()
+        API.postProposal(JSON.stringify(newProposal)).then((response) => {
           setProposal(response)
           // @ts-expect-error
           updateAgentsIdsRef?.current?.updateAgentsIdsRef()
@@ -250,7 +270,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           console.trace(error)
         })
       } else {
-        API.putProposal(proposal.idProposal, JSON.stringify(proposal)).then((response) => {
+        const newProposal = removeNullProperties()
+        API.putProposal(proposal.idProposal, JSON.stringify(newProposal)).then((response) => {
           setProposal(response)
           // @ts-expect-error
           updateAgentsIdsRef?.current?.updateAgentsIdsRef()
@@ -462,11 +483,11 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           <Username>
             {getEnchargedFullname()}
           </Username>
-          {editMode && proposal.idStatus === 1
+          {editMode && proposal.idProposalStatus === 1
             ? <Status className="open">{I18n.t('pages.proposal.table.openLabel')}</Status>
             : null
           }
-          {editMode && proposal.idStatus === 3
+          {editMode && proposal.idProposalStatus === 3
             ? <Status className="inReview">{I18n.t('pages.proposal.table.inRevisionLabel')}</Status>
             : null
           }

@@ -258,19 +258,19 @@ const Proposal = (): JSX.Element => {
 
   const verifyStatus = (status): any => {
     switch (status) {
-      case 'Aberta':
+      case 'Open':
         return StatusProposalEnum.ABERTA
-      case 'Ag. Retorno Cliente':
+      case 'Awaiting Customer Return':
         return StatusProposalEnum.AGUARDANDO_RETORNO_CLIENTE
-      case 'Em Revisao':
+      case 'Revision':
         return StatusProposalEnum.EM_REVISAO
-      case 'Aprovada':
+      case 'Approved':
         return StatusProposalEnum.APROVADA
-      case 'Rejeitada':
+      case 'Discard':
         return StatusProposalEnum.REJEITADA
-      case 'Cancelada':
+      case 'Canceled':
         return StatusProposalEnum.CANCELADA
-      case 'Cancelamento Automático':
+      case 'Automatically Canceled':
         return StatusProposalEnum.CANCELAMENTO_AUTOMATICO
     }
   }
@@ -320,7 +320,7 @@ const Proposal = (): JSX.Element => {
   }
 
   const verifyType = (type: String): string => {
-    if (type === 'FRETE - IMPORTAÇÃO') {
+    if (type === 'IMPORT FREIGHT') {
       return 'importation'
     } else {
       return 'exportation'
@@ -339,10 +339,9 @@ const Proposal = (): JSX.Element => {
       const status = verifyStatus(proposal.status)
       const modal = verifyModal(proposal.modal)
       const type = verifyType(proposal.operation)
-
       const item = {
         client: proposal.clientName,
-        destination: proposal.modal === 'LAND' ? proposal.destinationCityName : proposal.destinationId,
+        destination: proposal.modal === 'LAND' ? proposal.destinationCityName : proposal.idDestination,
         iconterm: proposal.incotermId,
         isLate: showWarning,
         key: proposal.idProposal,
@@ -350,7 +349,7 @@ const Proposal = (): JSX.Element => {
         modal,
         numio: proposal.numIO,
         opening,
-        origin: proposal.modal === 'LAND' ? proposal.originCityName : proposal.originId,
+        origin: proposal.modal === 'LAND' ? proposal.originCityName : proposal.idOrigin,
         reference: proposal.reference,
         responsible: proposal.responsible,
         shelfLife,
@@ -553,7 +552,7 @@ const Proposal = (): JSX.Element => {
 
       setFilter((filter: any) => ({
         ...filter,
-        customerId: [clientIds]
+        idBusinessPartnerCustomer: [clientIds]
       }))
     }
 
@@ -706,7 +705,7 @@ const Proposal = (): JSX.Element => {
 
   const cleanFilter = (): void => {
     delete filter.referenceProposal
-    delete filter.customerId
+    delete filter.idBusinessPartnerCustomer
     delete filter.operationType
     delete filter.idOrigin
     delete filter.idDestination

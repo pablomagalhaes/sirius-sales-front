@@ -63,9 +63,9 @@ export const initialState = {
   agent: {
     agent: '',
     id: null,
-    agentId: null,
+    idBusinessPartnerAgent: null,
     shippingCompany: '',
-    transportCompanyId: null
+    idBusinessPartnerTransportCompany: null
   },
   selectedAgent: '',
   saleValue: '',
@@ -100,14 +100,6 @@ const FareModal = ({
       setData({ ...data, selectedContainer: containerItems[0].type })
     } else {
       setData({ ...data, selectedContainer: '' })
-    }
-  }
-
-  const verifyAgents = (): void => {
-    if (proposal.agents.length === 1) {
-      setData({ ...data, selectedAgent: proposal.agents[0]?.agent })
-    } else {
-      setData({ ...data, selectedAgent: initialState?.agent?.agent })
     }
   }
 
@@ -161,13 +153,23 @@ const FareModal = ({
     }
   }
 
+  const getAgents = (): any => {
+    const proposalAgentsidBusinessPartnerAgent = proposal.agents.map(a => a.idBusinessPartnerAgent)
+    const getSomeAgents = AllAgents?.map(a => proposalAgentsidBusinessPartnerAgent.includes(a?.businessPartner?.id)
+      ? ({
+          idBusinessPartnerAgent: a?.businessPartner?.id,
+          agent: a?.businessPartner?.simpleName,
+          idBusinessPartnerTransportCompany: proposal.agents.find(find => find.idBusinessPartnerAgent === a?.businessPartner?.id)?.idBusinessPartnerTransportCompany
+        })
+      : null)
+    return getSomeAgents?.filter(f => f != null)
+  }
+
   useEffect(() => {
     if (dataProp !== initialState) {
-      console.log('dataProp', dataProp)
-      setData(dataProp)
-    }
-    if (proposal.agents.length > 0) {
-      verifyAgents()
+      setData({ ...dataProp })
+    } else if (proposal.agents.length === 1 && AllAgents !== undefined) {
+      setData({ ...data, selectedAgent: getAgents()[0]?.agent })
     }
   }, [open])
 
@@ -189,16 +191,7 @@ const FareModal = ({
 
   useEffect(() => {
     if (AllAgents !== undefined) {
-      const proposalAgentsAgentId = proposal.agents.map(a => a.agentId)
-      let getSomeAgents = AllAgents.map(a => proposalAgentsAgentId.includes(a?.businessPartner?.id)
-        ? ({
-            agentId: a?.businessPartner?.id,
-            agent: a?.businessPartner?.simpleName,
-            transportCompanyId: proposal.agents.find(find => find.agentId === a?.businessPartner?.id)?.transportCompanyId
-          })
-        : null)
-      getSomeAgents = getSomeAgents.filter(f => f != null)
-      setAgentList(getSomeAgents)
+      setAgentList(getAgents())
     }
   }, [proposal, AllAgents])
 

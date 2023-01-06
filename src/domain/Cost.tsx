@@ -1,14 +1,15 @@
 export interface CostAgent {
   id?: number | null
-  agentId?: number | null
-  transportCompanyId?: number | null
+  idBusinessPartnerAgent?: number | null
+  idBusinessPartnerTransportCompany?: number | null
   proposalId?: number | null
 }
 export interface Cost {
   id?: number | null
+  idCost: number | null
   idProposal?: number | null
   idService: number // id Descricao
-  containerType: string | null// containerMODAL
+  idContainerType: string | null// containerMODAL
   agent: CostAgent
   costType: string // 'Origem''Destino''Tarifa'
   billingType: string // Tipo -MODAL
