@@ -116,7 +116,10 @@ const Step6 = ({
   const [businessPartner, setBusinessPartner] = useState<any[]>([])
 
   const handleOpen = (): void => setOpen(true)
-  const handleClose = (): void => setOpen(false)
+  const handleClose = (): void => {
+    setOpen(false)
+    setChargeData(initialState)
+  }
 
   const currencyArray = new Map()
 

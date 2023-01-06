@@ -103,14 +103,6 @@ const FareModal = ({
     }
   }
 
-  const verifyAgents = (): void => {
-    if (proposal.agents.length === 1) {
-      setData({ ...data, selectedAgent: proposal.agents[0]?.agent })
-    } else {
-      setData({ ...data, selectedAgent: initialState?.agent?.agent })
-    }
-  }
-
   useEffect(() => {
     verifyContainerItems()
   }, [containerItems])
@@ -161,12 +153,23 @@ const FareModal = ({
     }
   }
 
+  const getAgents = (): any => {
+    const proposalAgentsidBusinessPartnerAgent = proposal.agents.map(a => a.idBusinessPartnerAgent)
+    const getSomeAgents = AllAgents?.map(a => proposalAgentsidBusinessPartnerAgent.includes(a?.businessPartner?.id)
+      ? ({
+          idBusinessPartnerAgent: a?.businessPartner?.id,
+          agent: a?.businessPartner?.simpleName,
+          idBusinessPartnerTransportCompany: proposal.agents.find(find => find.idBusinessPartnerAgent === a?.businessPartner?.id)?.idBusinessPartnerTransportCompany
+        })
+      : null)
+    return getSomeAgents?.filter(f => f != null)
+  }
+
   useEffect(() => {
     if (dataProp !== initialState) {
-      setData(dataProp)
-    }
-    if (proposal.agents.length > 0) {
-      verifyAgents()
+      setData({ ...dataProp })
+    } else if (proposal.agents.length === 1 && AllAgents !== undefined) {
+      setData({ ...data, selectedAgent: getAgents()[0]?.agent })
     }
   }, [open])
 
@@ -188,16 +191,7 @@ const FareModal = ({
 
   useEffect(() => {
     if (AllAgents !== undefined) {
-      const proposalAgentsidBusinessPartnerAgent = proposal.agents.map(a => a.idBusinessPartnerAgent)
-      let getSomeAgents = AllAgents.map(a => proposalAgentsidBusinessPartnerAgent.includes(a?.businessPartner?.id)
-        ? ({
-            idBusinessPartnerAgent: a?.businessPartner?.id,
-            agent: a?.businessPartner?.simpleName,
-            idBusinessPartnerTransportCompany: proposal.agents.find(find => find.idBusinessPartnerAgent === a?.businessPartner?.id)?.idBusinessPartnerTransportCompany
-          })
-        : null)
-      getSomeAgents = getSomeAgents.filter(f => f != null)
-      setAgentList(getSomeAgents)
+      setAgentList(getAgents())
     }
   }, [proposal, AllAgents])
 
