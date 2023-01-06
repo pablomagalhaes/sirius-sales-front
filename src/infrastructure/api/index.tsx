@@ -213,6 +213,15 @@ const getMercosulCities = async (): Promise<any> => {
   }
 }
 
+const getMercosulStates = async (): Promise<any> => {
+  try {
+    const res = await instance.get('/sirius-master-data-api/state/mercosul')
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const getStates = async (params): Promise<any> => {
   try {
     const res = await instance.get(`/sirius-master-data-api/countries/${String(params)}/states`)
@@ -284,7 +293,8 @@ const API = {
   getCities,
   getCityById,
   getCountProposal,
-  getMercosulCities
+  getMercosulCities,
+  getMercosulStates
 }
 
 export default API

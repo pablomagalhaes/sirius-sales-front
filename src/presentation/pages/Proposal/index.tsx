@@ -141,21 +141,21 @@ const Proposal = (): JSX.Element => {
     void (async function () {
       const actualList: any[] = []
       await API.getCountries()
-        .then((response) => response.forEach((item: any) => actualList.push(`${String(item.id)}-${String(item.name)}`)))
+        .then((response) => response.forEach((item: any) => actualList.push(String(item.name))))
         .then(() => setoriginDestinationCountries(actualList))
         .catch((err) => console.log(err))
     })()
     void (async function () {
       const actualList: any[] = []
-      await API.getMercosulCities()
-        .then((response) => response.forEach((item: any) => actualList.push(String(item.txState))))
+      await API.getMercosulStates()
+        .then((response) => response.forEach((item: any) => actualList.push(`${String(item.txState)} (${String(item.txCountry)})`)))
         .then(() => setoriginDestinationStates(actualList))
         .catch((err) => console.log(err))
     })()
     void (async function () {
       const actualList: any[] = []
       await API.getMercosulCities()
-        .then((response) => response.forEach((item: any) => actualList.push(String(item.txCity))))
+        .then((response) => response.forEach((item: any) => actualList.push(`${String(item.txCity)} (${String(item.txCountry)})`)))
         .then(() => setoriginDestinationCities(actualList))
         .catch((err) => console.log(err))
     })()
