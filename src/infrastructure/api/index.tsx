@@ -215,7 +215,7 @@ const getMercosulCities = async (): Promise<any> => {
 
 const getMercosulStates = async (): Promise<any> => {
   try {
-    const res = await instance.get('/sirius-master-data-api/state/mercosul')
+    const res = await instance.get('/sirius-master-data-api/states/mercosul')
     return res.data
   } catch (error) {
     console.error(error)
