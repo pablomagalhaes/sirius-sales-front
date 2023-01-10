@@ -454,62 +454,6 @@ const Step1 = ({
                     PaperComponent={(params: any) => <StyledPaper {...params} />}
                   />
               }
-          {/* {selectedAgents.map((selectedAgent, index) => {
-            return (
-              <Fragment key={index}>
-                <Autocomplete
-                  freeSolo
-                  options={
-                    data.proposal === 'ROUTING ORDER'
-                      ? agentsList.map((item) => item.businessPartner.simpleName)
-                      : partnerList.map((item) => item.businessPartner.simpleName)
-                  }
-                  onChange={(e, newValue) => {
-                    setSelectedAgents(
-                      selectedAgents.map((value, currentIndex) =>
-                        currentIndex === index
-                          ? {
-                              ...value,
-                              agent: newValue ?? '',
-                              idBusinessPartnerAgent: getidBusinessPartnerAgent(newValue)
-                            }
-                          : value
-                      )
-                    )
-                  }}
-                  value={selectedAgent.agent}
-                  renderInput={(params) => (
-                    <div ref={params.InputProps.ref}>
-                      <ControlledInput
-                        {...params}
-                        id="search-client"
-                        toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                        invalid={data.proposalValue === '' && invalidInput}
-                        variant="outlined"
-                        size="small"
-                        placeholder={I18n.t('pages.newProposal.step1.searchClient')}
-                        $space
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <IconComponent
-                                name="search"
-                                defaultColor={
-                                  theme?.commercial?.pages?.newProposal?.subtitle
-                                }
-                              />
-                            </InputAdornment>
-                          )
-                        }}
-                      />
-                    </div>
-                  )}
-                  PaperComponent={(params: any) => <StyledPaper {...params} />}
-                />
-              </Fragment>
-            )
-          })} */}
-
         </Grid>
         <Grid item xs={6}>
           <FormLabel component="legend" error={data.requester === '' && invalidInput}>
