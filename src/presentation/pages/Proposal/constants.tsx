@@ -49,7 +49,8 @@ const menuItems = {
     'Consultoria',
     'FTA'
   ],
-  modal: ['Aéreo', 'Marítimo', 'Rodoviário']
+  modal: ['Aéreo', 'Marítimo', 'Rodoviário'],
+  statusTypes: ['Aberta', 'Ag. Retorno Cliente', 'Em Revisão', 'Rejeitada', 'Cancelada', 'Aprovada']
 }
 
 // mock

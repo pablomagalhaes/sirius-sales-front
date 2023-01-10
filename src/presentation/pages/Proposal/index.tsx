@@ -616,6 +616,37 @@ const Proposal = (): JSX.Element => {
       }))
     }
 
+    const selectedStatus = findKeyFilter(
+      selectedFiltersRowFilter,
+      'Status'
+    )
+    if (selectedStatus !== undefined) {
+      const statusList: string[] = selectedStatus.map((status: string): string => {
+        switch (status) {
+          case 'Aberta':
+            return StatusProposalStringEnum.ABERTA
+          case 'Ag. Retorno Cliente':
+            return StatusProposalStringEnum.AGUARDANDO_RETORNO_CLIENTE
+          case 'Em Revisão':
+            return StatusProposalStringEnum.EM_REVISAO
+          case 'Aprovada':
+            return StatusProposalStringEnum.APROVADA
+          case 'Rejeitada':
+            return StatusProposalStringEnum.REJEITADA
+          case 'Cancelada':
+            return StatusProposalStringEnum.CANCELADA
+          case 'Cancelamento Automatico':
+            return StatusProposalStringEnum.CANCELAMENTO_AUTOMATICO
+          default:
+            return ''
+        }
+      })
+      setFilter((filter: any) => ({
+        ...filter,
+        status: [statusList]
+      }))
+    }
+
     const selectedDates = findKeyFilter(selectedFiltersRowFilter, 'Período')
     if (selectedDates !== undefined) {
       const type = selectedFiltersRowFilter[5].checkBoxSelecteds
@@ -710,6 +741,7 @@ const Proposal = (): JSX.Element => {
     delete filter.idOrigin
     delete filter.idDestination
     delete filter.idIncoterm
+    delete filter.status
     delete filter['openingDate.dtBegin']
     delete filter['openingDate.dtEnd']
     delete filter['validityDate.dtBegin']
@@ -774,6 +806,11 @@ const Proposal = (): JSX.Element => {
       checkboxList: ['Dt. Abertura', 'Dt. Validade'],
       hasDatePicker: true,
       dateRanges: menuItems.dateRanges
+    },
+    {
+      label: 'Status',
+      checkboxList1: menuItems.statusTypes,
+      pickerLabel1: 'Status'
     }
   ]
 
