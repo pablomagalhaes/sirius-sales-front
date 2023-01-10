@@ -269,7 +269,6 @@ const Step1 = ({
     }
   }, [data.proposalValue, selectedAgents, agentsList])
 
-
   return (
     <Separator>
       <Title>
@@ -359,8 +358,8 @@ const Step1 = ({
               </FormLabel>
               )}
 
-              {data.proposal === 'ROUTING ORDER' ?
-                selectedAgents.map((selectedAgent, index) => {
+              {data.proposal === 'ROUTING ORDER'
+                ? selectedAgents.map((selectedAgent, index) => {
                   return (
                       <Fragment key={index}>
                         <Autocomplete
@@ -413,9 +412,9 @@ const Step1 = ({
                           PaperComponent={(params: any) => <StyledPaper {...params} />}
                         />
                       </Fragment>
-                  )})
-                :
-                  <Autocomplete
+                  )
+                })
+                : <Autocomplete
                     freeSolo
                     onChange={(e, newValue) =>
                       setData({ ...data, proposalValue: String(newValue) })
@@ -453,7 +452,7 @@ const Step1 = ({
                       </div>
                     )}
                     PaperComponent={(params: any) => <StyledPaper {...params} />}
-                  />        
+                  />
               }
           {/* {selectedAgents.map((selectedAgent, index) => {
             return (

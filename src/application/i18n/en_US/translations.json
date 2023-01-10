@@ -251,8 +251,7 @@
         "message": "This page contains unsaved changes. Do you want to discard the proposal and leave the page?",
         "title": "Are you sure you want to quit?"
       },
-      "view": "View",
-      "viewDownload": "View / Download"
+      "view": "View"
     },
     "proposal": {
       "table": {
