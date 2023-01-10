@@ -309,10 +309,6 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       onClick: () => { }
     },
     {
-      iconType: 'download',
-      label: I18n.t('pages.newProposal.viewDownload'),
-      onClick: () => { }
-    }, {
       iconType: 'send',
       label: I18n.t('pages.newProposal.send'),
       onClick: () => { }
