@@ -341,7 +341,7 @@ const Proposal = (): JSX.Element => {
       const type = verifyType(proposal.operation)
       const item = {
         client: proposal.clientName,
-        destination: proposal.modal === 'LAND' ? proposal.destinationCityName : proposal.idDestination,
+        destination: proposal.modal === 'LAND' ? proposal.destinationCityName : proposal.destinationId,
         iconterm: proposal.incotermId,
         isLate: showWarning,
         key: proposal.idProposal,
@@ -349,7 +349,7 @@ const Proposal = (): JSX.Element => {
         modal,
         numio: proposal.numIO,
         opening,
-        origin: proposal.modal === 'LAND' ? proposal.originCityName : proposal.idOrigin,
+        origin: proposal.modal === 'LAND' ? proposal.originCityName : proposal.originId,
         reference: proposal.reference,
         responsible: proposal.responsible,
         shelfLife,
