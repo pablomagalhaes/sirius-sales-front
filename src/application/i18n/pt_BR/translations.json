@@ -255,7 +255,8 @@
         "message": "Essa página contém alterações não salvas. Deseja descartar a proposta e sair da página?",
         "title": "Tem certeza que deseja sair?"
       },
-      "view": "Visualizar"
+      "view": "Visualizar",
+      "viewDownload": "Visualizar / Fazer Download"
     },
     "proposal": {
       "table": {
