@@ -188,7 +188,6 @@ const Step1 = ({
   useEffect(() => {
     if (
       data.proposal !== '' &&
-      data.proposalValue !== '' &&
       data.modal !== '' &&
       data.requester !== ''
     ) {
@@ -198,7 +197,6 @@ const Step1 = ({
     }
     if (
       data.proposal !== '' ||
-      data.proposalValue !== '' ||
       data.modal !== ''
     ) {
       setFilled((currentState) => {
@@ -360,62 +358,102 @@ const Step1 = ({
               </FormLabel>
               )}
 
-          {selectedAgents.map((selectedAgent, index) => {
-            return (
-              <Fragment key={index}>
-                <Autocomplete
-                  freeSolo
-                  options={
-                    data.proposal === 'ROUTING ORDER'
-                      ? agentsList.map((item) => item.businessPartner.simpleName)
-                      : partnerList.map((item) => item.businessPartner.simpleName)
-                  }
-                  onChange={(e, newValue) => {
-                    setSelectedAgents(
-                      selectedAgents.map((value, currentIndex) =>
-                        currentIndex === index
-                          ? {
-                              ...value,
-                              agent: newValue ?? '',
-                              idBusinessPartnerAgent: getidBusinessPartnerAgent(newValue)
-                            }
-                          : value
-                      )
-                    )
-                  }}
-                  value={selectedAgent.agent}
-                  renderInput={(params) => (
-                    <div ref={params.InputProps.ref}>
-                      <ControlledInput
-                        {...params}
-                        id="search-client"
-                        toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                        invalid={data.proposalValue === '' && invalidInput}
-                        variant="outlined"
-                        size="small"
-                        placeholder={I18n.t('pages.newProposal.step1.searchClient')}
-                        $space
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <IconComponent
-                                name="search"
-                                defaultColor={
-                                  theme?.commercial?.pages?.newProposal?.subtitle
-                                }
+              {data.proposal === 'ROUTING ORDER'
+                ? selectedAgents.map((selectedAgent, index) => {
+                  return (
+                      <Fragment key={index}>
+                        <Autocomplete
+                          freeSolo
+                          options={
+                            data.proposal === 'ROUTING ORDER'
+                              ? agentsList.map((item) => item.businessPartner.simpleName)
+                              : partnerList.map((item) => item.businessPartner.simpleName)
+                          }
+                          onChange={(e, newValue) => {
+                            setSelectedAgents(
+                              selectedAgents.map((value, currentIndex) =>
+                                currentIndex === index
+                                  ? {
+                                      ...value,
+                                      agent: newValue ?? '',
+                                      idBusinessPartnerAgent: getidBusinessPartnerAgent(newValue)
+                                    }
+                                  : value
+                              )
+                            )
+                          }}
+                          value={selectedAgent.agent}
+                          renderInput={(params) => (
+                            <div ref={params.InputProps.ref}>
+                              <ControlledInput
+                                {...params}
+                                id="search-client"
+                                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                invalid={data.proposalValue === '' && invalidInput}
+                                variant="outlined"
+                                size="small"
+                                placeholder={I18n.t('pages.newProposal.step1.searchClient')}
+                                $space
+                                InputProps={{
+                                  endAdornment: (
+                                    <InputAdornment position="end">
+                                      <IconComponent
+                                        name="search"
+                                        defaultColor={
+                                          theme?.commercial?.pages?.newProposal?.subtitle
+                                        }
+                                      />
+                                    </InputAdornment>
+                                  )
+                                }}
                               />
-                            </InputAdornment>
-                          )
-                        }}
-                      />
-                    </div>
-                  )}
-                  PaperComponent={(params: any) => <StyledPaper {...params} />}
-                />
-              </Fragment>
-            )
-          })}
-
+                            </div>
+                          )}
+                          PaperComponent={(params: any) => <StyledPaper {...params} />}
+                        />
+                      </Fragment>
+                  )
+                })
+                : <Autocomplete
+                    freeSolo
+                    onChange={(e, newValue) =>
+                      setData({ ...data, proposalValue: String(newValue) })
+                    }
+                    options={
+                      data.proposal === 'ROUTING ORDER'
+                        ? agentsList.map((item) => item.businessPartner.simpleName)
+                        : partnerList.map((item) => item.businessPartner.simpleName)
+                    }
+                    value={data.proposalValue}
+                    renderInput={(params) => (
+                      <div ref={params.InputProps.ref}>
+                        <ControlledInput
+                          {...params}
+                          id="search-client"
+                          toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                          invalid={data.proposalValue === '' && invalidInput}
+                          variant="outlined"
+                          size="small"
+                          placeholder={I18n.t('pages.newProposal.step1.searchClient')}
+                          $space
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <IconComponent
+                                  name="search"
+                                  defaultColor={
+                                    theme?.commercial?.pages?.newProposal?.subtitle
+                                  }
+                                />
+                              </InputAdornment>
+                            )
+                          }}
+                        />
+                      </div>
+                    )}
+                    PaperComponent={(params: any) => <StyledPaper {...params} />}
+                  />
+              }
         </Grid>
         <Grid item xs={6}>
           <FormLabel component="legend" error={data.requester === '' && invalidInput}>
