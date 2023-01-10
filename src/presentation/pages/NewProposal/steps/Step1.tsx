@@ -255,15 +255,6 @@ const Step1 = ({
   }
 
   useEffect(() => {
-    setProposal({
-      ...proposal,
-      agents: selectedAgents.map(
-        ({ shippingCompany, agent, ...otherProperties }) => otherProperties
-      )
-    })
-  }, [selectedAgents])
-
-  useEffect(() => {
     if (data.proposal === 'ROUTING ORDER') {
       setAgentList(selectedAgents)
     }
