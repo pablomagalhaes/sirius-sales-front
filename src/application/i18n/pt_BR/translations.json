@@ -256,7 +256,7 @@
         "title": "Tem certeza que deseja sair?"
       },
       "view": "Visualizar",
-      "viewDownload": "Visualizar / Fazer Download"
+      "viewDownload": "Visualizar / Fazer download"
     },
     "proposal": {
       "table": {
@@ -273,7 +273,8 @@
         "rejectLabel": "Definir como rejeitada",
         "rejectedLabel": "Rejeitada",
         "reviewLabel": "Definir como \"Em revisão\"",
-        "waitingForCustomerReturnLabel": "Ag. ret. cliente"
+        "waitingForCustomerReturnLabel": "Ag. ret. cliente",
+        "viewDownload": "Visualizar / Fazer download"
       }
     }
   }

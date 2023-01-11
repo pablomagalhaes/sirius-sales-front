@@ -359,6 +359,11 @@ const Proposal = (): JSX.Element => {
       case StatusProposalEnum.AGUARDANDO_RETORNO_CLIENTE:
         array.push(
           {
+            iconType: 'file',
+            label: I18n.t('pages.proposal.table.viewDownload'),
+            onClick: () => { }
+          },
+          {
             iconType: 'duplicate',
             label: I18n.t('pages.proposal.table.duplicateLabel'),
             onClick: () => {
@@ -430,7 +435,13 @@ const Proposal = (): JSX.Element => {
         )
         return array
       case StatusProposalEnum.APROVADA:
-        array.push({
+        array.push(
+          {
+            iconType: 'file',
+            label: I18n.t('pages.proposal.table.viewDownload'),
+            onClick: () => { }
+          },
+          {
           iconType: 'duplicate',
           label: I18n.t('pages.proposal.table.duplicateLabel'),
           onClick: () => {

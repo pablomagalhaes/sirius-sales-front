@@ -269,7 +269,8 @@
         "rejectLabel": "Set as rejected",
         "rejectedLabel": "Discard",
         "reviewLabel": "Set to \"Under review\"",
-        "waitingForCustomerReturnLabel": "Awai. customer return"
+        "waitingForCustomerReturnLabel": "Awai. customer return",
+        "viewDownload": "View / Download"
       }
     }
   }
