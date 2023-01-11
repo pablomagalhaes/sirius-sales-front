@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import React, { useState, useCallback, useEffect, useContext, useRef } from 'react'
 import { Button, ExitDialog, FloatingMenu, Steps, Messages } from 'fiorde-fe-components'
+import ProposalDisplayModal from '../../components/ProposalDisplayModal/ProposalDisplayModal'
 import { Breadcrumbs, Link } from '@material-ui/core/'
 import {
   ButtonContainer,
@@ -55,6 +56,10 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [showSaveMessage, setShowSaveMessage] = useState(false)
   const [specifications, setSpecifications] = useState('')
   const [step3TableItems, setStep3TableItems] = useState<ItemModalData[]>([])
+  const [open, setOpen] = useState(false)
+
+  const handleOpen = (): void => setOpen(true)
+  const handleClose = (): void => setOpen(false)
 
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
@@ -302,7 +307,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     }, {
       iconType: 'file',
       label: I18n.t('pages.newProposal.view'),
-      onClick: () => { }
+      onClick: () => handleOpen()
     }, {
       iconType: 'download',
       label: I18n.t('pages.newProposal.download'),
@@ -518,6 +523,10 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           </Button>
         </ButtonContainer>
       </TopContainer>
+      <ProposalDisplayModal
+          open={open}
+          setClose={handleClose}
+        />
       {leavingPage && <MessageExitDialog />}
       {loadExistingProposal &&
         <MainContainer ref={divRef}>

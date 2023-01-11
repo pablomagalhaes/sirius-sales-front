@@ -97,7 +97,14 @@ const light = {
         backgroundColor: '#F0F1F5',
         fontColor: '#222222',
         borderColor: '#999DAC'
-      }
+      },
+      proposalModal: {
+        backgroundColor: '#F2F3F7',
+        border: '#E3E5EB',
+        iconColor: '#222222',
+        titleColor: '#222222',
+        headerColor: '#FFFFFF'
+      },
     },
     pages: {
       home: {

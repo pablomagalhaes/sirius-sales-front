@@ -90,6 +90,10 @@
       "save": "Save",
       "stack": "Stack up",
       "type": "Type: "
+    },
+    "ProposalDisplayModal": {
+      "title": "Download the proposal",
+      "buttonText": "Confirm language and download"
     }
   },
   "pages": {
