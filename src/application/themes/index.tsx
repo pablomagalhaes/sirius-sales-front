@@ -104,7 +104,7 @@ const light = {
         iconColor: '#222222',
         titleColor: '#222222',
         headerColor: '#FFFFFF'
-      },
+      }
     },
     pages: {
       home: {

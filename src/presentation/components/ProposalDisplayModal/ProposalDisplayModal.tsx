@@ -1,5 +1,5 @@
-import { Box, Modal, Grid, Typography } from '@material-ui/core'
-import React, { useState } from 'react'
+import { Modal } from '@material-ui/core'
+import React from 'react'
 import CloseIcon from '../../../application/icons/CloseIcon'
 import { withTheme } from 'styled-components'
 import {
@@ -22,12 +22,9 @@ interface ProposalDisplayProps {
 
 const ProposalDisplayModal = ({
   open,
-  setClose,
+  setClose
 }: ProposalDisplayProps): JSX.Element => {
-
   const handleOnClose = (): void => setClose()
-
-
 
   return (
     <Modal open={open} onClose={handleOnClose}>
