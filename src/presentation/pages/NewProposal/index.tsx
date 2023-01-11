@@ -56,35 +56,6 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [specifications, setSpecifications] = useState('')
   const [step3TableItems, setStep3TableItems] = useState<ItemModalData[]>([])
 
-  const floatingButtonMenuItems = [
-    {
-      iconType: 'save',
-      label: I18n.t('pages.newProposal.save'),
-      onClick: () => handleSave()
-    }, {
-      iconType: 'send',
-      label: I18n.t('pages.newProposal.send'),
-      onClick: () => { }
-    }
-  ]
-
-  // Menu suspenso após proposta ter sido salva
-  const floatingButtonMenuItemsAfterSaved = [
-    {
-      iconType: 'save',
-      label: I18n.t('pages.newProposal.save'),
-      onClick: () => handleSave()
-    }, {
-      iconType: 'file',
-      label: I18n.t('pages.newProposal.viewDownload'),
-      onClick: () => { }
-    }, {
-      iconType: 'send',
-      label: I18n.t('pages.newProposal.send'),
-      onClick: () => { }
-    }
-  ]
-
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
   const history = useHistory()
@@ -320,6 +291,35 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       setInvalidInput(true)
     }
   }
+
+  const floatingButtonMenuItems = [
+    {
+      iconType: 'save',
+      label: I18n.t('pages.newProposal.save'),
+      onClick: () => handleSave()
+    }, {
+      iconType: 'send',
+      label: I18n.t('pages.newProposal.send'),
+      onClick: () => { }
+    }
+  ]
+
+  // Menu suspenso após proposta ter sido salva
+  const floatingButtonMenuItemsAfterSaved = [
+    {
+      iconType: 'save',
+      label: I18n.t('pages.newProposal.save'),
+      onClick: () => handleSave()
+    }, {
+      iconType: 'file',
+      label: I18n.t('pages.newProposal.viewDownload'),
+      onClick: () => { }
+    }, {
+      iconType: 'send',
+      label: I18n.t('pages.newProposal.send'),
+      onClick: () => { }
+    }
+  ]
 
   const getEnchargedFullname = (): string => {
     const user = JSON.parse(localStorage.getItem('user') || '{}')

@@ -442,12 +442,12 @@ const Proposal = (): JSX.Element => {
             onClick: () => { }
           },
           {
-          iconType: 'duplicate',
-          label: I18n.t('pages.proposal.table.duplicateLabel'),
-          onClick: () => {
-            duplicateEventPage(id)
-          }
-        })
+            iconType: 'duplicate',
+            label: I18n.t('pages.proposal.table.duplicateLabel'),
+            onClick: () => {
+              duplicateEventPage(id)
+            }
+          })
         return array
       case StatusProposalEnum.REJEITADA:
       case StatusProposalEnum.CANCELADA:
