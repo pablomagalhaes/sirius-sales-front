@@ -46,6 +46,26 @@ export const HeaderDiv = styled.div`
   box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.05) !important;
 `
 
+export const SubHeaderDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`
+
+export const LanguageDiv = styled.div`
+  margin-right: 20px;
+`
+
+export const RowReverseDiv = styled.div`
+  display: flex;
+  flex-direction: row-reverse;
+  justify-self: flex-end;
+  margin-left: 35px;
+  margin-right: 35px;
+`
+
 export const MainDiv = styled.div`
   padding: 0 20px;
   

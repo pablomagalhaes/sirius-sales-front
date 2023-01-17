@@ -1,19 +1,22 @@
 import { Modal } from '@material-ui/core'
-import React from 'react'
+import React, { useState } from 'react'
 import CloseIcon from '../../../application/icons/CloseIcon'
 import { withTheme } from 'styled-components'
 import {
+  LanguageDiv,
   ModalDiv,
   MainDiv,
-  HeaderDiv
-} from './ProposalDisplayStyles'
-import { I18n } from 'react-redux-i18n'
-import {
+  HeaderDiv,
   RowReverseDiv,
+  SubHeaderDiv
+} from './ProposalDisplayStyles'
+import { setLocale, I18n } from 'react-redux-i18n'
+import {
   Title,
   CloseIconContainer
 } from '../StyledComponents/modalStyles'
-import { Button } from 'fiorde-fe-components'
+import { Button, LanguageSelect } from 'fiorde-fe-components'
+import { useDispatch } from 'react-redux'
 
 interface ProposalDisplayProps {
   open: boolean
@@ -24,22 +27,44 @@ const ProposalDisplayModal = ({
   open,
   setClose
 }: ProposalDisplayProps): JSX.Element => {
-  const handleOnClose = (): void => setClose()
+  const locale = localStorage.getItem('locale') ?? 'pt'
+  const dispatch = useDispatch()
+  const handleOnClose = (): void => {
+    dispatch(setLocale(locale))
+    setClose()
+  }
+  const [language, setLanguage] = useState(locale)
+
+  const handleLanguage = (language: string): void => {
+    setLanguage(language)
+    dispatch(setLocale(language))
+  }
 
   return (
     <Modal open={open} onClose={handleOnClose}>
       <ModalDiv>
         <HeaderDiv>
-          <Title>{I18n.t('components.ProposalDisplayModal.title')}</Title>
-          <Button
-              backgroundGreen
-              disabled={false}
-              icon=""
-              onAction={() => { }}
-              position="right"
-              text={I18n.t('components.ProposalDisplayModal.buttonText')}
-              tooltip={I18n.t('components.ProposalDisplayModal.buttonText')}
-            />
+          <SubHeaderDiv>
+            <Title>{I18n.t('components.ProposalDisplayModal.title')}</Title>
+            <LanguageDiv>
+              <LanguageSelect
+                language={language}
+                onLanguageChange={(language: string) => handleLanguage(language)}
+                languageLabelMain='PT'
+                languageLabelSecondary='EN'
+                showLabelLanguage
+              />
+            </LanguageDiv>
+            <Button
+                backgroundGreen
+                disabled={false}
+                icon=""
+                onAction={() => { }}
+                position="right"
+                text={I18n.t('components.ProposalDisplayModal.buttonText')}
+                tooltip={I18n.t('components.ProposalDisplayModal.buttonText')}
+              />
+          </SubHeaderDiv>
           <RowReverseDiv>
             <CloseIconContainer>
               <CloseIcon onClick={handleOnClose} />
