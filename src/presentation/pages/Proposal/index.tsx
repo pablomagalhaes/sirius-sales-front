@@ -3,9 +3,9 @@ import {
   Button,
   Pagination,
   RowFilter,
-  Table,
   FloatingMenu
 } from 'fiorde-fe-components'
+import TableImpl from './TableImpl'
 import { Breadcrumbs, Link, Select, MenuItem } from '@material-ui/core/'
 import {
   ArrowIconContainer,
@@ -968,19 +968,8 @@ const Proposal = (): JSX.Element => {
       </ListHeaderContainer>
       <BottomSideContainer>
         <TableContainer>
-          <Table
-            approvedLabel={I18n.t('pages.proposal.table.approvedLabel')}
-            cancelLabel={I18n.t('pages.proposal.table.cancelledLabel')}
-            inRevisionLabel={I18n.t('pages.proposal.table.inRevisionLabel')}
-            openLabel={I18n.t('pages.proposal.table.openLabel')}
-            rejectLabel={I18n.t('pages.proposal.table.rejectedLabel')}
+          <TableImpl
             rows={getProposalItems(proposalList)}
-            waitingForCustomerReturnLabel={I18n.t(
-              'pages.proposal.table.waitingForCustomerReturnLabel'
-            )}
-            tooltipTitle={I18n.t(
-              'pages.proposal.table.overdueClientResponse'
-            )}
             />
             <RejectModal
                 open={open}
