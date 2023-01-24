@@ -14,7 +14,7 @@ import {
   MaritimeCell,
   Table, FloatingMenu, AlertIconCircle, ControlledToolTip
 } from 'fiorde-fe-components'
-import API from '../../../infrastructure/api'
+// import API from '../../../infrastructure/api'
 
 export interface TableImplProps {
   rows: any[]
