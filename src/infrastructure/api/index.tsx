@@ -8,7 +8,7 @@ const getContainerType = async (params?): Promise<any> => {
     const res = await instance.get(url)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 
@@ -18,7 +18,7 @@ const getCurrencies = async (): Promise<any> => {
     const res = await instance.get(url)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 
@@ -28,7 +28,7 @@ const getIncoterms = async (): Promise<any> => {
     const res = await instance.get(url)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 
@@ -38,7 +38,7 @@ const getPackaging = async (): Promise<any> => {
     const res = await instance.get(url)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 
@@ -48,7 +48,7 @@ const getOriginDestination = async (): Promise<any> => {
     const res = await instance.get(url)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 
@@ -58,7 +58,7 @@ const getOriginDestinationByModal = async (params): Promise<any> => {
     const res = await instance.get(url)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 
@@ -68,7 +68,7 @@ const getOriginDestinationById = async (params): Promise<any> => {
     const res = await instance.get(url)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 
@@ -78,7 +78,7 @@ const getFrequency = async (): Promise<any> => {
     const res = await instance.get(url)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 
@@ -88,7 +88,7 @@ const getAgents = async (): Promise<any> => {
     const res = await instance.get(url)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 
@@ -98,7 +98,7 @@ const getBusinessPartnerByType = async (type: string): Promise<any> => {
     const res = await instance.get(url)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 
@@ -108,7 +108,7 @@ const getTemperature = async (params?): Promise<any> => {
     const res = await instance.get(url)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 
@@ -118,7 +118,7 @@ const getImo = async (params?): Promise<any> => {
     const res = await instance.get(url)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 
@@ -128,7 +128,7 @@ const getPartner = async (): Promise<any> => {
     const res = await instance.get(url)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 
@@ -138,7 +138,7 @@ const getService = async (params?): Promise<any> => {
     const res = await instance.get(url)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 
@@ -153,7 +153,7 @@ const getProposals = async (params): Promise<any> => {
     })
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 
@@ -163,7 +163,7 @@ const postProposal = async (params): Promise<any> => {
     const res = await instance.post(url, params)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 
@@ -173,7 +173,7 @@ const postTotalCalculation = async (params): Promise<any> => {
     const res = await instance.post(url, params)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 
@@ -183,7 +183,7 @@ const getProposal = async (params): Promise<any> => {
     const res = await instance.get(url)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 
@@ -193,7 +193,7 @@ const putProposal = async (id, params): Promise<any> => {
     const res = await instance.put(url, params)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 
@@ -204,7 +204,7 @@ const putStatus = async (id: any, status: string, reason?: string): Promise<any>
     const res = await instance.put(url)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 
@@ -214,7 +214,7 @@ const getBusinessPartnerCostumer = async (params): Promise<any> => {
     const res = await instance.get(url)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 
@@ -224,7 +224,7 @@ const getCountries = async (): Promise<any> => {
     const res = await instance.get(url)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 const getMercosulCities = async (): Promise<any> => {
@@ -233,7 +233,7 @@ const getMercosulCities = async (): Promise<any> => {
     const res = await instance.get(url)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 
@@ -243,7 +243,7 @@ const getMercosulStates = async (): Promise<any> => {
     const res = await instance.get(url)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 
@@ -253,7 +253,7 @@ const getStates = async (params): Promise<any> => {
     const res = await instance.get(url)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
     return ('error')
   }
 }
@@ -264,7 +264,7 @@ const getCities = async (params): Promise<any> => {
     const res = await instance.get(url)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
     return ('error')
   }
 }
@@ -275,7 +275,7 @@ const getCityById = async (params): Promise<any> => {
     const res = await instance.get(url)
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
     return ('error')
   }
 }
@@ -291,7 +291,7 @@ const getCountProposal = async (params): Promise<any> => {
     })
     return res.data
   } catch (error) {
-    toast.error(String(error) + ' | Request:  ' +  String(url))
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 
