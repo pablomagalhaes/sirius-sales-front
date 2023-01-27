@@ -798,11 +798,26 @@ const Step6 = ({
     let totalSum: number = 0
     for (let index = 0; index < tableData.length; index++) {
       const item = tableData[index]
-      if (item.minimumValue > item.saleValue) {
-        totalSum = totalSum + Number(item.minimumValue?.replace(',', '.'))
+
+      const MinValue = Number(item.minimumValue?.replace(',', '.'))
+      const SaleValue = Number(item.saleValue?.replace(',', '.'))
+
+      if (item.type === 'FIXO' || item.type === 'BL') {
+        if (MinValue > SaleValue) {
+          totalSum = totalSum + Number(item.minimumValue?.replace(',', '.'))
+        }
+        if (MinValue <= SaleValue) {
+          totalSum = totalSum + Number(item.saleValue?.replace(',', '.'))
+        }
       }
-      if (item.minimumValue <= item.saleValue) {
-        totalSum = totalSum + Number(item.saleValue?.replace(',', '.'))
+
+      if (item.type === 'KG' || item.type === 'CW') {
+        if (MinValue > SaleValue) {
+          totalSum = totalSum + Number(item.totalItem?.replace(',', '.'))
+        }
+        if (MinValue <= SaleValue) {
+          totalSum = totalSum + Number(item.totalItem?.replace(',', '.'))
+        }
       }
     }
     return totalSum.toFixed(2).replace('.', ',')
