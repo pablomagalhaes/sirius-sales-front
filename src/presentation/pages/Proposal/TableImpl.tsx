@@ -14,6 +14,7 @@ import {
   MaritimeCell,
   Table, FloatingMenu, AlertIconCircle, ControlledToolTip
 } from 'fiorde-fe-components'
+import API from '../../../infrastructure/api'
 
 export interface TableImplProps {
   rows: any[]
@@ -119,13 +120,41 @@ const TableImpl = ({
     {
       label: 'Origem',
       key: 'origin',
-      render: ({ origin }: any) => <OriginCell>{origin}</OriginCell>,
+      render: ({ origin, modal }: any) => (
+        <OriginCell>
+          <ControlledToolTip
+            placement="top"
+            title={origin}
+            open={true}
+            disabled={true}
+            getTitle={modal !== 'rodoviario' && API.getOriginDestinationById}
+          >
+            <div>
+              {origin}
+            </div>
+          </ControlledToolTip>
+        </OriginCell>
+      ),
       size: 3
     },
     {
       label: 'Destino',
       key: 'destination',
-      render: ({ destination }: any) => <LabelCell>{destination}</LabelCell>,
+      render: ({ destination, modal }: any) => (
+        <LabelCell>
+          <ControlledToolTip
+            placement="top"
+            title={destination}
+            open={true}
+            disabled={true}
+            getTitle={modal !== 'rodoviario' && API.getOriginDestinationById}
+          >
+            <div>
+              {destination}
+            </div>
+          </ControlledToolTip>
+        </LabelCell>
+      ),
       size: 2
     },
     {
