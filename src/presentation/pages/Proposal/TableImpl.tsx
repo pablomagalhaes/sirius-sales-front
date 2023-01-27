@@ -14,7 +14,7 @@ import {
   MaritimeCell,
   Table, FloatingMenu, AlertIconCircle, ControlledToolTip
 } from 'fiorde-fe-components'
-// import API from '../../../infrastructure/api'
+import API from '../../../infrastructure/api'
 
 export interface TableImplProps {
   rows: any[]
@@ -127,7 +127,7 @@ const TableImpl = ({
             title={origin}
             open={true}
             disabled={true}
-            // getTitle={modal !== 'rodoviario' && API.getOriginDestinationById}
+            getTitle={modal !== 'rodoviario' && API.getOriginDestinationById}
           >
             <div>
               {origin}
@@ -147,7 +147,7 @@ const TableImpl = ({
             title={destination}
             open={true}
             disabled={true}
-            // getTitle={modal !== 'rodoviario' && API.getOriginDestinationById}
+            getTitle={modal !== 'rodoviario' && API.getOriginDestinationById}
           >
             <div>
               {destination}
