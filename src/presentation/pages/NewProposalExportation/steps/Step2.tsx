@@ -490,7 +490,6 @@ const Step2 = ({
         return { ...currentState, step2: true }
       })
     }
-
   }
 
   const validateFilled = (): void => {

@@ -320,7 +320,7 @@ const FareModal = ({
                   />
                 </Container>
               </RowDiv></>
-            )}
+          )}
 
           {specifications === 'fcl' && (
             <><RowDiv>
