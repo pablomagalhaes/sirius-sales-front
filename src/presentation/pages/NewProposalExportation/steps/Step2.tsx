@@ -1300,11 +1300,6 @@ const Step2 = ({
                               'components.itemModal.requiredField'
                             )}
                             value={selectedAgent.agent}
-                            // invalid={
-                            //   proposalType === 'CLIENT' &&
-                            //   invalidInput &&
-                            //   selectedAgent.agent.length === 0
-                            // }
                             variant="outlined"
                             placeholder={
                               selectedAgent.agent.length === 0 &&
