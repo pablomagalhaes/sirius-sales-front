@@ -103,7 +103,7 @@
       "weight4": "+500kg",
       "weight5": "+1 ton",
       "currency": "Currency: ",
-      "agent": "Agent / Air Company: ",
+      "agent": "Agent / Air Carrier: ",
       "originDestination": "Origin and Destination: ",
       "airTitle": "Fare Details - Air",
       "seaLclTitle": "Fare Details - Sea LCL",
@@ -112,7 +112,17 @@
       "requiredField": "Required field",
       "save": "Save",
       "choose": "Choose ...",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "untilWeight": "Until 7w/m: ",
+      "overrWeight": "Over: ",
+      "agentSeaCompany": "Agent / Sea Carrier: ",
+      "container20": "Container 20: ",
+      "container40": "Container 40: ",
+      "generalCargoDed": "General Cargo ded.: ",
+      "generalCargoCons": "General Cargo cons.: ",
+      "ImoCargoDed": "IMO Cargo ded.: ",
+      "ImoCargoCons": "IMO Cargo cons.: ",
+      "agentLandCompany": "Agent / Land Carrier: "
     }
   },
   "pages": {

@@ -13,7 +13,7 @@ import {
   TableBodyRow,
   TableHeadRow,
   Input
-} from './AirTariffModalStyles'
+} from './SeaLclTariffModalStyles'
 import { I18n } from 'react-redux-i18n'
 import ControlledInput from '../ControlledInput'
 import {
@@ -32,25 +32,22 @@ import FormatNumber from '../../../application/utils/formatNumber'
 import ControlledSelect from '../../components/ControlledSelect'
 import API from '../../../infrastructure/api'
 
-export interface AirTariffModalData {
+export interface SeaLclTariffModalData {
   minValue: string | null
   validity: string | null
   frequency: string
   route: string | null
   transitTime: string | null
-  weight1: number | null
-  weight2: number | null
-  weight3: number | null
-  weight4: number | null
-  weight5: number | null
+  untilWeight: number | null
+  overWeight: number | null
   currency: string | null
   agent: string | null
   originDestination: string | null
-  airCompany: string | null
+  seaCompany: string | null
 }
 
-interface AirTariffModalProps {
-  dataProp: AirTariffModalData
+interface SeaLclTariffModalProps {
+  dataProp: SeaLclTariffModalData
   handleAdd: (item) => void
   open: boolean
   setClose: () => void
@@ -68,25 +65,22 @@ export const initialState = {
   frequency: '',
   route: null,
   transitTime: null,
-  weight1: null,
-  weight2: null,
-  weight3: null,
-  weight4: null,
-  weight5: null,
+  untilWeight: null,
+  overWeight: null,
   currency: null,
   agent: null,
   originDestination: null,
-  airCompany: null
+  seaCompany: null
 }
 
-const AirTariffModal = ({
+const SeaLclTariffModal = ({
   dataProp,
   handleAdd,
   open,
   setClose,
   title
-}: AirTariffModalProps): JSX.Element => {
-  const [data, setData] = useState<AirTariffModalData>(initialState)
+}: SeaLclTariffModalProps): JSX.Element => {
+  const [data, setData] = useState<SeaLclTariffModalData>(initialState)
   const [frequencyList, setFrequencyList] = useState<Frequency[]>([])
   const [currencyList, setCurrencyList] = useState<any[]>([])
   const [invalidInput, setInvalidInput] = useState(false)
@@ -167,7 +161,7 @@ const AirTariffModal = ({
                   <TableHead>
                     <TableHeadRow>
                       <StyledTableCell width="45%">
-                        {I18n.t('components.tariffModal.agentAircompany')}
+                        {I18n.t('components.tariffModal.agentSeaCompany')}
                       </StyledTableCell>
                       <StyledTableCell width="40%" align="left">
                         {I18n.t('components.tariffModal.originDestination')}
@@ -182,7 +176,7 @@ const AirTariffModal = ({
                       <StyledTableCell width="45%" align="left">
                         <ColumnDiv>
                           <span>{data.agent}</span>
-                          <span>{data.airCompany}</span>
+                          <span>{data.seaCompany}</span>
                         </ColumnDiv>
                       </StyledTableCell>
                       <StyledTableCell width="40%" align="left">
@@ -220,7 +214,7 @@ const AirTariffModal = ({
                 </StyledTable>
               </SubDiv>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={3}>
               <FormLabel component="legend" error={invalidInput}>
                 {I18n.t('components.tariffModal.minValue')}<RedColorSpan> *</RedColorSpan>
               </FormLabel>
@@ -240,10 +234,9 @@ const AirTariffModal = ({
                 style={{ marginRight: '3px' }}
               />
             </Grid>
-            <Grid item xs={7} container={true} spacing={1} direction="row" justify="center" alignItems="center">
-                <Grid item xs={12} md>
-                <FormLabel component="legend" error={invalidInput} >
-                  {I18n.t('components.tariffModal.weight1')}<RedColorSpan> *</RedColorSpan>
+            <Grid item xs={3}>
+              <FormLabel component="legend" error={invalidInput}>
+                  {I18n.t('components.tariffModal.untilWeight')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
                   decimalSeparator={','}
@@ -252,91 +245,34 @@ const AirTariffModal = ({
                   format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                   customInput={ControlledInput}
                   toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-                  invalid={invalidInput && data.weight1 === null}
-                  value={data.weight1 != null ? data.weight1 : ''}
-                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, weight1: e.target.value })) }}
-                  variant="outlined"
-                  size="small"
-                  modal
-                />
-                </Grid>
-                <Grid item xs={12} md>
-                <FormLabel component="legend" error={invalidInput} >
-                  {I18n.t('components.tariffModal.weight2')}<RedColorSpan> *</RedColorSpan>
-                </FormLabel>
-                <NumberInput
-                  decimalSeparator={','}
-                  thousandSeparator={'.'}
-                  decimalScale={2}
-                  format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
-                  customInput={ControlledInput}
-                  toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-                  invalid={invalidInput && data.weight2 === null}
-                  value={data.weight2 != null ? data.weight2 : ''}
-                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, weight2: e.target.value })) }}
-                  variant="outlined"
-                  size="small"
-                  modal
-                />
-                </Grid>
-                <Grid item xs={12} md>
-                <FormLabel component="legend" error={invalidInput} >
-                  {I18n.t('components.tariffModal.weight3')}<RedColorSpan> *</RedColorSpan>
-                </FormLabel>
-                <NumberInput
-                  decimalSeparator={','}
-                  thousandSeparator={'.'}
-                  decimalScale={2}
-                  format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
-                  customInput={ControlledInput}
-                  toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-                  invalid={invalidInput && data.weight3 === null}
-                  value={data.weight3 != null ? data.weight3 : ''}
-                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, weight3: e.target.value })) }}
-                  variant="outlined"
-                  size="small"
-                  modal
-                />
-                </Grid>
-                <Grid item xs={12} md>
-                <FormLabel component="legend" error={invalidInput} >
-                  {I18n.t('components.tariffModal.weight4')}<RedColorSpan> *</RedColorSpan>
-                </FormLabel>
-                <NumberInput
-                  decimalSeparator={','}
-                  thousandSeparator={'.'}
-                  decimalScale={2}
-                  format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
-                  customInput={ControlledInput}
-                  toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-                  invalid={invalidInput && data.weight4 === null}
-                  value={data.weight4 != null ? data.weight4 : ''}
-                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, weight4: e.target.value })) }}
-                  variant="outlined"
-                  size="small"
-                  modal
-                />
-                </Grid>
-                <Grid item xs={12} md>
-                <FormLabel component="legend" error={invalidInput} >
-                  {I18n.t('components.tariffModal.weight5')}<RedColorSpan> *</RedColorSpan>
-                </FormLabel>
-                <NumberInput
-                  decimalSeparator={','}
-                  thousandSeparator={'.'}
-                  decimalScale={2}
-                  format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
-                  customInput={ControlledInput}
-                  toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-                  invalid={invalidInput && data.weight5 === null}
-                  value={data.weight5 != null ? data.weight5 : ''}
-                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, weight5: e.target.value })) }}
+                  invalid={invalidInput && data.untilWeight === null}
+                  value={data.untilWeight != null ? data.untilWeight : ''}
+                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, untilWeight: e.target.value })) }}
                   variant="outlined"
                   size="small"
                   modal
                   style={{ marginRight: '3px' }}
                 />
-                </Grid>
+            </Grid>
+            <Grid item xs={3}>
+              <FormLabel component="legend" error={invalidInput}>
+                  {I18n.t('components.tariffModal.overWeight')}<RedColorSpan> *</RedColorSpan>
+                </FormLabel>
+                <NumberInput
+                  decimalSeparator={','}
+                  thousandSeparator={'.'}
+                  decimalScale={2}
+                  format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                  customInput={ControlledInput}
+                  toolTipTitle={I18n.t('components.tariffModal.requiredField')}
+                  invalid={invalidInput && data.overWeight === null}
+                  value={data.overWeight != null ? data.overWeight : ''}
+                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, overWeight: e.target.value })) }}
+                  variant="outlined"
+                  size="small"
+                  modal
+                  style={{ marginRight: '3px' }}
+                />
             </Grid>
             <Grid item xs={3}>
               <FormLabel component="legend" error={invalidInput}>
@@ -465,4 +401,4 @@ const AirTariffModal = ({
   )
 }
 
-export default AirTariffModal
+export default SeaLclTariffModal

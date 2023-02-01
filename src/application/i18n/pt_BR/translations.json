@@ -104,7 +104,7 @@
       "weight4": "+500kg",
       "weight5": "+1 ton",
       "currency": "Moeda: ",
-      "agent": "Agente / Cia Aérea: ",
+      "agentAirCompany": "Agente / Cia. Aérea: ",
       "originDestination": "Origem e destino: ",
       "airTitle": "Detalhamento da tarifa - Aéreo",
       "seaLclTitle": "Detalhamento da tarifa - Marítimo LCL",
@@ -113,7 +113,17 @@
       "requiredField": "Campo obrigatório",
       "save": "Salvar",
       "choose": "Escolha ...",
-      "cancel": "Cancelar"
+      "cancel": "Cancelar",
+      "untilWeight": "Até 7w/m: ",
+      "overWeight": "Acima: ",
+      "agentSeaCompany": "Agente / Cia. Marítima: ",
+      "container20": "Container 20: ",
+      "container40": "Container 40: ",
+      "generalCargoDed": "Carga Geral ded.: ",
+      "generalCargoCons": "Carga Geral cons.: ",
+      "ImoCargoDed": "Carga IMO ded.: ",
+      "ImoCargoCons": "Carga IMO cons.: ",
+      "agentLandCompany": "Agente / Transportadora: "
     }
   },
   "pages": {
