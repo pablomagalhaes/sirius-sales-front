@@ -468,43 +468,56 @@ const Step2 = ({
   }
 
   const validateFormComplete = (): void => {
-    if (
-      !invalidAgent &&
-      validateCompleteShippingCompany() &&
-      originDestinyFullfilled() &&
-      validateClient() &&
-      validateIncoterm() &&
-      validateOriginDestination()
-    ) {
+    if (proposalType !== 'CLIENT') {
+      if (
+        !invalidAgent &&
+        validateCompleteShippingCompany() &&
+        validateClient() &&
+        validateOriginDestination() &&
+        originDestinyFullfilled() &&
+        validateIncoterm()
+      ) {
+        setCompleted((currentState) => {
+          return { ...currentState, step2: true }
+        })
+      } else {
+        setCompleted((currentState) => {
+          return { ...currentState, step2: false }
+        })
+      }
+    } else {
       setCompleted((currentState) => {
         return { ...currentState, step2: true }
       })
-    } else {
-      setCompleted((currentState) => {
-        return { ...currentState, step2: false }
-      })
     }
+
   }
 
   const validateFilled = (): void => {
-    if (
-      data.origin !== '' ||
-      data.destiny !== '' ||
-      data.oriCity !== '' ||
-      data.oriState !== '' ||
-      data.oriCountry !== '' ||
-      data.destCity !== '' ||
-      data.destState !== '' ||
-      data.destCountry !== '' ||
-      data.incoterm !== '' ||
-      validateClient()
-    ) {
-      setFilled((currentState) => {
-        return { ...currentState, step2: true }
-      })
+    if (proposalType !== 'CLIENT') {
+      if (
+        data.origin !== '' ||
+        data.destiny !== '' ||
+        data.oriCity !== '' ||
+        data.oriState !== '' ||
+        data.oriCountry !== '' ||
+        data.destCity !== '' ||
+        data.destState !== '' ||
+        data.destCountry !== '' ||
+        data.incoterm !== '' ||
+        validateClient()
+      ) {
+        setFilled((currentState) => {
+          return { ...currentState, step2: true }
+        })
+      } else {
+        setFilled((currentState) => {
+          return { ...currentState, step2: false }
+        })
+      }
     } else {
       setFilled((currentState) => {
-        return { ...currentState, step2: false }
+        return { ...currentState, step2: true }
       })
     }
   }
@@ -1288,11 +1301,11 @@ const Step2 = ({
                               'components.itemModal.requiredField'
                             )}
                             value={selectedAgent.agent}
-                            invalid={
-                              proposalType === 'CLIENT' &&
-                              invalidInput &&
-                              selectedAgent.agent.length === 0
-                            }
+                            // invalid={
+                            //   proposalType === 'CLIENT' &&
+                            //   invalidInput &&
+                            //   selectedAgent.agent.length === 0
+                            // }
                             variant="outlined"
                             placeholder={
                               selectedAgent.agent.length === 0 &&

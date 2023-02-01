@@ -260,19 +260,28 @@ const Step5 = ({
   }, [dataOrigin, dataDestiny, dataTotalCostDestiny, dataTotalCostOrigin, setDataOrigin, setDataDestiny])
 
   useEffect(() => {
-    if (dataOrigin.length > 0 && dataDestiny.length > 0) {
-      setCompleted((currentState) => {
-        return { ...currentState, step5: true }
-      })
-      setFilled((currentState) => {
-        return { ...currentState, step5: true }
-      })
+    if (proposal.proposalType !== 'CLIENT') {
+      if (dataOrigin.length > 0 && dataDestiny.length > 0) {
+        setCompleted((currentState) => {
+          return { ...currentState, step5: true }
+        })
+        setFilled((currentState) => {
+          return { ...currentState, step5: true }
+        })
+      } else {
+        setCompleted((currentState) => {
+          return { ...currentState, step5: false }
+        })
+        setFilled((currentState) => {
+          return { ...currentState, step5: false }
+        })
+      }
     } else {
       setCompleted((currentState) => {
-        return { ...currentState, step5: false }
+        return { ...currentState, step5: true }
       })
       setFilled((currentState) => {
-        return { ...currentState, step5: false }
+        return { ...currentState, step5: true }
       })
     }
   }, [dataDestiny, dataOrigin])

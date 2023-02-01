@@ -75,7 +75,7 @@ const ContractingTypeWithoutFcl = [
 ]
 
 const makeTableData = (costs): any => {
-  const getTarifas = costs.filter(cost => cost.costType === 'Tarifa')
+  const getTarifas = costs?.filter(cost => cost.costType === 'Tarifa')
   return getTarifas.map(cost => ({
     idCost: cost.idCost,
     selectedContainer: cost.idContainerType,
@@ -124,9 +124,9 @@ const Step6 = ({
   const currencyArray = new Map()
 
   // const [tableData, setTableData] = useState<FareModalData[]>([])
-  const [tableData, setTableData] = useState<FareModalData[]>(makeTableData(proposal.costs))
+  const [tableData, setTableData] = useState<FareModalData[]>(makeTableData(proposal?.costs))
   const [data, setData] = useState<any[]>(
-    proposal.agents.map(newAgent => ({
+    proposal?.agents.map(newAgent => ({
       idCost: proposal.costs.find((cost): any => {
         if (cost.costType === 'Frete') {
           if (cost?.agent?.idBusinessPartnerAgent === newAgent?.idBusinessPartnerAgent) {

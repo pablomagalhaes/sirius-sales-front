@@ -287,40 +287,40 @@ const FareModal = ({
             </Container>
           </RowDiv>
 
-          <RowDiv>
-            <Label width="513px" color={invalidInput && (data.agent?.agent === '' || data.agent?.agent === null) ? 'red' : ''}>
-              {I18n.t('components.fareModal.agent')}
-              <RedColorSpan> *</RedColorSpan>
-            </Label>
-          </RowDiv>
+          {agentList?.length > 0 && (
+            <> <RowDiv>
+                <Label width="513px" color={invalidInput && (data.agent?.agent === '' || data.agent?.agent === null) ? 'red' : ''}>
+                  {I18n.t('components.fareModal.agent')}
+                  <RedColorSpan> *</RedColorSpan>
+                </Label>
+              </RowDiv>
 
-          <RowDiv margin={true}>
-
-            <Container width="513px" height="32px">
-              <Autocomplete
-                onChange={(e, newValue) => setData({ ...data, selectedAgent: newValue })}
-                options={agentList.map(agent => agent.agent)}
-                value={data.selectedAgent}
-                renderInput={(params) => (
-                  <div ref={params.InputProps.ref}>
-                    <Input
-                      {...params.inputProps}
-                      filled={data.selectedAgent}
-                      toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                      invalid={invalidInput && (data.agent?.agent === '' || data.agent?.agent === null)}
-                      placeholder={I18n.t('components.fareModal.choose')}
-                      style={{ width: '513px' }}
-                    />
-                    <Box {...params.inputProps} className="dropdownCustom">
-                      <ArrowDropDownIcon />
-                    </Box>
-                  </div>
-                )}
-                PaperComponent={(params: any) => <StyledPaper {...params} />}
-              />
-            </Container>
-
-          </RowDiv>
+              <RowDiv margin={true}>
+                <Container width="513px" height="32px">
+                  <Autocomplete
+                    onChange={(e, newValue) => setData({ ...data, selectedAgent: newValue })}
+                    options={agentList.map(agent => agent.agent)}
+                    value={data.selectedAgent}
+                    renderInput={(params) => (
+                      <div ref={params.InputProps.ref}>
+                        <Input
+                          {...params.inputProps}
+                          filled={data.selectedAgent}
+                          toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                          invalid={invalidInput && (data.agent?.agent === '' || data.agent?.agent === null)}
+                          placeholder={I18n.t('components.fareModal.choose')}
+                          style={{ width: '513px' }}
+                        />
+                        <Box {...params.inputProps} className="dropdownCustom">
+                          <ArrowDropDownIcon />
+                        </Box>
+                      </div>
+                    )}
+                    PaperComponent={(params: any) => <StyledPaper {...params} />}
+                  />
+                </Container>
+              </RowDiv></>
+            )}
 
           {specifications === 'fcl' && (
             <><RowDiv>
