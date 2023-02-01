@@ -68,7 +68,6 @@ const Step1 = ({
 }: Step1Props): JSX.Element => {
   const [transportList] = useState<Transport[]>(TransportList)
   const [agentsList, setAgentsList] = useState<any[]>([])
-  const [businessPartnerList, setBusinessPartnerList] = useState<any[]>([])
   const [partnerList, setPartnerList] = useState<any[]>([])
   const [data, setData] = useState({
     proposal: '',
@@ -141,27 +140,6 @@ const Step1 = ({
   }, [])
 
   useEffect(() => {
-    void getBusinessPartner(getBusinessPartnerType())
-  }, [])
-
-  const getBusinessPartner = async (type: string): Promise<any> => {
-    const response = await API.getBusinessPartnerByType(type)
-    if (response !== undefined) {
-      setBusinessPartnerList([...response])
-    }
-  }
-
-  const getBusinessPartnerType = (): string => {
-    switch (data.modal) {
-      case 'AIR':
-        return 'CIA. AEREA'
-      case 'LAND':
-        return 'TRANS. INTERNACIONAL'
-    }
-    return ''
-  }
-
-  useEffect(() => {
     let firstAgent!: any[]
     let listCostsWithoutAgents!: any[]
 
@@ -181,22 +159,18 @@ const Step1 = ({
       }
     }
 
-    // agentsList.filter(
-    //   (agt) => agt.businessPartner.simpleName === data.proposalValue
-    // )[0]?.businessPartner.id
-
     setProposal({
       ...proposal,
       proposalType: data.proposal,
       idTransport: data.modal,
       idBusinessPartnerCustomer:
-      data.proposal === 'ROUTING ORDER'
-        ? agentsList.filter(
-        (agt) => agt.businessPartner.simpleName === data.proposalValue
-      )[0]?.businessPartner.id
-      : partnerList.filter(
-        (ptn) => ptn.businessPartner.simpleName === data.proposalValue
-      )[0]?.businessPartner.id,
+        data.proposal === 'ROUTING ORDER'
+          ? agentsList.filter(
+            (agt) => agt.businessPartner.simpleName === data.proposalValue
+          )[0]?.businessPartner.id
+          : partnerList.filter(
+            (ptn) => ptn.businessPartner.simpleName === data.proposalValue
+          )[0]?.businessPartner.id,
       requester: data.requester,
       transportIncluded: data.serviceTransport,
       clearenceIncluded: data.serviceDesemb
@@ -241,12 +215,6 @@ const Step1 = ({
     }
   }, [data.proposal])
 
-  useEffect(() => {
-    if (data.proposal === 'ROUTING ORDER') {
-      setAgentList(selectedAgents)
-    }
-  }, [selectedAgents, agentsList])
-
   const getColor = (value): any => {
     if (value === '' && invalidInput) {
       return theme?.commercial?.components?.itemModal?.redAsterisk
@@ -286,57 +254,11 @@ const Step1 = ({
     return id
   }
 
-  const getAgentById = (idProposalAgent: number | null | undefined): string => {
-    if (idProposalAgent !== null && idProposalAgent !== undefined) {
-      const agent = agentsList.find((agent) => agent.businessPartner.id === idProposalAgent)
-      if (agent !== undefined) {
-        return agent.businessPartner.simpleName
-      }
-    }
-    return ''
-  }
-
-  const getBusinessPartnerById = (id: number | null | undefined): string => {
-    if (id !== null && id !== undefined) {
-      const businessPartner = businessPartnerList.find(
-        (businessPartner) => businessPartner.businessPartner.id === id
-      )
-      if (businessPartner !== undefined) {
-        return businessPartner.businessPartner.simpleName
-      }
-    }
-    return ''
-  }
-
   useEffect(() => {
-    if (proposal.agents.length > 0) {
-      setSelectedAgents(
-        proposal.agents.map((agent, index) => {
-          return {
-            idProposalAgent: agent.idProposalAgent,
-            idBusinessPartnerAgent: agent.idBusinessPartnerAgent,
-            shippingCompany: getBusinessPartnerById(agent.idBusinessPartnerTransportCompany),
-            agent: getAgentById(agent.idBusinessPartnerAgent),
-            idBusinessPartnerTransportCompany: agent.idBusinessPartnerTransportCompany
-          }
-        })
-      )
+    if (data.proposal === 'ROUTING ORDER') {
+      setAgentList(selectedAgents)
     }
-  }, [agentsList, businessPartnerList])
-
-  useEffect(() => {
-    setProposal({
-      ...proposal,
-      agents: selectedAgents.map(
-        ({ shippingCompany, agent, ...otherProperties }) => otherProperties
-      )
-    })
-  }, [selectedAgents])
-
-  // {idProposalAgent: null, idBusinessPartnerAgent: 1, idBusinessPartnerTransportCompany: 296}
-
-  console.log('selectedAgents', selectedAgents)
-  // console.log('data step1', data)
+  }, [data.proposalValue, selectedAgents, agentsList])
 
   return (
     <Separator>
@@ -433,9 +355,11 @@ const Step1 = ({
                       <Fragment key={index}>
                         <Autocomplete
                           freeSolo
-                          options={agentsList.map(
-                            (item) => item.businessPartner.simpleName
-                          )}
+                          options={
+                            data.proposal === 'ROUTING ORDER'
+                              ? agentsList.map((item) => item.businessPartner.simpleName)
+                              : partnerList.map((item) => item.businessPartner.simpleName)
+                          }
                           onChange={(e, newValue) => {
                             setSelectedAgents(
                               selectedAgents.map((value, currentIndex) =>
