@@ -90,6 +90,29 @@
       "save": "Save",
       "stack": "Stack up",
       "type": "Type: "
+    },
+    "tariffModal": {
+      "minValue": "Minimum Value: ",
+      "validity": "Validity: ",
+      "frequency": "Frequency: ",
+      "route": "Route: ",
+      "transitTime": "Transit time (days): ",
+      "weight1": "+45kg",
+      "weight2": "+100kg",
+      "weight3": "+300kg",
+      "weight4": "+500kg",
+      "weight5": "+1 ton",
+      "currency": "Currency: ",
+      "agent": "Agent / Air Company: ",
+      "originDestination": "Origin and Destination: ",
+      "airTitle": "Fare Details - Air",
+      "seaLclTitle": "Fare Details - Sea LCL",
+      "seaFclTitle": "Fare Details - Sea FCL",
+      "landTitle": "Fare Details - Land",
+      "requiredField": "Required field",
+      "save": "Save",
+      "choose": "Choose ...",
+      "cancel": "Cancel"
     }
   },
   "pages": {

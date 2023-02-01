@@ -33,6 +33,7 @@ import ItemModal, {
   ItemModalData,
   initialState
 } from '../../../components/ItemModal/ItemModal'
+import AirTariffModal from '../../../components/AirTariffModal/AirTariffModal'
 import ControlledSelect from '../../../components/ControlledSelect'
 import ControlledInput from '../../../components/ControlledInput'
 import ChargeTable, {
@@ -94,6 +95,7 @@ const Step3 = ({
   setCwSale
 }: Step3Props): JSX.Element => {
   const [open, setOpen] = useState(false)
+  const [open2, setOpen2] = useState(false)
   const [cwOpen, setCwOpen] = useState(false)
   const [tableRows, setTableRows] = useState<ItemModalData[]>([])
   const [chargeData, setChargeData] = useState<ItemModalData>(initialState)
@@ -366,6 +368,7 @@ const Step3 = ({
 
   const handleClose = (): void => {
     setOpen(false)
+    setOpen2(false)
     setChargeData(initialState)
   }
 
@@ -702,6 +705,19 @@ const Step3 = ({
                     : I18n.t('pages.newProposal.step3.buttonAdd')
                 }
               />
+              <Button
+                onAction={() => setOpen2(true)}
+                text={I18n.t('components.tariffModal.airTitle')}
+                icon="add"
+                backgroundGreen={false}
+                disabled={false}
+                tooltip={
+                  modal === '' ||
+                    (modal === 'SEA' && data.specifications.length === 0)
+                    ? I18n.t('pages.newProposal.step3.buttonAddTooltip')
+                    : I18n.t('pages.newProposal.step3.buttonAdd')
+                }
+              />
               <ItemModal
                 dataProp={chargeData}
                 handleAdd={handleAdd}
@@ -712,6 +728,28 @@ const Step3 = ({
                 specifications={data.specifications}
                 containerTypeList={containerTypeList}
                 packagingList={packagingList}
+              />
+              <AirTariffModal
+                dataProp={{
+                  minValue: '90,00',
+                  validity: '04/10/2022',
+                  frequency: '2',
+                  route: 'LIS',
+                  transitTime: null,
+                  weight1: 4.67,
+                  weight2: 4.50,
+                  weight3: 4.50,
+                  weight4: 4.50,
+                  weight5: 4.50,
+                  currency: 'ARS',
+                  agent: 'MOLFINHO HNS',
+                  originDestination: 'BUE > SSZ',
+                  airCompany: 'LATAM'
+                }}
+                handleAdd={handleAdd}
+                open={open2}
+                setClose={handleClose}
+                title={I18n.t('components.tariffModal.airTitle')}
               />
               {isAir() && tableRows.length > 0
                 ? (

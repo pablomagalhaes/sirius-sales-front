@@ -97,7 +97,13 @@ const light = {
         backgroundColor: '#F0F1F5',
         fontColor: '#222222',
         borderColor: '#999DAC'
+      },
+      tariffTable: {
+        backgroundColor: '#f0f1f5',
+        border: '#D9DCE5',
+        subtitle: '#545454'
       }
+
     },
     pages: {
       home: {

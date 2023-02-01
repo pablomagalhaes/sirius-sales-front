@@ -91,6 +91,29 @@
       "save": "Salvar",
       "stack": "Permite empilhar",
       "type": "Tipo: "
+    },
+    "tariffModal": {
+      "minValue": "Valor Mínimo: ",
+      "validity": "Validade: ",
+      "frequency": "Frequência: ",
+      "route": "Rota: ",
+      "transitTime": "Transit time (dias): ",
+      "weight1": "+45kg",
+      "weight2": "+100kg",
+      "weight3": "+300kg",
+      "weight4": "+500kg",
+      "weight5": "+1 ton",
+      "currency": "Moeda: ",
+      "agent": "Agente / Cia Aérea: ",
+      "originDestination": "Origem e destino: ",
+      "airTitle": "Detalhamento da tarifa - Aéreo",
+      "seaLclTitle": "Detalhamento da tarifa - Marítimo LCL",
+      "seaFclTitle": "Detalhamento da tarifa - Marítimo FCL",
+      "landTitle": "Detalhamento da tarifa - Rodoviário",
+      "requiredField": "Campo obrigatório",
+      "save": "Salvar",
+      "choose": "Escolha ...",
+      "cancel": "Cancelar"
     }
   },
   "pages": {
