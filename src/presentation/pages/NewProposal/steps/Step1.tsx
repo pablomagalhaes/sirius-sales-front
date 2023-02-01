@@ -190,11 +190,13 @@ const Step1 = ({
       proposalType: data.proposal,
       idTransport: data.modal,
       idBusinessPartnerCustomer:
-        data.proposal === 'ROUTING ORDER'
-          ? 268
-          : partnerList.filter(
-            (ptn) => ptn.businessPartner.simpleName === data.proposalValue
-          )[0]?.businessPartner.id,
+      data.proposal === 'ROUTING ORDER'
+        ? agentsList.filter(
+        (agt) => agt.businessPartner.simpleName === data.proposalValue
+      )[0]?.businessPartner.id
+      : partnerList.filter(
+        (ptn) => ptn.businessPartner.simpleName === data.proposalValue
+      )[0]?.businessPartner.id,
       requester: data.requester,
       transportIncluded: data.serviceTransport,
       clearenceIncluded: data.serviceDesemb
