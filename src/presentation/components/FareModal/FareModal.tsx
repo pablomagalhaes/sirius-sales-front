@@ -168,8 +168,8 @@ const FareModal = ({
   useEffect(() => {
     if (dataProp !== initialState) {
       setData({ ...dataProp })
-    } else if (proposal.agents.length === 1 && AllAgents !== undefined) {
-      setData({ ...data, selectedAgent: getAgents()[0]?.agent })
+    } else if (proposal.agents.length === 1 && AllAgents !== undefined && currency.length !== 0) {
+      setData({ ...data, selectedAgent: getAgents()[0]?.agent, saleCurrency: currency })
     }
   }, [open])
 
