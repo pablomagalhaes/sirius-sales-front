@@ -582,38 +582,66 @@ const Proposal = (): JSX.Element => {
       selectedFiltersRowFilter,
       'Modal/Origem/Destino'
     )
-    if (selectedOriginsDestinations !== undefined) {
-      const typeOrigin = selectedFiltersRowFilter[3].pickerSelecteds1
-      const typeDestination = selectedFiltersRowFilter[3].pickerSelecteds2
-
-      if (typeOrigin.length === 1 && typeDestination.length === 0) {
-        const origins = selectedOriginsDestinations[0].split(' - ')
-        setFilter((filter: any) => ({
-          ...filter,
-          idOrigin: [origins]
-        }))
+    console.log(selectedOriginsDestinations)
+    if (selectedOriginsDestinations.length !== 0) {
+      const modal: string = selectedOriginsDestinations.find((item: any) => item[0] === 'radioButtonSelected')[1]
+      const getModalName = (): string => {
+        switch (modal) {
+          case 'Aéreo':
+            return 'AIR'
+          case 'Marítimo':
+            return 'SEA'
+          case 'Rodoviário':
+            return 'LAND'
+          default:
+            return ''
+        }
       }
 
-      if (typeOrigin.length === 0 && typeDestination.length === 1) {
-        const destinations = selectedOriginsDestinations[0].split(' - ')
-        setFilter({
-          ...filter,
-          idDestination: [destinations]
-        })
+      if (modal !== 'Rodoviário' && selectedOriginsDestinations.length > 1) {
+        const origins = selectedOriginsDestinations.find((item: any) => item[0] === 'pickerSelecteds1')
+        const destinations = selectedOriginsDestinations.find((item: any) => item[0] === 'pickerSelecteds2')
+        if (origins) {
+          const ids = origins[1].map((name: string) => name.split(' - ')[0])
+          setFilter((filter: any) => ({
+            ...filter,
+            idOrigin: [ids]
+          }))
+        }
+        if (destinations) {
+          const ids = destinations[1].map((name: string) => name.split(' - ')[0])
+          setFilter((filter: any) => ({
+            ...filter,
+            idDestination: [ids]
+          }))
+        }
       }
-
-      if (typeOrigin.length === 1 && typeDestination.length === 1) {
-        const selectOriginsDestinations =
-          selectedOriginsDestinations.split(' / ')
-        const origins = selectOriginsDestinations[0].split(' - ')
-        const destinations = selectOriginsDestinations[1].split(' - ')
-
-        setFilter((filter: any) => ({
-          ...filter,
-          idOrigin: [origins[0]],
-          idDestination: [destinations[0]]
-        }))
+      if (modal === 'Rodoviário' && selectedOriginsDestinations.length > 1) {
+        const originCountries = selectedOriginsDestinations.find((item: any) => item[0] === 'pickerSelecteds1')
+        const originStates = selectedOriginsDestinations.find((item: any) => item[0] === 'pickerSelecteds3')
+        const originCities = selectedOriginsDestinations.find((item: any) => item[0] === 'pickerSelecteds5')
+        const destinationCountries = selectedOriginsDestinations.find((item: any) => item[0] === 'pickerSelecteds2')
+        const destinationStates = selectedOriginsDestinations.find((item: any) => item[0] === 'pickerSelecteds4')
+        const destinationCities = selectedOriginsDestinations.find((item: any) => item[0] === 'pickerSelecteds6')
+        if (originCountries) {
+          const ids = originCountries[1].map((name: string) => name)
+          setFilter((filter: any) => ({
+            ...filter,
+            originCountry: [ids]
+          }))
+        }
+        if (destinationCountries) {
+          const ids = destinationCountries[1].map((name: string) => name)
+          setFilter((filter: any) => ({
+            ...filter,
+            destinationCountry: [ids]
+          }))
+        }
       }
+      setFilter((filter: any) => ({
+        ...filter,
+        idTransport: getModalName()
+      }))
     }
 
     const selectedIncoterms = findKeyFilter(
@@ -712,6 +740,9 @@ const Proposal = (): JSX.Element => {
   const findKeyFilter = (filterSelected: any, key: string): any => {
     for (const item of filterSelected) {
       if (item.filterName === key) {
+        if (key === 'Modal/Origem/Destino') {
+          return Object.entries(item).filter((arrayItem: any) => arrayItem[1].length > 0 && arrayItem[0] !== 'filterName')
+        }
         if (item.textFieldValueSelected !== '') {
           return item.textFieldValueSelected
         }
