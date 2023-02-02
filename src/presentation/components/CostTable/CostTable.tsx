@@ -159,7 +159,7 @@ const CostTable = ({
       })
       : []
     setData(copyData)
-  }, [calculationData, containerItems, proposal.cargo[0]])
+  }, [calculationData, containerItems, proposal?.cargo[0]])
 
   useEffect(() => {
     setCopyTable([])

@@ -211,6 +211,34 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
     }
   ]
 
+  const stepsModalLand = [
+    {
+      id: 'step1',
+      label: I18n.t('pages.newProposal.step1.title'),
+      completed: completed.step1
+    },
+    {
+      id: 'step2',
+      label: I18n.t('pages.newProposal.step2.title'),
+      completed: completed.step2
+    },
+    {
+      id: 'step3',
+      label: I18n.t('pages.newProposal.step3.title'),
+      completed: completed.step3
+    },
+    {
+      id: 'step4',
+      label: I18n.t('pages.newProposal.step4.title'),
+      completed: completed.step4
+    },
+    {
+      id: 'step6',
+      label: I18n.t('pages.newProposal.step6.title'),
+      completed: completed.step6
+    }
+  ]
+
   const handleClick = (clickState): void => {
     setClicked(clickState)
   }
@@ -477,7 +505,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
           handleHover={handleHover}
           hover={hover}
           offset={-270}
-          steps={steps}
+          steps={proposal?.idTransport === 'LAND' ? stepsModalLand : steps}
         />
         <ButtonContainer>
           <Button
@@ -552,7 +580,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
             </div>
             {stepLoaded.step3 &&
               <>
-                {proposal.idTransport !== 'LAND' &&
+                {proposal?.idTransport !== 'LAND' &&
                   <div id="step5">
                     <Step5
                       agentList={agentList}

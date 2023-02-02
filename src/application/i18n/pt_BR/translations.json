@@ -223,7 +223,7 @@
         "addFareTooltip": "Para adicionar, selecione os agentes na etapa \"Serviço\" e inclua pelo menos um item na etapa \"Carga\"",
         "agent": "Agente",
         "colValue": "Valor",
-        "companyAir": "Cia. Aérea:",
+        "companyAir": "Cia. Aérea:", 
         "companyLand": "Cia. Rodoviária:",
         "companySea": "Cia. Maritima:",
         "currencyPurchase": "Moeda compra:",
