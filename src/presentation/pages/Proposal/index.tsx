@@ -139,24 +139,18 @@ const Proposal = (): JSX.Element => {
         .catch((err) => console.log(err))
     })()
     void (async function () {
-      const actualList: any[] = []
       await API.getCountries()
-        .then((response) => response.forEach((item: any) => actualList.push(String(item.name))))
-        .then(() => setoriginDestinationCountries(actualList))
+        .then((response) => setoriginDestinationCountries(response))
         .catch((err) => console.log(err))
     })()
     void (async function () {
-      const actualList: any[] = []
       await API.getMercosulStates()
-        .then((response) => response.forEach((item: any) => actualList.push(`${String(item.txState)} (${String(item.txCountry)})`)))
-        .then(() => setoriginDestinationStates(actualList))
+        .then((response) => setoriginDestinationStates(response))
         .catch((err) => console.log(err))
     })()
     void (async function () {
-      const actualList: any[] = []
       await API.getMercosulCities()
-        .then((response) => response.forEach((item: any) => actualList.push(`${String(item.txCity)} (${String(item.txCountry)})`)))
-        .then(() => setoriginDestinationCities(actualList))
+        .then((response) => setoriginDestinationCities(response))
         .catch((err) => console.log(err))
     })()
   }, [])
@@ -187,17 +181,17 @@ const Proposal = (): JSX.Element => {
     } else {
       if (land === 'País') {
         originDestinationCountries?.forEach((item): void => {
-          actualList.push(item)
+          actualList.push(`${String(item.name)}`)
         })
       }
       if (land === 'Estado') {
         originDestinationStates?.forEach((item): void => {
-          actualList.push(item)
+          actualList.push(`${String(item.txState)} (${String(item.txCountry)})`)
         })
       }
       if (land === 'Cidade') {
         originDestinationCities?.forEach((item): void => {
-          actualList.push(item)
+          actualList.push(`${String(item.txCity)} (${String(item.txCountry)})`)
         })
       }
     }
@@ -582,9 +576,8 @@ const Proposal = (): JSX.Element => {
       selectedFiltersRowFilter,
       'Modal/Origem/Destino'
     )
-    console.log(selectedOriginsDestinations)
-    if (selectedOriginsDestinations.length !== 0) {
-      const modal: string = selectedOriginsDestinations.find((item: any) => item[0] === 'radioButtonSelected')[1]
+    if (selectedOriginsDestinations !== undefined) {
+      const modal: string = selectedOriginsDestinations.radioButtonSelected
       const getModalName = (): string => {
         switch (modal) {
           case 'Aéreo':
@@ -598,43 +591,85 @@ const Proposal = (): JSX.Element => {
         }
       }
 
-      if (modal !== 'Rodoviário' && selectedOriginsDestinations.length > 1) {
-        const origins = selectedOriginsDestinations.find((item: any) => item[0] === 'pickerSelecteds1')
-        const destinations = selectedOriginsDestinations.find((item: any) => item[0] === 'pickerSelecteds2')
-        if (origins) {
-          const ids = origins[1].map((name: string) => name.split(' - ')[0])
+      if (modal.length > 0 && modal !== 'Rodoviário') {
+        const idOrigin = selectedOriginsDestinations.pickerSelecteds1
+          .map((name: string) => name.split(' - ')[0])
+        const idDestination = selectedOriginsDestinations.pickerSelecteds2
+          .map((name: string) => name.split(' - ')[0])
+
+        if (idOrigin.length > 0 && idOrigin[0] !== undefined) {
           setFilter((filter: any) => ({
             ...filter,
-            idOrigin: [ids]
+            idOrigin
           }))
         }
-        if (destinations) {
-          const ids = destinations[1].map((name: string) => name.split(' - ')[0])
+        if (idDestination.length > 0 && idDestination[0] !== undefined) {
           setFilter((filter: any) => ({
             ...filter,
-            idDestination: [ids]
+            idDestination
           }))
         }
       }
-      if (modal === 'Rodoviário' && selectedOriginsDestinations.length > 1) {
-        const originCountries = selectedOriginsDestinations.find((item: any) => item[0] === 'pickerSelecteds1')
-        const originStates = selectedOriginsDestinations.find((item: any) => item[0] === 'pickerSelecteds3')
-        const originCities = selectedOriginsDestinations.find((item: any) => item[0] === 'pickerSelecteds5')
-        const destinationCountries = selectedOriginsDestinations.find((item: any) => item[0] === 'pickerSelecteds2')
-        const destinationStates = selectedOriginsDestinations.find((item: any) => item[0] === 'pickerSelecteds4')
-        const destinationCities = selectedOriginsDestinations.find((item: any) => item[0] === 'pickerSelecteds6')
-        if (originCountries) {
-          const ids = originCountries[1].map((name: string) => name)
+
+      if (modal.length > 0 && modal === 'Rodoviário') {
+        const originCountry = selectedOriginsDestinations.pickerSelecteds1
+          .map((locationFiltered: string) => originDestinationCountries
+            .find((country) => country.name === locationFiltered)?.id)
+
+        const destinationCountry = selectedOriginsDestinations.pickerSelecteds2
+          .map((locationFiltered: string) => originDestinationCountries
+            .find((country) => country.name === locationFiltered)?.id)
+
+        const originState = selectedOriginsDestinations.pickerSelecteds3
+          .map((locationFiltered: string) => originDestinationStates
+            .find((state) => state.txState === locationFiltered.split(' (')[0] && state.txCountry === locationFiltered.split(' (')[1].slice(0, -1))?.idState)
+
+        const destinationState = selectedOriginsDestinations.pickerSelecteds4
+          .map((locationFiltered: string) => originDestinationStates
+            .find((state) => state.txState === locationFiltered.split(' (')[0] && state.txCountry === locationFiltered.split(' (')[1].slice(0, -1))?.idState)
+
+        const originCity = selectedOriginsDestinations.pickerSelecteds5
+          .map((locationFiltered: string) => originDestinationCities
+            .find((city) => city.txCity === locationFiltered.split(' (')[0] && city.txCountry === locationFiltered.split(' (')[1].slice(0, -1))?.idCity)
+
+        const destinationCity = selectedOriginsDestinations.pickerSelecteds6
+          .map((locationFiltered: string) => originDestinationCities
+            .find((city) => city.txCity === locationFiltered.split(' (')[0] && city.txCountry === locationFiltered.split(' (')[1].slice(0, -1))?.idCity)
+
+        if (originCountry.length > 0 && originCountry[0] !== undefined) {
           setFilter((filter: any) => ({
             ...filter,
-            originCountry: [ids]
+            originCountry
           }))
         }
-        if (destinationCountries) {
-          const ids = destinationCountries[1].map((name: string) => name)
+        if (destinationCountry.length > 0 && destinationCountry[0] !== undefined) {
           setFilter((filter: any) => ({
             ...filter,
-            destinationCountry: [ids]
+            destinationCountry
+          }))
+        }
+        if (originState.length > 0 && originState[0] !== undefined) {
+          setFilter((filter: any) => ({
+            ...filter,
+            originState
+          }))
+        }
+        if (destinationState.length > 0 && destinationState[0] !== undefined) {
+          setFilter((filter: any) => ({
+            ...filter,
+            destinationState
+          }))
+        }
+        if (originCity.length > 0 && originCity[0] !== undefined) {
+          setFilter((filter: any) => ({
+            ...filter,
+            originCity
+          }))
+        }
+        if (destinationCity.length > 0 && destinationCity[0] !== undefined) {
+          setFilter((filter: any) => ({
+            ...filter,
+            destinationCity
           }))
         }
       }
@@ -741,7 +776,16 @@ const Proposal = (): JSX.Element => {
     for (const item of filterSelected) {
       if (item.filterName === key) {
         if (key === 'Modal/Origem/Destino') {
-          return Object.entries(item).filter((arrayItem: any) => arrayItem[1].length > 0 && arrayItem[0] !== 'filterName')
+          console.log(item)
+          return {
+            pickerSelecteds1: item.pickerSelecteds1,
+            pickerSelecteds2: item.pickerSelecteds2,
+            pickerSelecteds3: item.pickerSelecteds3,
+            pickerSelecteds4: item.pickerSelecteds4,
+            pickerSelecteds5: item.pickerSelecteds5,
+            pickerSelecteds6: item.pickerSelecteds6,
+            radioButtonSelected: item.radioButtonSelected
+          }
         }
         if (item.textFieldValueSelected !== '') {
           return item.textFieldValueSelected
@@ -783,6 +827,7 @@ const Proposal = (): JSX.Element => {
     delete filter.idOrigin
     delete filter.idDestination
     delete filter.idIncoterm
+    delete filter.idTransport
     delete filter.status
     delete filter['openingDate.dtBegin']
     delete filter['openingDate.dtEnd']
@@ -820,7 +865,8 @@ const Proposal = (): JSX.Element => {
     {
       label: 'Cliente',
       pickerListOptions1: partnerSimpleNameList,
-      pickerLabel1: 'Cliente'
+      pickerLabel1: 'Cliente',
+      pickerLandLabels: []
     },
     {
       label: 'Tipo de processo',
@@ -841,7 +887,8 @@ const Proposal = (): JSX.Element => {
     {
       label: 'Incoterm',
       pickerListOptions1: incotermList,
-      pickerLabel1: 'Incoterm'
+      pickerLabel1: 'Incoterm',
+      pickerLandLabels: []
     },
     {
       label: 'Período',
