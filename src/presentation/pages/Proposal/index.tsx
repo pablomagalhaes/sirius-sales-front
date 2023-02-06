@@ -776,7 +776,6 @@ const Proposal = (): JSX.Element => {
     for (const item of filterSelected) {
       if (item.filterName === key) {
         if (key === 'Modal/Origem/Destino') {
-          console.log(item)
           return {
             pickerSelecteds1: item.pickerSelecteds1,
             pickerSelecteds2: item.pickerSelecteds2,
