@@ -82,8 +82,8 @@ const makeTableData = (costs): any => {
     agent: cost.agent,
     type: cost.billingType,
     saleCurrency: cost.idCurrencySale,
-    saleValue: String(cost.valueSale).replace('.', ',') ?? '',
-    minimumValue: String(cost.valueMinimumSale).replace('.', ',') ?? ''
+    saleValue: String(cost.valueSale?.toFixed(2)).replace('.', ',') ?? '',
+    minimumValue: String(cost.valueMinimumSale?.toFixed(2)).replace('.', ',') ?? ''
   }))
 }
 
@@ -159,7 +159,7 @@ const Step6 = ({
           }
         }
         return false
-      })?.valuePurchase).replace('.', ','),
+      })?.valuePurchase?.toFixed(2)).replace('.', ','),
       tableData: []
     }))
   )
@@ -168,14 +168,14 @@ const Step6 = ({
     idContainerType: item.idContainerType,
     currencySale: proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.idCurrencySale ?? '',
     currencyPurchase: proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.idCurrencyPurchase ?? '',
-    valueSale: String(proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.valueSale).replace('.', ','),
-    valuePurchase: String(proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.valuePurchase).replace('.', ',')
+    valueSale: String(proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.valueSale?.toFixed(2)).replace('.', ','),
+    valuePurchase: String(proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.valuePurchase?.toFixed(2)).replace('.', ',')
   })))
 
   const [dataSales, setDataSales] = useState<any>({
     idCost: proposal.costs.find(cost => cost.costType === 'Frete' && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.idCost ?? null,
     currencySale: String(proposal.costs.find(cost => cost.costType === 'Frete' && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.idCurrencySale ?? ''),
-    valueSale: String(proposal.costs.find(cost => cost.costType === 'Frete' && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.valueSale ?? '')
+    valueSale: String(proposal.costs.find(cost => cost.costType === 'Frete' && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.valueSale?.toFixed(2) ?? '')
   })
 
   useEffect(() => {
