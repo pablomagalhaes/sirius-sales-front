@@ -609,6 +609,10 @@ const Proposal = (): JSX.Element => {
             idDestination
           }))
         }
+        setFilter((filter: any) => ({
+          ...filter,
+          idTransport: getModalName()
+        }))
       }
 
       if (modal.length > 0 && modal === 'Rodoviário') {
@@ -672,11 +676,11 @@ const Proposal = (): JSX.Element => {
             destinationCity
           }))
         }
+        setFilter((filter: any) => ({
+          ...filter,
+          idTransport: getModalName()
+        }))
       }
-      setFilter((filter: any) => ({
-        ...filter,
-        idTransport: getModalName()
-      }))
     }
 
     const selectedIncoterms = findKeyFilter(
