@@ -557,7 +557,7 @@ const Proposal = (): JSX.Element => {
 
       setFilter((filter: any) => ({
         ...filter,
-        idBusinessPartnerCustomer: [clientIds]
+        customer: [clientIds]
       }))
     }
 
@@ -566,9 +566,10 @@ const Proposal = (): JSX.Element => {
       'Tipo de processo'
     )
     if (selectedProcessTypes !== undefined) {
+      const processTypes = selectedProcessTypes.map((type: string) => type === 'Frete - Importação' ? 'IMPORT FREIGHT' : 'EXPORT FREIGHT')
       setFilter((filter: any) => ({
         ...filter,
-        operationType: [selectedProcessTypes]
+        operationType: [processTypes]
       }))
     }
 
