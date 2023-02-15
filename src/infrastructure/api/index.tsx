@@ -296,11 +296,12 @@ const getCountProposal = async (params): Promise<any> => {
 }
 
 const downloadProposal = async (language: string, idProposal: string): Promise<any> => {
+  const url: string = `/sirius-business-proposal-api/proposal/report/${idProposal}/PDF/${language}`
   try {
-    const res = await instance.get(`/sirius-business-proposal-api/proposal/report/${idProposal}/PDF/${language}`)
+    const res = await instance.get(url)
     return res.data
   } catch (error) {
-    console.error(error)
+    toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
 

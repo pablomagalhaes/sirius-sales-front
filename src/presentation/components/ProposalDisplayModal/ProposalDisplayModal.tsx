@@ -45,12 +45,14 @@ const ProposalDisplayModal = ({
   }
 
   useEffect(() => {
-    void (async function () {
-      await API.downloadProposal(language, idProposal)
-        .then((response) => setProposal(response))
-        .catch((err) => console.log(err))
-    })()
-  }, [open])
+    if(open) {
+      void (async function () {
+        await API.downloadProposal(language === 'pt' ? language + '_BR' : language + '_US', idProposal)
+          .then((response) => setProposal(response))
+          .catch((err) => console.log(err))
+      })()
+    }
+  }, [open, language])
 
   return (
     <Modal open={open} onClose={handleOnClose}>
@@ -71,7 +73,7 @@ const ProposalDisplayModal = ({
                 backgroundGreen
                 disabled={false}
                 icon=""
-                onAction={async () => await API.downloadProposal(language, idProposal)}
+                onAction={async () => await API.downloadProposal(language === 'pt' ? language + '_BR' : language + '_US', idProposal)}
                 position="right"
                 text={I18n.t('components.ProposalDisplayModal.buttonText')}
                 tooltip={I18n.t('components.ProposalDisplayModal.buttonText')}

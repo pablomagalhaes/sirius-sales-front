@@ -29,6 +29,7 @@ import {
   TopContainer,
   ButtonContainer
 } from './style'
+import ProposalDisplayModal from '../../components/ProposalDisplayModal/ProposalDisplayModal'
 import { ExitToApp } from '@material-ui/icons/'
 import Warning from '../../../application/icons/WarningIcon'
 import { useHistory } from 'react-router-dom'
@@ -52,7 +53,8 @@ const defaultFilter = {
 
 const Proposal = (): JSX.Element => {
   const [filter, setFilter] = useState<any>(defaultFilter)
-  const [open, setOpen] = useState(false)
+  const [openReject, setOpenReject] = useState(false)
+  const [openDisplay, setOpenDisplay] = useState(false)
   const [reference, setReference] = useState('')
   const [proposalId, setProposalId] = useState('')
   const [incotermList, setIncotermList] = useState<any[]>([])
@@ -421,7 +423,10 @@ const Proposal = (): JSX.Element => {
           {
             iconType: 'file',
             label: I18n.t('pages.proposal.table.viewDownload'),
-            onClick: () => { }
+            onClick: () => {
+              setOpenDisplay(true)
+              setProposalId(id)
+            }
           },
           {
             iconType: 'duplicate',
@@ -455,7 +460,7 @@ const Proposal = (): JSX.Element => {
             iconType: 'thumbsDown',
             label: I18n.t('pages.proposal.table.rejectLabel'),
             onClick: () => {
-              setOpen(true)
+              setOpenReject(true)
               setReference(ref)
               setProposalId(id)
             }
@@ -946,9 +951,14 @@ const Proposal = (): JSX.Element => {
     }
     return `Resultado do filtro (${totalProposalList})`
   }
-  const handleClose = (): void => {
-    setOpen(false)
+  const handleCloseReject = (): void => {
+    setOpenReject(false)
     setReference('')
+    setProposalId('')
+  }
+
+  const handleCloseDisplay = (): void => {
+    setOpenDisplay(false)
     setProposalId('')
   }
 
@@ -1054,13 +1064,18 @@ const Proposal = (): JSX.Element => {
             rows={getProposalItems(proposalList)}
             />
             <RejectModal
-                open={open}
-                setClose={handleClose}
-                title={I18n.t('components.rejectModal.title')}
-                reference={reference}
-                proposalId={proposalId}
-                setStatus={setStatus}
-              />
+              open={openReject}
+              setClose={handleCloseReject}
+              title={I18n.t('components.rejectModal.title')}
+              reference={reference}
+              proposalId={proposalId}
+              setStatus={setStatus}
+            />
+            <ProposalDisplayModal
+              open={openDisplay}
+              setClose={handleCloseDisplay}
+              idProposal={proposalId}
+            />
         </TableContainer>
         <PaginationContainer>
           <PaginationMainContainer>
