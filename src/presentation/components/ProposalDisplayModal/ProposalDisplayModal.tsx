@@ -45,7 +45,7 @@ const ProposalDisplayModal = ({
   }
 
   useEffect(() => {
-    if(open) {
+    if (open) {
       void (async function () {
         await API.downloadProposal(language === 'pt' ? language + '_BR' : language + '_US', idProposal)
           .then((response) => setProposal(response))
