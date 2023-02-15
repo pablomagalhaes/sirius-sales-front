@@ -64,9 +64,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
   const history = useHistory()
-
   const location = useLocation()
-
   const updateTable3IdsRef = useRef()
   const updateTable5IdsRef = useRef()
   const updateTable6IdsRef = useRef()
@@ -305,13 +303,22 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       label: I18n.t('pages.newProposal.save'),
       onClick: () => handleSave()
     }, {
-      iconType: 'file',
-      label: I18n.t('pages.newProposal.view'),
-      onClick: () => handleOpen()
-    }, {
-      iconType: 'download',
-      label: I18n.t('pages.newProposal.download'),
+      iconType: 'send',
+      label: I18n.t('pages.newProposal.send'),
       onClick: () => { }
+    }
+  ]
+
+  // Menu suspenso após proposta ter sido salva
+  const floatingButtonMenuItemsAfterSaved = [
+    {
+      iconType: 'save',
+      label: I18n.t('pages.newProposal.save'),
+      onClick: () => handleSave()
+    }, {
+      iconType: 'file',
+      label: I18n.t('pages.newProposal.viewDownload'),
+      onClick: () => handleOpen()
     },
     {
       iconType: 'send',
@@ -519,7 +526,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
             text={I18n.t('pages.newProposal.buttonFinish')}
             tooltip={I18n.t('pages.newProposal.buttonFinish')}
           >
-            <FloatingMenu menuItems={floatingButtonMenuItems} />
+            <FloatingMenu menuItems={proposal.idProposal != null ? floatingButtonMenuItemsAfterSaved : floatingButtonMenuItems} />
           </Button>
         </ButtonContainer>
       </TopContainer>

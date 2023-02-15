@@ -227,7 +227,7 @@
         "addFareTooltip": "Para adicionar, selecione os agentes na etapa \"Serviço\" e inclua pelo menos um item na etapa \"Carga\"",
         "agent": "Agente",
         "colValue": "Valor",
-        "companyAir": "Cia. Aérea:",
+        "companyAir": "Cia. Aérea:", 
         "companyLand": "Cia. Rodoviária:",
         "companySea": "Cia. Maritima:",
         "currencyPurchase": "Moeda compra:",
@@ -259,7 +259,8 @@
         "message": "Essa página contém alterações não salvas. Deseja descartar a proposta e sair da página?",
         "title": "Tem certeza que deseja sair?"
       },
-      "view": "Visualizar"
+      "view": "Visualizar",
+      "viewDownload": "Visualizar / Fazer download"
     },
     "proposal": {
       "table": {
@@ -276,7 +277,8 @@
         "rejectLabel": "Definir como rejeitada",
         "rejectedLabel": "Rejeitada",
         "reviewLabel": "Definir como \"Em revisão\"",
-        "waitingForCustomerReturnLabel": "Ag. ret. cliente"
+        "waitingForCustomerReturnLabel": "Ag. ret. cliente",
+        "viewDownload": "Visualizar / Fazer download"
       }
     }
   }

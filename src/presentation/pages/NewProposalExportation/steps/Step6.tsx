@@ -75,15 +75,15 @@ const ContractingTypeWithoutFcl = [
 ]
 
 const makeTableData = (costs): any => {
-  const getTarifas = costs.filter(cost => cost.costType === 'Tarifa')
+  const getTarifas = costs?.filter(cost => cost.costType === 'Tarifa')
   return getTarifas.map(cost => ({
     idCost: cost.idCost,
     selectedContainer: cost.idContainerType,
     agent: cost.agent,
     type: cost.billingType,
     saleCurrency: cost.idCurrencySale,
-    saleValue: String(cost.valueSale).replace('.', ',') ?? '',
-    minimumValue: String(cost.valueMinimumSale).replace('.', ',') ?? ''
+    saleValue: String(cost.valueSale?.toFixed(2)).replace('.', ',') ?? '',
+    minimumValue: String(cost.valueMinimumSale?.toFixed(2)).replace('.', ',') ?? ''
   }))
 }
 
@@ -124,9 +124,9 @@ const Step6 = ({
   const currencyArray = new Map()
 
   // const [tableData, setTableData] = useState<FareModalData[]>([])
-  const [tableData, setTableData] = useState<FareModalData[]>(makeTableData(proposal.costs))
+  const [tableData, setTableData] = useState<FareModalData[]>(makeTableData(proposal?.costs))
   const [data, setData] = useState<any[]>(
-    proposal.agents.map(newAgent => ({
+    proposal?.agents.map(newAgent => ({
       idCost: proposal.costs.find((cost): any => {
         if (cost.costType === 'Frete') {
           if (cost?.agent?.idBusinessPartnerAgent === newAgent?.idBusinessPartnerAgent) {
@@ -159,7 +159,7 @@ const Step6 = ({
           }
         }
         return false
-      })?.valuePurchase).replace('.', ','),
+      })?.valuePurchase?.toFixed(2)).replace('.', ','),
       tableData: []
     }))
   )
@@ -168,14 +168,14 @@ const Step6 = ({
     idContainerType: item.idContainerType,
     currencySale: proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.idCurrencySale ?? '',
     currencyPurchase: proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.idCurrencyPurchase ?? '',
-    valueSale: String(proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.valueSale).replace('.', ','),
-    valuePurchase: String(proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.valuePurchase).replace('.', ',')
+    valueSale: String(proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.valueSale?.toFixed(2)).replace('.', ','),
+    valuePurchase: String(proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.valuePurchase?.toFixed(2)).replace('.', ',')
   })))
 
   const [dataSales, setDataSales] = useState<any>({
     idCost: proposal.costs.find(cost => cost.costType === 'Frete' && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.idCost ?? null,
     currencySale: String(proposal.costs.find(cost => cost.costType === 'Frete' && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.idCurrencySale ?? ''),
-    valueSale: String(proposal.costs.find(cost => cost.costType === 'Frete' && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.valueSale ?? '')
+    valueSale: String(proposal.costs.find(cost => cost.costType === 'Frete' && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.valueSale?.toFixed(2) ?? '')
   })
 
   useEffect(() => {
@@ -1091,7 +1091,6 @@ const Step6 = ({
                     )}
                     {proposal.agents.map((selectedAgent, index) => {
                       return ((selectedAgent.idBusinessPartnerAgent !== null) && (selectedAgent.idBusinessPartnerTransportCompany !== null)) && (
-                        <>
                           <Fragment key={index}>
                             <Grid container spacing={5}>
                               <Grid item xs={3}>
@@ -1136,7 +1135,6 @@ const Step6 = ({
                               </Grid>
                             </Grid>
                           </Fragment>
-                        </>
                       )
                     })}
                     <Fragment>
@@ -1231,8 +1229,6 @@ const Step6 = ({
                     )}
                     {proposal.cargo[0].cargoVolumes.map((cargoVolume, index, array) => {
                       return (dataContainer.length === array.length) && (
-
-                        <>
                           <Fragment key={index}>
 
                             <Grid container spacing={5}>
@@ -1363,9 +1359,6 @@ const Step6 = ({
                             </Grid>
 
                           </Fragment>
-
-                        </>
-
                       )
                     })}
                   </>

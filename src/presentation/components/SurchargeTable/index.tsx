@@ -40,7 +40,7 @@ const SurchargeTable = ({ data, dataFields, remove, edit, agentList }: TableData
     } else {
       return (
         <FormatValue>
-          {dataFields.currencySale} {item.totalItem}
+         {dataFields.currencySale} {item.totalItem}
         </FormatValue>
       )
     }

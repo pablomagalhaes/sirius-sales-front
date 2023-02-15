@@ -255,7 +255,8 @@
         "message": "This page contains unsaved changes. Do you want to discard the proposal and leave the page?",
         "title": "Are you sure you want to quit?"
       },
-      "view": "View"
+      "view": "View",
+      "viewDownload": "View / Download"
     },
     "proposal": {
       "table": {
@@ -272,7 +273,8 @@
         "rejectLabel": "Set as rejected",
         "rejectedLabel": "Discard",
         "reviewLabel": "Set to \"Under review\"",
-        "waitingForCustomerReturnLabel": "Awai. customer return"
+        "waitingForCustomerReturnLabel": "Awai. customer return",
+        "viewDownload": "View / Download"
       }
     }
   }
