@@ -266,6 +266,15 @@ const getCountProposal = async (params): Promise<any> => {
   }
 }
 
+const downloadProposal = async (language: string, idProposal: string): Promise<any> => {
+  try {
+    const res = await instance.get(`/sirius-business-proposal-api/proposal/report/${idProposal}/PDF/${language}`)
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const API = {
   getContainerType,
   getCurrencies,
@@ -294,7 +303,8 @@ const API = {
   getCityById,
   getCountProposal,
   getMercosulCities,
-  getMercosulStates
+  getMercosulStates,
+  downloadProposal
 }
 
 export default API

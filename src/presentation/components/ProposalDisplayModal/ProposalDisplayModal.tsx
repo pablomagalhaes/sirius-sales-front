@@ -1,7 +1,8 @@
 import { Modal } from '@material-ui/core'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import CloseIcon from '../../../application/icons/CloseIcon'
 import { withTheme } from 'styled-components'
+import API from '../../../infrastructure/api'
 import {
   LanguageDiv,
   ModalDiv,
@@ -21,11 +22,13 @@ import { useDispatch } from 'react-redux'
 interface ProposalDisplayProps {
   open: boolean
   setClose: () => void
+  idProposal: string
 }
 
 const ProposalDisplayModal = ({
   open,
-  setClose
+  setClose,
+  idProposal
 }: ProposalDisplayProps): JSX.Element => {
   const locale = localStorage.getItem('locale') ?? 'pt'
   const dispatch = useDispatch()
@@ -34,11 +37,20 @@ const ProposalDisplayModal = ({
     setClose()
   }
   const [language, setLanguage] = useState(locale)
+  const [proposal, setProposal] = useState<string>('')
 
   const handleLanguage = (language: string): void => {
     setLanguage(language)
     dispatch(setLocale(language))
   }
+
+  useEffect(() => {
+    void (async function () {
+      await API.downloadProposal(language, idProposal)
+        .then((response) => setProposal(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [open])
 
   return (
     <Modal open={open} onClose={handleOnClose}>
@@ -59,7 +71,7 @@ const ProposalDisplayModal = ({
                 backgroundGreen
                 disabled={false}
                 icon=""
-                onAction={() => { }}
+                onAction={async () => await API.downloadProposal(language, idProposal)}
                 position="right"
                 text={I18n.t('components.ProposalDisplayModal.buttonText')}
                 tooltip={I18n.t('components.ProposalDisplayModal.buttonText')}
@@ -72,6 +84,7 @@ const ProposalDisplayModal = ({
           </RowReverseDiv>
         </HeaderDiv>
         <MainDiv>
+          <img src={`data:image/jpeg;base64,${proposal}`} />
         </MainDiv>
       </ModalDiv>
     </Modal >
