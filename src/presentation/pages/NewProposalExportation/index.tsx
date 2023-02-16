@@ -111,13 +111,13 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
         validityDate: '',
         idProposalStatus: 1,
         openingDate: formatDate(),
-        cargo: {
-          ...proposal.cargo[0],
-          id: null,
-          cargoVolumes: proposal.cargo[0].cargoVolumes.map(cargoVolume => {
+        cargo: proposal.cargo.map((cargo) => {
+          cargo.id = null
+          cargo.cargoVolumes = cargo.cargoVolumes.map(cargoVolume => {
             cargoVolume.id = null; cargoVolume.idCargo = null; return cargoVolume
           })
-        },
+          return cargo
+        }),
         totalCosts: proposal.totalCosts.map(totalCost => {
           totalCost.id = null; totalCost.idProposal = null; return totalCost
         }),
