@@ -341,7 +341,7 @@ const Proposal = (): JSX.Element => {
         iconterm: proposal.incotermId,
         isLate: showWarning,
         key: proposal.idProposal,
-        menuItems: menuItemsList(status, proposal.idProposal, proposal.reference),
+        menuItems: menuItemsList(status, proposal.idProposal, proposal.reference, proposal.operation),
         modal,
         numio: proposal.numIO,
         opening,
@@ -369,21 +369,35 @@ const Proposal = (): JSX.Element => {
     })()
   }
 
-  const editEventPage = (id: any): void => {
-    history.push({
-      pathname: '/novaProposta',
-      state: { proposalId: id }
-    })
+  const editEventPage = (id: any, operationType: any): void => {
+    if (operationType === 'IMPORT FREIGHT') {
+      history.push({
+        pathname: '/novaProposta',
+        state: { proposalId: id }
+      })
+    } else {
+      history.push({
+        pathname: '/novaPropostaExportacao',
+        state: { proposalId: id }
+      })
+    }
   }
 
-  const duplicateEventPage = (id: any): void => {
-    history.push({
-      pathname: '/novaProposta',
-      state: { proposalId: id, eventType: 'duplicate' }
-    })
+  const duplicateEventPage = (id: any, operationType: any): void => {
+    if (operationType === 'IMPORT FREIGHT') {
+      history.push({
+        pathname: '/novaProposta',
+        state: { proposalId: id, eventType: 'duplicate' }
+      })
+    } else {
+      history.push({
+        pathname: '/novaPropostaExportacao',
+        state: { proposalId: id, eventType: 'duplicate' }
+      })
+    }
   }
 
-  const menuItemsList = (status: any, id: any, ref: any): void => {
+  const menuItemsList = (status: any, id: any, ref: any, operationType: any): void => {
     const array: any = []
     switch (status) {
       case StatusProposalEnum.ABERTA:
@@ -392,14 +406,14 @@ const Proposal = (): JSX.Element => {
             iconType: 'edit',
             label: I18n.t('pages.proposal.table.editLabel'),
             onClick: () => {
-              editEventPage(id)
+              editEventPage(id, operationType)
             }
           },
           {
             iconType: 'duplicate',
             label: I18n.t('pages.proposal.table.duplicateLabel'),
             onClick: () => {
-              duplicateEventPage(id)
+              duplicateEventPage(id, operationType)
             }
           },
           {
@@ -432,7 +446,7 @@ const Proposal = (): JSX.Element => {
             iconType: 'duplicate',
             label: I18n.t('pages.proposal.table.duplicateLabel'),
             onClick: () => {
-              duplicateEventPage(id)
+              duplicateEventPage(id, operationType)
             }
           },
           {
@@ -473,14 +487,14 @@ const Proposal = (): JSX.Element => {
             iconType: 'edit',
             label: I18n.t('pages.proposal.table.editLabel'),
             onClick: () => {
-              editEventPage(id)
+              editEventPage(id, operationType)
             }
           },
           {
             iconType: 'duplicate',
             label: I18n.t('pages.proposal.table.duplicateLabel'),
             onClick: () => {
-              duplicateEventPage(id)
+              duplicateEventPage(id, operationType)
             }
           },
           {
@@ -510,7 +524,7 @@ const Proposal = (): JSX.Element => {
             iconType: 'duplicate',
             label: I18n.t('pages.proposal.table.duplicateLabel'),
             onClick: () => {
-              duplicateEventPage(id)
+              duplicateEventPage(id, operationType)
             }
           })
         return array
@@ -520,7 +534,7 @@ const Proposal = (): JSX.Element => {
           iconType: 'duplicate',
           label: I18n.t('pages.proposal.table.duplicateLabel'),
           onClick: () => {
-            duplicateEventPage(id)
+            duplicateEventPage(id, operationType)
           }
         })
         return array
@@ -529,7 +543,7 @@ const Proposal = (): JSX.Element => {
           iconType: 'duplicate',
           label: I18n.t('pages.proposal.table.duplicateLabel'),
           onClick: () => {
-            duplicateEventPage(id)
+            duplicateEventPage(id, operationType)
           }
         })
         return array
