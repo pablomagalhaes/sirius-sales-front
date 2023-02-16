@@ -91,6 +91,10 @@
       "save": "Salvar",
       "stack": "Permite empilhar",
       "type": "Tipo: "
+    },
+    "ProposalDisplayModal": {
+      "title": "Fazer download de proposta",
+      "buttonText": "Confirmar idioma e fazer download"
     }
   },
   "pages": {
