@@ -98,7 +98,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
       })()
     } else {
       setLoadExistingProposal(true)
-      setProposal({ ...emptyProposalValue, openingDate: formatDate() })
+      setProposal({ ...emptyProposalValue, openingDate: formatDate(), operationType: 'EXPORT FREIGHT' })
     }
   }, [])
 
