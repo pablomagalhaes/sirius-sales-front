@@ -225,8 +225,7 @@ const Step6 = ({
 
   useEffect(() => {
     loadAgentsList()
-
-    void loadBusinessPartner()
+    if (proposal.idTransport !== '') void loadBusinessPartner()
   }, [proposal.idTransport])
 
   const loadAgentsList = (): void => {
