@@ -1,6 +1,6 @@
 import React from 'react'
 import PositiveProfitIcon from '../../../application/icons/PositiveProfitIcon'
-import { CwLabel, LowerContainer, PercentageLabel, ProfitContainer, ProfitLabel, TotalCargoContainer, TotalContainer, UpperContainer } from './style'
+import { CwLabel, LowerContainer, PercentageContainer, PercentageLabel, PercentageCard, ProfitContainer, ProfitLabel, TotalCargoContainer, TotalContainer, UpperContainer } from './style'
 import { I18n } from 'react-redux-i18n'
 
 interface TotalSurchargeProps {
@@ -40,17 +40,20 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal }: 
         </TotalCargoContainer>
       </UpperContainer>
       <LowerContainer>
-      {false &&
-          <>
+        <ProfitContainer>
+          <ProfitLabel>
+            {I18n.t('pages.newProposal.step6.profit')}
+          </ProfitLabel>
+          <PercentageContainer>
             <ProfitLabel>
-              {I18n.t('pages.newProposal.step6.profit')}
+              {I18n.t('pages.newProposal.step6.percentageProfit')}
             </ProfitLabel>
-            <ProfitContainer>
+            <PercentageCard>
               <PositiveProfitIcon />
               <PercentageLabel>5,74%</PercentageLabel>
-            </ProfitContainer>
-          </>
-        }
+            </PercentageCard>
+          </PercentageContainer>
+        </ProfitContainer>
         <TotalCargoContainer>
           <div>{I18n.t('pages.newProposal.step6.totalOtherFees')}</div>
           <div>{(totalOtherFare !== '0,00' && totalOtherFare !== '') ? `${currency} ${totalOtherFare}` : '-'}</div>

@@ -37,6 +37,16 @@ const LowerContainer = styled.div`
 `
 
 const ProfitContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const PercentageContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const PercentageCard = styled.div`
   background: #6CD99A;
   border-radius: 4px;
   font-weight: 400;
@@ -51,7 +61,7 @@ const CwLabel = styled.span`
 `
 
 const ProfitLabel = styled.span`
-  margin-right: 41px;
+  margin-right: 15px;
   width: 200px;
   min-width: 100px;
 `
@@ -75,5 +85,7 @@ export {
   ProfitLabel,
   LowerContainer,
   ProfitContainer,
-  PercentageLabel
+  PercentageContainer,
+  PercentageLabel,
+  PercentageCard
 }

@@ -241,6 +241,7 @@
         "origin": "Origin",
         "originCost": "New origin cost",
         "profit": "Profit:",
+        "percentageProfit": "Rentabilidade:",
         "subtitle": "Informe as tarifas para o serviço de frete.",
         "title": "Frete",
         "totalDestiny": "Total destiny costs:",
