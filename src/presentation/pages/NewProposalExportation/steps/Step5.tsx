@@ -31,6 +31,7 @@ interface Step5Props {
   invalidInput: boolean
   updateTableIdsRef: any
   agentList: Agents[]
+  setTotalCosts: any
 }
 
 export interface TotalCostTable {
@@ -56,7 +57,8 @@ const Step5 = ({
   calculationData,
   invalidInput,
   updateTableIdsRef,
-  agentList
+  agentList,
+  setTotalCosts
 }: Step5Props): JSX.Element => {
   const [dataOrigin, setDataOrigin] = useState<CostTableItem[]>([])
   const [dataDestiny, setDataDestiny] = useState<CostTableItem[]>([])
@@ -285,6 +287,10 @@ const Step5 = ({
       })
     }
   }, [dataDestiny, dataOrigin])
+
+  useEffect(() => {
+    setTotalCosts([...dataTotalCostDestiny, ...dataTotalCostOrigin])
+  }, [dataTotalCostDestiny, dataTotalCostOrigin])
 
   const completeDecimalPlaces = (num: number | null): string | null => {
     if (num === null) return null

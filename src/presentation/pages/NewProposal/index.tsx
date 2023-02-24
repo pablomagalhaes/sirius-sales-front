@@ -51,6 +51,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [leavingPage, setLeavingPage] = useState(false)
   const [loadExistingProposal, setLoadExistingProposal] = useState(false)
   const [modal, setModal] = useState('')
+  const [totalCosts, setTotalCosts] = useState()
   const [proposalType, setProposalType] = useState('')
   const [serviceList, setServiceList] = useState<any[]>([])
   const [showSaveMessage, setShowSaveMessage] = useState(false)
@@ -603,6 +604,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                 serviceList={serviceList}
                 setCompleted={setCompleted}
                 setFilled={setFilled}
+                setTotalCosts={setTotalCosts}
                 setUndoMessage={setUndoMessage}
                 specifications={specifications}
                 undoMessage={undoMessage}
@@ -624,6 +626,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                   setFilled={setFilled}
                   setUndoMessage={setUndoMessage}
                   specifications={specifications}
+                  totalCosts={totalCosts}
                   undoMessage={undoMessage}
                   updateTableIdsRef={updateTable6IdsRef}
                 />

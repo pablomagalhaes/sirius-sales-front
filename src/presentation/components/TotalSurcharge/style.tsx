@@ -41,17 +41,13 @@ const ProfitContainer = styled.div`
   flex-direction: column;
 `
 
-const PercentageContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-`
-
 const PercentageCard = styled.div`
-  background: #6CD99A;
+  background: ${(props: any) => props.color === 'red' ? 'red' : '#6CD99A' };
   border-radius: 4px;
   font-weight: 400;
   padding: 2px 9px;
   color: #222222;
+  margin-left: 15px;
 `
 
 const CwLabel = styled.span`
@@ -60,11 +56,17 @@ const CwLabel = styled.span`
   min-width: 100px;
 `
 
-const ProfitLabel = styled.span`
+const ProfitLabel = styled.div`
   margin-right: 15px;
-  width: 200px;
-  min-width: 100px;
+  width: 600px;
+  display: flex;
+  flex-direction: row;
 `
+const ProfitValue = styled.span`
+  margin-left: 15px;
+  font-weight: 400;
+`
+
 const PercentageLabel = styled.span`
   margin-left: 5px;
 `
@@ -83,9 +85,9 @@ export {
   TotalCargoContainer,
   CwLabel,
   ProfitLabel,
+  ProfitValue,
   LowerContainer,
   ProfitContainer,
-  PercentageContainer,
   PercentageLabel,
   PercentageCard
 }

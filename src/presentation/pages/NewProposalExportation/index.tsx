@@ -51,6 +51,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
   const [loadExistingProposal, setLoadExistingProposal] = useState(false)
   const [modal, setModal] = useState('')
   const [proposalType, setProposalType] = useState('')
+  const [totalCosts, setTotalCosts] = useState()
   const [serviceList, setServiceList] = useState<any[]>([])
   const [showSaveMessage, setShowSaveMessage] = useState(false)
   const [specifications, setSpecifications] = useState('')
@@ -595,6 +596,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
                       setFilled={setFilled}
                       setUndoMessage={setUndoMessage}
                       specifications={specifications}
+                      setTotalCosts={setTotalCosts}
                       undoMessage={undoMessage}
                       updateTableIdsRef={updateTable5IdsRef}
                     />
@@ -615,6 +617,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
                   setFilled={setFilled}
                   setUndoMessage={setUndoMessage}
                   specifications={specifications}
+                  totalCosts={totalCosts}
                   undoMessage={undoMessage}
                   updateTableIdsRef={updateTable6IdsRef}
                 />

@@ -30,6 +30,7 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import { CalculationDataProps } from '../../../components/ChargeTable'
 
 interface Step6Props {
+  totalCosts: any
   containerItems: ItemModalData[]
   costData: any
   modal: string
@@ -103,7 +104,8 @@ const Step6 = ({
   invalidInput,
   updateTableIdsRef,
   cw,
-  cwSale
+  cwSale,
+  totalCosts
 }: Step6Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [copyTable, setCopyTable] = useState<FareModalData[]>([])
@@ -847,6 +849,8 @@ const Step6 = ({
             cw={cw}
             cwSale={cwSale}
             modal={modal}
+            data={data}
+            totalCosts={totalCosts}
           />
         )
       }
@@ -864,6 +868,8 @@ const Step6 = ({
             cw={cw}
             cwSale={cwSale}
             modal={modal}
+            data={data}
+            totalCosts={totalCosts}
           />
         )
       }
