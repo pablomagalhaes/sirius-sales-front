@@ -70,7 +70,7 @@ const Step5 = ({
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
   const [loadedTable, setLoadedTable] = useState(false)
-  
+
   useImperativeHandle(updateTableIdsRef, () => ({
     updateStep5Ids () {
       let originId = 0

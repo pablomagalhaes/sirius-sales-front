@@ -42,7 +42,7 @@ const ProfitContainer = styled.div`
 `
 
 const PercentageCard = styled.div`
-  background: ${(props: any) => props.color === 'red' ? 'red' : '#6CD99A' };
+  background: ${(props: any) => props.color === 'red' ? 'red' : '#6CD99A'};
   border-radius: 4px;
   font-weight: 400;
   padding: 2px 9px;
