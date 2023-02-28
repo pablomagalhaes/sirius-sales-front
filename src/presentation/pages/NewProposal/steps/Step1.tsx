@@ -68,6 +68,7 @@ const Step1 = ({
 }: Step1Props): JSX.Element => {
   const [transportList] = useState<Transport[]>(TransportList)
   const [agentsList, setAgentsList] = useState<any[]>([])
+  const [businessPartnerList, setBusinessPartnerList] = useState<any[]>([])
   const [partnerList, setPartnerList] = useState<any[]>([])
   const [data, setData] = useState({
     proposal: '',
@@ -92,6 +93,84 @@ const Step1 = ({
   ])
 
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+
+  const getidBusinessPartnerAgent = (agentName: string): number | undefined => {
+    let id
+    if (agentName !== '') {
+      agentsList?.forEach((item): void => {
+        if (String(item.businessPartner.simpleName) === String(agentName)) {
+          id = item.businessPartner.id
+        }
+      })
+    }
+    return id
+  }
+  useEffect(() => {
+    void getBusinessPartner(getBusinessPartnerType())
+  }, [])
+  const getBusinessPartner = async (type: string): Promise<any> => {
+    const response = await API.getBusinessPartnerByType(type)
+    if (response !== undefined) {
+      setBusinessPartnerList([...response])
+    }
+  }
+  const getBusinessPartnerType = (): string => {
+    switch (proposal.idTransport) {
+      case 'AIR':
+        return 'CIA. AEREA'
+      case 'LAND':
+        return 'TRANS. INTERNACIONAL'
+    }
+    return ''
+  }
+  useEffect(() => {
+    if (data.proposal === 'ROUTING ORDER') {
+      setAgentList(selectedAgents)
+    }
+  }, [selectedAgents, agentsList])
+  const getAgentById = (idProposalAgent: number | null | undefined): string => {
+    if (idProposalAgent !== null && idProposalAgent !== undefined) {
+      const agent = agentsList.find((agent) => agent.businessPartner.id === idProposalAgent)
+      if (agent !== undefined) {
+        return agent.businessPartner.simpleName
+      }
+    }
+    return ''
+  }
+  const getBusinessPartnerById = (id: number | null | undefined): string => {
+    if (id !== null && id !== undefined) {
+      const businessPartner = businessPartnerList.find(
+        (businessPartner) => businessPartner.businessPartner.id === id
+      )
+      if (businessPartner !== undefined) {
+        return businessPartner.businessPartner.simpleName
+      }
+    }
+    return ''
+  }
+  useEffect(() => {
+    if (proposal.agents.length > 0) {
+      setSelectedAgents(
+        proposal?.agents.map((agent, index) => {
+          return {
+            idProposalAgent: agent.idProposalAgent,
+            idBusinessPartnerAgent: agent.idBusinessPartnerAgent,
+            shippingCompany: getBusinessPartnerById(agent.idBusinessPartnerTransportCompany),
+            agent: getAgentById(agent.idBusinessPartnerAgent),
+            idBusinessPartnerTransportCompany: agent.idBusinessPartnerTransportCompany
+          }
+        })
+      )
+    }
+  }, [agentsList])
+  useEffect(() => {
+    setProposal({
+      ...proposal,
+      agents: selectedAgents.map(
+        ({ shippingCompany, agent, ...otherProperties }) => otherProperties
+      )
+    })
+  }, [selectedAgents])
 
   useEffect(() => {
     const getAgents = new Promise<void>((resolve) => {
@@ -242,17 +321,7 @@ const Step1 = ({
     }
   }
 
-  const getidBusinessPartnerAgent = (agentName: string): number | undefined => {
-    let id
-    if (agentName !== '') {
-      agentsList?.forEach((item): void => {
-        if (String(item.businessPartner.simpleName) === String(agentName)) {
-          id = item.businessPartner.id
-        }
-      })
-    }
-    return id
-  }
+
 
   useEffect(() => {
     if (data.proposal === 'ROUTING ORDER') {
@@ -337,7 +406,7 @@ const Step1 = ({
 
           {data.proposal === 'ROUTING ORDER'
             ? (
-              <FormLabel component="legend" error={data.proposalValue === '' && invalidInput}>
+              <FormLabel component="legend" error={selectedAgents[0]?.agent === '' && invalidInput}>
                 {I18n.t('pages.newProposal.step1.agents')}
                 <RedColorSpan> *</RedColorSpan>
               </FormLabel>
@@ -347,7 +416,7 @@ const Step1 = ({
                 {I18n.t('pages.newProposal.step1.client')}:
                 <RedColorSpan> *</RedColorSpan>
               </FormLabel>
-              )}
+            )}
 
               {data.proposal === 'ROUTING ORDER'
                 ? selectedAgents.map((selectedAgent, index) => {
@@ -380,7 +449,7 @@ const Step1 = ({
                                 {...params}
                                 id="search-client"
                                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                invalid={data.proposalValue === '' && invalidInput}
+                                invalid={selectedAgent.agent === '' && invalidInput}
                                 variant="outlined"
                                 size="small"
                                 placeholder={I18n.t('pages.newProposal.step1.searchClient')}
