@@ -5,7 +5,7 @@ import { ProposalContext, ProposalProps } from '../../pages/NewProposal/context/
 import { ProfitsProps } from '../../../domain/ProfitsProps'
 import { CwLabel, LowerContainer, ProfitContainer, ProfitLabel, ProfitValue, TotalCargoContainer, TotalContainer, UpperContainer } from './style'
 import { I18n } from 'react-redux-i18n'
-
+// valores comentados nesse arquivo se referem ao calculo de percentual de profit que será implementado posteriormente
 interface TotalSurchargeProps {
   value: string
   currency: string

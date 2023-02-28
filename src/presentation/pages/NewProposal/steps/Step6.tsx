@@ -1140,7 +1140,7 @@ const Step6 = ({
                               </Grid>
                               <Grid item xs={2}>
                                 <Autocomplete freeSolo value={data[index]?.currencyPurchase} onChange={(e, newValue) => {
-                                  const newData = data
+                                  const newData = [...data]
                                   newData[index].currencyPurchase = String(newValue ?? '')
                                   handleCurrencyPurchase(newData[index].agent.idBusinessPartnerAgent, newData, newValue)
                                 }}
@@ -1166,7 +1166,7 @@ const Step6 = ({
                               <Grid item xs={2}>
                                 <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                                   customInput={ControlledInput} onChange={(e) => {
-                                    const newData = data
+                                    const newData = [...data]
                                     newData[index].valuePurchase = e.target.value
                                     handleValuePurchase(newData[index].agent.idBusinessPartnerAgent, newData, e.target.value)
                                   }} toolTipTitle={I18n.t('components.itemModal.requiredField')}
