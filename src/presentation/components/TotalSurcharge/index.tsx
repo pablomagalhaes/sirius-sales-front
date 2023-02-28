@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react'
-import PositiveProfitIcon from '../../../application/icons/PositiveProfitIcon'
-import NegativeProfitIcon from '../../../application/icons/NegativeProfitIcon'
+// import PositiveProfitIcon from '../../../application/icons/PositiveProfitIcon'
+// import NegativeProfitIcon from '../../../application/icons/NegativeProfitIcon'
 import { ProposalContext, ProposalProps } from '../../pages/NewProposal/context/ProposalContext'
 import { ProfitsProps } from '../../../domain/ProfitsProps'
-import { CwLabel, LowerContainer, PercentageLabel, PercentageCard, ProfitContainer, ProfitLabel, ProfitValue, TotalCargoContainer, TotalContainer, UpperContainer } from './style'
+import { CwLabel, LowerContainer, ProfitContainer, ProfitLabel, ProfitValue, TotalCargoContainer, TotalContainer, UpperContainer } from './style'
 import { I18n } from 'react-redux-i18n'
 
 interface TotalSurchargeProps {
@@ -20,11 +20,9 @@ interface TotalSurchargeProps {
 const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, data, totalCosts }: TotalSurchargeProps): JSX.Element => {
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
   const [profit, setProfit] = useState('')
-  const [profitPercentage, setProfitPercentage] = useState<number[][]>([])
+  // const [profitPercentage, setProfitPercentage] = useState<number[][]>([])
 
-  console.log(totalCosts)
-
-  const removeDuplicates = (arr) => {
+  const removeDuplicates = (arr): any => {
     return arr.filter((item: string,
       index: number) => arr.indexOf(item) === index)
   }
@@ -49,7 +47,7 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
       const currencySelect = totalCosts.filter(total => total.name === each)
       let total: number = 0
       if (currencySelect.length > 0) {
-        total += currencySelect.map(cost => cost.value.buy).reduce((acc, curr) => acc + curr)
+        total += Number(currencySelect.map(cost => cost.value.buy).reduce((acc, curr) => Number(acc) + Number(curr)))
       }
       if (data.length > 0 && data[0].currencyPurchase !== '') {
         const purchaseCurrency = data.filter(purchase => purchase.currencyPurchase === each)
@@ -71,7 +69,7 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
       const currencySelect = totalCosts.filter(total => total.name === each)
       let total: number = 0
       if (currencySelect.length > 0) {
-        total += currencySelect.map(cost => cost.value.sale).reduce((acc, curr) => acc + curr)
+        total += Number(currencySelect.map(cost => cost.value.sale).reduce((acc, curr) => Number(acc) + Number(curr)))
       }
       if (currency === each && value !== '0,00' && value !== '') {
         if (isAir()) total += totalValue()
@@ -100,23 +98,22 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
     return finalResult
   }
 
-  const calculateProfitPercentage = (): number[][] => {
-    const finalResult: number[][] = []
+  // const calculateProfitPercentage = (): number[][] => {
+  //   const finalResult: number[][] = []
 
-    totalSale().forEach(sale => {
-      const purchaseTotal = totalPurchase().find(purchase => sale[0] === purchase[0])
-      console.log(purchaseTotal)
-      if (purchaseTotal != null) finalResult.push([sale[0], ((sale[1] * 100) / purchaseTotal[1]) - 100])
-      // else finalResult.push(sale)
-    })
-    // totalPurchase().forEach(purchase => {
-    //   if(!finalResult.some(result => result[0] === purchase[0])) finalResult.push([purchase[0], -purchase[1]])
-    // })
-    return finalResult
-  }
+  //   totalSale().forEach(sale => {
+  //     const purchaseTotal = totalPurchase().find(purchase => sale[0] === purchase[0])
+  //     if (purchaseTotal != null) finalResult.push([sale[0], ((sale[1] * 100) / purchaseTotal[1]) - 100])
+  //     // else finalResult.push(sale)
+  //   })
+  //   // totalPurchase().forEach(purchase => {
+  //   //   if(!finalResult.some(result => result[0] === purchase[0])) finalResult.push([purchase[0], -purchase[1]])
+  //   // })
+  //   return finalResult
+  // }
 
   useEffect(() => {
-    if (data && totalCosts.length > 0) {
+    if (data !== undefined && totalCosts.length > 0) {
       let finalProfit: string = ''
       const profits: ProfitsProps[] = []
       calculateProfit().forEach(profitValue => {
@@ -125,12 +122,12 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
       })
       setProfit(finalProfit.slice(0, -3))
 
-      calculateProfitPercentage().forEach(percentageValue => {
-        profits.forEach((each, index) => {
-          if (each.idCurrency === percentageValue[0]) profits[index] = { ...profits[index], percentageProfit: Number(percentageValue[1].toFixed(2)) }
-        })
-      })
-      setProfitPercentage(calculateProfitPercentage())
+      // calculateProfitPercentage().forEach(percentageValue => {
+      //   profits.forEach((each, index) => {
+      //     if (each.idCurrency === percentageValue[0]) profits[index] = { ...profits[index], percentageProfit: Number(percentageValue[1].toFixed(2)) }
+      //   })
+      // })
+      // setProfitPercentage(calculateProfitPercentage())
       setProposal({ ...proposal, profits })
     }
   }, [data, totalCosts, currency, totalOtherFare, value, modal])
@@ -159,7 +156,7 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
             {I18n.t('pages.newProposal.step6.profit')}
             <ProfitValue>{profit.replace('.', ',')}</ProfitValue>
           </ProfitLabel>
-          <ProfitLabel>
+          {/* <ProfitLabel>
             {I18n.t('pages.newProposal.step6.percentageProfit')}
             {profitPercentage.map((profitArray) => (
               <PercentageCard color={profitArray[1] <= 0 ? 'red' : 'normal'}>
@@ -168,7 +165,7 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
               </PercentageCard>
             ))}
 
-          </ProfitLabel>
+          </ProfitLabel> */}
         </ProfitContainer>
         <TotalCargoContainer>
           <div>{I18n.t('pages.newProposal.step6.totalOtherFees')}</div>
