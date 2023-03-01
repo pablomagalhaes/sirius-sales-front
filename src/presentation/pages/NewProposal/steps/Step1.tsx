@@ -106,8 +106,9 @@ const Step1 = ({
     return id
   }
   useEffect(() => {
-    void getBusinessPartner(getBusinessPartnerType())
-  }, [])
+    if (proposal.idTransport !== '') void getBusinessPartner(getBusinessPartnerType())
+  }, [proposal.idTransport])
+  
   const getBusinessPartner = async (type: string): Promise<any> => {
     const response = await API.getBusinessPartnerByType(type)
     if (response !== undefined) {
