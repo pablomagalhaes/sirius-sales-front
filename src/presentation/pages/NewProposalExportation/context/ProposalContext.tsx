@@ -16,6 +16,7 @@ export const emptyProposalValue: Proposal = {
   internalObservations: '', // Step4ObservacoesInternas
   requester: '', // solicitante step1
   cargoCollectionAddress: '', // nao sabe
+  cargoDeliveryAddress: '',
   costs: [],
   totalCosts: [],
   proposalType: '', // step1 tipo proposta 'cliente' 'routing order'
