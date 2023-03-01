@@ -30,6 +30,7 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import { CalculationDataProps } from '../../../components/ChargeTable'
 
 interface Step6Props {
+  totalCosts: any
   containerItems: ItemModalData[]
   costData: any
   modal: string
@@ -103,7 +104,8 @@ const Step6 = ({
   invalidInput,
   updateTableIdsRef,
   cw,
-  cwSale
+  cwSale,
+  totalCosts
 }: Step6Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [copyTable, setCopyTable] = useState<FareModalData[]>([])
@@ -847,6 +849,8 @@ const Step6 = ({
             cw={cw}
             cwSale={cwSale}
             modal={modal}
+            data={data}
+            totalCosts={totalCosts}
           />
         )
       }
@@ -864,6 +868,8 @@ const Step6 = ({
             cw={cw}
             cwSale={cwSale}
             modal={modal}
+            data={data}
+            totalCosts={totalCosts}
           />
         )
       }
@@ -1134,7 +1140,7 @@ const Step6 = ({
                               </Grid>
                               <Grid item xs={2}>
                                 <Autocomplete freeSolo value={data[index]?.currencyPurchase} onChange={(e, newValue) => {
-                                  const newData = data
+                                  const newData = [...data]
                                   newData[index].currencyPurchase = String(newValue ?? '')
                                   handleCurrencyPurchase(newData[index].agent.idBusinessPartnerAgent, newData, newValue)
                                 }}
@@ -1160,7 +1166,7 @@ const Step6 = ({
                               <Grid item xs={2}>
                                 <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                                   customInput={ControlledInput} onChange={(e) => {
-                                    const newData = data
+                                    const newData = [...data]
                                     newData[index].valuePurchase = e.target.value
                                     handleValuePurchase(newData[index].agent.idBusinessPartnerAgent, newData, e.target.value)
                                   }} toolTipTitle={I18n.t('components.itemModal.requiredField')}

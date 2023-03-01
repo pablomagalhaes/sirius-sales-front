@@ -2,6 +2,7 @@ import { Agent } from './Agent'
 import { CargoVolume } from './CargoVolume'
 import { Cost } from './Cost'
 import { TotalCost } from './TotalCost'
+import { ProfitsProps } from './ProfitsProps'
 
 export interface Proposal {
   idProposal?: number | null
@@ -53,4 +54,5 @@ export interface Proposal {
   transportIncluded: boolean
   clearenceIncluded: boolean
   agents: Agent[]
+  profits: ProfitsProps[]
 }

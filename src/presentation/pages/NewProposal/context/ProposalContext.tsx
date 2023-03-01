@@ -49,7 +49,8 @@ export const emptyProposalValue: Proposal = {
   weeklyRecurrency: '', // "0101100" segunda quarta e quinta
   transportIncluded: false,
   clearenceIncluded: false,
-  agents: []
+  agents: [],
+  profits: []
 }
 
 interface ProposalContextProviderProps {
