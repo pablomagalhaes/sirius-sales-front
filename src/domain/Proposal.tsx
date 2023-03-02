@@ -19,6 +19,7 @@ export interface Proposal {
   internalObservations: string // Step4ObservacoesInternas
   requester: string // solicitante step1
   cargoCollectionAddress: string // endereco de coleta step2
+  cargoDeliveryAddress: string // endereco de entrega step2
   costs: Cost[]
   totalCosts: TotalCost[]
   proposalType: string // step1 tipo proposta 'cliente' 'routing order'
