@@ -3,7 +3,7 @@ import styled from 'styled-components'
 const RootContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: auto;
+  height: 90vh;
   margin: 0 24px;
 
   .breadcrumbInitial {
@@ -163,7 +163,7 @@ const TableContainer = styled.div`
 
 const BottomSideContainer = styled.div`
   display: flex;
-  margin: 30px 0;
+  margin: 0;
   flex-direction: column;
 
   .floating-button-style {
@@ -196,6 +196,13 @@ const TopContainer = styled.div`
   align-items: center;
 `
 
+const MidleContainer = styled.div`
+  width: 100%;
+  padding: 10px;
+  background-color: white;
+  font-size: 12px;
+`
+
 const TopButtonContainer = styled.div`
   margin-left: auto;
 `
@@ -220,5 +227,6 @@ export {
   DropdownMenuContainer,
   RowFilterContainer,
   ArrowIconContainer,
-  ButtonContainer
+  ButtonContainer,
+  MidleContainer
 }

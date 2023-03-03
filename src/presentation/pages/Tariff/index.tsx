@@ -4,6 +4,7 @@ import {
   Button,
   RowFilter,
   Tabs,
+  QuickFilters
 } from 'fiorde-fe-components'
 import { Breadcrumbs, Link, Select, MenuItem } from '@material-ui/core/'
 import {
@@ -17,6 +18,7 @@ import {
   ListHeaderContainer,
   ListMainTitleSpan,
   ListTextSpan,
+  MidleContainer,
   OrderByContainer,
   PaginationContainer,
   PaginationMainContainer,
@@ -44,7 +46,7 @@ const defaultFilter = {
   size: 10
 }
 
-const Proposal = (): JSX.Element => {
+const Tariff = (): JSX.Element => {
   const [filter, setFilter] = useState<any>(defaultFilter)
   const [incotermList, setIncotermList] = useState<any[]>([])
   const [openedOrderSelect, setOpenedOrderSelect] = useState(false)
@@ -56,9 +58,11 @@ const Proposal = (): JSX.Element => {
   const [originDestinationCities, setoriginDestinationCities] = useState<any[]>([])
   const [partnerList, setPartnerList] = useState<any[]>([])
   const [partnerSimpleNameList, setPartnerSimpleNameList] = useState<any[]>([])
-  const [proposalList, setProposalList] = useState<any[]>([])
+  const [tariffList, setTariffList] = useState<any[]>([])
   const [radioValue, setRadioValue] = useState('')
-  const [totalProposalList, setTotalProposalList] = useState<number>(0)
+  // const [totalTariffList, setTotalTariffList] = useState<number>(0)
+  const [quickFilterList, setQuickFilterList] = useState<any[]>([])
+  const [tabs, setTabs] = useState<any[]>()
 
   const history = useHistory()
 
@@ -188,20 +192,94 @@ const Proposal = (): JSX.Element => {
     return landLabels
   }
 
-  const getProposalByFilter = (): void => {
-    void (async function () {
-      await API.getProposals(filter)
-        .then((response) => {
-          setProposalList(response.content)
-          setTotalProposalList(response.totalElements)
-        })
-        .catch((err) => console.log(err))
-    })()
+  const getModalFilter = (): string => {
+    const modalFilter = quickFilterList.find((item) => item.type === "modal")
+    let type: string =  ''
+    if(modalFilter !== undefined) {
+      switch (modalFilter.status) {
+        case 'Aéreo':
+          type = 'AIR'
+          break
+        case 'Marítimo':
+          type = 'SEA'
+          break
+        case 'Rodoviário':
+          type = 'LAND'
+          break
+        default:
+          break
+      }
+    }
+    return type
+  }
+
+  const getActivityFilter = (): string => {
+    const activityFilter = quickFilterList.find((item) => item.type === "activity")
+    let type: string =  ''
+    if(activityFilter !== undefined) {
+      switch (activityFilter.status) {
+        case 'Importação':
+          type = 'IMPORT'
+          break
+        case 'Exportação':
+          type = 'EXPORT'
+          break
+        default:
+          break
+      }
+    }
+    return type
+  }
+
+  const getValidityFilter = (validity: string): string => {
+    const validityFilter = quickFilterList.find((item) => item.type === validity)
+    let type: string =  ''
+    if(validityFilter !== undefined) {
+      switch (validityFilter.status) {
+        case 'Vencimento próximo':
+          type = 'CLOSE_TO_VALIDITY'
+          break
+        case 'Vencidas':
+          type = 'EXPIRED'
+          break
+        default:
+          break
+      }
+    }
+    return type
+  }
+
+  const getTariffByFilter = (): void => {
+    const modal = getModalFilter()
+    const activity = getActivityFilter()
+    if (modal !== '' && activity !== '') {
+      void (async function () {
+        await API.getTariffs(activity, modal, 'EXPIRED')
+          .then((response) => {
+            const regionsTabs: any[] = []
+            response.forEach((item) => {
+              const countries: any[]= []
+              item.countries.forEach((country) => countries.push({title: country, component: 'teste', disable: false}))
+              regionsTabs.push({
+                title: item.region,
+                icon: '',
+                component: <Accordion content={countries} />
+              })
+            })
+            setTabs(regionsTabs)
+            setTariffList(response)
+            // setTotalTariffList(response.totalElements)
+          })
+          .catch((err) => console.log(err))
+      })()
+    }
+    console.log(quickFilterList)
+
   }
 
   useEffect(() => {
-    getProposalByFilter()
-  }, [filter])
+    getTariffByFilter()
+  }, [quickFilterList])
 
 
   const handleSelectedRowFilter = (selectedFiltersRowFilter: any): void => {
@@ -515,7 +593,7 @@ const Proposal = (): JSX.Element => {
     {
         title: 'Argentina',
         component: 'teste',
-        disable: false,
+        disable: true,
     },
     {
         title: 'Brasil',
@@ -535,19 +613,55 @@ const Proposal = (): JSX.Element => {
     },
     { title: 'México', component: 'texto 3', disable: false },
     { title: 'Estados Unidos', component: 'texto 4', disable: false },
-];
+  ];
 
-  const tabs = [
+  // const tabs = [
+  //   {
+  //       title: 'Europa',
+  //       icon: '',
+  //       component: 'teste'
+  //   },
+  //   { title: 'Americas', icon: '', component: <Accordion content={data} /> },
+  //   { title: 'Asia', icon: '', component: 'texto simples' },
+  //   { title: 'Oceania', icon: '', component: 4 },
+  //   { title: 'Africa', icon: '', component: 5 },
+  // ];
+
+  const cardFilters = [
     {
-        title: 'Europa',
-        icon: 'warn',
-        component: 'teste'
+        iconType: 'import',
+        status: 'Importação',
+        uniqueChoice: true,
     },
-    { title: 'Americas', icon: 'error', component: <Accordion content={data} /> },
-    { title: 'Asia', icon: '', component: 'texto simples' },
-    { title: 'Oceania', icon: '', component: 4 },
-    { title: 'Africa', icon: '', component: 5 },
-];
+    {
+        iconType: 'export',
+        status: 'Exportação',
+        uniqueChoice: true,
+    },
+    {
+        iconType: 'truck',
+        status: 'Rodoviário',
+        uniqueChoice: true,
+    },
+    {
+        iconType: 'plane',
+        status: 'Aéreo',
+        uniqueChoice: true,
+    },
+    {
+        iconType: 'ship',
+        status: 'Marítimo',
+        uniqueChoice: true,
+    },
+    {
+        iconType: 'warn',
+        status: 'Vencimento próximo',
+    },
+    {
+        iconType: 'alert',
+        status: 'Vencidas',
+    },
+  ];
 
   return (
     <RootContainer>
@@ -579,22 +693,27 @@ const Proposal = (): JSX.Element => {
           </ButtonContainer>
         </TopButtonContainer>
       </TopContainer>
-      <RowFilterContainer>
-        <RowFilter
-          addFilterLabel="Filtros avançados"
-          applyLabel="Aplicar"
-          approveLabel="Salvar Filtro"
-          cleanLabel="Limpar"
-          handleClean={handleChangeModal}
-          handleCleanRow={handleCleanModal}
-          handleSelectedFilters={handleSelectedRowFilter}
-          menuItemsSelector={menuItemsSelector}
-          myFilterLabel="Meus Filtros"
-          setRadioValue={setRadioValue}
+      <MidleContainer>
+        Exibir por: 
+        <QuickFilters
+          cardFilters={cardFilters}
+          onFilterClick={(selectedFilterCards) => setQuickFilterList(selectedFilterCards)}
         />
-      </RowFilterContainer>
+      </MidleContainer>
       <ListHeaderContainer>
         <LeftSideListHeaderContainer>
+          <RowFilter
+            addFilterLabel="Filtros avançados"
+            applyLabel="Aplicar"
+            approveLabel="Salvar Filtro"
+            cleanLabel="Limpar"
+            handleClean={handleChangeModal}
+            handleCleanRow={handleCleanModal}
+            handleSelectedFilters={handleSelectedRowFilter}
+            menuItemsSelector={menuItemsSelector}
+            myFilterLabel="Meus Filtros"
+            setRadioValue={setRadioValue}
+          />
         </LeftSideListHeaderContainer>
         <RightSideListHeaderContainer>
           <ExportTariffContainer onClick={handleExportTariff}>
@@ -632,10 +751,10 @@ const Proposal = (): JSX.Element => {
         </RightSideListHeaderContainer>
       </ListHeaderContainer>
       <BottomSideContainer>
-        <Tabs tabs={tabs}/>
+        {tabs !== undefined && <Tabs tabs={tabs}/>}
       </BottomSideContainer>
     </RootContainer>
   )
 }
 
-export default Proposal
+export default Tariff

@@ -295,6 +295,16 @@ const getCountProposal = async (params): Promise<any> => {
   }
 }
 
+const getTariffs = async (activity: string, modal: string, validity?: string): Promise<any> => {
+  const url: string = `/sirius-tariff-api/tariff/region/country/${String(activity)}/${String(modal)}/${validity ? String(validity) : 'VALID'}`
+  try {
+    const res = await instance.get(url)
+    return res.data
+  } catch (error) {
+    toast.error(String(error) + ' | Request:  ' + String(url))
+  }
+}
+
 const API = {
   getContainerType,
   getCurrencies,
@@ -323,7 +333,8 @@ const API = {
   getCityById,
   getCountProposal,
   getMercosulCities,
-  getMercosulStates
+  getMercosulStates,
+  getTariffs
 }
 
 export default API
