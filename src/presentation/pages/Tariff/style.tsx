@@ -1,4 +1,6 @@
 import styled from 'styled-components'
+import { withStyles } from '@material-ui/core/styles'
+import MuiTableCell from '@material-ui/core/TableCell'
 
 const RootContainer = styled.div`
   display: flex;
@@ -207,12 +209,19 @@ const TopButtonContainer = styled.div`
   margin-left: auto;
 `
 
+const TableCell = withStyles({
+  root: {
+    borderBottom: 'none'
+  }
+})(MuiTableCell)
+
 export {
   RootContainer,
   ListHeaderContainer,
   LeftSideListHeaderContainer,
   RightSideListHeaderContainer,
   TableContainer,
+  TableCell,
   BottomSideContainer,
   PaginationContainer,
   PaginationMainContainer,

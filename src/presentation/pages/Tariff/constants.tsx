@@ -53,4 +53,22 @@ const menuItems = {
   statusTypes: ['Aberta', 'Ag. Retorno Cliente', 'Em Revisão', 'Rejeitada', 'Cancelada', 'Aprovada']
 }
 
-export { orderButtonMenuItems, menuItems }
+const columns = {
+  AIR: ['Agente', 'Cia. Aérea', 'Origem e destino', 'Tr. time', 'Validade', 'Moeda', 'Mínimo', 'Valor (de +45kg a 1ton)'],
+  SEA: {
+    LCL: ['Agente', 'Cia. Marítima', 'Origem e destino', 'Tr. time', 'Validade', 'Moeda', 'Mínimo', 'Até 7w/m', 'Acima'],
+    FCL: ['Agente', 'Cia. Marítima', 'Origem e destino', 'Tr. time', 'Validade', 'Moeda', 'Vlr. container(20)', 'Vlr. container(40)']
+  },
+  LAND: ['Agente', 'Transportadora', 'Origem e destino', 'Tr. time', 'Validade', 'Moeda', 'Geral/IMO Ded.', 'Geral/ IMO Cons']
+}
+
+const rows = {
+  AIR: ['agent', 'airCompany', 'originDestiny', 'transitTime', 'validity', 'currency', 'minimun', 'value'],
+  SEA: {
+    LCL: ['agent', 'seaCompany', 'originDestiny', 'transitTime', 'validity', 'currency', 'minimun', 'under7w', 'over'],
+    FCL: ['agent', 'seaCompany', 'originDestiny', 'transitTime', 'validity', 'currency', 'minimun', 'container20', 'container40']
+  },
+  LAND: ['agent', 'landCompany', 'originDestiny', 'transitTime', 'validity', 'currency', 'geralImoDed', 'geralImoCons']
+}
+
+export { orderButtonMenuItems, menuItems, columns, rows }

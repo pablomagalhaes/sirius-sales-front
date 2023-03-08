@@ -38,12 +38,17 @@ import ArrowDown from '../../../application/icons/ArrowDown'
 import { orderButtonMenuItems, menuItems } from './constants'
 import { I18n } from 'react-redux-i18n'
 import { StatusProposalStringEnum } from '../../../application/enum/statusProposalEnum'
+import TariffTable from './TariffTable'
+import { getModalFilter, getActivityFilter, getValidityFilter } from './helpers'
 
 const defaultFilter = {
   direction: 'ASC',
-  orderByList: 'openingDate',
+  orderByList: 'tariffType',
   page: 0,
-  size: 10
+  size: 10,
+  tariffModalType: '',
+  validityTariff: '',
+  tariffType: ''
 }
 
 const Tariff = (): JSX.Element => {
@@ -63,6 +68,9 @@ const Tariff = (): JSX.Element => {
   // const [totalTariffList, setTotalTariffList] = useState<number>(0)
   const [quickFilterList, setQuickFilterList] = useState<any[]>([])
   const [tabs, setTabs] = useState<any[]>()
+  const [countriesExpanded, setCountriesExpanded] = useState<string[]>([])
+
+  console.log(countriesExpanded)
 
   const history = useHistory()
 
@@ -192,95 +200,61 @@ const Tariff = (): JSX.Element => {
     return landLabels
   }
 
-  const getModalFilter = (): string => {
-    const modalFilter = quickFilterList.find((item) => item.type === "modal")
-    let type: string =  ''
-    if(modalFilter !== undefined) {
-      switch (modalFilter.status) {
-        case 'Aéreo':
-          type = 'AIR'
-          break
-        case 'Marítimo':
-          type = 'SEA'
-          break
-        case 'Rodoviário':
-          type = 'LAND'
-          break
-        default:
-          break
-      }
-    }
-    return type
-  }
-
-  const getActivityFilter = (): string => {
-    const activityFilter = quickFilterList.find((item) => item.type === "activity")
-    let type: string =  ''
-    if(activityFilter !== undefined) {
-      switch (activityFilter.status) {
-        case 'Importação':
-          type = 'IMPORT'
-          break
-        case 'Exportação':
-          type = 'EXPORT'
-          break
-        default:
-          break
-      }
-    }
-    return type
-  }
-
-  const getValidityFilter = (validity: string): string => {
-    const validityFilter = quickFilterList.find((item) => item.type === validity)
-    let type: string =  ''
-    if(validityFilter !== undefined) {
-      switch (validityFilter.status) {
-        case 'Vencimento próximo':
-          type = 'CLOSE_TO_VALIDITY'
-          break
-        case 'Vencidas':
-          type = 'EXPIRED'
-          break
-        default:
-          break
-      }
-    }
-    return type
-  }
-
   const getTariffByFilter = (): void => {
-    const modal = getModalFilter()
-    const activity = getActivityFilter()
-    if (modal !== '' && activity !== '') {
+    if (filter.tariffModalType !== '' && filter.tariffType !== '') {
       void (async function () {
-        await API.getTariffs(activity, modal, 'EXPIRED')
+        await API.getTariffs(filter.tariffType, filter.tariffModalType, filter.validityTariff)
           .then((response) => {
-            const regionsTabs: any[] = []
-            response.forEach((item) => {
-              const countries: any[]= []
-              item.countries.forEach((country) => countries.push({title: country, component: 'teste', disable: false}))
-              regionsTabs.push({
-                title: item.region,
-                icon: '',
-                component: <Accordion content={countries} />
-              })
-            })
-            setTabs(regionsTabs)
             setTariffList(response)
             // setTotalTariffList(response.totalElements)
           })
           .catch((err) => console.log(err))
       })()
     }
-    console.log(quickFilterList)
+  }
 
+  const createTabs = (): void => {
+    const regionsTabs: any[] = []
+    tariffList.forEach((item) => {
+      const content: any[] = []
+      item.countries.forEach((country: string) => content.push({
+        title: country,
+        component: <TariffTable region={item.region} countriesExpanded={countriesExpanded} country={country} filter={filter}/>,
+        disable: false,
+        onChange: (country: string): void => { if (!countriesExpanded.some(each => each === country)) setCountriesExpanded([...countriesExpanded, country]) }
+      }))
+      regionsTabs.push({
+        title: item.region,
+        icon: '',
+        component: <Accordion content={content}/>
+      })
+    })
+    setTabs(regionsTabs)
+  }
+
+  const getQuickFilters = (): void => {
+    const tariffModalType = getModalFilter(quickFilterList)
+    const tariffType = getActivityFilter(quickFilterList)
+    const validityTariff = getValidityFilter(quickFilterList)
+    setFilter((filter: any) => ({
+      ...filter,
+      tariffModalType,
+      validityTariff,
+      tariffType
+    }))
   }
 
   useEffect(() => {
-    getTariffByFilter()
+    createTabs()
+  }, [tariffList, countriesExpanded, quickFilterList])
+
+  useEffect(() => {
+    getQuickFilters()
   }, [quickFilterList])
 
+  useEffect(() => {
+    getTariffByFilter()
+  }, [filter])
 
   const handleSelectedRowFilter = (selectedFiltersRowFilter: any): void => {
     cleanFilter()
@@ -503,7 +477,7 @@ const Tariff = (): JSX.Element => {
 
     setFilter(() => ({
       direction: 'ASC',
-      orderByList: 'openingDate',
+      orderByList: 'tariffType',
       page: 0,
       size: 10
     }))
@@ -589,32 +563,6 @@ const Tariff = (): JSX.Element => {
 
   const handleExportTariff = (): void => {}
 
-  const data = [
-    {
-        title: 'Argentina',
-        component: 'teste',
-        disable: true,
-    },
-    {
-        title: 'Brasil',
-        component: (
-            <Button
-                backgroundGreen={true}
-                disabled={false}
-                icon={''}
-                onAction={function (arg: any): void {
-                    throw new Error('Function not implemented.');
-                }}
-                text={'Clique aqui'}
-                tooltip={''}
-            />
-        ),
-        disable: false,
-    },
-    { title: 'México', component: 'texto 3', disable: false },
-    { title: 'Estados Unidos', component: 'texto 4', disable: false },
-  ];
-
   // const tabs = [
   //   {
   //       title: 'Europa',
@@ -629,39 +577,41 @@ const Tariff = (): JSX.Element => {
 
   const cardFilters = [
     {
-        iconType: 'import',
-        status: 'Importação',
-        uniqueChoice: true,
+      iconType: 'import',
+      status: 'Importação',
+      uniqueChoice: true
     },
     {
-        iconType: 'export',
-        status: 'Exportação',
-        uniqueChoice: true,
+      iconType: 'export',
+      status: 'Exportação',
+      uniqueChoice: true
     },
     {
-        iconType: 'truck',
-        status: 'Rodoviário',
-        uniqueChoice: true,
+      iconType: 'truck',
+      status: 'Rodoviário',
+      uniqueChoice: true
     },
     {
-        iconType: 'plane',
-        status: 'Aéreo',
-        uniqueChoice: true,
+      iconType: 'plane',
+      status: 'Aéreo',
+      uniqueChoice: true
     },
     {
-        iconType: 'ship',
-        status: 'Marítimo',
-        uniqueChoice: true,
+      iconType: 'ship',
+      status: 'Marítimo',
+      uniqueChoice: true
     },
     {
-        iconType: 'warn',
-        status: 'Vencimento próximo',
+      iconType: 'warn',
+      status: 'Vencimento próximo',
+      uniqueChoice: true
     },
     {
-        iconType: 'alert',
-        status: 'Vencidas',
-    },
-  ];
+      iconType: 'alert',
+      status: 'Vencidas',
+      uniqueChoice: true
+    }
+  ]
 
   return (
     <RootContainer>
@@ -694,7 +644,7 @@ const Tariff = (): JSX.Element => {
         </TopButtonContainer>
       </TopContainer>
       <MidleContainer>
-        Exibir por: 
+        Exibir por:
         <QuickFilters
           cardFilters={cardFilters}
           onFilterClick={(selectedFilterCards) => setQuickFilterList(selectedFilterCards)}

@@ -305,6 +305,22 @@ const getTariffs = async (activity: string, modal: string, validity?: string): P
   }
 }
 
+// https://qa.siriuslog.com/gateway/sirius-tariff-api/tariff/filter?direction=ASC&orderByList=tariffType&tariffModalType=SEA&validityTariff=EXPIRED&tariffType=IMPORT&txRegion=Asia&txCountry=Syria&page=0&size=10
+const getTariffsByCountry = async (params): Promise<any> => {
+  const url: string = '/sirius-tariff-api/tariff/filter'
+  try {
+    const res = await instance.get(url, {
+      params,
+      paramsSerializer: params => {
+        return qs.stringify(params, { arrayFormat: 'comma' })
+      }
+    })
+    return res.data
+  } catch (error) {
+    toast.error(String(error) + ' | Request:  ' + String(url))
+  }
+}
+
 const API = {
   getContainerType,
   getCurrencies,
@@ -334,7 +350,8 @@ const API = {
   getCountProposal,
   getMercosulCities,
   getMercosulStates,
-  getTariffs
+  getTariffs,
+  getTariffsByCountry
 }
 
 export default API
