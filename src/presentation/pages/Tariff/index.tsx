@@ -246,7 +246,7 @@ const Tariff = (): JSX.Element => {
 
   useEffect(() => {
     createTabs()
-  }, [tariffList, countriesExpanded, quickFilterList])
+  }, [tariffList, countriesExpanded])
 
   useEffect(() => {
     getQuickFilters()

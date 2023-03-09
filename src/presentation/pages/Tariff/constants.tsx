@@ -66,7 +66,7 @@ const rows = {
   AIR: ['agent', 'airCompany', 'originDestiny', 'transitTime', 'validity', 'currency', 'minimun', 'value'],
   SEA: {
     LCL: ['agent', 'seaCompany', 'originDestiny', 'transitTime', 'validity', 'currency', 'minimun', 'under7w', 'over'],
-    FCL: ['agent', 'seaCompany', 'originDestiny', 'transitTime', 'validity', 'currency', 'minimun', 'container20', 'container40']
+    FCL: ['agent', 'seaCompany', 'originDestiny', 'transitTime', 'validity', 'currency', 'container20', 'container40']
   },
   LAND: ['agent', 'landCompany', 'originDestiny', 'transitTime', 'validity', 'currency', 'geralImoDed', 'geralImoCons']
 }

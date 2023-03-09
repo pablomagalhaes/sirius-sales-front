@@ -19,64 +19,59 @@ const TariffTable = ({
   filter
 }: TariffTableProps): JSX.Element => {
   const [data, setData] = useState<any[]>()
-  const [seaType, setSeaType] = useState<string>('LCL')
+  const [seaType, setSeaType] = useState<string>('FCL')
 
-  const getLandTariffItems = (tariffList): string[] => {
-    const getTariffValues = (tariffTypeValues, type) => {
-      const resp = tariffTypeValues.find(each => each.tariffType.description === type)
-      if (resp !== undefined) return resp.idTariffTypeValues
-      return '-'
-    }
+  const getTariffItems = (tariffList): string[] => {
     const array: any = []
     for (const tariff of tariffList) {
-      const originDestiny = tariff.cityOrigin + ' > ' + tariff.cityDestination
+      const modal = filter.tariffModalType
+      const agent = tariff.nmAgent
+      const company = tariff.dsBusinessPartnerTransporter
+      const transitTime = tariff.transitTime
+      const currency = tariff.currency
+      const originDestiny = modal === 'LAND' ? tariff.cityOrigin + ' > ' + tariff.cityDestination : tariff.origin + ' > ' + tariff.destination
       const validity = new Date(tariff.validityDate).toLocaleDateString('pt-BR')
-      const geralImoDed = getTariffValues(tariff.tariffTypeValues, 'VLGERALDED') + ' / ' + getTariffValues(tariff.tariffTypeValues, 'VLIMODED')
-      const geralImoCons = getTariffValues(tariff.tariffTypeValues, 'VLGERALCONS') + ' / ' + getTariffValues(tariff.tariffTypeValues, 'VLIMOCONS')
-      const item = {
-        agent: tariff.nmAgent,
-        landCompany: tariff.dsBusinessPartnerTransporter,
-        originDestiny,
-        transitTime: tariff.transitTime,
-        validity,
-        currency: tariff.currency,
-        geralImoDed,
-        geralImoCons
-      }
+      const values = [...tariff.tariffTypeValues].filter(each => each.tariffType.description !== 'MINIMUN').map(item => item.value)
+      const value = `de ${Math.min(...values)} a ${Math.max(...values)}`
+      const getTariffTypeValue = (type: string) => tariff.tariffTypeValues.find(each => each.tariffType.description === type)
+      const geralImoDed = getTariffTypeValue('VLGERALDED')?.idTariffTypeValues + ' / ' + getTariffTypeValue('VLIMODED')?.idTariffTypeValues
+      const geralImoCons = getTariffTypeValue('VLGERALCONS')?.idTariffTypeValues + ' / ' + getTariffTypeValue('VLIMOCONS')?.idTariffTypeValues
+      const minimun = getTariffTypeValue('MINIMUN')?.value
+      const under7w = getTariffTypeValue('VLATE7WM')?.value
+      const over = getTariffTypeValue('ACIMA')?.value
+      const container20 = getTariffTypeValue('VLCONTAINER20')?.value
+      const container40 = getTariffTypeValue('VLCONTAINER40')?.value
 
-      array.push(item)
+      let item: any
+      if (modal !== '') {
+        switch (modal) {
+          case 'AIR':
+            item = {agent, airCompany: company, originDestiny, transitTime, validity, currency, minimun, value}
+            break
+          case 'SEA':
+            if (seaType === 'LCL') item = {agent, seaCompany: company, originDestiny, transitTime, validity, currency, minimun, under7w, over}
+            if (seaType === 'FCL') item = {agent, seaCompany: company, originDestiny, transitTime, validity, currency, container20, container40}
+            break
+          case 'LAND':
+            item = {agent, landCompany: company, originDestiny, transitTime, validity, currency, geralImoDed, geralImoCons}
+            break
+          default:
+            break
+        }
+      }
+      if (item !== undefined) array.push(item)
     }
     return array
-  }
-
-  const getTariffItems = (tariffs): any[] => {
-    const modal = filter.tariffModalType
-    let items: any[] = []
-    if (modal !== '') {
-      switch (modal) {
-        case 'AIR':
-          // items = getAirTariffItems(tariffs)
-          break
-        case 'SEA':
-          // if (seaType === 'LCL') items = getSeaLclTariffItems(tariffs)
-          // if (seaType === 'FCL') items = getSeaFclTariffItems(tariffs)
-          break
-        case 'LAND':
-          items = getLandTariffItems(tariffs)
-          break
-        default:
-          break
-      }
-    }
-    return items
   }
 
   useEffect(() => {
     console.log(countriesExpanded)
     if (countriesExpanded.some((each) => each === country)) {
-      // setData([mockedData])
       void (async function () {
-        await API.getTariffsByCountry({ ...filter, txRegion: region, txCountry: country })
+        const modal = filter.tariffModalType
+        let payload = { ...filter, txRegion: region, txCountry: country }
+        if (modal !== '' && modal === 'SEA') payload = { ...filter, txRegion: region, txCountry: country, txChargeType: seaType}
+        await API.getTariffsByCountry(payload)
           .then((response) => {
             const tariffs = getTariffItems(response.content)
             if (tariffs.length > 0) setData(tariffs)
