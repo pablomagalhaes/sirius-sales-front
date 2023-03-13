@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 
 import { Table, TableBody, TableContainer, TableHead, TableRow } from '@material-ui/core'
+import { Pagination } from 'fiorde-fe-components'
+import { PaginationContainer, PaginationMainContainer } from './style'
 import { TableCell } from './style'
 import { columns, rows } from './constants'
 import API from '../../../infrastructure/api'
@@ -10,16 +12,19 @@ export interface TariffTableProps {
   country: string
   region: string
   filter: any
+  setFilter: Function
 }
 
 const TariffTable = ({
   countriesExpanded,
   country,
   region,
-  filter
+  filter,
+  setFilter
 }: TariffTableProps): JSX.Element => {
   const [data, setData] = useState<any[]>()
   const [seaType, setSeaType] = useState<string>('FCL')
+  const [totalTariffList, setTotalTariffList] = useState<number>(0)
 
   const getTariffItems = (tariffList): string[] => {
     const array: any = []
@@ -46,14 +51,14 @@ const TariffTable = ({
       if (modal !== '') {
         switch (modal) {
           case 'AIR':
-            item = {agent, airCompany: company, originDestiny, transitTime, validity, currency, minimun, value}
+            item = { agent, airCompany: company, originDestiny, transitTime, validity, currency, minimun, value }
             break
           case 'SEA':
-            if (seaType === 'LCL') item = {agent, seaCompany: company, originDestiny, transitTime, validity, currency, minimun, under7w, over}
-            if (seaType === 'FCL') item = {agent, seaCompany: company, originDestiny, transitTime, validity, currency, container20, container40}
+            if (seaType === 'LCL') item = { agent, seaCompany: company, originDestiny, transitTime, validity, currency, minimun, under7w, over }
+            if (seaType === 'FCL') item = { agent, seaCompany: company, originDestiny, transitTime, validity, currency, container20, container40 }
             break
           case 'LAND':
-            item = {agent, landCompany: company, originDestiny, transitTime, validity, currency, geralImoDed, geralImoCons}
+            item = { agent, landCompany: company, originDestiny, transitTime, validity, currency, geralImoDed, geralImoCons }
             break
           default:
             break
@@ -70,11 +75,12 @@ const TariffTable = ({
       void (async function () {
         const modal = filter.tariffModalType
         let payload = { ...filter, txRegion: region, txCountry: country }
-        if (modal !== '' && modal === 'SEA') payload = { ...filter, txRegion: region, txCountry: country, txChargeType: seaType}
+        if (modal !== '' && modal === 'SEA') payload = { ...filter, txRegion: region, txCountry: country, txChargeType: seaType }
         await API.getTariffsByCountry(payload)
           .then((response) => {
             const tariffs = getTariffItems(response.content)
             if (tariffs.length > 0) setData(tariffs)
+            setTotalTariffList(response.totalElements)
           })
           .catch((err) => console.log(err))
       })()
@@ -83,30 +89,57 @@ const TariffTable = ({
 
   if (data !== undefined) {
     return (
-    <TableContainer>
-      <Table >
-        <TableHead>
-          <TableRow>
-            {filter.tariffModalType === 'SEA'
-              ? columns[filter.tariffModalType][seaType].map((column: string) => <TableCell key={column}>{column}</TableCell>)
-              : columns[filter.tariffModalType].map((column: string) => <TableCell key={column}>{column}</TableCell>)
-            }
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data.map((row, index) => (
-            <TableRow
-              key={index}
-            >
+    <>
+      <TableContainer>
+        <Table >
+          <TableHead>
+            <TableRow>
               {filter.tariffModalType === 'SEA'
-                ? rows[filter.tariffModalType][seaType].map((each: string) => <TableCell key={each} align="left">{row[each]}</TableCell>)
-                : rows[filter.tariffModalType].map((each: string) => <TableCell key={each} align="left">{row[each]}</TableCell>)
+                ? columns[filter.tariffModalType][seaType].map((column: string) => <TableCell key={column}>{column}</TableCell>)
+                : columns[filter.tariffModalType].map((column: string) => <TableCell key={column}>{column}</TableCell>)
               }
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {data.map((row, index) => (
+              <TableRow
+                key={index}
+              >
+                {filter.tariffModalType === 'SEA'
+                  ? rows[filter.tariffModalType][seaType].map((each: string) => <TableCell key={each} align="left">{row[each]}</TableCell>)
+                  : rows[filter.tariffModalType].map((each: string) => <TableCell key={each} align="left">{row[each]}</TableCell>)
+                }
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <PaginationContainer>
+        <PaginationMainContainer>
+          <Pagination
+            count={totalTariffList}
+            labelDisplay="exibindo"
+            labelDisplayedRows="de"
+            labelRowsPerPage="Propostas por página"
+            onPageChange={(value) =>
+              setFilter((filter: any) => ({ ...filter, page: value }))
+            }
+            onRowsPerPageChange={(value) =>
+              setFilter((filter: any) => ({
+                ...filter,
+                size: value,
+                page: 0
+              }))
+            }
+            tooltipBack="Anterior"
+            tooltipFirst="Primeira"
+            tooltipLast="Última"
+            tooltipNext="Próxima"
+          />
+        </PaginationMainContainer>
+      </PaginationContainer>
+    </>
+    
     )
   } else return <></>
 }

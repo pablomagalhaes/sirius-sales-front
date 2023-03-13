@@ -65,7 +65,6 @@ const Tariff = (): JSX.Element => {
   const [partnerSimpleNameList, setPartnerSimpleNameList] = useState<any[]>([])
   const [tariffList, setTariffList] = useState<any[]>([])
   const [radioValue, setRadioValue] = useState('')
-  // const [totalTariffList, setTotalTariffList] = useState<number>(0)
   const [quickFilterList, setQuickFilterList] = useState<any[]>([])
   const [tabs, setTabs] = useState<any[]>()
   const [countriesExpanded, setCountriesExpanded] = useState<string[]>([])
@@ -206,7 +205,6 @@ const Tariff = (): JSX.Element => {
         await API.getTariffs(filter.tariffType, filter.tariffModalType, filter.validityTariff)
           .then((response) => {
             setTariffList(response)
-            // setTotalTariffList(response.totalElements)
           })
           .catch((err) => console.log(err))
       })()
@@ -219,7 +217,7 @@ const Tariff = (): JSX.Element => {
       const content: any[] = []
       item.countries.forEach((country: string) => content.push({
         title: country,
-        component: <TariffTable region={item.region} countriesExpanded={countriesExpanded} country={country} filter={filter}/>,
+        component: <TariffTable region={item.region} countriesExpanded={countriesExpanded} country={country} filter={filter} setFilter={setFilter}/>,
         disable: false,
         onChange: (country: string): void => { if (!countriesExpanded.some(each => each === country)) setCountriesExpanded([...countriesExpanded, country]) }
       }))
@@ -562,18 +560,6 @@ const Tariff = (): JSX.Element => {
   }
 
   const handleExportTariff = (): void => {}
-
-  // const tabs = [
-  //   {
-  //       title: 'Europa',
-  //       icon: '',
-  //       component: 'teste'
-  //   },
-  //   { title: 'Americas', icon: '', component: <Accordion content={data} /> },
-  //   { title: 'Asia', icon: '', component: 'texto simples' },
-  //   { title: 'Oceania', icon: '', component: 4 },
-  //   { title: 'Africa', icon: '', component: 5 },
-  // ];
 
   const cardFilters = [
     {
