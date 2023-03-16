@@ -10,25 +10,20 @@ import { Breadcrumbs, Link, Select, MenuItem } from '@material-ui/core/'
 import {
   ArrowIconContainer,
   BottomSideContainer,
-  CloseExpirationContainer,
   DropdownMenuContainer,
   ExportTariffContainer,
   ExportListSpan,
   LeftSideListHeaderContainer,
   ListHeaderContainer,
-  ListMainTitleSpan,
   ListTextSpan,
   MidleContainer,
   OrderByContainer,
-  PaginationContainer,
-  PaginationMainContainer,
   RightSideListHeaderContainer,
   RootContainer,
-  RowFilterContainer,
-  TableContainer,
   TopButtonContainer,
   TopContainer,
-  ButtonContainer
+  ButtonContainer,
+  MidleTypography
 } from './style'
 import { ExitToApp } from '@material-ui/icons/'
 import { useHistory } from 'react-router-dom'
@@ -36,7 +31,7 @@ import UpArrow from '../../../application/icons/UpArrow'
 import API from '../../../infrastructure/api'
 import ArrowDown from '../../../application/icons/ArrowDown'
 import { orderButtonMenuItems, menuItems } from './constants'
-import { I18n } from 'react-redux-i18n'
+// import { I18n } from 'react-redux-i18n'
 import { StatusProposalStringEnum } from '../../../application/enum/statusProposalEnum'
 import TariffTable from './TariffTable'
 import { getModalFilter, getActivityFilter, getValidityFilter } from './helpers'
@@ -65,73 +60,74 @@ const Tariff = (): JSX.Element => {
   const [partnerSimpleNameList, setPartnerSimpleNameList] = useState<any[]>([])
   const [tariffList, setTariffList] = useState<any[]>([])
   const [radioValue, setRadioValue] = useState('')
-  const [quickFilterList, setQuickFilterList] = useState<any[]>([])
+  const [quickFilterList, setQuickFilterList] = useState<any[]>([
+    { type: 'activity', status: 'Importação' },
+    { type: 'modal', status: 'Aéreo' }
+  ])
   const [tabs, setTabs] = useState<any[]>()
-  const [countriesExpanded, setCountriesExpanded] = useState<string[]>([])
-
-  console.log(countriesExpanded)
+  const [countryExpanded, setCountryExpanded] = useState<string>('')
 
   const history = useHistory()
 
-  useEffect(() => {
-    const newIncotermList: any[] = []
-    void (async function () {
-      await API.getIncoterms()
-        .then((response) => {
-          response.forEach((item: any) => {
-            newIncotermList.push(item?.id)
-          })
-          return setIncotermList(newIncotermList)
-        })
-        .catch((err) => console.log(err))
-    })()
-  }, [])
+  // useEffect(() => {
+  //   const newIncotermList: any[] = []
+  //   void (async function () {
+  //     await API.getIncoterms()
+  //       .then((response) => {
+  //         response.forEach((item: any) => {
+  //           newIncotermList.push(item?.id)
+  //         })
+  //         return setIncotermList(newIncotermList)
+  //       })
+  //       .catch((err) => console.log(err))
+  //   })()
+  // }, [])
 
-  useEffect(() => {
-    const simpleNameList: any[] = []
-    const newPartnerList: any[] = []
-    void (async function () {
-      await API.getPartner()
-        .then((response) => {
-          response.forEach((item: any) => {
-            simpleNameList.push(item?.businessPartner?.simpleName)
-            newPartnerList.push(item?.businessPartner)
-          })
-          setPartnerSimpleNameList(simpleNameList)
-          setPartnerList(newPartnerList)
-        })
-        .catch((err) => console.log(err))
-    })()
-  }, [])
+  // useEffect(() => {
+  //   const simpleNameList: any[] = []
+  //   const newPartnerList: any[] = []
+  //   void (async function () {
+  //     await API.getPartner()
+  //       .then((response) => {
+  //         response.forEach((item: any) => {
+  //           simpleNameList.push(item?.businessPartner?.simpleName)
+  //           newPartnerList.push(item?.businessPartner)
+  //         })
+  //         setPartnerSimpleNameList(simpleNameList)
+  //         setPartnerList(newPartnerList)
+  //       })
+  //       .catch((err) => console.log(err))
+  //   })()
+  // }, [])
 
-  useEffect(() => {
-    void (async function () {
-      await API.getOriginDestination()
-        .then((response) => { setOriginDestinationList(response) })
-        .catch((err) => console.log(err))
-    })()
-    void (async function () {
-      const actualList: any[] = []
-      await API.getCountries()
-        .then((response) => response.forEach((item: any) => actualList.push(String(item.name))))
-        .then(() => setoriginDestinationCountries(actualList))
-        .catch((err) => console.log(err))
-    })()
-    void (async function () {
-      const actualList: any[] = []
-      await API.getMercosulStates()
-        .then((response) => response.forEach((item: any) => actualList.push(`${String(item.txState)} (${String(item.txCountry)})`)))
-        .then(() => setoriginDestinationStates(actualList))
-        .catch((err) => console.log(err))
-    })()
-    void (async function () {
-      const actualList: any[] = []
-      await API.getMercosulCities()
-        .then((response) => response.forEach((item: any) => actualList.push(`${String(item.txCity)} (${String(item.txCountry)})`)))
-        .then(() => setoriginDestinationCities(actualList))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
+  // useEffect(() => {
+  //   void (async function () {
+  //     await API.getOriginDestination()
+  //       .then((response) => { setOriginDestinationList(response) })
+  //       .catch((err) => console.log(err))
+  //   })()
+  //   void (async function () {
+  //     const actualList: any[] = []
+  //     await API.getCountries()
+  //       .then((response) => response.forEach((item: any) => actualList.push(String(item.name))))
+  //       .then(() => setoriginDestinationCountries(actualList))
+  //       .catch((err) => console.log(err))
+  //   })()
+  //   void (async function () {
+  //     const actualList: any[] = []
+  //     await API.getMercosulStates()
+  //       .then((response) => response.forEach((item: any) => actualList.push(`${String(item.txState)} (${String(item.txCountry)})`)))
+  //       .then(() => setoriginDestinationStates(actualList))
+  //       .catch((err) => console.log(err))
+  //   })()
+  //   void (async function () {
+  //     const actualList: any[] = []
+  //     await API.getMercosulCities()
+  //       .then((response) => response.forEach((item: any) => actualList.push(`${String(item.txCity)} (${String(item.txCountry)})`)))
+  //       .then(() => setoriginDestinationCities(actualList))
+  //       .catch((err) => console.log(err))
+  //   })()
+  // }, [])
 
   const getOriginDestinyList = (land: string): string[] => {
     const actualList: string[] = []
@@ -213,18 +209,25 @@ const Tariff = (): JSX.Element => {
 
   const createTabs = (): void => {
     const regionsTabs: any[] = []
-    tariffList.forEach((item) => {
+    tariffList?.forEach((item) => {
       const content: any[] = []
       item.countries.forEach((country: string) => content.push({
         title: country,
-        component: <TariffTable region={item.region} countriesExpanded={countriesExpanded} country={country} filter={filter} setFilter={setFilter}/>,
+        component: <TariffTable
+          region={item.region}
+          expanded={countryExpanded === country}
+          country={country}
+          filter={filter}
+          setFilter={setFilter}
+        />,
         disable: false,
-        onChange: (country: string): void => { if (!countriesExpanded.some(each => each === country)) setCountriesExpanded([...countriesExpanded, country]) }
+        onChange: (country: string, expanded: boolean): void => { setCountryExpanded(country) },
+        expanded: countryExpanded === country
       }))
       regionsTabs.push({
         title: item.region,
         icon: '',
-        component: <Accordion content={content}/>
+        component: <Accordion content={content} />
       })
     })
     setTabs(regionsTabs)
@@ -244,10 +247,11 @@ const Tariff = (): JSX.Element => {
 
   useEffect(() => {
     createTabs()
-  }, [tariffList, countriesExpanded])
+  }, [tariffList, countryExpanded])
 
   useEffect(() => {
     getQuickFilters()
+    setCountryExpanded('')
   }, [quickFilterList])
 
   useEffect(() => {
@@ -573,11 +577,6 @@ const Tariff = (): JSX.Element => {
       uniqueChoice: true
     },
     {
-      iconType: 'truck',
-      status: 'Rodoviário',
-      uniqueChoice: true
-    },
-    {
       iconType: 'plane',
       status: 'Aéreo',
       uniqueChoice: true
@@ -585,6 +584,11 @@ const Tariff = (): JSX.Element => {
     {
       iconType: 'ship',
       status: 'Marítimo',
+      uniqueChoice: true
+    },
+    {
+      iconType: 'truck',
+      status: 'Rodoviário',
       uniqueChoice: true
     },
     {
@@ -630,10 +634,11 @@ const Tariff = (): JSX.Element => {
         </TopButtonContainer>
       </TopContainer>
       <MidleContainer>
-        Exibir por:
+        <MidleTypography>Exibir por:</MidleTypography>
         <QuickFilters
           cardFilters={cardFilters}
           onFilterClick={(selectedFilterCards) => setQuickFilterList(selectedFilterCards)}
+          initialSelected={quickFilterList}
         />
       </MidleContainer>
       <ListHeaderContainer>

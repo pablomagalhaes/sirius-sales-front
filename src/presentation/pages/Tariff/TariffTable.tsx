@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
 
 import { Table, TableBody, TableContainer, TableHead, TableRow } from '@material-ui/core'
-import { Pagination } from 'fiorde-fe-components'
-import { PaginationContainer, PaginationMainContainer } from './style'
-import { TableCell } from './style'
+import { Pagination, ListSwitcher } from 'fiorde-fe-components'
+import { PaginationContainer, PaginationMainContainer, MainTariffContainer, TableCell } from './style'
+
 import { columns, rows } from './constants'
 import API from '../../../infrastructure/api'
 
 export interface TariffTableProps {
-  countriesExpanded: string[]
+  expanded: boolean
   country: string
   region: string
   filter: any
@@ -16,7 +16,7 @@ export interface TariffTableProps {
 }
 
 const TariffTable = ({
-  countriesExpanded,
+  expanded,
   country,
   region,
   filter,
@@ -34,13 +34,13 @@ const TariffTable = ({
       const company = tariff.dsBusinessPartnerTransporter
       const transitTime = tariff.transitTime
       const currency = tariff.currency
-      const originDestiny = modal === 'LAND' ? tariff.cityOrigin + ' > ' + tariff.cityDestination : tariff.origin + ' > ' + tariff.destination
+      const originDestiny = modal === 'LAND' ? `${String(tariff.cityOrigin)} > ${String(tariff.cityDestination)}` : `${String(tariff.origin)} > ${String(tariff.destination)}`
       const validity = new Date(tariff.validityDate).toLocaleDateString('pt-BR')
       const values = [...tariff.tariffTypeValues].filter(each => each.tariffType.description !== 'MINIMUN').map(item => item.value)
       const value = `de ${Math.min(...values)} a ${Math.max(...values)}`
-      const getTariffTypeValue = (type: string) => tariff.tariffTypeValues.find(each => each.tariffType.description === type)
-      const geralImoDed = getTariffTypeValue('VLGERALDED')?.idTariffTypeValues + ' / ' + getTariffTypeValue('VLIMODED')?.idTariffTypeValues
-      const geralImoCons = getTariffTypeValue('VLGERALCONS')?.idTariffTypeValues + ' / ' + getTariffTypeValue('VLIMOCONS')?.idTariffTypeValues
+      const getTariffTypeValue = (type: string): any => tariff.tariffTypeValues.find(each => each.tariffType.description === type)
+      const geralImoDed = `${String(getTariffTypeValue('VLGERALDED')?.idTariffTypeValues)} / ${String(getTariffTypeValue('VLIMODED')?.idTariffTypeValues)}`
+      const geralImoCons = `${String(getTariffTypeValue('VLGERALCONS')?.idTariffTypeValues)} / ${String(getTariffTypeValue('VLIMOCONS')?.idTariffTypeValues)}`
       const minimun = getTariffTypeValue('MINIMUN')?.value
       const under7w = getTariffTypeValue('VLATE7WM')?.value
       const over = getTariffTypeValue('ACIMA')?.value
@@ -70,8 +70,7 @@ const TariffTable = ({
   }
 
   useEffect(() => {
-    console.log(countriesExpanded)
-    if (countriesExpanded.some((each) => each === country)) {
+    if (expanded && (data === undefined || data.length < 0)) {
       void (async function () {
         const modal = filter.tariffModalType
         let payload = { ...filter, txRegion: region, txCountry: country }
@@ -80,16 +79,26 @@ const TariffTable = ({
           .then((response) => {
             const tariffs = getTariffItems(response.content)
             if (tariffs.length > 0) setData(tariffs)
+            else setData([])
             setTotalTariffList(response.totalElements)
           })
           .catch((err) => console.log(err))
       })()
     }
-  }, [region, countriesExpanded, filter])
+  }, [expanded, filter, seaType])
 
-  if (data !== undefined) {
+  if (data !== undefined && data.length > 0) {
     return (
-    <>
+    <MainTariffContainer>
+      {filter.tariffModalType === 'SEA' &&
+        <div>
+          <ListSwitcher
+            firstLabel='FCL'
+            secondLabel='LCL'
+            onChange={(value: string) => setSeaType(value)}
+          />
+        </div>
+      }
       <TableContainer>
         <Table >
           <TableHead>
@@ -135,11 +144,12 @@ const TariffTable = ({
             tooltipFirst="Primeira"
             tooltipLast="Última"
             tooltipNext="Próxima"
+            reducedPagination={true}
           />
         </PaginationMainContainer>
       </PaginationContainer>
-    </>
-    
+    </MainTariffContainer>
+
     )
   } else return <></>
 }

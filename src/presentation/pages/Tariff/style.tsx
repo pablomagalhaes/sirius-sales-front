@@ -35,7 +35,6 @@ const ButtonContainer = styled.div`
 const ListHeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid ${(props: any) => props.theme?.commercial?.pages?.proposal?.lineDivisorColor};
 `
 
 const LeftSideListHeaderContainer = styled.div`
@@ -59,15 +58,6 @@ const ExportTariffContainer = styled.div`
     }
 `
 
-const ListMainTitleSpan = styled.span`
-  font-style: normal;
-  font-weight: 400;
-  font-size: 18px;
-  line-height: 27px;
-  letter-spacing: 0.02em;
-  margin-right: 35px;
-`
-
 const ListTextSpan = styled.span`
   margin-right: 21px;
   color: ${(props: any) => props.theme?.commercial?.pages?.proposal?.listTextSpan};
@@ -88,6 +78,8 @@ const RightSideListHeaderContainer = styled.div`
   font-size: 14px;
   line-height: 150%;
   color: ${(props: any) => props.theme?.commercial?.pages?.proposal?.tableHeader};
+  position: relative;
+  top: 50px;
 `
 
 const OrderByContainer = styled.div`
@@ -139,19 +131,6 @@ const ArrowIconContainer = styled.div`
   }
 `
 
-const CloseExpirationContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 30px;
-  svg {
-    margin-right: 7px;
-    path {
-      fill: #f2d16d;
-    }
-  }
-`
-
 // end of list header styles
 
 const TableContainer = styled.div`
@@ -168,11 +147,50 @@ const BottomSideContainer = styled.div`
   margin: 0;
   flex-direction: column;
 
+  .makeStyles-root-1 {
+    background: #f2f2f7;
+  }
+
   .floating-button-style {
     position: fixed;
     right: 40px;
     bottom: 73px;
     z-index: 99;
+  }
+
+  .MuiTypography-root {
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 21px;
+    letter-spacing: 0.02em;
+  }
+
+  .MuiTab-fullWidth {
+    max-width: 100px !important;
+  }
+
+  .MuiBox-root {
+    padding: 0 !important;
+  }
+
+  .MuiAppBar-root {
+    border-bottom: 1px solid ${(props: any) => props.theme?.commercial?.pages?.proposal?.lineDivisorColor};
+  }
+
+  .MuiTab-wrapper > div {
+    text-align: center !important;
+    display: flex;
+    justify-content: center !important;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 24px;
+    letter-spacing: 0.02em;
+
+  }
+
+  .MuiTabs-indicator {
+    background: #2E9990 !important;
   }
 `
 
@@ -181,6 +199,7 @@ const PaginationContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
+  margin-top: 20px;
 `
 
 const PaginationMainContainer = styled.div`
@@ -201,13 +220,24 @@ const TopContainer = styled.div`
 
 const MidleContainer = styled.div`
   width: 100%;
-  padding: 10px;
+  margin: 18px 0;
   background-color: white;
+`
+
+const MidleTypography = styled.div`
+  font-weight: 400;
   font-size: 12px;
+  line-height: 150%;
+  margin: 8px 16px;
 `
 
 const TopButtonContainer = styled.div`
   margin-left: auto;
+`
+const MainTariffContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%; 
 `
 
 const TableCell = withStyles({
@@ -230,13 +260,13 @@ export {
   TopButtonContainer,
   ListTextSpan,
   ExportListSpan,
-  ListMainTitleSpan,
   ExportTariffContainer,
-  CloseExpirationContainer,
   OrderByContainer,
   DropdownMenuContainer,
   RowFilterContainer,
   ArrowIconContainer,
   ButtonContainer,
-  MidleContainer
+  MidleContainer,
+  MainTariffContainer,
+  MidleTypography
 }

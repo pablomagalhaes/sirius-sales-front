@@ -296,7 +296,7 @@ const getCountProposal = async (params): Promise<any> => {
 }
 
 const getTariffs = async (activity: string, modal: string, validity?: string): Promise<any> => {
-  const url: string = `/sirius-tariff-api/tariff/region/country/${String(activity)}/${String(modal)}/${validity ? String(validity) : 'VALID'}`
+  const url: string = `/sirius-tariff-api/tariff/region/country/${String(activity)}/${String(modal)}/${validity !== null ? String(validity) : 'VALID'}`
   try {
     const res = await instance.get(url)
     return res.data
@@ -305,7 +305,6 @@ const getTariffs = async (activity: string, modal: string, validity?: string): P
   }
 }
 
-// https://qa.siriuslog.com/gateway/sirius-tariff-api/tariff/filter?direction=ASC&orderByList=tariffType&tariffModalType=SEA&validityTariff=EXPIRED&tariffType=IMPORT&txRegion=Asia&txCountry=Syria&page=0&size=10
 const getTariffsByCountry = async (params): Promise<any> => {
   const url: string = '/sirius-tariff-api/tariff/filter'
   try {
