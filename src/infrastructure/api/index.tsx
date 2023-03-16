@@ -295,10 +295,35 @@ const getCountProposal = async (params): Promise<any> => {
   }
 }
 
+const getTariffs = async (activity: string, modal: string, validity?: string): Promise<any> => {
+  const url: string = `/sirius-tariff-api/tariff/region/country/${String(activity)}/${String(modal)}/${validity !== null ? String(validity) : 'VALID'}`
+  try {
+    const res = await instance.get(url)
+    return res.data
+  } catch (error) {
+    toast.error(String(error) + ' | Request:  ' + String(url))
+  }
+}
+
 const downloadProposal = async (language: string, idProposal: string): Promise<any> => {
   const url: string = `/sirius-business-proposal-api/proposal/report/${idProposal}/PDF/${language}`
   try {
     const res = await instance.get(url)
+    return res.data
+  } catch (error) {
+    toast.error(String(error) + ' | Request:  ' + String(url))
+  }
+}
+
+const getTariffsByCountry = async (params): Promise<any> => {
+  const url: string = '/sirius-tariff-api/tariff/filter'
+  try {
+    const res = await instance.get(url, {
+      params,
+      paramsSerializer: params => {
+        return qs.stringify(params, { arrayFormat: 'comma' })
+      }
+    })
     return res.data
   } catch (error) {
     toast.error(String(error) + ' | Request:  ' + String(url))
@@ -334,6 +359,8 @@ const API = {
   getCountProposal,
   getMercosulCities,
   getMercosulStates,
+  getTariffs,
+  getTariffsByCountry,
   downloadProposal
 }
 
