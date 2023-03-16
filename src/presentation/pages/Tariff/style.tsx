@@ -5,7 +5,7 @@ import MuiTableCell from '@material-ui/core/TableCell'
 const RootContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: 90vh;
+  height: 100vh;
   margin: 0 24px;
 
   .breadcrumbInitial {
@@ -146,9 +146,10 @@ const BottomSideContainer = styled.div`
   display: flex;
   margin: 0;
   flex-direction: column;
+ 
 
-  .makeStyles-root-1 {
-    background: #f2f2f7;
+  > div {
+    background: none !important;
   }
 
   .floating-button-style {
@@ -186,12 +187,20 @@ const BottomSideContainer = styled.div`
     font-weight: 700;
     line-height: 24px;
     letter-spacing: 0.02em;
-
   }
 
   .MuiTabs-indicator {
     background: #2E9990 !important;
   }
+
+  .MuiAccordionSummary-root {
+    min-height: 60px;
+  }
+  .MuiTableHead-root {
+    text-transform: none !important;
+    font-size: 12px !important;
+  }
+
 `
 
 const PaginationContainer = styled.div`
@@ -222,6 +231,12 @@ const MidleContainer = styled.div`
   width: 100%;
   margin: 18px 0;
   background-color: white;
+  > div {
+    justify-content: start !important;
+  }
+  #container_card {
+    padding-right: 35px !important;
+  }
 `
 
 const MidleTypography = styled.div`
