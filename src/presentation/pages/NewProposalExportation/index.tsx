@@ -51,6 +51,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
   const [loadExistingProposal, setLoadExistingProposal] = useState(false)
   const [modal, setModal] = useState('')
   const [proposalType, setProposalType] = useState('')
+  const [totalCosts, setTotalCosts] = useState()
   const [serviceList, setServiceList] = useState<any[]>([])
   const [showSaveMessage, setShowSaveMessage] = useState(false)
   const [specifications, setSpecifications] = useState('')
@@ -98,7 +99,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
       })()
     } else {
       setLoadExistingProposal(true)
-      setProposal({ ...emptyProposalValue, openingDate: formatDate() })
+      setProposal({ ...emptyProposalValue, openingDate: formatDate(), operationType: 'EXPORT FREIGHT' })
     }
   }, [])
 
@@ -111,13 +112,13 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
         validityDate: '',
         idProposalStatus: 1,
         openingDate: formatDate(),
-        cargo: {
-          ...proposal.cargo[0],
-          id: null,
-          cargoVolumes: proposal.cargo[0].cargoVolumes.map(cargoVolume => {
+        cargo: proposal.cargo.map((cargo) => {
+          cargo.id = null
+          cargo.cargoVolumes = cargo.cargoVolumes.map(cargoVolume => {
             cargoVolume.id = null; cargoVolume.idCargo = null; return cargoVolume
           })
-        },
+          return cargo
+        }),
         totalCosts: proposal.totalCosts.map(totalCost => {
           totalCost.id = null; totalCost.idProposal = null; return totalCost
         }),
@@ -203,6 +204,34 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
       id: 'step5',
       label: I18n.t('pages.newProposal.step5.title'),
       completed: completed.step5
+    },
+    {
+      id: 'step6',
+      label: I18n.t('pages.newProposal.step6.title'),
+      completed: completed.step6
+    }
+  ]
+
+  const stepsModalLand = [
+    {
+      id: 'step1',
+      label: I18n.t('pages.newProposal.step1.title'),
+      completed: completed.step1
+    },
+    {
+      id: 'step2',
+      label: I18n.t('pages.newProposal.step2.title'),
+      completed: completed.step2
+    },
+    {
+      id: 'step3',
+      label: I18n.t('pages.newProposal.step3.title'),
+      completed: completed.step3
+    },
+    {
+      id: 'step4',
+      label: I18n.t('pages.newProposal.step4.title'),
+      completed: completed.step4
     },
     {
       id: 'step6',
@@ -477,7 +506,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
           handleHover={handleHover}
           hover={hover}
           offset={-270}
-          steps={steps}
+          steps={proposal?.idTransport === 'LAND' ? stepsModalLand : steps}
         />
         <ButtonContainer>
           <Button
@@ -552,7 +581,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
             </div>
             {stepLoaded.step3 &&
               <>
-                {proposal.idTransport !== 'LAND' &&
+                {proposal?.idTransport !== 'LAND' &&
                   <div id="step5">
                     <Step5
                       agentList={agentList}
@@ -567,6 +596,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
                       setFilled={setFilled}
                       setUndoMessage={setUndoMessage}
                       specifications={specifications}
+                      setTotalCosts={setTotalCosts}
                       undoMessage={undoMessage}
                       updateTableIdsRef={updateTable5IdsRef}
                     />
@@ -587,6 +617,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
                   setFilled={setFilled}
                   setUndoMessage={setUndoMessage}
                   specifications={specifications}
+                  totalCosts={totalCosts}
                   undoMessage={undoMessage}
                   updateTableIdsRef={updateTable6IdsRef}
                 />

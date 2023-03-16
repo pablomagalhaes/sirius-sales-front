@@ -31,6 +31,7 @@ interface Step5Props {
   invalidInput: boolean
   updateTableIdsRef: any
   agentList: Agents[]
+  setTotalCosts: any
 }
 
 export interface TotalCostTable {
@@ -56,7 +57,8 @@ const Step5 = ({
   calculationData,
   invalidInput,
   updateTableIdsRef,
-  agentList
+  agentList,
+  setTotalCosts
 }: Step5Props): JSX.Element => {
   const [dataOrigin, setDataOrigin] = useState<CostTableItem[]>([])
   const [dataDestiny, setDataDestiny] = useState<CostTableItem[]>([])
@@ -260,22 +262,35 @@ const Step5 = ({
   }, [dataOrigin, dataDestiny, dataTotalCostDestiny, dataTotalCostOrigin, setDataOrigin, setDataDestiny])
 
   useEffect(() => {
-    if (dataOrigin.length > 0 && dataDestiny.length > 0) {
-      setCompleted((currentState) => {
-        return { ...currentState, step5: true }
-      })
-      setFilled((currentState) => {
-        return { ...currentState, step5: true }
-      })
+    if (proposal.proposalType !== 'CLIENT') {
+      if (dataOrigin.length > 0 && dataDestiny.length > 0) {
+        setCompleted((currentState) => {
+          return { ...currentState, step5: true }
+        })
+        setFilled((currentState) => {
+          return { ...currentState, step5: true }
+        })
+      } else {
+        setCompleted((currentState) => {
+          return { ...currentState, step5: false }
+        })
+        setFilled((currentState) => {
+          return { ...currentState, step5: false }
+        })
+      }
     } else {
       setCompleted((currentState) => {
-        return { ...currentState, step5: false }
+        return { ...currentState, step5: true }
       })
       setFilled((currentState) => {
-        return { ...currentState, step5: false }
+        return { ...currentState, step5: true }
       })
     }
   }, [dataDestiny, dataOrigin])
+
+  useEffect(() => {
+    setTotalCosts([...dataTotalCostDestiny, ...dataTotalCostOrigin])
+  }, [dataTotalCostDestiny, dataTotalCostOrigin])
 
   const completeDecimalPlaces = (num: number | null): string | null => {
     if (num === null) return null

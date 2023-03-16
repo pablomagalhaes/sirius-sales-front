@@ -2,6 +2,7 @@ import { Agent } from './Agent'
 import { CargoVolume } from './CargoVolume'
 import { Cost } from './Cost'
 import { TotalCost } from './TotalCost'
+import { ProfitsProps } from './ProfitsProps'
 
 export interface Proposal {
   idProposal?: number | null
@@ -18,6 +19,7 @@ export interface Proposal {
   internalObservations: string // Step4ObservacoesInternas
   requester: string // solicitante step1
   cargoCollectionAddress: string // endereco de coleta step2
+  cargoDeliveryAddress: string // endereco de entrega step2
   costs: Cost[]
   totalCosts: TotalCost[]
   proposalType: string // step1 tipo proposta 'cliente' 'routing order'
@@ -53,4 +55,5 @@ export interface Proposal {
   transportIncluded: boolean
   clearenceIncluded: boolean
   agents: Agent[]
+  profits: ProfitsProps[]
 }

@@ -30,6 +30,7 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import { CalculationDataProps } from '../../../components/ChargeTable'
 
 interface Step6Props {
+  totalCosts: any
   containerItems: ItemModalData[]
   costData: any
   modal: string
@@ -75,15 +76,15 @@ const ContractingTypeWithoutFcl = [
 ]
 
 const makeTableData = (costs): any => {
-  const getTarifas = costs.filter(cost => cost.costType === 'Tarifa')
+  const getTarifas = costs?.filter(cost => cost.costType === 'Tarifa')
   return getTarifas.map(cost => ({
     idCost: cost.idCost,
     selectedContainer: cost.idContainerType,
     agent: cost.agent,
     type: cost.billingType,
     saleCurrency: cost.idCurrencySale,
-    saleValue: String(cost.valueSale).replace('.', ',') ?? '',
-    minimumValue: String(cost.valueMinimumSale).replace('.', ',') ?? ''
+    saleValue: String(cost.valueSale?.toFixed(2)).replace('.', ',') ?? '',
+    minimumValue: String(cost.valueMinimumSale?.toFixed(2)).replace('.', ',') ?? ''
   }))
 }
 
@@ -103,7 +104,8 @@ const Step6 = ({
   invalidInput,
   updateTableIdsRef,
   cw,
-  cwSale
+  cwSale,
+  totalCosts
 }: Step6Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [copyTable, setCopyTable] = useState<FareModalData[]>([])
@@ -124,9 +126,9 @@ const Step6 = ({
   const currencyArray = new Map()
 
   // const [tableData, setTableData] = useState<FareModalData[]>([])
-  const [tableData, setTableData] = useState<FareModalData[]>(makeTableData(proposal.costs))
+  const [tableData, setTableData] = useState<FareModalData[]>(makeTableData(proposal?.costs))
   const [data, setData] = useState<any[]>(
-    proposal.agents.map(newAgent => ({
+    proposal?.agents.map(newAgent => ({
       idCost: proposal.costs.find((cost): any => {
         if (cost.costType === 'Frete') {
           if (cost?.agent?.idBusinessPartnerAgent === newAgent?.idBusinessPartnerAgent) {
@@ -159,7 +161,7 @@ const Step6 = ({
           }
         }
         return false
-      })?.valuePurchase).replace('.', ','),
+      })?.valuePurchase?.toFixed(2)).replace('.', ','),
       tableData: []
     }))
   )
@@ -168,14 +170,14 @@ const Step6 = ({
     idContainerType: item.idContainerType,
     currencySale: proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.idCurrencySale ?? '',
     currencyPurchase: proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.idCurrencyPurchase ?? '',
-    valueSale: String(proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.valueSale).replace('.', ','),
-    valuePurchase: String(proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.valuePurchase).replace('.', ',')
+    valueSale: String(proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.valueSale?.toFixed(2)).replace('.', ','),
+    valuePurchase: String(proposal.costs.filter(cost => cost.costType === 'Frete')[index]?.valuePurchase?.toFixed(2)).replace('.', ',')
   })))
 
   const [dataSales, setDataSales] = useState<any>({
     idCost: proposal.costs.find(cost => cost.costType === 'Frete' && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.idCost ?? null,
     currencySale: String(proposal.costs.find(cost => cost.costType === 'Frete' && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.idCurrencySale ?? ''),
-    valueSale: String(proposal.costs.find(cost => cost.costType === 'Frete' && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.valueSale ?? '')
+    valueSale: String(proposal.costs.find(cost => cost.costType === 'Frete' && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.valueSale?.toFixed(2) ?? '')
   })
 
   useEffect(() => {
@@ -225,8 +227,7 @@ const Step6 = ({
 
   useEffect(() => {
     loadAgentsList()
-
-    void loadBusinessPartner()
+    if (proposal.idTransport !== '') void loadBusinessPartner()
   }, [proposal.idTransport])
 
   const loadAgentsList = (): void => {
@@ -812,6 +813,8 @@ const Step6 = ({
             cw={cw}
             cwSale={cwSale}
             modal={modal}
+            data={data}
+            totalCosts={totalCosts}
           />
         )
       }
@@ -829,6 +832,8 @@ const Step6 = ({
             cw={cw}
             cwSale={cwSale}
             modal={modal}
+            data={data}
+            totalCosts={totalCosts}
           />
         )
       }
@@ -1101,7 +1106,7 @@ const Step6 = ({
                               </Grid>
                               <Grid item xs={2}>
                                 <Autocomplete freeSolo value={data[index]?.currencyPurchase} onChange={(e, newValue) => {
-                                  const newData = data
+                                  const newData = [...data]
                                   newData[index].currencyPurchase = String(newValue ?? '')
                                   handleCurrencyPurchase(newData[index].agent.idBusinessPartnerAgent, newData, newValue)
                                 }}
@@ -1127,7 +1132,7 @@ const Step6 = ({
                               <Grid item xs={2}>
                                 <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                                   customInput={ControlledInput} onChange={(e) => {
-                                    const newData = data
+                                    const newData = [...data]
                                     newData[index].valuePurchase = e.target.value
                                     handleValuePurchase(newData[index].agent.idBusinessPartnerAgent, newData, e.target.value)
                                   }} toolTipTitle={I18n.t('components.itemModal.requiredField')}

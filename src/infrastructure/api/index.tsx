@@ -305,6 +305,16 @@ const getTariffs = async (activity: string, modal: string, validity?: string): P
   }
 }
 
+const downloadProposal = async (language: string, idProposal: string): Promise<any> => {
+  const url: string = `/sirius-business-proposal-api/proposal/report/${idProposal}/PDF/${language}`
+  try {
+    const res = await instance.get(url)
+    return res.data
+  } catch (error) {
+    toast.error(String(error) + ' | Request:  ' + String(url))
+  }
+}
+
 const getTariffsByCountry = async (params): Promise<any> => {
   const url: string = '/sirius-tariff-api/tariff/filter'
   try {
@@ -350,7 +360,8 @@ const API = {
   getMercosulCities,
   getMercosulStates,
   getTariffs,
-  getTariffsByCountry
+  getTariffsByCountry,
+  downloadProposal
 }
 
 export default API

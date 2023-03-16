@@ -52,6 +52,7 @@ interface Step2Props {
 
 interface DataProps {
   collection: string
+  collectionDap: string
   destCity: string
   destCountry: string
   destState: string
@@ -98,6 +99,7 @@ const Step2 = ({
     destiny: '',
     incoterm: '',
     collection: '',
+    collectionDap: '',
     oriCountry: '',
     oriState: '',
     oriCity: '',
@@ -294,6 +296,7 @@ const Step2 = ({
       void Promise.all([getOrigin, getDestiny]).then((values: any[]) => {
         setData({
           collection: proposal.cargoCollectionAddress,
+          collectionDap: proposal.cargoDeliveryAddress,
           destCity: modal === 'LAND' ? String(values[1]?.name) : '',
           destCountry:
             modal === 'LAND' ? String(values[1]?.state?.country?.name) : '',
@@ -373,7 +376,8 @@ const Step2 = ({
             }
           ],
         idIncoterm: data.incoterm,
-        cargoCollectionAddress: data.collection
+        cargoCollectionAddress: data.collection,
+        cargoDeliveryAddress: data.collectionDap
       })
     } else {
       setProposal({
@@ -386,7 +390,8 @@ const Step2 = ({
           }
         ],
         idIncoterm: data.incoterm,
-        cargoCollectionAddress: data.collection
+        cargoCollectionAddress: data.collection,
+        cargoDeliveryAddress: data.collectionDap
       })
     }
   }, [data])
@@ -408,8 +413,12 @@ const Step2 = ({
         data.incoterm !== 'DAP') ||
       (data.incoterm.length !== 0 &&
         data.incoterm !== '' &&
-        (data.incoterm === 'EXW' || data.incoterm === 'DAP') &&
-        data.collection !== '')
+        data.incoterm === 'EXW' &&
+        data.collection !== '') ||
+      (data.incoterm.length !== 0 &&
+        data.incoterm !== '' &&
+        data.incoterm === 'DAP' &&
+        data.collectionDap !== '')
     )
   }
 
@@ -1463,8 +1472,7 @@ const Step2 = ({
           </Grid>
           <Grid item xs={4}>
             {(data.incoterm === 'EXW' ||
-              data.incoterm === 'FCA' ||
-              data.incoterm === 'DAP') && (
+              data.incoterm === 'FCA') && (
               <>
                 <FormLabel component="legend" error={
                     invalidInput &&
@@ -1491,6 +1499,31 @@ const Step2 = ({
                 />
               </>
             )}
+            {(data.incoterm === 'DAP' && (
+              <>
+                <FormLabel component="legend" error={
+                    invalidInput &&
+                    data.collectionDap.length === 0
+                  }>
+                  {I18n.t('pages.newProposal.step2.collectionAddressDap')}
+                  {<RedColorSpan> *</RedColorSpan>}
+                </FormLabel>
+                <ControlledInput
+                  id="description"
+                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                  onChange={(e) =>
+                    setData({ ...data, collectionDap: e.target.value })
+                  }
+                  invalid={
+                    invalidInput &&
+                    data.collectionDap.length === 0
+                  }
+                  value={data.collectionDap.length !== 0 ? data.collectionDap : ''}
+                  variant="outlined"
+                  size="small"
+                />
+              </>
+            ))}
           </Grid>
         </Grid>
       </FormControl>

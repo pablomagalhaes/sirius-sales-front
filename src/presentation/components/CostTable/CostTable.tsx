@@ -159,7 +159,7 @@ const CostTable = ({
       })
       : []
     setData(copyData)
-  }, [calculationData, containerItems, proposal.cargo[0]])
+  }, [calculationData, containerItems, proposal?.cargo[0]])
 
   useEffect(() => {
     setCopyTable([])
@@ -311,6 +311,7 @@ const CostTable = ({
           </TableHead>
           <TableBody>
             {data?.map((dataMap: CostTableItem) => {
+
               calculateTotalCost(dataMap.buyCurrency, dataMap.saleCurrency, dataMap.buyValueCalculated, dataMap.saleValueCalculated, dataMap.buyMin, dataMap.saleMin)
               return (
                 <TableRow key={dataMap.id}>
@@ -324,10 +325,12 @@ const CostTable = ({
                     title === I18n.t('pages.newProposal.step5.destiny')
                       ? null
                       : <StyledTableCell width="12%" align="left">
-                        {dataMap.agent.idBusinessPartnerAgent != null
+
+                        {dataMap.agent !== null
                           ? <Default>{getAgentName(dataMap.agent.idBusinessPartnerAgent) }</Default>
                           : <Default>-</Default>
                         }
+
                       </StyledTableCell>
                   }
                   <StyledTableCell width="13%" align="left">
