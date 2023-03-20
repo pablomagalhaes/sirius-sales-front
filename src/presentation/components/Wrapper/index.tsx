@@ -29,7 +29,7 @@ const Wrapper = ({ children }): JSX.Element => {
     {
       icon: 'tariff',
       label: I18n.t('components.header.tariff'),
-      onclick: () => console.log(),
+      onclick: () => history.push('/tarifario'),
       subMenuItems: []
     },
     {

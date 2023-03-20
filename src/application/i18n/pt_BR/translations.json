@@ -124,7 +124,10 @@
       "ImoCargoDed": "Carga IMO ded.: ",
       "ImoCargoCons": "Carga IMO cons.: ",
       "agentLandCompany": "Agente / Transportadora: "
-    }
+  },
+  "ProposalDisplayModal": {
+    "title": "Fazer download de proposta",
+    "buttonText": "Confirmar idioma e fazer download"
   },
   "pages": {
     "newProposal": {
@@ -256,7 +259,7 @@
         "addFareTooltip": "Para adicionar, selecione os agentes na etapa \"Serviço\" e inclua pelo menos um item na etapa \"Carga\"",
         "agent": "Agente",
         "colValue": "Valor",
-        "companyAir": "Cia. Aérea:",
+        "companyAir": "Cia. Aérea:", 
         "companyLand": "Cia. Rodoviária:",
         "companySea": "Cia. Maritima:",
         "currencyPurchase": "Moeda compra:",
@@ -270,6 +273,7 @@
         "origin": "Origin",
         "originCost": "New origin cost",
         "profit": "Profit:",
+        "percentageProfit": "Rentabilidade:",
         "subtitle": "Informe as tarifas para o serviço de frete.",
         "title": "Frete",
         "totalDestiny": "Total destiny costs:",

@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import React, { useState, useCallback, useEffect, useContext, useRef } from 'react'
 import { Button, ExitDialog, FloatingMenu, Steps, Messages } from 'fiorde-fe-components'
+import ProposalDisplayModal from '../../components/ProposalDisplayModal/ProposalDisplayModal'
 import { Breadcrumbs, Link } from '@material-ui/core/'
 import {
   ButtonContainer,
@@ -50,11 +51,16 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [leavingPage, setLeavingPage] = useState(false)
   const [loadExistingProposal, setLoadExistingProposal] = useState(false)
   const [modal, setModal] = useState('')
+  const [totalCosts, setTotalCosts] = useState()
   const [proposalType, setProposalType] = useState('')
   const [serviceList, setServiceList] = useState<any[]>([])
   const [showSaveMessage, setShowSaveMessage] = useState(false)
   const [specifications, setSpecifications] = useState('')
   const [step3TableItems, setStep3TableItems] = useState<ItemModalData[]>([])
+  const [open, setOpen] = useState(false)
+
+  const handleOpen = (): void => setOpen(true)
+  const handleClose = (): void => setOpen(false)
 
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
@@ -109,13 +115,13 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         validityDate: '',
         idProposalStatus: 1,
         openingDate: formatDate(),
-        cargo: {
-          ...proposal.cargo[0],
-          id: null,
-          cargoVolumes: proposal.cargo[0].cargoVolumes.map(cargoVolume => {
+        cargo: proposal.cargo.map((cargo) => {
+          cargo.id = null
+          cargo.cargoVolumes = cargo.cargoVolumes.map(cargoVolume => {
             cargoVolume.id = null; cargoVolume.idCargo = null; return cargoVolume
           })
-        },
+          return cargo
+        }),
         totalCosts: proposal.totalCosts.map(totalCost => {
           totalCost.id = null; totalCost.idProposal = null; return totalCost
         }),
@@ -313,7 +319,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     }, {
       iconType: 'file',
       label: I18n.t('pages.newProposal.viewDownload'),
-      onClick: () => { }
+      onClick: () => handleOpen()
     },
     {
       iconType: 'send',
@@ -525,6 +531,11 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           </Button>
         </ButtonContainer>
       </TopContainer>
+      <ProposalDisplayModal
+          open={open}
+          setClose={handleClose}
+          idProposal={location.state?.proposalId}
+        />
       {leavingPage && <MessageExitDialog />}
       {loadExistingProposal &&
         <MainContainer ref={divRef}>
@@ -593,6 +604,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                 serviceList={serviceList}
                 setCompleted={setCompleted}
                 setFilled={setFilled}
+                setTotalCosts={setTotalCosts}
                 setUndoMessage={setUndoMessage}
                 specifications={specifications}
                 undoMessage={undoMessage}
@@ -614,6 +626,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                   setFilled={setFilled}
                   setUndoMessage={setUndoMessage}
                   specifications={specifications}
+                  totalCosts={totalCosts}
                   undoMessage={undoMessage}
                   updateTableIdsRef={updateTable6IdsRef}
                 />

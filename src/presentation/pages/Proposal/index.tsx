@@ -29,6 +29,7 @@ import {
   TopContainer,
   ButtonContainer
 } from './style'
+import ProposalDisplayModal from '../../components/ProposalDisplayModal/ProposalDisplayModal'
 import { ExitToApp } from '@material-ui/icons/'
 import Warning from '../../../application/icons/WarningIcon'
 import { useHistory } from 'react-router-dom'
@@ -52,7 +53,8 @@ const defaultFilter = {
 
 const Proposal = (): JSX.Element => {
   const [filter, setFilter] = useState<any>(defaultFilter)
-  const [open, setOpen] = useState(false)
+  const [openReject, setOpenReject] = useState(false)
+  const [openDisplay, setOpenDisplay] = useState(false)
   const [reference, setReference] = useState('')
   const [proposalId, setProposalId] = useState('')
   const [incotermList, setIncotermList] = useState<any[]>([])
@@ -139,24 +141,18 @@ const Proposal = (): JSX.Element => {
         .catch((err) => console.log(err))
     })()
     void (async function () {
-      const actualList: any[] = []
       await API.getCountries()
-        .then((response) => response.forEach((item: any) => actualList.push(String(item.name))))
-        .then(() => setoriginDestinationCountries(actualList))
+        .then((response) => setoriginDestinationCountries(response))
         .catch((err) => console.log(err))
     })()
     void (async function () {
-      const actualList: any[] = []
       await API.getMercosulStates()
-        .then((response) => response.forEach((item: any) => actualList.push(`${String(item.txState)} (${String(item.txCountry)})`)))
-        .then(() => setoriginDestinationStates(actualList))
+        .then((response) => setoriginDestinationStates(response))
         .catch((err) => console.log(err))
     })()
     void (async function () {
-      const actualList: any[] = []
       await API.getMercosulCities()
-        .then((response) => response.forEach((item: any) => actualList.push(`${String(item.txCity)} (${String(item.txCountry)})`)))
-        .then(() => setoriginDestinationCities(actualList))
+        .then((response) => setoriginDestinationCities(response))
         .catch((err) => console.log(err))
     })()
   }, [])
@@ -187,17 +183,17 @@ const Proposal = (): JSX.Element => {
     } else {
       if (land === 'País') {
         originDestinationCountries?.forEach((item): void => {
-          actualList.push(item)
+          actualList.push(`${String(item.name)}`)
         })
       }
       if (land === 'Estado') {
         originDestinationStates?.forEach((item): void => {
-          actualList.push(item)
+          actualList.push(`${String(item.txState)} (${String(item.txCountry)})`)
         })
       }
       if (land === 'Cidade') {
         originDestinationCities?.forEach((item): void => {
-          actualList.push(item)
+          actualList.push(`${String(item.txCity)} (${String(item.txCountry)})`)
         })
       }
     }
@@ -345,7 +341,7 @@ const Proposal = (): JSX.Element => {
         iconterm: proposal.incotermId,
         isLate: showWarning,
         key: proposal.idProposal,
-        menuItems: menuItemsList(status, proposal.idProposal, proposal.reference),
+        menuItems: menuItemsList(status, proposal.idProposal, proposal.reference, proposal.operation),
         modal,
         numio: proposal.numIO,
         opening,
@@ -373,21 +369,35 @@ const Proposal = (): JSX.Element => {
     })()
   }
 
-  const editEventPage = (id: any): void => {
-    history.push({
-      pathname: '/novaProposta',
-      state: { proposalId: id }
-    })
+  const editEventPage = (id: any, operationType: any): void => {
+    if (operationType === 'IMPORT FREIGHT') {
+      history.push({
+        pathname: '/novaProposta',
+        state: { proposalId: id }
+      })
+    } else {
+      history.push({
+        pathname: '/novaPropostaExportacao',
+        state: { proposalId: id }
+      })
+    }
   }
 
-  const duplicateEventPage = (id: any): void => {
-    history.push({
-      pathname: '/novaProposta',
-      state: { proposalId: id, eventType: 'duplicate' }
-    })
+  const duplicateEventPage = (id: any, operationType: any): void => {
+    if (operationType === 'IMPORT FREIGHT') {
+      history.push({
+        pathname: '/novaProposta',
+        state: { proposalId: id, eventType: 'duplicate' }
+      })
+    } else {
+      history.push({
+        pathname: '/novaPropostaExportacao',
+        state: { proposalId: id, eventType: 'duplicate' }
+      })
+    }
   }
 
-  const menuItemsList = (status: any, id: any, ref: any): void => {
+  const menuItemsList = (status: any, id: any, ref: any, operationType: any): void => {
     const array: any = []
     switch (status) {
       case StatusProposalEnum.ABERTA:
@@ -396,14 +406,14 @@ const Proposal = (): JSX.Element => {
             iconType: 'edit',
             label: I18n.t('pages.proposal.table.editLabel'),
             onClick: () => {
-              editEventPage(id)
+              editEventPage(id, operationType)
             }
           },
           {
             iconType: 'duplicate',
             label: I18n.t('pages.proposal.table.duplicateLabel'),
             onClick: () => {
-              duplicateEventPage(id)
+              duplicateEventPage(id, operationType)
             }
           },
           {
@@ -427,13 +437,16 @@ const Proposal = (): JSX.Element => {
           {
             iconType: 'file',
             label: I18n.t('pages.proposal.table.viewDownload'),
-            onClick: () => { }
+            onClick: () => {
+              setOpenDisplay(true)
+              setProposalId(id)
+            }
           },
           {
             iconType: 'duplicate',
             label: I18n.t('pages.proposal.table.duplicateLabel'),
             onClick: () => {
-              duplicateEventPage(id)
+              duplicateEventPage(id, operationType)
             }
           },
           {
@@ -461,7 +474,7 @@ const Proposal = (): JSX.Element => {
             iconType: 'thumbsDown',
             label: I18n.t('pages.proposal.table.rejectLabel'),
             onClick: () => {
-              setOpen(true)
+              setOpenReject(true)
               setReference(ref)
               setProposalId(id)
             }
@@ -474,14 +487,14 @@ const Proposal = (): JSX.Element => {
             iconType: 'edit',
             label: I18n.t('pages.proposal.table.editLabel'),
             onClick: () => {
-              editEventPage(id)
+              editEventPage(id, operationType)
             }
           },
           {
             iconType: 'duplicate',
             label: I18n.t('pages.proposal.table.duplicateLabel'),
             onClick: () => {
-              duplicateEventPage(id)
+              duplicateEventPage(id, operationType)
             }
           },
           {
@@ -511,7 +524,7 @@ const Proposal = (): JSX.Element => {
             iconType: 'duplicate',
             label: I18n.t('pages.proposal.table.duplicateLabel'),
             onClick: () => {
-              duplicateEventPage(id)
+              duplicateEventPage(id, operationType)
             }
           })
         return array
@@ -521,7 +534,7 @@ const Proposal = (): JSX.Element => {
           iconType: 'duplicate',
           label: I18n.t('pages.proposal.table.duplicateLabel'),
           onClick: () => {
-            duplicateEventPage(id)
+            duplicateEventPage(id, operationType)
           }
         })
         return array
@@ -530,7 +543,7 @@ const Proposal = (): JSX.Element => {
           iconType: 'duplicate',
           label: I18n.t('pages.proposal.table.duplicateLabel'),
           onClick: () => {
-            duplicateEventPage(id)
+            duplicateEventPage(id, operationType)
           }
         })
         return array
@@ -563,7 +576,7 @@ const Proposal = (): JSX.Element => {
 
       setFilter((filter: any) => ({
         ...filter,
-        idBusinessPartnerCustomer: [clientIds]
+        customer: [clientIds]
       }))
     }
 
@@ -572,9 +585,10 @@ const Proposal = (): JSX.Element => {
       'Tipo de processo'
     )
     if (selectedProcessTypes !== undefined) {
+      const processTypes = selectedProcessTypes.map((type: string) => type === 'Frete - Importação' ? 'IMPORT FREIGHT' : 'EXPORT FREIGHT')
       setFilter((filter: any) => ({
         ...filter,
-        operationType: [selectedProcessTypes]
+        operationType: [processTypes]
       }))
     }
 
@@ -583,35 +597,108 @@ const Proposal = (): JSX.Element => {
       'Modal/Origem/Destino'
     )
     if (selectedOriginsDestinations !== undefined) {
-      const typeOrigin = selectedFiltersRowFilter[3].pickerSelecteds1
-      const typeDestination = selectedFiltersRowFilter[3].pickerSelecteds2
+      const modal: string = selectedOriginsDestinations.radioButtonSelected
+      const getModalName = (): string => {
+        switch (modal) {
+          case 'Aéreo':
+            return 'AIR'
+          case 'Marítimo':
+            return 'SEA'
+          case 'Rodoviário':
+            return 'LAND'
+          default:
+            return ''
+        }
+      }
 
-      if (typeOrigin.length === 1 && typeDestination.length === 0) {
-        const origins = selectedOriginsDestinations[0].split(' - ')
+      if (modal.length > 0 && modal !== 'Rodoviário') {
+        const idOrigin = selectedOriginsDestinations.pickerSelecteds1
+          .map((name: string) => name.split(' - ')[0])
+        const idDestination = selectedOriginsDestinations.pickerSelecteds2
+          .map((name: string) => name.split(' - ')[0])
+
+        if (idOrigin.length > 0 && idOrigin[0] !== undefined) {
+          setFilter((filter: any) => ({
+            ...filter,
+            idOrigin
+          }))
+        }
+        if (idDestination.length > 0 && idDestination[0] !== undefined) {
+          setFilter((filter: any) => ({
+            ...filter,
+            idDestination
+          }))
+        }
         setFilter((filter: any) => ({
           ...filter,
-          idOrigin: [origins]
+          idTransport: getModalName()
         }))
       }
 
-      if (typeOrigin.length === 0 && typeDestination.length === 1) {
-        const destinations = selectedOriginsDestinations[0].split(' - ')
-        setFilter({
-          ...filter,
-          idDestination: [destinations]
-        })
-      }
+      if (modal.length > 0 && modal === 'Rodoviário') {
+        const originCountry = selectedOriginsDestinations.pickerSelecteds1
+          .map((locationFiltered: string) => originDestinationCountries
+            .find((country) => country.name === locationFiltered)?.id)
 
-      if (typeOrigin.length === 1 && typeDestination.length === 1) {
-        const selectOriginsDestinations =
-          selectedOriginsDestinations.split(' / ')
-        const origins = selectOriginsDestinations[0].split(' - ')
-        const destinations = selectOriginsDestinations[1].split(' - ')
+        const destinationCountry = selectedOriginsDestinations.pickerSelecteds2
+          .map((locationFiltered: string) => originDestinationCountries
+            .find((country) => country.name === locationFiltered)?.id)
 
+        const originState = selectedOriginsDestinations.pickerSelecteds3
+          .map((locationFiltered: string) => originDestinationStates
+            .find((state) => state.txState === locationFiltered.split(' (')[0] && state.txCountry === locationFiltered.split(' (')[1].slice(0, -1))?.idState)
+
+        const destinationState = selectedOriginsDestinations.pickerSelecteds4
+          .map((locationFiltered: string) => originDestinationStates
+            .find((state) => state.txState === locationFiltered.split(' (')[0] && state.txCountry === locationFiltered.split(' (')[1].slice(0, -1))?.idState)
+
+        const originCity = selectedOriginsDestinations.pickerSelecteds5
+          .map((locationFiltered: string) => originDestinationCities
+            .find((city) => city.txCity === locationFiltered.split(' (')[0] && city.txCountry === locationFiltered.split(' (')[1].slice(0, -1))?.idCity)
+
+        const destinationCity = selectedOriginsDestinations.pickerSelecteds6
+          .map((locationFiltered: string) => originDestinationCities
+            .find((city) => city.txCity === locationFiltered.split(' (')[0] && city.txCountry === locationFiltered.split(' (')[1].slice(0, -1))?.idCity)
+
+        if (originCountry.length > 0 && originCountry[0] !== undefined) {
+          setFilter((filter: any) => ({
+            ...filter,
+            originCountry
+          }))
+        }
+        if (destinationCountry.length > 0 && destinationCountry[0] !== undefined) {
+          setFilter((filter: any) => ({
+            ...filter,
+            destinationCountry
+          }))
+        }
+        if (originState.length > 0 && originState[0] !== undefined) {
+          setFilter((filter: any) => ({
+            ...filter,
+            originState
+          }))
+        }
+        if (destinationState.length > 0 && destinationState[0] !== undefined) {
+          setFilter((filter: any) => ({
+            ...filter,
+            destinationState
+          }))
+        }
+        if (originCity.length > 0 && originCity[0] !== undefined) {
+          setFilter((filter: any) => ({
+            ...filter,
+            originCity
+          }))
+        }
+        if (destinationCity.length > 0 && destinationCity[0] !== undefined) {
+          setFilter((filter: any) => ({
+            ...filter,
+            destinationCity
+          }))
+        }
         setFilter((filter: any) => ({
           ...filter,
-          idOrigin: [origins[0]],
-          idDestination: [destinations[0]]
+          idTransport: getModalName()
         }))
       }
     }
@@ -712,6 +799,17 @@ const Proposal = (): JSX.Element => {
   const findKeyFilter = (filterSelected: any, key: string): any => {
     for (const item of filterSelected) {
       if (item.filterName === key) {
+        if (key === 'Modal/Origem/Destino') {
+          return {
+            pickerSelecteds1: item.pickerSelecteds1,
+            pickerSelecteds2: item.pickerSelecteds2,
+            pickerSelecteds3: item.pickerSelecteds3,
+            pickerSelecteds4: item.pickerSelecteds4,
+            pickerSelecteds5: item.pickerSelecteds5,
+            pickerSelecteds6: item.pickerSelecteds6,
+            radioButtonSelected: item.radioButtonSelected
+          }
+        }
         if (item.textFieldValueSelected !== '') {
           return item.textFieldValueSelected
         }
@@ -752,6 +850,7 @@ const Proposal = (): JSX.Element => {
     delete filter.idOrigin
     delete filter.idDestination
     delete filter.idIncoterm
+    delete filter.idTransport
     delete filter.status
     delete filter['openingDate.dtBegin']
     delete filter['openingDate.dtEnd']
@@ -789,7 +888,8 @@ const Proposal = (): JSX.Element => {
     {
       label: 'Cliente',
       pickerListOptions1: partnerSimpleNameList,
-      pickerLabel1: 'Cliente'
+      pickerLabel1: 'Cliente',
+      pickerLandLabels: []
     },
     {
       label: 'Tipo de processo',
@@ -810,7 +910,8 @@ const Proposal = (): JSX.Element => {
     {
       label: 'Incoterm',
       pickerListOptions1: incotermList,
-      pickerLabel1: 'Incoterm'
+      pickerLabel1: 'Incoterm',
+      pickerLandLabels: []
     },
     {
       label: 'Período',
@@ -864,9 +965,14 @@ const Proposal = (): JSX.Element => {
     }
     return `Resultado do filtro (${totalProposalList})`
   }
-  const handleClose = (): void => {
-    setOpen(false)
+  const handleCloseReject = (): void => {
+    setOpenReject(false)
     setReference('')
+    setProposalId('')
+  }
+
+  const handleCloseDisplay = (): void => {
+    setOpenDisplay(false)
     setProposalId('')
   }
 
@@ -972,13 +1078,18 @@ const Proposal = (): JSX.Element => {
             rows={getProposalItems(proposalList)}
             />
             <RejectModal
-                open={open}
-                setClose={handleClose}
-                title={I18n.t('components.rejectModal.title')}
-                reference={reference}
-                proposalId={proposalId}
-                setStatus={setStatus}
-              />
+              open={openReject}
+              setClose={handleCloseReject}
+              title={I18n.t('components.rejectModal.title')}
+              reference={reference}
+              proposalId={proposalId}
+              setStatus={setStatus}
+            />
+            <ProposalDisplayModal
+              open={openDisplay}
+              setClose={handleCloseDisplay}
+              idProposal={proposalId}
+            />
         </TableContainer>
         <PaginationContainer>
           <PaginationMainContainer>

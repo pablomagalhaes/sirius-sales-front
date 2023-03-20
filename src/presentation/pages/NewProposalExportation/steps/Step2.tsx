@@ -52,6 +52,7 @@ interface Step2Props {
 
 interface DataProps {
   collection: string
+  collectionDap: string
   destCity: string
   destCountry: string
   destState: string
@@ -98,6 +99,7 @@ const Step2 = ({
     destiny: '',
     incoterm: '',
     collection: '',
+    collectionDap: '',
     oriCountry: '',
     oriState: '',
     oriCity: '',
@@ -191,7 +193,8 @@ const Step2 = ({
       oriState: '',
       origin: '',
       incoterm: '',
-      collection: ''
+      collection: '',
+      collectionDap: ''
     })
     setSelectedAgents([
       {
@@ -294,6 +297,7 @@ const Step2 = ({
       void Promise.all([getOrigin, getDestiny]).then((values: any[]) => {
         setData({
           collection: proposal.cargoCollectionAddress,
+          collectionDap: proposal.cargoDeliveryAddress,
           destCity: modal === 'LAND' ? String(values[1]?.name) : '',
           destCountry:
             modal === 'LAND' ? String(values[1]?.state?.country?.name) : '',
@@ -373,7 +377,8 @@ const Step2 = ({
             }
           ],
         idIncoterm: data.incoterm,
-        cargoCollectionAddress: data.collection
+        cargoCollectionAddress: data.collection,
+        cargoDeliveryAddress: data.collectionDap
       })
     } else {
       setProposal({
@@ -386,7 +391,8 @@ const Step2 = ({
           }
         ],
         idIncoterm: data.incoterm,
-        cargoCollectionAddress: data.collection
+        cargoCollectionAddress: data.collection,
+        cargoDeliveryAddress: data.collectionDap
       })
     }
   }, [data])
@@ -408,8 +414,17 @@ const Step2 = ({
         data.incoterm !== 'DAP') ||
       (data.incoterm.length !== 0 &&
         data.incoterm !== '' &&
-        (data.incoterm === 'EXW' || data.incoterm === 'DAP') &&
-        data.collection !== '')
+        data.incoterm === 'EXW' &&
+        data.collection !== '') ||
+      (data.incoterm.length !== 0 &&
+        data.incoterm !== '' &&
+        data.incoterm === 'DAP' &&
+        data.collectionDap !== '') ||
+      (data.incoterm.length !== 0 &&
+        data.incoterm !== '' &&
+        data.incoterm === 'DDP' &&
+        data.collectionDap !== '')
+
     )
   }
 
@@ -468,43 +483,55 @@ const Step2 = ({
   }
 
   const validateFormComplete = (): void => {
-    if (
-      !invalidAgent &&
-      validateCompleteShippingCompany() &&
-      originDestinyFullfilled() &&
-      validateClient() &&
-      validateIncoterm() &&
-      validateOriginDestination()
-    ) {
-      setCompleted((currentState) => {
-        return { ...currentState, step2: true }
-      })
+    if (proposalType !== 'CLIENT') {
+      if (
+        !invalidAgent &&
+        validateCompleteShippingCompany() &&
+        validateClient() &&
+        validateOriginDestination() &&
+        originDestinyFullfilled() &&
+        validateIncoterm()
+      ) {
+        setCompleted((currentState) => {
+          return { ...currentState, step2: true }
+        })
+      } else {
+        setCompleted((currentState) => {
+          return { ...currentState, step2: false }
+        })
+      }
     } else {
       setCompleted((currentState) => {
-        return { ...currentState, step2: false }
+        return { ...currentState, step2: true }
       })
     }
   }
 
   const validateFilled = (): void => {
-    if (
-      data.origin !== '' ||
-      data.destiny !== '' ||
-      data.oriCity !== '' ||
-      data.oriState !== '' ||
-      data.oriCountry !== '' ||
-      data.destCity !== '' ||
-      data.destState !== '' ||
-      data.destCountry !== '' ||
-      data.incoterm !== '' ||
-      validateClient()
-    ) {
-      setFilled((currentState) => {
-        return { ...currentState, step2: true }
-      })
+    if (proposalType !== 'CLIENT') {
+      if (
+        data.origin !== '' ||
+        data.destiny !== '' ||
+        data.oriCity !== '' ||
+        data.oriState !== '' ||
+        data.oriCountry !== '' ||
+        data.destCity !== '' ||
+        data.destState !== '' ||
+        data.destCountry !== '' ||
+        data.incoterm !== '' ||
+        validateClient()
+      ) {
+        setFilled((currentState) => {
+          return { ...currentState, step2: true }
+        })
+      } else {
+        setFilled((currentState) => {
+          return { ...currentState, step2: false }
+        })
+      }
     } else {
       setFilled((currentState) => {
-        return { ...currentState, step2: false }
+        return { ...currentState, step2: true }
       })
     }
   }
@@ -694,7 +721,6 @@ const Step2 = ({
     if (
       data.incoterm === 'CIP' ||
       data.incoterm === 'CPT' ||
-      data.incoterm === 'DDP' ||
       data.incoterm === 'DPU'
     ) {
       setData({ ...data, collection: '' })
@@ -1288,11 +1314,6 @@ const Step2 = ({
                               'components.itemModal.requiredField'
                             )}
                             value={selectedAgent.agent}
-                            invalid={
-                              proposalType === 'CLIENT' &&
-                              invalidInput &&
-                              selectedAgent.agent.length === 0
-                            }
                             variant="outlined"
                             placeholder={
                               selectedAgent.agent.length === 0 &&
@@ -1485,21 +1506,15 @@ const Step2 = ({
           </Grid>
           <Grid item xs={4}>
             {(data.incoterm === 'EXW' ||
-              data.incoterm === 'DAP') && (
+              data.incoterm === 'FCA') && (
               <>
-                <FormLabel component="legend">
-                  {data.incoterm === 'DAP'
-                    ? (
-                        <>
-                          {I18n.t('pages.newProposal.step2.collectionAddressDap')}
-                        </>
-                      )
-                    : (
-                      <>
-                      {I18n.t('pages.newProposal.step2.collectionAddress')}
-                      </>
-                      )}
-
+                <FormLabel component="legend" error={
+                    invalidInput &&
+                    data.incoterm !== 'FCA' &&
+                    data.collection.length === 0
+                  }>
+                  {I18n.t('pages.newProposal.step2.collectionAddress')}
+                  {data.incoterm !== 'FCA' && <RedColorSpan> *</RedColorSpan>}
                 </FormLabel>
                 <ControlledInput
                   id="description"
@@ -1509,6 +1524,7 @@ const Step2 = ({
                   }
                   invalid={
                     invalidInput &&
+                    data.incoterm !== 'FCA' &&
                     data.collection.length === 0
                   }
                   value={data.collection.length !== 0 ? data.collection : ''}
@@ -1517,6 +1533,56 @@ const Step2 = ({
                 />
               </>
             )}
+            {(data.incoterm === 'DAP' && (
+              <>
+                <FormLabel component="legend" error={
+                    invalidInput &&
+                    data.collectionDap.length === 0
+                  }>
+                  {I18n.t('pages.newProposal.step2.collectionAddressDap')}
+                  {<RedColorSpan> *</RedColorSpan>}
+                </FormLabel>
+                <ControlledInput
+                  id="description"
+                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                  onChange={(e) =>
+                    setData({ ...data, collectionDap: e.target.value })
+                  }
+                  invalid={
+                    invalidInput &&
+                    data.collectionDap.length === 0
+                  }
+                  value={data.collectionDap.length !== 0 ? data.collectionDap : ''}
+                  variant="outlined"
+                  size="small"
+                />
+              </>
+            ))}
+            {(data.incoterm === 'DDP' && (
+              <>
+                <FormLabel component="legend" error={
+                    invalidInput &&
+                    data.collectionDap.length === 0
+                  }>
+                  {I18n.t('pages.newProposal.step2.collectionAddressDap')}
+                  {<RedColorSpan> *</RedColorSpan>}
+                </FormLabel>
+                <ControlledInput
+                  id="description"
+                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                  onChange={(e) =>
+                    setData({ ...data, collectionDap: e.target.value })
+                  }
+                  invalid={
+                    invalidInput &&
+                    data.collectionDap.length === 0
+                  }
+                  value={data.collectionDap.length !== 0 ? data.collectionDap : ''}
+                  variant="outlined"
+                  size="small"
+                />
+              </>
+            ))}
           </Grid>
         </Grid>
       </FormControl>

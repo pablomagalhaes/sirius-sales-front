@@ -16,6 +16,7 @@ export const emptyProposalValue: Proposal = {
   internalObservations: '', // Step4ObservacoesInternas
   requester: '', // solicitante step1
   cargoCollectionAddress: '', // nao sabe
+  cargoDeliveryAddress: '',
   costs: [],
   totalCosts: [],
   proposalType: '', // step1 tipo proposta 'cliente' 'routing order'
@@ -49,7 +50,8 @@ export const emptyProposalValue: Proposal = {
   weeklyRecurrency: '', // "0101100" segunda quarta e quinta
   transportIncluded: false,
   clearenceIncluded: false,
-  agents: []
+  agents: [],
+  profits: []
 }
 
 interface ProposalContextProviderProps {
