@@ -311,7 +311,6 @@ const CostTable = ({
           </TableHead>
           <TableBody>
             {data?.map((dataMap: CostTableItem) => {
-
               calculateTotalCost(dataMap.buyCurrency, dataMap.saleCurrency, dataMap.buyValueCalculated, dataMap.saleValueCalculated, dataMap.buyMin, dataMap.saleMin)
               return (
                 <TableRow key={dataMap.id}>
