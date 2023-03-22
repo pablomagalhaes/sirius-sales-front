@@ -107,12 +107,11 @@ const Step1 = ({
   }
   useEffect(() => {
     if (proposal.idTransport !== '') {
-      if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND') {
-        void getBusinessPartner(getBusinessPartnerType())
-      }
       if (proposal.idTransport === 'SEA') {
         void getBusinessPartner('ARMADOR')
         void getBusinessPartner('COLOADER')
+      } else {
+        void getBusinessPartner(getBusinessPartnerType())
       }
     }
   }, [proposal.idTransport])
