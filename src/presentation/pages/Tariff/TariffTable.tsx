@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react'
 
-import { Table, TableBody, TableContainer, TableHead, TableRow } from '@material-ui/core'
-import { Pagination, ListSwitcher } from 'fiorde-fe-components'
+import { Table, TableBody, TableContainer, TableHead, TableRow, Button, Popover } from '@material-ui/core'
+import { Pagination, ListSwitcher, MenuIconCell, FloatingMenu } from 'fiorde-fe-components'
 import { PaginationContainer, PaginationMainContainer, MainTariffContainer, TableCell } from './style'
+import AirTariffModal from '../../components/AirTariffModal/AirTariffModal'
+import SeaFclTariffModal from '../../components/SeaFclTariffModal/SeaFclTariffModal'
+import SeaLclTariffModal from '../../components/SeaLclTariffModal/SeaLclTariffModal'
+import LandTariffModal from '../../components/LandTariffModal/LandTariffModal'
 
 import { columns, rows } from './constants'
+import { convertToDecimal } from './helpers'
 import API from '../../../infrastructure/api'
 
 export interface TariffTableProps {
@@ -25,10 +30,63 @@ const TariffTable = ({
   const [data, setData] = useState<any[]>()
   const [seaType, setSeaType] = useState<string>('FCL')
   const [totalTariffList, setTotalTariffList] = useState<number>(0)
+  const [tariffData, setTariffData] = useState<any[]>()
+  const [state, setState] = useState({ anchorEl: null, currentKey: null })
+  const [openModal, setOpenModal] = useState<boolean>(false)
+
+  const handleClick = (event: any, key: any): void => {
+    setState({ anchorEl: event.currentTarget, currentKey: key })
+  }
+
+  const handleClose = (): void => {
+    setOpenModal(false)
+    setState({ anchorEl: null, currentKey: null })
+  }
+
+  const { anchorEl, currentKey } = state
+  const open = Boolean(anchorEl)
+  const id = open ? 'simple-popover' : undefined
+
+  const renderModal = (index: number | null): JSX.Element => {
+    if (filter.tariffModalType !== '' && tariffData !== undefined && index !== null) {
+      switch (filter.tariffModalType) {
+        case 'AIR':
+          return <AirTariffModal
+                    dataProp={tariffData[index]}
+                    open={openModal}
+                    setClose={handleClose}
+                  />
+        case 'SEA':
+          if (seaType === 'FCL') {
+            return <SeaFclTariffModal
+                    dataProp={tariffData[index]}
+                    open={openModal}
+                    setClose={handleClose}
+                  />
+          } else {
+            return <SeaLclTariffModal
+                    dataProp={tariffData[index]}
+                    open={openModal}
+                    setClose={handleClose}
+                  />
+          }
+        case 'LAND':
+          return <LandTariffModal
+                    dataProp={tariffData[index]}
+                    open={openModal}
+                    setClose={handleClose}
+                  />
+        default:
+          break
+      }
+    }
+    return <></>
+  }
 
   const getTariffItems = (tariffList): string[] => {
     const array: any = []
     for (const tariff of tariffList) {
+      const id = tariff.idTariff
       const modal = filter.tariffModalType
       const agent = tariff.nmAgent
       const company = tariff.dsBusinessPartnerTransporter
@@ -37,28 +95,32 @@ const TariffTable = ({
       const originDestiny = modal === 'LAND' ? `${String(tariff.cityOrigin)} > ${String(tariff.cityDestination)}` : `${String(tariff.origin)} > ${String(tariff.destination)}`
       const validity = new Date(tariff.validityDate).toLocaleDateString('pt-BR')
       const values = [...tariff.tariffTypeValues].filter(each => each.tariffType.description !== 'MINIMUN').map(item => item.value)
-      const value = `de ${Math.min(...values)} a ${Math.max(...values)}`
-      const getTariffTypeValue = (type: string): any => tariff.tariffTypeValues.find(each => each.tariffType.description === type)
-      const geralImoDed = `${String(getTariffTypeValue('VLGERALDED')?.idTariffTypeValues)} / ${String(getTariffTypeValue('VLIMODED')?.idTariffTypeValues)}`
-      const geralImoCons = `${String(getTariffTypeValue('VLGERALCONS')?.idTariffTypeValues)} / ${String(getTariffTypeValue('VLIMOCONS')?.idTariffTypeValues)}`
-      const minimun = getTariffTypeValue('MINIMUN')?.value
-      const under7w = getTariffTypeValue('VLATE7WM')?.value
-      const over = getTariffTypeValue('ACIMA')?.value
-      const container20 = getTariffTypeValue('VLCONTAINER20')?.value
-      const container40 = getTariffTypeValue('VLCONTAINER40')?.value
+      const value = `de ${convertToDecimal(Math.min(...values))} a ${convertToDecimal(Math.max(...values))}`
+      const getTariffTypeValue = (type: string): string => {
+        const res = tariff.tariffTypeValues.find(each => each.tariffType.description === type)
+        if (res !== undefined) return convertToDecimal(res.value)
+        return ''
+      }
+      const geralImoDed = `${getTariffTypeValue('VLGERALDED')} / ${getTariffTypeValue('VLIMODED')}`
+      const geralImoCons = `${getTariffTypeValue('VLGERALCONS')} / ${getTariffTypeValue('VLIMOCONS')}`
+      const minimun = getTariffTypeValue('MINIMUN')
+      const under7w = getTariffTypeValue('VLATE7WM')
+      const over = getTariffTypeValue('ACIMA')
+      const container20 = getTariffTypeValue('VLCONTAINER20')
+      const container40 = getTariffTypeValue('VLCONTAINER40')
 
       let item: any
       if (modal !== '') {
         switch (modal) {
           case 'AIR':
-            item = { agent, airCompany: company, originDestiny, transitTime, validity, currency, minimun, value }
+            item = { id, agent, airCompany: company, originDestiny, transitTime, validity, currency, minimun, value }
             break
           case 'SEA':
-            if (seaType === 'LCL') item = { agent, seaCompany: company, originDestiny, transitTime, validity, currency, minimun, under7w, over }
-            if (seaType === 'FCL') item = { agent, seaCompany: company, originDestiny, transitTime, validity, currency, container20, container40 }
+            if (seaType === 'LCL') item = { id, agent, seaCompany: company, originDestiny, transitTime, validity, currency, minimun, under7w, over }
+            if (seaType === 'FCL') item = { id, agent, seaCompany: company, originDestiny, transitTime, validity, currency, container20, container40 }
             break
           case 'LAND':
-            item = { agent, landCompany: company, originDestiny, transitTime, validity, currency, geralImoDed, geralImoCons }
+            item = { id, agent, landCompany: company, originDestiny, transitTime, validity, currency, geralImoDed, geralImoCons }
             break
           default:
             break
@@ -70,7 +132,7 @@ const TariffTable = ({
   }
 
   useEffect(() => {
-    if (expanded && (data === undefined || data.length < 0)) {
+    if (expanded && !openModal) {
       void (async function () {
         const modal = filter.tariffModalType
         let payload = { ...filter, txRegion: region, txCountry: country }
@@ -78,14 +140,20 @@ const TariffTable = ({
         await API.getTariffsByCountry(payload)
           .then((response) => {
             const tariffs = getTariffItems(response.content)
-            if (tariffs.length > 0) setData(tariffs)
-            else setData([])
+            if (tariffs.length > 0) {
+              setData(tariffs)
+              console.log(response.content)
+              setTariffData(response.content)
+            } else {
+              setData([])
+              setTariffData([])
+            }
             setTotalTariffList(response.totalElements)
           })
           .catch((err) => console.log(err))
       })()
     }
-  }, [expanded, filter, seaType])
+  }, [expanded, filter, seaType, openModal])
 
   if (data !== undefined && data.length > 0) {
     return (
@@ -118,6 +186,36 @@ const TariffTable = ({
                   ? rows[filter.tariffModalType][seaType].map((each: string) => <TableCell key={each} align="left">{row[each]}</TableCell>)
                   : rows[filter.tariffModalType].map((each: string) => <TableCell key={each} align="left">{row[each]}</TableCell>)
                 }
+                <TableCell>
+                  <div>
+                      <Button onClick={(e) => handleClick(e, index)}>
+                          <MenuIconCell />
+                      </Button>
+                      <Popover
+                          id={id}
+                          open={open && index === currentKey}
+                          anchorEl={anchorEl}
+                          onClose={handleClose}
+                          anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'center'
+                          }}
+                          transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'center'
+                          }}
+                      >
+                          <FloatingMenu
+                            menuItems={[{
+                              iconType: 'pricing',
+                              label: 'Ver detalhes ou editar tarifa',
+                              onClick: () => setOpenModal(true)
+                            }]}
+                          />
+                      </Popover>
+                      {renderModal(state.currentKey)}
+                  </div>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -151,7 +249,21 @@ const TariffTable = ({
     </MainTariffContainer>
 
     )
-  } else return <></>
+  } else {
+    return (
+    <MainTariffContainer>
+      {filter.tariffModalType === 'SEA' &&
+        <div>
+          <ListSwitcher
+            firstLabel='FCL'
+            secondLabel='LCL'
+            onChange={(value: string) => setSeaType(value)}
+          />
+        </div>
+      }
+    </MainTariffContainer>
+    )
+  }
 }
 
 export default TariffTable

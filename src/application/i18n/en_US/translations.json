@@ -128,7 +128,8 @@
   "ProposalDisplayModal": {
     "title": "Download the proposal",
     "buttonText": "Confirm language and download"
-  },
+  }
+},
   "pages": {
     "newProposal": {
       "buttonFinish": "Finish proposal",

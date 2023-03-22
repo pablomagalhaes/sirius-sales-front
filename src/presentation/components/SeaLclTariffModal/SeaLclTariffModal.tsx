@@ -1,6 +1,7 @@
 import { Modal, Grid, FormLabel, MenuItem, TableHead, TableBody, Box } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import CloseIcon from '../../../application/icons/CloseIcon'
+import moment from 'moment'
 import {
   ButtonDiv,
   ColumnDiv,
@@ -32,14 +33,18 @@ import FormatNumber from '../../../application/utils/formatNumber'
 import ControlledSelect from '../../components/ControlledSelect'
 import API from '../../../infrastructure/api'
 
+interface TariffValues {
+  idTariffTypeValues: number
+  value: string
+}
 export interface SeaLclTariffModalData {
-  minValue: string | null
-  validity: string | null
+  minValue: TariffValues | null
+  dtValidity: string | null
   frequency: string
-  route: string | null
+  txRoute: string | null
   transitTime: string | null
-  untilWeight: number | null
-  overWeight: number | null
+  untilWeight: TariffValues | null
+  overWeight: TariffValues | null
   currency: string | null
   agent: string | null
   originDestination: string | null
@@ -47,11 +52,9 @@ export interface SeaLclTariffModalData {
 }
 
 interface SeaLclTariffModalProps {
-  dataProp: SeaLclTariffModalData
-  handleAdd: (item) => void
+  dataProp: any
   open: boolean
   setClose: () => void
-  title: string
 }
 
 interface Frequency {
@@ -61,9 +64,9 @@ interface Frequency {
 
 export const initialState = {
   minValue: null,
-  validity: null,
+  dtValidity: null,
   frequency: '',
-  route: null,
+  txRoute: null,
   transitTime: null,
   untilWeight: null,
   overWeight: null,
@@ -75,10 +78,8 @@ export const initialState = {
 
 const SeaLclTariffModal = ({
   dataProp,
-  handleAdd,
   open,
-  setClose,
-  title
+  setClose
 }: SeaLclTariffModalProps): JSX.Element => {
   const [data, setData] = useState<SeaLclTariffModalData>(initialState)
   const [frequencyList, setFrequencyList] = useState<Frequency[]>([])
@@ -90,7 +91,28 @@ const SeaLclTariffModal = ({
 
   useEffect(() => {
     if (dataProp !== initialState) {
-      setData(dataProp)
+      const getTariffValue = (type: string): any => {
+        const tariffValue = dataProp.tariffTypeValues.find(each => each.tariffType.description === type)
+        if (tariffValue !== undefined) {
+          const { idTariffTypeValues, value } = tariffValue
+          return { idTariffTypeValues, value: value.toFixed(2) }
+        }
+        return { idTariffTypeValues: 0, value: 0 }
+      }
+      const tariff = {
+        agent: dataProp.nmAgent,
+        seaCompany: dataProp.dsBusinessPartnerTransporter,
+        transitTime: dataProp.transitTime,
+        currency: dataProp.currency,
+        dtValidity: new Date(dataProp.validityDate).toLocaleDateString('pt-BR'),
+        minValue: getTariffValue('MINIMUN'),
+        untilWeight: getTariffValue('VLATE7WM'),
+        overWeight: getTariffValue('ACIMA'),
+        txRoute: dataProp.route,
+        frequency: dataProp.frequency,
+        originDestination: `${String(dataProp.origin)} > ${String(dataProp.destination)}`
+      }
+      setData(tariff)
     }
   }, [open])
 
@@ -123,22 +145,68 @@ const SeaLclTariffModal = ({
 
   const validateData = (): boolean => {
     return !(
-      (data.minValue === null || data.minValue?.length === 0) ||
-        (data.validity === null || data.validity?.length === 0) ||
-        (data.frequency === null || data.frequency?.length === 0) ||
-        (data.route === null || data.route?.length === 0) ||
-        (data.transitTime === null || data.transitTime?.length === 0) ||
-        (data.agent === null || data.agent?.length === 0) ||
-        (data.originDestination === null || data.originDestination?.length === 0) ||
-        (data.currency === null || data.currency?.length === 0))
+      !validateDate() ||
+      (data.overWeight === null || data.overWeight.value?.length === 0) ||
+      (data.untilWeight === null || data.untilWeight.value?.length === 0) ||
+      (data.minValue === null || data.minValue.value?.length === 0) ||
+      (data.dtValidity === null || data.dtValidity?.length === 0) ||
+      (data.frequency === null || data.frequency?.length === 0) ||
+      (data.txRoute === null || data.txRoute?.length === 0) ||
+      (data.transitTime === null || data.transitTime?.length === 0) ||
+      (data.agent === null || data.agent?.length === 0) ||
+      (data.originDestination === null || data.originDestination?.length === 0) ||
+      (data.currency === null || data.currency?.length === 0))
+  }
+
+  const handleEdit = (): void => {
+    const { currency, dtValidity, frequency, txRoute, transitTime, overWeight, untilWeight, minValue } = data
+    const splitedValidityDate = dtValidity !== null ? dtValidity.trim().split('/') : [0, 0, 0]
+    const stringToNumber = (item: TariffValues): any => {
+      let { idTariffTypeValues, value } = item
+      if (typeof value === 'string') value = value.replace(',', '.')
+      return { idTariffTypeValues, value: Number(value) }
+    }
+    const values = [overWeight, untilWeight, minValue].map((value) => value !== null && stringToNumber(value))
+    const params = {
+      currency,
+      dtValidity: `${splitedValidityDate[2]}-${splitedValidityDate[1]}-${splitedValidityDate[0]}T00:00-03:00`,
+      frequency,
+      txRoute,
+      transitTime: Number(transitTime),
+      values
+    }
+    void (async function () {
+      await API.editTariff(dataProp.idTariff, params)
+        .then((_response) => handleOnClose())
+        .catch((err) => console.log(err))
+    })()
+  }
+
+  const validateDate = (): boolean => {
+    const validityDate = moment(data.dtValidity, 'DD/MM/YYYY', true)
+    const today = moment().startOf('day')
+    return validityDate.isValid() && validityDate.isSameOrAfter(today)
   }
 
   const handleOnAdd = (): void => {
     if (validateData()) {
-      handleAdd(data)
-      handleOnClose()
+      handleEdit()
     } else {
       setInvalidInput(true)
+    }
+  }
+
+  const handleValues = (e, key): void => {
+    if (data[key] !== null) {
+      setData(
+        {
+          ...data,
+          [key]: {
+            idTariffTypeValues: data[key].idTariffTypeValues,
+            value: e.target.value
+          }
+        }
+      )
     }
   }
 
@@ -146,7 +214,7 @@ const SeaLclTariffModal = ({
     <Modal open={open} onClose={handleOnClose}>
       <ModalDiv>
         <HeaderDiv>
-          <Title>{title}</Title>
+          <Title>Detalhamento da tarifa - Marítimo LCL</Title>
           <RowReverseDiv>
             <CloseIconContainer>
               <CloseIcon onClick={handleOnClose} />
@@ -188,7 +256,10 @@ const SeaLclTariffModal = ({
                             <Autocomplete
                               value={data.currency}
                               options={currencyList.map((option) => option.id)}
-                              disabled={true}
+                              disabled={false}
+                              onChange={(_e, value) =>
+                                setData({ ...data, currency: value })
+                              }
                               renderInput={(params) => (
                                 <div ref={params.InputProps.ref}>
                                   <Input
@@ -215,7 +286,7 @@ const SeaLclTariffModal = ({
               </SubDiv>
             </Grid>
             <Grid item xs={3}>
-              <FormLabel component="legend" error={invalidInput}>
+              <FormLabel component="legend" error={invalidInput && data.minValue?.value.length === 0}>
                 {I18n.t('components.tariffModal.minValue')}<RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <NumberInput
@@ -225,9 +296,9 @@ const SeaLclTariffModal = ({
                 format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                 customInput={ControlledInput}
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-                invalid={invalidInput && data.minValue?.length === 0}
-                value={data.minValue != null ? data.minValue : ''}
-                onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, minValue: e.target.value })) }}
+                invalid={invalidInput && data.minValue?.value.length === 0}
+                value={data.minValue != null ? data.minValue.value : ''}
+                onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'minValue') }}
                 variant="outlined"
                 size="small"
                 modal
@@ -235,7 +306,7 @@ const SeaLclTariffModal = ({
               />
             </Grid>
             <Grid item xs={3}>
-              <FormLabel component="legend" error={invalidInput}>
+              <FormLabel component="legend" error={invalidInput && data.untilWeight?.value.length === 0}>
                   {I18n.t('components.tariffModal.untilWeight')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
@@ -245,9 +316,9 @@ const SeaLclTariffModal = ({
                   format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                   customInput={ControlledInput}
                   toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-                  invalid={invalidInput && data.untilWeight === null}
-                  value={data.untilWeight != null ? data.untilWeight : ''}
-                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, untilWeight: e.target.value })) }}
+                  invalid={invalidInput && data.untilWeight?.value.length === 0}
+                  value={data.untilWeight != null ? data.untilWeight.value : ''}
+                  onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'untilWeight') }}
                   variant="outlined"
                   size="small"
                   modal
@@ -255,7 +326,7 @@ const SeaLclTariffModal = ({
                 />
             </Grid>
             <Grid item xs={3}>
-              <FormLabel component="legend" error={invalidInput}>
+              <FormLabel component="legend" error={invalidInput && data.overWeight?.value.length === 0}>
                   {I18n.t('components.tariffModal.overWeight')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
@@ -265,9 +336,9 @@ const SeaLclTariffModal = ({
                   format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                   customInput={ControlledInput}
                   toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-                  invalid={invalidInput && data.overWeight === null}
-                  value={data.overWeight != null ? data.overWeight : ''}
-                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, overWeight: e.target.value })) }}
+                  invalid={invalidInput && data.overWeight?.value.length === 0}
+                  value={data.overWeight != null ? data.overWeight.value : ''}
+                  onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'overWeight') }}
                   variant="outlined"
                   size="small"
                   modal
@@ -275,7 +346,7 @@ const SeaLclTariffModal = ({
                 />
             </Grid>
             <Grid item xs={3}>
-              <FormLabel component="legend" error={invalidInput}>
+              <FormLabel component="legend" error={invalidInput && (data.dtValidity?.length === 0 || !validateDate())}>
                 {I18n.t('components.tariffModal.validity')}<RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <NumberInput
@@ -285,10 +356,10 @@ const SeaLclTariffModal = ({
                 placeholder="DD/MM/YYYY"
                 customInput={ControlledInput}
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-                invalid={invalidInput && data.validity?.length === 0}
-                value={data.validity}
+                invalid={invalidInput && (data.dtValidity?.length === 0 || !validateDate())}
+                value={data.dtValidity}
                 onChange={(e) =>
-                  setData({ ...data, validity: e.target.value })
+                  setData({ ...data, dtValidity: e.target.value })
                 }
                 variant="outlined"
                 size="small"
@@ -327,7 +398,7 @@ const SeaLclTariffModal = ({
                 component="legend"
                 error={
                   invalidInput &&
-                  (data.route === null || data.route.length === 0)
+                  (data.txRoute === null || data.txRoute.length === 0)
                 }>
                   {I18n.t('components.tariffModal.route')}
                   <RedColorSpan> *</RedColorSpan>
@@ -336,10 +407,10 @@ const SeaLclTariffModal = ({
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
                 invalid={
                   invalidInput &&
-                  (data.route === null || data.route.length === 0)
+                  (data.txRoute === null || data.txRoute.length === 0)
                 }
-                value={data.route}
-                onChange={e => setData({ ...data, route: e.target.value })}
+                value={data.txRoute}
+                onChange={e => setData({ ...data, txRoute: e.target.value })}
                 variant="outlined"
                 size="small"
                 modal

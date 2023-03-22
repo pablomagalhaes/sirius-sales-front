@@ -1,6 +1,7 @@
 import { Modal, Grid, FormLabel, MenuItem, TableHead, TableBody, Box } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import CloseIcon from '../../../application/icons/CloseIcon'
+import moment from 'moment'
 import {
   ButtonDiv,
   ColumnDiv,
@@ -32,15 +33,19 @@ import FormatNumber from '../../../application/utils/formatNumber'
 import ControlledSelect from '../../components/ControlledSelect'
 import API from '../../../infrastructure/api'
 
+interface TariffValues {
+  idTariffTypeValues: number
+  value: string
+}
 export interface LandTariffModalData {
-  validity: string | null
+  dtValidity: string | null
   frequency: string
-  route: string | null
+  txRoute: string | null
   transitTime: string | null
-  generalCargoDed: number | null
-  generalCargoCons: number | null
-  ImoCargoDed: number | null
-  ImoCargoCons: number | null
+  generalCargoDed: TariffValues | null
+  generalCargoCons: TariffValues | null
+  imoCargoDed: TariffValues | null
+  imoCargoCons: TariffValues | null
   landCompany: string | null
   currency: string | null
   agent: string | null
@@ -48,11 +53,9 @@ export interface LandTariffModalData {
 }
 
 interface LandTariffModalProps {
-  dataProp: LandTariffModalData
-  handleAdd: (item) => void
+  dataProp: any
   open: boolean
   setClose: () => void
-  title: string
 }
 
 interface Frequency {
@@ -61,14 +64,14 @@ interface Frequency {
 }
 
 export const initialState = {
-  validity: null,
+  dtValidity: null,
   frequency: '',
-  route: null,
+  txRoute: null,
   transitTime: null,
   generalCargoDed: null,
   generalCargoCons: null,
-  ImoCargoDed: null,
-  ImoCargoCons: null,
+  imoCargoDed: null,
+  imoCargoCons: null,
   landCompany: null,
   currency: null,
   agent: null,
@@ -77,10 +80,8 @@ export const initialState = {
 
 const LandTariffModal = ({
   dataProp,
-  handleAdd,
   open,
-  setClose,
-  title
+  setClose
 }: LandTariffModalProps): JSX.Element => {
   const [data, setData] = useState<LandTariffModalData>(initialState)
   const [frequencyList, setFrequencyList] = useState<Frequency[]>([])
@@ -92,7 +93,29 @@ const LandTariffModal = ({
 
   useEffect(() => {
     if (dataProp !== initialState) {
-      setData(dataProp)
+      const getTariffValue = (type: string): any => {
+        const tariffValue = dataProp.tariffTypeValues.find(each => each.tariffType.description === type)
+        if (tariffValue !== undefined) {
+          const { idTariffTypeValues, value } = tariffValue
+          return { idTariffTypeValues, value: value.toFixed(2) }
+        }
+        return { idTariffTypeValues: 0, value: 0 }
+      }
+      const tariff = {
+        agent: dataProp.nmAgent,
+        landCompany: dataProp.dsBusinessPartnerTransporter,
+        transitTime: dataProp.transitTime,
+        currency: dataProp.currency,
+        dtValidity: new Date(dataProp.validityDate).toLocaleDateString('pt-BR'),
+        generalCargoDed: getTariffValue('VLGERALDED'),
+        generalCargoCons: getTariffValue('VLGERALCONS'),
+        imoCargoDed: getTariffValue('VLIMODED'),
+        imoCargoCons: getTariffValue('VLIMOCONS'),
+        txRoute: dataProp.route,
+        frequency: dataProp.frequency,
+        originDestination: `${String(dataProp.cityOrigin)} > ${String(dataProp.cityDestination)}`
+      }
+      setData(tariff)
     }
   }, [open])
 
@@ -125,21 +148,69 @@ const LandTariffModal = ({
 
   const validateData = (): boolean => {
     return !(
-      (data.validity === null || data.validity?.length === 0) ||
-        (data.frequency === null || data.frequency?.length === 0) ||
-        (data.route === null || data.route?.length === 0) ||
-        (data.transitTime === null || data.transitTime?.length === 0) ||
-        (data.agent === null || data.agent?.length === 0) ||
-        (data.originDestination === null || data.originDestination?.length === 0) ||
-        (data.currency === null || data.currency?.length === 0))
+      !validateDate() ||
+      (data.generalCargoDed === null || data.generalCargoDed.value?.length === 0) ||
+      (data.generalCargoCons === null || data.generalCargoCons.value?.length === 0) ||
+      (data.imoCargoDed === null || data.imoCargoDed.value?.length === 0) ||
+      (data.imoCargoCons === null || data.imoCargoCons.value?.length === 0) ||
+      (data.dtValidity === null || data.dtValidity?.length === 0) ||
+      (data.frequency === null || data.frequency?.length === 0) ||
+      (data.txRoute === null || data.txRoute?.length === 0) ||
+      (data.transitTime === null || data.transitTime?.length === 0) ||
+      (data.agent === null || data.agent?.length === 0) ||
+      (data.originDestination === null || data.originDestination?.length === 0) ||
+      (data.currency === null || data.currency?.length === 0))
+  }
+
+  const handleEdit = (): void => {
+    const { currency, dtValidity, frequency, txRoute, transitTime, generalCargoDed, generalCargoCons, imoCargoDed, imoCargoCons } = data
+    const splitedValidityDate = dtValidity !== null ? dtValidity.trim().split('/') : [0, 0, 0]
+    const stringToNumber = (item: TariffValues): any => {
+      let { idTariffTypeValues, value } = item
+      if (typeof value === 'string') value = value.replace(',', '.')
+      return { idTariffTypeValues, value: Number(value) }
+    }
+    const values = [generalCargoDed, generalCargoCons, imoCargoDed, imoCargoCons].map((value) => value !== null && stringToNumber(value))
+    const params = {
+      currency,
+      dtValidity: `${splitedValidityDate[2]}-${splitedValidityDate[1]}-${splitedValidityDate[0]}T00:00-03:00`,
+      frequency,
+      txRoute,
+      transitTime: Number(transitTime),
+      values
+    }
+    void (async function () {
+      await API.editTariff(dataProp.idTariff, params)
+        .then((_response) => handleOnClose())
+        .catch((err) => console.log(err))
+    })()
+  }
+
+  const validateDate = (): boolean => {
+    const validityDate = moment(data.dtValidity, 'DD/MM/YYYY', true)
+    const today = moment().startOf('day')
+    return validityDate.isValid() && validityDate.isSameOrAfter(today)
   }
 
   const handleOnAdd = (): void => {
     if (validateData()) {
-      handleAdd(data)
-      handleOnClose()
+      handleEdit()
     } else {
       setInvalidInput(true)
+    }
+  }
+
+  const handleValues = (e, key): void => {
+    if (data[key] !== null) {
+      setData(
+        {
+          ...data,
+          [key]: {
+            idTariffTypeValues: data[key].idTariffTypeValues,
+            value: e.target.value
+          }
+        }
+      )
     }
   }
 
@@ -147,7 +218,7 @@ const LandTariffModal = ({
     <Modal open={open} onClose={handleOnClose}>
       <ModalDiv>
         <HeaderDiv>
-          <Title>{title}</Title>
+          <Title>Detalhamento da tarifa - Rodoviário</Title>
           <RowReverseDiv>
             <CloseIconContainer>
               <CloseIcon onClick={handleOnClose} />
@@ -162,7 +233,7 @@ const LandTariffModal = ({
                   <TableHead>
                     <TableHeadRow>
                       <StyledTableCell width="45%">
-                        {I18n.t('components.tariffModal.agentAircompany')}
+                        {I18n.t('components.tariffModal.agentLandCompany')}
                       </StyledTableCell>
                       <StyledTableCell width="40%" align="left">
                         {I18n.t('components.tariffModal.originDestination')}
@@ -189,7 +260,10 @@ const LandTariffModal = ({
                             <Autocomplete
                               value={data.currency}
                               options={currencyList.map((option) => option.id)}
-                              disabled={true}
+                              disabled={false}
+                              onChange={(_e, value) =>
+                                setData({ ...data, currency: value })
+                              }
                               renderInput={(params) => (
                                 <div ref={params.InputProps.ref}>
                                   <Input
@@ -216,7 +290,7 @@ const LandTariffModal = ({
               </SubDiv>
             </Grid>
             <Grid item xs={3}>
-              <FormLabel component="legend" error={invalidInput}>
+              <FormLabel component="legend" error={invalidInput && data.generalCargoDed?.value.length === 0}>
                   {I18n.t('components.tariffModal.generalCargoDed')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
@@ -226,9 +300,9 @@ const LandTariffModal = ({
                   format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                   customInput={ControlledInput}
                   toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-                  invalid={invalidInput && data.generalCargoDed === null}
-                  value={data.generalCargoDed != null ? data.generalCargoDed : ''}
-                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, generalCargoDed: e.target.value })) }}
+                  invalid={invalidInput && data.generalCargoDed?.value.length === 0}
+                  value={data.generalCargoDed != null ? data.generalCargoDed.value : ''}
+                  onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'generalCargoDed') }}
                   variant="outlined"
                   size="small"
                   modal
@@ -236,7 +310,7 @@ const LandTariffModal = ({
                 />
             </Grid>
             <Grid item xs={3}>
-              <FormLabel component="legend" error={invalidInput}>
+              <FormLabel component="legend" error={invalidInput && data.generalCargoCons?.value.length === 0}>
                   {I18n.t('components.tariffModal.generalCargoCons')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
@@ -246,9 +320,9 @@ const LandTariffModal = ({
                   format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                   customInput={ControlledInput}
                   toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-                  invalid={invalidInput && data.generalCargoCons === null}
-                  value={data.generalCargoCons != null ? data.generalCargoCons : ''}
-                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, generalCargoCons: e.target.value })) }}
+                  invalid={invalidInput && data.generalCargoCons?.value.length === 0}
+                  value={data.generalCargoCons != null ? data.generalCargoCons.value : ''}
+                  onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'generalCargoCons') }}
                   variant="outlined"
                   size="small"
                   modal
@@ -256,7 +330,7 @@ const LandTariffModal = ({
                 />
             </Grid>
             <Grid item xs={3}>
-              <FormLabel component="legend" error={invalidInput}>
+              <FormLabel component="legend" error={invalidInput && data.imoCargoDed?.value.length === 0}>
                   {I18n.t('components.tariffModal.ImoCargoDed')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
@@ -266,9 +340,9 @@ const LandTariffModal = ({
                   format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                   customInput={ControlledInput}
                   toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-                  invalid={invalidInput && data.ImoCargoDed === null}
-                  value={data.ImoCargoDed != null ? data.ImoCargoDed : ''}
-                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, ImoCargoDed: e.target.value })) }}
+                  invalid={invalidInput && data.imoCargoDed?.value.length === 0}
+                  value={data.imoCargoDed != null ? data.imoCargoDed.value : ''}
+                  onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'imoCargoDed') }}
                   variant="outlined"
                   size="small"
                   modal
@@ -276,7 +350,7 @@ const LandTariffModal = ({
                 />
             </Grid>
             <Grid item xs={3}>
-              <FormLabel component="legend" error={invalidInput}>
+              <FormLabel component="legend" error={invalidInput && data.imoCargoCons?.value.length === 0}>
                   {I18n.t('components.tariffModal.ImoCargoCons')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
@@ -286,9 +360,9 @@ const LandTariffModal = ({
                   format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                   customInput={ControlledInput}
                   toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-                  invalid={invalidInput && data.ImoCargoCons === null}
-                  value={data.ImoCargoCons != null ? data.ImoCargoCons : ''}
-                  onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, ImoCargoCons: e.target.value })) }}
+                  invalid={invalidInput && data.imoCargoCons?.value.length === 0}
+                  value={data.imoCargoCons != null ? data.imoCargoCons.value : ''}
+                  onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'imoCargoCons') }}
                   variant="outlined"
                   size="small"
                   modal
@@ -327,7 +401,7 @@ const LandTariffModal = ({
                 component="legend"
                 error={
                   invalidInput &&
-                  (data.route === null || data.route.length === 0)
+                  (data.txRoute === null || data.txRoute.length === 0)
                 }>
                   {I18n.t('components.tariffModal.route')}
                   <RedColorSpan> *</RedColorSpan>
@@ -336,10 +410,10 @@ const LandTariffModal = ({
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
                 invalid={
                   invalidInput &&
-                  (data.route === null || data.route.length === 0)
+                  (data.txRoute === null || data.txRoute.length === 0)
                 }
-                value={data.route}
-                onChange={e => setData({ ...data, route: e.target.value })}
+                value={data.txRoute}
+                onChange={e => setData({ ...data, txRoute: e.target.value })}
                 variant="outlined"
                 size="small"
                 modal
@@ -369,7 +443,7 @@ const LandTariffModal = ({
               />
             </Grid>
             <Grid item xs={3}>
-              <FormLabel component="legend" error={invalidInput}>
+              <FormLabel component="legend" error={invalidInput && (data.dtValidity?.length === 0 || !validateDate())}>
                 {I18n.t('components.tariffModal.validity')}<RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <NumberInput
@@ -379,10 +453,10 @@ const LandTariffModal = ({
                 placeholder="DD/MM/YYYY"
                 customInput={ControlledInput}
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-                invalid={invalidInput && data.validity?.length === 0}
-                value={data.validity}
+                invalid={invalidInput && (data.dtValidity?.length === 0 || !validateDate())}
+                value={data.dtValidity}
                 onChange={(e) =>
-                  setData({ ...data, validity: e.target.value })
+                  setData({ ...data, dtValidity: e.target.value })
                 }
                 variant="outlined"
                 size="small"
