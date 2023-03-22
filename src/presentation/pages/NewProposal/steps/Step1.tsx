@@ -106,9 +106,17 @@ const Step1 = ({
     return id
   }
   useEffect(() => {
-    if (proposal.idTransport !== '') void getBusinessPartner(getBusinessPartnerType())
+    if (proposal.idTransport !== '') {
+      if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND') {
+        void getBusinessPartner(getBusinessPartnerType())
+      }
+      if (proposal.idTransport === 'SEA') {
+        void getBusinessPartner('ARMADOR')
+        void getBusinessPartner('COLOADER')
+      }
+    }
   }, [proposal.idTransport])
-  
+
   const getBusinessPartner = async (type: string): Promise<any> => {
     const response = await API.getBusinessPartnerByType(type)
     if (response !== undefined) {
@@ -322,8 +330,6 @@ const Step1 = ({
     }
   }
 
-
-
   useEffect(() => {
     if (data.proposal === 'ROUTING ORDER') {
       setAgentList(selectedAgents)
@@ -417,7 +423,7 @@ const Step1 = ({
                 {I18n.t('pages.newProposal.step1.client')}:
                 <RedColorSpan> *</RedColorSpan>
               </FormLabel>
-            )}
+              )}
 
               {data.proposal === 'ROUTING ORDER'
                 ? selectedAgents.map((selectedAgent, index) => {
