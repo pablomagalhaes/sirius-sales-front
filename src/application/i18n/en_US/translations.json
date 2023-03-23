@@ -91,11 +91,45 @@
       "stack": "Stack up",
       "type": "Type: "
     },
-    "ProposalDisplayModal": {
-      "title": "Download the proposal",
-      "buttonText": "Confirm language and download"
-    }
+    "tariffModal": {
+      "minValue": "Minimum Value: ",
+      "validity": "Validity: ",
+      "frequency": "Frequency: ",
+      "route": "Route: ",
+      "transitTime": "Transit time (days): ",
+      "weight1": "+45kg",
+      "weight2": "+100kg",
+      "weight3": "+300kg",
+      "weight4": "+500kg",
+      "weight5": "+1 ton",
+      "currency": "Currency: ",
+      "agent": "Agent / Air Carrier: ",
+      "originDestination": "Origin and Destination: ",
+      "airTitle": "Fare Details - Air",
+      "seaLclTitle": "Fare Details - Sea LCL",
+      "seaFclTitle": "Fare Details - Sea FCL",
+      "landTitle": "Fare Details - Land",
+      "requiredField": "Required field",
+      "save": "Save",
+      "choose": "Choose ...",
+      "cancel": "Cancel",
+      "untilWeight": "Until 7w/m: ",
+      "overrWeight": "Over: ",
+      "agentSeaCompany": "Agent / Sea Carrier: ",
+      "container20": "Container 20: ",
+      "container40": "Container 40: ",
+      "generalCargoDed": "General Cargo ded.: ",
+      "generalCargoCons": "General Cargo cons.: ",
+      "ImoCargoDed": "IMO Cargo ded.: ",
+      "ImoCargoCons": "IMO Cargo cons.: ",
+      "agentLandCompany": "Agent / Land Carrier: "
+
   },
+  "ProposalDisplayModal": {
+    "title": "Download the proposal",
+    "buttonText": "Confirm language and download"
+  }
+},
   "pages": {
     "newProposal": {
       "buttonFinish": "Finish proposal",

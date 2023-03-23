@@ -98,6 +98,11 @@ const light = {
         fontColor: '#222222',
         borderColor: '#999DAC'
       },
+      tariffTable: {
+        backgroundColor: '#f0f1f5',
+        border: '#D9DCE5',
+        subtitle: '#545454'
+      },
       proposalModal: {
         backgroundColor: '#F2F3F7',
         border: '#E3E5EB',
@@ -105,6 +110,7 @@ const light = {
         titleColor: '#222222',
         headerColor: '#FFFFFF'
       }
+
     },
     pages: {
       home: {

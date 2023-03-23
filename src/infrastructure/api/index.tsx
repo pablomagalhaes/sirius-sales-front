@@ -330,6 +330,16 @@ const getTariffsByCountry = async (params): Promise<any> => {
   }
 }
 
+const editTariff = async (idTariff: string, params): Promise<any> => {
+  const url: string = `/sirius-tariff-api/tariff/${idTariff}`
+  try {
+    const res = await instance.put(url, params)
+    return res.data
+  } catch (error) {
+    toast.error(String(error) + ' | Request:  ' + String(url))
+  }
+}
+
 const API = {
   getContainerType,
   getCurrencies,
@@ -361,7 +371,8 @@ const API = {
   getMercosulStates,
   getTariffs,
   getTariffsByCountry,
-  downloadProposal
+  downloadProposal,
+  editTariff
 }
 
 export default API
