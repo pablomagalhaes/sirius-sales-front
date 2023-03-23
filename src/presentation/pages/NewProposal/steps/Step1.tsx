@@ -106,7 +106,14 @@ const Step1 = ({
     return id
   }
   useEffect(() => {
-    if (proposal.idTransport !== '') void getBusinessPartner(getBusinessPartnerType())
+    if (proposal.idTransport !== '') {
+      if (proposal.idTransport === 'SEA') {
+        void getBusinessPartner('ARMADOR')
+        void getBusinessPartner('COLOADER')
+      } else {
+        void getBusinessPartner(getBusinessPartnerType())
+      }
+    }
   }, [proposal.idTransport])
 
   const getBusinessPartner = async (type: string): Promise<any> => {

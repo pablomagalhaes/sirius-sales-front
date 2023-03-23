@@ -16,7 +16,7 @@ export const RowReverseDiv = styled.div`
   display: flex;
   flex-direction: row-reverse;
   justify-self: flex-end;
-  width: 100%;
+  width: 10%;
   margin-right: 35px;
 `
 export const CloseIconContainer = styled.div`
@@ -36,7 +36,7 @@ export const Label = styled.span`
 
 export const Title = styled.span`
   margin-left: 24px;
-  width: 71%;
+  width: 90%;
 `
 export const HeaderDiv = styled.div`
   display: flex;
