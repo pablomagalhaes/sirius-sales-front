@@ -108,7 +108,7 @@ const Step1 = ({
   useEffect(() => {
     if (proposal.idTransport !== '') void getBusinessPartner(getBusinessPartnerType())
   }, [proposal.idTransport])
-  
+
   const getBusinessPartner = async (type: string): Promise<any> => {
     const response = await API.getBusinessPartnerByType(type)
     if (response !== undefined) {
@@ -322,8 +322,6 @@ const Step1 = ({
     }
   }
 
-
-
   useEffect(() => {
     if (data.proposal === 'ROUTING ORDER') {
       setAgentList(selectedAgents)
@@ -417,7 +415,7 @@ const Step1 = ({
                 {I18n.t('pages.newProposal.step1.client')}:
                 <RedColorSpan> *</RedColorSpan>
               </FormLabel>
-            )}
+              )}
 
               {data.proposal === 'ROUTING ORDER'
                 ? selectedAgents.map((selectedAgent, index) => {

@@ -116,6 +116,7 @@ const Step6 = ({
   const [loadedTotalCostsIds, setLoadedTotalCostsIds] = useState<number[]>([])
   const [agentList, setAgentsList] = useState<any[]>([])
   const [businessPartner, setBusinessPartner] = useState<any[]>([])
+  const [totalCharge, setTotalCharge] = useState<number>(0)
 
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => {
@@ -665,6 +666,38 @@ const Step6 = ({
   }, [containerItems, calculationData, proposal.cargo[0]])
 
   useEffect(() => {
+    let total = 0
+    const getSalesFreight = proposal.costs
+      .filter(cost => cost.costType === 'Frete' && cost.valueSale !== null && cost.valueSale > 0)
+    const salesData = getSalesFreight.map(cost => ({
+      idCost: cost.idCost,
+      selectedContainer: cost.idContainerType,
+      agent: cost.agent,
+      type: 'TON',
+      saleCurrency: cost.idCurrencySale,
+      saleValue: String(cost.valueSale?.toFixed(2)).replace('.', ',') ?? '',
+      minimumValue: String(cost.valueMinimumSale?.toFixed(2)).replace('.', ',') ?? ''
+    }))
+    const waitAllData = async (): Promise<void> => {
+      for (const item of salesData) {
+        void (await new Promise((resolve) => {
+          const totalCostCalculationData = getTotalCalculationData(item)
+          API.postTotalCalculation(totalCostCalculationData)
+            .then((response) => {
+              resolve(total = response.valueSale)
+            })
+            .catch((err) => {
+              resolve('')
+              console.log(err)
+            })
+        }))
+      }
+      setTotalCharge(total)
+    }
+    void waitAllData()
+  }, [dataSales, proposal.costs])
+
+  useEffect(() => {
     void (async function () {
       await API.getCurrencies()
         .then((response) => setCurrencyList(response))
@@ -803,7 +836,7 @@ const Step6 = ({
   }
 
   function renderTotalSurchage (): JSX.Element | undefined {
-    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
+    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND') {
       if (dataSales.valueSale !== '' && dataSales.currencySale !== null) {
         return (
           <TotalSurcharge
@@ -828,6 +861,22 @@ const Step6 = ({
           <TotalSurcharge
             currency={dataContainer[0]?.currencySale}
             value={dataContainer.reduce((total, item) => Number(item.valueSale?.replace(',', '.')) + total, 0).toFixed(2).replace('.', ',')}
+            totalOtherFare={getSumTotalItem()}
+            cw={cw}
+            cwSale={cwSale}
+            modal={modal}
+            data={data}
+            totalCosts={totalCosts}
+          />
+        )
+      }
+    }
+    if (proposal.idTransport === 'SEA' && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType)) {
+      if (dataSales.valueSale !== '' && dataSales.currencySale !== null) {
+        return (
+          <TotalSurcharge
+            currency={dataSales.currencySale}
+            value={String(Number(totalCharge).toFixed(2)).replace('.', ',')}
             totalOtherFare={getSumTotalItem()}
             cw={cw}
             cwSale={cwSale}

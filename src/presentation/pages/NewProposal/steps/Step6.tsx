@@ -694,7 +694,7 @@ const Step6 = ({
       idCost: cost.idCost,
       selectedContainer: cost.idContainerType,
       agent: cost.agent,
-      type: "TON",
+      type: 'TON',
       saleCurrency: cost.idCurrencySale,
       saleValue: String(cost.valueSale?.toFixed(2)).replace('.', ',') ?? '',
       minimumValue: String(cost.valueMinimumSale?.toFixed(2)).replace('.', ',') ?? ''
