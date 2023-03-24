@@ -57,4 +57,6 @@ const getValidityFilter = (quickFilterList): string => {
   return type
 }
 
-export { getValidityFilter, getActivityFilter, getModalFilter }
+const convertToDecimal = (value: number): string => String(value.toFixed(2)).replace('.', ',')
+
+export { getValidityFilter, getActivityFilter, getModalFilter, convertToDecimal }

@@ -92,11 +92,44 @@
       "stack": "Permite empilhar",
       "type": "Tipo: "
     },
-    "ProposalDisplayModal": {
-      "title": "Fazer download de proposta",
-      "buttonText": "Confirmar idioma e fazer download"
-    }
+    "tariffModal": {
+      "minValue": "Valor Mínimo: ",
+      "validity": "Validade: ",
+      "frequency": "Frequência: ",
+      "route": "Rota: ",
+      "transitTime": "Transit time (dias): ",
+      "weight1": "+45kg",
+      "weight2": "+100kg",
+      "weight3": "+300kg",
+      "weight4": "+500kg",
+      "weight5": "+1 ton",
+      "currency": "Moeda: ",
+      "agentAirCompany": "Agente / Cia. Aérea: ",
+      "originDestination": "Origem e destino: ",
+      "airTitle": "Detalhamento da tarifa - Aéreo",
+      "seaLclTitle": "Detalhamento da tarifa - Marítimo LCL",
+      "seaFclTitle": "Detalhamento da tarifa - Marítimo FCL",
+      "landTitle": "Detalhamento da tarifa - Rodoviário",
+      "requiredField": "Campo obrigatório",
+      "save": "Salvar",
+      "choose": "Escolha ...",
+      "cancel": "Cancelar",
+      "untilWeight": "Até 7w/m: ",
+      "overWeight": "Acima: ",
+      "agentSeaCompany": "Agente / Cia. Marítima: ",
+      "container20": "Container 20: ",
+      "container40": "Container 40: ",
+      "generalCargoDed": "Carga Geral ded.: ",
+      "generalCargoCons": "Carga Geral cons.: ",
+      "ImoCargoDed": "Carga IMO ded.: ",
+      "ImoCargoCons": "Carga IMO cons.: ",
+      "agentLandCompany": "Agente / Transportadora: "
   },
+  "ProposalDisplayModal": {
+    "title": "Fazer download de proposta",
+    "buttonText": "Confirmar idioma e fazer download"
+  }
+},
   "pages": {
     "newProposal": {
       "buttonFinish": "Concluir proposta",
