@@ -256,7 +256,6 @@ const Step1 = ({
     setAgentList(selectedAgents)
   }, [data.proposalValue, selectedAgents, agentsList])
 
-
   return (
     <Separator>
       <Title>
