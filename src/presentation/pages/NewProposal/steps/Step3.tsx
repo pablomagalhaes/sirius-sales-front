@@ -283,6 +283,8 @@ const Step3 = ({
   }, [])
 
   useEffect(() => {
+    console.log('MODAL:')
+    console.log(modal)
     setProposal({
       ...proposal,
       cargo: [{
@@ -293,7 +295,7 @@ const Step3 = ({
             ? specificationsList
               .map((spe) => spe.toLowerCase())
               .indexOf(data.specifications) + 1
-            : 1,
+            : null,
         isDangerous: data.dangerous,
         idImoType: Number(data.imo),
         codeUnDangerous: Number(data.codUn),
