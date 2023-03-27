@@ -1285,7 +1285,8 @@ const Step6 = ({
                     <LineSeparator />
 
                     <Grid item xs={6}>
-                      <FormLabel component="legend">{'Agente: '}<strong>{getAgentNameByidBusinessPartnerAgent(proposal.agents[0].idBusinessPartnerAgent)}</strong>{' / Cia. Marítima: '}<strong>{getCorporateNameByidBusinessPartnerAgent(proposal.agents[0].idBusinessPartnerTransportCompany)}</strong></FormLabel>
+                      <FormLabel component="legend">{'Agente: '}<strong>{ getAgentNameByidBusinessPartnerAgent(proposal?.agents[0]?.idBusinessPartnerAgent)}</strong>
+                      {' / Cia. Marítima: '}<strong>{getCorporateNameByidBusinessPartnerAgent(proposal?.agents[0]?.idBusinessPartnerTransportCompany)}</strong></FormLabel>
                     </Grid>
 
                     {proposal.cargo[0].cargoVolumes.length > 0 &&
