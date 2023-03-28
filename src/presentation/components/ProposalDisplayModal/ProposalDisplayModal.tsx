@@ -18,6 +18,7 @@ import {
 } from '../StyledComponents/modalStyles'
 import { Button, LanguageSelect } from 'fiorde-fe-components'
 import { useDispatch } from 'react-redux'
+import { Pdf } from './Pdf'
 
 interface ProposalDisplayProps {
   open: boolean
@@ -44,11 +45,22 @@ const ProposalDisplayModal = ({
     dispatch(setLocale(language))
   }
 
+  const downloadPDF = (): void => {
+    if (proposal !== '') {
+      const linkSource = `data:application/pdf;base64,${proposal}`
+      const downloadLink = document.createElement('a')
+      const fileName = `${idProposal}-${language}.pdf`
+      downloadLink.href = linkSource
+      downloadLink.download = fileName
+      downloadLink.click()
+    }
+  }
+
   useEffect(() => {
     if (open) {
       void (async function () {
         await API.downloadProposal(language === 'pt' ? language + '_BR' : language + '_US', idProposal)
-          .then((response) => setProposal(response))
+          .then((response) => setProposal(response.body))
           .catch((err) => console.log(err))
       })()
     }
@@ -73,7 +85,7 @@ const ProposalDisplayModal = ({
                 backgroundGreen
                 disabled={false}
                 icon=""
-                onAction={async () => await API.downloadProposal(language === 'pt' ? language + '_BR' : language + '_US', idProposal)}
+                onAction={downloadPDF}
                 position="right"
                 text={I18n.t('components.ProposalDisplayModal.buttonText')}
                 tooltip={I18n.t('components.ProposalDisplayModal.buttonText')}
@@ -86,7 +98,7 @@ const ProposalDisplayModal = ({
           </RowReverseDiv>
         </HeaderDiv>
         <MainDiv>
-          <img src={`data:image/jpeg;base64,${proposal}`} />
+          {proposal !== '' && <Pdf url={`data:application/pdf;base64,${proposal}`} />}
         </MainDiv>
       </ModalDiv>
     </Modal >
