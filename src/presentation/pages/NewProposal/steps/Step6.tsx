@@ -293,7 +293,6 @@ const Step6 = ({
     proposal.costs = resultado
 
     if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
-
       data.forEach((item): void => {
         const freightCostNew = {
           id: item?.idCost,
