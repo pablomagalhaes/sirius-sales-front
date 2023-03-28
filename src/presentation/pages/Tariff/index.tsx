@@ -209,27 +209,29 @@ const Tariff = (): JSX.Element => {
 
   const createTabs = (): void => {
     const regionsTabs: any[] = []
-    tariffList?.forEach((item) => {
-      const content: any[] = []
-      item.countries.forEach((country: string) => content.push({
-        title: country,
-        component: <TariffTable
-          region={item.region}
-          expanded={countryExpanded === country}
-          country={country}
-          filter={filter}
-          setFilter={setFilter}
-        />,
-        disable: false,
-        onChange: (country: string, expanded: boolean): void => { setCountryExpanded(country) },
-        expanded: countryExpanded === country
-      }))
-      regionsTabs.push({
-        title: item.region,
-        icon: '',
-        component: <Accordion content={content} />
+    if (tariffList?.length > 0) {
+      tariffList.forEach((item) => {
+        const content: any[] = []
+        item.countries.forEach((country: string) => content.push({
+          title: country,
+          component: <TariffTable
+            region={item.region}
+            expanded={countryExpanded === country}
+            country={country}
+            filter={filter}
+            setFilter={setFilter}
+          />,
+          disable: false,
+          onChange: (country: string, expanded: boolean): void => { setCountryExpanded(country) },
+          expanded: countryExpanded === country
+        }))
+        regionsTabs.push({
+          title: item.region,
+          icon: '',
+          component: <Accordion content={content} />
+        })
       })
-    })
+    }
     setTabs(regionsTabs)
   }
 
