@@ -293,6 +293,7 @@ const Step6 = ({
     proposal.costs = resultado
 
     if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
+
       data.forEach((item): void => {
         const freightCostNew = {
           id: item?.idCost,
@@ -306,10 +307,10 @@ const Step6 = ({
           valueSalePercent: 0,
           valueMinimumSale: null,
           agent: {
-            id: item.agent.id,
-            idBusinessPartnerAgent: item.agent.idBusinessPartnerAgent,
-            idBusinessPartnerTransportCompany: item.agent.idBusinessPartnerTransportCompany,
-            proposalId: item.agent.proposalId
+            id: proposal.agents[0].id,
+            idBusinessPartnerAgent: proposal.agents[0].idBusinessPartnerAgent,
+            idBusinessPartnerTransportCompany: proposal.agents[0].idBusinessPartnerTransportCompany,
+            proposalId: null
           },
           costType: 'Frete',
           idCurrencySale: item.currencySale,
