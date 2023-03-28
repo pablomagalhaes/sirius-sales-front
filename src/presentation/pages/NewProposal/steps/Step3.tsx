@@ -293,7 +293,7 @@ const Step3 = ({
             ? specificationsList
               .map((spe) => spe.toLowerCase())
               .indexOf(data.specifications) + 1
-            : 1,
+            : null,
         isDangerous: data.dangerous,
         idImoType: Number(data.imo),
         codeUnDangerous: Number(data.codUn),
@@ -318,7 +318,7 @@ const Step3 = ({
               .map((spe) => spe.toLowerCase())
               .indexOf(data.specifications) + 1
             : 1,
-        idContainerType: !marineFCL() ? null : verifyContainerByType(row.type), // !marineFCL() ? null : containerTypeList.filter((cont) => cont.type === row.type)[0]?.id,
+        idContainerType: modal !== 'SEA' || !marineFCL() ? null : verifyContainerByType(row.type), // !marineFCL() ? null : containerTypeList.filter((cont) => cont.type === row.type)[0]?.id,
         idPackaging: 0, // marineFCL() ? null : packagingList.filter((pack) => pack.packaging === row.type)[0]?.id,
         valueQuantity: Number(row.amount),
         valueGrossWeight: Number(row.rawWeight?.replace(',', '.')),
