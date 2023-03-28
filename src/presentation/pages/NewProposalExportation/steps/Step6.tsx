@@ -469,9 +469,7 @@ const Step6 = ({
                     ? 0
                     : calculationData?.cubageWeight,
                   valuePurchase: 0,
-                  valueSale: Number(cost.valueSale) > Number(cost.valueMinimumSale)
-                    ? Number(cost.valueSale)
-                    : Number(cost.valueMinimumSale),
+                  valueSale: Number(cost.valueSale),
                   idCurrencyPurchase: cost.idCurrencyPurchase,
                   idCurrencySale: cost.idCurrencySale,
                   valuePurchaseCW:
@@ -746,7 +744,6 @@ const Step6 = ({
       step5destiny: false,
       step6: false
     })
-
     const totalCostCalculationData = getTotalCalculationData(item)
 
     void (async function () {
@@ -816,11 +813,14 @@ const Step6 = ({
     let totalSum: number = 0
     for (let index = 0; index < tableData.length; index++) {
       const item = tableData[index]
-      if (item.minimumValue > item.saleValue) {
+      const MinValue = Number(item.minimumValue?.replace(',', '.'))
+      const TotalItem = Number(item.totalItem?.replace(',', '.'))
+
+      if (MinValue > TotalItem) {
         totalSum = totalSum + Number(item.minimumValue?.replace(',', '.'))
       }
-      if (item.minimumValue < item.saleValue) {
-        totalSum = totalSum + Number(item.saleValue?.replace(',', '.'))
+      if (MinValue <= TotalItem) {
+        totalSum = totalSum + Number(item.totalItem?.replace(',', '.'))
       }
     }
     return totalSum.toFixed(2).replace('.', ',')

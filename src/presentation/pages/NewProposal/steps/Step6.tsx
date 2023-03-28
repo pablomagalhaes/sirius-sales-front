@@ -469,9 +469,7 @@ const Step6 = ({
                     ? 0
                     : calculationData?.cubageWeight,
                   valuePurchase: 0,
-                  valueSale: Number(cost.valueSale) > Number(cost.valueMinimumSale)
-                    ? Number(cost.valueSale)
-                    : Number(cost.valueMinimumSale),
+                  valueSale: Number(cost.valueSale),
                   idCurrencyPurchase: cost.idCurrencyPurchase,
                   idCurrencySale: cost.idCurrencySale,
                   valuePurchaseCW:
@@ -483,7 +481,6 @@ const Step6 = ({
                       ? Number(proposal.cargo[0].vlCwSale)
                       : null
                 }
-
                 API.postTotalCalculation(totalCostCalculationData)
                   .then((response) => {
                     resolve(Number(response?.valueSale))
@@ -837,26 +834,14 @@ const Step6 = ({
     let totalSum: number = 0
     for (let index = 0; index < tableData.length; index++) {
       const item = tableData[index]
-
       const MinValue = Number(item.minimumValue?.replace(',', '.'))
-      const SaleValue = Number(item.saleValue?.replace(',', '.'))
+      const TotalItem = Number(item.totalItem?.replace(',', '.'))
 
-      if (item.type === 'FIXO' || item.type === 'BL') {
-        if (MinValue > SaleValue) {
-          totalSum = totalSum + Number(item.minimumValue?.replace(',', '.'))
-        }
-        if (MinValue <= SaleValue) {
-          totalSum = totalSum + Number(item.saleValue?.replace(',', '.'))
-        }
+      if (MinValue > TotalItem) {
+        totalSum = totalSum + Number(item.minimumValue?.replace(',', '.'))
       }
-
-      if (item.type === 'KG' || item.type === 'CW') {
-        if (MinValue > SaleValue) {
-          totalSum = totalSum + Number(item.totalItem?.replace(',', '.'))
-        }
-        if (MinValue <= SaleValue) {
-          totalSum = totalSum + Number(item.totalItem?.replace(',', '.'))
-        }
+      if (MinValue <= TotalItem) {
+        totalSum = totalSum + Number(item.totalItem?.replace(',', '.'))
       }
     }
     return totalSum.toFixed(2).replace('.', ',')
@@ -1285,7 +1270,8 @@ const Step6 = ({
                     <LineSeparator />
 
                     <Grid item xs={6}>
-                      <FormLabel component="legend">{'Agente: '}<strong>{getAgentNameByidBusinessPartnerAgent(proposal.agents[0].idBusinessPartnerAgent)}</strong>{' / Cia. Marítima: '}<strong>{getCorporateNameByidBusinessPartnerAgent(proposal.agents[0].idBusinessPartnerTransportCompany)}</strong></FormLabel>
+                      <FormLabel component="legend">{'Agente: '}<strong>{ getAgentNameByidBusinessPartnerAgent(proposal?.agents[0]?.idBusinessPartnerAgent)}</strong>
+                      {' / Cia. Marítima: '}<strong>{getCorporateNameByidBusinessPartnerAgent(proposal?.agents[0]?.idBusinessPartnerTransportCompany)}</strong></FormLabel>
                     </Grid>
 
                     {proposal.cargo[0].cargoVolumes.length > 0 &&
