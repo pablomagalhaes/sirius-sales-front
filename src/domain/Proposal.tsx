@@ -38,7 +38,7 @@ export interface Proposal {
     isDangerous: boolean // step3 perigoso
     idImoType: number // id IMO
     idTemperature: number // step 3 id temperatura
-    idCargoContractingType: number // id especificacoes step3 (null observar comportamento)
+    idCargoContractingType: number | null // id especificacoes step3 (null observar comportamento)
     codeUnDangerous: number // step 3 codigo
     cargoVolumes: CargoVolume[] // array de items adicionados
     vlCwPurchase: number | null // chargeable weight compra
