@@ -306,10 +306,10 @@ const Step6 = ({
           valueSalePercent: 0,
           valueMinimumSale: null,
           agent: {
-            id: item.agent.id,
-            idBusinessPartnerAgent: item.agent.idBusinessPartnerAgent,
-            idBusinessPartnerTransportCompany: item.agent.idBusinessPartnerTransportCompany,
-            proposalId: item.agent.proposalId
+            id: proposal.agents[0].id,
+            idBusinessPartnerAgent: proposal.agents[0].idBusinessPartnerAgent,
+            idBusinessPartnerTransportCompany: proposal.agents[0].idBusinessPartnerTransportCompany,
+            proposalId: null
           },
           costType: 'Frete',
           idCurrencySale: item.currencySale,
