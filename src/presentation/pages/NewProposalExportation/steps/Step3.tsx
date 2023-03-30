@@ -317,7 +317,7 @@ const Step3 = ({
             ? specificationsList.map((spe) => spe.toLowerCase()).indexOf(data.specifications) + 1
             : 1,
         idContainerType: modal !== 'SEA' || !marineFCL() ? null : verifyContainerByType(row.type), // !marineFCL() ? null : containerTypeList.filter((cont) => cont.type === row.type)[0]?.id,
-        idPackaging: marineFCL() ? null : verifyPackagingByType(row.type),
+        idPackaging: marineFCL() ? null : packagingList.filter((pack) => pack.packaging === row.type)[0]?.id,
         valueQuantity: Number(row.amount),
         valueGrossWeight: Number(row.rawWeight?.replace(',', '.')),
         valueCubage: Number(row.cubage?.replace(',', '.')),
@@ -332,10 +332,13 @@ const Step3 = ({
   }, [tableRows])
 
   const marineFCL = (): boolean => {
-    const specification =
+    let specification: string = ''
+    if (proposal.cargo[0].idCargoContractingType !== null) {
+      specification =
       specificationsList[
         Number(proposal.cargo[0].idCargoContractingType) - 1
       ].toLowerCase()
+    }
     return modal === 'SEA' && specification === 'fcl'
   }
 
