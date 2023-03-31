@@ -319,7 +319,6 @@ const Step6 = ({
           isPurchase: false,
           isSale: true
         }
-        console.log('getFreightCost - primeiro if', freightCostNew)
         freightCostArrayNew.push(freightCostNew)
       })
       if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
@@ -348,7 +347,6 @@ const Step6 = ({
           isPurchase: false,
           isSale: true
         }
-        console.log('getFreightCost - segundo if', freightCostSale)
         freightCostArrayNew.push(freightCostSale)
       }
     }
