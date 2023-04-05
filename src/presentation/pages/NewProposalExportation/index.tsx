@@ -310,15 +310,29 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
       label: I18n.t('pages.newProposal.save'),
       onClick: () => handleSave()
     }, {
-      iconType: 'file',
-      label: I18n.t('pages.newProposal.viewDownload'),
-      onClick: () => handleOpen()
-    }, {
       iconType: 'send',
       label: I18n.t('pages.newProposal.send'),
       onClick: () => { }
     }
   ]
+
+    // Menu suspenso após proposta ter sido salva
+    const floatingButtonMenuItemsAfterSaved = [
+      {
+        iconType: 'save',
+        label: I18n.t('pages.newProposal.save'),
+        onClick: () => handleSave()
+      }, {
+        iconType: 'file',
+        label: I18n.t('pages.newProposal.viewDownload'),
+        onClick: () => handleOpen()
+      },
+      {
+        iconType: 'send',
+        label: I18n.t('pages.newProposal.send'),
+        onClick: () => { }
+      }
+    ]
 
   const getEnchargedFullname = (): string => {
     const user = JSON.parse(localStorage.getItem('user') || '{}')
@@ -519,7 +533,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
             text={I18n.t('pages.newProposal.buttonFinish')}
             tooltip={I18n.t('pages.newProposal.buttonFinish')}
           >
-            <FloatingMenu menuItems={floatingButtonMenuItems} />
+            <FloatingMenu menuItems={proposal.idProposal != null ? floatingButtonMenuItemsAfterSaved : floatingButtonMenuItems} />
           </Button>
         </ButtonContainer>
       </TopContainer>
