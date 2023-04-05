@@ -195,7 +195,7 @@ const AirTariffModal = ({
   const validateDate = (): boolean => {
     const validityDate = moment(data.dtValidity, 'DD/MM/YYYY', true)
     const today = moment().startOf('day')
-    return validityDate.isValid() && validityDate.isSameOrAfter(today) 
+    return validityDate.isValid() && validityDate.isSameOrAfter(today)
   }
 
   const handleOnAdd = (): void => {
