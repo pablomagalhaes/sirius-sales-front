@@ -23,7 +23,7 @@ import { Pdf } from './Pdf'
 interface ProposalDisplayProps {
   open: boolean
   setClose: () => void
-  idProposal: string
+  idProposal: string | null
 }
 
 const ProposalDisplayModal = ({
@@ -46,7 +46,7 @@ const ProposalDisplayModal = ({
   }
 
   const downloadPDF = (): void => {
-    if (proposal !== '') {
+    if (proposal !== '' && idProposal !== null && language !== undefined) {
       const linkSource = `data:application/pdf;base64,${proposal}`
       const downloadLink = document.createElement('a')
       const fileName = `${idProposal}-${language}.pdf`
@@ -57,14 +57,14 @@ const ProposalDisplayModal = ({
   }
 
   useEffect(() => {
-    if (open) {
+    if (open && idProposal !== null && language !== undefined) {
       void (async function () {
         await API.downloadProposal(language === 'pt' ? language + '_BR' : language + '_US', idProposal)
           .then((response) => setProposal(response.body))
           .catch((err) => console.log(err))
       })()
     }
-  }, [open, language])
+  }, [open, language, idProposal])
 
   return (
     <Modal open={open} onClose={handleOnClose}>
