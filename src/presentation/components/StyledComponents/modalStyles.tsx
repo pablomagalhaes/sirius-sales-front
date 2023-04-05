@@ -48,7 +48,7 @@ export const HeaderDiv = styled.div`
   width: 100%;
   font-family: DM Sans;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 600 !important;
   font-size: 16px;
   line-height: 150%;
   margin-top: 23px;

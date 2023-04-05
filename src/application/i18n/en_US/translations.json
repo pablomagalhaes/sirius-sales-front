@@ -311,6 +311,12 @@
         "waitingForCustomerReturnLabel": "Awai. customer return",
         "viewDownload": "View / Download"
       }
+    },
+    "tariff": {
+      "upload": {
+        "import": "Import",
+        "export": "Export"
+      }
     }
   }
 }

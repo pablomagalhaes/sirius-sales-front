@@ -314,6 +314,12 @@
         "waitingForCustomerReturnLabel": "Ag. ret. cliente",
         "viewDownload": "Visualizar / Fazer download"
       }
+    },
+    "tariff": {
+      "upload": {
+        "import": "Importação",
+        "export": "Exportação"
+      }
     }
   }
 }

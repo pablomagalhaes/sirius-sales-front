@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import {
   Accordion,
   Button,
+  FloatingMenu,
   RowFilter,
   Tabs,
   QuickFilters
@@ -31,10 +32,11 @@ import UpArrow from '../../../application/icons/UpArrow'
 import API from '../../../infrastructure/api'
 import ArrowDown from '../../../application/icons/ArrowDown'
 import { orderButtonMenuItems, menuItems } from './constants'
-// import { I18n } from 'react-redux-i18n'
+import { I18n } from 'react-redux-i18n'
 import { StatusProposalStringEnum } from '../../../application/enum/statusProposalEnum'
 import TariffTable from './TariffTable'
 import { getModalFilter, getActivityFilter, getValidityFilter } from './helpers'
+import TariffUploadModal from '../../components/TariffUploadModal/TariffUploadModal'
 
 const defaultFilter = {
   direction: 'ASC',
@@ -66,6 +68,8 @@ const Tariff = (): JSX.Element => {
   ])
   const [tabs, setTabs] = useState<any[]>()
   const [countryExpanded, setCountryExpanded] = useState<string>('')
+  const [open, setOpen] = useState(false)
+  const [uploadType, setUploadType] = useState('')
 
   const history = useHistory()
 
@@ -128,6 +132,18 @@ const Tariff = (): JSX.Element => {
   //       .catch((err) => console.log(err))
   //   })()
   // }, [])
+
+  const floatingButtonMenuItems = [
+    {
+      iconType: 'import',
+      label: I18n.t('pages.tariff.upload.import'),
+      onClick: () => { setUploadType(I18n.t('pages.tariff.upload.import')); setOpen(true) }
+    }, {
+      iconType: 'export',
+      label: I18n.t('pages.tariff.upload.export'),
+      onClick: () => { setUploadType(I18n.t('pages.tariff.upload.export')); setOpen(true) }
+    }
+  ]
 
   const getOriginDestinyList = (land: string): string[] => {
     const actualList: string[] = []
@@ -631,7 +647,10 @@ const Tariff = (): JSX.Element => {
               popover
               position="left"
 
-              />
+              >
+              <FloatingMenu menuItems={floatingButtonMenuItems} />
+            </Button>
+            <TariffUploadModal setClose={() => setOpen(false)} open={open} type={uploadType}/>
           </ButtonContainer>
         </TopButtonContainer>
       </TopContainer>
