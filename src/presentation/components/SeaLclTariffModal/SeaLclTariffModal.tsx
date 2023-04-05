@@ -153,8 +153,6 @@ const SeaLclTariffModal = ({
       (data.frequency === null || data.frequency?.length === 0) ||
       (data.txRoute === null || data.txRoute?.length === 0) ||
       (data.transitTime === null || data.transitTime?.length === 0) ||
-      (data.agent === null || data.agent?.length === 0) ||
-      (data.originDestination === null || data.originDestination?.length === 0) ||
       (data.currency === null || data.currency?.length === 0))
   }
 

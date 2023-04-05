@@ -14,6 +14,7 @@ export function Pdf (props): JSX.Element {
       <Document file={props.url} onLoadSuccess={onDocumentLoadSuccess} loading="">
         {numPages !== null && Array.from({ length: numPages }, (_, i) => i + 1).map((num) =>
             <Page
+                key={num}
                 pageNumber={num}
                 loading=""
                 renderAnnotationLayer={false}
