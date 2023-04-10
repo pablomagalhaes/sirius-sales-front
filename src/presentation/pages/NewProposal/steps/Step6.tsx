@@ -343,7 +343,7 @@ const Step6 = ({
           idCurrencySale: dataSales.currencySale,
           idCurrencyPurchase: dataSales.currencySale,
           valueSale: Number(dataSales.valueSale.replace(',', '.')),
-          valuePurchase: Number(0),
+          valuePurchase: null,
           isPurchase: false,
           isSale: true
         }
