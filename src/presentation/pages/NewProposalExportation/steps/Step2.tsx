@@ -395,7 +395,7 @@ const Step2 = ({
         cargoDeliveryAddress: data.collectionDap
       })
     }
-  }, [data])
+  }, [data, oriCitiesList, destCitiesList])
 
   useEffect(() => {
     setProposal({
