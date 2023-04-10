@@ -534,7 +534,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       <ProposalDisplayModal
           open={open}
           setClose={handleClose}
-          idProposal={location.state?.proposalId}
+          idProposal={proposal.idProposal}
         />
       {leavingPage && <MessageExitDialog />}
       {loadExistingProposal &&

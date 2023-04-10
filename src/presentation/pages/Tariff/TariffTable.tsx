@@ -142,7 +142,6 @@ const TariffTable = ({
             const tariffs = getTariffItems(response.content)
             if (tariffs.length > 0) {
               setData(tariffs)
-              console.log(response.content)
               setTariffData(response.content)
             } else {
               setData([])
