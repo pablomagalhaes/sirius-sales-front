@@ -103,7 +103,6 @@ const Step5 = ({
       }
     }
   }))
-  console.log(proposal)
   useEffect(() => {
     const loadedDataOrigin: CostTableItem[] = []
     const loadedDataDestiny: CostTableItem[] = []
