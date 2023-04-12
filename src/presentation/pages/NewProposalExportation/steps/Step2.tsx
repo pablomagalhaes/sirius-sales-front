@@ -239,9 +239,9 @@ const Step2 = ({
     }
     return ''
   }
-
+  console.log(proposal)
   useEffect(() => {
-    if (proposalType === 'CLIENT' && loadedAgentsData) {
+    if (loadedAgentsData) {
       setAgentList(selectedAgents)
     }
   }, [selectedAgents, agentsList])

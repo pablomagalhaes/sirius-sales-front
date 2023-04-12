@@ -91,7 +91,6 @@ const Step1 = ({
       idBusinessPartnerTransportCompany: null
     }
   ])
-
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
   const getidBusinessPartnerAgent = (agentName: string): number | undefined => {
@@ -198,8 +197,22 @@ const Step1 = ({
         })
         .catch((err) => console.log(err))
     })
-
-    if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
+    if (proposal.proposalType === 'ROUTING ORDER') {
+      void Promise.all([getAgents, getPartners]).then(
+        () => {
+          setData({
+            proposal: proposal.proposalType,
+            serviceDesemb: proposal.clearenceIncluded,
+            serviceTransport: proposal.transportIncluded,
+            modal: proposal.idTransport,
+            proposalValue: '',
+            requester: proposal.requester
+          })
+          setStepLoaded((currentState) => ({ ...currentState, step1: true }))
+        }
+      )
+    }
+    else if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
       const getPartnerCostumer = new Promise<void>((resolve) => {
         API.getBusinessPartnerCostumer(proposal.idBusinessPartnerCustomer)
           .then((response) => {

@@ -111,7 +111,22 @@ const Step1 = ({
         .catch((err) => console.log(err))
     })
 
-    if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
+    if (proposal.proposalType === 'ROUTING ORDER') {
+      void Promise.all([getAgents, getPartners]).then(
+        () => {
+          setData({
+            proposal: proposal.proposalType,
+            serviceDesemb: proposal.clearenceIncluded,
+            serviceTransport: proposal.transportIncluded,
+            modal: proposal.idTransport,
+            proposalValue: '',
+            requester: proposal.requester
+          })
+          setStepLoaded((currentState) => ({ ...currentState, step1: true }))
+        }
+      )
+    }
+    else if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
       const getPartnerCostumer = new Promise<void>((resolve) => {
         API.getBusinessPartnerCostumer(proposal.idBusinessPartnerCustomer)
           .then((response) => {
@@ -137,6 +152,15 @@ const Step1 = ({
       setStepLoaded((currentState) => ({ ...currentState, step1: true }))
     }
   }, [])
+
+  useEffect(() => {
+    setProposal({
+      ...proposal,
+      agents: selectedAgents.map(
+        ({ shippingCompany, agent, ...otherProperties }) => otherProperties
+      )
+    })
+  }, [selectedAgents])
 
   useEffect(() => {
     let firstAgent!: any[]
@@ -375,7 +399,7 @@ const Step1 = ({
                                 {...params}
                                 id="search-client"
                                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                invalid={data.proposalValue === '' && invalidInput}
+                                invalid={selectedAgent.agent === '' && invalidInput}
                                 variant="outlined"
                                 size="small"
                                 placeholder={I18n.t('pages.newProposal.step1.searchClient')}
