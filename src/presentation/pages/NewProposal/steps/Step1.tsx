@@ -130,11 +130,7 @@ const Step1 = ({
     }
     return ''
   }
-  useEffect(() => {
-    if (data.proposal === 'ROUTING ORDER') {
-      setAgentList(selectedAgents)
-    }
-  }, [selectedAgents, agentsList])
+
   const getAgentById = (idProposalAgent: number | null | undefined): string => {
     if (idProposalAgent !== null && idProposalAgent !== undefined) {
       const agent = agentsList.find((agent) => agent.businessPartner.id === idProposalAgent)

@@ -239,7 +239,7 @@ const Step2 = ({
     }
     return ''
   }
-  console.log(proposal)
+
   useEffect(() => {
     if (loadedAgentsData) {
       setAgentList(selectedAgents)
