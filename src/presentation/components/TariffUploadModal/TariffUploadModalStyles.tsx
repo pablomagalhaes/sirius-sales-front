@@ -120,3 +120,8 @@ export const ButtonDiv = styled.div`
     border: 0px !important;
   }
 `
+
+export const DragAndDropDiv = styled.div`
+  margin: -47px;
+  margin-top: -30px;
+`

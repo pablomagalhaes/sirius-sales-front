@@ -6,7 +6,8 @@ import {
   ButtonDiv,
   CloseButtonDiv,
   ModalDiv,
-  MainDiv
+  MainDiv,
+  DragAndDropDiv
 } from './TariffUploadModalStyles'
 import { I18n } from 'react-redux-i18n'
 import {
@@ -16,7 +17,7 @@ import {
   Title,
   CloseIconContainer
 } from '../StyledComponents/modalStyles'
-import { Button } from 'fiorde-fe-components'
+import { Button, DragAndDrop } from 'fiorde-fe-components'
 import { makeStyles } from '@material-ui/core/styles'
 import API from '../../../infrastructure/api'
 
@@ -99,7 +100,6 @@ const TariffUploadModal = ({
           .catch((err) => console.log(err))
       }
     } else {
-      console.log('entrou')
       setInvalidInput(true)
     }
   }
@@ -133,7 +133,7 @@ const TariffUploadModal = ({
         .then((agent) => setAgentsList(agent))
         .catch((err) => console.log(err))
     })()
-  })
+  }, [])
 
   const getidBusinessPartnerAgent = (agentName: string): number | undefined => {
     let id
@@ -239,6 +239,15 @@ const TariffUploadModal = ({
                 </Select>
               </FormControl>
             </Grid>
+            <DragAndDropDiv>
+              <DragAndDrop 
+                onAction={setFile}
+                label= "Você pode arrastar o arquivo .csv para esta área ou"
+                uploadButtonLabel= "Selecionar arquivo"
+                status={progress === 100 ? "Upload completo | Em processamento" : "Fazendo upload"}
+                progress={progress}
+              />
+            </DragAndDropDiv>
             { completed && <Grid item xs={12}>
               <p>Acompanhe o processamento do arquivo na tela de processamentos.</p>
             </Grid>}
