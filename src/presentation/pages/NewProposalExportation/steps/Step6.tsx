@@ -343,7 +343,7 @@ const Step6 = ({
           idCurrencySale: dataSales.currencySale,
           idCurrencyPurchase: dataSales.currencySale,
           valueSale: Number(dataSales.valueSale.replace(',', '.')),
-          valuePurchase: Number(dataSales.valueSale.replace(',', '.')),
+          valuePurchase: null,
           isPurchase: false,
           isSale: true
         }
@@ -624,25 +624,46 @@ const Step6 = ({
   }, [data, dataTotalCost, dataContainer])
 
   useEffect(() => {
-    if (data.every(d => d.currencyPurchase !== '') && data.every(d => d.valuePurchase !== '')) {
-      setCompleted((currentState) => {
-        return { ...currentState, step6: true }
-      })
-      setFilled((currentState) => {
-        return { ...currentState, step6: true }
-      })
-    } else {
-      setFilled((currentState) => {
-        return { ...currentState, step6: false }
-      })
-      setCompleted((currentState) => {
-        return { ...currentState, step6: false }
-      })
+    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
+      if (data.every(d => d.currencyPurchase !== '') && data.every(d => d.valuePurchase !== '')) {
+        setCompleted((currentState) => {
+          return { ...currentState, step6: true }
+        })
+        setFilled((currentState) => {
+          return { ...currentState, step6: true }
+        })
+      } else {
+        setFilled((currentState) => {
+          return { ...currentState, step6: false }
+        })
+        setCompleted((currentState) => {
+          return { ...currentState, step6: false }
+        })
+      }
     }
+
+    if (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType) {
+      if (dataContainer.every(d => d.currencyPurchase !== '') && dataContainer.every(d => d.valuePurchase !== '')) {
+        setCompleted((currentState) => {
+          return { ...currentState, step6: true }
+        })
+        setFilled((currentState) => {
+          return { ...currentState, step6: true }
+        })
+      } else {
+        setFilled((currentState) => {
+          return { ...currentState, step6: false }
+        })
+        setCompleted((currentState) => {
+          return { ...currentState, step6: false }
+        })
+      }
+    }
+
     setDataTotalCost(
       Array.from(currencyArray, ([name, value]) => ({ name, value }))
     )
-  }, [tableData, data, tableData.length])
+  }, [tableData, data, dataContainer, tableData.length])
 
   useEffect(() => {
     const newTableData: FareModalData[] = []

@@ -241,7 +241,7 @@ const Step2 = ({
   }
 
   useEffect(() => {
-    if (proposalType === 'CLIENT' && loadedAgentsData) {
+    if (loadedAgentsData) {
       setAgentList(selectedAgents)
     }
   }, [selectedAgents, agentsList])
@@ -395,7 +395,7 @@ const Step2 = ({
         cargoDeliveryAddress: data.collectionDap
       })
     }
-  }, [data])
+  }, [data, oriCitiesList, destCitiesList])
 
   useEffect(() => {
     setProposal({

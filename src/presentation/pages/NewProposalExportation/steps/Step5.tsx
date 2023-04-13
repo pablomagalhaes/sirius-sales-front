@@ -103,7 +103,6 @@ const Step5 = ({
       }
     }
   }))
-
   useEffect(() => {
     const loadedDataOrigin: CostTableItem[] = []
     const loadedDataDestiny: CostTableItem[] = []
