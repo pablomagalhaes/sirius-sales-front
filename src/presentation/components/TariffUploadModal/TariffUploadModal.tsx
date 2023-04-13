@@ -240,11 +240,11 @@ const TariffUploadModal = ({
               </FormControl>
             </Grid>
             <DragAndDropDiv>
-              <DragAndDrop 
+              <DragAndDrop
                 onAction={setFile}
                 label= "Você pode arrastar o arquivo .csv para esta área ou"
                 uploadButtonLabel= "Selecionar arquivo"
-                status={progress === 100 ? "Upload completo | Em processamento" : "Fazendo upload"}
+                status={progress === 100 ? 'Upload completo | Em processamento' : 'Fazendo upload'}
                 progress={progress}
               />
             </DragAndDropDiv>
