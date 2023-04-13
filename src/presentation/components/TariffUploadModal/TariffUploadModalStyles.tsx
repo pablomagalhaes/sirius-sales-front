@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Box, TableCell, Radio } from '@material-ui/core'
+import { Box, Radio, MenuItem, Select, FormControl } from '@material-ui/core'
 import { primary } from '../../../application/themes'
 
 interface StyledRadioProps {
@@ -85,15 +85,6 @@ export const CheckBoxArea = styled.div`
   cursor: pointer;
 `
 
-interface StyledTableCellProps {
-  width: string
-}
-
-export const StyledTableCell = styled(TableCell)`
-  width: ${(props: StyledTableCellProps) => props.width};
-  vertical-align: top ! important;
-`
-
 export const CloseButtonDiv = styled.div`
   margin-top: 30px;
   margin-bottom: 25px;
@@ -124,4 +115,36 @@ export const ButtonDiv = styled.div`
 export const DragAndDropDiv = styled.div`
   margin: -47px;
   margin-top: -30px;
+`
+
+export const Form = styled(FormControl)`
+  width: 100%;
+`
+interface StyledSelect {
+  invalidData: boolean
+}
+
+export const SelectEmpty = styled(Select)`
+  margin-top: 0;
+  padding: 5px;
+  padding-left: 5px;
+  font-weight: 400 !important;
+  font-size: 14px !important;
+  &.MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline
+  {
+    border-color: ${(props: StyledSelect) => props.invalidData && '#f44336'};
+  };
+  &.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline
+    {
+      border-color: #D9DCE6;
+    };
+  &.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline
+    {
+      border-color: #43BFB5;
+    };
+`
+
+export const Item = styled(MenuItem)`
+  font-weight: 400;
+  font-size: 14px;
 `

@@ -1,4 +1,4 @@
-import { Modal, Grid, FormLabel, MenuItem, Select, RadioGroup, FormControlLabel, FormControl } from '@material-ui/core'
+import { Modal, Grid, FormLabel, RadioGroup, FormControlLabel } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import CloseIcon from '../../../application/icons/CloseIcon'
 import {
@@ -7,7 +7,10 @@ import {
   CloseButtonDiv,
   ModalDiv,
   MainDiv,
-  DragAndDropDiv
+  DragAndDropDiv,
+  Form,
+  SelectEmpty,
+  Item
 } from './TariffUploadModalStyles'
 import { I18n } from 'react-redux-i18n'
 import {
@@ -18,7 +21,6 @@ import {
   CloseIconContainer
 } from '../StyledComponents/modalStyles'
 import { Button, DragAndDrop } from 'fiorde-fe-components'
-import { makeStyles } from '@material-ui/core/styles'
 import API from '../../../infrastructure/api'
 
 interface AgentType {
@@ -55,37 +57,6 @@ const TariffUploadModal = ({
   const [completed, setCompleted] = useState<boolean>(false)
   const [agentsList, setAgentsList] = useState<any[]>([])
 
-  const useStyles = makeStyles(() => ({
-    formControl: {
-      width: '100%'
-    },
-    Item: {
-      fontWeight: 400,
-      fontSize: '14px'
-    },
-    selectEmpty: {
-      marginTop: 0,
-      padding: '5px',
-      paddingLeft: '5px',
-      fontWeight: 400,
-      fontSize: '14px',
-      '&.MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline':
-      {
-        borderColor: data.agent.name.length === 0 && invalidInput && '#f44336'
-      },
-      '&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline':
-        {
-          borderColor: '#D9DCE6'
-        },
-      '&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
-        {
-          borderColor: '#43BFB5'
-        }
-    }
-  }))
-
-  const classes = useStyles()
-
   const uploadTariff = async (): Promise<void> => {
     if (validateData() && data.modal !== null) {
       if (type === 'Importação' && data.agent.idBusinessPartnerAgent !== null) {
@@ -114,6 +85,7 @@ const TariffUploadModal = ({
   }
 
   const validateData = (): boolean => {
+    console.log(type === 'Importação' && data.agent.idBusinessPartnerAgent === null)
     return !(
       (data.modal === null || data.modal?.length === 0) ||
         (type === 'Importação' && data.agent.idBusinessPartnerAgent === null) ||
@@ -199,19 +171,18 @@ const TariffUploadModal = ({
               </RadioGroup>
             </Grid>
             <Grid item xs={12}>
-              <FormLabel component="legend" error={data.agent.name.length === 0 && invalidInput}>
+              <FormLabel component="legend" error={type === 'Importação' && data.agent.name.length === 0 && invalidInput}>
                 {I18n.t('pages.newProposal.step2.agents')}:
                 {type === 'Importação' && (
                   <RedColorSpan> *</RedColorSpan>
                 )}
               </FormLabel>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <Select
+              <Form variant="outlined">
+                <SelectEmpty
                   labelId="demo-simple-select-outlined-label"
                   id="demo-simple-select-outlined"
                   value={data.agent.name}
                   displayEmpty
-                  className={classes.selectEmpty}
                   inputProps={{ 'aria-label': 'Without label' }}
                   onChange={(e) => {
                     setData({
@@ -222,22 +193,22 @@ const TariffUploadModal = ({
                       }
                     })
                   }}
+                  invalidData={type === 'Importação' && data.agent.name.length === 0 && invalidInput}
                   disableUnderline={true}
                 >
-                  <MenuItem value="">
+                  <Item value="">
                     <em> </em>
-                  </MenuItem>
+                  </Item>
                   {agentsList.map((item) =>
-                    <MenuItem
+                    <Item
                       value={item.businessPartner.simpleName}
                       key={item.businessPartner.id}
-                      className={classes.Item}
                     >
                       {item.businessPartner.simpleName}
-                    </MenuItem>
+                    </Item>
                   )}
-                </Select>
-              </FormControl>
+                </SelectEmpty>
+              </Form>
             </Grid>
             <DragAndDropDiv>
               <DragAndDrop
