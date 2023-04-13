@@ -68,6 +68,7 @@ const Step1 = ({
 }: Step1Props): JSX.Element => {
   const [transportList] = useState<Transport[]>(TransportList)
   const [agentsList, setAgentsList] = useState<any[]>([])
+  const [businessPartnerList, setBusinessPartnerList] = useState<any[]>([])
   const [partnerList, setPartnerList] = useState<any[]>([])
   const [data, setData] = useState({
     proposal: '',
@@ -93,6 +94,38 @@ const Step1 = ({
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
   useEffect(() => {
+    if (data.proposal === 'ROUTING ORDER') {
+      setAgentList(selectedAgents)
+    }
+  }, [data.proposalValue, selectedAgents, agentsList])
+  useEffect(() => {
+    if (proposal.idTransport !== '') {
+      if (proposal.idTransport === 'SEA') {
+        void getBusinessPartner('ARMADOR')
+        void getBusinessPartner('COLOADER')
+      } else {
+        void getBusinessPartner(getBusinessPartnerType())
+      }
+    }
+  }, [proposal.idTransport])
+
+  const getBusinessPartner = async (type: string): Promise<any> => {
+    const response = await API.getBusinessPartnerByType(type)
+    if (response !== undefined) {
+      setBusinessPartnerList([...response])
+    }
+  }
+  const getBusinessPartnerType = (): string => {
+    switch (proposal.idTransport) {
+      case 'AIR':
+        return 'CIA. AEREA'
+      case 'LAND':
+        return 'TRANS. INTERNACIONAL'
+    }
+    return ''
+  }
+
+  useEffect(() => {
     const getAgents = new Promise<void>((resolve) => {
       API.getAgents()
         .then((response) => {
@@ -111,7 +144,22 @@ const Step1 = ({
         .catch((err) => console.log(err))
     })
 
-    if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
+    if (proposal.proposalType === 'ROUTING ORDER') {
+      void Promise.all([getAgents, getPartners]).then(
+        () => {
+          setData({
+            proposal: proposal.proposalType,
+            serviceDesemb: proposal.clearenceIncluded,
+            serviceTransport: proposal.transportIncluded,
+            modal: proposal.idTransport,
+            proposalValue: '',
+            requester: proposal.requester
+          })
+          setStepLoaded((currentState) => ({ ...currentState, step1: true }))
+        }
+      )
+    }
+    else if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
       const getPartnerCostumer = new Promise<void>((resolve) => {
         API.getBusinessPartnerCostumer(proposal.idBusinessPartnerCustomer)
           .then((response) => {
@@ -137,6 +185,49 @@ const Step1 = ({
       setStepLoaded((currentState) => ({ ...currentState, step1: true }))
     }
   }, [])
+  const getAgentById = (idProposalAgent: number | null | undefined): string => {
+    if (idProposalAgent !== null && idProposalAgent !== undefined) {
+      const agent = agentsList.find((agent) => agent.businessPartner.id === idProposalAgent)
+      if (agent !== undefined) {
+        return agent.businessPartner.simpleName
+      }
+    }
+    return ''
+  }
+  const getBusinessPartnerById = (id: number | null | undefined): string => {
+    if (id !== null && id !== undefined) {
+      const businessPartner = businessPartnerList.find(
+        (businessPartner) => businessPartner.businessPartner.id === id
+      )
+      if (businessPartner !== undefined) {
+        return businessPartner.businessPartner.simpleName
+      }
+    }
+    return ''
+  }
+  useEffect(() => {
+    if (proposal.agents.length > 0) {
+      setSelectedAgents(
+        proposal?.agents.map((agent, index) => {
+          return {
+            idProposalAgent: agent.idProposalAgent,
+            idBusinessPartnerAgent: agent.idBusinessPartnerAgent,
+            shippingCompany: getBusinessPartnerById(agent.idBusinessPartnerTransportCompany),
+            agent: getAgentById(agent.idBusinessPartnerAgent),
+            idBusinessPartnerTransportCompany: agent.idBusinessPartnerTransportCompany
+          }
+        })
+      )
+    }
+  }, [agentsList])
+  useEffect(() => {
+    setProposal({
+      ...proposal,
+      agents: selectedAgents.map(
+        ({ shippingCompany, agent, ...otherProperties }) => otherProperties
+      )
+    })
+  }, [selectedAgents])
 
   useEffect(() => {
     let firstAgent!: any[]
@@ -375,7 +466,7 @@ const Step1 = ({
                                 {...params}
                                 id="search-client"
                                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                invalid={data.proposalValue === '' && invalidInput}
+                                invalid={selectedAgent.agent === '' && invalidInput}
                                 variant="outlined"
                                 size="small"
                                 placeholder={I18n.t('pages.newProposal.step1.searchClient')}
