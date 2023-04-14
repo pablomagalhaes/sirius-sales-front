@@ -340,6 +340,24 @@ const editTariff = async (idTariff: string, params): Promise<any> => {
   }
 }
 
+const uploadTariff = async (type: string, modal: string, setProgress: Function, params: any, agent?: number): Promise<any> => {
+  const url: string = agent !== undefined && agent !== null
+    ? `/sirius-tariff-api/tariff/${type}/${modal}?idAgent=${agent}`
+    : `/sirius-tariff-api/tariff/${type}/${modal}`
+
+  try {
+    const res = await instance.post(url, params, {
+      onUploadProgress: data => {
+        setProgress(Math.round((100 * data.loaded) / data.total))
+      }
+    })
+    return res.data
+  } catch (error) {
+    toast.error(String(error) + ' | Request:  ' + String(url))
+    return 'error'
+  }
+}
+
 const API = {
   getContainerType,
   getCurrencies,
@@ -372,7 +390,8 @@ const API = {
   getTariffs,
   getTariffsByCountry,
   downloadProposal,
-  editTariff
+  editTariff,
+  uploadTariff
 }
 
 export default API
