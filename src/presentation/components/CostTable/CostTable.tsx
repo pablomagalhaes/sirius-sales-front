@@ -254,7 +254,7 @@ const CostTable = ({
   }
 
   const costValidation = (): boolean => {
-    return costData === 0 || agentList.length < 1 || agentList[0].agent === ''
+    return costData === 0 || agentList.length < 1 || agentList[0].agent === '' || proposal?.cargo[0].cargoVolumes.length < 1
   }
 
   return (
@@ -275,7 +275,7 @@ const CostTable = ({
       <Header>
         <Title>
           {title}
-          <RedColorSpan> *</RedColorSpan>
+          {modal !== 'LAND' && proposal.operationType === 'IMPORT FREIGHT' && <RedColorSpan> *</RedColorSpan> }
         </Title>
       </Header>
       {data?.length > 0 && (
@@ -402,7 +402,7 @@ const CostTable = ({
               backgroundGreen={false}
               icon={'add'}
               onAction={addClickHandler}
-              disabled={false}
+              disabled={costValidation()}
               tooltip={
                 costValidation()
                   ? I18n.t('components.costTable.addCostTooltip')
@@ -424,7 +424,7 @@ const CostTable = ({
                             backgroundGreen={false}
                             icon={'add'}
                             onAction={addClickHandler}
-                            disabled={costValidation()}
+                            disabled={agentList.length < 1 || agentList[0].agent === '' || proposal?.cargo[0].cargoVolumes.length < 1 }
                             tooltip={
                               costValidation()
                                 ? I18n.t('components.costTable.addCostTooltip')
