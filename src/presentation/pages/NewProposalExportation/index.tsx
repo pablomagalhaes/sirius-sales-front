@@ -253,12 +253,13 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
   }
 
   const handleSave = (): void => {
+    console.log(modal !== 'LAND' && proposal.operationType === 'IMPORT FREIGHT' && completed.step5)
     if (
       completed.step1 &&
       completed.step2 &&
       completed.step3 &&
       completed.step4 &&
-      (modal !== 'LAND' && proposal.operationType === 'IMPORT FREIGHT' && completed.step5) &&
+      (modal === 'LAND' || completed.step5) &&
       completed.step6
     ) {
       if (proposal.idProposal === undefined || proposal.idProposal === null || location.state?.eventType === 'duplicate') {
