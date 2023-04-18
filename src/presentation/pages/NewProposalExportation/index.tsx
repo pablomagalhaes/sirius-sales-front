@@ -253,7 +253,6 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
   }
 
   const handleSave = (): void => {
-    console.log(modal !== 'LAND' && proposal.operationType === 'IMPORT FREIGHT' && completed.step5)
     if (
       completed.step1 &&
       completed.step2 &&
