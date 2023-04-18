@@ -258,7 +258,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
       completed.step2 &&
       completed.step3 &&
       completed.step4 &&
-      completed.step5 &&
+      (modal === 'LAND' || completed.step5) &&
       completed.step6
     ) {
       if (proposal.idProposal === undefined || proposal.idProposal === null || location.state?.eventType === 'duplicate') {
@@ -600,27 +600,25 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
             </div>
             {stepLoaded.step3 &&
               <>
-                {proposal?.idTransport !== 'LAND' &&
-                  <div id="step5">
-                    <Step5
-                      agentList={agentList}
-                      calculationData={calculationData}
-                      containerItems={step3TableItems}
-                      containerTypeList={containerTypeList}
-                      costData={costData}
-                      invalidInput={invalidInput}
-                      modal={modal}
-                      serviceList={serviceList}
-                      setCompleted={setCompleted}
-                      setFilled={setFilled}
-                      setUndoMessage={setUndoMessage}
-                      specifications={specifications}
-                      setTotalCosts={setTotalCosts}
-                      undoMessage={undoMessage}
-                      updateTableIdsRef={updateTable5IdsRef}
-                    />
-                  </div>
-                }
+                <div id="step5">
+                  <Step5
+                    agentList={agentList}
+                    calculationData={calculationData}
+                    containerItems={step3TableItems}
+                    containerTypeList={containerTypeList}
+                    costData={costData}
+                    invalidInput={invalidInput}
+                    modal={modal}
+                    serviceList={serviceList}
+                    setCompleted={setCompleted}
+                    setFilled={setFilled}
+                    setUndoMessage={setUndoMessage}
+                    specifications={specifications}
+                    setTotalCosts={setTotalCosts}
+                    undoMessage={undoMessage}
+                    updateTableIdsRef={updateTable5IdsRef}
+                  />
+                </div>
               <div id="step6">
                 <Step6
                   calculationData={calculationData}
