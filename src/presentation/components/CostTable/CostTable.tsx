@@ -275,7 +275,7 @@ const CostTable = ({
       <Header>
         <Title>
           {title}
-          {modal !== 'LAND' && proposal.operationType === 'IMPORT FREIGHT' && <RedColorSpan> *</RedColorSpan> }
+          {(modal === 'LAND' && proposal.operationType === 'EXPORT FREIGHT') || <RedColorSpan> *</RedColorSpan> }
         </Title>
       </Header>
       {data?.length > 0 && (
