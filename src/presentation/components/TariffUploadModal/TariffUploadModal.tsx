@@ -58,15 +58,21 @@ const TariffUploadModal = ({
   const [agentsList, setAgentsList] = useState<any[]>([])
 
   const uploadTariff = async (): Promise<void> => {
-    if (validateData() && data.modal !== null) {
+    if (validateData() && data.modal !== null && file !== undefined) {
+
+      let formData = new FormData();
+      formData.append("file", file);
+
       if (type === 'Importação' && data.agent.idBusinessPartnerAgent !== null) {
-        await API.uploadTariff('import', data.modal, setProgress, { file }, data.agent.idBusinessPartnerAgent)
+
+        await API.uploadTariff('import', data.modal, setProgress, formData, data.agent.idBusinessPartnerAgent)
           .then((res) => res !== 'error' && setCompleted(true))
           .catch((err) => console.log(err))
       }
       if (type === 'Exportação') {
+
         const agentId = data.agent.idBusinessPartnerAgent !== null ? data.agent.idBusinessPartnerAgent : undefined
-        await API.uploadTariff('export', data.modal, setProgress, { file }, agentId)
+        await API.uploadTariff('export', data.modal, setProgress, formData, agentId)
           .then((res) => res !== 'error' && setCompleted(true))
           .catch((err) => console.log(err))
       }
@@ -74,7 +80,7 @@ const TariffUploadModal = ({
       setInvalidInput(true)
     }
   }
-
+  console.log(file)
   const handleOnClose = (): void => {
     setData(initialState)
     setInvalidInput(false)
@@ -145,26 +151,26 @@ const TariffUploadModal = ({
                 onChange={(e) => setData({ ...data, modal: e.target.value })}
               >
                 <FormControlLabel
-                  checked={data.modal === 'AIR'}
-                  value="AIR"
+                  checked={data.modal === 'air'}
+                  value="air"
                   control={<StyledRadio color={getColor(data.modal)} />}
                   label='Aéreo'
                 />
                 <FormControlLabel
-                  checked={data.modal === 'SEA/FCL'}
-                  value="SEA/FCL"
+                  checked={data.modal === 'sea/fcl'}
+                  value="sea/fcl"
                   control={<StyledRadio color={getColor(data.modal)} />}
                   label='Marítimo/FCL'
                 />
                 <FormControlLabel
-                  checked={data.modal === 'SEA/LCL'}
-                  value="SEA/LCL"
+                  checked={data.modal === 'sea/lcl'}
+                  value="sea/lcl"
                   control={<StyledRadio color={getColor(data.modal)} />}
                   label='Marítimo/LCL'
                 />
                 <FormControlLabel
-                  checked={data.modal === 'LAND'}
-                  value="LAND"
+                  checked={data.modal === 'land'}
+                  value="land"
                   control={<StyledRadio color={getColor(data.modal)} />}
                   label='Rodoviário'
                 />
