@@ -348,7 +348,7 @@ const uploadTariff = async (type: string, modal: string, setProgress: Function, 
   try {
     const res = await instance.post(url, params, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data'
       },
       onUploadProgress: data => {
         setProgress(Math.round((100 * data.loaded) / data.total))

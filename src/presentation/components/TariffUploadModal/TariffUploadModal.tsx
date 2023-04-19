@@ -59,18 +59,15 @@ const TariffUploadModal = ({
 
   const uploadTariff = async (): Promise<void> => {
     if (validateData() && data.modal !== null && file !== undefined) {
-
-      let formData = new FormData();
-      formData.append("file", file);
+      const formData = new FormData()
+      formData.append('file', file)
 
       if (type === 'Importação' && data.agent.idBusinessPartnerAgent !== null) {
-
         await API.uploadTariff('import', data.modal, setProgress, formData, data.agent.idBusinessPartnerAgent)
           .then((res) => res !== 'error' && setCompleted(true))
           .catch((err) => console.log(err))
       }
       if (type === 'Exportação') {
-
         const agentId = data.agent.idBusinessPartnerAgent !== null ? data.agent.idBusinessPartnerAgent : undefined
         await API.uploadTariff('export', data.modal, setProgress, formData, agentId)
           .then((res) => res !== 'error' && setCompleted(true))
