@@ -207,8 +207,7 @@ const Step1 = ({
           setStepLoaded((currentState) => ({ ...currentState, step1: true }))
         }
       )
-    }
-    else if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
+    } else if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
       const getPartnerCostumer = new Promise<void>((resolve) => {
         API.getBusinessPartnerCostumer(proposal.idBusinessPartnerCustomer)
           .then((response) => {

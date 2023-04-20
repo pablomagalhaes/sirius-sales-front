@@ -316,23 +316,23 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
     }
   ]
 
-    // Menu suspenso após proposta ter sido salva
-    const floatingButtonMenuItemsAfterSaved = [
-      {
-        iconType: 'save',
-        label: I18n.t('pages.newProposal.save'),
-        onClick: () => handleSave()
-      }, {
-        iconType: 'file',
-        label: I18n.t('pages.newProposal.viewDownload'),
-        onClick: () => handleOpen()
-      },
-      {
-        iconType: 'send',
-        label: I18n.t('pages.newProposal.send'),
-        onClick: () => { }
-      }
-    ]
+  // Menu suspenso após proposta ter sido salva
+  const floatingButtonMenuItemsAfterSaved = [
+    {
+      iconType: 'save',
+      label: I18n.t('pages.newProposal.save'),
+      onClick: () => handleSave()
+    }, {
+      iconType: 'file',
+      label: I18n.t('pages.newProposal.viewDownload'),
+      onClick: () => handleOpen()
+    },
+    {
+      iconType: 'send',
+      label: I18n.t('pages.newProposal.send'),
+      onClick: () => { }
+    }
+  ]
 
   const getEnchargedFullname = (): string => {
     const user = JSON.parse(localStorage.getItem('user') || '{}')
