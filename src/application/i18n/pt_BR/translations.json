@@ -203,7 +203,7 @@
         "buttonAddTooltip": "Para adicionar, selecione os campos \"Modal\" na etapa \"Serviço\" e \"Especificação\" na etapa \"Carga\"",
         "buy": "Compra",
         "choose": "Escolha ...",
-        "cubage": "Cubagem (Ton³): ",
+        "cubage": "Cubagem (m³): ",
         "description": "Descrição geral da carga:",
         "messageDeleteItem": "Item excluído com sucesso.",
         "messageUndoDelete": "Desfazer",

@@ -202,7 +202,7 @@
         "buttonAddTooltip": "To add, select the fields \"Modal\" in the step \"Service\" and \"Specification\" in the step \"Cargo\"",
         "buy": "Buy",
         "choose": "Choose ...",
-        "cubage": "Cubage(Ton³): ",
+        "cubage": "Cubage(m³): ",
         "description": "General cargo description:",
         "messageDeleteItem": "Item successfully deleted.",
         "messageUndoDelete": "Undo",
