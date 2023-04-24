@@ -77,7 +77,7 @@ const TariffUploadModal = ({
       setInvalidInput(true)
     }
   }
-  
+
   const handleOnClose = (): void => {
     setData(initialState)
     setInvalidInput(false)
