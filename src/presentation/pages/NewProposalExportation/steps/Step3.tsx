@@ -325,7 +325,8 @@ const Step3 = ({
         valueHeight: Number(row.height?.replace(',', '.')),
         valueWidth: Number(row.width?.replace(',', '.')),
         valueDiameter: Number(row.diameter?.replace(',', '.')),
-        isStacked: row.stack
+        isStacked: row.stack,
+        type: row.type
       })
     })
     setCargoVolume(newCargoVolumes)
@@ -496,17 +497,6 @@ const Step3 = ({
       }
     }
     return name
-  }
-
-  const verifyPackagingByType = (packaging: string): number => {
-    let id: number = 0
-    for (let index = 0; index < packagingList.length; index++) {
-      const element = packagingList[index]
-      if (packaging === element.packaging) {
-        id = element.id
-      }
-    }
-    return id
   }
 
   useEffect(() => {
