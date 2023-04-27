@@ -225,6 +225,7 @@ const Tariff = (): JSX.Element => {
 
   const createTabs = (): void => {
     const regionsTabs: any[] = []
+    const validity = getValidityFilter(quickFilterList)
     if (tariffList?.length > 0) {
       tariffList.forEach((item) => {
         const content: any[] = []
@@ -243,7 +244,7 @@ const Tariff = (): JSX.Element => {
         }))
         regionsTabs.push({
           title: item.region,
-          icon: '',
+          icon: item.closeToValidity === true ? 'error' : validity === 'EXPIRED' ? 'warn' : '',
           component: <Accordion content={content} />
         })
       })

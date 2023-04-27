@@ -84,6 +84,7 @@ const TableImpl = ({
                         title={I18n.t('pages.proposal.table.overdueClientResponse')}
                         open={statusLabel === I18n.t('pages.proposal.table.waitingForCustomerReturnLabel') && isClientReturnLate}
                         disabled={statusLabel === I18n.t('pages.proposal.table.waitingForCustomerReturnLabel') && isClientReturnLate}
+                        getTitle={false}
                     >
                         <div>
                             {statusLabel === I18n.t('pages.proposal.table.waitingForCustomerReturnLabel') && isClientReturnLate !== undefined

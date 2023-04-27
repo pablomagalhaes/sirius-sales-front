@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react'
 
 import { Table, TableBody, TableContainer, TableHead, TableRow, Button, Popover } from '@material-ui/core'
-import { Pagination, ListSwitcher, MenuIconCell, FloatingMenu } from 'fiorde-fe-components'
-import { PaginationContainer, PaginationMainContainer, MainTariffContainer, TableCell } from './style'
+import { Pagination, ListSwitcher, MenuIconCell, FloatingMenu, ControlledToolTip } from 'fiorde-fe-components'
+import { PaginationContainer, PaginationMainContainer, MainTariffContainer, TableCell, IconDisplay, RedColorSpan } from './style'
 import AirTariffModal from '../../components/AirTariffModal/AirTariffModal'
 import SeaFclTariffModal from '../../components/SeaFclTariffModal/SeaFclTariffModal'
 import SeaLclTariffModal from '../../components/SeaLclTariffModal/SeaLclTariffModal'
 import LandTariffModal from '../../components/LandTariffModal/LandTariffModal'
+import WarnIconClicked from '../../../application/icons/WarnClicked'
+import AlertClickedIcon from '../../../application/icons/AlertClicked'
 
 import { columns, rows } from './constants'
 import { convertToDecimal } from './helpers'
@@ -130,6 +132,47 @@ const TariffTable = ({
     }
     return array
   }
+  const validityDisplay = (validity: string): JSX.Element => {
+    const breakDate = validity.split('/')
+    const today = new Date()
+    const date = new Date(parseInt(breakDate[2]), parseInt(breakDate[1]), parseInt(breakDate[0]))
+    const timeDiff = date.getTime() - today.getTime()
+    const timeAbsolute = Math.abs(timeDiff)
+    const diffDays = Math.ceil(timeAbsolute / (1000 * 3600 * 24))
+    if (timeDiff < 0) {
+      return (
+      <IconDisplay>
+        <ControlledToolTip
+          placement="top"
+          title="Vencido"
+          open={true}
+          disabled={true}
+          getTitle={false}
+        >
+          <div className='icon'><AlertClickedIcon/></div>
+        </ControlledToolTip>
+        <RedColorSpan>{validity}</RedColorSpan>
+      </IconDisplay>
+      )
+    }
+    if (diffDays <= 7) {
+      return (
+      <IconDisplay>
+        <ControlledToolTip
+          placement="top"
+          title={`Vencimento em ${diffDays} dias`}
+          open={true}
+          disabled={true}
+          getTitle={false}
+        >
+          <div className='icon'><WarnIconClicked/></div>
+        </ControlledToolTip>
+        {validity}
+      </IconDisplay>
+      )
+    }
+    return <>{validity}</>
+  }
 
   useEffect(() => {
     if (expanded && !openModal) {
@@ -182,8 +225,14 @@ const TariffTable = ({
                 key={index}
               >
                 {filter.tariffModalType === 'SEA'
-                  ? rows[filter.tariffModalType][seaType].map((each: string) => <TableCell key={each} align="left">{row[each]}</TableCell>)
-                  : rows[filter.tariffModalType].map((each: string) => <TableCell key={each} align="left">{row[each]}</TableCell>)
+                  ? rows[filter.tariffModalType][seaType].map((each: string) =>
+                    <TableCell key={each} align="left">
+                      {each === 'validity' ? validityDisplay(row[each]) : row[each] }
+                    </TableCell>)
+                  : rows[filter.tariffModalType].map((each: string) =>
+                    <TableCell key={each} align="left">
+                      {each === 'validity' ? validityDisplay(row[each]) : row[each] }
+                    </TableCell>)
                 }
                 <TableCell>
                   <div>
