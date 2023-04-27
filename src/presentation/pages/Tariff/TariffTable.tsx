@@ -9,6 +9,7 @@ import SeaLclTariffModal from '../../components/SeaLclTariffModal/SeaLclTariffMo
 import LandTariffModal from '../../components/LandTariffModal/LandTariffModal'
 import WarnIconClicked from '../../../application/icons/WarnClicked'
 import AlertClickedIcon from '../../../application/icons/AlertClicked'
+import moment from 'moment'
 
 import { columns, rows } from './constants'
 import { convertToDecimal } from './helpers'
@@ -133,12 +134,9 @@ const TariffTable = ({
     return array
   }
   const validityDisplay = (validity: string): JSX.Element => {
-    const breakDate = validity.split('/')
-    const today = new Date()
-    const date = new Date(parseInt(breakDate[2]), parseInt(breakDate[1]), parseInt(breakDate[0]))
-    const timeDiff = date.getTime() - today.getTime()
-    const timeAbsolute = Math.abs(timeDiff)
-    const diffDays = Math.ceil(timeAbsolute / (1000 * 3600 * 24))
+    const today = moment().startOf('day')
+    const date = moment(validity, 'DD/MM/YYYY')
+    const timeDiff = date.diff(today, 'days')
     if (timeDiff < 0) {
       return (
       <IconDisplay>
@@ -155,12 +153,12 @@ const TariffTable = ({
       </IconDisplay>
       )
     }
-    if (diffDays <= 7) {
+    else if (timeDiff <= 7) {
       return (
       <IconDisplay>
         <ControlledToolTip
           placement="top"
-          title={`Vencimento em ${diffDays} dias`}
+          title={`Vencimento em ${timeDiff} dias`}
           open={true}
           disabled={true}
           getTitle={false}
