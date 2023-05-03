@@ -930,13 +930,21 @@ const Proposal = (): JSX.Element => {
     handleCleanAll: () => void,
     handleCleanButton: () => void,
     handlePickerChange1: (e: any, newValue: string[]) => void,
-    handlePickerChange2: (e: any, newValue: string[]) => void
+    handlePickerChange2: (e: any, newValue: string[]) => void,
+    handlePickerChange3: (e: any, newValue: string[]) => void,
+    handlePickerChange4: (e: any, newValue: string[]) => void,
+    handlePickerChange5: (e: any, newValue: string[]) => void,
+    handlePickerChange6: (e: any, newValue: string[]) => void
   ): void => {
     if (radioValue !== '') {
       handleCleanAll()
       handleCleanButton()
       handlePickerChange1(null, [])
       handlePickerChange2(null, [])
+      handlePickerChange3(null, [])
+      handlePickerChange4(null, [])
+      handlePickerChange5(null, [])
+      handlePickerChange6(null, [])
     }
   }
 

@@ -20,7 +20,8 @@ export interface TariffTableProps {
   country: string
   region: string
   filter: any
-  setFilter: Function
+  tableFilter: any
+  setTableFilter: Function
 }
 
 const TariffTable = ({
@@ -28,7 +29,8 @@ const TariffTable = ({
   country,
   region,
   filter,
-  setFilter
+  tableFilter,
+  setTableFilter
 }: TariffTableProps): JSX.Element => {
   const [data, setData] = useState<any[]>()
   const [seaType, setSeaType] = useState<string>('FCL')
@@ -152,8 +154,7 @@ const TariffTable = ({
         <RedColorSpan>{validity}</RedColorSpan>
       </IconDisplay>
       )
-    }
-    else if (timeDiff <= 7) {
+    } else if (timeDiff <= 7) {
       return (
       <IconDisplay>
         <ControlledToolTip
@@ -176,8 +177,8 @@ const TariffTable = ({
     if (expanded && !openModal) {
       void (async function () {
         const modal = filter.tariffModalType
-        let payload = { ...filter, txRegion: region, txCountry: country }
-        if (modal !== '' && modal === 'SEA') payload = { ...filter, txRegion: region, txCountry: country, txChargeType: seaType }
+        let payload = { ...tableFilter, txRegion: region, txCountry: country }
+        if (modal !== '' && modal === 'SEA') payload = { ...tableFilter, txRegion: region, txCountry: country, txChargeType: seaType }
         await API.getTariffsByCountry(payload)
           .then((response) => {
             const tariffs = getTariffItems(response.content)
@@ -193,7 +194,7 @@ const TariffTable = ({
           .catch((err) => console.log(err))
       })()
     }
-  }, [expanded, filter, seaType, openModal])
+  }, [expanded, filter, seaType, openModal, tableFilter])
 
   if (data !== undefined && data.length > 0) {
     return (
@@ -275,10 +276,10 @@ const TariffTable = ({
             labelDisplayedRows="de"
             labelRowsPerPage="Propostas por página"
             onPageChange={(value) =>
-              setFilter((filter: any) => ({ ...filter, page: value }))
+              setTableFilter((filter: any) => ({ ...filter, page: value }))
             }
             onRowsPerPageChange={(value) =>
-              setFilter((filter: any) => ({
+              setTableFilter((filter: any) => ({
                 ...filter,
                 size: value,
                 page: 0
