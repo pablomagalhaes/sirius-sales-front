@@ -298,12 +298,6 @@ const Step1 = ({
     }
   }, [data])
 
-  useEffect(() => {
-    if (data.proposal === 'CLIENT') {
-      setData({ ...data, serviceTransport: false, serviceDesemb: false })
-    }
-  }, [data.proposal])
-
   const getColor = (value): any => {
     if (value === '' && invalidInput) {
       return theme?.commercial?.components?.itemModal?.redAsterisk
@@ -380,45 +374,39 @@ const Step1 = ({
             />
           </RadioGroup>
         </Grid>
-        {data.proposal === 'ROUTING ORDER'
-          ? (
-            <Grid item xs={6}>
-              <FormLabel component="legend">
-                {I18n.t('pages.newProposal.step1.services')}
-              </FormLabel>
-              <FormGroup row aria-label="services">
-                <FormControlLabel
-                  value="transport"
-                  control={
-                    <Checkbox
-                      checked={data.serviceTransport}
-                      onChange={(e) =>
-                        setData({ ...data, serviceTransport: e.target.checked })
-                      }
-                    />
-                  }
-                  label={I18n.t('pages.newProposal.step1.transport')}
-                />
-                <FormControlLabel
-                  value="desemb"
-                  control={
-                    <Checkbox
-                      checked={data.serviceDesemb}
-                      onChange={(e) =>
-                        setData({ ...data, serviceDesemb: e.target.checked })
-                      }
-                    />
-                  }
-                  label={I18n.t('pages.newProposal.step1.readiness')}
-                />
-              </FormGroup>
-            </Grid>
-            )
-          : (
-            <Grid item xs={6}>
-              {' '}
-            </Grid>
-            )}
+        {
+          <Grid item xs={6}>
+            <FormLabel component="legend">
+              {I18n.t('pages.newProposal.step1.services')}
+            </FormLabel>
+            <FormGroup row aria-label="services">
+              <FormControlLabel
+                value="transport"
+                control={
+                  <Checkbox
+                    checked={data.serviceTransport}
+                    onChange={(e) =>
+                      setData({ ...data, serviceTransport: e.target.checked })
+                    }
+                  />
+                }
+                label={I18n.t('pages.newProposal.step1.transport')}
+              />
+              <FormControlLabel
+                value="desemb"
+                control={
+                  <Checkbox
+                    checked={data.serviceDesemb}
+                    onChange={(e) =>
+                      setData({ ...data, serviceDesemb: e.target.checked })
+                    }
+                  />
+                }
+                label={I18n.t('pages.newProposal.step1.readiness')}
+              />
+            </FormGroup>
+          </Grid>
+        }
         <Grid item xs={6}>
           {data.proposal === 'ROUTING ORDER'
             ? (
