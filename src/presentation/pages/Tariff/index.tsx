@@ -40,10 +40,7 @@ import TariffUploadModal from '../../components/TariffUploadModal/TariffUploadMo
 const defaultFilter = {
   tariffModalType: '',
   validityTariff: '',
-  tariffType: ''
-}
-
-const defaultTableFilter = {
+  tariffType: '',
   direction: 'ASC',
   orderByList: 'tariffType',
   page: 0,
@@ -52,7 +49,6 @@ const defaultTableFilter = {
 
 const Tariff = (): JSX.Element => {
   const [filter, setFilter] = useState<any>(defaultFilter)
-  const [tableFilter, setTableFilter] = useState<any>(defaultTableFilter)
   const [businessPartnerList, setBusinessPartnerList] = useState<any[]>([])
   const [openedOrderSelect, setOpenedOrderSelect] = useState(false)
   const [orderAsc, setOrderAsc] = useState(true)
@@ -248,8 +244,7 @@ const Tariff = (): JSX.Element => {
             expanded={countryExpanded === country}
             country={country}
             filter={filter}
-            setTableFilter={setTableFilter}
-            tableFilter={tableFilter}
+            setFilter={setFilter}
           />,
           disable: false,
           onChange: (country: string, expanded: boolean): void => { setCountryExpanded(country) },
@@ -470,7 +465,7 @@ const Tariff = (): JSX.Element => {
       }))
     }
 
-    const selectedDates = findKeyFilter(selectedFiltersRowFilter, 'Período')
+    const selectedDates = findKeyFilter(selectedFiltersRowFilter, 'Validade')
     if (selectedDates !== undefined) {
       const type = selectedFiltersRowFilter[6].checkBoxSelecteds
       const size = selectedDates.length
@@ -598,8 +593,8 @@ const Tariff = (): JSX.Element => {
     delete filter['validityDate.dtBegin']
     delete filter['validityDate.dtEnd']
 
-    setTableFilter(() => ({
-      ...tableFilter,
+    setFilter((filter: any) => ({
+      ...filter,
       direction: 'ASC',
       orderByList: 'tariffType',
       page: 0,
@@ -608,16 +603,16 @@ const Tariff = (): JSX.Element => {
   }
 
   const handleOrderSelect = (value: React.SetStateAction<string>): void => {
-    setTableFilter((filter: any) => ({ ...filter, orderByList: value }))
+    setFilter((filter: any) => ({ ...filter, orderByList: value }))
     setOrderBy(value)
   }
 
   const handleOrderDirection = (): void => {
     if (orderAsc) {
-      setTableFilter((filter: any) => ({ ...filter, direction: 'DESC' }))
+      setFilter((filter: any) => ({ ...filter, direction: 'DESC' }))
       setOrderAsc(false)
     } else {
-      setTableFilter((filter: any) => ({ ...filter, direction: 'ASC' }))
+      setFilter((filter: any) => ({ ...filter, direction: 'ASC' }))
       setOrderAsc(true)
     }
   }
@@ -676,8 +671,8 @@ const Tariff = (): JSX.Element => {
       pickerLandLabels: []
     },
     {
-      label: 'Período',
-      checkboxList: ['Dt. Abertura', 'Dt. Validade'],
+      label: 'Validade',
+      checkboxList: ['Dt. Validade'],
       hasDatePicker: true,
       dateRanges: menuItems.dateRanges
     }
