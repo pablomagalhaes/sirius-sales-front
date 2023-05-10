@@ -31,26 +31,25 @@ import { useHistory } from 'react-router-dom'
 import UpArrow from '../../../application/icons/UpArrow'
 import API from '../../../infrastructure/api'
 import ArrowDown from '../../../application/icons/ArrowDown'
-import { orderButtonMenuItems, menuItems } from './constants'
+import { orderButtonMenuItems } from './constants'
 import { I18n } from 'react-redux-i18n'
-import { StatusProposalStringEnum } from '../../../application/enum/statusProposalEnum'
 import TariffTable from './TariffTable'
 import { getModalFilter, getActivityFilter, getValidityFilter } from './helpers'
 import TariffUploadModal from '../../components/TariffUploadModal/TariffUploadModal'
 
 const defaultFilter = {
+  tariffModalType: '',
+  validityTariff: '',
+  tariffType: '',
   direction: 'ASC',
   orderByList: 'tariffType',
   page: 0,
-  size: 10,
-  tariffModalType: '',
-  validityTariff: '',
-  tariffType: ''
+  size: 10
 }
 
 const Tariff = (): JSX.Element => {
   const [filter, setFilter] = useState<any>(defaultFilter)
-  const [incotermList, setIncotermList] = useState<any[]>([])
+  const [businessPartnerList, setBusinessPartnerList] = useState<any[]>([])
   const [openedOrderSelect, setOpenedOrderSelect] = useState(false)
   const [orderAsc, setOrderAsc] = useState(true)
   const [orderBy, setOrderBy] = useState<string>('openingDate')
@@ -60,6 +59,7 @@ const Tariff = (): JSX.Element => {
   const [originDestinationCities, setoriginDestinationCities] = useState<any[]>([])
   const [partnerList, setPartnerList] = useState<any[]>([])
   const [partnerSimpleNameList, setPartnerSimpleNameList] = useState<any[]>([])
+  const [currencyList, setCurrencyList] = useState<any[]>([])
   const [tariffList, setTariffList] = useState<any[]>([])
   const [radioValue, setRadioValue] = useState('')
   const [quickFilterList, setQuickFilterList] = useState<any[]>([
@@ -73,65 +73,45 @@ const Tariff = (): JSX.Element => {
 
   const history = useHistory()
 
-  // useEffect(() => {
-  //   const newIncotermList: any[] = []
-  //   void (async function () {
-  //     await API.getIncoterms()
-  //       .then((response) => {
-  //         response.forEach((item: any) => {
-  //           newIncotermList.push(item?.id)
-  //         })
-  //         return setIncotermList(newIncotermList)
-  //       })
-  //       .catch((err) => console.log(err))
-  //   })()
-  // }, [])
+  useEffect(() => {
+    const simpleNameList: any[] = []
+    const newPartnerList: any[] = []
+    void (async function () {
+      await API.getAgents()
+        .then((response) => {
+          response.forEach((item: any) => {
+            simpleNameList.push(item?.businessPartner?.simpleName)
+            newPartnerList.push(item?.businessPartner)
+          })
+          setPartnerSimpleNameList(simpleNameList)
+          setPartnerList(newPartnerList)
+        })
+        .catch((err) => console.log(err))
+    })()
+  }, [])
 
-  // useEffect(() => {
-  //   const simpleNameList: any[] = []
-  //   const newPartnerList: any[] = []
-  //   void (async function () {
-  //     await API.getPartner()
-  //       .then((response) => {
-  //         response.forEach((item: any) => {
-  //           simpleNameList.push(item?.businessPartner?.simpleName)
-  //           newPartnerList.push(item?.businessPartner)
-  //         })
-  //         setPartnerSimpleNameList(simpleNameList)
-  //         setPartnerList(newPartnerList)
-  //       })
-  //       .catch((err) => console.log(err))
-  //   })()
-  // }, [])
-
-  // useEffect(() => {
-  //   void (async function () {
-  //     await API.getOriginDestination()
-  //       .then((response) => { setOriginDestinationList(response) })
-  //       .catch((err) => console.log(err))
-  //   })()
-  //   void (async function () {
-  //     const actualList: any[] = []
-  //     await API.getCountries()
-  //       .then((response) => response.forEach((item: any) => actualList.push(String(item.name))))
-  //       .then(() => setoriginDestinationCountries(actualList))
-  //       .catch((err) => console.log(err))
-  //   })()
-  //   void (async function () {
-  //     const actualList: any[] = []
-  //     await API.getMercosulStates()
-  //       .then((response) => response.forEach((item: any) => actualList.push(`${String(item.txState)} (${String(item.txCountry)})`)))
-  //       .then(() => setoriginDestinationStates(actualList))
-  //       .catch((err) => console.log(err))
-  //   })()
-  //   void (async function () {
-  //     const actualList: any[] = []
-  //     await API.getMercosulCities()
-  //       .then((response) => response.forEach((item: any) => actualList.push(`${String(item.txCity)} (${String(item.txCountry)})`)))
-  //       .then(() => setoriginDestinationCities(actualList))
-  //       .catch((err) => console.log(err))
-  //   })()
-  // }, [])
+  useEffect(() => {
+    void (async function () {
+      await API.getOriginDestination()
+        .then((response) => { setOriginDestinationList(response) })
+        .catch((err) => console.log(err))
+    })()
+    void (async function () {
+      await API.getCountries()
+        .then((response) => setoriginDestinationCountries(response))
+        .catch((err) => console.log(err))
+    })()
+    void (async function () {
+      await API.getMercosulStates()
+        .then((response) => setoriginDestinationStates(response))
+        .catch((err) => console.log(err))
+    })()
+    void (async function () {
+      await API.getMercosulCities()
+        .then((response) => setoriginDestinationCities(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
 
   const floatingButtonMenuItems = [
     {
@@ -145,18 +125,61 @@ const Tariff = (): JSX.Element => {
     }
   ]
 
+  useEffect(() => {
+    if (filter.tariffModalType !== '') {
+      if (filter.tariffModalType === 'SEA') {
+        void getBusinessPartnerSea()
+      } else {
+        void getBusinessPartner(getBusinessPartnerType())
+      }
+    }
+  }, [filter.tariffModalType])
+
+  useEffect(() => {
+    void (async function () {
+      await API.getCurrencies()
+        .then((response) => setCurrencyList(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
+
+  const getBusinessPartner = async (type: string): Promise<any> => {
+    const response = await API.getBusinessPartnerByType(type)
+    if (response !== undefined) {
+      setBusinessPartnerList([...response])
+    }
+  }
+
+  const getBusinessPartnerSea = async (): Promise<any> => {
+    const responseShipOwner = await API.getBusinessPartnerByType('ARMADOR')
+    const responseColoader = await API.getBusinessPartnerByType('COLOADER')
+    if (responseShipOwner !== undefined && responseColoader !== undefined) {
+      setBusinessPartnerList([...responseColoader, ...responseShipOwner])
+    }
+  }
+
+  const getBusinessPartnerType = (): string => {
+    switch (filter.tariffModalType) {
+      case 'AIR':
+        return 'CIA. AEREA'
+      case 'LAND':
+        return 'TRANS. INTERNACIONAL'
+    }
+    return ''
+  }
+
   const getOriginDestinyList = (land: string): string[] => {
     const actualList: string[] = []
     let type = ''
 
-    switch (radioValue) {
-      case 'Aéreo':
+    switch (filter.tariffModalType) {
+      case 'AIR':
         type = 'AEROPORTO'
         break
-      case 'Marítimo':
+      case 'SEA':
         type = 'PORTO'
         break
-      case 'Rodoviário':
+      case 'LAND':
         type = 'RODOVIARIO'
         break
       default:
@@ -171,17 +194,17 @@ const Tariff = (): JSX.Element => {
     } else {
       if (land === 'País') {
         originDestinationCountries?.forEach((item): void => {
-          actualList.push(item)
+          actualList.push(`${String(item.name)}`)
         })
       }
       if (land === 'Estado') {
         originDestinationStates?.forEach((item): void => {
-          actualList.push(item)
+          actualList.push(`${String(item.txState)} (${String(item.txCountry)})`)
         })
       }
       if (land === 'Cidade') {
         originDestinationCities?.forEach((item): void => {
-          actualList.push(item)
+          actualList.push(`${String(item.txCity)} (${String(item.txCountry)})`)
         })
       }
     }
@@ -189,23 +212,8 @@ const Tariff = (): JSX.Element => {
   }
 
   const getLandLabels = (): string[] => {
-    let type = ''
     let landLabels: string[] = []
-    switch (radioValue) {
-      case 'Aéreo':
-        type = 'AEROPORTO'
-        break
-      case 'Marítimo':
-        type = 'PORTO'
-        break
-      case 'Rodoviário':
-        type = 'RODOVIARIO'
-        break
-      default:
-        break
-    }
-
-    if (type === 'RODOVIARIO') {
+    if (filter.tariffModalType === 'LAND') {
       landLabels = ['País', 'Estado', 'Cidade']
     }
     return landLabels
@@ -280,176 +288,258 @@ const Tariff = (): JSX.Element => {
   const handleSelectedRowFilter = (selectedFiltersRowFilter: any): void => {
     cleanFilter()
 
-    const selectedProposals = findKeyFilter(
+    const selectedAgents = findKeyFilter(
       selectedFiltersRowFilter,
-      'Ref. proposta'
+      'Agente'
     )
-    if (selectedProposals !== undefined) {
+    if (selectedAgents !== undefined) {
+      const agentIds: any = []
+      selectedAgents.forEach(name => {
+        const agent = partnerList.find(item => item.simpleName === name)
+        agentIds.push(agent.id)
+      })
       setFilter((filter: any) => ({
         ...filter,
-        referenceProposal: [selectedProposals]
+        idBusinessPartnerAgent: [agentIds]
       }))
     }
 
-    const selectedClients = findKeyFilter(selectedFiltersRowFilter, 'Cliente')
-    if (selectedClients !== undefined) {
-      const clientIds: any = []
-      selectedClients.forEach(name => {
-        const client = partnerList.find(item => item.simpleName === name)
-        clientIds.push(client.id)
+    const selectedShippingCompany = findKeyFilter(selectedFiltersRowFilter, getCompanyLabels())
+    if (selectedShippingCompany !== undefined) {
+      const shippingCompanyId: any = []
+      selectedShippingCompany.forEach(name => {
+        const client = businessPartnerList.find(item => item.businessPartner.simpleName === name)
+        shippingCompanyId.push(client.id)
       })
 
       setFilter((filter: any) => ({
         ...filter,
-        idBusinessPartnerCustomer: [clientIds]
+        idBusinessPartnerTransporter: [shippingCompanyId]
       }))
     }
 
-    const selectedProcessTypes = findKeyFilter(
+    const selectedCurrencies = findKeyFilter(
       selectedFiltersRowFilter,
-      'Tipo de processo'
+      'Moeda'
     )
-    if (selectedProcessTypes !== undefined) {
+    if (selectedCurrencies !== undefined) {
       setFilter((filter: any) => ({
         ...filter,
-        operationType: [selectedProcessTypes]
+        idCurrency: [selectedCurrencies]
       }))
     }
 
     const selectedOriginsDestinations = findKeyFilter(
       selectedFiltersRowFilter,
-      'Modal/Origem/Destino'
+      'Origem/Destino'
     )
     if (selectedOriginsDestinations !== undefined) {
-      const typeOrigin = selectedFiltersRowFilter[3].pickerSelecteds1
-      const typeDestination = selectedFiltersRowFilter[3].pickerSelecteds2
+      const modal: string = filter.tariffModalType
+      if (modal.length > 0 && modal !== 'LAND') {
+        const idOrigin = selectedOriginsDestinations.pickerSelecteds1
+          .map((name: string) => name.split(' - ')[0])
+        const idDestination = selectedOriginsDestinations.pickerSelecteds2
+          .map((name: string) => name.split(' - ')[0])
 
-      if (typeOrigin.length === 1 && typeDestination.length === 0) {
-        const origins = selectedOriginsDestinations[0].split(' - ')
-        setFilter((filter: any) => ({
-          ...filter,
-          idOrigin: [origins]
-        }))
+        if (idOrigin.length > 0 && idOrigin[0] !== undefined) {
+          setFilter((filter: any) => ({
+            ...filter,
+            idOrigin
+          }))
+        }
+        if (idDestination.length > 0 && idDestination[0] !== undefined) {
+          setFilter((filter: any) => ({
+            ...filter,
+            idDestination
+          }))
+        }
       }
 
-      if (typeOrigin.length === 0 && typeDestination.length === 1) {
-        const destinations = selectedOriginsDestinations[0].split(' - ')
-        setFilter({
-          ...filter,
-          idDestination: [destinations]
-        })
-      }
+      if (modal.length > 0 && modal === 'LAND') {
+        const originCountry = selectedOriginsDestinations.pickerSelecteds1
+          .map((locationFiltered: string) => originDestinationCountries
+            .find((country) => country.name === locationFiltered)?.id)
+          .map((id: string) => Number(id))
 
-      if (typeOrigin.length === 1 && typeDestination.length === 1) {
-        const selectOriginsDestinations =
-          selectedOriginsDestinations.split(' / ')
-        const origins = selectOriginsDestinations[0].split(' - ')
-        const destinations = selectOriginsDestinations[1].split(' - ')
+        const destinationCountry = selectedOriginsDestinations.pickerSelecteds2
+          .map((locationFiltered: string) => originDestinationCountries
+            .find((country) => country.name === locationFiltered)?.id)
+          .map((id: string) => Number(id))
 
-        setFilter((filter: any) => ({
-          ...filter,
-          idOrigin: [origins[0]],
-          idDestination: [destinations[0]]
-        }))
+        const originState = selectedOriginsDestinations.pickerSelecteds3
+          .map((locationFiltered: string) => originDestinationStates
+            .find((state) => state.txState === locationFiltered.split(' (')[0] && state.txCountry === locationFiltered.split(' (')[1].slice(0, -1))?.idState)
+
+        const destinationState = selectedOriginsDestinations.pickerSelecteds4
+          .map((locationFiltered: string) => originDestinationStates
+            .find((state) => state.txState === locationFiltered.split(' (')[0] && state.txCountry === locationFiltered.split(' (')[1].slice(0, -1))?.idState)
+
+        const originCity = selectedOriginsDestinations.pickerSelecteds5
+          .map((locationFiltered: string) => originDestinationCities
+            .find((city) => city.txCity === locationFiltered.split(' (')[0] && city.txCountry === locationFiltered.split(' (')[1].slice(0, -1))?.idCity)
+
+        const destinationCity = selectedOriginsDestinations.pickerSelecteds6
+          .map((locationFiltered: string) => originDestinationCities
+            .find((city) => city.txCity === locationFiltered.split(' (')[0] && city.txCountry === locationFiltered.split(' (')[1].slice(0, -1))?.idCity)
+
+        console.log(originDestinationCountries)
+
+        if (originCountry.length > 0 && originCountry[0] !== undefined) {
+          setFilter((filter: any) => ({
+            ...filter,
+            originCountry
+          }))
+        }
+        if (destinationCountry.length > 0 && destinationCountry[0] !== undefined) {
+          setFilter((filter: any) => ({
+            ...filter,
+            destinationCountry
+          }))
+        }
+        if (originState.length > 0 && originState[0] !== undefined) {
+          setFilter((filter: any) => ({
+            ...filter,
+            originState
+          }))
+        }
+        if (destinationState.length > 0 && destinationState[0] !== undefined) {
+          setFilter((filter: any) => ({
+            ...filter,
+            destinationState
+          }))
+        }
+        if (originCity.length > 0 && originCity[0] !== undefined) {
+          setFilter((filter: any) => ({
+            ...filter,
+            originCity
+          }))
+        }
+        if (destinationCity.length > 0 && destinationCity[0] !== undefined) {
+          setFilter((filter: any) => ({
+            ...filter,
+            destinationCity
+          }))
+        }
       }
     }
 
-    const selectedIncoterms = findKeyFilter(
+    const selectedTransitTime = findKeyFilter(
       selectedFiltersRowFilter,
-      'Incoterm'
+      'Transit Time'
     )
-    if (selectedIncoterms !== undefined) {
+    if (selectedTransitTime !== undefined) {
       setFilter((filter: any) => ({
         ...filter,
-        idIncoterm: [selectedIncoterms]
+        transitTime: selectedTransitTime
       }))
     }
 
-    const selectedStatus = findKeyFilter(
+    const selectedFrequencies = findKeyFilter(
       selectedFiltersRowFilter,
-      'Status'
+      'Frequência'
     )
-    if (selectedStatus !== undefined) {
-      const statusList: string[] = selectedStatus.map((status: string): string => {
-        switch (status) {
-          case 'Aberta':
-            return StatusProposalStringEnum.ABERTA
-          case 'Ag. Retorno Cliente':
-            return StatusProposalStringEnum.AGUARDANDO_RETORNO_CLIENTE
-          case 'Em Revisão':
-            return StatusProposalStringEnum.EM_REVISAO
-          case 'Aprovada':
-            return StatusProposalStringEnum.APROVADA
-          case 'Rejeitada':
-            return StatusProposalStringEnum.REJEITADA
-          case 'Cancelada':
-            return StatusProposalStringEnum.CANCELADA
-          case 'Cancelamento Automatico':
-            return StatusProposalStringEnum.CANCELAMENTO_AUTOMATICO
+
+    if (selectedFrequencies !== undefined) {
+      const frequencyIds: number[] = []
+      selectedFrequencies.forEach((selectedFrequency) => {
+        switch (selectedFrequency) {
+          case 'DIÁRIO':
+            frequencyIds.push(1)
+            break
+          case 'SEMANAL':
+            frequencyIds.push(2)
+            break
+          case 'QUINZENAL':
+            frequencyIds.push(3)
+            break
+          case 'MENSAL':
+            frequencyIds.push(4)
+            break
           default:
-            return ''
+            break
         }
       })
       setFilter((filter: any) => ({
         ...filter,
-        status: [statusList]
+        idFrequency: [frequencyIds]
       }))
     }
 
-    const selectedDates = findKeyFilter(selectedFiltersRowFilter, 'Período')
-    if (selectedDates !== undefined) {
-      const type = selectedFiltersRowFilter[5].checkBoxSelecteds
-      const size = selectedDates.length
+    // const selectedDates = findKeyFilter(selectedFiltersRowFilter, 'Validade')
+    // if (selectedDates !== undefined) {
+    //   const type = selectedFiltersRowFilter[6].checkBoxSelecteds
+    //   const size = selectedDates.length
 
-      if (type[0] === 'Dt. Abertura') {
-        const openedDates = selectedDates[size - 1].split(' - ')
+    //   if (type[0] === 'Dt. Abertura') {
+    //     const openedDates = selectedDates[size - 1].split(' - ')
 
-        const [openedDayBegin, openedMonthBegin, openedYearBegin] =
-          openedDates[0].split('/')
-        const [openedDayEnd, openedMonthEnd, openedYearEnd] =
-          openedDates[1].split('/')
+    //     const [openedDayBegin, openedMonthBegin, openedYearBegin] =
+    //       openedDates[0].split('/')
+    //     const [openedDayEnd, openedMonthEnd, openedYearEnd] =
+    //       openedDates[1].split('/')
 
-        const openedDtBeginFormated = `${String(openedYearBegin)}/${String(
-          openedMonthBegin
-        )}/${String(openedDayBegin)}`
-        const openedDtEndFormated = `${String(openedYearEnd)}/${String(
-          openedMonthEnd
-        )}/${String(openedDayEnd)}`
+    //     const openedDtBeginFormated = `${String(openedYearBegin)}/${String(
+    //       openedMonthBegin
+    //     )}/${String(openedDayBegin)}`
+    //     const openedDtEndFormated = `${String(openedYearEnd)}/${String(
+    //       openedMonthEnd
+    //     )}/${String(openedDayEnd)}`
 
-        setFilter((filter: any) => ({
-          ...filter,
-          'openingDate.dtBegin': openedDtBeginFormated,
-          'openingDate.dtEnd': openedDtEndFormated
-        }))
-      }
+    //     setFilter((filter: any) => ({
+    //       ...filter,
+    //       'openingDate.dtBegin': openedDtBeginFormated,
+    //       'openingDate.dtEnd': openedDtEndFormated
+    //     }))
+    //   }
 
-      if (type[0] === 'Dt. Validade' || type[1] === 'Dt. Validade') {
-        const validateDates = selectedDates[size - 1].split(' - ')
+    //   if (type[0] === 'Dt. Validade' || type[1] === 'Dt. Validade') {
+    //     const validateDates = selectedDates[size - 1].split(' - ')
 
-        const [validateDayBegin, validateMonthBegin, validateYearBegin] =
-          validateDates[0].split('/')
-        const [validateDayEnd, validateMonthEnd, validateYearEnd] =
-          validateDates[1].split('/')
+    //     const [validateDayBegin, validateMonthBegin, validateYearBegin] =
+    //       validateDates[0].split('/')
+    //     const [validateDayEnd, validateMonthEnd, validateYearEnd] =
+    //       validateDates[1].split('/')
 
-        const validateDtBeginFormated = `${String(validateYearBegin)}/${String(
-          validateMonthBegin
-        )}/${String(validateDayBegin)}`
-        const validateDtEndFormated = `${String(validateYearEnd)}/${String(
-          validateMonthEnd
-        )}/${String(validateDayEnd)}`
+    //     const validateDtBeginFormated = `${String(validateYearBegin)}/${String(
+    //       validateMonthBegin
+    //     )}/${String(validateDayBegin)}`
+    //     const validateDtEndFormated = `${String(validateYearEnd)}/${String(
+    //       validateMonthEnd
+    //     )}/${String(validateDayEnd)}`
 
-        setFilter((filter: any) => ({
-          ...filter,
-          'validityDate.dtBegin': validateDtBeginFormated,
-          'validityDate.dtEnd': validateDtEndFormated
-        }))
-      }
+    //     setFilter((filter: any) => ({
+    //       ...filter,
+    //       'validityDate.dtBegin': validateDtBeginFormated,
+    //       'validityDate.dtEnd': validateDtEndFormated
+    //     }))
+    //   }
+    // }
+    const selectedEspecifications = findKeyFilter(
+      selectedFiltersRowFilter,
+      'Especificação'
+    )
+    if (selectedEspecifications !== undefined) {
+      setFilter((filter: any) => ({
+        ...filter,
+        txChargeType: [selectedEspecifications]
+      }))
     }
   }
 
   const findKeyFilter = (filterSelected: any, key: string): any => {
     for (const item of filterSelected) {
       if (item.filterName === key) {
+        if (key === 'Origem/Destino') {
+          return {
+            pickerSelecteds1: item.pickerSelecteds1,
+            pickerSelecteds2: item.pickerSelecteds2,
+            pickerSelecteds3: item.pickerSelecteds3,
+            pickerSelecteds4: item.pickerSelecteds4,
+            pickerSelecteds5: item.pickerSelecteds5,
+            pickerSelecteds6: item.pickerSelecteds6,
+            radioButtonSelected: item.radioButtonSelected
+          }
+        }
         if (item.textFieldValueSelected !== '') {
           return item.textFieldValueSelected
         }
@@ -484,19 +574,27 @@ const Tariff = (): JSX.Element => {
   }
 
   const cleanFilter = (): void => {
-    delete filter.referenceProposal
-    delete filter.idBusinessPartnerCustomer
-    delete filter.operationType
+    delete filter.idBusinessPartnerAgent
+    delete filter.idBusinessPartnerTransporter
+    delete filter.idCurrency
     delete filter.idOrigin
     delete filter.idDestination
-    delete filter.idIncoterm
-    delete filter.status
+    delete filter.originCountry
+    delete filter.destinationCountry
+    delete filter.originState
+    delete filter.destinationState
+    delete filter.originCity
+    delete filter.destinationCity
+    delete filter.transitTime
+    delete filter.idFrequency
+    delete filter.txChargeType
     delete filter['openingDate.dtBegin']
     delete filter['openingDate.dtEnd']
     delete filter['validityDate.dtBegin']
     delete filter['validityDate.dtEnd']
 
-    setFilter(() => ({
+    setFilter((filter: any) => ({
+      ...filter,
       direction: 'ASC',
       orderByList: 'tariffType',
       page: 0,
@@ -519,61 +617,107 @@ const Tariff = (): JSX.Element => {
     }
   }
 
+  const getCompanyLabels = (): string => {
+    let label: string = 'Cia. Aérea'
+    switch (filter.tariffModalType) {
+      case 'AIR':
+        label = 'Cia. Aérea'
+        break
+      case 'SEA':
+        label = 'Armador/Coloader'
+        break
+      case 'LAND':
+        label = 'Transportadora'
+        break
+      default:
+        break
+    }
+    return label
+  }
+
   const menuItemsSelector = [
     {
-      label: 'Ref. proposta',
-      textField: 'Ref. proposta'
+      label: getCompanyLabels(),
+      pickerListOptions1: businessPartnerList.map(
+        (item) => item.businessPartner.simpleName
+      ),
+      pickerLabel1: getCompanyLabels(),
+      pickerLandLabels: []
     },
     {
-      label: 'Cliente',
-      pickerListOptions1: partnerSimpleNameList,
-      pickerLabel1: 'Cliente'
-    },
-    {
-      label: 'Tipo de processo',
-      checkboxList1: menuItems.processTypes
-    },
-    {
-      label: 'Modal/Origem/Destino',
-      radioButtonList: menuItems.modal,
+      label: 'Origem/Destino',
       pickerListOptions1: getOriginDestinyList('País'),
       pickerListOptions2: getOriginDestinyList('Estado'),
       pickerListOptions3: getOriginDestinyList('Cidade'),
       pickerLabel1: 'Origem',
       pickerLabel2: 'Destino',
-      title1: 'Modal',
       pickerLandLabels: getLandLabels()
 
     },
     {
-      label: 'Incoterm',
-      pickerListOptions1: incotermList,
-      pickerLabel1: 'Incoterm'
+      label: 'Moeda',
+      pickerListOptions1: currencyList.map((option) => option.id),
+      pickerLabel1: 'Moeda',
+      pickerLandLabels: []
     },
     {
-      label: 'Período',
-      checkboxList: ['Dt. Abertura', 'Dt. Validade'],
-      hasDatePicker: true,
-      dateRanges: menuItems.dateRanges
+      label: 'Transit Time',
+      textField: 'Transit Time'
     },
     {
-      label: 'Status',
-      checkboxList1: menuItems.statusTypes,
-      pickerLabel1: 'Status'
+      label: 'Frequência',
+      pickerListOptions1: ['DIÁRIO', 'SEMANAL', 'QUINZENAL', 'MENSAL'],
+      pickerLabel1: 'Frequência',
+      pickerLandLabels: []
     }
+    // {
+    //   label: 'Validade',
+    //   checkboxList: ['Dt. Validade'],
+    //   hasDatePicker: true,
+    //   dateRanges: menuItems.dateRanges
+    // }
   ]
+
+  const specification = {
+    label: 'Especificação',
+    pickerListOptions1: ['FCL', 'LCL', 'Break Bulk', 'Ro-Ro'],
+    pickerLabel1: 'Especificação',
+    pickerLandLabels: []
+  }
+
+  const agent = {
+    label: 'Agente',
+    pickerListOptions1: partnerSimpleNameList,
+    pickerLabel1: 'Agente',
+    pickerLandLabels: []
+  }
+
+  const createMenuItems = (): any => {
+    if (filter.tariffModalType === 'SEA' && filter.tariffType === 'IMPORT') return [agent, ...menuItemsSelector, specification]
+    else if (filter.tariffType === 'IMPORT') return [agent, ...menuItemsSelector]
+    else if (filter.tariffModalType === 'SEA' && filter.tariffType === 'EXPORT') return [...menuItemsSelector, specification]
+    else return [...menuItemsSelector]
+  }
 
   const handleChangeModal = (
     handleCleanAll: () => void,
     handleCleanButton: () => void,
     handlePickerChange1: (e: any, newValue: string[]) => void,
-    handlePickerChange2: (e: any, newValue: string[]) => void
+    handlePickerChange2: (e: any, newValue: string[]) => void,
+    handlePickerChange3: (e: any, newValue: string[]) => void,
+    handlePickerChange4: (e: any, newValue: string[]) => void,
+    handlePickerChange5: (e: any, newValue: string[]) => void,
+    handlePickerChange6: (e: any, newValue: string[]) => void
   ): void => {
     if (radioValue !== '') {
       handleCleanAll()
       handleCleanButton()
       handlePickerChange1(null, [])
       handlePickerChange2(null, [])
+      handlePickerChange3(null, [])
+      handlePickerChange4(null, [])
+      handlePickerChange5(null, [])
+      handlePickerChange6(null, [])
     }
   }
 
@@ -666,17 +810,17 @@ const Tariff = (): JSX.Element => {
       <ListHeaderContainer>
         <LeftSideListHeaderContainer>
           <RowFilter
-            addFilterLabel="Filtros avançados"
-            applyLabel="Aplicar"
-            approveLabel="Salvar Filtro"
-            cleanLabel="Limpar"
-            handleClean={handleChangeModal}
-            handleCleanRow={handleCleanModal}
-            handleSelectedFilters={handleSelectedRowFilter}
-            menuItemsSelector={menuItemsSelector}
-            myFilterLabel="Meus Filtros"
-            setRadioValue={setRadioValue}
-          />
+          addFilterLabel="Filtros avançados"
+          applyLabel="Aplicar"
+          approveLabel="Salvar Filtro"
+          cleanLabel="Limpar"
+          handleClean={handleChangeModal}
+          handleCleanRow={handleCleanModal}
+          handleSelectedFilters={handleSelectedRowFilter}
+          menuItemsSelector={createMenuItems()}
+          myFilterLabel="Meus Filtros"
+          setRadioValue={setRadioValue}
+        />
         </LeftSideListHeaderContainer>
         <RightSideListHeaderContainer>
           <ExportTariffContainer onClick={handleExportTariff}>

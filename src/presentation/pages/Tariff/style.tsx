@@ -80,6 +80,7 @@ const RightSideListHeaderContainer = styled.div`
   color: ${(props: any) => props.theme?.commercial?.pages?.proposal?.tableHeader};
   position: relative;
   top: 50px;
+  z-index: 1;
 `
 
 const OrderByContainer = styled.div`
