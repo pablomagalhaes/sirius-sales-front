@@ -31,7 +31,7 @@ import { useHistory } from 'react-router-dom'
 import UpArrow from '../../../application/icons/UpArrow'
 import API from '../../../infrastructure/api'
 import ArrowDown from '../../../application/icons/ArrowDown'
-import { orderButtonMenuItems, menuItems } from './constants'
+import { orderButtonMenuItems } from './constants'
 import { I18n } from 'react-redux-i18n'
 import TariffTable from './TariffTable'
 import { getModalFilter, getActivityFilter, getValidityFilter } from './helpers'
@@ -465,55 +465,55 @@ const Tariff = (): JSX.Element => {
       }))
     }
 
-    const selectedDates = findKeyFilter(selectedFiltersRowFilter, 'Validade')
-    if (selectedDates !== undefined) {
-      const type = selectedFiltersRowFilter[6].checkBoxSelecteds
-      const size = selectedDates.length
+    // const selectedDates = findKeyFilter(selectedFiltersRowFilter, 'Validade')
+    // if (selectedDates !== undefined) {
+    //   const type = selectedFiltersRowFilter[6].checkBoxSelecteds
+    //   const size = selectedDates.length
 
-      if (type[0] === 'Dt. Abertura') {
-        const openedDates = selectedDates[size - 1].split(' - ')
+    //   if (type[0] === 'Dt. Abertura') {
+    //     const openedDates = selectedDates[size - 1].split(' - ')
 
-        const [openedDayBegin, openedMonthBegin, openedYearBegin] =
-          openedDates[0].split('/')
-        const [openedDayEnd, openedMonthEnd, openedYearEnd] =
-          openedDates[1].split('/')
+    //     const [openedDayBegin, openedMonthBegin, openedYearBegin] =
+    //       openedDates[0].split('/')
+    //     const [openedDayEnd, openedMonthEnd, openedYearEnd] =
+    //       openedDates[1].split('/')
 
-        const openedDtBeginFormated = `${String(openedYearBegin)}/${String(
-          openedMonthBegin
-        )}/${String(openedDayBegin)}`
-        const openedDtEndFormated = `${String(openedYearEnd)}/${String(
-          openedMonthEnd
-        )}/${String(openedDayEnd)}`
+    //     const openedDtBeginFormated = `${String(openedYearBegin)}/${String(
+    //       openedMonthBegin
+    //     )}/${String(openedDayBegin)}`
+    //     const openedDtEndFormated = `${String(openedYearEnd)}/${String(
+    //       openedMonthEnd
+    //     )}/${String(openedDayEnd)}`
 
-        setFilter((filter: any) => ({
-          ...filter,
-          'openingDate.dtBegin': openedDtBeginFormated,
-          'openingDate.dtEnd': openedDtEndFormated
-        }))
-      }
+    //     setFilter((filter: any) => ({
+    //       ...filter,
+    //       'openingDate.dtBegin': openedDtBeginFormated,
+    //       'openingDate.dtEnd': openedDtEndFormated
+    //     }))
+    //   }
 
-      if (type[0] === 'Dt. Validade' || type[1] === 'Dt. Validade') {
-        const validateDates = selectedDates[size - 1].split(' - ')
+    //   if (type[0] === 'Dt. Validade' || type[1] === 'Dt. Validade') {
+    //     const validateDates = selectedDates[size - 1].split(' - ')
 
-        const [validateDayBegin, validateMonthBegin, validateYearBegin] =
-          validateDates[0].split('/')
-        const [validateDayEnd, validateMonthEnd, validateYearEnd] =
-          validateDates[1].split('/')
+    //     const [validateDayBegin, validateMonthBegin, validateYearBegin] =
+    //       validateDates[0].split('/')
+    //     const [validateDayEnd, validateMonthEnd, validateYearEnd] =
+    //       validateDates[1].split('/')
 
-        const validateDtBeginFormated = `${String(validateYearBegin)}/${String(
-          validateMonthBegin
-        )}/${String(validateDayBegin)}`
-        const validateDtEndFormated = `${String(validateYearEnd)}/${String(
-          validateMonthEnd
-        )}/${String(validateDayEnd)}`
+    //     const validateDtBeginFormated = `${String(validateYearBegin)}/${String(
+    //       validateMonthBegin
+    //     )}/${String(validateDayBegin)}`
+    //     const validateDtEndFormated = `${String(validateYearEnd)}/${String(
+    //       validateMonthEnd
+    //     )}/${String(validateDayEnd)}`
 
-        setFilter((filter: any) => ({
-          ...filter,
-          'validityDate.dtBegin': validateDtBeginFormated,
-          'validityDate.dtEnd': validateDtEndFormated
-        }))
-      }
-    }
+    //     setFilter((filter: any) => ({
+    //       ...filter,
+    //       'validityDate.dtBegin': validateDtBeginFormated,
+    //       'validityDate.dtEnd': validateDtEndFormated
+    //     }))
+    //   }
+    // }
     const selectedEspecifications = findKeyFilter(
       selectedFiltersRowFilter,
       'Especificação'
@@ -525,7 +525,7 @@ const Tariff = (): JSX.Element => {
       }))
     }
   }
-  console.log(filter)
+
   const findKeyFilter = (filterSelected: any, key: string): any => {
     for (const item of filterSelected) {
       if (item.filterName === key) {
@@ -669,13 +669,13 @@ const Tariff = (): JSX.Element => {
       pickerListOptions1: ['DIÁRIO', 'SEMANAL', 'QUINZENAL', 'MENSAL'],
       pickerLabel1: 'Frequência',
       pickerLandLabels: []
-    },
-    {
-      label: 'Validade',
-      checkboxList: ['Dt. Validade'],
-      hasDatePicker: true,
-      dateRanges: menuItems.dateRanges
     }
+    // {
+    //   label: 'Validade',
+    //   checkboxList: ['Dt. Validade'],
+    //   hasDatePicker: true,
+    //   dateRanges: menuItems.dateRanges
+    // }
   ]
 
   const specification = {
