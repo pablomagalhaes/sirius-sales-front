@@ -198,7 +198,7 @@ const putProposal = async (id, params): Promise<any> => {
 }
 
 const putStatus = async (id: any, status: string, reason?: string): Promise<any> => {
-  const payload = reason === undefined ? `${String(status)}` : `${String(status)}/${String(reason)}`
+  const payload = reason === undefined ? `${String(status)}` : `${String(status)}?reasonStatus=${String(reason)}`
   const url: string = `/sirius-business-proposal-api/proposal/${String(id)}/status/${payload}`
   try {
     const res = await instance.put(url)
