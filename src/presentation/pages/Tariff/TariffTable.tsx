@@ -152,8 +152,7 @@ const TariffTable = ({
         <RedColorSpan>{validity}</RedColorSpan>
       </IconDisplay>
       )
-    }
-    else if (timeDiff <= 7) {
+    } else if (timeDiff <= 7) {
       return (
       <IconDisplay>
         <ControlledToolTip
