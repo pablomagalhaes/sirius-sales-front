@@ -170,8 +170,8 @@ const CostTable = ({
 
   useEffect(() => {
     if (tableData.length > 0) {
-      const waitLoadAllData = async (): Promise<void> => {
-        for (const item of tableData) {
+      const waitLoadAllData = async() => {
+        const allData = tableData.map(async (item): Promise<CostTableItem> => {
           const indexContainer = containerItems.findIndex(container => item.selectedContainer === container.type)
           const data = {
             costType: item.type,
@@ -184,27 +184,30 @@ const CostTable = ({
             idCurrencyPurchase: item.buyCurrency,
             idCurrencySale: item.saleCurrency
           }
-          void await new Promise<void>((resolve) => {
-            const totalCalculationData =
-            data.costType === 'CW'
-              ? {
-                  ...data,
-                  valuePurchaseCW: proposal.cargo[0].vlCwPurchase,
-                  valueSaleCW: proposal.cargo[0].vlCwSale
-                }
-              : { ...data, valuePurchaseCW: null, valueSaleCW: null }
-            API.postTotalCalculation(totalCalculationData)
-              .then((response) => {
-                item.buyValueCalculated = response.valuePurchase
-                item.saleValueCalculated = response.valueSale
-                resolve()
-              })
-              .catch((err) => console.log(err))
-          })
-        }
+          const totalCalculationData =
+          data.costType === 'CW'
+            ? {
+                ...data,
+                valuePurchaseCW: proposal.cargo[0].vlCwPurchase,
+                valueSaleCW: proposal.cargo[0].vlCwSale
+              }
+            : { ...data, valuePurchaseCW: null, valueSaleCW: null }
+          return API.postTotalCalculation(totalCalculationData)
+            .then((response): CostTableItem=> {
+              return {
+                ...item,
+                buyValueCalculated: response.valuePurchase,
+                saleValueCalculated: response.valueSale
+              }
+            })
+            .catch(() => { return {
+              ...item
+            }})
+        })
+        const newTableData = await Promise.all(allData)
+        setData([...newTableData])
       }
       void waitLoadAllData()
-      setData(tableData)
     }
   }, [])
 

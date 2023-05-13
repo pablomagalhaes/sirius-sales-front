@@ -317,7 +317,9 @@ const Step6 = ({
           valueSale: Number(String(item.valueSale).replace(',', '.')),
           valuePurchase: Number(String(item.valuePurchase).replace(',', '.')),
           isPurchase: false,
-          isSale: true
+          isSale: true,
+          valueSaleTotal: null,
+          valuePurchaseTotal: null
         }
         freightCostArrayNew.push(freightCostNew)
       })
@@ -345,7 +347,9 @@ const Step6 = ({
           valueSale: Number(dataSales.valueSale.replace(',', '.')),
           valuePurchase: null,
           isPurchase: false,
-          isSale: true
+          isSale: true,
+          valueSaleTotal: null,
+          valuePurchaseTotal: null
         }
         freightCostArrayNew.push(freightCostSale)
       }
@@ -376,7 +380,9 @@ const Step6 = ({
           valueSale: Number(String(item.valueSale).replace(',', '.')),
           valuePurchase: Number(String(item.valuePurchase).replace(',', '.')),
           isPurchase: false,
-          isSale: true
+          isSale: true,
+          valueSaleTotal: null,
+          valuePurchaseTotal: null
         }
         freightCostArrayNew.push(freightCostNew)
       })
@@ -590,7 +596,9 @@ const Step6 = ({
         idCurrencyPurchase: 'nul', // tipo moeda NOTNULL VARCHAR(3)
         idCurrencySale: row.saleCurrency, // tipo moeda
         isPurchase: false, // checkbox compra
-        isSale: row.saleValue !== null // checkbox venda
+        isSale: row.saleValue !== null, // checkbox venda
+        valueSaleTotal: null,
+        valuePurchaseTotal: null
       })
     })
 
@@ -998,7 +1006,9 @@ const Step6 = ({
         valueMinimumSale: null,
         valuePurchase: 0,
         valuePurchasePercent: null,
-        valueSalePercent: 0
+        valueSalePercent: 0,
+        valueSaleTotal: null,
+        valuePurchaseTotal: null
       }
       setProposal({
         ...proposal,
@@ -1051,7 +1061,9 @@ const Step6 = ({
         valuePurchase: 0,
         valuePurchasePercent: null,
         valueSale: 0,
-        valueSalePercent: 0
+        valueSalePercent: 0,
+        valueSaleTotal: null,
+        valuePurchaseTotal: null
       }
       setProposal({
         ...proposal,

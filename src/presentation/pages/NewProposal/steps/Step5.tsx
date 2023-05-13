@@ -202,7 +202,9 @@ const Step5 = ({
         idCurrencyPurchase: row.buyCurrency, // tipo moeda
         idCurrencySale: row.saleCurrency, // tipo moeda
         isPurchase: row.buyValue !== null, // checkbox compra
-        isSale: row.saleValue !== null // checkbox venda
+        isSale: row.saleValue !== null, // checkbox venda
+        valueSaleTotal: Number(row.saleValueCalculated),
+        valuePurchaseTotal: Number(row.buyValueCalculated),
       })
     })
     const newDestinyTableData: Cost[] = []
@@ -225,7 +227,9 @@ const Step5 = ({
         idCurrencyPurchase: row.buyCurrency, // tipo moeda
         idCurrencySale: row.saleCurrency, // tipo moeda
         isPurchase: Number(row.buyValue) !== 0, // checkbox compra
-        isSale: Number(row.saleValue) !== 0 // checkbox venda
+        isSale: Number(row.saleValue) !== 0, // checkbox venda
+        valueSaleTotal: Number(row.saleValueCalculated),
+        valuePurchaseTotal: Number(row.buyValueCalculated),
       })
     })
 
@@ -260,6 +264,10 @@ const Step5 = ({
     const newTotal: TotalCost[] = actualTotalCostArray.concat(newTotalCostOrigin.concat(newTotalCostDestiny))
     setProposal({ ...proposal, totalCosts: newTotal, costs: actualCostArray.concat(newOriginTableData.concat(newDestinyTableData)) })
   }, [dataOrigin, dataDestiny, dataTotalCostDestiny, dataTotalCostOrigin, setDataOrigin, setDataDestiny])
+
+  useEffect(() => {
+    console.log(proposal)
+  }, [proposal])
 
   useEffect(() => {
     if (dataOrigin.length > 0 && dataDestiny.length > 0) {
