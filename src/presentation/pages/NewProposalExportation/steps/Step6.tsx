@@ -602,7 +602,7 @@ const Step6 = ({
       })
     })
 
-    let actualTotalCostArray = proposal.totalCosts
+    const actualTotalCostArray = proposal.totalCosts
     const newTotalCostFare: TotalCost[] = []
     dataTotalCost.forEach((currency, index) => {
       newTotalCostFare.push({
