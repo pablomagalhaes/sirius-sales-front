@@ -121,14 +121,41 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
         profits.push({ idCurrency: profitValue[0], valueTotalProfit: Number(profitValue[1].toFixed(2)), percentageProfit: null })
       })
       setProfit(finalProfit.slice(0, -3))
+      const totalCostArray = [...proposal?.totalCosts.filter(e => e.costType === 'Origem' || e.costType === 'Destino')]
 
+     if (totalOtherFare !== '0,00' && totalOtherFare !== '') {
+      totalCostArray.push({
+        "idTotalCost": null,
+        "costType":"Tarifa",
+        "idCurrency": currency,
+        "valueTotalSale": Number(totalOtherFare.replace(',', '.')),
+        "valueTotalPurchase": Number(totalOtherFare.replace(',', '.'))
+      })
+     }
+     if (isAir() && (value !== '0,00' && value !== '')) {
+      totalCostArray.push({
+        "idTotalCost":null,
+        "costType":"Frete",
+        "idCurrency": currency,
+        "valueTotalSale": totalValue(),
+        "valueTotalPurchase": totalValue()
+      })
+     } else if((value !== '0,00' && value !== '')) {
+      totalCostArray.push({
+        "idTotalCost":null,
+        "costType":"Frete",
+        "idCurrency": currency,
+        "valueTotalSale": Number(value.replace(',', '.')),
+        "valueTotalPurchase": Number(value.replace(',', '.'))
+      })
+     }
       // calculateProfitPercentage().forEach(percentageValue => {
       //   profits.forEach((each, index) => {
       //     if (each.idCurrency === percentageValue[0]) profits[index] = { ...profits[index], percentageProfit: Number(percentageValue[1].toFixed(2)) }
       //   })
       // })
       // setProfitPercentage(calculateProfitPercentage())
-      setProposal({ ...proposal, profits })
+      setProposal({ ...proposal, profits, totalCosts: totalCostArray })
     }
   }, [data, totalCosts, currency, totalOtherFare, value, modal])
 

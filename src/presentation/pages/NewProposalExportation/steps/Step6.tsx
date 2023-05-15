@@ -597,15 +597,12 @@ const Step6 = ({
         idCurrencySale: row.saleCurrency, // tipo moeda
         isPurchase: false, // checkbox compra
         isSale: row.saleValue !== null, // checkbox venda
-        valueSaleTotal: null,
+        valueSaleTotal: row.type === 'FIXO' || row.type === 'BL' ? Number(row.saleValue?.replace(',', '.')) : Number(row.totalItem?.replace(',', '.')),
         valuePurchaseTotal: null
       })
     })
 
     let actualTotalCostArray = proposal.totalCosts
-    actualTotalCostArray = actualTotalCostArray.filter(
-      (cost) => cost.costType !== 'Tarifa' && cost
-    )
     const newTotalCostFare: TotalCost[] = []
     dataTotalCost.forEach((currency, index) => {
       newTotalCostFare.push({

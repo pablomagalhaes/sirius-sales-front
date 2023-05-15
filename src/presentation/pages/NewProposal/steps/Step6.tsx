@@ -565,7 +565,6 @@ const Step6 = ({
     const newFareItems: Cost[] = []
 
     tableData.forEach((row) => {
-      console.log(row)
       newFareItems.push({
         id: row.idCost === undefined ? null : row.idCost,
         idCost: row.idCost === undefined ? null : row.idCost,
@@ -603,9 +602,6 @@ const Step6 = ({
     })
 
     let actualTotalCostArray = proposal.totalCosts
-    actualTotalCostArray = actualTotalCostArray.filter(
-      (cost) => cost.costType !== 'Tarifa' && cost
-    )
     const newTotalCostFare: TotalCost[] = []
     dataTotalCost.forEach((currency, index) => {
       newTotalCostFare.push({
@@ -672,7 +668,7 @@ const Step6 = ({
       Array.from(currencyArray, ([name, value]) => ({ name, value }))
     )
   }, [tableData, data, dataContainer, tableData.length])
-  console.log(dataTotalCost)
+
   useEffect(() => {
     const newTableData: FareModalData[] = []
     const waitAllData = async (): Promise<void> => {

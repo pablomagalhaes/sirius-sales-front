@@ -233,7 +233,7 @@ const Step5 = ({
     })
 
     let actualTotalCostArray = proposal.totalCosts
-    actualTotalCostArray = actualTotalCostArray.filter((cost) => cost.costType === 'Tarifa' && cost)
+    actualTotalCostArray = actualTotalCostArray.filter((cost) => (cost?.costType === 'Tarifa' || cost?.costType === 'Frete') && cost)
     const newTotalCostOrigin: TotalCost[] = []
     dataTotalCostOrigin.forEach((currency, index) => {
       if (currency.value.buy !== 0 || currency.value.sale !== 0) {

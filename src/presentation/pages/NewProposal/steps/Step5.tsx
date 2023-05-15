@@ -234,7 +234,7 @@ const Step5 = ({
     })
 
     let actualTotalCostArray = proposal.totalCosts
-    actualTotalCostArray = actualTotalCostArray.filter((cost) => cost.costType === 'Tarifa' && cost)
+    actualTotalCostArray = actualTotalCostArray.filter((cost) => (cost?.costType === 'Tarifa' || cost?.costType === 'Frete') && cost)
     const newTotalCostOrigin: TotalCost[] = []
     dataTotalCostOrigin.forEach((currency, index) => {
       if (currency.value.buy !== 0 || currency.value.sale !== 0) {
@@ -264,10 +264,6 @@ const Step5 = ({
     const newTotal: TotalCost[] = actualTotalCostArray.concat(newTotalCostOrigin.concat(newTotalCostDestiny))
     setProposal({ ...proposal, totalCosts: newTotal, costs: actualCostArray.concat(newOriginTableData.concat(newDestinyTableData)) })
   }, [dataOrigin, dataDestiny, dataTotalCostDestiny, dataTotalCostOrigin, setDataOrigin, setDataDestiny])
-
-  useEffect(() => {
-    console.log(proposal)
-  }, [proposal])
 
   useEffect(() => {
     if (dataOrigin.length > 0 && dataDestiny.length > 0) {
