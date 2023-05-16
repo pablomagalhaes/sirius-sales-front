@@ -6,6 +6,7 @@ import { ProfitsProps } from '../../../domain/ProfitsProps'
 import { CwLabel, LowerContainer, ProfitContainer, ProfitLabel, ProfitValue, TotalCargoContainer, TotalContainer, UpperContainer } from './style'
 import { I18n } from 'react-redux-i18n'
 import FormatNumber from '../../../application/utils/formatNumber'
+import { CostTypes } from '../../../application/enum/costEnum'
 // valores comentados nesse arquivo se referem ao calculo de percentual de profit que será implementado posteriormente
 interface TotalSurchargeProps {
   value: string
@@ -122,12 +123,12 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
         profits.push({ idCurrency: profitValue[0], valueTotalProfit: Number(profitValue[1].toFixed(2)), percentageProfit: null })
       })
       setProfit(finalProfit.slice(0, -3))
-      const totalCostArray = [...proposal?.totalCosts.filter(e => e.costType === 'Origem' || e.costType === 'Destino')]
+      const totalCostArray = [...proposal?.totalCosts.filter(e => e.costType === CostTypes.Origin || e.costType === CostTypes.Destiny)]
 
       if (totalOtherFare !== '0,00' && totalOtherFare !== '') {
         totalCostArray.push({
           idTotalCost: null,
-          costType: 'Tarifa',
+          costType: CostTypes.Fare,
           idCurrency: currency,
           valueTotalSale: FormatNumber.convertStringToNumber(totalOtherFare),
           valueTotalPurchase: FormatNumber.convertStringToNumber(totalOtherFare)
@@ -136,7 +137,7 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
       if (isAir() && (value !== '0,00' && value !== '')) {
         totalCostArray.push({
           idTotalCost: null,
-          costType: 'Frete',
+          costType: CostTypes.Freight,
           idCurrency: currency,
           valueTotalSale: totalValue(),
           valueTotalPurchase: totalValue()
@@ -144,7 +145,7 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
       } else if ((value !== '0,00' && value !== '')) {
         totalCostArray.push({
           idTotalCost: null,
-          costType: 'Frete',
+          costType: CostTypes.Freight,
           idCurrency: currency,
           valueTotalSale: FormatNumber.convertStringToNumber(value),
           valueTotalPurchase: FormatNumber.convertStringToNumber(value)
