@@ -598,7 +598,8 @@ const Step6 = ({
         idCurrencySale: row.saleCurrency, // tipo moeda
         isPurchase: false, // checkbox compra
         isSale: row.saleValue !== null, // checkbox venda
-        valueSaleTotal: row.type === FareItemsTypes.Fixed || row.type === FareItemsTypes.Bl ? Number(row.saleValue?.replace(',', '.')) : Number(row.totalItem?.replace(',', '.')),
+        valueSaleTotal: row.type === FareItemsTypes.Fixed || row.type === FareItemsTypes.Bl ? 
+          FormatNumber.convertStringToNumber(row.saleValue) : FormatNumber.convertStringToNumber(row.totalItem),
         valuePurchaseTotal: null
       })
     })

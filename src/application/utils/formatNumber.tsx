@@ -11,9 +11,9 @@ const rightToLeftFormatter = (value: string, decimal: number): string => {
   return String(amount).replace('.', ',')
 }
 
-const convertNumberToString = (value: number): string => String(value.toFixed(2)).replace('.', ',')
+const convertNumberToString = (value: number | undefined): string => String(value?.toFixed(2)).replace('.', ',')
 
-const convertStringToNumber = (value: string): number => Number(value.replace(',', '.'))
+const convertStringToNumber = (value: string | undefined): number => Number(value?.replace(',', '.'))
 
 const FormatNumber = {
   rightToLeftFormatter,
