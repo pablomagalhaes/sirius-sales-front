@@ -50,9 +50,8 @@ const defaultFilter = {
 const Tariff = (): JSX.Element => {
   const [filter, setFilter] = useState<any>(defaultFilter)
   const [businessPartnerList, setBusinessPartnerList] = useState<any[]>([])
-  const [openedOrderSelect, setOpenedOrderSelect] = useState(false)
   const [orderAsc, setOrderAsc] = useState(true)
-  const [orderBy, setOrderBy] = useState<string>('openingDate')
+  const [orderBy, setOrderBy] = useState<string>('validityDate')
   const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
   const [originDestinationCountries, setoriginDestinationCountries] = useState<any[]>([])
   const [originDestinationStates, setoriginDestinationStates] = useState<any[]>([])
@@ -131,6 +130,18 @@ const Tariff = (): JSX.Element => {
         void getBusinessPartnerSea()
       } else {
         void getBusinessPartner(getBusinessPartnerType())
+      }
+      if (filter.tariffModalType === 'LAND' && orderBy === 'origin') {
+        setOrderBy('cityOrigin')
+      }
+      if (filter.tariffModalType === 'LAND' && orderBy === 'destination') {
+        setOrderBy('cityDestination')
+      }
+      if (filter.tariffModalType !== 'LAND' && orderBy === 'cityOrigin') {
+        setOrderBy('origin')
+      }
+      if (filter.tariffModalType !== 'LAND' && orderBy === 'cityDestination') {
+        setOrderBy('destination')
       }
     }
   }, [filter.tariffModalType])
@@ -596,7 +607,7 @@ const Tariff = (): JSX.Element => {
     setFilter((filter: any) => ({
       ...filter,
       direction: 'ASC',
-      orderByList: 'tariffType',
+      orderByList: 'validityDate',
       page: 0,
       size: 10
     }))
@@ -829,16 +840,15 @@ const Tariff = (): JSX.Element => {
           </ExportTariffContainer>
           <OrderByContainer>
             <ListTextSpan>Ordenar por:</ListTextSpan>
-            <DropdownMenuContainer showArrow={openedOrderSelect}>
+            <DropdownMenuContainer>
               <Select
                 className="select-style"
                 disableUnderline
                 onChange={(e) => handleOrderSelect(String(e.target.value))}
-                onOpen={() => setOpenedOrderSelect(!openedOrderSelect)}
                 placeholder={orderBy}
                 value={orderBy}
               >
-                {orderButtonMenuItems.map((item) => (
+                {orderButtonMenuItems(filter.tariffModalType).map((item) => (
                   <MenuItem
                     key={`${String(item.value)}_key`}
                     value={item.value}

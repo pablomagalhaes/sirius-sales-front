@@ -1,37 +1,36 @@
-const orderButtonMenuItems = [
-  {
-    value: 'referenceProposal',
-    description: 'Ref. proposta'
-  },
-  {
-    value: 'customerName',
-    description: 'Nome do cliente'
-  },
-  {
-    value: 'userCreationName',
-    description: 'Responsável'
-  },
-  {
-    value: 'idTransport',
-    description: 'Modal'
-  },
-  {
-    value: 'idOrigin',
-    description: 'Origem'
-  },
-  {
-    value: 'idDestination',
-    description: 'Destino'
-  },
-  {
-    value: 'openingDate',
-    description: 'Dt. abertura'
-  },
-  {
-    value: 'validityDate',
-    description: 'Dt. validade'
-  }
-]
+const orderButtonMenuItems = (modal: string): any => {
+    const getBusinessPartnerType = (): string => {
+      switch (modal) {
+        case 'SEA':
+          return 'Armador/Coloader'
+        case 'LAND':
+          return 'Transportadora'
+      }
+      return 'Cia. Aérea'
+    }
+    return [
+      {
+        value: 'nmAgent',
+        description: 'Agente'
+      },
+      {
+        value: 'dsBusinessPartnerTransporter',
+        description: getBusinessPartnerType()
+      },
+      {
+        value: modal === 'LAND' ? 'cityOrigin' : 'origin',
+        description: 'Origem'
+      },
+      {
+        value: modal === 'LAND' ? 'cityDestination' : 'destination',
+        description: 'Destino'
+      },
+      {
+        value: 'validityDate',
+        description: 'Validade'
+      }
+    ]
+} 
 
 const menuItems = {
   dateRanges: [
