@@ -316,6 +316,15 @@
       "upload": {
         "import": "Import",
         "export": "Export"
+      },
+      "orderSelectors": {
+        "agent": "Agente",
+        "origin": "Origem",
+        "destination": "Destino",
+        "validity": "Validade",
+        "seaBusinessPartner": "Armador/Coloader",
+        "landBusinessPartner": "Transportadora",
+        "airBusinessPartner": "Cia. Aérea"
       }
     }
   }

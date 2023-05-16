@@ -36,6 +36,7 @@ import { I18n } from 'react-redux-i18n'
 import TariffTable from './TariffTable'
 import { getModalFilter, getActivityFilter, getValidityFilter } from './helpers'
 import TariffUploadModal from '../../components/TariffUploadModal/TariffUploadModal'
+import { SelectorsValuesTypes, TariffModalTypes } from '../../../application/enum/tariffEnum'
 
 const defaultFilter = {
   tariffModalType: '',
@@ -51,7 +52,7 @@ const Tariff = (): JSX.Element => {
   const [filter, setFilter] = useState<any>(defaultFilter)
   const [businessPartnerList, setBusinessPartnerList] = useState<any[]>([])
   const [orderAsc, setOrderAsc] = useState(true)
-  const [orderBy, setOrderBy] = useState<string>('validityDate')
+  const [orderBy, setOrderBy] = useState<string>(SelectorsValuesTypes.Validity)
   const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
   const [originDestinationCountries, setoriginDestinationCountries] = useState<any[]>([])
   const [originDestinationStates, setoriginDestinationStates] = useState<any[]>([])
@@ -131,17 +132,17 @@ const Tariff = (): JSX.Element => {
       } else {
         void getBusinessPartner(getBusinessPartnerType())
       }
-      if (filter.tariffModalType === 'LAND' && orderBy === 'origin') {
-        setOrderBy('cityOrigin')
+      if (filter.tariffModalType === TariffModalTypes.Land && orderBy === SelectorsValuesTypes.Origin) {
+        setOrderBy(SelectorsValuesTypes.CityOrigin)
       }
-      if (filter.tariffModalType === 'LAND' && orderBy === 'destination') {
-        setOrderBy('cityDestination')
+      if (filter.tariffModalType === TariffModalTypes.Land && orderBy === SelectorsValuesTypes.Destination) {
+        setOrderBy(SelectorsValuesTypes.CityDestination)
       }
-      if (filter.tariffModalType !== 'LAND' && orderBy === 'cityOrigin') {
-        setOrderBy('origin')
+      if (filter.tariffModalType !== TariffModalTypes.Land && orderBy === SelectorsValuesTypes.CityOrigin) {
+        setOrderBy(SelectorsValuesTypes.Origin)
       }
-      if (filter.tariffModalType !== 'LAND' && orderBy === 'cityDestination') {
-        setOrderBy('destination')
+      if (filter.tariffModalType !== TariffModalTypes.Land && orderBy === SelectorsValuesTypes.CityDestination) {
+        setOrderBy(SelectorsValuesTypes.Destination)
       }
     }
   }, [filter.tariffModalType])
@@ -607,7 +608,7 @@ const Tariff = (): JSX.Element => {
     setFilter((filter: any) => ({
       ...filter,
       direction: 'ASC',
-      orderByList: 'validityDate',
+      orderByList: SelectorsValuesTypes.Validity,
       page: 0,
       size: 10
     }))

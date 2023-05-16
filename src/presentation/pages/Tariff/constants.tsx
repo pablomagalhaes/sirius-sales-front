@@ -1,33 +1,36 @@
+import { SelectorsValuesTypes, TariffModalTypes } from '../../../application/enum/tariffEnum'
+import { I18n } from 'react-redux-i18n'
+
 const orderButtonMenuItems = (modal: string): any => {
   const getBusinessPartnerType = (): string => {
     switch (modal) {
-      case 'SEA':
-        return 'Armador/Coloader'
-      case 'LAND':
-        return 'Transportadora'
+      case TariffModalTypes.Sea:
+        return I18n.t('pages.tariff.orderSelectors.seaBusinessPartner')
+      case TariffModalTypes.Land:
+        return I18n.t('pages.tariff.orderSelectors.landBusinessPartner')
     }
-    return 'Cia. Aérea'
+    return I18n.t('pages.tariff.orderSelectors.airBusinessPartner')
   }
   return [
     {
-      value: 'nmAgent',
-      description: 'Agente'
+      value: SelectorsValuesTypes.Agent,
+      description: I18n.t('pages.tariff.orderSelectors.agent')
     },
     {
-      value: 'dsBusinessPartnerTransporter',
+      value: SelectorsValuesTypes.PartnerTransporter,
       description: getBusinessPartnerType()
     },
     {
-      value: modal === 'LAND' ? 'cityOrigin' : 'origin',
-      description: 'Origem'
+      value: modal === TariffModalTypes.Land ? SelectorsValuesTypes.CityOrigin : SelectorsValuesTypes.Origin,
+      description: I18n.t('pages.tariff.orderSelectors.origin')
     },
     {
-      value: modal === 'LAND' ? 'cityDestination' : 'destination',
-      description: 'Destino'
+      value: modal === TariffModalTypes.Land ? SelectorsValuesTypes.CityDestination : SelectorsValuesTypes.Destination,
+      description: I18n.t('pages.tariff.orderSelectors.destination')
     },
     {
-      value: 'validityDate',
-      description: 'Validade'
+      value: SelectorsValuesTypes.Validity,
+      description: I18n.t('pages.tariff.orderSelectors.validity')
     }
   ]
 }
