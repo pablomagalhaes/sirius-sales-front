@@ -181,7 +181,7 @@ const Step5 = ({
 
   useEffect(() => {
     let actualCostArray = proposal.costs
-    actualCostArray = actualCostArray.filter((cost) => (cost.costType === CostTypes.Fare || cost.costType === CostTypes.Freight) && cost)
+    actualCostArray = actualCostArray.filter((cost) => (cost.costType === CostTypes.Tariff || cost.costType === CostTypes.Freight) && cost)
     const newOriginTableData: Cost[] = []
     dataOrigin.forEach((row) => {
       newOriginTableData.push({
@@ -234,7 +234,7 @@ const Step5 = ({
     })
 
     let actualTotalCostArray = proposal.totalCosts
-    actualTotalCostArray = actualTotalCostArray.filter((cost) => (cost?.costType === CostTypes.Fare || cost?.costType === CostTypes.Freight) && cost)
+    actualTotalCostArray = actualTotalCostArray.filter((cost) => (cost?.costType === CostTypes.Tariff || cost?.costType === CostTypes.Freight) && cost)
     const newTotalCostOrigin: TotalCost[] = []
     dataTotalCostOrigin.forEach((currency, index) => {
       if (currency.value.buy !== 0 || currency.value.sale !== 0) {

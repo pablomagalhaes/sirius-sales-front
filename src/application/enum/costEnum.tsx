@@ -1,5 +1,5 @@
 enum CostTypes {
-  Fare = 'Tarifa',
+  Tariff = 'Tarifa',
   Freight = 'Frete',
   Origin = 'Origem',
   Destiny = 'Destino'

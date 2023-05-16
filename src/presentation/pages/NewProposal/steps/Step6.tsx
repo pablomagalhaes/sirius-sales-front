@@ -82,7 +82,7 @@ const decimalToString = (value: number | null | undefined): string => {
 }
 
 const makeTableData = (costs): any => {
-  const getTarifas = costs.filter(cost => cost.costType === CostTypes.Fare)
+  const getTarifas = costs.filter(cost => cost.costType === CostTypes.Tariff)
   return getTarifas.map(cost => ({
     idCost: cost.idCost,
     selectedContainer: cost.idContainerType,
@@ -399,14 +399,14 @@ const Step6 = ({
         const newTableData = [...tableData]
         const newLoadedTotalCostsIds: number[] = []
         for (const cost of proposal.costs) {
-          if (cost.costType === CostTypes.Fare) {
+          if (cost.costType === CostTypes.Tariff) {
             newTableData[tableDataId].idCost = cost.idCost
             newTableData[tableDataId++].idProposal = proposal.idProposal
           }
         }
         setTableData(newTableData)
         for (const totalCost of proposal.totalCosts) {
-          if (totalCost.costType === CostTypes.Fare) {
+          if (totalCost.costType === CostTypes.Tariff) {
             newLoadedTotalCostsIds.push(Number(totalCost.id))
           }
           setLoadedTotalCostsIds(newLoadedTotalCostsIds)
@@ -456,7 +456,7 @@ const Step6 = ({
             const getDescription = await getContainer
 
             const getTotalItemValue = new Promise((resolve) => {
-              if (cost.costType === CostTypes.Fare) {
+              if (cost.costType === CostTypes.Tariff) {
                 const indexContainer = containerItems.findIndex(
                   (container) => getDescription === container.type
                 )
@@ -532,12 +532,12 @@ const Step6 = ({
                     : Number(response[2]).toFixed(2).replace('.', ',')
               }
               if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
-                if (cost.costType === CostTypes.Fare) {
+                if (cost.costType === CostTypes.Tariff) {
                   const getAgentByTarifaAgent = proposal.agents.find(agent => agent.idBusinessPartnerAgent === cost.agent.idBusinessPartnerAgent)
                   loadedItem.agent = getAgentByTarifaAgent // novo agente vinculado ao custo
                 }
               }
-              if (cost.costType === CostTypes.Fare) {
+              if (cost.costType === CostTypes.Tariff) {
                 loadedData.push(loadedItem)
               }
             }))
@@ -548,7 +548,7 @@ const Step6 = ({
 
         const loadedTotalCosts: any[] = []
         proposal.totalCosts.forEach((totalCost: TotalCost) => {
-          if (totalCost.costType === CostTypes.Fare) {
+          if (totalCost.costType === CostTypes.Tariff) {
             loadedTotalCosts.push(totalCost.id)
           }
         })
@@ -561,7 +561,7 @@ const Step6 = ({
   useEffect(() => {
     let actualCostArray = proposal.costs
     actualCostArray = actualCostArray.filter(
-      (cost) => cost.costType !== CostTypes.Fare && cost && cost.costType !== CostTypes.Freight
+      (cost) => cost.costType !== CostTypes.Tariff && cost && cost.costType !== CostTypes.Freight
     )
     const newFareItems: Cost[] = []
 
@@ -585,7 +585,7 @@ const Step6 = ({
           idBusinessPartnerTransportCompany: row.agent?.idBusinessPartnerTransportCompany,
           proposalId: row.agent?.proposalId ?? null
         },
-        costType: CostTypes.Fare,
+        costType: CostTypes.Tariff,
         billingType: row.type, // Tipo -MODAL
         valuePurchase: null, // valor compra
         valuePurchasePercent: 0, // 0 por enquanto
@@ -612,7 +612,7 @@ const Step6 = ({
             : loadedTotalCostsIds[index],
         idProposal:
           proposal?.idProposal === undefined ? null : proposal?.idProposal,
-        costType: CostTypes.Fare,
+        costType: CostTypes.Tariff,
         idCurrency: currency.name, // id moeda
         valueTotalSale: currency.value, // total sale da moeda
         valueTotalPurchase: 0 // total compra da moeda

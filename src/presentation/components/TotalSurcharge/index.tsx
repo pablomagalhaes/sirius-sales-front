@@ -128,7 +128,7 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
       if (totalOtherFare !== '0,00' && totalOtherFare !== '') {
         totalCostArray.push({
           idTotalCost: null,
-          costType: CostTypes.Fare,
+          costType: CostTypes.Tariff,
           idCurrency: currency,
           valueTotalSale: FormatNumber.convertStringToNumber(totalOtherFare),
           valueTotalPurchase: FormatNumber.convertStringToNumber(totalOtherFare)
