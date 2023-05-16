@@ -7,7 +7,8 @@ enum CostTypes {
 
 enum FareItemsTypes {
   Fixed = 'FIXO',
-  Bl = 'BL'
+  Bl = 'BL',
+  Cw = 'CW'
 }
 
 export { CostTypes, FareItemsTypes }

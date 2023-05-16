@@ -34,6 +34,7 @@ import { TotalCostTable } from '../../pages/NewProposal/steps/Step5'
 import API from '../../../infrastructure/api'
 import { ProposalProps, ProposalContext } from '../../pages/NewProposal/context/ProposalContext'
 import { Agents } from '../../pages/NewProposal/steps/Step2'
+import { FareItemsTypes } from '../../../application/enum/costEnum'
 
 interface CostTableProps {
   agentList: Agents[]
@@ -185,7 +186,7 @@ const CostTable = ({
             idCurrencySale: item.saleCurrency
           }
           const totalCalculationData =
-          data.costType === 'CW'
+          data.costType === FareItemsTypes.Cw
             ? {
                 ...data,
                 valuePurchaseCW: proposal.cargo[0].vlCwPurchase,
