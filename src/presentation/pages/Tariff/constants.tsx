@@ -1,36 +1,36 @@
 const orderButtonMenuItems = (modal: string): any => {
-    const getBusinessPartnerType = (): string => {
-      switch (modal) {
-        case 'SEA':
-          return 'Armador/Coloader'
-        case 'LAND':
-          return 'Transportadora'
-      }
-      return 'Cia. Aérea'
+  const getBusinessPartnerType = (): string => {
+    switch (modal) {
+      case 'SEA':
+        return 'Armador/Coloader'
+      case 'LAND':
+        return 'Transportadora'
     }
-    return [
-      {
-        value: 'nmAgent',
-        description: 'Agente'
-      },
-      {
-        value: 'dsBusinessPartnerTransporter',
-        description: getBusinessPartnerType()
-      },
-      {
-        value: modal === 'LAND' ? 'cityOrigin' : 'origin',
-        description: 'Origem'
-      },
-      {
-        value: modal === 'LAND' ? 'cityDestination' : 'destination',
-        description: 'Destino'
-      },
-      {
-        value: 'validityDate',
-        description: 'Validade'
-      }
-    ]
-} 
+    return 'Cia. Aérea'
+  }
+  return [
+    {
+      value: 'nmAgent',
+      description: 'Agente'
+    },
+    {
+      value: 'dsBusinessPartnerTransporter',
+      description: getBusinessPartnerType()
+    },
+    {
+      value: modal === 'LAND' ? 'cityOrigin' : 'origin',
+      description: 'Origem'
+    },
+    {
+      value: modal === 'LAND' ? 'cityDestination' : 'destination',
+      description: 'Destino'
+    },
+    {
+      value: 'validityDate',
+      description: 'Validade'
+    }
+  ]
+}
 
 const menuItems = {
   dateRanges: [
