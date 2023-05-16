@@ -5,6 +5,7 @@ import { ProposalContext, ProposalProps } from '../../pages/NewProposal/context/
 import { ProfitsProps } from '../../../domain/ProfitsProps'
 import { CwLabel, LowerContainer, ProfitContainer, ProfitLabel, ProfitValue, TotalCargoContainer, TotalContainer, UpperContainer } from './style'
 import { I18n } from 'react-redux-i18n'
+import FormatNumber from '../../../application/utils/formatNumber'
 // valores comentados nesse arquivo se referem ao calculo de percentual de profit que será implementado posteriormente
 interface TotalSurchargeProps {
   value: string
@@ -32,7 +33,7 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
   }
 
   const totalValue = (): number => {
-    return Number(value.replace(',', '.')) * cwSale
+    return FormatNumber.convertStringToNumber(value) * cwSale
   }
 
   const totalPurchase = (): number[][] => {
@@ -52,7 +53,7 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
       if (data.length > 0 && data[0].currencyPurchase !== '') {
         const purchaseCurrency = data.filter(purchase => purchase.currencyPurchase === each)
         purchaseCurrency.forEach(currency => {
-          if (currency.valuePurchase !== '') total += Number(currency.valuePurchase.replace(',', '.'))
+          if (currency.valuePurchase !== '') total += FormatNumber.convertStringToNumber(currency.valuePurchase)
         })
       }
 
@@ -73,10 +74,10 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
       }
       if (currency === each && value !== '0,00' && value !== '') {
         if (isAir()) total += totalValue()
-        else total += Number(value.replace(',', '.'))
+        else total += FormatNumber.convertStringToNumber(value)
       }
       if (currency === each && totalOtherFare !== '0,00' && totalOtherFare !== '') {
-        total += Number(totalOtherFare.replace(',', '.'))
+        total += FormatNumber.convertStringToNumber(totalOtherFare)
       }
       return [each, total]
     })
@@ -128,8 +129,8 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
           idTotalCost: null,
           costType: 'Tarifa',
           idCurrency: currency,
-          valueTotalSale: Number(totalOtherFare.replace(',', '.')),
-          valueTotalPurchase: Number(totalOtherFare.replace(',', '.'))
+          valueTotalSale: FormatNumber.convertStringToNumber(totalOtherFare),
+          valueTotalPurchase: FormatNumber.convertStringToNumber(totalOtherFare)
         })
       }
       if (isAir() && (value !== '0,00' && value !== '')) {
@@ -145,8 +146,8 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
           idTotalCost: null,
           costType: 'Frete',
           idCurrency: currency,
-          valueTotalSale: Number(value.replace(',', '.')),
-          valueTotalPurchase: Number(value.replace(',', '.'))
+          valueTotalSale: FormatNumber.convertStringToNumber(value),
+          valueTotalPurchase: FormatNumber.convertStringToNumber(value)
         })
       }
       // calculateProfitPercentage().forEach(percentageValue => {

@@ -11,8 +11,14 @@ const rightToLeftFormatter = (value: string, decimal: number): string => {
   return String(amount).replace('.', ',')
 }
 
+const convertNumberToString = (value: number): string => String(value.toFixed(2)).replace('.', ',')
+
+const convertStringToNumber = (value: string): number => Number(value.replace(',', '.'))
+
 const FormatNumber = {
-  rightToLeftFormatter
+  rightToLeftFormatter,
+  convertNumberToString,
+  convertStringToNumber
 }
 
 export default FormatNumber
