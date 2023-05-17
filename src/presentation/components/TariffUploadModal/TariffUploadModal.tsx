@@ -218,8 +218,9 @@ const TariffUploadModal = ({
                 onAction={setFile}
                 label= {I18n.t('pages.tariff.upload.dragAndDrop.label')}
                 uploadButtonLabel= {I18n.t('pages.tariff.upload.dragAndDrop.uploadButtonLabel')}
-                status={progress === 100 ? 
-                  I18n.t('pages.tariff.upload.dragAndDrop.completedStatus') : I18n.t('pages.tariff.upload.dragAndDrop.uploadStatus')}
+                status={progress === 100
+                  ? I18n.t('pages.tariff.upload.dragAndDrop.completedStatus')
+                  : I18n.t('pages.tariff.upload.dragAndDrop.uploadStatus')}
                 progress={progress}
                 errorMessage={I18n.t('pages.tariff.upload.dragAndDrop.errorMessage')}
                 types={['text/csv']}
