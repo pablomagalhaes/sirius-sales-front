@@ -5,6 +5,8 @@ import { ProposalContext, ProposalProps } from '../../pages/NewProposal/context/
 import { ProfitsProps } from '../../../domain/ProfitsProps'
 import { CwLabel, LowerContainer, ProfitContainer, ProfitLabel, ProfitValue, TotalCargoContainer, TotalContainer, UpperContainer } from './style'
 import { I18n } from 'react-redux-i18n'
+import FormatNumber from '../../../application/utils/formatNumber'
+import { CostTypes } from '../../../application/enum/costEnum'
 // valores comentados nesse arquivo se referem ao calculo de percentual de profit que será implementado posteriormente
 interface TotalSurchargeProps {
   value: string
@@ -32,7 +34,7 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
   }
 
   const totalValue = (): number => {
-    return Number(value.replace(',', '.')) * cwSale
+    return FormatNumber.convertStringToNumber(value) * cwSale
   }
 
   const totalPurchase = (): number[][] => {
@@ -52,7 +54,7 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
       if (data.length > 0 && data[0].currencyPurchase !== '') {
         const purchaseCurrency = data.filter(purchase => purchase.currencyPurchase === each)
         purchaseCurrency.forEach(currency => {
-          if (currency.valuePurchase !== '') total += Number(currency.valuePurchase.replace(',', '.'))
+          if (currency.valuePurchase !== '') total += FormatNumber.convertStringToNumber(currency.valuePurchase)
         })
       }
 
@@ -73,10 +75,10 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
       }
       if (currency === each && value !== '0,00' && value !== '') {
         if (isAir()) total += totalValue()
-        else total += Number(value.replace(',', '.'))
+        else total += FormatNumber.convertStringToNumber(value)
       }
       if (currency === each && totalOtherFare !== '0,00' && totalOtherFare !== '') {
-        total += Number(totalOtherFare.replace(',', '.'))
+        total += FormatNumber.convertStringToNumber(totalOtherFare)
       }
       return [each, total]
     })
@@ -121,14 +123,41 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
         profits.push({ idCurrency: profitValue[0], valueTotalProfit: Number(profitValue[1].toFixed(2)), percentageProfit: null })
       })
       setProfit(finalProfit.slice(0, -3))
+      const totalCostArray = [...proposal?.totalCosts.filter(e => e.costType === CostTypes.Origin || e.costType === CostTypes.Destiny)]
 
+      if (totalOtherFare !== '0,00' && totalOtherFare !== '') {
+        totalCostArray.push({
+          idTotalCost: null,
+          costType: CostTypes.Tariff,
+          idCurrency: currency,
+          valueTotalSale: FormatNumber.convertStringToNumber(totalOtherFare),
+          valueTotalPurchase: FormatNumber.convertStringToNumber(totalOtherFare)
+        })
+      }
+      if (isAir() && (value !== '0,00' && value !== '')) {
+        totalCostArray.push({
+          idTotalCost: null,
+          costType: CostTypes.Freight,
+          idCurrency: currency,
+          valueTotalSale: totalValue(),
+          valueTotalPurchase: totalValue()
+        })
+      } else if ((value !== '0,00' && value !== '')) {
+        totalCostArray.push({
+          idTotalCost: null,
+          costType: CostTypes.Freight,
+          idCurrency: currency,
+          valueTotalSale: FormatNumber.convertStringToNumber(value),
+          valueTotalPurchase: FormatNumber.convertStringToNumber(value)
+        })
+      }
       // calculateProfitPercentage().forEach(percentageValue => {
       //   profits.forEach((each, index) => {
       //     if (each.idCurrency === percentageValue[0]) profits[index] = { ...profits[index], percentageProfit: Number(percentageValue[1].toFixed(2)) }
       //   })
       // })
       // setProfitPercentage(calculateProfitPercentage())
-      setProposal({ ...proposal, profits })
+      setProposal({ ...proposal, profits, totalCosts: totalCostArray })
     }
   }, [data, totalCosts, currency, totalOtherFare, value, modal])
 

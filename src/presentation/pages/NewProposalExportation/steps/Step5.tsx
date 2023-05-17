@@ -10,6 +10,7 @@ import { TotalCost } from '../../../../domain/TotalCost'
 import { CalculationDataProps } from '../../../components/ChargeTable'
 import API from '../../../../infrastructure/api'
 import { Agents } from './Step2'
+import { CostTypes } from '../../../../application/enum/costEnum'
 
 interface Step5Props {
   costData: any
@@ -81,19 +82,19 @@ const Step5 = ({
         const newDestinyTable = [...dataDestiny]
         const newTotalCostDestIds: number[] = []
         for (const totalCost of proposal.totalCosts) {
-          if (totalCost.costType === 'Origem') {
+          if (totalCost.costType === CostTypes.Origin) {
             newTotalCostOrigIds.push(Number(totalCost.idTotalCost))
-          } else if (totalCost.costType === 'Destino') {
+          } else if (totalCost.costType === CostTypes.Destiny) {
             newTotalCostDestIds.push(Number(totalCost.idTotalCost))
           }
         }
         setLoadedTotalCostsOrigIds(newTotalCostOrigIds)
         setLoadedTotalCostsDestIds(newTotalCostDestIds)
         for (const cost of proposal.costs) {
-          if (cost.costType === 'Origem') {
+          if (cost.costType === CostTypes.Origin) {
             newOriginTable[originId].idCost = cost.idCost
             newOriginTable[originId++].idProposal = proposal.idProposal
-          } else if (cost.costType === 'Destino') {
+          } else if (cost.costType === CostTypes.Destiny) {
             newDestinyTable[destinyId].idCost = cost.idCost
             newDestinyTable[destinyId++].idProposal = proposal.idProposal
           }
@@ -148,9 +149,9 @@ const Step5 = ({
                 buyValueCalculated: null,
                 saleValueCalculated: null
               }
-              if (cost.costType === 'Origem') {
+              if (cost.costType === CostTypes.Origin) {
                 loadedDataOrigin.push(loadedItem)
-              } if (cost.costType === 'Destino') {
+              } if (cost.costType === CostTypes.Destiny) {
                 loadedDataDestiny.push(loadedItem)
               }
             })
@@ -164,9 +165,9 @@ const Step5 = ({
         const loadedTotalCostsOrig: any[] = []
         const loadedTotalCostsDest: any[] = []
         proposal.totalCosts.forEach((totalCost: TotalCost) => {
-          if (totalCost.costType === 'Origem') {
+          if (totalCost.costType === CostTypes.Origin) {
             loadedTotalCostsOrig.push(totalCost.idTotalCost)
-          } if (totalCost.costType === 'Destino') {
+          } if (totalCost.costType === CostTypes.Destiny) {
             loadedTotalCostsDest.push(totalCost.idTotalCost)
           }
         })
@@ -180,7 +181,7 @@ const Step5 = ({
 
   useEffect(() => {
     let actualCostArray = proposal.costs
-    actualCostArray = actualCostArray.filter((cost) => (cost.costType === 'Tarifa' || cost.costType === 'Frete') && cost)
+    actualCostArray = actualCostArray.filter((cost) => (cost.costType === CostTypes.Tariff || cost.costType === CostTypes.Freight) && cost)
     const newOriginTableData: Cost[] = []
     dataOrigin.forEach((row) => {
       newOriginTableData.push({
@@ -190,7 +191,7 @@ const Step5 = ({
         idService: serviceList.filter((serv) => serv.service === row.description)[0]?.idService, // id Descricao
         idContainerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : null, // containerMODAL
         agent: row.agent,
-        costType: 'Origem', // 'Origem''Destino''Tarifa'
+        costType: CostTypes.Origin, // 'Origem''Destino''Tarifa'
         billingType: row.type, // Tipo -MODAL
         valuePurchase: Number(row.buyValue), // valor compra
         valuePurchasePercent: 0, // 0 por enquanto
@@ -201,7 +202,9 @@ const Step5 = ({
         idCurrencyPurchase: row.buyCurrency, // tipo moeda
         idCurrencySale: row.saleCurrency, // tipo moeda
         isPurchase: row.buyValue !== null, // checkbox compra
-        isSale: row.saleValue !== null // checkbox venda
+        isSale: row.saleValue !== null, // checkbox venda
+        valueSaleTotal: Number(row.saleValueCalculated),
+        valuePurchaseTotal: Number(row.buyValueCalculated)
       })
     })
     const newDestinyTableData: Cost[] = []
@@ -213,7 +216,7 @@ const Step5 = ({
         idService: serviceList.filter((serv) => serv.service === row.description)[0]?.idService, // id Descricao
         idContainerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : null, // containerMODAL
         agent: row.agent,
-        costType: 'Destino', // 'Origem''Destino''Tarifa'
+        costType: CostTypes.Destiny, // 'Origem''Destino''Tarifa'
         billingType: row.type, // Tipo -MODAL
         valuePurchase: Number(row.buyValue), // valor compra
         valuePurchasePercent: 0, // 0 por enquanto
@@ -224,19 +227,21 @@ const Step5 = ({
         idCurrencyPurchase: row.buyCurrency, // tipo moeda
         idCurrencySale: row.saleCurrency, // tipo moeda
         isPurchase: Number(row.buyValue) !== 0, // checkbox compra
-        isSale: Number(row.saleValue) !== 0 // checkbox venda
+        isSale: Number(row.saleValue) !== 0, // checkbox venda
+        valueSaleTotal: Number(row.saleValueCalculated),
+        valuePurchaseTotal: Number(row.buyValueCalculated)
       })
     })
 
     let actualTotalCostArray = proposal.totalCosts
-    actualTotalCostArray = actualTotalCostArray.filter((cost) => cost.costType === 'Tarifa' && cost)
+    actualTotalCostArray = actualTotalCostArray.filter((cost) => (cost?.costType === CostTypes.Tariff || cost?.costType === CostTypes.Freight) && cost)
     const newTotalCostOrigin: TotalCost[] = []
     dataTotalCostOrigin.forEach((currency, index) => {
       if (currency.value.buy !== 0 || currency.value.sale !== 0) {
         newTotalCostOrigin.push({
           idTotalCost: loadedTotalCostsOrigIds[index] === undefined ? null : loadedTotalCostsOrigIds[index],
           idProposal: loadedTotalCostsOrigIds[index] === undefined ? null : proposal?.idProposal,
-          costType: 'Origem', // 'Origem''Destino''Tarifa'
+          costType: CostTypes.Origin, // 'Origem''Destino''Tarifa'
           idCurrency: currency.name, // id moeda
           valueTotalSale: currency.value.sale, // total sale da moeda
           valueTotalPurchase: currency.value.buy // total compra da moeda
@@ -249,7 +254,7 @@ const Step5 = ({
         newTotalCostDestiny.push({
           idTotalCost: loadedTotalCostsDestIds[index] === undefined ? null : loadedTotalCostsDestIds[index],
           idProposal: loadedTotalCostsDestIds[index] === undefined ? null : proposal?.idProposal,
-          costType: 'Destino', // 'Origem''Destino''Tarifa'
+          costType: CostTypes.Destiny, // 'Origem''Destino''Tarifa'
           idCurrency: currency.name, // id moeda
           valueTotalSale: currency.value.sale, // total sale da moeda
           valueTotalPurchase: currency.value.buy // total compra da moeda
