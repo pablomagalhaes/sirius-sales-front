@@ -23,4 +23,6 @@ export interface Cost {
   idCurrencySale: string | null // tipo moeda
   isPurchase: boolean // checkbox compra
   isSale: boolean // checkbox venda
+  valueSaleTotal: number | null
+  valuePurchaseTotal: number | null
 }
