@@ -318,7 +318,14 @@
     "tariff": {
       "upload": {
         "import": "Importação",
-        "export": "Exportação"
+        "export": "Exportação",
+        "dragAndDrop": {
+          "label": "Você pode arrastar o arquivo .csv para esta área ou",
+          "uploadButtonLabel": "Selecionar arquivo",
+          "uploadStatus": "Fazendo upload",
+          "completedStatus": "Upload completo | Em processamento",
+          "errorMessage": "Formato de arquivo inválido. Escolha um arquivo .csv"
+        }
       }
     }
   }

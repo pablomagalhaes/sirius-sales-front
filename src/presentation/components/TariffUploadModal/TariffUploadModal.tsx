@@ -216,10 +216,13 @@ const TariffUploadModal = ({
             <DragAndDropDiv>
               <DragAndDrop
                 onAction={setFile}
-                label= "Você pode arrastar o arquivo .csv para esta área ou"
-                uploadButtonLabel= "Selecionar arquivo"
-                status={progress === 100 ? 'Upload completo | Em processamento' : 'Fazendo upload'}
+                label= {I18n.t('pages.tariff.upload.dragAndDrop.label')}
+                uploadButtonLabel= {I18n.t('pages.tariff.upload.dragAndDrop.uploadButtonLabel')}
+                status={progress === 100 ? 
+                  I18n.t('pages.tariff.upload.dragAndDrop.completedStatus') : I18n.t('pages.tariff.upload.dragAndDrop.uploadStatus')}
                 progress={progress}
+                errorMessage={I18n.t('pages.tariff.upload.dragAndDrop.errorMessage')}
+                types={['text/csv']}
               />
             </DragAndDropDiv>
             { completed && <Grid item xs={12}>
