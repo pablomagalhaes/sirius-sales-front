@@ -601,7 +601,6 @@ const Tariff = (): JSX.Element => {
     delete filter['openingDate.dtEnd']
     delete filter['validityDate.dtBegin']
     delete filter['validityDate.dtEnd']
-
   }
 
   const handleOrderDirection = (): string => {
