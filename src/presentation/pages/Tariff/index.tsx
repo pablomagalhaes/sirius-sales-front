@@ -31,7 +31,7 @@ import { useHistory } from 'react-router-dom'
 import UpArrow from '../../../application/icons/UpArrow'
 import API from '../../../infrastructure/api'
 import ArrowDown from '../../../application/icons/ArrowDown'
-import { orderButtonMenuItems } from './constants'
+import { orderButtonMenuItems, cardFilters } from './constants'
 import { I18n } from 'react-redux-i18n'
 import TariffTable from './TariffTable'
 import { getModalFilter, getActivityFilter, getValidityFilter } from './helpers'
@@ -42,8 +42,7 @@ const defaultFilter = {
   tariffModalType: '',
   validityTariff: '',
   tariffType: '',
-  direction: 'ASC',
-  orderByList: 'tariffType',
+  orderByList: `${SelectorsValuesTypes.Validity},${SelectorsValuesTypes.Ascendent}`,
   page: 0,
   size: 10
 }
@@ -394,8 +393,6 @@ const Tariff = (): JSX.Element => {
           .map((locationFiltered: string) => originDestinationCities
             .find((city) => city.txCity === locationFiltered.split(' (')[0] && city.txCountry === locationFiltered.split(' (')[1].slice(0, -1))?.idCity)
 
-        console.log(originDestinationCountries)
-
         if (originCountry.length > 0 && originCountry[0] !== undefined) {
           setFilter((filter: any) => ({
             ...filter,
@@ -605,29 +602,18 @@ const Tariff = (): JSX.Element => {
     delete filter['validityDate.dtBegin']
     delete filter['validityDate.dtEnd']
 
-    setFilter((filter: any) => ({
-      ...filter,
-      direction: 'ASC',
-      orderByList: SelectorsValuesTypes.Validity,
-      page: 0,
-      size: 10
-    }))
   }
 
-  const handleOrderSelect = (value: React.SetStateAction<string>): void => {
-    setFilter((filter: any) => ({ ...filter, orderByList: value }))
-    setOrderBy(value)
-  }
-
-  const handleOrderDirection = (): void => {
+  const handleOrderDirection = (): string => {
     if (orderAsc) {
-      setFilter((filter: any) => ({ ...filter, direction: 'DESC' }))
-      setOrderAsc(false)
-    } else {
-      setFilter((filter: any) => ({ ...filter, direction: 'ASC' }))
-      setOrderAsc(true)
+      return SelectorsValuesTypes.Ascendent
     }
+    return SelectorsValuesTypes.Descendent
   }
+
+  useEffect(() => {
+    setFilter((filter: any) => ({ ...filter, orderByList: `${orderBy},${handleOrderDirection()}` }))
+  }, [orderAsc, orderBy])
 
   const getCompanyLabels = (): string => {
     let label: string = 'Cia. Aérea'
@@ -740,44 +726,6 @@ const Tariff = (): JSX.Element => {
 
   const handleExportTariff = (): void => {}
 
-  const cardFilters = [
-    {
-      iconType: 'import',
-      status: 'Importação',
-      uniqueChoice: true
-    },
-    {
-      iconType: 'export',
-      status: 'Exportação',
-      uniqueChoice: true
-    },
-    {
-      iconType: 'plane',
-      status: 'Aéreo',
-      uniqueChoice: true
-    },
-    {
-      iconType: 'ship',
-      status: 'Marítimo',
-      uniqueChoice: true
-    },
-    {
-      iconType: 'truck',
-      status: 'Rodoviário',
-      uniqueChoice: true
-    },
-    {
-      iconType: 'warn',
-      status: 'Vencimento próximo',
-      uniqueChoice: true
-    },
-    {
-      iconType: 'alert',
-      status: 'Vencidas',
-      uniqueChoice: true
-    }
-  ]
-
   return (
     <RootContainer>
       <TopContainer>
@@ -845,7 +793,7 @@ const Tariff = (): JSX.Element => {
               <Select
                 className="select-style"
                 disableUnderline
-                onChange={(e) => handleOrderSelect(String(e.target.value))}
+                onChange={(e) => setOrderBy(String(e.target.value))}
                 placeholder={orderBy}
                 value={orderBy}
               >
@@ -860,7 +808,7 @@ const Tariff = (): JSX.Element => {
               </Select>
             </DropdownMenuContainer>
             <ArrowIconContainer
-              onClick={handleOrderDirection}
+              onClick={() => setOrderAsc((order) => !order)}
               $rotate={orderAsc}
             >
               {orderAsc ? <ArrowDown /> : <UpArrow />}

@@ -3,9 +3,11 @@ enum SelectorsValuesTypes {
   PartnerTransporter = 'dsBusinessPartnerTransporter',
   Origin = 'origin',
   Destination = 'destination',
-  CityOrigin = 'cityOrigin',
-  CityDestination = 'cityDestination',
-  Validity = 'validityDate'
+  CityOrigin = 'originCity.nameCity',
+  CityDestination = 'destinationCity.nameCity',
+  Validity = 'validityDate',
+  Ascendent = 'ASC',
+  Descendent = 'DESC'
 }
 enum TariffModalTypes {
   Sea = 'SEA',

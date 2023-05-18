@@ -73,4 +73,42 @@ const rows = {
   LAND: ['agent', 'landCompany', 'originDestiny', 'transitTime', 'validity', 'currency', 'geralImoDed', 'geralImoCons']
 }
 
-export { orderButtonMenuItems, menuItems, columns, rows }
+const cardFilters = [
+  {
+    iconType: 'import',
+    status: 'Importação',
+    uniqueChoice: true
+  },
+  {
+    iconType: 'export',
+    status: 'Exportação',
+    uniqueChoice: true
+  },
+  {
+    iconType: 'plane',
+    status: 'Aéreo',
+    uniqueChoice: true
+  },
+  {
+    iconType: 'ship',
+    status: 'Marítimo',
+    uniqueChoice: true
+  },
+  {
+    iconType: 'truck',
+    status: 'Rodoviário',
+    uniqueChoice: true
+  },
+  {
+    iconType: 'warn',
+    status: 'Vencimento próximo',
+    uniqueChoice: true
+  },
+  {
+    iconType: 'alert',
+    status: 'Vencidas',
+    uniqueChoice: true
+  }
+]
+
+export { orderButtonMenuItems, menuItems, columns, rows, cardFilters }
