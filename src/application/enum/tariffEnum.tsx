@@ -6,13 +6,6 @@ enum SelectorsValuesTypes {
   CityOrigin = 'originCity.nameCity',
   CityDestination = 'destinationCity.nameCity',
   Validity = 'validityDate',
-  Ascendent = 'ASC',
-  Descendent = 'DESC'
-}
-enum TariffModalTypes {
-  Sea = 'SEA',
-  Land = 'LAND',
-  Air = 'AIR'
 }
 
-export { SelectorsValuesTypes, TariffModalTypes }
+export { SelectorsValuesTypes }

@@ -1,12 +1,13 @@
-import { SelectorsValuesTypes, TariffModalTypes } from '../../../application/enum/tariffEnum'
+import { SelectorsValuesTypes } from '../../../application/enum/tariffEnum'
+import { ModalTypes } from '../../../application/enum/utilsEnum'
 import { I18n } from 'react-redux-i18n'
 
 const orderButtonMenuItems = (modal: string): any => {
   const getBusinessPartnerType = (): string => {
     switch (modal) {
-      case TariffModalTypes.Sea:
+      case ModalTypes.Sea:
         return I18n.t('pages.tariff.orderSelectors.seaBusinessPartner')
-      case TariffModalTypes.Land:
+      case ModalTypes.Land:
         return I18n.t('pages.tariff.orderSelectors.landBusinessPartner')
     }
     return I18n.t('pages.tariff.orderSelectors.airBusinessPartner')
@@ -21,11 +22,11 @@ const orderButtonMenuItems = (modal: string): any => {
       description: getBusinessPartnerType()
     },
     {
-      value: modal === TariffModalTypes.Land ? SelectorsValuesTypes.CityOrigin : SelectorsValuesTypes.Origin,
+      value: modal === ModalTypes.Land ? SelectorsValuesTypes.CityOrigin : SelectorsValuesTypes.Origin,
       description: I18n.t('pages.tariff.orderSelectors.origin')
     },
     {
-      value: modal === TariffModalTypes.Land ? SelectorsValuesTypes.CityDestination : SelectorsValuesTypes.Destination,
+      value: modal === ModalTypes.Land ? SelectorsValuesTypes.CityDestination : SelectorsValuesTypes.Destination,
       description: I18n.t('pages.tariff.orderSelectors.destination')
     },
     {

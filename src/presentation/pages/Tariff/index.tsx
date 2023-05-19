@@ -36,13 +36,14 @@ import { I18n } from 'react-redux-i18n'
 import TariffTable from './TariffTable'
 import { getModalFilter, getActivityFilter, getValidityFilter } from './helpers'
 import TariffUploadModal from '../../components/TariffUploadModal/TariffUploadModal'
-import { SelectorsValuesTypes, TariffModalTypes } from '../../../application/enum/tariffEnum'
+import { SelectorsValuesTypes } from '../../../application/enum/tariffEnum'
+import { ModalTypes, OrderTypes } from '../../../application/enum/utilsEnum'
 
 const defaultFilter = {
   tariffModalType: '',
   validityTariff: '',
   tariffType: '',
-  orderByList: `${SelectorsValuesTypes.Validity},${SelectorsValuesTypes.Ascendent}`,
+  orderByList: `${SelectorsValuesTypes.Validity},${OrderTypes.Ascendent}`,
   page: 0,
   size: 10
 }
@@ -131,16 +132,16 @@ const Tariff = (): JSX.Element => {
       } else {
         void getBusinessPartner(getBusinessPartnerType())
       }
-      if (filter.tariffModalType === TariffModalTypes.Land && orderBy === SelectorsValuesTypes.Origin) {
+      if (filter.tariffModalType === ModalTypes.Land && orderBy === SelectorsValuesTypes.Origin) {
         setOrderBy(SelectorsValuesTypes.CityOrigin)
       }
-      if (filter.tariffModalType === TariffModalTypes.Land && orderBy === SelectorsValuesTypes.Destination) {
+      if (filter.tariffModalType === ModalTypes.Land && orderBy === SelectorsValuesTypes.Destination) {
         setOrderBy(SelectorsValuesTypes.CityDestination)
       }
-      if (filter.tariffModalType !== TariffModalTypes.Land && orderBy === SelectorsValuesTypes.CityOrigin) {
+      if (filter.tariffModalType !== ModalTypes.Land && orderBy === SelectorsValuesTypes.CityOrigin) {
         setOrderBy(SelectorsValuesTypes.Origin)
       }
-      if (filter.tariffModalType !== TariffModalTypes.Land && orderBy === SelectorsValuesTypes.CityDestination) {
+      if (filter.tariffModalType !== ModalTypes.Land && orderBy === SelectorsValuesTypes.CityDestination) {
         setOrderBy(SelectorsValuesTypes.Destination)
       }
     }
@@ -605,9 +606,9 @@ const Tariff = (): JSX.Element => {
 
   const handleOrderDirection = (): string => {
     if (orderAsc) {
-      return SelectorsValuesTypes.Ascendent
+      return OrderTypes.Ascendent
     }
-    return SelectorsValuesTypes.Descendent
+    return OrderTypes.Descendent
   }
 
   useEffect(() => {
