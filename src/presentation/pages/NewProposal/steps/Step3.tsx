@@ -528,6 +528,7 @@ const Step3 = ({
             <ControlledInput
               id="description"
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
+              inputProps={{ maxLength: 30 }}
               invalid={invalidInput && data.description.length === 0}
               onChange={(e) =>
                 setData({ ...data, description: e.target.value })
