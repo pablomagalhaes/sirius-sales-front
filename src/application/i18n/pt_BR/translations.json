@@ -326,6 +326,15 @@
           "completedStatus": "Upload completo | Em processamento",
           "errorMessage": "Formato de arquivo inválido. Escolha um arquivo .csv"
         }
+      },
+      "orderSelectors": {
+        "agent": "Agente",
+        "origin": "Origem",
+        "destination": "Destino",
+        "validity": "Validade",
+        "seaBusinessPartner": "Armador/Coloader",
+        "landBusinessPartner": "Transportadora",
+        "airBusinessPartner": "Cia. Aérea"
       }
     }
   }

@@ -1,37 +1,40 @@
-const orderButtonMenuItems = [
-  {
-    value: 'referenceProposal',
-    description: 'Ref. proposta'
-  },
-  {
-    value: 'customerName',
-    description: 'Nome do cliente'
-  },
-  {
-    value: 'userCreationName',
-    description: 'Responsável'
-  },
-  {
-    value: 'idTransport',
-    description: 'Modal'
-  },
-  {
-    value: 'idOrigin',
-    description: 'Origem'
-  },
-  {
-    value: 'idDestination',
-    description: 'Destino'
-  },
-  {
-    value: 'openingDate',
-    description: 'Dt. abertura'
-  },
-  {
-    value: 'validityDate',
-    description: 'Dt. validade'
+import { SelectorsValuesTypes } from '../../../application/enum/tariffEnum'
+import { ModalTypes } from '../../../application/enum/enum'
+import { I18n } from 'react-redux-i18n'
+
+const orderButtonMenuItems = (modal: string): any => {
+  const getBusinessPartnerType = (): string => {
+    switch (modal) {
+      case ModalTypes.Sea:
+        return I18n.t('pages.tariff.orderSelectors.seaBusinessPartner')
+      case ModalTypes.Land:
+        return I18n.t('pages.tariff.orderSelectors.landBusinessPartner')
+    }
+    return I18n.t('pages.tariff.orderSelectors.airBusinessPartner')
   }
-]
+  return [
+    {
+      value: SelectorsValuesTypes.Agent,
+      description: I18n.t('pages.tariff.orderSelectors.agent')
+    },
+    {
+      value: SelectorsValuesTypes.PartnerTransporter,
+      description: getBusinessPartnerType()
+    },
+    {
+      value: modal === ModalTypes.Land ? SelectorsValuesTypes.CityOrigin : SelectorsValuesTypes.Origin,
+      description: I18n.t('pages.tariff.orderSelectors.origin')
+    },
+    {
+      value: modal === ModalTypes.Land ? SelectorsValuesTypes.CityDestination : SelectorsValuesTypes.Destination,
+      description: I18n.t('pages.tariff.orderSelectors.destination')
+    },
+    {
+      value: SelectorsValuesTypes.Validity,
+      description: I18n.t('pages.tariff.orderSelectors.validity')
+    }
+  ]
+}
 
 const menuItems = {
   dateRanges: [
@@ -71,4 +74,42 @@ const rows = {
   LAND: ['agent', 'landCompany', 'originDestiny', 'transitTime', 'validity', 'currency', 'geralImoDed', 'geralImoCons']
 }
 
-export { orderButtonMenuItems, menuItems, columns, rows }
+const cardFilters = [
+  {
+    iconType: 'import',
+    status: 'Importação',
+    uniqueChoice: true
+  },
+  {
+    iconType: 'export',
+    status: 'Exportação',
+    uniqueChoice: true
+  },
+  {
+    iconType: 'plane',
+    status: 'Aéreo',
+    uniqueChoice: true
+  },
+  {
+    iconType: 'ship',
+    status: 'Marítimo',
+    uniqueChoice: true
+  },
+  {
+    iconType: 'truck',
+    status: 'Rodoviário',
+    uniqueChoice: true
+  },
+  {
+    iconType: 'warn',
+    status: 'Vencimento próximo',
+    uniqueChoice: true
+  },
+  {
+    iconType: 'alert',
+    status: 'Vencidas',
+    uniqueChoice: true
+  }
+]
+
+export { orderButtonMenuItems, menuItems, columns, rows, cardFilters }

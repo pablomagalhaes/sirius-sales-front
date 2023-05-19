@@ -31,18 +31,19 @@ import { useHistory } from 'react-router-dom'
 import UpArrow from '../../../application/icons/UpArrow'
 import API from '../../../infrastructure/api'
 import ArrowDown from '../../../application/icons/ArrowDown'
-import { orderButtonMenuItems } from './constants'
+import { orderButtonMenuItems, cardFilters } from './constants'
 import { I18n } from 'react-redux-i18n'
 import TariffTable from './TariffTable'
 import { getModalFilter, getActivityFilter, getValidityFilter } from './helpers'
 import TariffUploadModal from '../../components/TariffUploadModal/TariffUploadModal'
+import { SelectorsValuesTypes } from '../../../application/enum/tariffEnum'
+import { ModalTypes, OrderTypes } from '../../../application/enum/enum'
 
 const defaultFilter = {
   tariffModalType: '',
   validityTariff: '',
   tariffType: '',
-  direction: 'ASC',
-  orderByList: 'tariffType',
+  orderByList: `${SelectorsValuesTypes.Validity},${OrderTypes.Ascendent}`,
   page: 0,
   size: 10
 }
@@ -50,9 +51,8 @@ const defaultFilter = {
 const Tariff = (): JSX.Element => {
   const [filter, setFilter] = useState<any>(defaultFilter)
   const [businessPartnerList, setBusinessPartnerList] = useState<any[]>([])
-  const [openedOrderSelect, setOpenedOrderSelect] = useState(false)
   const [orderAsc, setOrderAsc] = useState(true)
-  const [orderBy, setOrderBy] = useState<string>('openingDate')
+  const [orderBy, setOrderBy] = useState<string>(SelectorsValuesTypes.Validity)
   const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
   const [originDestinationCountries, setoriginDestinationCountries] = useState<any[]>([])
   const [originDestinationStates, setoriginDestinationStates] = useState<any[]>([])
@@ -131,6 +131,18 @@ const Tariff = (): JSX.Element => {
         void getBusinessPartnerSea()
       } else {
         void getBusinessPartner(getBusinessPartnerType())
+      }
+      if (filter.tariffModalType === ModalTypes.Land && orderBy === SelectorsValuesTypes.Origin) {
+        setOrderBy(SelectorsValuesTypes.CityOrigin)
+      }
+      if (filter.tariffModalType === ModalTypes.Land && orderBy === SelectorsValuesTypes.Destination) {
+        setOrderBy(SelectorsValuesTypes.CityDestination)
+      }
+      if (filter.tariffModalType !== ModalTypes.Land && orderBy === SelectorsValuesTypes.CityOrigin) {
+        setOrderBy(SelectorsValuesTypes.Origin)
+      }
+      if (filter.tariffModalType !== ModalTypes.Land && orderBy === SelectorsValuesTypes.CityDestination) {
+        setOrderBy(SelectorsValuesTypes.Destination)
       }
     }
   }, [filter.tariffModalType])
@@ -382,8 +394,6 @@ const Tariff = (): JSX.Element => {
           .map((locationFiltered: string) => originDestinationCities
             .find((city) => city.txCity === locationFiltered.split(' (')[0] && city.txCountry === locationFiltered.split(' (')[1].slice(0, -1))?.idCity)
 
-        console.log(originDestinationCountries)
-
         if (originCountry.length > 0 && originCountry[0] !== undefined) {
           setFilter((filter: any) => ({
             ...filter,
@@ -592,30 +602,18 @@ const Tariff = (): JSX.Element => {
     delete filter['openingDate.dtEnd']
     delete filter['validityDate.dtBegin']
     delete filter['validityDate.dtEnd']
-
-    setFilter((filter: any) => ({
-      ...filter,
-      direction: 'ASC',
-      orderByList: 'tariffType',
-      page: 0,
-      size: 10
-    }))
   }
 
-  const handleOrderSelect = (value: React.SetStateAction<string>): void => {
-    setFilter((filter: any) => ({ ...filter, orderByList: value }))
-    setOrderBy(value)
-  }
-
-  const handleOrderDirection = (): void => {
+  const handleOrderDirection = (): string => {
     if (orderAsc) {
-      setFilter((filter: any) => ({ ...filter, direction: 'DESC' }))
-      setOrderAsc(false)
-    } else {
-      setFilter((filter: any) => ({ ...filter, direction: 'ASC' }))
-      setOrderAsc(true)
+      return OrderTypes.Ascendent
     }
+    return OrderTypes.Descendent
   }
+
+  useEffect(() => {
+    setFilter((filter: any) => ({ ...filter, orderByList: `${orderBy},${handleOrderDirection()}` }))
+  }, [orderAsc, orderBy])
 
   const getCompanyLabels = (): string => {
     let label: string = 'Cia. Aérea'
@@ -728,44 +726,6 @@ const Tariff = (): JSX.Element => {
 
   const handleExportTariff = (): void => {}
 
-  const cardFilters = [
-    {
-      iconType: 'import',
-      status: 'Importação',
-      uniqueChoice: true
-    },
-    {
-      iconType: 'export',
-      status: 'Exportação',
-      uniqueChoice: true
-    },
-    {
-      iconType: 'plane',
-      status: 'Aéreo',
-      uniqueChoice: true
-    },
-    {
-      iconType: 'ship',
-      status: 'Marítimo',
-      uniqueChoice: true
-    },
-    {
-      iconType: 'truck',
-      status: 'Rodoviário',
-      uniqueChoice: true
-    },
-    {
-      iconType: 'warn',
-      status: 'Vencimento próximo',
-      uniqueChoice: true
-    },
-    {
-      iconType: 'alert',
-      status: 'Vencidas',
-      uniqueChoice: true
-    }
-  ]
-
   return (
     <RootContainer>
       <TopContainer>
@@ -829,16 +789,15 @@ const Tariff = (): JSX.Element => {
           </ExportTariffContainer>
           <OrderByContainer>
             <ListTextSpan>Ordenar por:</ListTextSpan>
-            <DropdownMenuContainer showArrow={openedOrderSelect}>
+            <DropdownMenuContainer>
               <Select
                 className="select-style"
                 disableUnderline
-                onChange={(e) => handleOrderSelect(String(e.target.value))}
-                onOpen={() => setOpenedOrderSelect(!openedOrderSelect)}
+                onChange={(e) => setOrderBy(String(e.target.value))}
                 placeholder={orderBy}
                 value={orderBy}
               >
-                {orderButtonMenuItems.map((item) => (
+                {orderButtonMenuItems(filter.tariffModalType).map((item) => (
                   <MenuItem
                     key={`${String(item.value)}_key`}
                     value={item.value}
@@ -849,7 +808,7 @@ const Tariff = (): JSX.Element => {
               </Select>
             </DropdownMenuContainer>
             <ArrowIconContainer
-              onClick={handleOrderDirection}
+              onClick={() => setOrderAsc((order) => !order)}
               $rotate={orderAsc}
             >
               {orderAsc ? <ArrowDown /> : <UpArrow />}
