@@ -128,6 +128,15 @@
   "ProposalDisplayModal": {
     "title": "Download the proposal",
     "buttonText": "Confirm language and download"
+  },
+  "Pagination": {
+    "tooltipBack": "Anterior",
+    "tooltipFirst": "Primeira",
+    "tooltipLast": "Última",
+    "tooltipNext": "Próxima",
+    "labelDisplay": "exibindo",
+    "labelDisplayedRows": "de",
+    "labelRowsPerPage": "Propostas por página"
   }
 },
   "pages": {
@@ -313,9 +322,22 @@
       }
     },
     "tariff": {
+      "mainPage": {
+        "home": "Home",
+        "tariff": "Tarifário",
+        "display": "Exibir por",
+        "export": "Exportar tarifas",
+        "orderBy": "Ordenar por"
+      },
       "upload": {
-        "import": "Import",
-        "export": "Export",
+        "import": "Importação",
+        "export": "Exportação",
+        "mainLabel": "Fazer upload de tarifas",
+        "modal": "Modal",
+        "completedMessage": "Acompanhe o processamento do arquivo na tela de processamentos.",
+        "closeButtonLabel": "Fechar",
+        "startButtonLabel": "Iniciar processamento",
+        "processingButtonLabel": "Ver todos os processamentos",
         "dragAndDrop": {
           "label": "Você pode arrastar o arquivo .csv para esta área ou",
           "uploadButtonLabel": "Selecionar arquivo",
@@ -332,7 +354,32 @@
         "seaBusinessPartner": "Armador/Coloader",
         "landBusinessPartner": "Transportadora",
         "airBusinessPartner": "Cia. Aérea"
+      },
+      "modals": {
+        "seaFcl": "Marítimo/FCL",
+        "seaLcl": "Marítimo/LCL",
+        "air": "Aéreo",
+        "land": "Rodoviário"
+      },
+      "companyLabels": {
+        "air": "Cia. Aérea",
+        "sea": "Armador/Coloader",
+        "land": "Transportadora"
+      },
+      "menuItemsSelector": {
+        "currency": "Moeda",
+        "transitTime": "Transit Time",
+        "frequency": "Frequência",
+        "specification": "Especificação",
+        "agent": "Agente"
       }
+    },
+    "filter": {
+      "addFilterLabel": "Filtros avançados",
+      "applyLabel": "Aplicar",
+      "approveLabel": "Salvar Filtro",
+      "cleanLabel": "Limpar",
+      "myFilterLabel": "Meus Filtros"
     }
   }
 }
