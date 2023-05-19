@@ -37,7 +37,7 @@ import TariffTable from './TariffTable'
 import { getModalFilter, getActivityFilter, getValidityFilter } from './helpers'
 import TariffUploadModal from '../../components/TariffUploadModal/TariffUploadModal'
 import { SelectorsValuesTypes } from '../../../application/enum/tariffEnum'
-import { ModalTypes, OrderTypes } from '../../../application/enum/utilsEnum'
+import { ModalTypes, OrderTypes } from '../../../application/enum/enum'
 
 const defaultFilter = {
   tariffModalType: '',
