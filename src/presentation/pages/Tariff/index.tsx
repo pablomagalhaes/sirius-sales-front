@@ -280,7 +280,8 @@ const Tariff = (): JSX.Element => {
       ...filter,
       tariffModalType,
       validityTariff,
-      tariffType
+      tariffType,
+      orderByList: `${orderBy},${handleOrderDirection()}`
     }))
   }
 
@@ -302,7 +303,7 @@ const Tariff = (): JSX.Element => {
 
     const selectedAgents = findKeyFilter(
       selectedFiltersRowFilter,
-      'Agente'
+      I18n.t('pages.tariff.menuItemsSelector.agent')
     )
     if (selectedAgents !== undefined) {
       const agentIds: any = []
@@ -333,7 +334,7 @@ const Tariff = (): JSX.Element => {
 
     const selectedCurrencies = findKeyFilter(
       selectedFiltersRowFilter,
-      'Moeda'
+      I18n.t('pages.tariff.menuItemsSelector.currency')
     )
     if (selectedCurrencies !== undefined) {
       setFilter((filter: any) => ({
@@ -344,7 +345,7 @@ const Tariff = (): JSX.Element => {
 
     const selectedOriginsDestinations = findKeyFilter(
       selectedFiltersRowFilter,
-      'Origem/Destino'
+      `${String(I18n.t('pages.tariff.orderSelectors.origin'))}/${String(I18n.t('pages.tariff.orderSelectors.destination'))}`
     )
     if (selectedOriginsDestinations !== undefined) {
       const modal: string = filter.tariffModalType
@@ -436,7 +437,7 @@ const Tariff = (): JSX.Element => {
 
     const selectedTransitTime = findKeyFilter(
       selectedFiltersRowFilter,
-      'Transit Time'
+      I18n.t('pages.tariff.menuItemsSelector.transitTime')
     )
     if (selectedTransitTime !== undefined) {
       setFilter((filter: any) => ({
@@ -447,7 +448,7 @@ const Tariff = (): JSX.Element => {
 
     const selectedFrequencies = findKeyFilter(
       selectedFiltersRowFilter,
-      'Frequência'
+      I18n.t('pages.tariff.menuItemsSelector.frequency')
     )
 
     if (selectedFrequencies !== undefined) {
@@ -527,7 +528,7 @@ const Tariff = (): JSX.Element => {
     // }
     const selectedEspecifications = findKeyFilter(
       selectedFiltersRowFilter,
-      'Especificação'
+      I18n.t('pages.tariff.menuItemsSelector.specification')
     )
     if (selectedEspecifications !== undefined) {
       setFilter((filter: any) => ({
@@ -585,24 +586,16 @@ const Tariff = (): JSX.Element => {
   }
 
   const cleanFilter = (): void => {
-    delete filter.idBusinessPartnerAgent
-    delete filter.idBusinessPartnerTransporter
-    delete filter.idCurrency
-    delete filter.idOrigin
-    delete filter.idDestination
-    delete filter.originCountry
-    delete filter.destinationCountry
-    delete filter.originState
-    delete filter.destinationState
-    delete filter.originCity
-    delete filter.destinationCity
-    delete filter.transitTime
-    delete filter.idFrequency
-    delete filter.txChargeType
-    delete filter['openingDate.dtBegin']
-    delete filter['openingDate.dtEnd']
-    delete filter['validityDate.dtBegin']
-    delete filter['validityDate.dtEnd']
+    const tariffModalType = getModalFilter(quickFilterList)
+    const tariffType = getActivityFilter(quickFilterList)
+    const validityTariff = getValidityFilter(quickFilterList)
+    setFilter({
+      ...defaultFilter,
+      tariffModalType,
+      validityTariff,
+      tariffType,
+      orderByList: `${orderBy},${handleOrderDirection()}`
+    })
   }
 
   const handleOrderDirection = (): string => {
