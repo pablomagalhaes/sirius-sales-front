@@ -9,4 +9,11 @@ enum OrderTypes {
   Descendent = 'DESC'
 }
 
-export { ModalTypes, OrderTypes }
+enum BusinessPartnerTypes {
+  Coloader = 'COLOADER',
+  ShipOwner = 'ARMADOR',
+  Land = 'TRANS. INTERNACIONAL',
+  Air = 'CIA. AEREA'
+}
+
+export { ModalTypes, OrderTypes, BusinessPartnerTypes }

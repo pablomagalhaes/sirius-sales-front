@@ -38,6 +38,15 @@ import { getModalFilter, getActivityFilter, getValidityFilter } from './helpers'
 import TariffUploadModal from '../../components/TariffUploadModal/TariffUploadModal'
 import { SelectorsValuesTypes } from '../../../application/enum/tariffEnum'
 import { ModalTypes, OrderTypes } from '../../../application/enum/enum'
+import {
+  useCurrencies,
+  useOriginDestination,
+  usePartnerList,
+  useMercosulCountries,
+  useMercosulCities,
+  useMercosulStates,
+  useBusinessPartnerByType
+} from '../../hooks'
 
 const defaultFilter = {
   tariffModalType: '',
@@ -49,17 +58,17 @@ const defaultFilter = {
 }
 
 const Tariff = (): JSX.Element => {
+  const { data: currencyList = [] } = useCurrencies()
+  const { data: originDestinationList = [] } = useOriginDestination()
+  const { partnerList, partnerSimpleNameList } = usePartnerList()
+  const { data: originDestinationCountries = [] } = useMercosulCountries()
+  const { data: originDestinationStates = [] } = useMercosulStates()
+  const { data: originDestinationCities = [] } = useMercosulCities()
+  const { seaPartners, airPartners, landPartners } = useBusinessPartnerByType()
+
   const [filter, setFilter] = useState<any>(defaultFilter)
-  const [businessPartnerList, setBusinessPartnerList] = useState<any[]>([])
   const [orderAsc, setOrderAsc] = useState(true)
   const [orderBy, setOrderBy] = useState<string>(SelectorsValuesTypes.Validity)
-  const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
-  const [originDestinationCountries, setoriginDestinationCountries] = useState<any[]>([])
-  const [originDestinationStates, setoriginDestinationStates] = useState<any[]>([])
-  const [originDestinationCities, setoriginDestinationCities] = useState<any[]>([])
-  const [partnerList, setPartnerList] = useState<any[]>([])
-  const [partnerSimpleNameList, setPartnerSimpleNameList] = useState<any[]>([])
-  const [currencyList, setCurrencyList] = useState<any[]>([])
   const [tariffList, setTariffList] = useState<any[]>([])
   const [radioValue, setRadioValue] = useState('')
   const [quickFilterList, setQuickFilterList] = useState<any[]>([
@@ -73,46 +82,6 @@ const Tariff = (): JSX.Element => {
 
   const history = useHistory()
 
-  useEffect(() => {
-    const simpleNameList: any[] = []
-    const newPartnerList: any[] = []
-    void (async function () {
-      await API.getAgents()
-        .then((response) => {
-          response.forEach((item: any) => {
-            simpleNameList.push(item?.businessPartner?.simpleName)
-            newPartnerList.push(item?.businessPartner)
-          })
-          setPartnerSimpleNameList(simpleNameList)
-          setPartnerList(newPartnerList)
-        })
-        .catch((err) => console.log(err))
-    })()
-  }, [])
-
-  useEffect(() => {
-    void (async function () {
-      await API.getOriginDestination()
-        .then((response) => { setOriginDestinationList(response) })
-        .catch((err) => console.log(err))
-    })()
-    void (async function () {
-      await API.getCountries()
-        .then((response) => setoriginDestinationCountries(response))
-        .catch((err) => console.log(err))
-    })()
-    void (async function () {
-      await API.getMercosulStates()
-        .then((response) => setoriginDestinationStates(response))
-        .catch((err) => console.log(err))
-    })()
-    void (async function () {
-      await API.getMercosulCities()
-        .then((response) => setoriginDestinationCities(response))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
-
   const floatingButtonMenuItems = [
     {
       iconType: 'import',
@@ -125,13 +94,20 @@ const Tariff = (): JSX.Element => {
     }
   ]
 
+  const getBusinessPartner = (): any[] => {
+    switch (filter.tariffModalType) {
+      case ModalTypes.Air:
+        return airPartners
+      case ModalTypes.Land:
+        return landPartners
+      case ModalTypes.Sea:
+        return seaPartners
+    }
+    return []
+  }
+
   useEffect(() => {
     if (filter.tariffModalType !== '') {
-      if (filter.tariffModalType === 'SEA') {
-        void getBusinessPartnerSea()
-      } else {
-        void getBusinessPartner(getBusinessPartnerType())
-      }
       if (filter.tariffModalType === ModalTypes.Land && orderBy === SelectorsValuesTypes.Origin) {
         setOrderBy(SelectorsValuesTypes.CityOrigin)
       }
@@ -146,39 +122,6 @@ const Tariff = (): JSX.Element => {
       }
     }
   }, [filter.tariffModalType])
-
-  useEffect(() => {
-    void (async function () {
-      await API.getCurrencies()
-        .then((response) => setCurrencyList(response))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
-
-  const getBusinessPartner = async (type: string): Promise<any> => {
-    const response = await API.getBusinessPartnerByType(type)
-    if (response !== undefined) {
-      setBusinessPartnerList([...response])
-    }
-  }
-
-  const getBusinessPartnerSea = async (): Promise<any> => {
-    const responseShipOwner = await API.getBusinessPartnerByType('ARMADOR')
-    const responseColoader = await API.getBusinessPartnerByType('COLOADER')
-    if (responseShipOwner !== undefined && responseColoader !== undefined) {
-      setBusinessPartnerList([...responseColoader, ...responseShipOwner])
-    }
-  }
-
-  const getBusinessPartnerType = (): string => {
-    switch (filter.tariffModalType) {
-      case 'AIR':
-        return 'CIA. AEREA'
-      case 'LAND':
-        return 'TRANS. INTERNACIONAL'
-    }
-    return ''
-  }
 
   const getOriginDestinyList = (land: string): string[] => {
     const actualList: string[] = []
@@ -322,7 +265,7 @@ const Tariff = (): JSX.Element => {
     if (selectedShippingCompany !== undefined) {
       const shippingCompanyId: any = []
       selectedShippingCompany.forEach(name => {
-        const client = businessPartnerList.find(item => item.businessPartner.simpleName === name)
+        const client = getBusinessPartner().find(item => item.businessPartner.simpleName === name)
         shippingCompanyId.push(client.id)
       })
 
@@ -612,7 +555,7 @@ const Tariff = (): JSX.Element => {
   const menuItemsSelector = [
     {
       label: I18n.t(`pages.tariff.companyLabels.${String(filter.tariffModalType)}`),
-      pickerListOptions1: businessPartnerList.map(
+      pickerListOptions1: getBusinessPartner().map(
         (item) => item.businessPartner.simpleName
       ),
       pickerLabel1: I18n.t(`pages.tariff.companyLabels.${String(filter.tariffModalType)}`),

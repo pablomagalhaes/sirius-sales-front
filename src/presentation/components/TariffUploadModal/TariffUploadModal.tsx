@@ -1,5 +1,5 @@
 import { Modal, Grid, FormLabel, RadioGroup, FormControlLabel } from '@material-ui/core'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import CloseIcon from '../../../application/icons/CloseIcon'
 import {
   StyledRadio,
@@ -22,6 +22,7 @@ import {
 } from '../StyledComponents/modalStyles'
 import { Button, DragAndDrop } from 'fiorde-fe-components'
 import API from '../../../infrastructure/api'
+import { usePartnerList } from '../../hooks'
 
 interface AgentType {
   name: string
@@ -49,12 +50,13 @@ const TariffUploadModal = ({
   open,
   setClose
 }: TariffUploadProps): JSX.Element => {
+  const { partnerList: agentsList } = usePartnerList()
+
   const [data, setData] = useState<TariffUploadData>(initialState)
   const [invalidInput, setInvalidInput] = useState(false)
   const [file, setFile] = useState<File | undefined>()
   const [progress, setProgress] = useState<number>(0)
   const [completed, setCompleted] = useState<boolean>(false)
-  const [agentsList, setAgentsList] = useState<any[]>([])
 
   const uploadTariff = async (): Promise<void> => {
     if (validateData() && data.modal !== null && file !== undefined) {
@@ -100,20 +102,12 @@ const TariffUploadModal = ({
     }
   }
 
-  useEffect(() => {
-    void (async function () {
-      await API.getAgents()
-        .then((agent) => setAgentsList(agent))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
-
   const getidBusinessPartnerAgent = (agentName: string): number | undefined => {
     let id
     if (agentName !== '') {
       agentsList?.forEach((item): void => {
-        if (String(item.businessPartner.simpleName) === String(agentName)) {
-          id = item.businessPartner.id
+        if (String(item.simpleName) === String(agentName)) {
+          id = item.id
         }
       })
     }
@@ -202,10 +196,10 @@ const TariffUploadModal = ({
                   </Item>
                   {agentsList.map((item) =>
                     <Item
-                      value={item.businessPartner.simpleName}
-                      key={item.businessPartner.id}
+                      value={item.simpleName}
+                      key={item.id}
                     >
-                      {item.businessPartner.simpleName}
+                      {item.simpleName}
                     </Item>
                   )}
                 </SelectEmpty>
