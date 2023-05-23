@@ -128,6 +128,15 @@
   "ProposalDisplayModal": {
     "title": "Fazer download de proposta",
     "buttonText": "Confirmar idioma e fazer download"
+  },
+  "Pagination": {
+    "tooltipBack": "Anterior",
+    "tooltipFirst": "Primeira",
+    "tooltipLast": "Última",
+    "tooltipNext": "Próxima",
+    "labelDisplay": "exibindo",
+    "labelDisplayedRows": "de",
+    "labelRowsPerPage": "Propostas por página"
   }
 },
   "pages": {
@@ -316,9 +325,22 @@
       }
     },
     "tariff": {
+      "mainPage": {
+        "home": "Home",
+        "tariff": "Tarifário",
+        "display": "Exibir por",
+        "export": "Exportar tarifas",
+        "orderBy": "Ordenar por"
+      },
       "upload": {
         "import": "Importação",
         "export": "Exportação",
+        "mainLabel": "Fazer upload de tarifas",
+        "modal": "Modal",
+        "completedMessage": "Acompanhe o processamento do arquivo na tela de processamentos.",
+        "closeButtonLabel": "Fechar",
+        "startButtonLabel": "Iniciar processamento",
+        "processingButtonLabel": "Ver todos os processamentos",
         "dragAndDrop": {
           "label": "Você pode arrastar o arquivo .csv para esta área ou",
           "uploadButtonLabel": "Selecionar arquivo",
@@ -335,7 +357,103 @@
         "seaBusinessPartner": "Armador/Coloader",
         "landBusinessPartner": "Transportadora",
         "airBusinessPartner": "Cia. Aérea"
+      },
+      "modals": {
+        "sea": "Marítimo",
+        "seaTypes": {
+          "lcl": "LCL",
+          "fcl": "FCL"
+        },
+        "air": "Aéreo",
+        "land": "Rodoviário"
+      },
+      "companyLabels": {
+        "AIR": "Cia. Aérea",
+        "SEA": "Armador/Coloader",
+        "LAND": "Transportadora"
+      },
+      "menuItemsSelector": {
+        "currency": "Moeda",
+        "transitTime": "Transit Time",
+        "frequency": "Frequência",
+        "specification": "Especificação",
+        "agent": "Agente"
+      },
+      "tariffTable": {
+        "edit": "Ver detalhes ou editar tarifa",
+        "validUntil": "Vencimento em",
+        "days": "dias",
+        "overdue": "Vencido",
+        "columns": {
+          "AIR": {
+            "agent": "Agente",
+            "airCompany": "Cia. Aérea",
+            "originDestiny": "Origem e destino",
+            "transitTime": "Tr. time",
+            "validity": "Validade",
+            "currency": "Moeda",
+            "minimun": "Mínimo",
+            "value": "Valor (de +45kg a 1ton)"
+          },
+          "LAND": {
+            "agent": "Agente",
+            "landCompany": "Transportadora",
+            "originDestiny": "Origem e destino",
+            "transitTime": "Tr. time",
+            "validity": "Validade",
+            "currency": "Moeda",
+            "geralImoDed": "Geral/IMO Ded",
+            "geralImoCons": "Geral/IMO Cons"
+          },
+          "SEA": {
+            "LCL": {
+              "agent": "Agente",
+              "seaCompany": "Cia. Marítima",
+              "originDestiny": "Origem e destino",
+              "transitTime": "Tr. time",
+              "validity": "Validade",
+              "currency": "Moeda",
+              "minimun": "Mínimo",
+              "under7w": "Até 7w/m",
+              "over": "Acima"
+            },
+            "FCL": {
+              "agent": "Agente",
+              "seaCompany": "Cia. Marítima",
+              "originDestiny": "Origem e destino",
+              "transitTime": "Tr. time",
+              "validity": "Validade",
+              "currency": "Moeda",
+              "container20": "Vlr. container(20)",
+              "container40": "Vlr. container(40)"
+            }
+          }
+        }
+      },
+      "constants": {
+        "frequency": {
+          "daily": "DIÁRIO",
+          "weekly": "SEMANAL",
+          "biweekly": "QUINZENAL",
+          "monthly": "MENSAL"
+        },
+        "cardFilters": {
+          "import": "Importação",
+          "export": "Exportação",
+          "air": "Aéreo",
+          "sea": "Marítimo",
+          "land": "Rodoviário",
+          "closeToValidity": "Vencimento próximo",
+          "overdue": "Vencidas"
+        }
       }
+    },
+    "filter": {
+      "addFilterLabel": "Filtros avançados",
+      "applyLabel": "Aplicar",
+      "approveLabel": "Salvar Filtro",
+      "cleanLabel": "Limpar",
+      "myFilterLabel": "Meus Filtros"
     }
   }
 }

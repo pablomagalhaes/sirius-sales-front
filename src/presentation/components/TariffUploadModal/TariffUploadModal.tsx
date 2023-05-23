@@ -45,7 +45,6 @@ export const initialState = {
 }
 
 const TariffUploadModal = ({
-  theme,
   type,
   open,
   setClose
@@ -62,12 +61,12 @@ const TariffUploadModal = ({
       const formData = new FormData()
       formData.append('file', file)
 
-      if (type === 'Importação' && data.agent.idBusinessPartnerAgent !== null) {
+      if (type === I18n.t('pages.tariff.upload.import') && data.agent.idBusinessPartnerAgent !== null) {
         await API.uploadTariff('import', data.modal, setProgress, formData, data.agent.idBusinessPartnerAgent)
           .then((res) => res !== 'error' && setCompleted(true))
           .catch((err) => console.log(err))
       }
-      if (type === 'Exportação') {
+      if (type === I18n.t('pages.tariff.upload.export')) {
         const agentId = data.agent.idBusinessPartnerAgent !== null ? data.agent.idBusinessPartnerAgent : undefined
         await API.uploadTariff('export', data.modal, setProgress, formData, agentId)
           .then((res) => res !== 'error' && setCompleted(true))
@@ -88,10 +87,9 @@ const TariffUploadModal = ({
   }
 
   const validateData = (): boolean => {
-    console.log(type === 'Importação' && data.agent.idBusinessPartnerAgent === null)
     return !(
       (data.modal === null || data.modal?.length === 0) ||
-        (type === 'Importação' && data.agent.idBusinessPartnerAgent === null) ||
+        (type === I18n.t('pages.tariff.upload.import') && data.agent.idBusinessPartnerAgent === null) ||
         (file === undefined)
     )
   }
@@ -126,7 +124,7 @@ const TariffUploadModal = ({
     <Modal open={open} onClose={handleOnClose}>
       <ModalDiv>
         <HeaderDiv>
-          <Title>Fazer upload de tarifas - {type}</Title>
+          <Title>{I18n.t('pages.tariff.upload.mainLabel')} - {type}</Title>
           <RowReverseDiv>
             <CloseIconContainer>
               <CloseIcon onClick={handleOnClose} />
@@ -137,7 +135,7 @@ const TariffUploadModal = ({
           <Grid container spacing={1}>
             <Grid item xs={12}>
               <FormLabel component="legend" error={data.modal === null && invalidInput}>
-                Modal:
+                {I18n.t('pages.tariff.upload.modal')}
                 <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <RadioGroup
@@ -151,32 +149,32 @@ const TariffUploadModal = ({
                   checked={data.modal === 'air'}
                   value="air"
                   control={<StyledRadio color={getColor(data.modal)} />}
-                  label='Aéreo'
+                  label={I18n.t('pages.tariff.modals.air')}
                 />
                 <FormControlLabel
                   checked={data.modal === 'sea/fcl'}
                   value="sea/fcl"
                   control={<StyledRadio color={getColor(data.modal)} />}
-                  label='Marítimo/FCL'
+                  label={`${String(I18n.t('pages.tariff.modals.sea'))}/${String(I18n.t('pages.tariff.modals.seaTypes.fcl'))}`}
                 />
                 <FormControlLabel
                   checked={data.modal === 'sea/lcl'}
                   value="sea/lcl"
                   control={<StyledRadio color={getColor(data.modal)} />}
-                  label='Marítimo/LCL'
+                  label={`${String(I18n.t('pages.tariff.modals.sea'))}/${String(I18n.t('pages.tariff.modals.seaTypes.lcl'))}`}
                 />
                 <FormControlLabel
                   checked={data.modal === 'land'}
                   value="land"
                   control={<StyledRadio color={getColor(data.modal)} />}
-                  label='Rodoviário'
+                  label={I18n.t('pages.tariff.modals.land')}
                 />
               </RadioGroup>
             </Grid>
             <Grid item xs={12}>
-              <FormLabel component="legend" error={type === 'Importação' && data.agent.name.length === 0 && invalidInput}>
+              <FormLabel component="legend" error={type === I18n.t('pages.tariff.upload.import') && data.agent.name.length === 0 && invalidInput}>
                 {I18n.t('pages.newProposal.step2.agents')}:
-                {type === 'Importação' && (
+                {type === I18n.t('pages.tariff.upload.import') && (
                   <RedColorSpan> *</RedColorSpan>
                 )}
               </FormLabel>
@@ -196,7 +194,7 @@ const TariffUploadModal = ({
                       }
                     })
                   }}
-                  invalidData={type === 'Importação' && data.agent.name.length === 0 && invalidInput}
+                  invalidData={type === I18n.t('pages.tariff.upload.import') && data.agent.name.length === 0 && invalidInput}
                   disableUnderline={true}
                 >
                   <Item value="">
@@ -227,7 +225,7 @@ const TariffUploadModal = ({
               />
             </DragAndDropDiv>
             { completed && <Grid item xs={12}>
-              <p>Acompanhe o processamento do arquivo na tela de processamentos.</p>
+              <p>{I18n.t('pages.tariff.upload.completedMessage')}</p>
             </Grid>}
           </Grid>
             <Grid item xs={12} container={true} direction="row" justify="flex-end">
@@ -235,8 +233,8 @@ const TariffUploadModal = ({
                 <CloseButtonDiv>
                   <Button
                     disabled={false}
-                    text='Fechar'
-                    tooltip='Fechar'
+                    text={I18n.t('pages.tariff.upload.closeButtonLabel')}
+                    tooltip={I18n.t('pages.tariff.upload.closeButtonLabel')}
                     backgroundGreen={false}
                     icon=""
                     onAction={handleOnClose}
@@ -248,19 +246,19 @@ const TariffUploadModal = ({
                   {progress === 0
                     ? <Button
                       disabled={file == null}
-                      text='Iniciar processamento'
-                      tooltip='Iniciar processamento'
+                      text={I18n.t('pages.tariff.upload.startButtonLabel')}
+                      tooltip={I18n.t('pages.tariff.upload.startButtonLabel')}
                       backgroundGreen={true}
                       icon=""
                       onAction={uploadTariff}
                     />
                     : <Button
                       disabled={!completed}
-                      text='Ver todos os processamentos'
-                      tooltip='Ver todos os processamentos'
+                      text={I18n.t('pages.tariff.upload.processingButtonLabel')}
+                      tooltip={I18n.t('pages.tariff.upload.processingButtonLabel')}
                       backgroundGreen={true}
                       icon=""
-                      onAction={() => console.log('todos os processamentos')}
+                      onAction={() => console.log('')}
                     />
                   }
                 </ButtonDiv>

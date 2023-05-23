@@ -10,8 +10,8 @@ import LandTariffModal from '../../components/LandTariffModal/LandTariffModal'
 import WarnIconClicked from '../../../application/icons/WarnClicked'
 import AlertClickedIcon from '../../../application/icons/AlertClicked'
 import moment from 'moment'
+import { I18n } from 'react-redux-i18n'
 
-import { columns, rows } from './constants'
 import { convertToDecimal } from './helpers'
 import API from '../../../infrastructure/api'
 
@@ -142,7 +142,7 @@ const TariffTable = ({
       <IconDisplay>
         <ControlledToolTip
           placement="top"
-          title="Vencido"
+          title={I18n.t('pages.tariff.tariffTable.overdue')}
           open={true}
           disabled={true}
           getTitle={false}
@@ -157,7 +157,7 @@ const TariffTable = ({
       <IconDisplay>
         <ControlledToolTip
           placement="top"
-          title={`Vencimento em ${timeDiff} dias`}
+          title={`${String(I18n.t('pages.tariff.tariffTable.validUntil'))} ${timeDiff} ${String(I18n.t('pages.tariff.tariffTable.days'))}`}
           open={true}
           disabled={true}
           getTitle={false}
@@ -200,8 +200,8 @@ const TariffTable = ({
       {filter.tariffModalType === 'SEA' &&
         <div>
           <ListSwitcher
-            firstLabel='FCL'
-            secondLabel='LCL'
+            firstLabel={I18n.t('pages.tariff.modals.seaTypes.fcl')}
+            secondLabel={I18n.t('pages.tariff.modals.seaTypes.lcl')}
             onChange={(value: string) => setSeaType(value)}
           />
         </div>
@@ -211,8 +211,10 @@ const TariffTable = ({
           <TableHead>
             <TableRow>
               {filter.tariffModalType === 'SEA'
-                ? columns[filter.tariffModalType][seaType].map((column: string) => <TableCell key={column}>{column}</TableCell>)
-                : columns[filter.tariffModalType].map((column: string) => <TableCell key={column}>{column}</TableCell>)
+                ? Object.values(I18n.t(`pages.tariff.tariffTable.columns.SEA.${seaType}`))
+                  .map((column: string) => <TableCell key={column}>{column}</TableCell>)
+                : Object.values(I18n.t(`pages.tariff.tariffTable.columns.${String(filter.tariffModalType)}`))
+                  .map((column: string) => <TableCell key={column}>{column}</TableCell>)
               }
             </TableRow>
           </TableHead>
@@ -222,11 +224,11 @@ const TariffTable = ({
                 key={index}
               >
                 {filter.tariffModalType === 'SEA'
-                  ? rows[filter.tariffModalType][seaType].map((each: string) =>
+                  ? Object.keys(I18n.t(`pages.tariff.tariffTable.columns.SEA.${seaType}`)).map((each: string) =>
                     <TableCell key={each} align="left">
                       {each === 'validity' ? validityDisplay(row[each]) : row[each] }
                     </TableCell>)
-                  : rows[filter.tariffModalType].map((each: string) =>
+                  : Object.keys(I18n.t(`pages.tariff.tariffTable.columns.${String(filter.tariffModalType)}`)).map((each: string) =>
                     <TableCell key={each} align="left">
                       {each === 'validity' ? validityDisplay(row[each]) : row[each] }
                     </TableCell>)
@@ -253,7 +255,7 @@ const TariffTable = ({
                           <FloatingMenu
                             menuItems={[{
                               iconType: 'pricing',
-                              label: 'Ver detalhes ou editar tarifa',
+                              label: I18n.t('pages.tariff.tariffTable.edit'),
                               onClick: () => setOpenModal(true)
                             }]}
                           />
@@ -270,9 +272,9 @@ const TariffTable = ({
         <PaginationMainContainer>
           <Pagination
             count={totalTariffList}
-            labelDisplay="exibindo"
-            labelDisplayedRows="de"
-            labelRowsPerPage="Propostas por página"
+            labelDisplay={I18n.t('components.pagination.labelDisplay')}
+            labelDisplayedRows={I18n.t('components.pagination.labelDisplayedRows')}
+            labelRowsPerPage={I18n.t('components.pagination.labelRowsPerPage')}
             onPageChange={(value) =>
               setFilter((filter: any) => ({ ...filter, page: value }))
             }
@@ -283,10 +285,10 @@ const TariffTable = ({
                 page: 0
               }))
             }
-            tooltipBack="Anterior"
-            tooltipFirst="Primeira"
-            tooltipLast="Última"
-            tooltipNext="Próxima"
+            tooltipBack={I18n.t('components.pagination.tooltipBack')}
+            tooltipFirst={I18n.t('components.pagination.tooltipFirst')}
+            tooltipLast={I18n.t('components.pagination.tooltipLast')}
+            tooltipNext={I18n.t('components.pagination.tooltipNext')}
             reducedPagination={true}
           />
         </PaginationMainContainer>
@@ -300,8 +302,8 @@ const TariffTable = ({
       {filter.tariffModalType === 'SEA' &&
         <div>
           <ListSwitcher
-            firstLabel='FCL'
-            secondLabel='LCL'
+            firstLabel={I18n.t('pages.tariff.modals.seaTypes.fcl')}
+            secondLabel={I18n.t('pages.tariff.modals.seaTypes.lcl')}
             onChange={(value: string) => setSeaType(value)}
           />
         </div>

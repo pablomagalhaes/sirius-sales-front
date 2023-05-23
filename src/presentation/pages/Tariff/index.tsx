@@ -31,7 +31,7 @@ import { useHistory } from 'react-router-dom'
 import UpArrow from '../../../application/icons/UpArrow'
 import API from '../../../infrastructure/api'
 import ArrowDown from '../../../application/icons/ArrowDown'
-import { orderButtonMenuItems, cardFilters } from './constants'
+import { orderButtonMenuItems } from './constants'
 import { I18n } from 'react-redux-i18n'
 import TariffTable from './TariffTable'
 import { getModalFilter, getActivityFilter, getValidityFilter } from './helpers'
@@ -63,8 +63,8 @@ const Tariff = (): JSX.Element => {
   const [tariffList, setTariffList] = useState<any[]>([])
   const [radioValue, setRadioValue] = useState('')
   const [quickFilterList, setQuickFilterList] = useState<any[]>([
-    { type: 'activity', status: 'Importação' },
-    { type: 'modal', status: 'Aéreo' }
+    { type: 'activity', status: I18n.t('pages.tariff.upload.import') },
+    { type: 'modal', status: I18n.t('pages.tariff.modals.air') }
   ])
   const [tabs, setTabs] = useState<any[]>()
   const [countryExpanded, setCountryExpanded] = useState<string>('')
@@ -280,7 +280,8 @@ const Tariff = (): JSX.Element => {
       ...filter,
       tariffModalType,
       validityTariff,
-      tariffType
+      tariffType,
+      orderByList: `${orderBy},${handleOrderDirection()}`
     }))
   }
 
@@ -302,7 +303,7 @@ const Tariff = (): JSX.Element => {
 
     const selectedAgents = findKeyFilter(
       selectedFiltersRowFilter,
-      'Agente'
+      I18n.t('pages.tariff.menuItemsSelector.agent')
     )
     if (selectedAgents !== undefined) {
       const agentIds: any = []
@@ -316,7 +317,8 @@ const Tariff = (): JSX.Element => {
       }))
     }
 
-    const selectedShippingCompany = findKeyFilter(selectedFiltersRowFilter, getCompanyLabels())
+    const selectedShippingCompany =
+      findKeyFilter(selectedFiltersRowFilter, I18n.t(`pages.tariff.companyLabels.${String(filter.tariffModalType)}`))
     if (selectedShippingCompany !== undefined) {
       const shippingCompanyId: any = []
       selectedShippingCompany.forEach(name => {
@@ -332,7 +334,7 @@ const Tariff = (): JSX.Element => {
 
     const selectedCurrencies = findKeyFilter(
       selectedFiltersRowFilter,
-      'Moeda'
+      I18n.t('pages.tariff.menuItemsSelector.currency')
     )
     if (selectedCurrencies !== undefined) {
       setFilter((filter: any) => ({
@@ -343,7 +345,7 @@ const Tariff = (): JSX.Element => {
 
     const selectedOriginsDestinations = findKeyFilter(
       selectedFiltersRowFilter,
-      'Origem/Destino'
+      `${String(I18n.t('pages.tariff.orderSelectors.origin'))}/${String(I18n.t('pages.tariff.orderSelectors.destination'))}`
     )
     if (selectedOriginsDestinations !== undefined) {
       const modal: string = filter.tariffModalType
@@ -435,7 +437,7 @@ const Tariff = (): JSX.Element => {
 
     const selectedTransitTime = findKeyFilter(
       selectedFiltersRowFilter,
-      'Transit Time'
+      I18n.t('pages.tariff.menuItemsSelector.transitTime')
     )
     if (selectedTransitTime !== undefined) {
       setFilter((filter: any) => ({
@@ -446,23 +448,23 @@ const Tariff = (): JSX.Element => {
 
     const selectedFrequencies = findKeyFilter(
       selectedFiltersRowFilter,
-      'Frequência'
+      I18n.t('pages.tariff.menuItemsSelector.frequency')
     )
 
     if (selectedFrequencies !== undefined) {
       const frequencyIds: number[] = []
       selectedFrequencies.forEach((selectedFrequency) => {
         switch (selectedFrequency) {
-          case 'DIÁRIO':
+          case I18n.t('pages.tariff.constants.frequency.daily'):
             frequencyIds.push(1)
             break
-          case 'SEMANAL':
+          case I18n.t('pages.tariff.constants.frequency.weekly'):
             frequencyIds.push(2)
             break
-          case 'QUINZENAL':
+          case I18n.t('pages.tariff.constants.frequency.biweekly'):
             frequencyIds.push(3)
             break
-          case 'MENSAL':
+          case I18n.t('pages.tariff.constants.frequency.monthly'):
             frequencyIds.push(4)
             break
           default:
@@ -526,7 +528,7 @@ const Tariff = (): JSX.Element => {
     // }
     const selectedEspecifications = findKeyFilter(
       selectedFiltersRowFilter,
-      'Especificação'
+      I18n.t('pages.tariff.menuItemsSelector.specification')
     )
     if (selectedEspecifications !== undefined) {
       setFilter((filter: any) => ({
@@ -584,24 +586,16 @@ const Tariff = (): JSX.Element => {
   }
 
   const cleanFilter = (): void => {
-    delete filter.idBusinessPartnerAgent
-    delete filter.idBusinessPartnerTransporter
-    delete filter.idCurrency
-    delete filter.idOrigin
-    delete filter.idDestination
-    delete filter.originCountry
-    delete filter.destinationCountry
-    delete filter.originState
-    delete filter.destinationState
-    delete filter.originCity
-    delete filter.destinationCity
-    delete filter.transitTime
-    delete filter.idFrequency
-    delete filter.txChargeType
-    delete filter['openingDate.dtBegin']
-    delete filter['openingDate.dtEnd']
-    delete filter['validityDate.dtBegin']
-    delete filter['validityDate.dtEnd']
+    const tariffModalType = getModalFilter(quickFilterList)
+    const tariffType = getActivityFilter(quickFilterList)
+    const validityTariff = getValidityFilter(quickFilterList)
+    setFilter({
+      ...defaultFilter,
+      tariffModalType,
+      validityTariff,
+      tariffType,
+      orderByList: `${orderBy},${handleOrderDirection()}`
+    })
   }
 
   const handleOrderDirection = (): string => {
@@ -615,57 +609,44 @@ const Tariff = (): JSX.Element => {
     setFilter((filter: any) => ({ ...filter, orderByList: `${orderBy},${handleOrderDirection()}` }))
   }, [orderAsc, orderBy])
 
-  const getCompanyLabels = (): string => {
-    let label: string = 'Cia. Aérea'
-    switch (filter.tariffModalType) {
-      case 'AIR':
-        label = 'Cia. Aérea'
-        break
-      case 'SEA':
-        label = 'Armador/Coloader'
-        break
-      case 'LAND':
-        label = 'Transportadora'
-        break
-      default:
-        break
-    }
-    return label
-  }
-
   const menuItemsSelector = [
     {
-      label: getCompanyLabels(),
+      label: I18n.t(`pages.tariff.companyLabels.${String(filter.tariffModalType)}`),
       pickerListOptions1: businessPartnerList.map(
         (item) => item.businessPartner.simpleName
       ),
-      pickerLabel1: getCompanyLabels(),
+      pickerLabel1: I18n.t(`pages.tariff.companyLabels.${String(filter.tariffModalType)}`),
       pickerLandLabels: []
     },
     {
-      label: 'Origem/Destino',
+      label: `${String(I18n.t('pages.tariff.orderSelectors.origin'))}/${String(I18n.t('pages.tariff.orderSelectors.destination'))}`,
       pickerListOptions1: getOriginDestinyList('País'),
       pickerListOptions2: getOriginDestinyList('Estado'),
       pickerListOptions3: getOriginDestinyList('Cidade'),
-      pickerLabel1: 'Origem',
-      pickerLabel2: 'Destino',
+      pickerLabel1: I18n.t('pages.tariff.orderSelectors.origin'),
+      pickerLabel2: I18n.t('pages.tariff.orderSelectors.destination'),
       pickerLandLabels: getLandLabels()
 
     },
     {
-      label: 'Moeda',
+      label: I18n.t('pages.tariff.menuItemsSelector.currency'),
       pickerListOptions1: currencyList.map((option) => option.id),
-      pickerLabel1: 'Moeda',
+      pickerLabel1: I18n.t('pages.tariff.menuItemsSelector.currency'),
       pickerLandLabels: []
     },
     {
-      label: 'Transit Time',
-      textField: 'Transit Time'
+      label: I18n.t('pages.tariff.menuItemsSelector.transitTime'),
+      textField: I18n.t('pages.tariff.menuItemsSelector.transitTime')
     },
     {
-      label: 'Frequência',
-      pickerListOptions1: ['DIÁRIO', 'SEMANAL', 'QUINZENAL', 'MENSAL'],
-      pickerLabel1: 'Frequência',
+      label: I18n.t('pages.tariff.menuItemsSelector.frequency'),
+      pickerListOptions1: [
+        I18n.t('pages.tariff.constants.frequency.daily'),
+        I18n.t('pages.tariff.constants.frequency.weekly'),
+        I18n.t('pages.tariff.constants.frequency.biweekly'),
+        I18n.t('pages.tariff.constants.frequency.monthly')
+      ],
+      pickerLabel1: I18n.t('pages.tariff.menuItemsSelector.frequency'),
       pickerLandLabels: []
     }
     // {
@@ -677,16 +658,16 @@ const Tariff = (): JSX.Element => {
   ]
 
   const specification = {
-    label: 'Especificação',
+    label: I18n.t('pages.tariff.menuItemsSelector.specification'),
     pickerListOptions1: ['FCL', 'LCL', 'Break Bulk', 'Ro-Ro'],
-    pickerLabel1: 'Especificação',
+    pickerLabel1: I18n.t('pages.tariff.menuItemsSelector.specification'),
     pickerLandLabels: []
   }
 
   const agent = {
-    label: 'Agente',
+    label: I18n.t('pages.tariff.menuItemsSelector.agent'),
     pickerListOptions1: partnerSimpleNameList,
-    pickerLabel1: 'Agente',
+    pickerLabel1: I18n.t('pages.tariff.menuItemsSelector.agent'),
     pickerLandLabels: []
   }
 
@@ -726,6 +707,44 @@ const Tariff = (): JSX.Element => {
 
   const handleExportTariff = (): void => {}
 
+  const cardFilters = [
+    {
+      iconType: 'import',
+      status: I18n.t('pages.tariff.constants.cardFilters.import'),
+      uniqueChoice: true
+    },
+    {
+      iconType: 'export',
+      status: I18n.t('pages.tariff.constants.cardFilters.export'),
+      uniqueChoice: true
+    },
+    {
+      iconType: 'plane',
+      status: I18n.t('pages.tariff.constants.cardFilters.air'),
+      uniqueChoice: true
+    },
+    {
+      iconType: 'ship',
+      status: I18n.t('pages.tariff.constants.cardFilters.sea'),
+      uniqueChoice: true
+    },
+    {
+      iconType: 'truck',
+      status: I18n.t('pages.tariff.constants.cardFilters.land'),
+      uniqueChoice: true
+    },
+    {
+      iconType: 'warn',
+      status: I18n.t('pages.tariff.constants.cardFilters.closeToValidity'),
+      uniqueChoice: true
+    },
+    {
+      iconType: 'alert',
+      status: I18n.t('pages.tariff.constants.cardFilters.overdue'),
+      uniqueChoice: true
+    }
+  ]
+
   return (
     <RootContainer>
       <TopContainer>
@@ -736,16 +755,16 @@ const Tariff = (): JSX.Element => {
             className="breadcrumbInitial"
             style={{ cursor: 'pointer' }}
           >
-            Home
+            {I18n.t('pages.tariff.mainPage.home')}
           </Link>
-          <span className="breadcrumbEnd">Tarifário</span>
+          <span className="breadcrumbEnd">{I18n.t('pages.tariff.mainPage.tariff')}</span>
         </Breadcrumbs>
         <TopButtonContainer>
           <ButtonContainer>
             <Button
               disabled={false}
-              text={'Fazer upload de tarifas'}
-              tooltip={'Fazer upload de tarifas'}
+              text={I18n.t('pages.tariff.upload.mainLabel')}
+              tooltip={I18n.t('pages.tariff.upload.mainLabel')}
               backgroundGreen={true}
               icon="upload"
               onAction={() => { }}
@@ -760,7 +779,7 @@ const Tariff = (): JSX.Element => {
         </TopButtonContainer>
       </TopContainer>
       <MidleContainer>
-        <MidleTypography>Exibir por:</MidleTypography>
+        <MidleTypography>{I18n.t('pages.tariff.mainPage.display')}</MidleTypography>
         <QuickFilters
           cardFilters={cardFilters}
           onFilterClick={(selectedFilterCards) => setQuickFilterList(selectedFilterCards)}
@@ -770,25 +789,25 @@ const Tariff = (): JSX.Element => {
       <ListHeaderContainer>
         <LeftSideListHeaderContainer>
           <RowFilter
-          addFilterLabel="Filtros avançados"
-          applyLabel="Aplicar"
-          approveLabel="Salvar Filtro"
-          cleanLabel="Limpar"
-          handleClean={handleChangeModal}
-          handleCleanRow={handleCleanModal}
-          handleSelectedFilters={handleSelectedRowFilter}
-          menuItemsSelector={createMenuItems()}
-          myFilterLabel="Meus Filtros"
-          setRadioValue={setRadioValue}
+            addFilterLabel={I18n.t('pages.filter.addFilterLabel')}
+            applyLabel={I18n.t('pages.filter.applyLabel')}
+            approveLabel={I18n.t('pages.filter.approveLabel')}
+            cleanLabel={I18n.t('pages.filter.cleanLabel')}
+            handleClean={handleChangeModal}
+            handleCleanRow={handleCleanModal}
+            handleSelectedFilters={handleSelectedRowFilter}
+            menuItemsSelector={createMenuItems()}
+            myFilterLabel={I18n.t('pages.filter.myFilterLabel')}
+            setRadioValue={setRadioValue}
         />
         </LeftSideListHeaderContainer>
         <RightSideListHeaderContainer>
           <ExportTariffContainer onClick={handleExportTariff}>
             <ExitToApp />
-            <ExportListSpan>Exportar tarifas</ExportListSpan>
+            <ExportListSpan>{I18n.t('pages.tariff.mainPage.export')}</ExportListSpan>
           </ExportTariffContainer>
           <OrderByContainer>
-            <ListTextSpan>Ordenar por:</ListTextSpan>
+            <ListTextSpan>{I18n.t('pages.tariff.mainPage.orderBy')}:</ListTextSpan>
             <DropdownMenuContainer>
               <Select
                 className="select-style"
