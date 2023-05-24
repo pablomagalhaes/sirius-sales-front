@@ -1,5 +1,5 @@
 import { Modal, Grid, FormLabel, RadioGroup, FormControlLabel } from '@material-ui/core'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import CloseIcon from '../../../application/icons/CloseIcon'
 import {
   StyledRadio,
@@ -23,6 +23,7 @@ import {
 import { Button, DragAndDrop } from 'fiorde-fe-components'
 import { usePartnerList } from '../../hooks'
 import useUploadTariff from '../../hooks/useUploadTariff'
+import { TariffTypes } from '../../../application/enum/enum'
 
 interface AgentType {
   name: string
@@ -57,7 +58,6 @@ const TariffUploadModal = ({
   const [invalidInput, setInvalidInput] = useState(false)
   const [file, setFile] = useState<File | undefined>()
   const [progress, setProgress] = useState<number>(0)
-  const [completed, setCompleted] = useState<boolean>(false)
 
   const uploadTariff = async (): Promise<void> => {
     if (validateData() && data.modal !== null && file !== undefined) {
@@ -65,7 +65,7 @@ const TariffUploadModal = ({
       formData.append('file', file)
 
       const params = {
-        type: type === I18n.t('pages.tariff.upload.import') ? 'import' : 'export',
+        type: type === I18n.t('pages.tariff.upload.import') ? TariffTypes.Import : TariffTypes.Export,
         modal: data.modal,
         setProgress,
         formData,
@@ -78,15 +78,10 @@ const TariffUploadModal = ({
     }
   }
 
-  useEffect(() => {
-    if (isSuccess === true) setCompleted(true)
-  }, [isSuccess])
-
   const handleOnClose = (): void => {
     setData(initialState)
     setInvalidInput(false)
     setClose()
-    setCompleted(false)
     setProgress(0)
     setFile(undefined)
     reset()
@@ -222,7 +217,7 @@ const TariffUploadModal = ({
                 types={['text/csv']}
               />
             </DragAndDropDiv>
-            { completed && <Grid item xs={12}>
+            { isSuccess === true && <Grid item xs={12}>
               <p>{I18n.t('pages.tariff.upload.completedMessage')}</p>
             </Grid>}
           </Grid>
@@ -251,7 +246,7 @@ const TariffUploadModal = ({
                       onAction={uploadTariff}
                     />
                     : <Button
-                      disabled={!completed}
+                      disabled={isSuccess === false}
                       text={I18n.t('pages.tariff.upload.processingButtonLabel')}
                       tooltip={I18n.t('pages.tariff.upload.processingButtonLabel')}
                       backgroundGreen={true}

@@ -16,4 +16,9 @@ enum BusinessPartnerTypes {
   Air = 'CIA. AEREA'
 }
 
-export { ModalTypes, OrderTypes, BusinessPartnerTypes }
+enum TariffTypes {
+  Import = 'import',
+  Export = 'export'
+}
+
+export { ModalTypes, OrderTypes, BusinessPartnerTypes, TariffTypes }
