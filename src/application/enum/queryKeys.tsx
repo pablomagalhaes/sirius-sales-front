@@ -8,7 +8,9 @@ enum QueryKeys {
   businessPartnerAir = 'businessPartnerAir',
   businessPartnerLand = 'businessPartnerLand',
   businessPartnerShipOwner = 'businessPartnerShipOwner',
-  businessPartnerColoader = 'businessPartnerColoader'
+  businessPartnerColoader = 'businessPartnerColoader',
+  tariffs = 'tariffs',
+  tariffsByCountry = 'tariffsByCountry'
 }
 
 export { QueryKeys }

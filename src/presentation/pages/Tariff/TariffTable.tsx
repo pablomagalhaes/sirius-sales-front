@@ -11,9 +11,9 @@ import WarnIconClicked from '../../../application/icons/WarnClicked'
 import AlertClickedIcon from '../../../application/icons/AlertClicked'
 import moment from 'moment'
 import { I18n } from 'react-redux-i18n'
+import useTariffsByCountry from '../../hooks/useTariffsByCountry'
 
 import { convertToDecimal } from './helpers'
-import API from '../../../infrastructure/api'
 
 export interface TariffTableProps {
   expanded: boolean
@@ -30,10 +30,8 @@ const TariffTable = ({
   filter,
   setFilter
 }: TariffTableProps): JSX.Element => {
-  const [data, setData] = useState<any[]>()
+  const { content: tariffData, totalElements: totalTariffList, setParams } = useTariffsByCountry()
   const [seaType, setSeaType] = useState<string>('FCL')
-  const [totalTariffList, setTotalTariffList] = useState<number>(0)
-  const [tariffData, setTariffData] = useState<any[]>()
   const [state, setState] = useState({ anchorEl: null, currentKey: null })
   const [openModal, setOpenModal] = useState<boolean>(false)
 
@@ -86,7 +84,7 @@ const TariffTable = ({
     return <></>
   }
 
-  const getTariffItems = (tariffList): string[] => {
+  const getTariffItems = (tariffList: any): string[] => {
     const array: any = []
     for (const tariff of tariffList) {
       const id = tariff.idTariff
@@ -173,28 +171,14 @@ const TariffTable = ({
 
   useEffect(() => {
     if (expanded && !openModal) {
-      void (async function () {
-        const modal = filter.tariffModalType
-        let payload = { ...filter, txRegion: region, txCountry: country }
-        if (modal !== '' && modal === 'SEA') payload = { ...filter, txRegion: region, txCountry: country, txChargeType: seaType }
-        await API.getTariffsByCountry(payload)
-          .then((response) => {
-            const tariffs = getTariffItems(response.content)
-            if (tariffs.length > 0) {
-              setData(tariffs)
-              setTariffData(response.content)
-            } else {
-              setData([])
-              setTariffData([])
-            }
-            setTotalTariffList(response.totalElements)
-          })
-          .catch((err) => console.log(err))
-      })()
+      const modal = filter.tariffModalType
+      let payload = { ...filter, txRegion: region, txCountry: country }
+      if (modal !== '' && modal === 'SEA') payload = { ...filter, txRegion: region, txCountry: country, txChargeType: seaType }
+      setParams(payload)
     }
   }, [expanded, filter, seaType, openModal])
 
-  if (data !== undefined && data.length > 0) {
+  if (tariffData.length > 0) {
     return (
     <MainTariffContainer>
       {filter.tariffModalType === 'SEA' &&
@@ -219,7 +203,7 @@ const TariffTable = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((row, index) => (
+            {getTariffItems(tariffData).map((row, index) => (
               <TableRow
                 key={index}
               >
@@ -272,9 +256,9 @@ const TariffTable = ({
         <PaginationMainContainer>
           <Pagination
             count={totalTariffList}
-            labelDisplay={I18n.t('components.pagination.labelDisplay')}
-            labelDisplayedRows={I18n.t('components.pagination.labelDisplayedRows')}
-            labelRowsPerPage={I18n.t('components.pagination.labelRowsPerPage')}
+            labelDisplay={I18n.t('components.Pagination.labelDisplay')}
+            labelDisplayedRows={I18n.t('components.Pagination.labelDisplayedRows')}
+            labelRowsPerPage={I18n.t('components.Pagination.labelRowsPerPage')}
             onPageChange={(value) =>
               setFilter((filter: any) => ({ ...filter, page: value }))
             }
@@ -285,10 +269,10 @@ const TariffTable = ({
                 page: 0
               }))
             }
-            tooltipBack={I18n.t('components.pagination.tooltipBack')}
-            tooltipFirst={I18n.t('components.pagination.tooltipFirst')}
-            tooltipLast={I18n.t('components.pagination.tooltipLast')}
-            tooltipNext={I18n.t('components.pagination.tooltipNext')}
+            tooltipBack={I18n.t('components.Pagination.tooltipBack')}
+            tooltipFirst={I18n.t('components.Pagination.tooltipFirst')}
+            tooltipLast={I18n.t('components.Pagination.tooltipLast')}
+            tooltipNext={I18n.t('components.Pagination.tooltipNext')}
             reducedPagination={true}
           />
         </PaginationMainContainer>

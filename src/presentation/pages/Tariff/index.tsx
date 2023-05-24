@@ -29,7 +29,6 @@ import {
 import { ExitToApp } from '@material-ui/icons/'
 import { useHistory } from 'react-router-dom'
 import UpArrow from '../../../application/icons/UpArrow'
-import API from '../../../infrastructure/api'
 import ArrowDown from '../../../application/icons/ArrowDown'
 import { orderButtonMenuItems } from './constants'
 import { I18n } from 'react-redux-i18n'
@@ -47,6 +46,7 @@ import {
   useMercosulStates,
   useBusinessPartnerByType
 } from '../../hooks'
+import useTariffs from '../../hooks/useTariffs'
 
 const defaultFilter = {
   tariffModalType: '',
@@ -65,11 +65,10 @@ const Tariff = (): JSX.Element => {
   const { data: originDestinationStates = [] } = useMercosulStates()
   const { data: originDestinationCities = [] } = useMercosulCities()
   const { seaPartners, airPartners, landPartners } = useBusinessPartnerByType()
-
+  const { data: tariffList = [], setTariffType, setTariffModalType, setValidityTariff } = useTariffs()
   const [filter, setFilter] = useState<any>(defaultFilter)
   const [orderAsc, setOrderAsc] = useState(true)
   const [orderBy, setOrderBy] = useState<string>(SelectorsValuesTypes.Validity)
-  const [tariffList, setTariffList] = useState<any[]>([])
   const [radioValue, setRadioValue] = useState('')
   const [quickFilterList, setQuickFilterList] = useState<any[]>([
     { type: 'activity', status: I18n.t('pages.tariff.upload.import') },
@@ -174,18 +173,6 @@ const Tariff = (): JSX.Element => {
     return landLabels
   }
 
-  const getTariffByFilter = (): void => {
-    if (filter.tariffModalType !== '' && filter.tariffType !== '') {
-      void (async function () {
-        await API.getTariffs(filter.tariffType, filter.tariffModalType, filter.validityTariff)
-          .then((response) => {
-            setTariffList(response)
-          })
-          .catch((err) => console.log(err))
-      })()
-    }
-  }
-
   const createTabs = (): void => {
     const regionsTabs: any[] = []
     const validity = getValidityFilter(quickFilterList)
@@ -219,6 +206,9 @@ const Tariff = (): JSX.Element => {
     const tariffModalType = getModalFilter(quickFilterList)
     const tariffType = getActivityFilter(quickFilterList)
     const validityTariff = getValidityFilter(quickFilterList)
+    setTariffType(tariffType)
+    setTariffModalType(tariffModalType)
+    setValidityTariff(validityTariff)
     setFilter((filter: any) => ({
       ...filter,
       tariffModalType,
@@ -230,16 +220,12 @@ const Tariff = (): JSX.Element => {
 
   useEffect(() => {
     createTabs()
-  }, [tariffList, countryExpanded])
+  }, [tariffList, countryExpanded, filter])
 
   useEffect(() => {
     getQuickFilters()
     setCountryExpanded('')
   }, [quickFilterList])
-
-  useEffect(() => {
-    getTariffByFilter()
-  }, [filter])
 
   const handleSelectedRowFilter = (selectedFiltersRowFilter: any): void => {
     cleanFilter()

@@ -1,5 +1,5 @@
 import { Modal, Grid, FormLabel, RadioGroup, FormControlLabel } from '@material-ui/core'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import CloseIcon from '../../../application/icons/CloseIcon'
 import {
   StyledRadio,
@@ -21,8 +21,8 @@ import {
   CloseIconContainer
 } from '../StyledComponents/modalStyles'
 import { Button, DragAndDrop } from 'fiorde-fe-components'
-import API from '../../../infrastructure/api'
 import { usePartnerList } from '../../hooks'
+import useUploadTariff from '../../hooks/useUploadTariff'
 
 interface AgentType {
   name: string
@@ -51,6 +51,7 @@ const TariffUploadModal = ({
   setClose
 }: TariffUploadProps): JSX.Element => {
   const { partnerList: agentsList } = usePartnerList()
+  const { mutate, reset, isSuccess } = useUploadTariff()
 
   const [data, setData] = useState<TariffUploadData>(initialState)
   const [invalidInput, setInvalidInput] = useState(false)
@@ -63,21 +64,23 @@ const TariffUploadModal = ({
       const formData = new FormData()
       formData.append('file', file)
 
-      if (type === I18n.t('pages.tariff.upload.import') && data.agent.idBusinessPartnerAgent !== null) {
-        await API.uploadTariff('import', data.modal, setProgress, formData, data.agent.idBusinessPartnerAgent)
-          .then((res) => res !== 'error' && setCompleted(true))
-          .catch((err) => console.log(err))
+      const params = {
+        type: type === I18n.t('pages.tariff.upload.import') ? 'import' : 'export',
+        modal: data.modal,
+        setProgress,
+        formData,
+        agent: data.agent.idBusinessPartnerAgent !== null ? data.agent.idBusinessPartnerAgent : undefined
       }
-      if (type === I18n.t('pages.tariff.upload.export')) {
-        const agentId = data.agent.idBusinessPartnerAgent !== null ? data.agent.idBusinessPartnerAgent : undefined
-        await API.uploadTariff('export', data.modal, setProgress, formData, agentId)
-          .then((res) => res !== 'error' && setCompleted(true))
-          .catch((err) => console.log(err))
-      }
+
+      mutate(params)
     } else {
       setInvalidInput(true)
     }
   }
+
+  useEffect(() => {
+    if (isSuccess === true) setCompleted(true)
+  }, [isSuccess])
 
   const handleOnClose = (): void => {
     setData(initialState)
@@ -86,6 +89,7 @@ const TariffUploadModal = ({
     setCompleted(false)
     setProgress(0)
     setFile(undefined)
+    reset()
   }
 
   const validateData = (): boolean => {
