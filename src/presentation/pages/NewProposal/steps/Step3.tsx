@@ -1,7 +1,6 @@
 import React, {
   useEffect,
   useState,
-  useContext,
   useImperativeHandle
 } from 'react'
 import { Button, Messages } from 'fiorde-fe-components'
@@ -41,9 +40,9 @@ import ChargeTable, {
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import { withTheme } from 'styled-components'
 import API from '../../../../infrastructure/api'
-import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import { CargoVolume } from '../../../../domain/CargoVolume'
 import CwModal from '../../../components/CwModal/CwModal'
+import { NewProposal } from '../../../../domain/usecase'
 
 interface Step3Props {
   theme?: any
@@ -74,6 +73,7 @@ interface Step3Props {
   updateTableIdsRef: any
   setCw: (item: any) => void
   setCwSale: (item: any) => void
+  proposalService: NewProposal
 }
 
 const Step3 = ({
@@ -91,7 +91,8 @@ const Step3 = ({
   setStepLoaded,
   updateTableIdsRef,
   setCw,
-  setCwSale
+  setCwSale,
+  proposalService
 }: Step3Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [cwOpen, setCwOpen] = useState(false)
@@ -104,7 +105,7 @@ const Step3 = ({
   const [tableId, setTableId] = useState(0)
   const specificationsList = ['FCL', 'LCL', 'Break Bulk', 'Ro-Ro']
   const [packagingList, setPackagingList] = useState<any[]>([])
-  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+  const { proposal, setProposal } = proposalService
   const [calculation, setCalculation] = useState<CalculationDataProps>({
     weight: 0,
     cubage: 0,

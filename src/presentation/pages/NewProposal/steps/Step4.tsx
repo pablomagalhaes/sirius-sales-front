@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState } from 'react'
 import moment from 'moment'
 import {
   FormControl,
@@ -26,8 +26,8 @@ import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import API from '../../../../infrastructure/api'
 import { NumberInput } from './StepsStyles'
 import { withTheme } from 'styled-components'
-import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import FormatNumber from '../../../../application/utils/formatNumber'
+import { NewProposal } from '../../../../domain/usecase'
 
 interface Step4Props {
   invalidInput: boolean
@@ -37,6 +37,7 @@ interface Step4Props {
   modal: string
   specifications: string
   duplicateMode: boolean
+  proposalService: NewProposal
 }
 
 interface Frequency {
@@ -51,7 +52,8 @@ const Step4 = ({
   theme,
   modal,
   specifications,
-  duplicateMode
+  duplicateMode,
+  proposalService
 }: Step4Props): JSX.Element => {
   // mock para os selects
   const validityList = [
@@ -97,7 +99,7 @@ const Step4 = ({
 
   const [frequencyList, setFrequencyList] = useState<Frequency[]>([])
   const [disabledValidateDate, setDisabledValidateDate] = useState(true)
-  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+  const { proposal, setProposal } = proposalService
 
   const validateFloatInput = (value: string): RegExpMatchArray | null => {
     return value.match(/^[0-9]*,?[0-9]*$/)

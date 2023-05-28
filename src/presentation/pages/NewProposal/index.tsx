@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import React, { useState, useCallback, useEffect, useContext, useRef } from 'react'
+import React, { useState, useCallback, useEffect, useRef } from 'react'
 import { Button, ExitDialog, FloatingMenu, Steps, Messages } from 'fiorde-fe-components'
 import ProposalDisplayModal from '../../components/ProposalDisplayModal/ProposalDisplayModal'
 import { Breadcrumbs, Link } from '@material-ui/core/'
@@ -27,15 +27,17 @@ import Step5 from './steps/Step5'
 import Step6 from './steps/Step6'
 import { useHistory, useLocation } from 'react-router-dom'
 import { ItemModalData } from '../../components/ItemModal/ItemModal'
-import { ProposalContext, ProposalProps, emptyProposalValue } from './context/ProposalContext'
+import { emptyProposalValue } from './context/ProposalContext'
 import API from '../../../infrastructure/api'
 import { CalculationDataProps } from '../../components/ChargeTable'
+import { NewProposal as NewProposalUseCase } from '../../../domain/usecase'
 
 export interface NewProposalProps {
   theme: any
+  proposalService: NewProposalUseCase
 }
 
-const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
+const NewProposal = ({ theme, proposalService }: NewProposalProps): JSX.Element => {
   const [action, setAction] = useState('')
   const [agentList, setAgentList] = useState<Agents[]>([])
   const [calculationData, setCalculationData] = useState<CalculationDataProps>({ weight: 0, cubage: 0, cubageWeight: 0 })
@@ -62,7 +64,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
 
-  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+  const { proposal, setProposal } = proposalService
 
   const history = useHistory()
   const location = useLocation()
@@ -549,6 +551,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
               setModal={setModal}
               setProposalType={setProposalType}
               setStepLoaded={setStepLoaded}
+              proposalService={proposalService}
             />
           </div>
           {stepLoaded.step1 && <>
@@ -561,6 +564,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                 setCompleted={setCompleted}
                 setFilled={setFilled}
                 updateAgentsIdsRef={updateAgentsIdsRef}
+                proposalService={proposalService}
               />
             </div>
             <div id="step3">
@@ -580,6 +584,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                 setUndoMessage={setUndoMessage}
                 undoMessage={undoMessage}
                 updateTableIdsRef={updateTable3IdsRef}
+                proposalService={proposalService}
               />
             </div>
             <div id="step4">
@@ -590,6 +595,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                 setCompleted={setCompleted}
                 setFilled={setFilled}
                 specifications={specifications}
+                proposalService={proposalService}
               />
             </div>
             {stepLoaded.step3 && <> <div id="step5">
@@ -609,6 +615,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                 specifications={specifications}
                 undoMessage={undoMessage}
                 updateTableIdsRef={updateTable5IdsRef}
+                proposalService={proposalService}
               />
             </div>
               <div id="step6">
@@ -629,6 +636,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                   totalCosts={totalCosts}
                   undoMessage={undoMessage}
                   updateTableIdsRef={updateTable6IdsRef}
+                  proposalService={proposalService}
                 />
               </div>
             </>}

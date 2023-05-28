@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useImperativeHandle, useState, Fragment } from 'react'
+import React, { useEffect, useImperativeHandle, useState, Fragment } from 'react'
 import { I18n } from 'react-redux-i18n'
 import { MessageContainer, Separator, Subtitle, Title } from '../style'
 import FareModal, {
@@ -16,7 +16,6 @@ import {
 import { ItemModalData } from '../../../components/ItemModal/ItemModal'
 import { ButtonWrapper, HeightDiv, NumberInput, StyledPaper, LineSeparator, ErrorText } from './StepsStyles'
 import { Button, Messages } from 'fiorde-fe-components'
-import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import { Cost } from '../../../../domain/Cost'
 import { TotalCost } from '../../../../domain/TotalCost'
 import API from '../../../../infrastructure/api'
@@ -29,6 +28,7 @@ import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import { CalculationDataProps } from '../../../components/ChargeTable'
 import { CostTypes, FareItemsTypes } from '../../../../application/enum/costEnum'
+import { NewProposal } from '../../../../domain/usecase'
 
 interface Step6Props {
   totalCosts: any
@@ -60,6 +60,7 @@ interface Step6Props {
   updateTableIdsRef: any
   cw: number
   cwSale: number
+  proposalService: NewProposal
 }
 
 const enum ID_CARGO_CONTRACTING_TYPE {
@@ -111,13 +112,14 @@ const Step6 = ({
   updateTableIdsRef,
   cw,
   cwSale,
-  totalCosts
+  totalCosts,
+  proposalService
 }: Step6Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [copyTable, setCopyTable] = useState<FareModalData[]>([])
   const [chargeData, setChargeData] = useState<FareModalData>(initialState)
   const [currencyList, setCurrencyList] = useState<any[]>([])
-  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+  const { proposal, setProposal } = proposalService
   const [dataTotalCost, setDataTotalCost] = useState<any[]>([])
   const [loadedTotalCostsIds, setLoadedTotalCostsIds] = useState<number[]>([])
   const [agentList, setAgentsList] = useState<any[]>([])

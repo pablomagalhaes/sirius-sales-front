@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useContext, useImperativeHandle } from 'react'
+import React, { useEffect, useState, useImperativeHandle } from 'react'
 import CostTable from '../../../components/CostTable/CostTable'
 import { I18n } from 'react-redux-i18n'
 import { Title, Subtitle, Separator } from '../style'
 import { ItemModalData } from '../../../components/ItemModal/ItemModal'
-import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import { CostTableItem } from '../../../components/CostModal/CostModal'
 import { Cost } from '../../../../domain/Cost'
 import { TotalCost } from '../../../../domain/TotalCost'
@@ -11,6 +10,7 @@ import { CalculationDataProps } from '../../../components/ChargeTable'
 import API from '../../../../infrastructure/api'
 import { Agents } from './Step2'
 import { CostTypes } from '../../../../application/enum/costEnum'
+import { NewProposal } from '../../../../domain/usecase'
 
 interface Step5Props {
   costData: any
@@ -33,6 +33,7 @@ interface Step5Props {
   updateTableIdsRef: any
   agentList: Agents[]
   setTotalCosts: any
+  proposalService: NewProposal
 }
 
 export interface TotalCostTable {
@@ -59,7 +60,8 @@ const Step5 = ({
   invalidInput,
   updateTableIdsRef,
   agentList,
-  setTotalCosts
+  setTotalCosts,
+  proposalService
 }: Step5Props): JSX.Element => {
   const [dataOrigin, setDataOrigin] = useState<CostTableItem[]>([])
   const [dataDestiny, setDataDestiny] = useState<CostTableItem[]>([])
@@ -68,7 +70,7 @@ const Step5 = ({
   const [loadedTotalCostsOrigIds, setLoadedTotalCostsOrigIds] = useState<number[]>([])
   const [loadedTotalCostsDestIds, setLoadedTotalCostsDestIds] = useState<number[]>([])
 
-  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+  const { proposal, setProposal } = proposalService
 
   const [loadedTable, setLoadedTable] = useState(false)
 

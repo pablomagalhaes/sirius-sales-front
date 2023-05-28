@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, Fragment } from 'react'
+import React, { useEffect, useState, Fragment } from 'react'
 import {
   Checkbox,
   FormControlLabel,
@@ -25,7 +25,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import { Transport, TransportList } from '../../../../domain/Transport'
 import { StyledPaper } from './StepsStyles'
 import { ExitDialog } from 'fiorde-fe-components'
-import { ProposalContext, ProposalProps } from '../context/ProposalContext'
+import { NewProposal } from '../../../../domain/usecase'
 
 export interface Agents {
   id?: number | null
@@ -52,6 +52,7 @@ export interface Step1Props {
   filled: Filled
   setStepLoaded: (steps: any) => void
   setAgentList: (agent: Agents[]) => void
+  proposalService: NewProposal
   // setAgentList: (agent: string[]) => void
 }
 
@@ -64,7 +65,8 @@ const Step1 = ({
   setModal,
   filled,
   setStepLoaded,
-  setAgentList
+  setAgentList,
+  proposalService
 }: Step1Props): JSX.Element => {
   const [transportList] = useState<Transport[]>(TransportList)
   const [agentsList, setAgentsList] = useState<any[]>([])
@@ -91,7 +93,7 @@ const Step1 = ({
       idBusinessPartnerTransportCompany: null
     }
   ])
-  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+  const { proposal, setProposal } = proposalService
 
   const getidBusinessPartnerAgent = (agentName: string): number | undefined => {
     let id

@@ -1,7 +1,6 @@
 import React, {
   useEffect,
   useState,
-  useContext,
   useImperativeHandle,
   Fragment
 } from 'react'
@@ -35,9 +34,9 @@ import {
   OriginDestLabel,
   StyledPaper
 } from './StepsStyles'
-import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import { Button } from 'fiorde-fe-components'
 import AgentDeleteModal from '../../../components/AgentDeleteModal'
+import { NewProposal } from '../../../../domain/usecase'
 
 interface Step2Props {
   invalidInput: boolean
@@ -48,6 +47,7 @@ interface Step2Props {
   setFilled: (filled: any) => void
   theme: any
   updateAgentsIdsRef: any
+  proposalService: NewProposal
 }
 
 interface DataProps {
@@ -87,7 +87,8 @@ const Step2 = ({
   setCompleted,
   setFilled,
   theme,
-  updateAgentsIdsRef
+  updateAgentsIdsRef,
+  proposalService
 }: Step2Props): JSX.Element => {
   const [agentsList, setAgentsList] = useState<any[]>([])
   const [businessPartnerList, setBusinessPartnerList] = useState<any[]>([])
@@ -133,7 +134,7 @@ const Step2 = ({
     }
   ])
 
-  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+  const { proposal, setProposal } = proposalService
 
   useImperativeHandle(updateAgentsIdsRef, () => ({
     updateAgentsIdsRef () {
