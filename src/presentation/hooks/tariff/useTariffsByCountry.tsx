@@ -12,7 +12,7 @@ const useTariffsByCountry = (): any => {
     return data
   }
 
-  const { data } = useQuery(
+  const { data, refetch } = useQuery(
     [QueryKeys.tariffsByCountry, params],
     getTariffsByCountry,
     {
@@ -20,8 +20,8 @@ const useTariffsByCountry = (): any => {
       staleTime: 0
     }
   )
-  if (data !== undefined) return { content: data.content, totalElements: data.totalElements, setParams }
-  return { content: [], totalElements: 0, setParams }
+  if (data !== undefined) return { content: data.content, totalElements: data.totalElements, setParams, refetch }
+  return { content: [], totalElements: 0, setParams, refetch }
 }
 
 export default useTariffsByCountry

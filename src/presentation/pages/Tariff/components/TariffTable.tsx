@@ -27,7 +27,7 @@ const TariffTable = ({
   country,
   region
 }: TariffTableProps): JSX.Element => {
-  const { content: tariffData, totalElements: totalTariffList, setParams } = useTariffsByCountry()
+  const { content: tariffData, totalElements: totalTariffList, setParams, refetch } = useTariffsByCountry()
   const { filter, setFilter }: any = useContext(TariffContext)
 
   const [seaType, setSeaType] = useState<string>('FCL')
@@ -84,7 +84,6 @@ const TariffTable = ({
   }
 
   const getTariffItems = (tariffList: any): string[] => {
-    console.log('entrou')
     const array: any = []
     for (const tariff of tariffList) {
       const id = tariff.idTariff
@@ -168,13 +167,14 @@ const TariffTable = ({
     }
     return <>{validity}</>
   }
-  console.log(filter.tariffModalType)
+
   useEffect(() => {
+    const payload = filter.tariffModalType === 'SEA'
+      ? { ...filter, txRegion: region, txCountry: country, txChargeType: seaType }
+      : { ...filter, txRegion: region, txCountry: country }
     if (expanded && !openModal) {
-      const modal = filter.tariffModalType
-      let payload = { ...filter, txRegion: region, txCountry: country }
-      if (modal !== '' && modal === 'SEA') payload = { ...filter, txRegion: region, txCountry: country, txChargeType: seaType }
       setParams(payload)
+      refetch()
     }
   }, [expanded, filter, seaType, openModal])
 

@@ -131,6 +131,10 @@ const Tariff = (): JSX.Element => {
     setFilter((filter: any) => ({ ...filter, orderByList: `${orderBy},${handleOrderDirection()}` }))
   }, [orderAsc, orderBy])
 
+  useEffect(() => {
+    setOrderBy(SelectorsValuesTypes.Validity)
+  }, [filter.tariffModalType])
+
   const handleExportTariff = (): void => {}
 
   const cardFilters = [
