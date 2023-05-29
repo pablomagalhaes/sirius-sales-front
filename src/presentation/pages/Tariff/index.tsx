@@ -262,11 +262,13 @@ const Tariff = (): JSX.Element => {
           onChange: (country: string, expanded: boolean): void => { setCountryExpanded(country) },
           expanded: countryExpanded === country
         }))
-        regionsTabs.push({
-          title: item.region,
-          icon: item.closeToValidity === true ? 'error' : validity === 'EXPIRED' ? 'warn' : '',
-          component: <Accordion content={content} />
-        })
+        if (item.region.length !== 0) {
+          regionsTabs.push({
+            title: item.region,
+            icon: item.closeToValidity === true ? 'error' : validity === 'EXPIRED' ? 'warn' : '',
+            component: <Accordion content={content} />
+          })
+        }
       })
     }
     setTabs(regionsTabs)
