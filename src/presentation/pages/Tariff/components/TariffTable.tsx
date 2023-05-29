@@ -1,39 +1,36 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 
 import { Table, TableBody, TableContainer, TableHead, TableRow, Button, Popover } from '@material-ui/core'
 import { Pagination, ListSwitcher, MenuIconCell, FloatingMenu, ControlledToolTip } from 'fiorde-fe-components'
-import { PaginationContainer, PaginationMainContainer, MainTariffContainer, TableCell, IconDisplay, RedColorSpan } from './style'
-import AirTariffModal from '../../components/AirTariffModal/AirTariffModal'
-import SeaFclTariffModal from '../../components/SeaFclTariffModal/SeaFclTariffModal'
-import SeaLclTariffModal from '../../components/SeaLclTariffModal/SeaLclTariffModal'
-import LandTariffModal from '../../components/LandTariffModal/LandTariffModal'
-import WarnIconClicked from '../../../application/icons/WarnClicked'
-import AlertClickedIcon from '../../../application/icons/AlertClicked'
+import { PaginationContainer, PaginationMainContainer, MainTariffContainer, TableCell, IconDisplay, RedColorSpan } from '../style'
+import AirTariffModal from '../../../components/AirTariffModal/AirTariffModal'
+import SeaFclTariffModal from '../../../components/SeaFclTariffModal/SeaFclTariffModal'
+import SeaLclTariffModal from '../../../components/SeaLclTariffModal/SeaLclTariffModal'
+import LandTariffModal from '../../../components/LandTariffModal/LandTariffModal'
+import WarnIconClicked from '../../../../application/icons/WarnClicked'
+import AlertClickedIcon from '../../../../application/icons/AlertClicked'
 import moment from 'moment'
 import { I18n } from 'react-redux-i18n'
+import useTariffsByCountry from '../../../hooks/tariff/useTariffsByCountry'
+import { TariffContext } from '../context/TariffContext'
 
-import { convertToDecimal } from './helpers'
-import API from '../../../infrastructure/api'
+import { convertToDecimal } from '../helpers'
 
 export interface TariffTableProps {
   expanded: boolean
   country: string
   region: string
-  filter: any
-  setFilter: Function
 }
 
 const TariffTable = ({
   expanded,
   country,
-  region,
-  filter,
-  setFilter
+  region
 }: TariffTableProps): JSX.Element => {
-  const [data, setData] = useState<any[]>()
+  const { content: tariffData, totalElements: totalTariffList, setParams, refetch } = useTariffsByCountry()
+  const { filter, setFilter }: any = useContext(TariffContext)
+
   const [seaType, setSeaType] = useState<string>('FCL')
-  const [totalTariffList, setTotalTariffList] = useState<number>(0)
-  const [tariffData, setTariffData] = useState<any[]>()
   const [state, setState] = useState({ anchorEl: null, currentKey: null })
   const [openModal, setOpenModal] = useState<boolean>(false)
 
@@ -86,7 +83,7 @@ const TariffTable = ({
     return <></>
   }
 
-  const getTariffItems = (tariffList): string[] => {
+  const getTariffItems = (tariffList: any): string[] => {
     const array: any = []
     for (const tariff of tariffList) {
       const id = tariff.idTariff
@@ -95,7 +92,7 @@ const TariffTable = ({
       const company = tariff.dsBusinessPartnerTransporter
       const transitTime = tariff.transitTime
       const currency = tariff.currency
-      const originDestiny = modal === 'LAND' ? `${String(tariff.cityOrigin)} > ${String(tariff.cityDestination)}` : `${String(tariff.origin)} > ${String(tariff.destination)}`
+      const originDestiny = modal === 'LAND' ? `${String(tariff.originCity)} > ${String(tariff.destinationCity)}` : `${String(tariff.origin)} > ${String(tariff.destination)}`
       const validity = new Date(tariff.validityDate).toLocaleDateString('pt-BR')
       const values = [...tariff.tariffTypeValues].filter(each => each.tariffType.description !== 'MINIMUN').map(item => item.value)
       const value = `de ${convertToDecimal(Math.min(...values))} a ${convertToDecimal(Math.max(...values))}`
@@ -172,29 +169,16 @@ const TariffTable = ({
   }
 
   useEffect(() => {
+    const payload = filter.tariffModalType === 'SEA'
+      ? { ...filter, txRegion: region, txCountry: country, txChargeType: seaType }
+      : { ...filter, txRegion: region, txCountry: country }
     if (expanded && !openModal) {
-      void (async function () {
-        const modal = filter.tariffModalType
-        let payload = { ...filter, txRegion: region, txCountry: country }
-        if (modal !== '' && modal === 'SEA') payload = { ...filter, txRegion: region, txCountry: country, txChargeType: seaType }
-        await API.getTariffsByCountry(payload)
-          .then((response) => {
-            const tariffs = getTariffItems(response.content)
-            if (tariffs.length > 0) {
-              setData(tariffs)
-              setTariffData(response.content)
-            } else {
-              setData([])
-              setTariffData([])
-            }
-            setTotalTariffList(response.totalElements)
-          })
-          .catch((err) => console.log(err))
-      })()
+      setParams(payload)
+      refetch()
     }
   }, [expanded, filter, seaType, openModal])
 
-  if (data !== undefined && data.length > 0) {
+  if (tariffData.length > 0) {
     return (
     <MainTariffContainer>
       {filter.tariffModalType === 'SEA' &&
@@ -219,7 +203,7 @@ const TariffTable = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((row, index) => (
+            {getTariffItems(tariffData).map((row, index) => (
               <TableRow
                 key={index}
               >
@@ -272,9 +256,9 @@ const TariffTable = ({
         <PaginationMainContainer>
           <Pagination
             count={totalTariffList}
-            labelDisplay={I18n.t('components.pagination.labelDisplay')}
-            labelDisplayedRows={I18n.t('components.pagination.labelDisplayedRows')}
-            labelRowsPerPage={I18n.t('components.pagination.labelRowsPerPage')}
+            labelDisplay={I18n.t('components.Pagination.labelDisplay')}
+            labelDisplayedRows={I18n.t('components.Pagination.labelDisplayedRows')}
+            labelRowsPerPage={I18n.t('components.Pagination.labelRowsPerPage')}
             onPageChange={(value) =>
               setFilter((filter: any) => ({ ...filter, page: value }))
             }
@@ -285,10 +269,10 @@ const TariffTable = ({
                 page: 0
               }))
             }
-            tooltipBack={I18n.t('components.pagination.tooltipBack')}
-            tooltipFirst={I18n.t('components.pagination.tooltipFirst')}
-            tooltipLast={I18n.t('components.pagination.tooltipLast')}
-            tooltipNext={I18n.t('components.pagination.tooltipNext')}
+            tooltipBack={I18n.t('components.Pagination.tooltipBack')}
+            tooltipFirst={I18n.t('components.Pagination.tooltipFirst')}
+            tooltipLast={I18n.t('components.Pagination.tooltipLast')}
+            tooltipNext={I18n.t('components.Pagination.tooltipNext')}
             reducedPagination={true}
           />
         </PaginationMainContainer>

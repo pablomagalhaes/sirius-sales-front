@@ -1,5 +1,5 @@
 import { Modal, Grid, FormLabel, RadioGroup, FormControlLabel } from '@material-ui/core'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import CloseIcon from '../../../application/icons/CloseIcon'
 import {
   StyledRadio,
@@ -21,7 +21,9 @@ import {
   CloseIconContainer
 } from '../StyledComponents/modalStyles'
 import { Button, DragAndDrop } from 'fiorde-fe-components'
-import API from '../../../infrastructure/api'
+import { usePartnerList } from '../../hooks'
+import useUploadTariff from '../../hooks/tariff/useUploadTariff'
+import { TariffTypes } from '../../../application/enum/enum'
 
 interface AgentType {
   name: string
@@ -49,29 +51,28 @@ const TariffUploadModal = ({
   open,
   setClose
 }: TariffUploadProps): JSX.Element => {
+  const { partnerList: agentsList } = usePartnerList()
+  const { mutate, reset, isSuccess } = useUploadTariff()
+
   const [data, setData] = useState<TariffUploadData>(initialState)
   const [invalidInput, setInvalidInput] = useState(false)
   const [file, setFile] = useState<File | undefined>()
   const [progress, setProgress] = useState<number>(0)
-  const [completed, setCompleted] = useState<boolean>(false)
-  const [agentsList, setAgentsList] = useState<any[]>([])
 
   const uploadTariff = async (): Promise<void> => {
     if (validateData() && data.modal !== null && file !== undefined) {
       const formData = new FormData()
       formData.append('file', file)
 
-      if (type === I18n.t('pages.tariff.upload.import') && data.agent.idBusinessPartnerAgent !== null) {
-        await API.uploadTariff('import', data.modal, setProgress, formData, data.agent.idBusinessPartnerAgent)
-          .then((res) => res !== 'error' && setCompleted(true))
-          .catch((err) => console.log(err))
+      const params = {
+        type: type === I18n.t('pages.tariff.upload.import') ? TariffTypes.Import : TariffTypes.Export,
+        modal: data.modal,
+        setProgress,
+        formData,
+        agent: data.agent.idBusinessPartnerAgent !== null ? data.agent.idBusinessPartnerAgent : undefined
       }
-      if (type === I18n.t('pages.tariff.upload.export')) {
-        const agentId = data.agent.idBusinessPartnerAgent !== null ? data.agent.idBusinessPartnerAgent : undefined
-        await API.uploadTariff('export', data.modal, setProgress, formData, agentId)
-          .then((res) => res !== 'error' && setCompleted(true))
-          .catch((err) => console.log(err))
-      }
+
+      mutate(params)
     } else {
       setInvalidInput(true)
     }
@@ -81,9 +82,9 @@ const TariffUploadModal = ({
     setData(initialState)
     setInvalidInput(false)
     setClose()
-    setCompleted(false)
     setProgress(0)
     setFile(undefined)
+    reset()
   }
 
   const validateData = (): boolean => {
@@ -100,20 +101,12 @@ const TariffUploadModal = ({
     }
   }
 
-  useEffect(() => {
-    void (async function () {
-      await API.getAgents()
-        .then((agent) => setAgentsList(agent))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
-
   const getidBusinessPartnerAgent = (agentName: string): number | undefined => {
     let id
     if (agentName !== '') {
       agentsList?.forEach((item): void => {
-        if (String(item.businessPartner.simpleName) === String(agentName)) {
-          id = item.businessPartner.id
+        if (String(item.simpleName) === String(agentName)) {
+          id = item.id
         }
       })
     }
@@ -202,10 +195,10 @@ const TariffUploadModal = ({
                   </Item>
                   {agentsList.map((item) =>
                     <Item
-                      value={item.businessPartner.simpleName}
-                      key={item.businessPartner.id}
+                      value={item.simpleName}
+                      key={item.id}
                     >
-                      {item.businessPartner.simpleName}
+                      {item.simpleName}
                     </Item>
                   )}
                 </SelectEmpty>
@@ -224,7 +217,7 @@ const TariffUploadModal = ({
                 types={['text/csv']}
               />
             </DragAndDropDiv>
-            { completed && <Grid item xs={12}>
+            { isSuccess === true && <Grid item xs={12}>
               <p>{I18n.t('pages.tariff.upload.completedMessage')}</p>
             </Grid>}
           </Grid>
@@ -253,7 +246,7 @@ const TariffUploadModal = ({
                       onAction={uploadTariff}
                     />
                     : <Button
-                      disabled={!completed}
+                      disabled={isSuccess === false}
                       text={I18n.t('pages.tariff.upload.processingButtonLabel')}
                       tooltip={I18n.t('pages.tariff.upload.processingButtonLabel')}
                       backgroundGreen={true}
