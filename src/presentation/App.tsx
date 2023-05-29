@@ -3,9 +3,7 @@ import { StyledThemeProvider, dark as libraryThemeDark, light as libraryThemeLig
 import { ThemeProvider } from 'styled-components'
 import { light, dark } from '../application/themes'
 import Routes from './components/Routes'
-import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
-import { QueryClient } from '@tanstack/react-query'
-import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useSelector } from 'react-redux'
 import startSubscriber from '../application/Subscriber'
 import { withErrorBoundary } from 'react-error-boundary'
@@ -15,14 +13,9 @@ import 'react-toastify/dist/ReactToastify.css'
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      cacheTime: 1000 * 60 * 60 * 24, // 24 hours
-      staleTime: 1000 * 60 * 60 * 2
+      staleTime: Infinity
     }
   }
-})
-
-const persister = createSyncStoragePersister({
-  storage: window.localStorage
 })
 
 const App = (): JSX.Element => {
@@ -30,9 +23,8 @@ const App = (): JSX.Element => {
   const { theme } = state.app
   startSubscriber()
   return (
-    <PersistQueryClientProvider
+    <QueryClientProvider
       client={queryClient}
-      persistOptions={{ persister }}
     >
     <ThemeProvider theme={theme === 'light' ? light : dark}>
       <ToastContainer
@@ -44,7 +36,7 @@ const App = (): JSX.Element => {
         <Routes />
       </StyledThemeProvider>
     </ThemeProvider>
-    </PersistQueryClientProvider>
+    </QueryClientProvider>
   )
 }
 

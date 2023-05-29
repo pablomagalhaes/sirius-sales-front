@@ -1,36 +1,35 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 
 import { Table, TableBody, TableContainer, TableHead, TableRow, Button, Popover } from '@material-ui/core'
 import { Pagination, ListSwitcher, MenuIconCell, FloatingMenu, ControlledToolTip } from 'fiorde-fe-components'
-import { PaginationContainer, PaginationMainContainer, MainTariffContainer, TableCell, IconDisplay, RedColorSpan } from './style'
-import AirTariffModal from '../../components/AirTariffModal/AirTariffModal'
-import SeaFclTariffModal from '../../components/SeaFclTariffModal/SeaFclTariffModal'
-import SeaLclTariffModal from '../../components/SeaLclTariffModal/SeaLclTariffModal'
-import LandTariffModal from '../../components/LandTariffModal/LandTariffModal'
-import WarnIconClicked from '../../../application/icons/WarnClicked'
-import AlertClickedIcon from '../../../application/icons/AlertClicked'
+import { PaginationContainer, PaginationMainContainer, MainTariffContainer, TableCell, IconDisplay, RedColorSpan } from '../style'
+import AirTariffModal from '../../../components/AirTariffModal/AirTariffModal'
+import SeaFclTariffModal from '../../../components/SeaFclTariffModal/SeaFclTariffModal'
+import SeaLclTariffModal from '../../../components/SeaLclTariffModal/SeaLclTariffModal'
+import LandTariffModal from '../../../components/LandTariffModal/LandTariffModal'
+import WarnIconClicked from '../../../../application/icons/WarnClicked'
+import AlertClickedIcon from '../../../../application/icons/AlertClicked'
 import moment from 'moment'
 import { I18n } from 'react-redux-i18n'
-import useTariffsByCountry from '../../hooks/useTariffsByCountry'
+import useTariffsByCountry from '../../../hooks/tariff/useTariffsByCountry'
+import { TariffContext } from '../context/TariffContext'
 
-import { convertToDecimal } from './helpers'
+import { convertToDecimal } from '../helpers'
 
 export interface TariffTableProps {
   expanded: boolean
   country: string
   region: string
-  filter: any
-  setFilter: Function
 }
 
 const TariffTable = ({
   expanded,
   country,
-  region,
-  filter,
-  setFilter
+  region
 }: TariffTableProps): JSX.Element => {
   const { content: tariffData, totalElements: totalTariffList, setParams } = useTariffsByCountry()
+  const { filter, setFilter }: any = useContext(TariffContext)
+
   const [seaType, setSeaType] = useState<string>('FCL')
   const [state, setState] = useState({ anchorEl: null, currentKey: null })
   const [openModal, setOpenModal] = useState<boolean>(false)
@@ -85,6 +84,7 @@ const TariffTable = ({
   }
 
   const getTariffItems = (tariffList: any): string[] => {
+    console.log('entrou')
     const array: any = []
     for (const tariff of tariffList) {
       const id = tariff.idTariff
@@ -93,7 +93,7 @@ const TariffTable = ({
       const company = tariff.dsBusinessPartnerTransporter
       const transitTime = tariff.transitTime
       const currency = tariff.currency
-      const originDestiny = modal === 'LAND' ? `${String(tariff.cityOrigin)} > ${String(tariff.cityDestination)}` : `${String(tariff.origin)} > ${String(tariff.destination)}`
+      const originDestiny = modal === 'LAND' ? `${String(tariff.originCity)} > ${String(tariff.destinationCity)}` : `${String(tariff.origin)} > ${String(tariff.destination)}`
       const validity = new Date(tariff.validityDate).toLocaleDateString('pt-BR')
       const values = [...tariff.tariffTypeValues].filter(each => each.tariffType.description !== 'MINIMUN').map(item => item.value)
       const value = `de ${convertToDecimal(Math.min(...values))} a ${convertToDecimal(Math.max(...values))}`
@@ -168,7 +168,7 @@ const TariffTable = ({
     }
     return <>{validity}</>
   }
-
+  console.log(filter.tariffModalType)
   useEffect(() => {
     if (expanded && !openModal) {
       const modal = filter.tariffModalType

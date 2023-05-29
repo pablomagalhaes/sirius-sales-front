@@ -22,7 +22,7 @@ import {
 } from '../StyledComponents/modalStyles'
 import { Button, DragAndDrop } from 'fiorde-fe-components'
 import { usePartnerList } from '../../hooks'
-import useUploadTariff from '../../hooks/useUploadTariff'
+import useUploadTariff from '../../hooks/tariff/useUploadTariff'
 import { TariffTypes } from '../../../application/enum/enum'
 
 interface AgentType {

@@ -24,6 +24,10 @@ const useMercosulStates = (): any => {
   return useQuery([QueryKeys.mercosulStates], API.getMercosulStates)
 }
 
+const useFrequency = (): any => {
+  return useQuery([QueryKeys.frequency], API.getFrequency)
+}
+
 const usePartnerList = (): any => {
   const { data = [] } = useQuery([QueryKeys.agent], API.getAgents)
   const partnerList: any[] = data.map((item: any) => item?.businessPartner)
@@ -58,4 +62,13 @@ const useBusinessPartnerByType = (): any => {
   return { seaPartners: [...shipOwner, ...coloader], airPartners, landPartners }
 }
 
-export { useCurrencies, useOriginDestination, usePartnerList, useMercosulCountries, useMercosulCities, useMercosulStates, useBusinessPartnerByType }
+export {
+  useCurrencies,
+  useOriginDestination,
+  usePartnerList,
+  useMercosulCountries,
+  useMercosulCities,
+  useMercosulStates,
+  useBusinessPartnerByType,
+  useFrequency
+}

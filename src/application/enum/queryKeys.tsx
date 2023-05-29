@@ -10,7 +10,8 @@ enum QueryKeys {
   businessPartnerShipOwner = 'businessPartnerShipOwner',
   businessPartnerColoader = 'businessPartnerColoader',
   tariffs = 'tariffs',
-  tariffsByCountry = 'tariffsByCountry'
+  tariffsByCountry = 'tariffsByCountry',
+  frequency = 'frequency'
 }
 
 export { QueryKeys }

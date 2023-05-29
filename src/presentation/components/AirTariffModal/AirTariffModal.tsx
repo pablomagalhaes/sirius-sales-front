@@ -32,6 +32,7 @@ import { NumberInput, StyledPaper } from '../../pages/NewProposal/steps/StepsSty
 import FormatNumber from '../../../application/utils/formatNumber'
 import ControlledSelect from '../../components/ControlledSelect'
 import API from '../../../infrastructure/api'
+import { useCurrencies, useFrequency } from '../../hooks'
 
 interface TariffValues {
   idTariffTypeValues: number
@@ -60,11 +61,6 @@ interface AirTariffModalProps {
   setClose: () => void
 }
 
-interface Frequency {
-  id: number
-  description: string
-}
-
 export const initialState = {
   minValue: null,
   dtValidity: null,
@@ -88,8 +84,8 @@ const AirTariffModal = ({
   setClose
 }: AirTariffModalProps): JSX.Element => {
   const [data, setData] = useState<AirTariffModalData>(initialState)
-  const [frequencyList, setFrequencyList] = useState<Frequency[]>([])
-  const [currencyList, setCurrencyList] = useState<any[]>([])
+  const { data: frequencyList = [] } = useFrequency()
+  const { data: currencyList = [] } = useCurrencies()
   const [invalidInput, setInvalidInput] = useState(false)
 
   const rgxFloat = /^[0-9]*,?[0-9]*$/
@@ -124,19 +120,6 @@ const AirTariffModal = ({
       setData(tariff)
     }
   }, [open])
-
-  useEffect(() => {
-    void (async function () {
-      await API.getFrequency()
-        .then((response) => setFrequencyList(response))
-        .catch((err) => console.log(err))
-    })()
-    void (async function () {
-      await API.getCurrencies()
-        .then((response) => setCurrencyList(response))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
 
   const handleOnClose = (): void => {
     setData(initialState)

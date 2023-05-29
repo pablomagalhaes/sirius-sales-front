@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
-import API from '../../infrastructure/api'
+import API from '../../../infrastructure/api'
 
 const useUploadTariff = (): any => {
   const uploadTariff = async (params: any): Promise<any> => {
