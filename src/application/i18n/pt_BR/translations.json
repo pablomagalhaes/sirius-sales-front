@@ -446,6 +446,12 @@
           "closeToValidity": "Vencimento próximo",
           "overdue": "Vencidas"
         }
+      },
+      "titles": {
+        "land": "Detalhamento da tarifa - Rodoviário",
+        "air": "Detalhamento da tarifa - Aéreo",
+        "seaLcl": "Detalhamento da tarifa - Marítimo LCL",
+        "seaFcl": "Detalhamento da tarifa - Marítimo FCL"
       }
     },
     "filter": {

@@ -3,16 +3,18 @@ import React, { useState, useEffect, useContext } from 'react'
 import { Table, TableBody, TableContainer, TableHead, TableRow, Button, Popover } from '@material-ui/core'
 import { Pagination, ListSwitcher, MenuIconCell, FloatingMenu, ControlledToolTip } from 'fiorde-fe-components'
 import { PaginationContainer, PaginationMainContainer, MainTariffContainer, TableCell, IconDisplay, RedColorSpan } from '../style'
-import AirTariffModal from '../../../components/AirTariffModal/AirTariffModal'
-import SeaFclTariffModal from '../../../components/SeaFclTariffModal/SeaFclTariffModal'
-import SeaLclTariffModal from '../../../components/SeaLclTariffModal/SeaLclTariffModal'
-import LandTariffModal from '../../../components/LandTariffModal/LandTariffModal'
+import AirTariffModal from './AirTariffModal/AirTariffModal'
+import SeaFclTariffModal from './SeaFclTariffModal/SeaFclTariffModal'
+import SeaLclTariffModal from './SeaLclTariffModal/SeaLclTariffModal'
+import LandTariffModal from './LandTariffModal/LandTariffModal'
 import WarnIconClicked from '../../../../application/icons/WarnClicked'
 import AlertClickedIcon from '../../../../application/icons/AlertClicked'
 import moment from 'moment'
 import { I18n } from 'react-redux-i18n'
 import useTariffsByCountry from '../../../hooks/tariff/useTariffsByCountry'
 import { TariffContext } from '../context/TariffContext'
+import { TxChargeTypes, TariffItemsTypes } from '../../../../application/enum/tariffEnum'
+import { ModalTypes } from '../../../../application/enum/enum'
 
 import { convertToDecimal } from '../helpers'
 
@@ -30,7 +32,7 @@ const TariffTable = ({
   const { content: tariffData, totalElements: totalTariffList, setParams, refetch } = useTariffsByCountry()
   const { filter, setFilter }: any = useContext(TariffContext)
 
-  const [seaType, setSeaType] = useState<string>('FCL')
+  const [seaType, setSeaType] = useState<string>(TxChargeTypes.Fcl)
   const [state, setState] = useState({ anchorEl: null, currentKey: null })
   const [openModal, setOpenModal] = useState<boolean>(false)
 
@@ -50,14 +52,14 @@ const TariffTable = ({
   const renderModal = (index: number | null): JSX.Element => {
     if (filter.tariffModalType !== '' && tariffData !== undefined && index !== null) {
       switch (filter.tariffModalType) {
-        case 'AIR':
+        case ModalTypes.Air:
           return <AirTariffModal
                     dataProp={tariffData[index]}
                     open={openModal}
                     setClose={handleClose}
                   />
-        case 'SEA':
-          if (seaType === 'FCL') {
+        case ModalTypes.Sea:
+          if (seaType === TxChargeTypes.Fcl) {
             return <SeaFclTariffModal
                     dataProp={tariffData[index]}
                     open={openModal}
@@ -70,7 +72,7 @@ const TariffTable = ({
                     setClose={handleClose}
                   />
           }
-        case 'LAND':
+        case ModalTypes.Land:
           return <LandTariffModal
                     dataProp={tariffData[index]}
                     open={openModal}
@@ -92,7 +94,7 @@ const TariffTable = ({
       const company = tariff.dsBusinessPartnerTransporter
       const transitTime = tariff.transitTime
       const currency = tariff.currency
-      const originDestiny = modal === 'LAND' ? `${String(tariff.originCity)} > ${String(tariff.destinationCity)}` : `${String(tariff.origin)} > ${String(tariff.destination)}`
+      const originDestiny = modal === ModalTypes.Land ? `${String(tariff.originCity)} > ${String(tariff.destinationCity)}` : `${String(tariff.origin)} > ${String(tariff.destination)}`
       const validity = new Date(tariff.validityDate).toLocaleDateString('pt-BR')
       const values = [...tariff.tariffTypeValues].filter(each => each.tariffType.description !== 'MINIMUN').map(item => item.value)
       const value = `de ${convertToDecimal(Math.min(...values))} a ${convertToDecimal(Math.max(...values))}`
@@ -101,25 +103,25 @@ const TariffTable = ({
         if (res !== undefined) return convertToDecimal(res.value)
         return ''
       }
-      const geralImoDed = `${getTariffTypeValue('VLGERALDED')} / ${getTariffTypeValue('VLIMODED')}`
-      const geralImoCons = `${getTariffTypeValue('VLGERALCONS')} / ${getTariffTypeValue('VLIMOCONS')}`
-      const minimun = getTariffTypeValue('MINIMUN')
-      const under7w = getTariffTypeValue('VLATE7WM')
-      const over = getTariffTypeValue('ACIMA')
-      const container20 = getTariffTypeValue('VLCONTAINER20')
-      const container40 = getTariffTypeValue('VLCONTAINER40')
+      const geralImoDed = `${getTariffTypeValue(TariffItemsTypes.Vlgeneralded)} / ${getTariffTypeValue(TariffItemsTypes.Vlimoded)}`
+      const geralImoCons = `${getTariffTypeValue(TariffItemsTypes.Vlgeneralcons)} / ${getTariffTypeValue(TariffItemsTypes.Vlimocons)}`
+      const minimun = getTariffTypeValue(TariffItemsTypes.Minimun)
+      const under7w = getTariffTypeValue(TariffItemsTypes.Vluntil7wm)
+      const over = getTariffTypeValue(TariffItemsTypes.Over)
+      const container20 = getTariffTypeValue(TariffItemsTypes.Vlcontainer20)
+      const container40 = getTariffTypeValue(TariffItemsTypes.Vlcontainer40)
 
       let item: any
       if (modal !== '') {
         switch (modal) {
-          case 'AIR':
+          case ModalTypes.Air:
             item = { id, agent, airCompany: company, originDestiny, transitTime, validity, currency, minimun, value }
             break
-          case 'SEA':
-            if (seaType === 'LCL') item = { id, agent, seaCompany: company, originDestiny, transitTime, validity, currency, minimun, under7w, over }
-            if (seaType === 'FCL') item = { id, agent, seaCompany: company, originDestiny, transitTime, validity, currency, container20, container40 }
+          case ModalTypes.Sea:
+            if (seaType === TxChargeTypes.Lcl) item = { id, agent, seaCompany: company, originDestiny, transitTime, validity, currency, minimun, under7w, over }
+            if (seaType === TxChargeTypes.Fcl) item = { id, agent, seaCompany: company, originDestiny, transitTime, validity, currency, container20, container40 }
             break
-          case 'LAND':
+          case ModalTypes.Land:
             item = { id, agent, landCompany: company, originDestiny, transitTime, validity, currency, geralImoDed, geralImoCons }
             break
           default:
@@ -169,7 +171,7 @@ const TariffTable = ({
   }
 
   useEffect(() => {
-    const payload = filter.tariffModalType === 'SEA'
+    const payload = filter.tariffModalType === ModalTypes.Sea
       ? { ...filter, txRegion: region, txCountry: country, txChargeType: seaType }
       : { ...filter, txRegion: region, txCountry: country }
     if (expanded && !openModal) {
@@ -181,7 +183,7 @@ const TariffTable = ({
   if (tariffData.length > 0) {
     return (
     <MainTariffContainer>
-      {filter.tariffModalType === 'SEA' &&
+      {filter.tariffModalType === ModalTypes.Sea &&
         <div>
           <ListSwitcher
             firstLabel={I18n.t('pages.tariff.modals.seaTypes.fcl')}
@@ -194,7 +196,7 @@ const TariffTable = ({
         <Table >
           <TableHead>
             <TableRow>
-              {filter.tariffModalType === 'SEA'
+              {filter.tariffModalType === ModalTypes.Sea
                 ? Object.values(I18n.t(`pages.tariff.tariffTable.columns.SEA.${seaType}`))
                   .map((column: string) => <TableCell key={column}>{column}</TableCell>)
                 : Object.values(I18n.t(`pages.tariff.tariffTable.columns.${String(filter.tariffModalType)}`))
@@ -207,7 +209,7 @@ const TariffTable = ({
               <TableRow
                 key={index}
               >
-                {filter.tariffModalType === 'SEA'
+                {filter.tariffModalType === ModalTypes.Sea
                   ? Object.keys(I18n.t(`pages.tariff.tariffTable.columns.SEA.${seaType}`)).map((each: string) =>
                     <TableCell key={each} align="left">
                       {each === 'validity' ? validityDisplay(row[each]) : row[each] }
@@ -283,7 +285,7 @@ const TariffTable = ({
   } else {
     return (
     <MainTariffContainer>
-      {filter.tariffModalType === 'SEA' &&
+      {filter.tariffModalType === ModalTypes.Sea &&
         <div>
           <ListSwitcher
             firstLabel={I18n.t('pages.tariff.modals.seaTypes.fcl')}

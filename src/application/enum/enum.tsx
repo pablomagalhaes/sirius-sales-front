@@ -21,4 +21,13 @@ enum TariffTypes {
   Export = 'export'
 }
 
-export { ModalTypes, OrderTypes, BusinessPartnerTypes, TariffTypes }
+enum OriginDestinyTypes {
+  Airport = 'AEROPORTO',
+  Seaport = 'PORTO',
+  Landport = 'RODOVIARIO',
+  Country = 'País',
+  City = 'Cidade',
+  State = 'Estado'
+}
+
+export { ModalTypes, OrderTypes, BusinessPartnerTypes, TariffTypes, OriginDestinyTypes }

@@ -33,8 +33,8 @@ import { orderButtonMenuItems } from './constants'
 import { I18n } from 'react-redux-i18n'
 import TariffTable from './components/TariffTable'
 import { getModalFilter, getActivityFilter, getValidityFilter } from './helpers'
-import TariffUploadModal from '../../components/TariffUploadModal/TariffUploadModal'
-import { SelectorsValuesTypes } from '../../../application/enum/tariffEnum'
+import TariffUploadModal from './components/TariffUploadModal/TariffUploadModal'
+import { SelectorsValuesTypes, QuickFilterTypes, IconTypes, ValidityTypes } from '../../../application/enum/tariffEnum'
 import { OrderTypes } from '../../../application/enum/enum'
 import useTariffs from '../../hooks/tariff/useTariffs'
 import Filter from './components/filter'
@@ -47,8 +47,8 @@ const Tariff = (): JSX.Element => {
   const [orderAsc, setOrderAsc] = useState(true)
   const [orderBy, setOrderBy] = useState<string>(SelectorsValuesTypes.Validity)
   const [quickFilterList, setQuickFilterList] = useState<any[]>([
-    { type: 'activity', status: I18n.t('pages.tariff.upload.import') },
-    { type: 'modal', status: I18n.t('pages.tariff.modals.air') }
+    { type: QuickFilterTypes.Activity, status: I18n.t('pages.tariff.upload.import') },
+    { type: QuickFilterTypes.Modal, status: I18n.t('pages.tariff.modals.air') }
   ])
   const [tabs, setTabs] = useState<any[]>()
   const [countryExpanded, setCountryExpanded] = useState<string>('')
@@ -59,11 +59,11 @@ const Tariff = (): JSX.Element => {
 
   const floatingButtonMenuItems = [
     {
-      iconType: 'import',
+      iconType: IconTypes.Import,
       label: I18n.t('pages.tariff.upload.import'),
       onClick: () => { setUploadType(I18n.t('pages.tariff.upload.import')); setOpen(true) }
     }, {
-      iconType: 'export',
+      iconType: IconTypes.Export,
       label: I18n.t('pages.tariff.upload.export'),
       onClick: () => { setUploadType(I18n.t('pages.tariff.upload.export')); setOpen(true) }
     }
@@ -88,7 +88,7 @@ const Tariff = (): JSX.Element => {
         }))
         regionsTabs.push({
           title: item.region,
-          icon: item.closeToValidity === true ? 'error' : validity === 'EXPIRED' ? 'warn' : '',
+          icon: item.closeToValidity === true ? IconTypes.Error : validity === ValidityTypes.Expired ? IconTypes.Warn : '',
           component: <Accordion content={content} />
         })
       })
@@ -139,37 +139,37 @@ const Tariff = (): JSX.Element => {
 
   const cardFilters = [
     {
-      iconType: 'import',
+      iconType: IconTypes.Import,
       status: I18n.t('pages.tariff.constants.cardFilters.import'),
       uniqueChoice: true
     },
     {
-      iconType: 'export',
+      iconType: IconTypes.Export,
       status: I18n.t('pages.tariff.constants.cardFilters.export'),
       uniqueChoice: true
     },
     {
-      iconType: 'plane',
+      iconType: IconTypes.Plane,
       status: I18n.t('pages.tariff.constants.cardFilters.air'),
       uniqueChoice: true
     },
     {
-      iconType: 'ship',
+      iconType: IconTypes.Ship,
       status: I18n.t('pages.tariff.constants.cardFilters.sea'),
       uniqueChoice: true
     },
     {
-      iconType: 'truck',
+      iconType: IconTypes.Truck,
       status: I18n.t('pages.tariff.constants.cardFilters.land'),
       uniqueChoice: true
     },
     {
-      iconType: 'warn',
+      iconType: IconTypes.Warn,
       status: I18n.t('pages.tariff.constants.cardFilters.closeToValidity'),
       uniqueChoice: true
     },
     {
-      iconType: 'alert',
+      iconType: IconTypes.Alert,
       status: I18n.t('pages.tariff.constants.cardFilters.overdue'),
       uniqueChoice: true
     }
