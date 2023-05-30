@@ -8,8 +8,10 @@ const useTariffsByCountry = (): any => {
   const [params, setParams] = useState()
 
   const getTariffsByCountry = async (): Promise<any> => {
-    const data = await API.getTariffsByCountry(params)
-    return data
+    if (params !== undefined) {
+      const data = await API.getTariffsByCountry(params)
+      return data
+    }
   }
 
   const { data, refetch } = useQuery(
