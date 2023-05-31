@@ -19,7 +19,6 @@ const useTariffsByCountry = (): any => {
     getTariffsByCountry,
     {
       enabled: params !== undefined,
-      staleTime: 0
     }
   )
   if (data !== undefined) return { content: data.content, totalElements: data.totalElements, setParams, refetch }
