@@ -1,6 +1,8 @@
 import styled from 'styled-components'
 import { withStyles } from '@material-ui/core/styles'
-import MuiTableCell from '@material-ui/core/TableCell'
+import Table from '@material-ui/core/TableCell'
+import TableHead from '@material-ui/core/TableHead'
+import TableBody from '@material-ui/core/TableBody'
 
 const RootContainer = styled.div`
   display: flex;
@@ -141,67 +143,7 @@ const TableContainer = styled.div`
   width: 100%;
   justify-content: flex-start;
   overflow-x: auto;
-`
-
-const BottomSideContainer = styled.div`
-  display: flex;
-  margin: 0;
-  flex-direction: column;
- 
-
-  > div {
-    background: none !important;
-  }
-
-  .floating-button-style {
-    position: fixed;
-    right: 40px;
-    bottom: 73px;
-    z-index: 99;
-  }
-
-  .MuiTypography-root {
-    text-transform: uppercase;
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 21px;
-    letter-spacing: 0.02em;
-  }
-
-  .MuiTab-fullWidth {
-    max-width: 100px !important;
-  }
-
-  .MuiBox-root {
-    padding: 0 !important;
-  }
-
-  .MuiAppBar-root {
-    border-bottom: 1px solid ${(props: any) => props.theme?.commercial?.pages?.proposal?.lineDivisorColor};
-  }
-
-  .MuiTab-wrapper > div {
-    text-align: center !important;
-    display: flex;
-    justify-content: center !important;
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 24px;
-    letter-spacing: 0.02em;
-  }
-
-  .MuiTabs-indicator {
-    background: #2E9990 !important;
-  }
-
-  .MuiAccordionSummary-root {
-    min-height: 60px;
-  }
-  .MuiTableHead-root {
-    text-transform: none !important;
-    font-size: 12px !important;
-  }
-
+  background-color: '#FFFFFF';
 `
 
 const PaginationContainer = styled.div`
@@ -219,6 +161,7 @@ const PaginationMainContainer = styled.div`
     padding-left: 10px !important;
   }
 `
+
 
 const TopContainer = styled.div`
   margin: 18px 0;
@@ -275,21 +218,28 @@ const ColButton = styled.div`
 
 const TableCell = withStyles({
   root: {
-    borderBottom: 'none'
+    // borderBottom: 'none'
+    backgroundColor: '#FFFFFF',
+    color: '#545454'
   }
-})(MuiTableCell)
+})(Table)
 
-const IconDisplay = styled.div`
-  display: flex;
-
-  .icon {
-    margin-right: 5px;
+const TableHeader = withStyles({
+  root: {
+    // borderBottom: 'none'
+    backgroundColor: '#FFFFFF',
+    fontWeight: 'bold',
+    color: '#000000'
   }
-`
-const RedColorSpan = styled.span`
-  color: ${(props: any) =>
-    props.theme?.commercial?.components?.itemModal?.redAsterisk};
-`
+})(TableHead)
+
+const TableBod = withStyles({
+  root: {
+    // borderBottom: 'none'
+    backgroundColor: '#FFFFFF',
+    color: '#545454'
+  }
+})(TableBody)
 
 export {
   RootContainer,
@@ -298,7 +248,6 @@ export {
   RightSideListHeaderContainer,
   TableContainer,
   TableCell,
-  BottomSideContainer,
   PaginationContainer,
   PaginationMainContainer,
   TopContainer,
@@ -316,7 +265,7 @@ export {
   MidleTypography,
   GridButton,
   RowButton,
-  IconDisplay,
-  RedColorSpan,
-  ColButton
+  ColButton,
+  TableHeader,
+  TableBod
 }

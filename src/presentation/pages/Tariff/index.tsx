@@ -23,7 +23,10 @@ import {
   TopButtonContainer,
   TopContainer,
   ButtonContainer,
-  MidleTypography
+  MidleTypography,
+  GridButton,
+  RowButton,
+  ColButton
 } from './style'
 import { ExitToApp } from '@material-ui/icons/'
 import { useHistory } from 'react-router-dom'
@@ -190,22 +193,37 @@ const Tariff = (): JSX.Element => {
           <span className="breadcrumbEnd">{I18n.t('pages.tariff.mainPage.tariff')}</span>
         </Breadcrumbs>
         <TopButtonContainer>
-          <ButtonContainer>
-            <Button
-              disabled={false}
-              text={I18n.t('pages.tariff.upload.mainLabel')}
-              tooltip={I18n.t('pages.tariff.upload.mainLabel')}
-              backgroundGreen={true}
-              icon="upload"
-              onAction={() => { }}
-              popover
-              position="left"
-
-              >
-              <FloatingMenu menuItems={floatingButtonMenuItems} />
-            </Button>
-            <TariffUploadModal setClose={() => setOpen(false)} open={open} type={uploadType}/>
-          </ButtonContainer>
+          <GridButton>
+            <RowButton>
+              <ColButton>
+                <Link
+                  color="inherit"
+                  onClick={() => history.push('/tarifario-processamentos')}
+                  className="breadcrumbInitial"
+                  style={{ cursor: 'pointer', textAlign: 'left', color: '#087a7a' }}
+                >
+                  Ver todos os processamentos
+                </Link>
+              </ColButton>
+              <ColButton>
+              <ButtonContainer>
+                <Button
+                  disabled={false}
+                  text={I18n.t('pages.tariff.upload.mainLabel')}
+                  tooltip={I18n.t('pages.tariff.upload.mainLabel')}
+                  backgroundGreen={true}
+                  icon="upload"
+                  onAction={() => { }}
+                  popover
+                  position="left"
+                  >
+                  <FloatingMenu menuItems={floatingButtonMenuItems} />
+                </Button>
+                <TariffUploadModal setClose={() => setOpen(false)} open={open} type={uploadType}/>
+              </ButtonContainer>
+              </ColButton>
+            </RowButton>
+          </GridButton>
         </TopButtonContainer>
       </TopContainer>
       <MidleContainer>

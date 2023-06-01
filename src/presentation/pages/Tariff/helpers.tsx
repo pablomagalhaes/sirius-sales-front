@@ -1,3 +1,4 @@
+import API from '../../../infrastructure/api'
 
 const getModalFilter = (quickFilterList): string => {
   const modalFilter = quickFilterList.find((item) => item.type === 'modal')
@@ -57,6 +58,15 @@ const getValidityFilter = (quickFilterList): string => {
   return type
 }
 
+const getTariffByFilter = async (filter?: any): Promise<any> => {
+  try {
+    const res = await API.getTariffsByFilter(filter.direction, filter.orderByList, filter.page, filter.size)
+    return res
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 const convertToDecimal = (value: number): string => String(value.toFixed(2)).replace('.', ',')
 
-export { getValidityFilter, getActivityFilter, getModalFilter, convertToDecimal }
+export { getValidityFilter, getActivityFilter, getModalFilter, convertToDecimal, getTariffByFilter }

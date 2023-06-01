@@ -305,6 +305,17 @@ const getTariffs = async (activity: string, modal: string, validity?: string): P
   }
 }
 
+const getTariffsByFilter = async (direction: string, orderByList: string, page: number, size: number): Promise<any> => {
+  const url: string = `/sirius-tariff-api/upload/file/filter?direction=${String(direction)}&orderByList=${String(orderByList)}&page=${Number(page)}&size=${Number(size)}`
+  try {
+    const res = await instance.get(url)
+    return res.data
+  } catch (error) {
+    toast.error(String(error) + ' | Request:  ' + String(url))
+  }
+}
+
+
 const downloadProposal = async (language: string, idProposal: string): Promise<any> => {
   const url: string = `/sirius-business-proposal-api/proposal/report/${idProposal}/PDF/${language}`
   try {
@@ -394,7 +405,8 @@ const API = {
   getTariffsByCountry,
   downloadProposal,
   editTariff,
-  uploadTariff
+  uploadTariff,
+  getTariffsByFilter
 }
 
 export default API
