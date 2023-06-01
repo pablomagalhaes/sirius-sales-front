@@ -35,27 +35,10 @@ enum QuickFilterTypes {
   Modal = 'modal'
 }
 
-enum IconTypes {
-  Error = 'error',
-  Warn = 'warn',
-  Import = 'import',
-  Export = 'export',
-  Plane = 'plane',
-  Ship = 'ship',
-  Truck = 'truck',
-  Alert = 'alert',
-  Main = 'main'
-}
-
 enum ValidityTypes {
   Expired = 'EXPIRED',
   CloseValidity = 'CLOSE_TO_VALIDITY',
   Valid = 'VALID'
-}
-
-enum AcitivityTypes {
-  Import = 'IMPORT',
-  Export = 'EXPORT'
 }
 
 export {
@@ -63,7 +46,5 @@ export {
   TxChargeTypes,
   TariffItemsTypes,
   QuickFilterTypes,
-  IconTypes,
-  ValidityTypes,
-  AcitivityTypes
+  ValidityTypes
 }

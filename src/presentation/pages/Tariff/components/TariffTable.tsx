@@ -13,8 +13,8 @@ import moment from 'moment'
 import { I18n } from 'react-redux-i18n'
 import useTariffsByCountry from '../../../hooks/tariff/useTariffsByCountry'
 import { TariffContext } from '../context/TariffContext'
-import { TxChargeTypes, TariffItemsTypes } from '../../../../application/enum/tariffEnum'
-import { ModalTypes } from '../../../../application/enum/enum'
+import { TariffItemsTypes } from '../../../../application/enum/tariffEnum'
+import { ModalTypes, TxChargeTypes } from '../../../../application/enum/enum'
 
 import { convertToDecimal } from '../helpers'
 

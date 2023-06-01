@@ -30,4 +30,35 @@ enum OriginDestinyTypes {
   State = 'Estado'
 }
 
-export { ModalTypes, OrderTypes, BusinessPartnerTypes, TariffTypes, OriginDestinyTypes }
+enum TxChargeTypes {
+  Lcl = 'LCL', 
+  Fcl = 'FCL'
+}
+
+enum IconTypes {
+  Error = 'error',
+  Warn = 'warn',
+  Import = 'import',
+  Export = 'export',
+  Plane = 'plane',
+  Ship = 'ship',
+  Truck = 'truck',
+  Alert = 'alert',
+  Main = 'main'
+}
+
+enum AcitivityTypes {
+  Import = 'IMPORT',
+  Export = 'EXPORT'
+}
+
+export { 
+  ModalTypes, 
+  OrderTypes, 
+  BusinessPartnerTypes, 
+  TariffTypes, 
+  OriginDestinyTypes, 
+  TxChargeTypes, 
+  IconTypes,
+  AcitivityTypes
+}

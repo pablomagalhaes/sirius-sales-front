@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'
 import { RowFilter } from 'fiorde-fe-components'
 
 import { I18n } from 'react-redux-i18n'
-import { ModalTypes, OriginDestinyTypes } from '../../../../application/enum/enum'
+import { ModalTypes, OriginDestinyTypes, AcitivityTypes } from '../../../../application/enum/enum'
 import {
   useCurrencies,
   useOriginDestination,
@@ -13,7 +13,6 @@ import {
   useBusinessPartnerByType
 } from '../../../hooks'
 import { TariffContext } from '../context/TariffContext'
-import { AcitivityTypes } from '../../../../application/enum/tariffEnum'
 
 interface FilterProps {
   cleanFilter: () => void

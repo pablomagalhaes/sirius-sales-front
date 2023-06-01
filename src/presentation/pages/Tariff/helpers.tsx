@@ -1,5 +1,5 @@
-import { ValidityTypes, IconTypes, AcitivityTypes } from '../../../application/enum/tariffEnum'
-import { ModalTypes } from '../../../application/enum/enum'
+import { ValidityTypes } from '../../../application/enum/tariffEnum'
+import { ModalTypes, IconTypes, AcitivityTypes } from '../../../application/enum/enum'
 
 const getModalFilter = (quickFilterList): string => {
   const modalFilter = quickFilterList.find((item) => item.type === 'modal')
