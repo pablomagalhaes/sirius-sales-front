@@ -31,7 +31,7 @@ enum OriginDestinyTypes {
 }
 
 enum TxChargeTypes {
-  Lcl = 'LCL', 
+  Lcl = 'LCL',
   Fcl = 'FCL'
 }
 
@@ -52,13 +52,13 @@ enum AcitivityTypes {
   Export = 'EXPORT'
 }
 
-export { 
-  ModalTypes, 
-  OrderTypes, 
-  BusinessPartnerTypes, 
-  TariffTypes, 
-  OriginDestinyTypes, 
-  TxChargeTypes, 
+export {
+  ModalTypes,
+  OrderTypes,
+  BusinessPartnerTypes,
+  TariffTypes,
+  OriginDestinyTypes,
+  TxChargeTypes,
   IconTypes,
   AcitivityTypes
 }

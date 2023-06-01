@@ -8,11 +8,6 @@ enum SelectorsValuesTypes {
   Validity = 'validityDate',
 }
 
-enum TxChargeTypes {
-  Lcl = 'LCL',
-  Fcl = 'FCL'
-}
-
 enum TariffItemsTypes {
   Vlgeneralded= 'VLGERALDED',
   Vlimoded = 'VLIMODED',
@@ -43,7 +38,6 @@ enum ValidityTypes {
 
 export {
   SelectorsValuesTypes,
-  TxChargeTypes,
   TariffItemsTypes,
   QuickFilterTypes,
   ValidityTypes
