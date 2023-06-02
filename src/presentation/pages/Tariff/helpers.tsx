@@ -1,4 +1,6 @@
 import API from '../../../infrastructure/api'
+import { ValidityTypes } from '../../../application/enum/tariffEnum'
+import { ModalTypes, IconTypes, AcitivityTypes } from '../../../application/enum/enum'
 
 const getModalFilter = (quickFilterList): string => {
   const modalFilter = quickFilterList.find((item) => item.type === 'modal')
@@ -6,13 +8,13 @@ const getModalFilter = (quickFilterList): string => {
   if (modalFilter !== undefined) {
     switch (modalFilter.status) {
       case 'Aéreo':
-        type = 'AIR'
+        type = ModalTypes.Air
         break
       case 'Marítimo':
-        type = 'SEA'
+        type = ModalTypes.Sea
         break
       case 'Rodoviário':
-        type = 'LAND'
+        type = ModalTypes.Land
         break
       default:
         break
@@ -27,10 +29,10 @@ const getActivityFilter = (quickFilterList): string => {
   if (activityFilter !== undefined) {
     switch (activityFilter.status) {
       case 'Importação':
-        type = 'IMPORT'
+        type = AcitivityTypes.Import
         break
       case 'Exportação':
-        type = 'EXPORT'
+        type = AcitivityTypes.Export
         break
       default:
         break
@@ -41,15 +43,15 @@ const getActivityFilter = (quickFilterList): string => {
 
 const getValidityFilter = (quickFilterList): string => {
   const validityFilter = quickFilterList
-    .find((item) => item.type === 'warn' || item.type === 'main')
-  let type: string = 'VALID'
+    .find((item) => item.type === IconTypes.Warn || item.type === IconTypes.Main)
+  let type: string = ValidityTypes.Valid
   if (validityFilter !== undefined) {
     switch (validityFilter.status) {
       case 'Vencimento próximo':
-        type = 'CLOSE_TO_VALIDITY'
+        type = ValidityTypes.CloseValidity
         break
       case 'Vencidas':
-        type = 'EXPIRED'
+        type = ValidityTypes.Expired
         break
       default:
         break

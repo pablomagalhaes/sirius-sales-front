@@ -1,6 +1,6 @@
 import { Modal, Grid, FormLabel, MenuItem, TableHead, TableBody, Box } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
-import CloseIcon from '../../../application/icons/CloseIcon'
+import CloseIcon from '../../../../../application/icons/CloseIcon'
 import moment from 'moment'
 import {
   ButtonDiv,
@@ -16,7 +16,7 @@ import {
   Input
 } from './LandTariffModalStyles'
 import { I18n } from 'react-redux-i18n'
-import ControlledInput from '../ControlledInput'
+import ControlledInput from '../../../../components/ControlledInput'
 import {
   HeaderDiv,
   RedColorSpan,
@@ -24,15 +24,16 @@ import {
   Title,
   CloseIconContainer,
   RowDiv
-} from '../StyledComponents/modalStyles'
+} from '../../../../components/StyledComponents/modalStyles'
 import { Button } from 'fiorde-fe-components'
 import { Autocomplete } from '@material-ui/lab'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
-import { NumberInput, StyledPaper } from '../../pages/NewProposal/steps/StepsStyles'
-import FormatNumber from '../../../application/utils/formatNumber'
-import ControlledSelect from '../../components/ControlledSelect'
-import API from '../../../infrastructure/api'
-import { useCurrencies, useFrequency } from '../../hooks'
+import { NumberInput, StyledPaper } from '../../../NewProposal/steps/StepsStyles'
+import FormatNumber from '../../../../../application/utils/formatNumber'
+import ControlledSelect from '../../../../components/ControlledSelect'
+import API from '../../../../../infrastructure/api'
+import { useCurrencies, useFrequency } from '../../../../hooks'
+import { TariffItemsTypes } from '../../../../../application/enum/tariffEnum'
 
 interface TariffValues {
   idTariffTypeValues: number
@@ -103,10 +104,10 @@ const LandTariffModal = ({
         transitTime: dataProp.transitTime,
         currency: dataProp.currency,
         dtValidity: new Date(dataProp.validityDate).toLocaleDateString('pt-BR'),
-        generalCargoDed: getTariffValue('VLGERALDED'),
-        generalCargoCons: getTariffValue('VLGERALCONS'),
-        imoCargoDed: getTariffValue('VLIMODED'),
-        imoCargoCons: getTariffValue('VLIMOCONS'),
+        generalCargoDed: getTariffValue(TariffItemsTypes.Vlgeneralded),
+        generalCargoCons: getTariffValue(TariffItemsTypes.Vlgeneralcons),
+        imoCargoDed: getTariffValue(TariffItemsTypes.Vlimoded),
+        imoCargoCons: getTariffValue(TariffItemsTypes.Vlimocons),
         txRoute: dataProp.route,
         frequency: dataProp.frequency,
         originDestination: `${String(dataProp.originCity)} > ${String(dataProp.destinationCity)}`
@@ -199,7 +200,7 @@ const LandTariffModal = ({
     <Modal open={open} onClose={handleOnClose}>
       <ModalDiv>
         <HeaderDiv>
-          <Title>Detalhamento da tarifa - Rodoviário</Title>
+          <Title>{I18n.t('pages.tariff.titles.land')}</Title>
           <RowReverseDiv>
             <CloseIconContainer>
               <CloseIcon onClick={handleOnClose} />

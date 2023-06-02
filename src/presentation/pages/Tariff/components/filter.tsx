@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'
 import { RowFilter } from 'fiorde-fe-components'
 
 import { I18n } from 'react-redux-i18n'
-import { ModalTypes } from '../../../../application/enum/enum'
+import { ModalTypes, OriginDestinyTypes, AcitivityTypes } from '../../../../application/enum/enum'
 import {
   useCurrencies,
   useOriginDestination,
@@ -48,36 +48,36 @@ const Filter = ({
     let type = ''
 
     switch (filter.tariffModalType) {
-      case 'AIR':
-        type = 'AEROPORTO'
+      case ModalTypes.Air:
+        type = OriginDestinyTypes.Airport
         break
-      case 'SEA':
-        type = 'PORTO'
+      case ModalTypes.Sea:
+        type = OriginDestinyTypes.Seaport
         break
-      case 'LAND':
-        type = 'RODOVIARIO'
+      case ModalTypes.Land:
+        type = OriginDestinyTypes.Landport
         break
       default:
         break
     }
-    if (type !== 'RODOVIARIO') {
+    if (type !== OriginDestinyTypes.Landport) {
       originDestinationList?.forEach((item): void => {
         if (item.type === type) {
           actualList.push(`${String(item.id)} - ${String(item.name)}`)
         }
       })
     } else {
-      if (land === 'País') {
+      if (land === OriginDestinyTypes.Country) {
         originDestinationCountries?.forEach((item): void => {
           actualList.push(`${String(item.name)}`)
         })
       }
-      if (land === 'Estado') {
+      if (land === OriginDestinyTypes.State) {
         originDestinationStates?.forEach((item): void => {
           actualList.push(`${String(item.txState)} (${String(item.txCountry)})`)
         })
       }
-      if (land === 'Cidade') {
+      if (land === OriginDestinyTypes.City) {
         originDestinationCities?.forEach((item): void => {
           actualList.push(`${String(item.txCity)} (${String(item.txCountry)})`)
         })
@@ -88,8 +88,8 @@ const Filter = ({
 
   const getLandLabels = (): string[] => {
     let landLabels: string[] = []
-    if (filter.tariffModalType === 'LAND') {
-      landLabels = ['País', 'Estado', 'Cidade']
+    if (filter.tariffModalType === ModalTypes.Land) {
+      landLabels = [OriginDestinyTypes.Country, OriginDestinyTypes.State, OriginDestinyTypes.City]
     }
     return landLabels
   }
@@ -145,7 +145,7 @@ const Filter = ({
     )
     if (selectedOriginsDestinations !== undefined) {
       const modal: string = filter.tariffModalType
-      if (modal.length > 0 && modal !== 'LAND') {
+      if (modal.length > 0 && modal !== ModalTypes.Land) {
         const idOrigin = selectedOriginsDestinations.pickerSelecteds1
           .map((name: string) => name.split(' - ')[0])
         const idDestination = selectedOriginsDestinations.pickerSelecteds2
@@ -165,7 +165,7 @@ const Filter = ({
         }
       }
 
-      if (modal.length > 0 && modal === 'LAND') {
+      if (modal.length > 0 && modal === ModalTypes.Land) {
         const originCountry = selectedOriginsDestinations.pickerSelecteds1
           .map((locationFiltered: string) => originDestinationCountries
             .find((country) => country.name === locationFiltered)?.id)
@@ -392,9 +392,9 @@ const Filter = ({
     },
     {
       label: `${String(I18n.t('pages.tariff.orderSelectors.origin'))}/${String(I18n.t('pages.tariff.orderSelectors.destination'))}`,
-      pickerListOptions1: getOriginDestinyList('País'),
-      pickerListOptions2: getOriginDestinyList('Estado'),
-      pickerListOptions3: getOriginDestinyList('Cidade'),
+      pickerListOptions1: getOriginDestinyList(OriginDestinyTypes.Country),
+      pickerListOptions2: getOriginDestinyList(OriginDestinyTypes.State),
+      pickerListOptions3: getOriginDestinyList(OriginDestinyTypes.City),
       pickerLabel1: I18n.t('pages.tariff.orderSelectors.origin'),
       pickerLabel2: I18n.t('pages.tariff.orderSelectors.destination'),
       pickerLandLabels: getLandLabels()
@@ -444,9 +444,9 @@ const Filter = ({
   }
 
   const createMenuItems = (): any => {
-    if (filter.tariffModalType === 'SEA' && filter.tariffType === 'IMPORT') return [agent, ...menuItemsSelector, specification]
-    else if (filter.tariffType === 'IMPORT') return [agent, ...menuItemsSelector]
-    else if (filter.tariffModalType === 'SEA' && filter.tariffType === 'EXPORT') return [...menuItemsSelector, specification]
+    if (filter.tariffModalType === ModalTypes.Sea && filter.tariffType === AcitivityTypes.Import) return [agent, ...menuItemsSelector, specification]
+    else if (filter.tariffType === AcitivityTypes.Import) return [agent, ...menuItemsSelector]
+    else if (filter.tariffModalType === ModalTypes.Sea && filter.tariffType === AcitivityTypes.Export) return [...menuItemsSelector, specification]
     else return [...menuItemsSelector]
   }
 

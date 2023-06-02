@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { Box, Table, TableRow, TableCell } from '@material-ui/core'
-import { primary } from '../../../application/themes'
+import { primary } from '../../../../../application/themes'
 
 styled(Box)`
   position: absolute;

@@ -123,22 +123,21 @@
       "ImoCargoDed": "IMO Cargo ded.: ",
       "ImoCargoCons": "IMO Cargo cons.: ",
       "agentLandCompany": "Agent / Land Carrier: "
-
+    },
+    "ProposalDisplayModal": {
+      "title": "Download the proposal",
+      "buttonText": "Confirm language and download"
+    },
+    "Pagination": {
+      "tooltipBack": "Anterior",
+      "tooltipFirst": "Primeira",
+      "tooltipLast": "Última",
+      "tooltipNext": "Próxima",
+      "labelDisplay": "exibindo",
+      "labelDisplayedRows": "de",
+      "labelRowsPerPage": "Propostas por página"
+    }
   },
-  "ProposalDisplayModal": {
-    "title": "Download the proposal",
-    "buttonText": "Confirm language and download"
-  },
-  "Pagination": {
-    "tooltipBack": "Anterior",
-    "tooltipFirst": "Primeira",
-    "tooltipLast": "Última",
-    "tooltipNext": "Próxima",
-    "labelDisplay": "exibindo",
-    "labelDisplayedRows": "de",
-    "labelRowsPerPage": "Propostas por página"
-  }
-},
   "pages": {
     "newProposal": {
       "buttonFinish": "Finish proposal",
@@ -427,7 +426,7 @@
             }
           }
         }
-      },  
+      },
       "constants": {
         "frequency": {
           "daily": "DIÁRIO",
@@ -445,12 +444,11 @@
           "overdue": "Vencidas"
         }
       },
-      "filter": {
-        "addFilterLabel": "Filtros avançados",
-        "applyLabel": "Aplicar",
-        "approveLabel": "Salvar Filtro",
-        "cleanLabel": "Limpar",
-        "myFilterLabel": "Meus Filtros"
+      "titles": {
+        "land": "Detalhamento da tarifa - Rodoviário",
+        "air": "Detalhamento da tarifa - Aéreo",
+        "seaLcl": "Detalhamento da tarifa - Marítimo LCL",
+        "seaFcl": "Detalhamento da tarifa - Marítimo FCL"
       },
       "tariffTableProcessing": {
         "sucessLabel": "SUCESSO",
@@ -476,13 +474,13 @@
                 "air": {
                   "cia": "Error to read column Air Cia"
                 },
-                "origin":{
+                "origin": {
                   "": "Error to read column Origin",
                   "country": "Error to read column Origin Country",
                   "state": "Error to read column Origin State",
                   "city": "Error to read column Origin City"
                 },
-                "destiny":{
+                "destiny": {
                   "": "Error to read column Destiny",
                   "country": "Error to read column Destiny Country",
                   "state": "Error to read column Destiny State",
@@ -503,7 +501,7 @@
                 "1ton": "Error to read column 1ton",
                 "route": "Error to read column Route",
                 "frequency": "Error to read column Frequency",
-                "road":{
+                "road": {
                   "transport": "Error to read column Road Transport"
                 },
                 "vl": {
@@ -558,5 +556,5 @@
         }
       }
     }
-  }  
+  }
 }

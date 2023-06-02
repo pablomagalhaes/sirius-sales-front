@@ -1,6 +1,6 @@
 import { Modal, Grid, FormLabel, RadioGroup, FormControlLabel } from '@material-ui/core'
 import React, { useState } from 'react'
-import CloseIcon from '../../../application/icons/CloseIcon'
+import CloseIcon from '../../../../../application/icons/CloseIcon'
 import {
   StyledRadio,
   ButtonDiv,
@@ -19,11 +19,11 @@ import {
   RowReverseDiv,
   Title,
   CloseIconContainer
-} from '../StyledComponents/modalStyles'
+} from '../../../../components/StyledComponents/modalStyles'
 import { Button, DragAndDrop } from 'fiorde-fe-components'
-import { usePartnerList } from '../../hooks'
-import useUploadTariff from '../../hooks/tariff/useUploadTariff'
-import { TariffTypes } from '../../../application/enum/enum'
+import { usePartnerList } from '../../../../hooks'
+import useUploadTariff from '../../../../hooks/tariff/useUploadTariff'
+import { TariffTypes } from '../../../../../application/enum/enum'
 
 interface AgentType {
   name: string
