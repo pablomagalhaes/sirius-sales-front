@@ -19,7 +19,7 @@ import { I18n } from 'react-redux-i18n'
 
 import ItemErrorModal from './ItemErrorModal/ItemErrorModal'
 import { getModalFilter, getTariffByFilter, getActivityFilter, getValidityFilter } from './helpers'
-import TariffUploadModal from '../../components/TariffUploadModal/TariffUploadModal'
+import TariffUploadModal from './components/TariffUploadModal/TariffUploadModal'
 import TariffProcessingTable from './TariffProcessingTable'
 import useTariffs from '../../hooks/tariff/useTariffs'
 import Filter from './components/filter'
