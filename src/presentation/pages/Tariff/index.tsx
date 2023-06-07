@@ -39,6 +39,7 @@ import { OrderTypes, IconTypes } from '../../../application/enum/enum'
 import useTariffs from '../../hooks/tariff/useTariffs'
 import Filter from './components/filter'
 import { TariffContext, filterDefault } from './context/TariffContext'
+import TariffImportModal from './components/TariffImportModal/TariffImportModal'
 
 const Tariff = (): JSX.Element => {
   const { data: tariffList = [], changeFilterList } = useTariffs()
@@ -204,7 +205,7 @@ const Tariff = (): JSX.Element => {
               >
               <FloatingMenu menuItems={floatingButtonMenuItems} />
             </Button>
-            <TariffUploadModal setClose={() => setOpen(false)} open={open} type={uploadType}/>
+            <TariffImportModal setClose={() => setOpen(false)} open={open}/>
           </ButtonContainer>
         </TopButtonContainer>
       </TopContainer>
