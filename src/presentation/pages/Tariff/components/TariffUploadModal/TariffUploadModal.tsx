@@ -174,7 +174,7 @@ const TariffUploadModal = ({
               <Form variant="outlined">
                 <SelectEmpty
                   labelId="demo-simple-select-outlined-label"
-                  id="demo-simple-select-outlined"
+                  id="siriuscomercial_tariff-upload_select_upload"
                   value={data.agent.name}
                   displayEmpty
                   inputProps={{ 'aria-label': 'Without label' }}
@@ -225,6 +225,7 @@ const TariffUploadModal = ({
               <Grid item xs={6}>
                 <CloseButtonDiv>
                   <Button
+                    id="siriuscomercial_tariff-upload_button_close"
                     disabled={false}
                     text={I18n.t('pages.tariff.upload.closeButtonLabel')}
                     tooltip={I18n.t('pages.tariff.upload.closeButtonLabel')}
@@ -238,6 +239,7 @@ const TariffUploadModal = ({
                 <ButtonDiv>
                   {progress === 0
                     ? <Button
+                      id="siriuscomercial_tariff-upload_button_iniciar-procesamento"
                       disabled={file == null}
                       text={I18n.t('pages.tariff.upload.startButtonLabel')}
                       tooltip={I18n.t('pages.tariff.upload.startButtonLabel')}
@@ -246,6 +248,7 @@ const TariffUploadModal = ({
                       onAction={uploadTariff}
                     />
                     : <Button
+                      id="siriuscomercial_tariff-upload_button_processando"
                       disabled={isSuccess === false}
                       text={I18n.t('pages.tariff.upload.processingButtonLabel')}
                       tooltip={I18n.t('pages.tariff.upload.processingButtonLabel')}

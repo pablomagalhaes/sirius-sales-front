@@ -237,8 +237,8 @@ const AirTariffModal = ({
                     <TableBodyRow>
                       <StyledTableCell width="45%" align="left">
                         <ColumnDiv>
-                          <span>{data.agent}</span>
-                          <span>{data.airCompany}</span>
+                          <span id="siriuscomercial_tariff-AirTariffModal_span_agente">{data.agent}</span>
+                          <span id="siriuscomercial_tariff-AirTariffModal_span_compania">{data.airCompany}</span>
                         </ColumnDiv>
                       </StyledTableCell>
                       <StyledTableCell width="40%" align="left">
@@ -258,6 +258,7 @@ const AirTariffModal = ({
                                 <div ref={params.InputProps.ref}>
                                   <Input
                                     {...params.inputProps}
+                                    id="siriuscomercial_tariff-AirTariffModal_select_currency"
                                     width="84px"
                                     placeholder={data.currency}
                                     toolTipTitle={I18n.t('components.tariffModal.requiredField')}
@@ -284,6 +285,7 @@ const AirTariffModal = ({
                 {I18n.t('components.tariffModal.minValue')}<RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <NumberInput
+                id="siriuscomercial_tariff-AirTariffModal_input_minValue"
                 decimalSeparator={','}
                 thousandSeparator={'.'}
                 decimalScale={2}
@@ -305,6 +307,7 @@ const AirTariffModal = ({
                   {I18n.t('components.tariffModal.weight1')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
+                  id="siriuscomercial_tariff-AirTariffModal_input_weight1"
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -324,6 +327,7 @@ const AirTariffModal = ({
                   {I18n.t('components.tariffModal.weight2')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
+                  id="siriuscomercial_tariff-AirTariffModal_input_weight2"
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -343,6 +347,7 @@ const AirTariffModal = ({
                   {I18n.t('components.tariffModal.weight3')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
+                  id="siriuscomercial_tariff-AirTariffModal_input_weight3"
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -362,6 +367,7 @@ const AirTariffModal = ({
                   {I18n.t('components.tariffModal.weight4')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
+                  id="siriuscomercial_tariff-AirTariffModal_input_weight4"
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -381,6 +387,7 @@ const AirTariffModal = ({
                   {I18n.t('components.tariffModal.weight5')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
+                  id="siriuscomercial_tariff-AirTariffModal_input_weight5"
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -402,7 +409,7 @@ const AirTariffModal = ({
                 {I18n.t('components.tariffModal.validity')}<RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <NumberInput
-                id="no-label-field"
+                id="siriuscomercial_tariff-AirTariffModal_input_data"
                 format={'##/##/####'}
                 mask={['D', 'D', 'M', 'M', 'Y', 'Y', 'Y', 'Y']}
                 placeholder="DD/MM/YYYY"
@@ -425,7 +432,7 @@ const AirTariffModal = ({
               </FormLabel>
               <ControlledSelect
                 labelId="frequency-label"
-                id="frequency"
+                id="siriuscomercial_tariff-AirTariffModal_select_frequency"
                 value={data.frequency}
                 onChange={(e) => setData({ ...data, frequency: e.target.value })}
                 displayEmpty
@@ -456,6 +463,7 @@ const AirTariffModal = ({
                   <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <ControlledInput
+                id="siriuscomercial_tariff-AirTariffModal_input_txRoute"
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
                 invalid={
                   invalidInput &&
@@ -479,6 +487,7 @@ const AirTariffModal = ({
                   <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <ControlledInput
+                id="siriuscomercial_tariff-AirTariffModal_input_transitTime"
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
                 invalid={
                   invalidInput &&
@@ -496,6 +505,7 @@ const AirTariffModal = ({
               <Grid item xs={10}>
                 <ButtonDiv>
                   <Button
+                    id="siriuscomercial_tariff-AirTariffModal_button_cancel"
                     disabled={false}
                     text={I18n.t('components.tariffModal.cancel')}
                     tooltip={I18n.t('components.tariffModal.cancel')}
@@ -508,6 +518,7 @@ const AirTariffModal = ({
               <Grid item xs={2}>
                 <ButtonDiv>
                   <Button
+                    id="siriuscomercial_tariff-AirTariffModal_button_save"
                     disabled={false}
                     text={I18n.t('components.tariffModal.save')}
                     tooltip={I18n.t('components.tariffModal.save')}

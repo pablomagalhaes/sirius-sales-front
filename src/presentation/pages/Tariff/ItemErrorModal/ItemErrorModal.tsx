@@ -70,13 +70,13 @@ const ItemErrorModal = ({
           <Grid container spacing={5} style={{ width: '100%' }}>
             <Grid item xs={12}>
               <UnorderedList>
-                <li><span>{I18n.t('pages.tariff.itemErrorModal.txFileName')}</span> {item?.txFileName}</li>
-                <li><span>{I18n.t('pages.tariff.itemErrorModal.dtProcess')}</span> {moment(item?.dtProcess).format('DD/MM/YYYY')}</li>
-                <li><span>{I18n.t('pages.tariff.itemErrorModal.userCreation')}</span> {item?.userCreation}</li>
-                <li><span>{I18n.t('pages.tariff.itemErrorModal.tariffType')}</span> {item?.tariffType}</li>
-                <li><span>{I18n.t('pages.tariff.itemErrorModal.tariffModalType')}</span> {item?.tariffModalType}</li>
-                <li><span>{I18n.t('pages.tariff.itemErrorModal.nmAgent')}</span> {item?.nmAgent}</li>
-                <li><span style={{float: 'left'}}>{I18n.t('pages.tariff.itemErrorModal.txStatus')}</span>
+                <li><span id="siriuscomercial_tariff-tariff-processing-itemErrorModal_span_nome">{I18n.t('pages.tariff.itemErrorModal.txFileName')}</span> {item?.txFileName}</li>
+                <li><span id="siriuscomercial_tariff-tariff-processing-itemErrorModal_span_data-hora-processamento">{I18n.t('pages.tariff.itemErrorModal.dtProcess')}</span> {moment(item?.dtProcess).format('DD/MM/YYYY')}</li>
+                <li><span id="siriuscomercial_tariff-tariff-processing-itemErrorModal_span_usuario">{I18n.t('pages.tariff.itemErrorModal.userCreation')}</span> {item?.userCreation}</li>
+                <li><span id="siriuscomercial_tariff-tariff-processing-itemErrorModal_span_tipo">{I18n.t('pages.tariff.itemErrorModal.tariffType')}</span> {item?.tariffType}</li>
+                <li><span id="siriuscomercial_tariff-tariff-processing-itemErrorModal_span_modal">{I18n.t('pages.tariff.itemErrorModal.tariffModalType')}</span> {item?.tariffModalType}</li>
+                <li><span id="siriuscomercial_tariff-tariff-processing-itemErrorModal_span_agente">{I18n.t('pages.tariff.itemErrorModal.nmAgent')}</span> {item?.nmAgent}</li>
+                <li><span id="siriuscomercial_tariff-tariff-processing-itemErrorModal_span_status-do-processamento" style={{ float: 'left' }}>{I18n.t('pages.tariff.itemErrorModal.txStatus')}</span>
                 <div style={{ borderRadius: '50%', height: '15px', width: '15px', marginLeft: '10px', float: 'left', backgroundColor: `${chooseStatusColor(item?.txStatus)}` }}></div>
                   <div style={{ lineHeight: '16px', marginLeft: '5px', float: 'left' }}>
                     {chooseStatusLabel(item?.txStatus)}
@@ -110,7 +110,7 @@ const ItemErrorModal = ({
               <Grid item xs={12}>
                 <Box display="flex" justifyContent="flex-end">
                  <Button
-                  id="siriuslog_tariff-tariff-processing_button_close"
+                  id="siriuscomercial_tariff-tariff-processing_button_close"
                   disabled={false}
                   text={I18n.t('pages.tariff.itemErrorModal.close')}
                   tooltip={I18n.t('')}
