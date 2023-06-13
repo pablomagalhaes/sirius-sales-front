@@ -36,17 +36,9 @@ enum ValidityTypes {
   Valid = 'VALID'
 }
 
-enum ImportTariff {
-  company = 'dsBusinessPartnerTransporter',
-  agent = 'nmAgent',
-  validity = 'validityDate',
-  currency = 'currency'
-}
-
 export {
   SelectorsValuesTypes,
   TariffItemsTypes,
   QuickFilterTypes,
-  ValidityTypes,
-  ImportTariff
+  ValidityTypes
 }

@@ -42,7 +42,7 @@ import { usePartnerList, useOriginDestination } from '../../../../hooks'
 import { OriginDestinyTypes } from '../../../../../application/enum/enum'
 import { TariffContext } from '../../context/TariffContext'
 import useTariffsByCountry from '../../../../hooks/tariff/useTariffsByCountry'
-import { TariffItemsTypes, ImportTariff } from '../../../../../application/enum/tariffEnum'
+import { TariffItemsTypes } from '../../../../../application/enum/tariffEnum'
 
 interface AgentType {
   name: string
@@ -77,7 +77,6 @@ const TariffImportModal = ({
   const { content: tariffData, totalElements: totalTariffList, setParams, refetch } = useTariffsByCountry()
 
   const [data, setData] = useState<TariffUploadData>(initialState)
-  const [tableData, setTableData] = useState<any>([])
   const [selecteds, setSelecteds] = useState<string[]>([])
   const [invalidInput, setInvalidInput] = useState(false)
 
@@ -99,23 +98,13 @@ const TariffImportModal = ({
     )
   }
 
-  const mockedData = [{
-    id: '1',
-    airCompany: 'TAM CARGO',
-    agent: 'MOLFINO HNS',
-    validity: '04/10/2022',
-    currency: 'USD',
-    minimun: '90,00',
-    Until45: '4,67',
-    Until100: '4,50',
-    Until300: '4,50',
-    Until500: '4,50',
-    Until1000: '4,02',
-  }]
-
   useEffect(() => {
     setParams(filter)
   }, [filter])
+
+  useEffect(() => {
+    if(open === true) setParams()
+  }, [open])
 
   const getOriginDestinyList = (): string[] => {
     const actualList: string[] = []
@@ -131,9 +120,8 @@ const TariffImportModal = ({
     const tariffValue = tariff.tariffTypeValues.find(each => each.tariffType.description === type)
     return tariffValue?.value
   }
-  console.log(tariffData)
 
-  const createTable = (): void => {
+  const createTable = (): any => {
     const tariffs: any = []
     tariffData.forEach((tariff: any) => {
       tariffs.push({
@@ -150,23 +138,36 @@ const TariffImportModal = ({
         weight5: getTariffValue(TariffItemsTypes.Until1000, tariff),
       })
     })
-    setTableData([...tariffs])
+    return tariffs
   }
-
+  console.log(tariffData)
   const searchTariffs = (): void => {
     if(validateData() === true) {
       setInvalidInput(false)
-      setFilter((filter: any) => ({
-        ...filter, 
-        tariffModalType: 'AIR', 
-        idBusinessPartnerAgent: data.agent.id, 
-        idOrigin: data.origin.split(' - ')[0],
-        idDestination: data.destiny.split(' - ')[0]
-      }))
+      if(data.agent.id === null) {
+        setFilter((filter: any) => ({
+          ...filter,
+          size: 3,
+          tariffModalType: 'AIR', 
+          idOrigin: data.origin.split(' - ')[0],
+          idDestination: data.destiny.split(' - ')[0]
+        }))
+      } else {
+        setFilter((filter: any) => ({
+          ...filter,
+          size: 3,
+          tariffModalType: 'AIR', 
+          idBusinessPartnerAgent: data.agent.id, 
+          idOrigin: data.origin.split(' - ')[0],
+          idDestination: data.destiny.split(' - ')[0]
+        }))
+      }
     } else {
       setInvalidInput(true)
     } 
   }
+
+  console.log(totalTariffList)
 
   return (
     <Modal open={open} onClose={handleOnClose}>
@@ -233,7 +234,7 @@ const TariffImportModal = ({
             </Grid>
             <Grid item xs={6}>
             <FormLabel component="legend" error={
-              (invalidInput && data.origin.length === 0)
+              (invalidInput && data.destiny.length === 0)
             }>
                 {I18n.t('pages.tariff.tariffImport.destiny')}
               <RedColorSpan> *</RedColorSpan>
@@ -245,13 +246,13 @@ const TariffImportModal = ({
               }
               options={getOriginDestinyList()}
               filterOptions={filterOptions}
-              value={data.origin}
+              value={data.destiny}
               disabled={false}
               renderInput={(params) => (
                 <div ref={params.InputProps.ref}>
                   <ControlledInput
                     {...params}
-                    id="search-origin"
+                    id="search-destiny"
                     toolTipTitle={
                       invalidInput
                         ? I18n.t('components.itemModal.requiredField')
@@ -281,10 +282,9 @@ const TariffImportModal = ({
               PaperComponent={(params: any) => <StyledPaper {...params} />}
             />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={6} style={{marginTop: '-45px'}}>
             <FormLabel component="legend">
                 {I18n.t('pages.tariff.tariffImport.agent')}
-              <RedColorSpan> *</RedColorSpan>
             </FormLabel>
             <Autocomplete
               freeSolo
@@ -328,7 +328,7 @@ const TariffImportModal = ({
             </Grid>
             <Grid item xs={6}>
               <Button
-                  disabled={false}
+                  disabled={!validateData()}
                   text={I18n.t('pages.tariff.tariffImport.searchButtonLabel')}
                   tooltip={I18n.t('pages.tariff.tariffImport.searchButtonLabel')}
                   backgroundGreen={true}
@@ -337,38 +337,38 @@ const TariffImportModal = ({
                 />
             </Grid>
           </Grid>
-          <TableContainer>
+          <TableContainer style={{marginTop: '20px', minHeight: '150px'}}>
             <Table >
               <TableHead>
                 <TableRow>
                   <CheckboxCell align="right">
                     <Checkbox
-                      checked={selecteds.length === tableData.length}
+                      checked={selecteds.length === tariffData.length && selecteds.length !== 0}
                       onChange={() =>{
-                        if(selecteds.length === tableData.length) {
+                        if(selecteds.length === tariffData.length) {
                           setSelecteds([])
                         } else {
-                          setSelecteds(tableData.map((row: any) => row.idTariff))
+                          setSelecteds(tariffData.map((row: any) => row.idTariff))
                         }
                       }}
                     />
                   </CheckboxCell>
-                  {Object.keys(mockedData[0]).filter((e) => e !== 'id')
+                  {Object.values(I18n.t('pages.tariff.tariffImport.table'))
                     .map((column: string) => <TableCell style={{paddingLeft: 0}} key={column}>{column}</TableCell>)
                   }
                 </TableRow>
               </TableHead>
               <TableBody>
-                {tableData.map((tariff: any, index: number) => (
-                  <TableRow key={tariff.idTariff}>
+                {createTable().map((tariff: any, index: number) => (
+                  <TableRow key={tariff.id}>
                     <TableBodyCell align="right">
                       <Checkbox
-                        checked={selecteds.some((selected) => selected === tariff.idTariff)}
+                        checked={selecteds.some((selected) => selected === tariff.id)}
                         onChange={() => {
-                          if(selecteds.some((selected) => selected === tariff.idTariff)) {
-                            setSelecteds((selecteds) => selecteds.filter((selected) => selected !== tariff.idTariff))
+                          if(selecteds.some((selected) => selected === tariff.id)) {
+                            setSelecteds((selecteds) => selecteds.filter((selected) => selected !== tariff.id))
                           } else {
-                            setSelecteds((selecteds) => [...selecteds, tariff.idTariff])
+                            setSelecteds((selecteds) => [...selecteds, tariff.id])
                           }
                         }}
                       />
@@ -384,9 +384,10 @@ const TariffImportModal = ({
               </TableBody>
             </Table>
           </TableContainer>
+          <hr style={{backgroundColor: '#E3E5EB', border: '0', height: '1px'}}/>
           <PaginationContainer>
             <PaginationMainContainer>
-              <NoBreakLine>{selecteds.length} {I18n.t('pages.tariff.tariffImport.selectedsItems')}</NoBreakLine>
+              <NoBreakLine>{selecteds.length} {selecteds.length > 1 ? I18n.t('pages.tariff.tariffImport.selectedsItems') : I18n.t('pages.tariff.tariffImport.selectedItem') }</NoBreakLine>
               <Pagination
                 count={totalTariffList}
                 labelDisplay={I18n.t('components.Pagination.labelDisplay')}
@@ -410,21 +411,30 @@ const TariffImportModal = ({
               />
             </PaginationMainContainer>
           </PaginationContainer>
-        <Grid item xs={12} container={true} direction="row" justify="flex-end">
-          <Grid item xs={6}>
+        <Grid item xs={12} container={true} direction="row" justify="flex-end" alignItems="center">
+          <Grid item>
             <CloseButtonDiv>
               <Button
                 disabled={false}
-                text={I18n.t('pages.tariff.upload.closeButtonLabel')}
-                tooltip={I18n.t('pages.tariff.upload.closeButtonLabel')}
+                text={I18n.t('pages.tariff.tariffImport.closeButtonLabel')}
+                tooltip={I18n.t('pages.tariff.tariffImport.closeButtonLabel')}
                 backgroundGreen={false}
                 icon=""
                 onAction={handleOnClose}
               />
             </CloseButtonDiv>
           </Grid>
-          <Grid item xs={6}>
-
+          <Grid item>
+            <div>
+              <Button
+                disabled={selecteds.length === 0}
+                text={I18n.t('pages.tariff.tariffImport.addButtonLabel')}
+                tooltip={I18n.t('pages.tariff.tariffImport.addButtonLabel')}
+                backgroundGreen={true}
+                icon=""
+                onAction={searchTariffs}
+              />
+            </div>
           </Grid>
         </Grid>
         </MainDiv>

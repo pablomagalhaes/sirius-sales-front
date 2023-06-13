@@ -387,7 +387,20 @@
         "closeButtonLabel": "Cancelar",
         "addButtonLabel": "Adicionar",
         "searchButtonLabel": "Buscar",
-        "selectedsItems": "item selecionado"
+        "selectedsItems": "itens selecionados",
+        "selectedItem": "item selecionado",
+        "table": {
+          "airCompany": "Cia. Aérea",
+          "agent": "Agente",
+          "validity": "Validade",
+          "currency": "Moeda",
+          "minimun": "Mínimo",
+          "plus45": "+45kg",
+          "plus100": "+100kg",
+          "plus300": "+300kg",
+          "plus500": "+500kg",
+          "plus1000": "+1ton"
+        }
       },
       "tariffTable": {
         "edit": "Ver detalhes ou editar tarifa",

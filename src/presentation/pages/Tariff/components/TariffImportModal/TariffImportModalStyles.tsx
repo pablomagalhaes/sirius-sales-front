@@ -168,9 +168,18 @@ export const PaginationMainContainer = styled.div`
   width: 100%;
   display: flex;
   margin-left: 15px;
+
+  span[title="Anterior"] + span {
+    display: inline-block !important;
+    top: 4px !important;
+  };
   
   & .MuiSelect-select {
     padding-left: 10px !important;
+  }
+
+  & .MuiInputBase-root {
+    display: none !important;
   }
 `
 export const TableBodyCell = withStyles({
