@@ -6,18 +6,18 @@ import { QueryKeys } from '../../../application/enum/queryKeys'
 
 const useTariffs = (): any => {
   const [tariffType, setTariffType] = useState('')
-  const [tariffModalType, setTariffModalType] = useState('')
-  const [validityTariff, setValidityTariff] = useState('')
+  const [params, setParams] = useState()
 
-  const changeFilterList = (tariff: string, modal: string, validity: string): void => {
-    setTariffType(tariff)
-    setTariffModalType(modal)
-    setValidityTariff(validity)
+  const changeFilterList = (filter): void => {
+    setTariffType(filter.tariffType)
+    setParams(filter)
   }
 
+  console.log('changeFilterList', changeFilterList)
+
   const { data = [] } = useQuery(
-    [QueryKeys.tariffs, tariffType, tariffModalType, validityTariff],
-    async () => await API.getTariffs(tariffType, tariffModalType, validityTariff),
+    [QueryKeys.tariffs, params],
+    async () => await API.getTariffs(params),
     {
       enabled: tariffType.length > 0
     }
