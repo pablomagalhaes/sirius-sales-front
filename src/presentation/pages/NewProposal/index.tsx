@@ -64,8 +64,6 @@ const NewProposal = ({ theme, proposalService }: NewProposalProps): JSX.Element 
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
 
-  const { proposal, setProposal } = proposalService
-
   const history = useHistory()
   const location = useLocation()
   const updateTable3IdsRef = useRef()
@@ -94,17 +92,14 @@ const NewProposal = ({ theme, proposalService }: NewProposalProps): JSX.Element 
     if (proposalId !== undefined && proposalId !== null) {
       setEditMode(true)
       void (async function () {
-        await API.getProposal(proposalId)
-          .then((response) => {
-            setProposal(response)
-            duplicateProposal(response)
-            setLoadExistingProposal(true)
-          })
-          .catch((err) => console.log(err))
+        const response = await API.getProposal(proposalId)
+        proposalService.setProposal(response)
+        duplicateProposal(response)
+        setLoadExistingProposal(true)
       })()
     } else {
       setLoadExistingProposal(true)
-      setProposal({ ...emptyProposalValue, openingDate: formatDate() })
+      proposalService.setProposal({ ...emptyProposalValue, openingDate: formatDate() })
     }
   }, [])
 
@@ -113,28 +108,28 @@ const NewProposal = ({ theme, proposalService }: NewProposalProps): JSX.Element 
       setEditMode(false)
       setduplicateMode(true)
       const proposalObject = {
-        ...proposal,
+        ...proposalService.proposal,
         validityDate: '',
         idProposalStatus: 1,
         openingDate: formatDate(),
-        cargo: proposal.cargo.map((cargo) => {
+        cargo: proposalService.proposal.cargo.map((cargo) => {
           cargo.id = null
           cargo.cargoVolumes = cargo.cargoVolumes.map(cargoVolume => {
             cargoVolume.id = null; cargoVolume.idCargo = null; return cargoVolume
           })
           return cargo
         }),
-        totalCosts: proposal.totalCosts.map(totalCost => {
+        totalCosts: proposalService.proposal.totalCosts.map(totalCost => {
           totalCost.id = null; totalCost.idProposal = null; return totalCost
         }),
-        costs: proposal.costs.map(cost => {
+        costs: proposalService.proposal.costs.map(cost => {
           cost.id = null; cost.idProposal = null; return cost
         }),
-        agents: proposal.agents.map(agt => {
+        agents: proposalService.proposal.agents.map(agt => {
           agt.id = null; agt.proposalImportFreightId = null; return agt
         })
       }
-      setProposal(proposalObject)
+      proposalService.setProposal(proposalObject)
     }
   }
 
@@ -226,7 +221,7 @@ const NewProposal = ({ theme, proposalService }: NewProposalProps): JSX.Element 
   }
 
   const removeNullProperties = (): any => {
-    const newProposal = { ...proposal };
+    const newProposal = { ...proposalService.proposal };
     ['id', 'idProposal', 'idCargo', 'proposalId', 'idProposalImportFreight'].forEach(e => {
       // eslint-disable-next-line
       newProposal[e] !== undefined && newProposal[e] === null && delete newProposal[e]
@@ -255,11 +250,11 @@ const NewProposal = ({ theme, proposalService }: NewProposalProps): JSX.Element 
       completed.step5 &&
       completed.step6
     ) {
-      if (proposal.idProposal === undefined || proposal.idProposal === null || location.state?.eventType === 'duplicate') {
-        proposal.idProposal = null
+      if (proposalService.proposal.idProposal === undefined || proposalService.proposal.idProposal === null || location.state?.eventType === 'duplicate') {
+        proposalService.proposal.idProposal = null
         const newProposal = removeNullProperties()
         API.postProposal(JSON.stringify(newProposal)).then((response) => {
-          setProposal(response)
+          proposalService.setProposal(response)
           // @ts-expect-error
           updateAgentsIdsRef?.current?.updateAgentsIdsRef()
           // @ts-expect-error
@@ -277,8 +272,8 @@ const NewProposal = ({ theme, proposalService }: NewProposalProps): JSX.Element 
         })
       } else {
         const newProposal = removeNullProperties()
-        API.putProposal(proposal.idProposal, JSON.stringify(newProposal)).then((response) => {
-          setProposal(response)
+        API.putProposal(proposalService.proposal.idProposal, JSON.stringify(newProposal)).then((response) => {
+          proposalService.setProposal(response)
           // @ts-expect-error
           updateAgentsIdsRef?.current?.updateAgentsIdsRef()
           // @ts-expect-error
@@ -489,7 +484,7 @@ const NewProposal = ({ theme, proposalService }: NewProposalProps): JSX.Element 
             ? <>
               {I18n.t('pages.newProposal.reference')}
               <ReferenceCode>
-                {proposal?.referenceProposal}
+                {proposalService.proposal?.referenceProposal}
               </ReferenceCode>
             </>
             : null
@@ -499,11 +494,11 @@ const NewProposal = ({ theme, proposalService }: NewProposalProps): JSX.Element 
           <Username>
             {getEnchargedFullname()}
           </Username>
-          {editMode && proposal.idProposalStatus === 1
+          {editMode && proposalService.proposal.idProposalStatus === 1
             ? <Status className="open">{I18n.t('pages.proposal.table.openLabel')}</Status>
             : null
           }
-          {editMode && proposal.idProposalStatus === 3
+          {editMode && proposalService.proposal.idProposalStatus === 3
             ? <Status className="inReview">{I18n.t('pages.proposal.table.inRevisionLabel')}</Status>
             : null
           }
@@ -529,14 +524,14 @@ const NewProposal = ({ theme, proposalService }: NewProposalProps): JSX.Element 
             text={I18n.t('pages.newProposal.buttonFinish')}
             tooltip={I18n.t('pages.newProposal.buttonFinish')}
           >
-            <FloatingMenu menuItems={proposal.idProposal != null ? floatingButtonMenuItemsAfterSaved : floatingButtonMenuItems} />
+            <FloatingMenu menuItems={proposalService.proposal.idProposal != null ? floatingButtonMenuItemsAfterSaved : floatingButtonMenuItems} />
           </Button>
         </ButtonContainer>
       </TopContainer>
       <ProposalDisplayModal
           open={open}
           setClose={handleClose}
-          idProposal={proposal.idProposal}
+          idProposal={proposalService.proposal.idProposal}
         />
       {leavingPage && <MessageExitDialog />}
       {loadExistingProposal &&
@@ -652,7 +647,7 @@ const NewProposal = ({ theme, proposalService }: NewProposalProps): JSX.Element 
             closeAlert={() => { setShowSaveMessage(false) } }
             closeMessage={I18n.t('pages.newProposal.saveMessage.closeMessage')}
             goBack={() => { history.push('/proposta') } }
-            message={`${String(I18n.t('pages.newProposal.saveMessage.message'))} ${String(proposal?.referenceProposal)}.`}
+            message={`${String(I18n.t('pages.newProposal.saveMessage.message'))} ${String(proposalService.proposal?.referenceProposal)}.`}
             severity={'success'}
           />
         </MessageContainer>}

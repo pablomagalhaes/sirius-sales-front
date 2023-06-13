@@ -48,7 +48,7 @@ export interface Proposal {
 }
 
 interface Cargo {
-  id?: number | undefined
+  id?: number | undefined | null
   txCargo: string
   isDangerous: boolean
   idImoType: number

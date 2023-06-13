@@ -1,4 +1,4 @@
-import React, { useReducer, useState, useEffect, useContext } from 'react'
+import React, { useReducer, useState, useEffect } from 'react'
 import { MenuItem, Modal, Box, Container } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
@@ -41,9 +41,9 @@ import ControlledSelect from '../ControlledSelect'
 import { MenuItemContent } from '../FareModal/FareModalStyles'
 import { CalculationDataProps } from '../ChargeTable'
 import FormatNumber from '../../../application/utils/formatNumber'
-import { ProposalContext, ProposalProps } from '../../pages/NewProposal/context/ProposalContext'
 import { CostAgent } from '../../../domain/Cost'
 import { Agents } from '../../pages/NewProposal/steps/Step2'
+import { NewProposal, NewProposalExportation } from '../../../domain/usecase'
 export interface CostTableItem {
   idCost?: number | null
   idProposal?: number | null
@@ -74,6 +74,7 @@ interface CostModalProps {
   containerItems: ItemModalData[]
   serviceList: any[]
   calculationData?: CalculationDataProps
+  proposalService: NewProposal | NewProposalExportation
 }
 
 export const initialState = {
@@ -92,7 +93,7 @@ export const initialState = {
   saleMin: null,
   id: null,
   buyValueCalculated: null,
-  saleValueCalculated: null
+  saleValueCalculated: null,
 }
 
 const CostModal = ({
@@ -106,7 +107,8 @@ const CostModal = ({
   specifications,
   containerItems,
   serviceList,
-  calculationData
+  calculationData,
+  proposalService
 }: CostModalProps): JSX.Element => {
   const getAgentByName = (name: string): CostAgent => {
     const agent = agentList.find(agent => agent.agent === name)
@@ -168,7 +170,6 @@ const CostModal = ({
   const [noValueInput, setNoValueInput] = useState(false)
   const [currencyList, setCurrencyList] = useState<any[]>([])
   const [flag, setFlag] = useState(false)
-  const { proposal }: ProposalProps = useContext(ProposalContext)
 
   const verifyContainerItems = (): void => {
     if (containerItems.length === 1) {
@@ -352,8 +353,8 @@ const CostModal = ({
           data.costType === 'CW'
             ? {
                 ...data,
-                valuePurchaseCW: proposal.cargo[0].vlCwPurchase,
-                valueSaleCW: proposal.cargo[0].vlCwSale
+                valuePurchaseCW: proposalService.proposal.cargo[0].vlCwPurchase,
+                valueSaleCW: proposalService.proposal.cargo[0].vlCwSale
               }
             : { ...data, valuePurchaseCW: null, valueSaleCW: null }
         await API.postTotalCalculation(totalCalculationData)

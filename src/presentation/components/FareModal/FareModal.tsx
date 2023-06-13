@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { MenuItem, Modal, Box } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
@@ -27,7 +27,7 @@ import API from '../../../infrastructure/api'
 import { ItemModalData } from '../ItemModal/ItemModal'
 import { NumberInput, StyledPaper } from '../../pages/NewProposal/steps/StepsStyles'
 import FormatNumber from '../../../application/utils/formatNumber'
-import { ProposalContext, ProposalProps } from '../../../presentation/pages/NewProposal/context/ProposalContext'
+import { NewProposal, NewProposalExportation } from '../../../domain/usecase'
 
 export interface FareModalData {
   idCost?: number | null
@@ -55,6 +55,7 @@ interface FareModalProps {
   containerItems: ItemModalData[]
   currency: any
   AllAgents?: any[]
+  proposalService: NewProposal | NewProposalExportation
 }
 
 export const initialState = {
@@ -85,7 +86,8 @@ const FareModal = ({
   specifications,
   containerItems,
   currency,
-  AllAgents
+  AllAgents,
+  proposalService
 }: FareModalProps): JSX.Element => {
   const [data, setData] = useState<FareModalData>(initialState)
   const [invalidInput, setInvalidInput] = useState(false)
@@ -93,7 +95,6 @@ const FareModal = ({
   const [serviceList, setServiceList] = useState<any[]>([])
   const [currencyList, setCurrencyList] = useState<any[]>([])
   const [agentList, setAgentList] = useState<any[]>([])
-  const { proposal }: ProposalProps = useContext(ProposalContext)
 
   const verifyContainerItems = (): void => {
     if (containerItems.length === 1) {
@@ -154,12 +155,12 @@ const FareModal = ({
   }
 
   const getAgents = (): any => {
-    const proposalAgentsidBusinessPartnerAgent = proposal.agents.map(a => a.idBusinessPartnerAgent)
+    const proposalAgentsidBusinessPartnerAgent = proposalService.proposal.agents.map(a => a.idBusinessPartnerAgent)
     const getSomeAgents = AllAgents?.map(a => proposalAgentsidBusinessPartnerAgent.includes(a?.businessPartner?.id)
       ? ({
           idBusinessPartnerAgent: a?.businessPartner?.id,
           agent: a?.businessPartner?.simpleName,
-          idBusinessPartnerTransportCompany: proposal.agents.find(find => find.idBusinessPartnerAgent === a?.businessPartner?.id)?.idBusinessPartnerTransportCompany
+          idBusinessPartnerTransportCompany: proposalService.proposal.agents.find(find => find.idBusinessPartnerAgent === a?.businessPartner?.id)?.idBusinessPartnerTransportCompany
         })
       : null)
     return getSomeAgents?.filter(f => f != null)
@@ -168,7 +169,7 @@ const FareModal = ({
   useEffect(() => {
     if (dataProp !== initialState) {
       setData({ ...dataProp })
-    } else if (proposal.agents.length === 1 && AllAgents !== undefined && currency.length !== 0) {
+    } else if (proposalService.proposal.agents.length === 1 && AllAgents !== undefined && currency.length !== 0) {
       setData({ ...data, selectedAgent: getAgents()[0]?.agent, saleCurrency: currency })
     }
   }, [open])
@@ -193,7 +194,7 @@ const FareModal = ({
     if (AllAgents !== undefined) {
       setAgentList(getAgents())
     }
-  }, [proposal, AllAgents])
+  }, [proposalService.proposal, AllAgents])
 
   useEffect(() => {
     switch (true) {

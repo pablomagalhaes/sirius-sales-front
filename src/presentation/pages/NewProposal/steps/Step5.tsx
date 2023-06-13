@@ -70,20 +70,18 @@ const Step5 = ({
   const [loadedTotalCostsOrigIds, setLoadedTotalCostsOrigIds] = useState<number[]>([])
   const [loadedTotalCostsDestIds, setLoadedTotalCostsDestIds] = useState<number[]>([])
 
-  const { proposal, setProposal } = proposalService
-
   const [loadedTable, setLoadedTable] = useState(false)
 
   useImperativeHandle(updateTableIdsRef, () => ({
     updateStep5Ids () {
       let originId = 0
       let destinyId = 0
-      if (proposal?.idProposal !== undefined && proposal?.idProposal !== null) {
+      if (proposalService.proposal?.idProposal !== undefined && proposalService.proposal?.idProposal !== null) {
         const newOriginTable = [...dataOrigin]
         const newTotalCostOrigIds: number[] = []
         const newDestinyTable = [...dataDestiny]
         const newTotalCostDestIds: number[] = []
-        for (const totalCost of proposal.totalCosts) {
+        for (const totalCost of proposalService.proposal.totalCosts) {
           if (totalCost.costType === CostTypes.Origin) {
             newTotalCostOrigIds.push(Number(totalCost.idTotalCost))
           } else if (totalCost.costType === CostTypes.Destiny) {
@@ -92,13 +90,13 @@ const Step5 = ({
         }
         setLoadedTotalCostsOrigIds(newTotalCostOrigIds)
         setLoadedTotalCostsDestIds(newTotalCostDestIds)
-        for (const cost of proposal.costs) {
+        for (const cost of proposalService.proposal.costs) {
           if (cost.costType === CostTypes.Origin) {
             newOriginTable[originId].idCost = cost.idCost
-            newOriginTable[originId++].idProposal = proposal.idProposal
+            newOriginTable[originId++].idProposal = proposalService.proposal.idProposal
           } else if (cost.costType === CostTypes.Destiny) {
             newDestinyTable[destinyId].idCost = cost.idCost
-            newDestinyTable[destinyId++].idProposal = proposal.idProposal
+            newDestinyTable[destinyId++].idProposal = proposalService.proposal.idProposal
           }
         }
         setDataOrigin(newOriginTable)
@@ -112,12 +110,12 @@ const Step5 = ({
     const loadedDataDestiny: CostTableItem[] = []
 
     let id = 0
-    if (proposal?.idProposal !== undefined && proposal?.idProposal !== null) {
+    if (proposalService.proposal?.idProposal !== undefined && proposalService.proposal?.idProposal !== null) {
       void new Promise<void>((resolve) => {
         setTimeout(() => resolve(), 1000)
       }).then(() => {
         const waitAllData = async (): Promise<void> => {
-          for (const cost of proposal.costs) {
+          for (const cost of proposalService.proposal.costs) {
             const getContainer = new Promise((resolve) => {
               if (specifications === 'fcl') {
                 API.getContainerType(cost.idContainerType)
@@ -137,7 +135,7 @@ const Step5 = ({
             void await Promise.all([getContainer, getService]).then((response) => {
               const loadedItem: CostTableItem = {
                 idCost: cost.idCost,
-                idProposal: proposal.idProposal,
+                idProposal: proposalService.proposal.idProposal,
                 agent: cost.agent,
                 buyCurrency: cost.idCurrencyPurchase === '' ? 'BRL' : String(cost.idCurrencyPurchase),
                 buyMin: cost.valueMinimumPurchase === 0 ? null : completeDecimalPlaces(cost.valueMinimumPurchase),
@@ -167,7 +165,7 @@ const Step5 = ({
 
         const loadedTotalCostsOrig: any[] = []
         const loadedTotalCostsDest: any[] = []
-        proposal.totalCosts.forEach((totalCost: TotalCost) => {
+        proposalService.proposal.totalCosts.forEach((totalCost: TotalCost) => {
           if (totalCost.costType === CostTypes.Origin) {
             loadedTotalCostsOrig.push(totalCost.idTotalCost)
           } if (totalCost.costType === CostTypes.Destiny) {
@@ -183,14 +181,14 @@ const Step5 = ({
   }, [])
 
   useEffect(() => {
-    let actualCostArray = proposal.costs
+    let actualCostArray = proposalService.proposal.costs
     actualCostArray = actualCostArray.filter((cost) => (cost.costType === CostTypes.Tariff || cost.costType === CostTypes.Freight) && cost)
     const newOriginTableData: Cost[] = []
     dataOrigin.forEach((row) => {
       newOriginTableData.push({
         id: row.idCost === undefined ? null : row.idCost,
         idCost: row.idCost === undefined ? null : row.idCost,
-        idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
+        idProposal: proposalService.proposal?.idProposal === undefined ? null : proposalService.proposal?.idProposal,
         idService: serviceList.filter((serv) => serv.service === row.description)[0]?.idService, // id Descricao
         idContainerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : null, // containerMODAL
         agent: row.agent,
@@ -215,7 +213,7 @@ const Step5 = ({
       newDestinyTableData.push({
         id: row.idCost === undefined ? null : row.idCost,
         idCost: row.idCost === undefined ? null : row.idCost,
-        idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
+        idProposal: proposalService.proposal?.idProposal === undefined ? null : proposalService.proposal?.idProposal,
         idService: serviceList.filter((serv) => serv.service === row.description)[0]?.idService, // id Descricao
         idContainerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : null, // containerMODAL
         agent: row.agent,
@@ -236,14 +234,14 @@ const Step5 = ({
       })
     })
 
-    let actualTotalCostArray = proposal.totalCosts
+    let actualTotalCostArray = proposalService.proposal.totalCosts
     actualTotalCostArray = actualTotalCostArray.filter((cost) => (cost?.costType === CostTypes.Tariff || cost?.costType === CostTypes.Freight) && cost)
     const newTotalCostOrigin: TotalCost[] = []
     dataTotalCostOrigin.forEach((currency, index) => {
       if (currency.value.buy !== 0 || currency.value.sale !== 0) {
         newTotalCostOrigin.push({
           idTotalCost: loadedTotalCostsOrigIds[index] === undefined ? null : loadedTotalCostsOrigIds[index],
-          idProposal: loadedTotalCostsOrigIds[index] === undefined ? null : proposal?.idProposal,
+          idProposal: loadedTotalCostsOrigIds[index] === undefined ? null : proposalService.proposal?.idProposal,
           costType: CostTypes.Origin, // 'Origem''Destino''Tarifa'
           idCurrency: currency.name, // id moeda
           valueTotalSale: currency.value.sale, // total sale da moeda
@@ -256,7 +254,7 @@ const Step5 = ({
       if (currency.value.buy !== 0 || currency.value.sale !== 0) {
         newTotalCostDestiny.push({
           idTotalCost: loadedTotalCostsDestIds[index] === undefined ? null : loadedTotalCostsDestIds[index],
-          idProposal: loadedTotalCostsDestIds[index] === undefined ? null : proposal?.idProposal,
+          idProposal: loadedTotalCostsDestIds[index] === undefined ? null : proposalService.proposal?.idProposal,
           costType: CostTypes.Destiny, // 'Origem''Destino''Tarifa'
           idCurrency: currency.name, // id moeda
           valueTotalSale: currency.value.sale, // total sale da moeda
@@ -265,7 +263,7 @@ const Step5 = ({
       }
     })
     const newTotal: TotalCost[] = actualTotalCostArray.concat(newTotalCostOrigin.concat(newTotalCostDestiny))
-    setProposal({ ...proposal, totalCosts: newTotal, costs: actualCostArray.concat(newOriginTableData.concat(newDestinyTableData)) })
+    proposalService.setProposal({ ...proposalService.proposal, totalCosts: newTotal, costs: actualCostArray.concat(newOriginTableData.concat(newDestinyTableData)) })
   }, [dataOrigin, dataDestiny, dataTotalCostDestiny, dataTotalCostOrigin, setDataOrigin, setDataDestiny])
 
   useEffect(() => {
@@ -318,6 +316,7 @@ const Step5 = ({
         serviceList={serviceList}
         calculationData={calculationData}
         errorMessage={invalidInput ? I18n.t('pages.newProposal.step5.errorOrigin') : ''}
+        proposalService={proposalService}
       />
       }
       {loadedTable && <CostTable
@@ -337,6 +336,7 @@ const Step5 = ({
         serviceList={serviceList}
         calculationData={calculationData}
         errorMessage={invalidInput ? I18n.t('pages.newProposal.step5.errorDestiny') : ''}
+        proposalService={proposalService}
       />
       }
     </Separator>

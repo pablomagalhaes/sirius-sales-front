@@ -134,13 +134,11 @@ const Step2 = ({
     }
   ])
 
-  const { proposal, setProposal } = proposalService
-
   useImperativeHandle(updateAgentsIdsRef, () => ({
     updateAgentsIdsRef () {
       setSelectedAgents(
         selectedAgents.map((agent, index) => {
-          return { ...agent, idProposalAgent: proposal.agents[index].idProposalAgent }
+          return { ...agent, idProposalAgent: proposalService.proposal.agents[index].idProposalAgent }
         })
       )
     }
@@ -265,14 +263,14 @@ const Step2 = ({
         .catch((err) => console.log(err))
     })()
 
-    if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
+    if (proposalService.proposal.idProposal !== undefined && proposalService.proposal.idProposal !== null) {
       const getOrigin = new Promise((resolve) => {
         if (modal === 'LAND') {
-          API.getCityById(proposal.originDestiny[0].originCityId)
+          API.getCityById(proposalService.proposal.originDestiny[0].originCityId)
             .then((response) => resolve(response))
             .catch((err) => console.log(err))
         } else {
-          API.getOriginDestinationById(proposal.originDestiny[0].idOrigin)
+          API.getOriginDestinationById(proposalService.proposal.originDestiny[0].idOrigin)
             .then((response) =>
               resolve(`${String(response?.id)} - ${String(response?.name)}`)
             )
@@ -282,11 +280,11 @@ const Step2 = ({
 
       const getDestiny = new Promise((resolve) => {
         if (modal === 'LAND') {
-          API.getCityById(proposal.originDestiny[0].destinationCityId)
+          API.getCityById(proposalService.proposal.originDestiny[0].destinationCityId)
             .then((response) => resolve(response))
             .catch((err) => console.log(err))
         } else {
-          API.getOriginDestinationById(proposal.originDestiny[0].idDestination)
+          API.getOriginDestinationById(proposalService.proposal.originDestiny[0].idDestination)
             .then((response) =>
               resolve(`${String(response?.id)} - ${String(response?.name)}`)
             )
@@ -296,14 +294,14 @@ const Step2 = ({
 
       void Promise.all([getOrigin, getDestiny]).then((values: any[]) => {
         setData({
-          collection: proposal.cargoCollectionAddress,
-          collectionDap: proposal.cargoDeliveryAddress,
+          collection: proposalService.proposal.cargoCollectionAddress,
+          collectionDap: proposalService.proposal.cargoDeliveryAddress,
           destCity: modal === 'LAND' ? String(values[1]?.name) : '',
           destCountry:
             modal === 'LAND' ? String(values[1]?.state?.country?.name) : '',
           destState: modal === 'LAND' ? String(values[1]?.state?.name) : '',
           destiny: modal !== 'LAND' ? String(values[1]) : '',
-          incoterm: proposal.idIncoterm,
+          incoterm: proposalService.proposal.idIncoterm,
           oriCity: modal === 'LAND' ? String(values[0]?.name) : '',
           oriCountry:
             modal === 'LAND' ? String(values[0]?.state?.country?.name) : '',
@@ -350,9 +348,9 @@ const Step2 = ({
   }
 
   useEffect(() => {
-    if (proposal.agents.length > 0) {
+    if (proposalService.proposal.agents.length > 0) {
       setSelectedAgents(
-        proposal.agents.map((agent, index) => {
+        proposalService.proposal.agents.map((agent, index) => {
           return {
             idProposalAgent: agent.idProposalAgent,
             idBusinessPartnerAgent: agent.idBusinessPartnerAgent,
@@ -367,8 +365,8 @@ const Step2 = ({
 
   useEffect(() => {
     if (modal === 'LAND') {
-      setProposal({
-        ...proposal,
+      proposalService.setProposal({
+        ...proposalService.proposal,
         originDestiny:
           [
             {
@@ -381,8 +379,8 @@ const Step2 = ({
         cargoDeliveryAddress: data.collectionDap
       })
     } else {
-      setProposal({
-        ...proposal,
+      proposalService.setProposal({
+        ...proposalService.proposal,
         originDestiny:
         [
           {
@@ -398,8 +396,8 @@ const Step2 = ({
   }, [data, oriCitiesList, destCitiesList])
 
   useEffect(() => {
-    setProposal({
-      ...proposal,
+    proposalService.setProposal({
+      ...proposalService.proposal,
       agents: selectedAgents.map(
         ({ shippingCompany, agent, ...otherProperties }) => otherProperties
       )
@@ -633,8 +631,8 @@ const Step2 = ({
     if (pageDidLoad > 1) {
       setData({ ...data, destCity: '' })
     } else if (
-      proposal.idProposal !== undefined &&
-      proposal.idProposal !== null
+      proposalService.proposal.idProposal !== undefined &&
+      proposalService.proposal.idProposal !== null
     ) {
       setPageDidLoad((prev) => prev + 1)
     } else {

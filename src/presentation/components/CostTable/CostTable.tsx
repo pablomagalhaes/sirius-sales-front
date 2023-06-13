@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { TableBody, TableHead, TableRow } from '@material-ui/core'
 
@@ -32,9 +32,9 @@ import { CalculationDataProps } from '../ChargeTable'
 import { MessageContainer } from '../../pages/NewProposal/style'
 import { TotalCostTable } from '../../pages/NewProposal/steps/Step5'
 import API from '../../../infrastructure/api'
-import { ProposalProps, ProposalContext } from '../../pages/NewProposal/context/ProposalContext'
 import { Agents } from '../../pages/NewProposal/steps/Step2'
 import { FareItemsTypes } from '../../../application/enum/costEnum'
+import { NewProposal, NewProposalExportation } from '../../../domain/usecase'
 
 interface CostTableProps {
   agentList: Agents[]
@@ -58,6 +58,7 @@ interface CostTableProps {
   serviceList: any[]
   calculationData: CalculationDataProps
   errorMessage: string
+  proposalService: NewProposal | NewProposalExportation
 }
 
 const CostTable = ({
@@ -75,7 +76,8 @@ const CostTable = ({
   setTotalCostData,
   serviceList,
   calculationData,
-  errorMessage
+  errorMessage,
+  proposalService
 }: CostTableProps): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [data, setData] = useState<CostTableItem[]>([])
@@ -84,7 +86,6 @@ const CostTable = ({
   const currencyList = new Map()
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
-  const { proposal }: ProposalProps = useContext(ProposalContext)
 
   const editClickHandler = (tableData: CostTableItem): void => {
     setChargeData({ ...tableData, buyValueCalculated: null, saleValueCalculated: null })
@@ -141,8 +142,8 @@ const CostTable = ({
           valueSale: Number(item.saleValue),
           idCurrencyPurchase: item.buyCurrency,
           idCurrencySale: item.saleCurrency,
-          valuePurchaseCW: item.type === 'CW' ? proposal.cargo[0].vlCwPurchase : null,
-          valueSaleCW: item.type === 'CW' ? proposal.cargo[0].vlCwSale : null
+          valuePurchaseCW: item.type === 'CW' ? proposalService.proposal.cargo[0].vlCwPurchase : null,
+          valueSaleCW: item.type === 'CW' ? proposalService.proposal.cargo[0].vlCwSale : null
         }
 
         void (async function () {
@@ -160,7 +161,7 @@ const CostTable = ({
       })
       : []
     setData(copyData)
-  }, [calculationData, containerItems, proposal?.cargo[0]])
+  }, [calculationData, containerItems, proposalService.proposal?.cargo[0]])
 
   useEffect(() => {
     setCopyTable([])
@@ -189,8 +190,8 @@ const CostTable = ({
           data.costType === FareItemsTypes.Cw
             ? {
                 ...data,
-                valuePurchaseCW: proposal.cargo[0].vlCwPurchase,
-                valueSaleCW: proposal.cargo[0].vlCwSale
+                valuePurchaseCW: proposalService.proposal.cargo[0].vlCwPurchase,
+                valueSaleCW: proposalService.proposal.cargo[0].vlCwSale
               }
             : { ...data, valuePurchaseCW: null, valueSaleCW: null }
           return await API.postTotalCalculation(totalCalculationData)
@@ -260,7 +261,7 @@ const CostTable = ({
   }
 
   const costValidation = (): boolean => {
-    return costData === 0 || agentList.length < 1 || agentList[0].agent === '' || proposal?.cargo[0].cargoVolumes.length < 1
+    return costData === 0 || agentList.length < 1 || agentList[0].agent === '' || proposalService.proposal?.cargo[0].cargoVolumes.length < 1
   }
 
   return (
@@ -277,11 +278,12 @@ const CostTable = ({
         containerItems={containerItems}
         serviceList={serviceList}
         calculationData={calculationData}
+        proposalService={proposalService}
       />
       <Header>
         <Title>
           {title}
-          {(modal === 'LAND' && proposal.operationType === 'EXPORT FREIGHT') || <RedColorSpan> *</RedColorSpan> }
+          {(modal === 'LAND' && proposalService.proposal.operationType === 'EXPORT FREIGHT') || <RedColorSpan> *</RedColorSpan> }
         </Title>
       </Header>
       {data?.length > 0 && (
@@ -430,7 +432,7 @@ const CostTable = ({
                             backgroundGreen={false}
                             icon={'add'}
                             onAction={addClickHandler}
-                            disabled={agentList.length < 1 || agentList[0].agent === '' || proposal?.cargo[0].cargoVolumes.length < 1 }
+                            disabled={agentList.length < 1 || agentList[0].agent === '' || proposalService.proposal?.cargo[0].cargoVolumes.length < 1 }
                             tooltip={
                               costValidation()
                                 ? I18n.t('components.costTable.addCostTooltip')

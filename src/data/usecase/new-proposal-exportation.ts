@@ -1,10 +1,10 @@
 import { CargoVolume } from '../../domain/CargoVolume'
 import { Proposal } from '../../domain/models'
-import { NewProposal } from '../../domain/usecase'
+import { NewProposalExportation } from '../../domain/usecase'
 import { HttpClient } from '../protocols/http'
 
 // eslint-disable-next-line import/export
-export class NewProposalService implements NewProposal {
+export class NewProposalExportationService implements NewProposalExportation {
   constructor (
     private readonly url?: string,
     private readonly httpClient?: HttpClient<NewProposalService.Model>
@@ -66,10 +66,6 @@ export class NewProposalService implements NewProposal {
 
   setProposal (value: any): void {
     this.proposal = value
-  }
-
-  getProposal (): any {
-    return this.proposal
   }
 
   // tratar criação de nova proposta em tarefa futura

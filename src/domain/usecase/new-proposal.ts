@@ -4,6 +4,7 @@ export interface NewProposal {
   post?: (params: NewProposal.Model) => Promise<NewProposal.Model>
   setProposal: (value: any) => void
   proposal: NewProposal.Model
+  getProposal: () => any
 }
 
 // eslint-disable-next-line @typescript-eslint/no-namespace

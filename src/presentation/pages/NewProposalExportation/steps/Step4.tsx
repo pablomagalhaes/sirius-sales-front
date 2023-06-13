@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   FormControl,
   FormControlLabel,
@@ -25,8 +25,8 @@ import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import API from '../../../../infrastructure/api'
 import { NumberInput } from './StepsStyles'
 import { withTheme } from 'styled-components'
-import { ProposalContext, ProposalProps } from '../../NewProposal/context/ProposalContext'
 import FormatNumber from '../../../../application/utils/formatNumber'
+import { NewProposalExportation } from '../../../../domain/usecase'
 
 interface Step4Props {
   invalidInput: boolean
@@ -36,6 +36,7 @@ interface Step4Props {
   modal: string
   specifications: string
   duplicateMode: boolean
+  proposalService: NewProposalExportation
 }
 
 interface Frequency {
@@ -50,7 +51,8 @@ const Step4 = ({
   theme,
   modal,
   specifications,
-  duplicateMode
+  duplicateMode,
+  proposalService
 }: Step4Props): JSX.Element => {
   // mock para os selects
   const validityList = [
@@ -96,17 +98,16 @@ const Step4 = ({
 
   const [frequencyList, setFrequencyList] = useState<Frequency[]>([])
   const [disabledValidateDate, setDisabledValidateDate] = useState(true)
-  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
   const validateFloatInput = (value: string): RegExpMatchArray | null => {
     return value.match(/^[0-9]*,?[0-9]*$/)
   }
 
   useEffect(() => {
-    if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
+    if (proposalService.proposal.idProposal !== undefined && proposalService.proposal.idProposal !== null) {
       const validityType = !duplicateMode ? '0' : ''
       const validityDateSplit = !duplicateMode
-        ? proposal.validityDate.split('T')[0].split('-')
+        ? proposalService.proposal.validityDate.split('T')[0].split('-')
         : ''
       const validityDateFormat = !duplicateMode
         ? `${validityDateSplit[2]}/${validityDateSplit[1]}/${validityDateSplit[0]}`
@@ -117,27 +118,27 @@ const Step4 = ({
         setData({
           validity: validityType,
           validityDate: validityDateFormat,
-          transitTime: String(proposal.transitTime),
-          frequency: String(proposal.idFrequency),
-          route: proposal.route,
-          client: proposal.referenceClientProposal,
-          freeTime: proposal.freeTime ? 'hired' : 'notHired',
-          deadline: String(proposal.nrFreeTimeDaysDeadline),
-          value: String(proposal.vlFreeTime),
-          generalObs: proposal.generalObservations,
-          internalObs: proposal.internalObservations,
-          recurrency: String(proposal.recurrency),
-          weeklyRecurrency: proposal.weeklyRecurrency
+          transitTime: String(proposalService.proposal.transitTime),
+          frequency: String(proposalService.proposal.idFrequency),
+          route: proposalService.proposal.route,
+          client: proposalService.proposal.referenceClientProposal,
+          freeTime: proposalService.proposal.freeTime ? 'hired' : 'notHired',
+          deadline: String(proposalService.proposal.nrFreeTimeDaysDeadline),
+          value: String(proposalService.proposal.vlFreeTime),
+          generalObs: proposalService.proposal.generalObservations,
+          internalObs: proposalService.proposal.internalObservations,
+          recurrency: String(proposalService.proposal.recurrency),
+          weeklyRecurrency: proposalService.proposal.weeklyRecurrency
         })
-        filledWeekValue(proposal.weeklyRecurrency)
+        filledWeekValue(proposalService.proposal.weeklyRecurrency)
       })
     }
   }, [])
 
   useEffect(() => {
     const splitedValidityDate = data.validityDate.trim().split('/')
-    setProposal({
-      ...proposal,
+    proposalService.setProposal({
+      ...proposalService.proposal,
       validityDate: `${splitedValidityDate[2]}-${splitedValidityDate[1]}-${splitedValidityDate[0]}T00:00-03:00`,
       transitTime: Number(data.transitTime),
       route: data.route,

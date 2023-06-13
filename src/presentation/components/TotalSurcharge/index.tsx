@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 // import PositiveProfitIcon from '../../../application/icons/PositiveProfitIcon'
 // import NegativeProfitIcon from '../../../application/icons/NegativeProfitIcon'
-import { ProposalContext, ProposalProps } from '../../pages/NewProposal/context/ProposalContext'
 import { ProfitsProps } from '../../../domain/ProfitsProps'
 import { CwLabel, LowerContainer, ProfitContainer, ProfitLabel, ProfitValue, TotalCargoContainer, TotalContainer, UpperContainer } from './style'
 import { I18n } from 'react-redux-i18n'
 import FormatNumber from '../../../application/utils/formatNumber'
 import { CostTypes } from '../../../application/enum/costEnum'
+import { NewProposal, NewProposalExportation } from '../../../domain/usecase'
 // valores comentados nesse arquivo se referem ao calculo de percentual de profit que será implementado posteriormente
 interface TotalSurchargeProps {
   value: string
@@ -17,10 +17,10 @@ interface TotalSurchargeProps {
   modal: string
   data: any
   totalCosts: any
+  proposalService: NewProposal | NewProposalExportation
 }
 
-const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, data, totalCosts }: TotalSurchargeProps): JSX.Element => {
-  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, data, totalCosts, proposalService }: TotalSurchargeProps): JSX.Element => {
   const [profit, setProfit] = useState('')
   // const [profitPercentage, setProfitPercentage] = useState<number[][]>([])
 
@@ -123,7 +123,7 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
         profits.push({ idCurrency: profitValue[0], valueTotalProfit: Number(profitValue[1].toFixed(2)), percentageProfit: null })
       })
       setProfit(finalProfit.slice(0, -3))
-      const totalCostArray = [...proposal?.totalCosts.filter(e => e.costType === CostTypes.Origin || e.costType === CostTypes.Destiny)]
+      const totalCostArray = [...proposalService.proposal?.totalCosts.filter(e => e.costType === CostTypes.Origin || e.costType === CostTypes.Destiny)]
 
       if (totalOtherFare !== '0,00' && totalOtherFare !== '') {
         totalCostArray.push({
@@ -157,7 +157,7 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
       //   })
       // })
       // setProfitPercentage(calculateProfitPercentage())
-      setProposal({ ...proposal, profits, totalCosts: totalCostArray })
+      proposalService.setProposal({ ...proposalService.proposal, profits, totalCosts: totalCostArray })
     }
   }, [data, totalCosts, currency, totalOtherFare, value, modal])
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, Fragment } from 'react'
+import React, { useEffect, useState, Fragment } from 'react'
 import {
   Checkbox,
   FormControlLabel,
@@ -25,7 +25,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import { Transport, TransportList } from '../../../../domain/Transport'
 import { StyledPaper } from './StepsStyles'
 import { ExitDialog } from 'fiorde-fe-components'
-import { ProposalContext, ProposalProps } from '../../NewProposal/context/ProposalContext'
+import { NewProposalExportation } from '../../../../domain/usecase'
 
 export interface Agents {
   id?: number | null
@@ -52,6 +52,7 @@ export interface Step1Props {
   filled: Filled
   setStepLoaded: (steps: any) => void
   setAgentList: (agent: Agents[]) => void
+  proposalService: NewProposalExportation
   // setAgentList: (agent: string[]) => void
 }
 
@@ -64,7 +65,8 @@ const Step1 = ({
   setModal,
   filled,
   setStepLoaded,
-  setAgentList
+  setAgentList,
+  proposalService
 }: Step1Props): JSX.Element => {
   const [transportList] = useState<Transport[]>(TransportList)
   const [agentsList, setAgentsList] = useState<any[]>([])
@@ -91,7 +93,6 @@ const Step1 = ({
       idBusinessPartnerTransportCompany: null
     }
   ])
-  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
   useEffect(() => {
     if (data.proposal === 'ROUTING ORDER') {
@@ -99,15 +100,15 @@ const Step1 = ({
     }
   }, [data.proposalValue, selectedAgents, agentsList])
   useEffect(() => {
-    if (proposal.idTransport !== '') {
-      if (proposal.idTransport === 'SEA') {
+    if (proposalService.proposal.idTransport !== '') {
+      if (proposalService.proposal.idTransport === 'SEA') {
         void getBusinessPartner('ARMADOR')
         void getBusinessPartner('COLOADER')
       } else {
         void getBusinessPartner(getBusinessPartnerType())
       }
     }
-  }, [proposal.idTransport])
+  }, [proposalService.proposal.idTransport])
 
   const getBusinessPartner = async (type: string): Promise<any> => {
     const response = await API.getBusinessPartnerByType(type)
@@ -116,7 +117,7 @@ const Step1 = ({
     }
   }
   const getBusinessPartnerType = (): string => {
-    switch (proposal.idTransport) {
+    switch (proposalService.proposal.idTransport) {
       case 'AIR':
         return 'CIA. AEREA'
       case 'LAND':
@@ -144,23 +145,23 @@ const Step1 = ({
         .catch((err) => console.log(err))
     })
 
-    if (proposal.proposalType === 'ROUTING ORDER') {
+    if (proposalService.proposal.proposalType === 'ROUTING ORDER') {
       void Promise.all([getAgents, getPartners]).then(
         () => {
           setData({
-            proposal: proposal.proposalType,
-            serviceDesemb: proposal.clearenceIncluded,
-            serviceTransport: proposal.transportIncluded,
-            modal: proposal.idTransport,
+            proposal: proposalService.proposal.proposalType,
+            serviceDesemb: proposalService.proposal.clearenceIncluded,
+            serviceTransport: proposalService.proposal.transportIncluded,
+            modal: proposalService.proposal.idTransport,
             proposalValue: '',
-            requester: proposal.requester
+            requester: proposalService.proposal.requester
           })
           setStepLoaded((currentState) => ({ ...currentState, step1: true }))
         }
       )
-    } else if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
+    } else if (proposalService.proposal.idProposal !== undefined && proposalService.proposal.idProposal !== null) {
       const getPartnerCostumer = new Promise<void>((resolve) => {
-        API.getBusinessPartnerCostumer(proposal.idBusinessPartnerCustomer)
+        API.getBusinessPartnerCostumer(proposalService.proposal.idBusinessPartnerCustomer)
           .then((response) => {
             resolve(response?.simpleName)
           })
@@ -170,12 +171,12 @@ const Step1 = ({
       void Promise.all([getAgents, getPartners, getPartnerCostumer]).then(
         (response) => {
           setData({
-            proposal: proposal.proposalType,
-            serviceDesemb: proposal.clearenceIncluded,
-            serviceTransport: proposal.transportIncluded,
-            modal: proposal.idTransport,
+            proposal: proposalService.proposal.proposalType,
+            serviceDesemb: proposalService.proposal.clearenceIncluded,
+            serviceTransport: proposalService.proposal.transportIncluded,
+            modal: proposalService.proposal.idTransport,
             proposalValue: String(response[2]),
-            requester: proposal.requester
+            requester: proposalService.proposal.requester
           })
           setStepLoaded((currentState) => ({ ...currentState, step1: true }))
         }
@@ -205,9 +206,9 @@ const Step1 = ({
     return ''
   }
   useEffect(() => {
-    if (proposal.agents.length > 0) {
+    if (proposalService.proposal.agents.length > 0) {
       setSelectedAgents(
-        proposal?.agents.map((agent, index) => {
+        proposalService.proposal?.agents.map((agent, index) => {
           return {
             idProposalAgent: agent.idProposalAgent,
             idBusinessPartnerAgent: agent.idBusinessPartnerAgent,
@@ -220,8 +221,8 @@ const Step1 = ({
     }
   }, [agentsList])
   useEffect(() => {
-    setProposal({
-      ...proposal,
+    proposalService.setProposal({
+      ...proposalService.proposal,
       agents: selectedAgents.map(
         ({ shippingCompany, agent, ...otherProperties }) => otherProperties
       )
@@ -233,23 +234,23 @@ const Step1 = ({
     let listCostsWithoutAgents!: any[]
 
     if (data.modal === 'LAND' || data.modal === 'SEA') {
-      if (proposal.idTransport !== '') {
-        if (proposal.idTransport === 'AIR') {
-          if (proposal.agents.length > 0 && proposal.agents[0].idBusinessPartnerAgent !== null) {
-            firstAgent = proposal.agents
-            proposal.agents = []
-            proposal.agents[0] = firstAgent[0]
-            proposal.agents[0].idBusinessPartnerTransportCompany = null
-            listCostsWithoutAgents = proposal.costs.filter(cost => cost.agent === null)
-            proposal.costs = []
-            proposal.costs = listCostsWithoutAgents
+      if (proposalService.proposal.idTransport !== '') {
+        if (proposalService.proposal.idTransport === 'AIR') {
+          if (proposalService.proposal.agents.length > 0 && proposalService.proposal.agents[0].idBusinessPartnerAgent !== null) {
+            firstAgent = proposalService.proposal.agents
+            proposalService.proposal.agents = []
+            proposalService.proposal.agents[0] = firstAgent[0]
+            proposalService.proposal.agents[0].idBusinessPartnerTransportCompany = null
+            listCostsWithoutAgents = proposalService.proposal.costs.filter(cost => cost.agent === null)
+            proposalService.proposal.costs = []
+            proposalService.proposal.costs = listCostsWithoutAgents
           }
         }
       }
     }
 
-    setProposal({
-      ...proposal,
+    proposalService.setProposal({
+      ...proposalService.proposal,
       proposalType: data.proposal,
       idTransport: data.modal,
       idBusinessPartnerCustomer:
@@ -313,7 +314,7 @@ const Step1 = ({
       filled.step6
     ) {
       setModalCopy(modal)
-      if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
+      if (proposalService.proposal.idProposal !== undefined && proposalService.proposal.idProposal !== null) {
         setShowPopUp(true)
       } else {
         setData({ ...data, modal: modal })

@@ -105,7 +105,6 @@ const Step3 = ({
   const [tableId, setTableId] = useState(0)
   const specificationsList = ['FCL', 'LCL', 'Break Bulk', 'Ro-Ro']
   const [packagingList, setPackagingList] = useState<any[]>([])
-  const { proposal, setProposal } = proposalService
   const [calculation, setCalculation] = useState<CalculationDataProps>({
     weight: 0,
     cubage: 0,
@@ -131,9 +130,9 @@ const Step3 = ({
   useImperativeHandle(updateTableIdsRef, () => ({
     updateStep3Ids () {
       let tableDataId = 0
-      if (proposal?.idProposal !== undefined && proposal?.idProposal !== null) {
+      if (proposalService.proposal?.idProposal !== undefined && proposalService.proposal?.idProposal !== null) {
         const newTableData = [...tableRows]
-        for (const cargo of proposal.cargo[0].cargoVolumes) {
+        for (const cargo of proposalService.proposal.cargo[0].cargoVolumes) {
           newTableData[tableDataId].idCargoVolume = cargo?.id
           newTableData[tableDataId++].idCargo = cargo?.idCargo
           setTableRows(newTableData)
@@ -181,8 +180,8 @@ const Step3 = ({
 
   useEffect(() => {
     setChargeableWeightSale(copyCwSale)
-    setCw(proposal.cargo[0].vlCwPurchase)
-    setChargeableWeight(proposal.cargo[0].vlCwPurchase)
+    setCw(proposalService.proposal.cargo[0].vlCwPurchase)
+    setChargeableWeight(proposalService.proposal.cargo[0].vlCwPurchase)
   }, [copyCwSale])
 
   useEffect(() => {
@@ -230,34 +229,34 @@ const Step3 = ({
 
     void Promise.all([getPackagingList, getImoList, getTemperatureList]).then(
       (response: any) => {
-        if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
-          setCopyCwSale(proposal.cargo[0].vlCwSale)
+        if (proposalService.proposal.idProposal !== undefined && proposalService.proposal.idProposal !== null) {
+          setCopyCwSale(proposalService.proposal.cargo[0].vlCwSale)
           setCwSaleEditMode(true)
           setData({
-            description: proposal.cargo[0].txCargo,
+            description: proposalService.proposal.cargo[0].txCargo,
             specifications:
-              proposal.idTransport === 'SEA'
-                ? specificationsList[
-                  Number(proposal.cargo[0].idCargoContractingType) - 1
-                ].toLowerCase()
-                : '',
-            temperature: String(proposal.cargo[0].idTemperature),
-            dangerous: proposal.cargo[0].isDangerous,
-            imo: String(proposal.cargo[0].idImoType),
-            codUn: String(proposal.cargo[0].codeUnDangerous !== null ? proposal.cargo[0].codeUnDangerous : '')
+            proposalService.proposal.idTransport === 'SEA'
+              ? specificationsList[
+                Number(proposalService.proposal.cargo[0].idCargoContractingType) - 1
+              ].toLowerCase()
+              : '',
+            temperature: String(proposalService.proposal.cargo[0].idTemperature),
+            dangerous: proposalService.proposal.cargo[0].isDangerous,
+            imo: String(proposalService.proposal.cargo[0].idImoType),
+            codUn: String(proposalService.proposal.cargo[0].codeUnDangerous !== null ? proposalService.proposal.cargo[0].codeUnDangerous : '')
           })
 
           if (isAir()) {
-            setChargeableWeight(proposal.cargo[0].vlCwPurchase)
-            setChargeableWeightSale(proposal.cargo[0].vlCwSale)
+            setChargeableWeight(proposalService.proposal.cargo[0].vlCwPurchase)
+            setChargeableWeightSale(proposalService.proposal.cargo[0].vlCwSale)
           }
 
           let id = 0
           const loadedTableRows: ItemModalData[] = []
-          proposal.cargo[0].cargoVolumes.forEach((cargo: CargoVolume) => {
+          proposalService.proposal.cargo[0].cargoVolumes.forEach((cargo: CargoVolume) => {
             loadedTableRows.push({
               idCargoVolume: cargo.id,
-              idCargo: proposal.cargo[0].id,
+              idCargo: proposalService.proposal.cargo[0].id,
               amount: String(cargo.valueQuantity),
               cubage: completeDecimalPlaces(cargo?.valueCubage),
               diameter: completeDecimalPlaces(cargo?.valueDiameter),
@@ -284,10 +283,10 @@ const Step3 = ({
   }, [])
 
   useEffect(() => {
-    setProposal({
-      ...proposal,
+    proposalService.setProposal({
+      ...proposalService.proposal,
       cargo: [{
-        ...proposal.cargo[0],
+        ...proposalService.proposal.cargo[0],
         txCargo: data.description,
         idCargoContractingType:
           modal === 'SEA'
@@ -338,7 +337,7 @@ const Step3 = ({
   const marineFCL = (): boolean => {
     const specification =
       specificationsList[
-        Number(proposal.cargo[0].idCargoContractingType) - 1
+        Number(proposalService.proposal.cargo[0].idCargoContractingType) - 1
       ].toLowerCase()
     return modal === 'SEA' && specification === 'fcl'
   }
