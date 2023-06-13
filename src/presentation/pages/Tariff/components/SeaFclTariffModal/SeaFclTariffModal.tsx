@@ -221,8 +221,8 @@ const SeaFclTariffModal = ({
                     <TableBodyRow>
                       <StyledTableCell width="45%" align="left">
                         <ColumnDiv>
-                          <span>{data.agent}</span>
-                          <span>{data.seaCompany}</span>
+                          <span id="siriuscomercial_tariff-SeaFclTariffModal_span_agent">{data.agent}</span>
+                          <span id="siriuscomercial_tariff-SeaFclTariffModal_span_seaCompany"> {data.seaCompany}</span>
                         </ColumnDiv>
                       </StyledTableCell>
                       <StyledTableCell width="40%" align="left">
@@ -241,6 +241,7 @@ const SeaFclTariffModal = ({
                               renderInput={(params) => (
                                 <div ref={params.InputProps.ref}>
                                   <Input
+                                    id="siriuscomercial_tariff-SeaFclTariffModal_input_currency"
                                     {...params.inputProps}
                                     width="84px"
                                     placeholder={data.currency}
@@ -268,6 +269,7 @@ const SeaFclTariffModal = ({
                   {I18n.t('components.tariffModal.container20')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
+                  id="siriuscomercial_tariff-SeaFclTariffModal_input_container20"
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -288,6 +290,7 @@ const SeaFclTariffModal = ({
                   {I18n.t('components.tariffModal.container40')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
+                  id="siriuscomercial_tariff-SeaFclTariffModal_input_container40"
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -308,7 +311,7 @@ const SeaFclTariffModal = ({
                 {I18n.t('components.tariffModal.validity')}<RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <NumberInput
-                id="no-label-field"
+                id="siriuscomercial_tariff-SeaFclTariffModal_input_dtValidity"
                 format={'##/##/####'}
                 mask={['D', 'D', 'M', 'M', 'Y', 'Y', 'Y', 'Y']}
                 placeholder="DD/MM/YYYY"
@@ -334,7 +337,7 @@ const SeaFclTariffModal = ({
               </FormLabel>
               <ControlledSelect
                 labelId="frequency-label"
-                id="frequency"
+                id="siriuscomercial_tariff-SeaFclTariffModal_select_frequency"
                 value={data.frequency}
                 onChange={(e) => setData({ ...data, frequency: e.target.value })}
                 displayEmpty
@@ -365,6 +368,7 @@ const SeaFclTariffModal = ({
                   <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <ControlledInput
+                id="siriuscomercial_tariff-SeaFclTariffModal_input_txRoute"
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
                 invalid={
                   invalidInput &&
@@ -388,6 +392,7 @@ const SeaFclTariffModal = ({
                   <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <ControlledInput
+                id="siriuscomercial_tariff-SeaFclTariffModal_input_transitTime"
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
                 invalid={
                   invalidInput &&
@@ -405,6 +410,7 @@ const SeaFclTariffModal = ({
               <Grid item xs={10}>
                 <ButtonDiv>
                   <Button
+                    id="siriuscomercial_tariff-SeaFclTariffModal_button_cancel"
                     disabled={false}
                     text={I18n.t('components.tariffModal.cancel')}
                     tooltip={I18n.t('components.tariffModal.cancel')}
@@ -417,6 +423,7 @@ const SeaFclTariffModal = ({
               <Grid item xs={2}>
                 <ButtonDiv>
                   <Button
+                    id="siriuscomercial_tariff-SeaFclTariffModal_button_save"
                     disabled={false}
                     text={I18n.t('components.tariffModal.save')}
                     tooltip={I18n.t('components.tariffModal.save')}

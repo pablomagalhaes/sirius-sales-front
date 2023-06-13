@@ -225,8 +225,8 @@ const SeaLclTariffModal = ({
                     <TableBodyRow>
                       <StyledTableCell width="45%" align="left">
                         <ColumnDiv>
-                          <span>{data.agent}</span>
-                          <span>{data.seaCompany}</span>
+                        <span id="siriuscomercial_tariff-SeaFclTariffModal_span_agent">{data.agent}</span>
+                        <span id="siriuscomercial_tariff-SeaFclTariffModal_span_seaCompany"> {data.seaCompany}</span>
                         </ColumnDiv>
                       </StyledTableCell>
                       <StyledTableCell width="40%" align="left">
@@ -245,6 +245,7 @@ const SeaLclTariffModal = ({
                               renderInput={(params) => (
                                 <div ref={params.InputProps.ref}>
                                   <Input
+                                    id="siriuscomercial_tariff-SeaLclTariffModal_input_currency"
                                     {...params.inputProps}
                                     width="84px"
                                     placeholder={data.currency}
@@ -272,6 +273,7 @@ const SeaLclTariffModal = ({
                 {I18n.t('components.tariffModal.minValue')}<RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <NumberInput
+                id="siriuscomercial_tariff-SeaLclTariffModal_input_minValue"
                 decimalSeparator={','}
                 thousandSeparator={'.'}
                 decimalScale={2}
@@ -292,6 +294,7 @@ const SeaLclTariffModal = ({
                   {I18n.t('components.tariffModal.untilWeight')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
+                  id="siriuscomercial_tariff-SeaLclTariffModal_input_untilWeight"
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -312,6 +315,7 @@ const SeaLclTariffModal = ({
                   {I18n.t('components.tariffModal.overWeight')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
+                  id="siriuscomercial_tariff-SeaLclTariffModal_input_overWeight"
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -332,7 +336,7 @@ const SeaLclTariffModal = ({
                 {I18n.t('components.tariffModal.validity')}<RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <NumberInput
-                id="no-label-field"
+                id="siriuscomercial_tariff-SeaLclTariffModal_input_dtValidity"
                 format={'##/##/####'}
                 mask={['D', 'D', 'M', 'M', 'Y', 'Y', 'Y', 'Y']}
                 placeholder="DD/MM/YYYY"
@@ -354,8 +358,8 @@ const SeaLclTariffModal = ({
                 <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <ControlledSelect
+                id="siriuscomercial_tariff-SeaLclTariffModal_select_frequency"
                 labelId="frequency-label"
-                id="frequency"
                 value={data.frequency}
                 onChange={(e) => setData({ ...data, frequency: e.target.value })}
                 displayEmpty
@@ -386,6 +390,7 @@ const SeaLclTariffModal = ({
                   <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <ControlledInput
+                id="siriuscomercial_tariff-SeaLclTariffModal_input_txRoute"
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
                 invalid={
                   invalidInput &&
@@ -409,6 +414,7 @@ const SeaLclTariffModal = ({
                   <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <ControlledInput
+                id="siriuscomercial_tariff-SeaLclTariffModal_input_transitTime"
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
                 invalid={
                   invalidInput &&
@@ -426,6 +432,7 @@ const SeaLclTariffModal = ({
               <Grid item xs={10}>
                 <ButtonDiv>
                   <Button
+                    id="siriuscomercial_tariff-SeaLclTariffModal_button_cancel"
                     disabled={false}
                     text={I18n.t('components.tariffModal.cancel')}
                     tooltip={I18n.t('components.tariffModal.cancel')}
@@ -438,6 +445,7 @@ const SeaLclTariffModal = ({
               <Grid item xs={2}>
                 <ButtonDiv>
                   <Button
+                    id="siriuscomercial_tariff-SeaLclTariffModal_button_save"
                     disabled={false}
                     text={I18n.t('components.tariffModal.save')}
                     tooltip={I18n.t('components.tariffModal.save')}

@@ -132,6 +132,7 @@ const TariffUploadModal = ({
                 <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <RadioGroup
+                id="siriuscomercial_tariff-upload_radio_seaTypes"
                 row
                 aria-label="proposal type"
                 name="row-radio-buttons-group"
