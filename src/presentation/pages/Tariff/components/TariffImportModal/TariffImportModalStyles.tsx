@@ -23,7 +23,7 @@ export const ModalDiv = styled.div`
   background-color: ${(props: any) =>
     props.theme?.commercial?.components?.itemModal?.backgroundColor};
   border-radius: 4px;
-  width: 512px;
+  width: 1112px;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -166,13 +166,28 @@ export const PaginationContainer = styled.div`
 
 export const PaginationMainContainer = styled.div`
   width: 100%;
+  display: flex;
+  margin-left: 15px;
   
   & .MuiSelect-select {
     padding-left: 10px !important;
   }
 `
-export const TableCell = withStyles({
+export const TableBodyCell = withStyles({
   root: {
-    borderBottom: 'none'
+    borderBottom: 'none',
+    paddingRight: 10, 
+    paddingLeft: 0
   }
 })(MuiTableCell)
+
+export const CheckboxCell = withStyles({
+  root: {
+    paddingRight: 10, 
+    paddingLeft: 0
+  }
+})(MuiTableCell)
+
+export const NoBreakLine = styled.span`
+  white-space: nowrap;
+`

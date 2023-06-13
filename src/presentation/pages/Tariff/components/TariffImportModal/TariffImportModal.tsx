@@ -7,9 +7,11 @@ import {
   TableBody,
   TableContainer,
   TableHead,
-  TableRow
+  TableRow,
+  TableCell,
+  Checkbox
 } from '@material-ui/core'
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import CloseIcon from '../../../../../application/icons/CloseIcon'
 import Autocomplete, {
   createFilterOptions
@@ -21,9 +23,11 @@ import {
   CloseButtonDiv,
   ModalDiv,
   MainDiv,
-  TableCell,
+  TableBodyCell,
   PaginationContainer,
-  PaginationMainContainer
+  PaginationMainContainer,
+  CheckboxCell,
+  NoBreakLine
 } from './TariffImportModalStyles'
 import { I18n } from 'react-redux-i18n'
 import {
@@ -37,6 +41,8 @@ import { Button, Pagination } from 'fiorde-fe-components'
 import { usePartnerList, useOriginDestination } from '../../../../hooks'
 import { OriginDestinyTypes } from '../../../../../application/enum/enum'
 import { TariffContext } from '../../context/TariffContext'
+import useTariffsByCountry from '../../../../hooks/tariff/useTariffsByCountry'
+import { TariffItemsTypes, ImportTariff } from '../../../../../application/enum/tariffEnum'
 
 interface AgentType {
   name: string
@@ -67,9 +73,12 @@ const TariffImportModal = ({
 }: TariffUploadProps): JSX.Element => {
   const { partnerList: agentsList } = usePartnerList()
   const { data: originDestinationList = [] } = useOriginDestination()
-  const { filter, setFilter }: any = useContext(TariffContext)
+  const { setFilter, filter }: any = useContext(TariffContext)
+  const { content: tariffData, totalElements: totalTariffList, setParams, refetch } = useTariffsByCountry()
 
   const [data, setData] = useState<TariffUploadData>(initialState)
+  const [tableData, setTableData] = useState<any>([])
+  const [selecteds, setSelecteds] = useState<string[]>([])
   const [invalidInput, setInvalidInput] = useState(false)
 
   const filterOptions = createFilterOptions({
@@ -86,12 +95,12 @@ const TariffImportModal = ({
   const validateData = (): boolean => {
     return !(
       (data.origin?.length === 0) ||
-      (data.destiny?.length === 0) ||
-      (data.agent.id === null)
+      (data.destiny?.length === 0)
     )
   }
 
   const mockedData = [{
+    id: '1',
     airCompany: 'TAM CARGO',
     agent: 'MOLFINO HNS',
     validity: '04/10/2022',
@@ -101,8 +110,12 @@ const TariffImportModal = ({
     Until100: '4,50',
     Until300: '4,50',
     Until500: '4,50',
-    Until1000: '4,02'
+    Until1000: '4,02',
   }]
+
+  useEffect(() => {
+    setParams(filter)
+  }, [filter])
 
   const getOriginDestinyList = (): string[] => {
     const actualList: string[] = []
@@ -112,6 +125,47 @@ const TariffImportModal = ({
       }
     })
     return actualList
+  }
+
+  const getTariffValue = (type: string, tariff: any): number => {
+    const tariffValue = tariff.tariffTypeValues.find(each => each.tariffType.description === type)
+    return tariffValue?.value
+  }
+  console.log(tariffData)
+
+  const createTable = (): void => {
+    const tariffs: any = []
+    tariffData.forEach((tariff: any) => {
+      tariffs.push({
+        id: tariff.idTariff,
+        airCompany: tariff.dsBusinessPartnerTransporter,
+        agent: tariff.nmAgent,
+        dtValidity: new Date(tariff.validityDate).toLocaleDateString('pt-BR'),
+        currency: tariff.currency,
+        minValue: getTariffValue(TariffItemsTypes.Minimun, tariff),
+        weight1: getTariffValue(TariffItemsTypes.Until45, tariff),
+        weight2: getTariffValue(TariffItemsTypes.Until100, tariff),
+        weight3: getTariffValue(TariffItemsTypes.Until300, tariff),
+        weight4: getTariffValue(TariffItemsTypes.Until500, tariff),
+        weight5: getTariffValue(TariffItemsTypes.Until1000, tariff),
+      })
+    })
+    setTableData([...tariffs])
+  }
+
+  const searchTariffs = (): void => {
+    if(validateData() === true) {
+      setInvalidInput(false)
+      setFilter((filter: any) => ({
+        ...filter, 
+        tariffModalType: 'AIR', 
+        idBusinessPartnerAgent: data.agent.id, 
+        idOrigin: data.origin.split(' - ')[0],
+        idDestination: data.destiny.split(' - ')[0]
+      }))
+    } else {
+      setInvalidInput(true)
+    } 
   }
 
   return (
@@ -126,7 +180,7 @@ const TariffImportModal = ({
           </RowReverseDiv>
         </HeaderDiv>
         <MainDiv>
-          <Grid container spacing={1}>
+          <Grid container spacing={5}>
             <Grid item xs={6}>
             <FormLabel component="legend" error={
               (invalidInput && data.origin.length === 0)
@@ -272,26 +326,57 @@ const TariffImportModal = ({
               PaperComponent={(params: any) => <StyledPaper {...params} />}
             />
             </Grid>
+            <Grid item xs={6}>
+              <Button
+                  disabled={false}
+                  text={I18n.t('pages.tariff.tariffImport.searchButtonLabel')}
+                  tooltip={I18n.t('pages.tariff.tariffImport.searchButtonLabel')}
+                  backgroundGreen={true}
+                  icon=""
+                  onAction={searchTariffs}
+                />
+            </Grid>
           </Grid>
           <TableContainer>
             <Table >
               <TableHead>
                 <TableRow>
-                  {Object.keys(mockedData[0])
-                    .map((column: string) => <TableCell key={column}>{column}</TableCell>)
+                  <CheckboxCell align="right">
+                    <Checkbox
+                      checked={selecteds.length === tableData.length}
+                      onChange={() =>{
+                        if(selecteds.length === tableData.length) {
+                          setSelecteds([])
+                        } else {
+                          setSelecteds(tableData.map((row: any) => row.idTariff))
+                        }
+                      }}
+                    />
+                  </CheckboxCell>
+                  {Object.keys(mockedData[0]).filter((e) => e !== 'id')
+                    .map((column: string) => <TableCell style={{paddingLeft: 0}} key={column}>{column}</TableCell>)
                   }
                 </TableRow>
               </TableHead>
               <TableBody>
-                {mockedData.map((row, index) => (
-                  <TableRow
-                    key={index}
-                  >
-
-                      {Object.values(row).map((each: string) =>
-                        <TableCell key={each} align="left">
-                          {each}
-                        </TableCell>)
+                {tableData.map((tariff: any, index: number) => (
+                  <TableRow key={tariff.idTariff}>
+                    <TableBodyCell align="right">
+                      <Checkbox
+                        checked={selecteds.some((selected) => selected === tariff.idTariff)}
+                        onChange={() => {
+                          if(selecteds.some((selected) => selected === tariff.idTariff)) {
+                            setSelecteds((selecteds) => selecteds.filter((selected) => selected !== tariff.idTariff))
+                          } else {
+                            setSelecteds((selecteds) => [...selecteds, tariff.idTariff])
+                          }
+                        }}
+                      />
+                    </TableBodyCell>
+                    {Object.values(tariff).filter((_e, index) => index !== 0).map((each: any) =>
+                      <TableBodyCell key={`${each}-${index}`} align="left">
+                        {each}
+                      </TableBodyCell>)
                     }
 
                   </TableRow>
@@ -301,8 +386,9 @@ const TariffImportModal = ({
           </TableContainer>
           <PaginationContainer>
             <PaginationMainContainer>
+              <NoBreakLine>{selecteds.length} {I18n.t('pages.tariff.tariffImport.selectedsItems')}</NoBreakLine>
               <Pagination
-                count={10}
+                count={totalTariffList}
                 labelDisplay={I18n.t('components.Pagination.labelDisplay')}
                 labelDisplayedRows={I18n.t('components.Pagination.labelDisplayedRows')}
                 labelRowsPerPage={I18n.t('components.Pagination.labelRowsPerPage')}
