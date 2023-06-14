@@ -177,9 +177,6 @@ const Tariff = (): JSX.Element => {
     }
   ]
 
-
-  console.log('filter', filter)
-
   return (
     <RootContainer>
       <TopContainer>
