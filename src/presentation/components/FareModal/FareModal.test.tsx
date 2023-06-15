@@ -2,7 +2,6 @@ import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
 import FareModal from './FareModal'
 import '@testing-library/jest-dom'
-import { NewProposalService } from '../../../data/usecase/new-proposal'
 const props = {
   dataProp: {
     type: 'CW',
@@ -22,8 +21,7 @@ const props = {
   modal: '',
   specifications: '',
   containerItems: [],
-  currency: 'EUR',
-  proposalService: new NewProposalService()
+  currency: 'EUR'
 }
 
 test('should show text Editar item', () => {

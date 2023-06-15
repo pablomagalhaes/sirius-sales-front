@@ -1,4 +1,4 @@
-import React, { useEffect, useImperativeHandle, useState, Fragment } from 'react'
+import React, { useContext, useEffect, useImperativeHandle, useState, Fragment } from 'react'
 import { I18n } from 'react-redux-i18n'
 import { MessageContainer, Separator, Subtitle, Title } from '../style'
 import FareModal, {
@@ -16,6 +16,7 @@ import {
 import { ItemModalData } from '../../../components/ItemModal/ItemModal'
 import { ButtonWrapper, HeightDiv, NumberInput, StyledPaper, LineSeparator, ErrorText } from './StepsStyles'
 import { Button, Messages } from 'fiorde-fe-components'
+import { ProposalContext, ProposalProps } from '../../NewProposal/context/ProposalContext'
 import { Cost } from '../../../../domain/Cost'
 import { TotalCost } from '../../../../domain/TotalCost'
 import API from '../../../../infrastructure/api'
@@ -28,7 +29,6 @@ import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import { CalculationDataProps } from '../../../components/ChargeTable'
 import { CostTypes, FareItemsTypes } from '../../../../application/enum/costEnum'
-import { NewProposalExportation } from '../../../../domain/usecase'
 
 interface Step6Props {
   totalCosts: any
@@ -60,7 +60,6 @@ interface Step6Props {
   updateTableIdsRef: any
   cw: number
   cwSale: number
-  proposalService: NewProposalExportation
 }
 
 const enum ID_CARGO_CONTRACTING_TYPE {
@@ -112,13 +111,13 @@ const Step6 = ({
   updateTableIdsRef,
   cw,
   cwSale,
-  totalCosts,
-  proposalService
+  totalCosts
 }: Step6Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [copyTable, setCopyTable] = useState<FareModalData[]>([])
   const [chargeData, setChargeData] = useState<FareModalData>(initialState)
   const [currencyList, setCurrencyList] = useState<any[]>([])
+  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
   const [dataTotalCost, setDataTotalCost] = useState<any[]>([])
   const [loadedTotalCostsIds, setLoadedTotalCostsIds] = useState<number[]>([])
   const [agentList, setAgentsList] = useState<any[]>([])
@@ -134,10 +133,10 @@ const Step6 = ({
   const currencyArray = new Map()
 
   // const [tableData, setTableData] = useState<FareModalData[]>([])
-  const [tableData, setTableData] = useState<FareModalData[]>(makeTableData(proposalService.proposal?.costs))
+  const [tableData, setTableData] = useState<FareModalData[]>(makeTableData(proposal?.costs))
   const [data, setData] = useState<any[]>(
-    proposalService.proposal?.agents.map(newAgent => ({
-      idCost: proposalService.proposal.costs.find((cost): any => {
+    proposal?.agents.map(newAgent => ({
+      idCost: proposal.costs.find((cost): any => {
         if (cost.costType === CostTypes.Freight) {
           if (cost?.agent?.idBusinessPartnerAgent === newAgent?.idBusinessPartnerAgent) {
             return true
@@ -153,7 +152,7 @@ const Step6 = ({
         proposalId: null
       },
       currencySale: '',
-      currencyPurchase: proposalService.proposal.costs.find((cost): any => {
+      currencyPurchase: proposal.costs.find((cost): any => {
         if (cost.costType === CostTypes.Freight) {
           if (cost?.agent?.idBusinessPartnerAgent === newAgent?.idBusinessPartnerAgent) {
             return true
@@ -162,7 +161,7 @@ const Step6 = ({
         return false
       })?.idCurrencyPurchase,
       valueSale: '',
-      valuePurchase: decimalToString(proposalService.proposal.costs.find((cost): any => {
+      valuePurchase: decimalToString(proposal.costs.find((cost): any => {
         if (cost.costType === CostTypes.Freight) {
           if (cost?.agent?.idBusinessPartnerAgent === newAgent?.idBusinessPartnerAgent) {
             return true
@@ -173,25 +172,25 @@ const Step6 = ({
       tableData: []
     }))
   )
-  const [dataContainer, setDataContainer] = useState(proposalService.proposal.cargo[0].cargoVolumes.map((item, index) => ({
-    idCost: proposalService.proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.idCost ?? null,
+  const [dataContainer, setDataContainer] = useState(proposal.cargo[0].cargoVolumes.map((item, index) => ({
+    idCost: proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.idCost ?? null,
     idContainerType: item.idContainerType,
-    currencySale: proposalService.proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.idCurrencySale ?? '',
-    currencyPurchase: proposalService.proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.idCurrencyPurchase ?? '',
-    valueSale: decimalToString(proposalService.proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.valueSale),
-    valuePurchase: decimalToString(proposalService.proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.valuePurchase)
+    currencySale: proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.idCurrencySale ?? '',
+    currencyPurchase: proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.idCurrencyPurchase ?? '',
+    valueSale: decimalToString(proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.valueSale),
+    valuePurchase: decimalToString(proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.valuePurchase)
   })))
 
   const [dataSales, setDataSales] = useState<any>({
-    idCost: proposalService.proposal.costs.find(cost => cost.costType === CostTypes.Freight && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.idCost ?? null,
-    currencySale: String(proposalService.proposal.costs.find(cost => cost.costType === CostTypes.Freight && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.idCurrencySale ?? ''),
-    valueSale: String(proposalService.proposal.costs.find(cost => cost.costType === CostTypes.Freight && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.valueSale?.toFixed(2) ?? '')
+    idCost: proposal.costs.find(cost => cost.costType === CostTypes.Freight && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.idCost ?? null,
+    currencySale: String(proposal.costs.find(cost => cost.costType === CostTypes.Freight && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.idCurrencySale ?? ''),
+    valueSale: String(proposal.costs.find(cost => cost.costType === CostTypes.Freight && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.valueSale?.toFixed(2) ?? '')
   })
 
   useEffect(() => {
     const currentAgentsId = data.map(currentAgent => currentAgent.agent.idBusinessPartnerAgent)
     const currentAgentsTransportCompanyId = data.map(currentAgent => currentAgent.agent.idBusinessPartnerTransportCompany)
-    const getNewAgents = proposalService.proposal.agents.filter(agent => !currentAgentsId.includes(agent.idBusinessPartnerAgent) && !currentAgentsTransportCompanyId.includes(agent.idBusinessPartnerTransportCompany))
+    const getNewAgents = proposal.agents.filter(agent => !currentAgentsId.includes(agent.idBusinessPartnerAgent) && !currentAgentsTransportCompanyId.includes(agent.idBusinessPartnerTransportCompany))
     const newDataWithNewAgents = getNewAgents.map(newAgent => ({
       company: '',
       agent: {
@@ -206,18 +205,18 @@ const Step6 = ({
     }))
     const unionAgents = [...data, ...newDataWithNewAgents]
     const getAllAgents = unionAgents.map(unionAgent => unionAgent.agent.idBusinessPartnerAgent)
-    const getOnlyAgentsExists = proposalService.proposal.agents.filter(currentProposalAgent => getAllAgents.includes(currentProposalAgent.idBusinessPartnerAgent)).map(agent => agent.idBusinessPartnerAgent)
+    const getOnlyAgentsExists = proposal.agents.filter(currentProposalAgent => getAllAgents.includes(currentProposalAgent.idBusinessPartnerAgent)).map(agent => agent.idBusinessPartnerAgent)
     const getOnlyDataExists = unionAgents.filter(unionAgent => getOnlyAgentsExists.includes(unionAgent.agent.idBusinessPartnerAgent))
     setData(getOnlyDataExists)
 
-    const getidBusinessPartnerAgents = proposalService.proposal.agents.map(agent => agent.idBusinessPartnerAgent)
+    const getidBusinessPartnerAgents = proposal.agents.map(agent => agent.idBusinessPartnerAgent)
     const newTableData = tableData.filter(row => getidBusinessPartnerAgents.includes(row?.agent?.idBusinessPartnerAgent))
     setTableData(newTableData)
-  }, [proposalService.proposal.agents])
+  }, [proposal.agents])
 
   useEffect(() => {
     const currentContainer = dataContainer.map(currentContainer => currentContainer.idContainerType)
-    const getNewCargos = proposalService.proposal.cargo[0].cargoVolumes.filter(cargo => !currentContainer.includes(cargo.idContainerType))
+    const getNewCargos = proposal.cargo[0].cargoVolumes.filter(cargo => !currentContainer.includes(cargo.idContainerType))
     const newDataWithNewCargos = getNewCargos.map(newCargo => ({
       idCost: null,
       idContainerType: newCargo.idContainerType,
@@ -228,15 +227,15 @@ const Step6 = ({
     }))
     const unionCargos = [...dataContainer, ...newDataWithNewCargos]
     const getAllCargos = unionCargos.map(unionAgent => unionAgent.idContainerType)
-    const getOnlyCargosExists = proposalService.proposal.cargo[0].cargoVolumes.filter(currentProsalCargoVolumes => getAllCargos.includes(currentProsalCargoVolumes.idContainerType)).map(cargo => cargo.idContainerType)
+    const getOnlyCargosExists = proposal.cargo[0].cargoVolumes.filter(currentProsalCargoVolumes => getAllCargos.includes(currentProsalCargoVolumes.idContainerType)).map(cargo => cargo.idContainerType)
     const getOnlyDataExists = unionCargos.filter(unionAgent => getOnlyCargosExists.includes(unionAgent.idContainerType))
     setDataContainer(getOnlyDataExists)
-  }, [proposalService.proposal.cargo[0]])
+  }, [proposal.cargo[0]])
 
   useEffect(() => {
     loadAgentsList()
-    if (proposalService.proposal.idTransport !== '') void loadBusinessPartner()
-  }, [proposalService.proposal.idTransport])
+    if (proposal.idTransport !== '') void loadBusinessPartner()
+  }, [proposal.idTransport])
 
   const loadAgentsList = (): void => {
     API.getAgents()
@@ -245,7 +244,7 @@ const Step6 = ({
   }
 
   const loadBusinessPartner = async (): Promise<void> => {
-    if (proposalService.proposal.idTransport === 'SEA') {
+    if (proposal.idTransport === 'SEA') {
       await getBusinessPartnerSea()
     } else {
       const response = await API.getBusinessPartnerByType(getBusinessPartnerType())
@@ -262,7 +261,7 @@ const Step6 = ({
   }
 
   const getBusinessPartnerType = (): string => {
-    switch (proposalService.proposal.idTransport) {
+    switch (proposal.idTransport) {
       case 'AIR':
         return 'CIA. AEREA'
       case 'LAND':
@@ -274,7 +273,7 @@ const Step6 = ({
   const getServiceType = (): any => {
     let service
 
-    switch (proposalService.proposal.idTransport) {
+    switch (proposal.idTransport) {
       case 'AIR':
         service = 'FRETE AÉREO'
         break
@@ -291,15 +290,15 @@ const Step6 = ({
 
   const getFreightCost = (): Cost[] => {
     const freightCostArrayNew: Cost[] = []
-    const resultado = proposalService.proposal.costs.filter(cost => cost.costType !== CostTypes.Freight)
-    proposalService.proposal.costs = resultado
+    const resultado = proposal.costs.filter(cost => cost.costType !== CostTypes.Freight)
+    proposal.costs = resultado
 
-    if (proposalService.proposal.idTransport === 'AIR' || proposalService.proposal.idTransport === 'LAND' || (proposalService.proposal.idTransport === 'SEA' && proposalService.proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposalService.proposal.cargo[0].idCargoContractingType))) {
+    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
       data.forEach((item): void => {
         const freightCostNew = {
           id: item?.idCost,
           idCost: item?.idCost,
-          idProposal: proposalService.proposal.idProposal,
+          idProposal: proposal.idProposal,
           idService: getServiceType(),
           billingType: '',
           idContainerType: null,
@@ -308,9 +307,9 @@ const Step6 = ({
           valueSalePercent: 0,
           valueMinimumSale: null,
           agent: {
-            id: proposalService.proposal.agents[0].id,
-            idBusinessPartnerAgent: proposalService.proposal.agents[0].idBusinessPartnerAgent,
-            idBusinessPartnerTransportCompany: proposalService.proposal.agents[0].idBusinessPartnerTransportCompany,
+            id: proposal.agents[0].id,
+            idBusinessPartnerAgent: proposal.agents[0].idBusinessPartnerAgent,
+            idBusinessPartnerTransportCompany: proposal.agents[0].idBusinessPartnerTransportCompany,
             proposalId: null
           },
           costType: CostTypes.Freight,
@@ -325,11 +324,11 @@ const Step6 = ({
         }
         freightCostArrayNew.push(freightCostNew)
       })
-      if (proposalService.proposal.idTransport === 'AIR' || proposalService.proposal.idTransport === 'LAND' || (proposalService.proposal.idTransport === 'SEA' && proposalService.proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposalService.proposal.cargo[0].idCargoContractingType))) {
+      if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
         const freightCostSale = {
           id: dataSales.idCost,
           idCost: dataSales.idCost,
-          idProposal: proposalService.proposal.idProposal,
+          idProposal: proposal.idProposal,
           idService: getServiceType(),
           billingType: '',
           idContainerType: null,
@@ -357,12 +356,12 @@ const Step6 = ({
       }
     }
 
-    if ((proposalService.proposal.idTransport === 'SEA' && proposalService.proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
+    if ((proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
       dataContainer.forEach((item): void => {
         const freightCostNew = {
           id: item?.idCost,
           idCost: item?.idCost,
-          idProposal: proposalService.proposal?.idProposal === undefined ? null : proposalService.proposal?.idProposal,
+          idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
           idService: getServiceType(),
           billingType: '',
           idContainerType: null,
@@ -371,9 +370,9 @@ const Step6 = ({
           valueSalePercent: 0,
           valueMinimumSale: null,
           agent: {
-            id: proposalService.proposal.agents[0].id,
-            idBusinessPartnerAgent: proposalService.proposal.agents[0].idBusinessPartnerAgent,
-            idBusinessPartnerTransportCompany: proposalService.proposal.agents[0].idBusinessPartnerTransportCompany,
+            id: proposal.agents[0].id,
+            idBusinessPartnerAgent: proposal.agents[0].idBusinessPartnerAgent,
+            idBusinessPartnerTransportCompany: proposal.agents[0].idBusinessPartnerTransportCompany,
             proposalId: null
           },
           costType: CostTypes.Freight,
@@ -396,17 +395,17 @@ const Step6 = ({
   useImperativeHandle(updateTableIdsRef, () => ({
     updateStep6Ids () {
       let tableDataId = 0
-      if (proposalService.proposal?.idProposal !== undefined && proposalService.proposal?.idProposal !== null) {
+      if (proposal?.idProposal !== undefined && proposal?.idProposal !== null) {
         const newTableData = [...tableData]
         const newLoadedTotalCostsIds: number[] = []
-        for (const cost of proposalService.proposal.costs) {
+        for (const cost of proposal.costs) {
           if (cost.costType === CostTypes.Tariff) {
             newTableData[tableDataId].idCost = cost.idCost
-            newTableData[tableDataId++].idProposal = proposalService.proposal.idProposal
+            newTableData[tableDataId++].idProposal = proposal.idProposal
           }
         }
         setTableData(newTableData)
-        for (const totalCost of proposalService.proposal.totalCosts) {
+        for (const totalCost of proposal.totalCosts) {
           if (totalCost.costType === CostTypes.Tariff) {
             newLoadedTotalCostsIds.push(Number(totalCost.id))
           }
@@ -432,12 +431,12 @@ const Step6 = ({
     const loadedData: FareModalData[] = []
 
     let id = 0
-    if (proposalService.proposal.idProposal !== undefined && proposalService.proposal.idProposal !== null) {
+    if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
       void new Promise<void>((resolve) => {
         setTimeout(() => resolve(), 1000)
       }).then(() => {
         const waitAllData = async (): Promise<void> => {
-          for (const cost of proposalService.proposal.costs) {
+          for (const cost of proposal.costs) {
             const getContainer: any = new Promise((resolve) => {
               if (specifications === 'fcl' && cost.idContainerType !== null) {
                 API.getContainerType(cost.idContainerType)
@@ -482,11 +481,11 @@ const Step6 = ({
                   idCurrencySale: cost.idCurrencySale,
                   valuePurchaseCW:
                     cost.billingType === 'CW'
-                      ? Number(proposalService.proposal.cargo[0].vlCwPurchase)
+                      ? Number(proposal.cargo[0].vlCwPurchase)
                       : null,
                   valueSaleCW:
                     cost.billingType === 'CW'
-                      ? Number(proposalService.proposal.cargo[0].vlCwSale)
+                      ? Number(proposal.cargo[0].vlCwSale)
                       : null
                 }
 
@@ -510,7 +509,7 @@ const Step6 = ({
             ]).then((response) => {
               const loadedItem: FareModalData = {
                 idCost: cost.idCost,
-                idProposal: proposalService.proposal.idProposal,
+                idProposal: proposal.idProposal,
                 id: id++,
                 saleCurrency:
                   cost.idCurrencySale === ''
@@ -533,9 +532,9 @@ const Step6 = ({
                     ? ''
                     : Number(response[2]).toFixed(2).replace('.', ',')
               }
-              if (proposalService.proposal.idTransport === 'AIR' || proposalService.proposal.idTransport === 'LAND' || (proposalService.proposal.idTransport === 'SEA' && proposalService.proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposalService.proposal.cargo[0].idCargoContractingType))) {
+              if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
                 if (cost.costType === CostTypes.Tariff) {
-                  const getAgentByTarifaAgent = proposalService.proposal.agents.find(agent => agent.idBusinessPartnerAgent === cost.agent.idBusinessPartnerAgent)
+                  const getAgentByTarifaAgent = proposal.agents.find(agent => agent.idBusinessPartnerAgent === cost.agent.idBusinessPartnerAgent)
                   loadedItem.agent = getAgentByTarifaAgent // novo agente vinculado ao custo
                 }
               }
@@ -549,7 +548,7 @@ const Step6 = ({
         void waitAllData()
 
         const loadedTotalCosts: any[] = []
-        proposalService.proposal.totalCosts.forEach((totalCost: TotalCost) => {
+        proposal.totalCosts.forEach((totalCost: TotalCost) => {
           if (totalCost.costType === CostTypes.Tariff) {
             loadedTotalCosts.push(totalCost.id)
           }
@@ -561,7 +560,7 @@ const Step6 = ({
   }, [])
 
   useEffect(() => {
-    let actualCostArray = proposalService.proposal.costs
+    let actualCostArray = proposal.costs
     actualCostArray = actualCostArray.filter(
       (cost) => cost.costType !== CostTypes.Tariff && cost && cost.costType !== CostTypes.Freight
     )
@@ -572,7 +571,7 @@ const Step6 = ({
         id: row.idCost === undefined ? null : row.idCost,
         idCost: row.idCost === undefined ? null : row.idCost,
         idProposal:
-        proposalService.proposal?.idProposal === undefined ? null : proposalService.proposal?.idProposal,
+          proposal?.idProposal === undefined ? null : proposal?.idProposal,
         idService: serviceList.filter((serv) => serv.service === row.expense)[0]
           ?.idService, // id Descricao
         idContainerType:
@@ -606,7 +605,7 @@ const Step6 = ({
       })
     })
 
-    const actualTotalCostArray = proposalService.proposal.totalCosts
+    const actualTotalCostArray = proposal.totalCosts
     const newTotalCostFare: TotalCost[] = []
     dataTotalCost.forEach((currency, index) => {
       newTotalCostFare.push({
@@ -615,7 +614,7 @@ const Step6 = ({
             ? null
             : loadedTotalCostsIds[index],
         idProposal:
-        proposalService.proposal?.idProposal === undefined ? null : proposalService.proposal?.idProposal,
+          proposal?.idProposal === undefined ? null : proposal?.idProposal,
         costType: CostTypes.Tariff,
         idCurrency: currency.name, // id moeda
         valueTotalSale: currency.value, // total sale da moeda
@@ -624,16 +623,16 @@ const Step6 = ({
     })
     newFareItems.push(...getFreightCost())
 
-    proposalService.setProposal({
-      ...proposalService.proposal,
-      agents: proposalService.proposal.agents,
+    setProposal({
+      ...proposal,
+      agents: proposal.agents,
       totalCosts: actualTotalCostArray.concat(newTotalCostFare),
       costs: actualCostArray.concat(newFareItems)
     })
   }, [data, dataTotalCost, dataContainer])
 
   useEffect(() => {
-    if (proposalService.proposal.idTransport === 'AIR' || proposalService.proposal.idTransport === 'LAND' || (proposalService.proposal.idTransport === 'SEA' && proposalService.proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposalService.proposal.cargo[0].idCargoContractingType))) {
+    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
       if (data.every(d => d.currencyPurchase !== '') && data.every(d => d.valuePurchase !== '')) {
         setCompleted((currentState) => {
           return { ...currentState, step6: true }
@@ -651,7 +650,7 @@ const Step6 = ({
       }
     }
 
-    if (proposalService.proposal.idTransport === 'SEA' && proposalService.proposal.cargo[0].idCargoContractingType === FclCargoContractingType) {
+    if (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType) {
       if (dataContainer.every(d => d.currencyPurchase !== '') && dataContainer.every(d => d.valuePurchase !== '')) {
         setCompleted((currentState) => {
           return { ...currentState, step6: true }
@@ -696,11 +695,11 @@ const Step6 = ({
       setTableData(newTableData)
     }
     void waitAllData()
-  }, [containerItems, calculationData, proposalService.proposal.cargo[0]])
+  }, [containerItems, calculationData, proposal.cargo[0]])
 
   useEffect(() => {
     let total = 0
-    const getSalesFreight = proposalService.proposal.costs
+    const getSalesFreight = proposal.costs
       .filter(cost => cost.costType === CostTypes.Freight && cost.valueSale !== null && cost.valueSale > 0)
     const salesData = getSalesFreight.map(cost => ({
       idCost: cost.idCost,
@@ -728,7 +727,7 @@ const Step6 = ({
       setTotalCharge(total)
     }
     void waitAllData()
-  }, [dataSales, proposalService.proposal.costs])
+  }, [dataSales, proposal.costs])
 
   useEffect(() => {
     void (async function () {
@@ -762,8 +761,8 @@ const Step6 = ({
       idCurrencyPurchase: '',
       idCurrencySale: item.saleCurrency,
       valuePurchaseCW:
-        item.type === 'CW' ? Number(proposalService.proposal.cargo[0].vlCwPurchase) : null,
-      valueSaleCW: item.type === 'CW' ? Number(proposalService.proposal.cargo[0].vlCwSale) : null
+        item.type === 'CW' ? Number(proposal.cargo[0].vlCwPurchase) : null,
+      valueSaleCW: item.type === 'CW' ? Number(proposal.cargo[0].vlCwSale) : null
     }
   }
 
@@ -857,12 +856,12 @@ const Step6 = ({
   }
 
   function disabledAddFareButton (): boolean {
-    if (proposalService.proposal.idTransport === 'AIR' || proposalService.proposal.idTransport === 'LAND' || (proposalService.proposal.idTransport === 'SEA' && proposalService.proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposalService.proposal.cargo[0].idCargoContractingType))) {
+    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
       if (dataSales.currencySale !== null) {
         return false
       }
     }
-    if (proposalService.proposal.idTransport === 'SEA' && proposalService.proposal.cargo[0].idCargoContractingType === FclCargoContractingType) {
+    if (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType) {
       if (dataContainer[0]?.currencySale !== '' && dataContainer.every(row => row.currencySale === dataContainer[0].currencySale)) {
         return false
       }
@@ -871,7 +870,7 @@ const Step6 = ({
   }
 
   function renderTotalSurchage (): JSX.Element | undefined {
-    if (proposalService.proposal.idTransport === 'AIR' || proposalService.proposal.idTransport === 'LAND') {
+    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND') {
       if (dataSales.valueSale !== '' && dataSales.currencySale !== null) {
         return (
           <TotalSurcharge
@@ -883,12 +882,11 @@ const Step6 = ({
             modal={modal}
             data={data}
             totalCosts={totalCosts}
-            proposalService={proposalService}
           />
         )
       }
     }
-    if ((proposalService.proposal.idTransport === 'SEA' && proposalService.proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
+    if ((proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
       if (dataContainer.every(row => row.valueSale !== '') && // algum campo de venda nao preenchido
         dataContainer.every(row => row.currencySale !== '' && row.currencySale !== null) && // algum campo de moeda nao preenchido
         dataContainer.every(row => row.currencySale === dataContainer[0].currencySale) // todos os campos de moeda precisam ter o mesmo valor
@@ -903,12 +901,11 @@ const Step6 = ({
             modal={modal}
             data={data}
             totalCosts={totalCosts}
-            proposalService={proposalService}
           />
         )
       }
     }
-    if (proposalService.proposal.idTransport === 'SEA' && proposalService.proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposalService.proposal.cargo[0].idCargoContractingType)) {
+    if (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType)) {
       if (dataSales.valueSale !== '' && dataSales.currencySale !== null) {
         return (
           <TotalSurcharge
@@ -920,7 +917,6 @@ const Step6 = ({
             modal={modal}
             data={data}
             totalCosts={totalCosts}
-            proposalService={proposalService}
           />
         )
       }
@@ -928,10 +924,10 @@ const Step6 = ({
   }
 
   function makeCurrencyOnFareModal (): string {
-    if (proposalService.proposal.idTransport === 'AIR' || proposalService.proposal.idTransport === 'LAND' || (proposalService.proposal.idTransport === 'SEA' && proposalService.proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposalService.proposal.cargo[0].idCargoContractingType))) {
+    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
       return dataSales.currencySale
     }
-    if ((proposalService.proposal.idTransport === 'SEA' && proposalService.proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
+    if ((proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
       if (dataContainer.length > 0) {
         return dataContainer[0]?.currencySale
       }
@@ -940,7 +936,7 @@ const Step6 = ({
   }
 
   function makeSurchargeTable (agentList: any[]): JSX.Element | undefined {
-    if (proposalService.proposal.idTransport === 'AIR' || proposalService.proposal.idTransport === 'LAND' || (proposalService.proposal.idTransport === 'SEA' && proposalService.proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposalService.proposal.cargo[0].idCargoContractingType))) {
+    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
       return (
         <SurchargeTable
           data={tableData}
@@ -954,7 +950,7 @@ const Step6 = ({
         />
       )
     }
-    if ((proposalService.proposal.idTransport === 'SEA' && proposalService.proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
+    if ((proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
       return (
         <SurchargeTable
           data={tableData}
@@ -971,7 +967,7 @@ const Step6 = ({
   }
 
   function handleValueSale (newValue: string): void {
-    const getCosts = [...proposalService.proposal.costs]
+    const getCosts = [...proposal.costs]
     const verifyIfCostsHasNullAgent = getCosts.some(cost => cost.costType === CostTypes.Freight && cost.agent.idBusinessPartnerAgent === null)
     if (verifyIfCostsHasNullAgent) {
       const handleCosts = getCosts.map(cost => {
@@ -983,8 +979,8 @@ const Step6 = ({
         }
         return cost
       })
-      proposalService.setProposal({
-        ...proposalService.proposal,
+      setProposal({
+        ...proposal,
         costs: handleCosts
       })
       setDataSales({ ...dataSales, valueSale: newValue })
@@ -1014,16 +1010,16 @@ const Step6 = ({
         valueSaleTotal: null,
         valuePurchaseTotal: null
       }
-      proposalService.setProposal({
-        ...proposalService.proposal,
-        costs: [...proposalService.proposal.costs, newCost]
+      setProposal({
+        ...proposal,
+        costs: [...proposal.costs, newCost]
       })
       setDataSales({ ...dataSales, valueSale: Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, '')) })
     }
   }
 
   function handleCurrencySale (newValue: string): void {
-    const getCosts = [...proposalService.proposal.costs]
+    const getCosts = [...proposal.costs]
     const verifyIfCostsHasNullAgent = getCosts.some(cost => cost.costType === CostTypes.Freight && cost.agent.idBusinessPartnerAgent === null)
     if (verifyIfCostsHasNullAgent) {
       const handleCosts = getCosts.map(cost => {
@@ -1035,8 +1031,8 @@ const Step6 = ({
         }
         return cost
       })
-      proposalService.setProposal({
-        ...proposalService.proposal,
+      setProposal({
+        ...proposal,
         costs: handleCosts
       })
       setDataSales({ ...dataSales, currencySale: newValue })
@@ -1069,9 +1065,9 @@ const Step6 = ({
         valueSaleTotal: null,
         valuePurchaseTotal: null
       }
-      proposalService.setProposal({
-        ...proposalService.proposal,
-        costs: [...proposalService.proposal.costs, newCost]
+      setProposal({
+        ...proposal,
+        costs: [...proposal.costs, newCost]
       })
       setDataSales({ ...dataSales, currencySale: newValue })
       setTableData(tableData.map(row => ({ ...row, saleCurrency: newValue })))
@@ -1079,7 +1075,7 @@ const Step6 = ({
   }
 
   function handleCurrencyPurchase (idBusinessPartnerAgent, newData: any, newValue: string): void {
-    const getCosts = proposalService.proposal.costs
+    const getCosts = proposal.costs
     const handleCosts = getCosts.map(cost => {
       if (cost.costType === CostTypes.Freight && cost.agent.idBusinessPartnerAgent === idBusinessPartnerAgent) {
         return {
@@ -1089,15 +1085,15 @@ const Step6 = ({
       }
       return cost
     })
-    proposalService.setProposal({
-      ...proposalService.proposal,
+    setProposal({
+      ...proposal,
       costs: handleCosts
     })
     setData(newData)
   }
 
   function handleValuePurchase (idBusinessPartnerAgent, newData: any, newValue: string): void {
-    const getCosts = proposalService.proposal.costs
+    const getCosts = proposal.costs
     const handleCosts = getCosts.map(cost => {
       if (cost.costType === CostTypes.Freight && cost.agent.idBusinessPartnerAgent === idBusinessPartnerAgent) {
         return {
@@ -1107,24 +1103,24 @@ const Step6 = ({
       }
       return cost
     })
-    proposalService.setProposal({
-      ...proposalService.proposal,
+    setProposal({
+      ...proposal,
       costs: handleCosts
     })
     setData(newData)
   }
 
   function handleContainerChange (newData, field, newValue, index, hasNumber: boolean): void {
-    const getCostsCostTypeFrete = proposalService.proposal.costs.filter(cost => cost.costType === CostTypes.Freight)
-    const getCostsAnotherCostType = proposalService.proposal.costs.filter(cost => cost.costType !== CostTypes.Freight)
+    const getCostsCostTypeFrete = proposal.costs.filter(cost => cost.costType === CostTypes.Freight)
+    const getCostsAnotherCostType = proposal.costs.filter(cost => cost.costType !== CostTypes.Freight)
     if (hasNumber) {
       getCostsCostTypeFrete[index][field] = Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, ''))
     } else {
       getCostsCostTypeFrete[index][field] = newValue
     }
     const handleCosts = [...getCostsAnotherCostType, ...getCostsCostTypeFrete]
-    proposalService.setProposal({
-      ...proposalService.proposal,
+    setProposal({
+      ...proposal,
       costs: handleCosts
     })
     setDataContainer(newData)
@@ -1150,15 +1146,15 @@ const Step6 = ({
           <>
 
             {(() => {
-              if (proposalService.proposal.idTransport === 'AIR' || proposalService.proposal.idTransport === 'LAND' || (proposalService.proposal.idTransport === 'SEA' && proposalService.proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposalService.proposal.cargo[0].idCargoContractingType))) {
+              if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
                 return (
                   <>
 
                     <Grid item xs={6}>
                       <FormLabel component="legend"><strong>{'Tarifas de compra por agente'}</strong></FormLabel>
                     </Grid>
-                    {proposalService.proposal.agents.length > 0 &&
-                      ((proposalService.proposal.agents[0].idBusinessPartnerAgent !== null) && (proposalService.proposal.agents[0].idBusinessPartnerTransportCompany !== null)) && (
+                    {proposal.agents.length > 0 &&
+                      ((proposal.agents[0].idBusinessPartnerAgent !== null) && (proposal.agents[0].idBusinessPartnerTransportCompany !== null)) && (
                         <Grid container spacing={5}>
                           <Grid item xs={3}>
                             <FormLabel component='legend'>
@@ -1182,7 +1178,7 @@ const Step6 = ({
                           </Grid>
                         </Grid>
                     )}
-                    {proposalService.proposal.agents.map((selectedAgent, index) => {
+                    {proposal.agents.map((selectedAgent, index) => {
                       return ((selectedAgent.idBusinessPartnerAgent !== null) && (selectedAgent.idBusinessPartnerTransportCompany !== null)) && (
                           <Fragment key={index}>
                             <Grid container spacing={5}>
@@ -1272,7 +1268,7 @@ const Step6 = ({
             })()}
 
             {(() => {
-              if ((proposalService.proposal.idTransport === 'SEA' && proposalService.proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
+              if ((proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
                 return (
                   <>
 
@@ -1283,11 +1279,11 @@ const Step6 = ({
                     <LineSeparator />
 
                     <Grid item xs={6}>
-                      <FormLabel component="legend">{'Agente: '}<strong>{getAgentNameByidBusinessPartnerAgent(proposalService.proposal.agents[0].idBusinessPartnerAgent)}</strong>{' / Cia. Marítima: '}<strong>{getCorporateNameByidBusinessPartnerAgent(proposalService.proposal.agents[0].idBusinessPartnerTransportCompany)}</strong></FormLabel>
+                      <FormLabel component="legend">{'Agente: '}<strong>{getAgentNameByidBusinessPartnerAgent(proposal.agents[0].idBusinessPartnerAgent)}</strong>{' / Cia. Marítima: '}<strong>{getCorporateNameByidBusinessPartnerAgent(proposal.agents[0].idBusinessPartnerTransportCompany)}</strong></FormLabel>
                     </Grid>
 
-                    {proposalService.proposal.cargo[0].cargoVolumes.length > 0 &&
-                      dataContainer.length === proposalService.proposal.cargo[0].cargoVolumes.length && (
+                    {proposal.cargo[0].cargoVolumes.length > 0 &&
+                      dataContainer.length === proposal.cargo[0].cargoVolumes.length && (
                         <Grid container spacing={5}>
                           <Grid item xs={3}>
                             <FormLabel component='legend'>
@@ -1320,7 +1316,7 @@ const Step6 = ({
                           </Grid>
                         </Grid>
                     )}
-                    {proposalService.proposal.cargo[0].cargoVolumes.map((cargoVolume, index, array) => {
+                    {proposal.cargo[0].cargoVolumes.map((cargoVolume, index, array) => {
                       return (dataContainer.length === array.length) && (
                           <Fragment key={index}>
 
@@ -1493,7 +1489,6 @@ const Step6 = ({
           containerItems={containerItems}
           currency={makeCurrencyOnFareModal()}
           AllAgents={agentList}
-          proposalService={proposalService}
         />
         {renderTotalSurchage()}
       </HeightDiv>

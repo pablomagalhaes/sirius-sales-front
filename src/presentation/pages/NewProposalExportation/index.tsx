@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import React, { useState, useCallback, useEffect, useRef } from 'react'
+import React, { useState, useCallback, useEffect, useContext, useRef } from 'react'
 import { Button, ExitDialog, FloatingMenu, Steps, Messages } from 'fiorde-fe-components'
 import ProposalDisplayModal from '../../components/ProposalDisplayModal/ProposalDisplayModal'
 import { Breadcrumbs, Link } from '@material-ui/core/'
@@ -27,17 +27,15 @@ import Step5 from './steps/Step5'
 import Step6 from './steps/Step6'
 import { useHistory, useLocation } from 'react-router-dom'
 import { ItemModalData } from '../../components/ItemModal/ItemModal'
-import { emptyProposalValue } from '../NewProposal/context/ProposalContext'
+import { ProposalContext, ProposalProps, emptyProposalValue } from '../NewProposal/context/ProposalContext'
 import API from '../../../infrastructure/api'
 import { CalculationDataProps } from '../../components/ChargeTable'
-import { NewProposalExportation as NewProposalExportationUseCase } from '../../../domain/usecase'
 
 export interface NewProposalProps {
   theme: any
-  proposalService: NewProposalExportationUseCase
 }
 
-const NewProposalExportation = ({ theme, proposalService }: NewProposalProps): JSX.Element => {
+const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
   const [action, setAction] = useState('')
   const [agentList, setAgentList] = useState<Agents[]>([])
   const [calculationData, setCalculationData] = useState<CalculationDataProps>({ weight: 0, cubage: 0, cubageWeight: 0 })
@@ -62,6 +60,8 @@ const NewProposalExportation = ({ theme, proposalService }: NewProposalProps): J
   const [open, setOpen] = useState(false)
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
+
+  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
   const history = useHistory()
 
@@ -95,7 +95,7 @@ const NewProposalExportation = ({ theme, proposalService }: NewProposalProps): J
       void (async function () {
         await API.getProposal(proposalId)
           .then((response) => {
-            proposalService.setProposal(response)
+            setProposal(response)
             duplicateProposal(response)
             setLoadExistingProposal(true)
           })
@@ -103,7 +103,7 @@ const NewProposalExportation = ({ theme, proposalService }: NewProposalProps): J
       })()
     } else {
       setLoadExistingProposal(true)
-      proposalService.setProposal({ ...emptyProposalValue, openingDate: formatDate(), operationType: 'EXPORT FREIGHT' })
+      setProposal({ ...emptyProposalValue, openingDate: formatDate(), operationType: 'EXPORT FREIGHT' })
     }
   }, [])
 
@@ -133,7 +133,7 @@ const NewProposalExportation = ({ theme, proposalService }: NewProposalProps): J
           agt.id = null; agt.proposalImportFreightId = null; return agt
         })
       }
-      proposalService.setProposal(proposalObject)
+      setProposal(proposalObject)
     }
   }
 
@@ -261,10 +261,10 @@ const NewProposalExportation = ({ theme, proposalService }: NewProposalProps): J
       (modal === 'LAND' || completed.step5) &&
       completed.step6
     ) {
-      if (proposalService.proposal.idProposal === undefined || proposalService.proposal.idProposal === null || location.state?.eventType === 'duplicate') {
-        proposalService.proposal.idProposal = null
-        API.postProposal(JSON.stringify(proposalService.proposal)).then((response) => {
-          proposalService.setProposal(response)
+      if (proposal.idProposal === undefined || proposal.idProposal === null || location.state?.eventType === 'duplicate') {
+        proposal.idProposal = null
+        API.postProposal(JSON.stringify(proposal)).then((response) => {
+          setProposal(response)
           // @ts-expect-error
           updateAgentsIdsRef?.current?.updateAgentsIdsRef()
           // @ts-expect-error
@@ -281,8 +281,8 @@ const NewProposalExportation = ({ theme, proposalService }: NewProposalProps): J
           console.trace(error)
         })
       } else {
-        API.putProposal(proposalService.proposal.idProposal, JSON.stringify(proposalService.proposal)).then((response) => {
-          proposalService.setProposal(response)
+        API.putProposal(proposal.idProposal, JSON.stringify(proposal)).then((response) => {
+          setProposal(response)
           // @ts-expect-error
           updateAgentsIdsRef?.current?.updateAgentsIdsRef()
           // @ts-expect-error
@@ -493,7 +493,7 @@ const NewProposalExportation = ({ theme, proposalService }: NewProposalProps): J
             ? <>
               {I18n.t('pages.newProposal.reference')}
               <ReferenceCode>
-                {proposalService.proposal?.referenceProposal}
+                {proposal?.referenceProposal}
               </ReferenceCode>
             </>
             : null
@@ -503,11 +503,11 @@ const NewProposalExportation = ({ theme, proposalService }: NewProposalProps): J
           <Username>
             {getEnchargedFullname()}
           </Username>
-          {editMode && proposalService.proposal.idProposalStatus === 1
+          {editMode && proposal.idProposalStatus === 1
             ? <Status className="open">{I18n.t('pages.proposal.table.openLabel')}</Status>
             : null
           }
-          {editMode && proposalService.proposal.idProposalStatus === 3
+          {editMode && proposal.idProposalStatus === 3
             ? <Status className="inReview">{I18n.t('pages.proposal.table.inRevisionLabel')}</Status>
             : null
           }
@@ -520,7 +520,7 @@ const NewProposalExportation = ({ theme, proposalService }: NewProposalProps): J
           handleHover={handleHover}
           hover={hover}
           offset={-270}
-          steps={proposalService.proposal?.idTransport === 'LAND' ? stepsModalLand : steps}
+          steps={proposal?.idTransport === 'LAND' ? stepsModalLand : steps}
         />
         <ButtonContainer>
           <Button
@@ -533,14 +533,14 @@ const NewProposalExportation = ({ theme, proposalService }: NewProposalProps): J
             text={I18n.t('pages.newProposal.buttonFinish')}
             tooltip={I18n.t('pages.newProposal.buttonFinish')}
           >
-            <FloatingMenu menuItems={proposalService.proposal.idProposal != null ? floatingButtonMenuItemsAfterSaved : floatingButtonMenuItems} />
+            <FloatingMenu menuItems={proposal.idProposal != null ? floatingButtonMenuItemsAfterSaved : floatingButtonMenuItems} />
           </Button>
         </ButtonContainer>
       </TopContainer>
       <ProposalDisplayModal
         open={open}
         setClose={handleClose}
-        idProposal={proposalService.proposal.idProposal}
+        idProposal={proposal.idProposal}
       />
       {leavingPage && <MessageExitDialog />}
       {loadExistingProposal &&
@@ -555,7 +555,6 @@ const NewProposalExportation = ({ theme, proposalService }: NewProposalProps): J
               setModal={setModal}
               setProposalType={setProposalType}
               setStepLoaded={setStepLoaded}
-              proposalService={proposalService}
             />
           </div>
           {stepLoaded.step1 && <>
@@ -568,7 +567,6 @@ const NewProposalExportation = ({ theme, proposalService }: NewProposalProps): J
                 setCompleted={setCompleted}
                 setFilled={setFilled}
                 updateAgentsIdsRef={updateAgentsIdsRef}
-                proposalService={proposalService}
               />
             </div>
             <div id="step3">
@@ -588,7 +586,6 @@ const NewProposalExportation = ({ theme, proposalService }: NewProposalProps): J
                 setUndoMessage={setUndoMessage}
                 undoMessage={undoMessage}
                 updateTableIdsRef={updateTable3IdsRef}
-                proposalService={proposalService}
               />
             </div>
             <div id="step4">
@@ -599,7 +596,6 @@ const NewProposalExportation = ({ theme, proposalService }: NewProposalProps): J
                 setCompleted={setCompleted}
                 setFilled={setFilled}
                 specifications={specifications}
-                proposalService={proposalService}
               />
             </div>
             {stepLoaded.step3 &&
@@ -621,7 +617,6 @@ const NewProposalExportation = ({ theme, proposalService }: NewProposalProps): J
                     setTotalCosts={setTotalCosts}
                     undoMessage={undoMessage}
                     updateTableIdsRef={updateTable5IdsRef}
-                    proposalService={proposalService}
                   />
                 </div>
               <div id="step6">
@@ -642,7 +637,6 @@ const NewProposalExportation = ({ theme, proposalService }: NewProposalProps): J
                   totalCosts={totalCosts}
                   undoMessage={undoMessage}
                   updateTableIdsRef={updateTable6IdsRef}
-                  proposalService={proposalService}
                 />
               </div>
             </>}
@@ -658,7 +652,7 @@ const NewProposalExportation = ({ theme, proposalService }: NewProposalProps): J
             closeAlert={() => { setShowSaveMessage(false) } }
             closeMessage={I18n.t('pages.newProposal.saveMessage.closeMessage')}
             goBack={() => { history.push('/proposta') } }
-            message={`${String(I18n.t('pages.newProposal.saveMessage.message'))} ${String(proposalService.proposal?.referenceProposal)}.`}
+            message={`${String(I18n.t('pages.newProposal.saveMessage.message'))} ${String(proposal?.referenceProposal)}.`}
             severity={'success'}
           />
         </MessageContainer>}

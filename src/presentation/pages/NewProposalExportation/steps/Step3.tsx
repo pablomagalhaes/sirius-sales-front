@@ -1,6 +1,7 @@
 import React, {
   useEffect,
   useState,
+  useContext,
   useImperativeHandle
 } from 'react'
 import { Button, Messages } from 'fiorde-fe-components'
@@ -40,9 +41,9 @@ import ChargeTable, {
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import { withTheme } from 'styled-components'
 import API from '../../../../infrastructure/api'
+import { ProposalContext, ProposalProps } from '../../NewProposal/context/ProposalContext'
 import { CargoVolume } from '../../../../domain/CargoVolume'
 import CwModal from '../../../components/CwModal/CwModal'
-import { NewProposalExportation } from '../../../../domain/usecase'
 
 interface Step3Props {
   theme?: any
@@ -53,7 +54,6 @@ interface Step3Props {
   setFilled: (filled: any) => void
   setSpecifications: (specifications: string) => void
   setTableItems: (tableItems: ItemModalData[]) => void
-  proposalService: NewProposalExportation
   setUndoMessage: React.Dispatch<
   React.SetStateAction<{
     step3: boolean
@@ -91,8 +91,7 @@ const Step3 = ({
   setStepLoaded,
   updateTableIdsRef,
   setCw,
-  setCwSale,
-  proposalService
+  setCwSale
 }: Step3Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [cwOpen, setCwOpen] = useState(false)
@@ -105,6 +104,7 @@ const Step3 = ({
   const [tableId, setTableId] = useState(0)
   const specificationsList = ['FCL', 'LCL', 'Break Bulk', 'Ro-Ro']
   const [packagingList, setPackagingList] = useState<any[]>([])
+  const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
   const [calculation, setCalculation] = useState<CalculationDataProps>({
     weight: 0,
     cubage: 0,
@@ -130,9 +130,9 @@ const Step3 = ({
   useImperativeHandle(updateTableIdsRef, () => ({
     updateStep3Ids () {
       let tableDataId = 0
-      if (proposalService.proposal?.idProposal !== undefined && proposalService.proposal?.idProposal !== null) {
+      if (proposal?.idProposal !== undefined && proposal?.idProposal !== null) {
         const newTableData = [...tableRows]
-        for (const cargo of proposalService.proposal.cargo[0].cargoVolumes) {
+        for (const cargo of proposal.cargo[0].cargoVolumes) {
           newTableData[tableDataId].idCargoVolume = cargo?.id
           newTableData[tableDataId++].idCargo = cargo?.idCargo
           setTableRows(newTableData)
@@ -180,8 +180,8 @@ const Step3 = ({
 
   useEffect(() => {
     setChargeableWeightSale(copyCwSale)
-    setCw(proposalService.proposal.cargo[0].vlCwPurchase)
-    setChargeableWeight(proposalService.proposal.cargo[0].vlCwPurchase)
+    setCw(proposal.cargo[0].vlCwPurchase)
+    setChargeableWeight(proposal.cargo[0].vlCwPurchase)
   }, [copyCwSale])
 
   useEffect(() => {
@@ -229,34 +229,34 @@ const Step3 = ({
 
     void Promise.all([getPackagingList, getImoList, getTemperatureList]).then(
       (response: any) => {
-        if (proposalService.proposal.idProposal !== undefined && proposalService.proposal.idProposal !== null) {
-          setCopyCwSale(proposalService.proposal.cargo[0].vlCwSale)
+        if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
+          setCopyCwSale(proposal.cargo[0].vlCwSale)
           setCwSaleEditMode(true)
           setData({
-            description: proposalService.proposal.cargo[0].txCargo,
+            description: proposal.cargo[0].txCargo,
             specifications:
-              proposalService.proposal.idTransport === 'SEA'
+              proposal.idTransport === 'SEA'
                 ? specificationsList[
-                  Number(proposalService.proposal.cargo[0].idCargoContractingType) - 1
+                  Number(proposal.cargo[0].idCargoContractingType) - 1
                 ].toLowerCase()
                 : '',
-            temperature: String(proposalService.proposal.cargo[0].idTemperature),
-            dangerous: proposalService.proposal.cargo[0].isDangerous,
-            imo: String(proposalService.proposal.cargo[0].idImoType),
-            codUn: String(proposalService.proposal.cargo[0].codeUnDangerous !== null ? proposalService.proposal.cargo[0].codeUnDangerous : '')
+            temperature: String(proposal.cargo[0].idTemperature),
+            dangerous: proposal.cargo[0].isDangerous,
+            imo: String(proposal.cargo[0].idImoType),
+            codUn: String(proposal.cargo[0].codeUnDangerous !== null ? proposal.cargo[0].codeUnDangerous : '')
           })
 
           if (isAir()) {
-            setChargeableWeight(proposalService.proposal.cargo[0].vlCwPurchase)
-            setChargeableWeightSale(proposalService.proposal.cargo[0].vlCwSale)
+            setChargeableWeight(proposal.cargo[0].vlCwPurchase)
+            setChargeableWeightSale(proposal.cargo[0].vlCwSale)
           }
 
           let id = 0
           const loadedTableRows: ItemModalData[] = []
-          proposalService.proposal.cargo[0].cargoVolumes.forEach((cargo: CargoVolume) => {
+          proposal.cargo[0].cargoVolumes.forEach((cargo: CargoVolume) => {
             loadedTableRows.push({
               idCargoVolume: cargo.id,
-              idCargo: proposalService.proposal.cargo[0].id,
+              idCargo: proposal.cargo[0].id,
               amount: String(cargo.valueQuantity),
               cubage: completeDecimalPlaces(cargo?.valueCubage),
               diameter: completeDecimalPlaces(cargo?.valueDiameter),
@@ -283,10 +283,10 @@ const Step3 = ({
   }, [])
 
   useEffect(() => {
-    proposalService.setProposal({
-      ...proposalService.proposal,
+    setProposal({
+      ...proposal,
       cargo: [{
-        ...proposalService.proposal.cargo[0],
+        ...proposal.cargo[0],
         txCargo: data.description,
         idCargoContractingType:
           modal === 'SEA'
@@ -334,10 +334,10 @@ const Step3 = ({
 
   const marineFCL = (): boolean => {
     let specification: string = ''
-    if (proposalService.proposal.cargo[0].idCargoContractingType !== null) {
+    if (proposal.cargo[0].idCargoContractingType !== null) {
       specification =
       specificationsList[
-        Number(proposalService.proposal.cargo[0].idCargoContractingType) - 1
+        Number(proposal.cargo[0].idCargoContractingType) - 1
       ].toLowerCase()
     }
     return modal === 'SEA' && specification === 'fcl'
