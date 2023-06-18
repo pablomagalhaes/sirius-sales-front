@@ -9,8 +9,7 @@ const useTariffs = (): any => {
   const [params, setParams] = useState()
 
   const changeFilterList = (filter): void => {
-    console.log('filter', filter)
-    setTariffType(filter.tariffType !== '' ? filter.tariffType : '')
+    setTariffType(filter?.tariffType)
     setParams(filter)
   }
 
