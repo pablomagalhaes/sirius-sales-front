@@ -13,8 +13,6 @@ const useTariffs = (): any => {
     setParams(filter)
   }
 
-  console.log('changeFilterList', changeFilterList)
-
   const { data = [] } = useQuery(
     [QueryKeys.tariffs, params],
     async () => await API.getTariffs(params),
