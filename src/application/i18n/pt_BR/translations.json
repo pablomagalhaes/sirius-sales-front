@@ -381,6 +381,7 @@
       },
       "tariffImport": {
         "title": "Tarifários aéreos",
+        "subtitle": "Adicionar tarifa manualmente",
         "origin": "Origem",
         "destiny": "Destino",
         "agent": "Agente",
