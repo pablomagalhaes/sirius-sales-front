@@ -35,6 +35,19 @@ import API from '../../../../../infrastructure/api'
 import { useCurrencies, useFrequency } from '../../../../hooks'
 import { TariffItemsTypes } from '../../../../../application/enum/tariffEnum'
 
+import {
+  TARIFF_SEA_FCL_TARIFF_MODAL_SPAN_AGENT,
+  TARIFF_SEA_FCL_TARIFF_MODAL_SPAN_COMPANY,
+  TARIFF_SEA_FCL_TARIFF_MODAL_SELECT_CURRENCY,
+  TARIFF_SEA_FCL_TARIFF_MODAL_INPUT_CONTAINER,
+  TARIFF_SEA_FCL_TARIFF_MODAL_INPUT_DTVALIDITY,
+  TARIFF_SEA_FCL_TARIFF_MODAL_SELECT_FREQUENCY,
+  TARIFF_SEA_FCL_TARIFF_MODAL_INPUT_TXROUTE,
+  TARIFF_SEA_FCL_TARIFF_MODAL_INPUT_TRANSITTIME,
+  TARIFF_SEA_FCL_TARIFF_MODAL_BUTTON_CANCEL,
+  TARIFF_SEA_FCL_TARIFF_MODAL_BUTTON_SAVE
+} from '../../../../../ids'
+
 interface TariffValues {
   idTariffTypeValues: number
   value: string
@@ -221,8 +234,8 @@ const SeaFclTariffModal = ({
                     <TableBodyRow>
                       <StyledTableCell width="45%" align="left">
                         <ColumnDiv>
-                          <span id="siriuscomercial_tariff-SeaFclTariffModal_span_agent">{data.agent}</span>
-                          <span id="siriuscomercial_tariff-SeaFclTariffModal_span_seaCompany"> {data.seaCompany}</span>
+                          <span id={TARIFF_SEA_FCL_TARIFF_MODAL_SPAN_AGENT}>{data.agent}</span>
+                          <span id={TARIFF_SEA_FCL_TARIFF_MODAL_SPAN_COMPANY}> {data.seaCompany}</span>
                         </ColumnDiv>
                       </StyledTableCell>
                       <StyledTableCell width="40%" align="left">
@@ -241,7 +254,7 @@ const SeaFclTariffModal = ({
                               renderInput={(params) => (
                                 <div ref={params.InputProps.ref}>
                                   <Input
-                                    id="siriuscomercial_tariff-SeaFclTariffModal_input_currency"
+                                    id={TARIFF_SEA_FCL_TARIFF_MODAL_SELECT_CURRENCY}
                                     {...params.inputProps}
                                     width="84px"
                                     placeholder={data.currency}
@@ -269,7 +282,7 @@ const SeaFclTariffModal = ({
                   {I18n.t('components.tariffModal.container20')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
-                  id="siriuscomercial_tariff-SeaFclTariffModal_input_container20"
+                  id={`${TARIFF_SEA_FCL_TARIFF_MODAL_INPUT_CONTAINER}20`}
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -290,7 +303,7 @@ const SeaFclTariffModal = ({
                   {I18n.t('components.tariffModal.container40')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
-                  id="siriuscomercial_tariff-SeaFclTariffModal_input_container40"
+                  id={`${TARIFF_SEA_FCL_TARIFF_MODAL_INPUT_CONTAINER}40`}
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -311,7 +324,7 @@ const SeaFclTariffModal = ({
                 {I18n.t('components.tariffModal.validity')}<RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <NumberInput
-                id="siriuscomercial_tariff-SeaFclTariffModal_input_dtValidity"
+                id={TARIFF_SEA_FCL_TARIFF_MODAL_INPUT_DTVALIDITY}
                 format={'##/##/####'}
                 mask={['D', 'D', 'M', 'M', 'Y', 'Y', 'Y', 'Y']}
                 placeholder="DD/MM/YYYY"
@@ -337,7 +350,7 @@ const SeaFclTariffModal = ({
               </FormLabel>
               <ControlledSelect
                 labelId="frequency-label"
-                id="siriuscomercial_tariff-SeaFclTariffModal_select_frequency"
+                id={TARIFF_SEA_FCL_TARIFF_MODAL_SELECT_FREQUENCY}
                 value={data.frequency}
                 onChange={(e) => setData({ ...data, frequency: e.target.value })}
                 displayEmpty
@@ -368,7 +381,7 @@ const SeaFclTariffModal = ({
                   <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <ControlledInput
-                id="siriuscomercial_tariff-SeaFclTariffModal_input_txRoute"
+                id={TARIFF_SEA_FCL_TARIFF_MODAL_INPUT_TXROUTE}
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
                 invalid={
                   invalidInput &&
@@ -392,7 +405,7 @@ const SeaFclTariffModal = ({
                   <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <ControlledInput
-                id="siriuscomercial_tariff-SeaFclTariffModal_input_transitTime"
+                id={TARIFF_SEA_FCL_TARIFF_MODAL_INPUT_TRANSITTIME}
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
                 invalid={
                   invalidInput &&
@@ -410,7 +423,7 @@ const SeaFclTariffModal = ({
               <Grid item xs={10}>
                 <ButtonDiv>
                   <Button
-                    id="siriuscomercial_tariff-SeaFclTariffModal_button_cancel"
+                    id={TARIFF_SEA_FCL_TARIFF_MODAL_BUTTON_CANCEL}
                     disabled={false}
                     text={I18n.t('components.tariffModal.cancel')}
                     tooltip={I18n.t('components.tariffModal.cancel')}
@@ -423,7 +436,7 @@ const SeaFclTariffModal = ({
               <Grid item xs={2}>
                 <ButtonDiv>
                   <Button
-                    id="siriuscomercial_tariff-SeaFclTariffModal_button_save"
+                    id={TARIFF_SEA_FCL_TARIFF_MODAL_BUTTON_SAVE}
                     disabled={false}
                     text={I18n.t('components.tariffModal.save')}
                     tooltip={I18n.t('components.tariffModal.save')}

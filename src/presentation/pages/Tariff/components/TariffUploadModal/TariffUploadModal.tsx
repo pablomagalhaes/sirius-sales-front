@@ -25,6 +25,13 @@ import { usePartnerList } from '../../../../hooks'
 import useUploadTariff from '../../../../hooks/tariff/useUploadTariff'
 import { TariffTypes } from '../../../../../application/enum/enum'
 
+import {
+  TARIFF_UPLOAD_MODAL_RADIO_SEATYPES,
+  TARIFF_UPLOAD_MODAL_SELECT_UPLOAD,
+  TARIFF_UPLOAD_MODAL_BUTTON_CLOSE,
+  TARIFF_UPLOAD_MODAL_BUTTON_INITIATEPROCESS,
+  TARIFF_UPLOAD_MODAL_BUTTON_PROCESSING
+} from '../../../../../ids'
 interface AgentType {
   name: string
   idBusinessPartnerAgent: number | null | undefined
@@ -132,7 +139,7 @@ const TariffUploadModal = ({
                 <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <RadioGroup
-                id="siriuscomercial_tariff-upload_radio_seaTypes"
+                id={TARIFF_UPLOAD_MODAL_RADIO_SEATYPES}
                 row
                 aria-label="proposal type"
                 name="row-radio-buttons-group"
@@ -175,7 +182,7 @@ const TariffUploadModal = ({
               <Form variant="outlined">
                 <SelectEmpty
                   labelId="demo-simple-select-outlined-label"
-                  id="siriuscomercial_tariff-upload_select_upload"
+                  id={TARIFF_UPLOAD_MODAL_SELECT_UPLOAD}
                   value={data.agent.name}
                   displayEmpty
                   inputProps={{ 'aria-label': 'Without label' }}
@@ -226,7 +233,7 @@ const TariffUploadModal = ({
               <Grid item xs={6}>
                 <CloseButtonDiv>
                   <Button
-                    id="siriuscomercial_tariff-upload_button_close"
+                    id={TARIFF_UPLOAD_MODAL_BUTTON_CLOSE}
                     disabled={false}
                     text={I18n.t('pages.tariff.upload.closeButtonLabel')}
                     tooltip={I18n.t('pages.tariff.upload.closeButtonLabel')}
@@ -240,7 +247,7 @@ const TariffUploadModal = ({
                 <ButtonDiv>
                   {progress === 0
                     ? <Button
-                      id="siriuscomercial_tariff-upload_button_iniciar-procesamento"
+                      id={TARIFF_UPLOAD_MODAL_BUTTON_INITIATEPROCESS}
                       disabled={file == null}
                       text={I18n.t('pages.tariff.upload.startButtonLabel')}
                       tooltip={I18n.t('pages.tariff.upload.startButtonLabel')}
@@ -249,7 +256,7 @@ const TariffUploadModal = ({
                       onAction={uploadTariff}
                     />
                     : <Button
-                      id="siriuscomercial_tariff-upload_button_processando"
+                      id={TARIFF_UPLOAD_MODAL_BUTTON_PROCESSING}
                       disabled={isSuccess === false}
                       text={I18n.t('pages.tariff.upload.processingButtonLabel')}
                       tooltip={I18n.t('pages.tariff.upload.processingButtonLabel')}

@@ -6,6 +6,9 @@
     "strictNullChecks": true
   },
   "files": ["src/sirius-sales-fe.tsx"],
+  "paths": {
+    "@/*": ["*"]
+  },
   "include": ["src/**/*"],
   "exclude": ["src/**/*.test"]
 }

@@ -43,6 +43,13 @@ import useTariffs from '../../hooks/tariff/useTariffs'
 import Filter from './components/filter'
 import { TariffContext, filterDefault } from './context/TariffContext'
 
+import {
+  TARIFF_MAINPAGE_SPAN_TARIFF,
+  TARIFF_MAINPAGE_LINK_HOME,
+  TARIFF_MAINPAGE_LINK_TARIFFPROCESSING,
+  TARIFF_BUTTON_UPLOAD
+} from '../../../ids'
+
 const Tariff = (): JSX.Element => {
   const { data: tariffList = [], changeFilterList } = useTariffs()
   const { filter, setFilter }: any = useContext(TariffContext)
@@ -183,6 +190,7 @@ const Tariff = (): JSX.Element => {
       <TopContainer>
         <Breadcrumbs separator=">" aria-label="breadcrumb">
           <Link
+            id={TARIFF_MAINPAGE_LINK_HOME}
             color="inherit"
             onClick={() => history.push('/')}
             className="breadcrumbInitial"
@@ -190,13 +198,14 @@ const Tariff = (): JSX.Element => {
           >
             {I18n.t('pages.tariff.mainPage.home')}
           </Link>
-          <span className="breadcrumbEnd">{I18n.t('pages.tariff.mainPage.tariff')}</span>
+          <span className="breadcrumbEnd" id={TARIFF_MAINPAGE_SPAN_TARIFF}>{I18n.t('pages.tariff.mainPage.tariff')}</span>
         </Breadcrumbs>
         <TopButtonContainer>
           <GridButton>
             <RowButton>
               <ColButton>
                 <Link
+                  id={TARIFF_MAINPAGE_LINK_TARIFFPROCESSING}
                   color="inherit"
                   onClick={() => history.push('/tarifario-processamentos')}
                   className="breadcrumbInitial"
@@ -208,6 +217,7 @@ const Tariff = (): JSX.Element => {
               <ColButton>
               <ButtonContainer>
                 <Button
+                  id={TARIFF_BUTTON_UPLOAD}
                   disabled={false}
                   text={I18n.t('pages.tariff.upload.mainLabel')}
                   tooltip={I18n.t('pages.tariff.upload.mainLabel')}

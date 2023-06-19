@@ -21,9 +21,18 @@ import ItemErrorModal from './ItemErrorModal/ItemErrorModal'
 import { getModalFilter, getTariffByFilter, getActivityFilter, getValidityFilter } from './helpers'
 import TariffUploadModal from './components/TariffUploadModal/TariffUploadModal'
 import TariffProcessingTable from './TariffProcessingTable'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import useTariffs from '../../hooks/tariff/useTariffs'
 import Filter from './components/filter'
 // import { TariffContext, filterDefault } from './context/TariffContext'
+
+import {
+  TARIFF_PROCESSING_LINK_HOME,
+  TARIFF_PROCESSING_LINK_TARIFF,
+  TARIFF_PROCESSING_BUTTON_BACK,
+  TARIFF_PROCESSING_BUTTON_UPLOAD,
+  TARIFF_PROCESSING_SPAN_TITLE
+} from '../../../ids'
 
 const defaultFilter = {
   direction: 'ASC',
@@ -41,11 +50,13 @@ const TariffProcessing = (): JSX.Element => {
   const [filter, setFilter] = useState<any>(defaultFilter)
   const [openErrorModal, setOpenErrorModal] = useState(false)
   const [tariffList, setTariffList] = useState<any[]>([])
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [totalFilesList, setTotalFilesList] = useState<number>(3)
   const [itemId, setItemId] = useState('')
   const history = useHistory()
   const [open, setOpen] = useState(false)
   const [uploadType, setUploadType] = useState('')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [quickFilterList, setQuickFilterList] = useState<any[]>([
     { type: 'activity', status: I18n.t('pages.tariff.upload.import') },
     { type: 'modal', status: I18n.t('pages.tariff.modals.air') }
@@ -89,8 +100,6 @@ const TariffProcessing = (): JSX.Element => {
     const tariffType = getActivityFilter(quickFilterList)
     const validityTariff = getValidityFilter(quickFilterList)
 
-    // changeFilterList(tariffType, tariffModalType, validityTariff)
-
     setFilter(() => ({
       ...defaultFilter,
       tariffModalType,
@@ -104,7 +113,7 @@ const TariffProcessing = (): JSX.Element => {
       <TopContainer>
         <Breadcrumbs separator=">" aria-label="breadcrumb">
           <Link
-            id="siriuscomercial_tariff-tariff-processing_link_home"
+            id={TARIFF_PROCESSING_LINK_HOME}
             color="inherit"
             onClick={() => history.push('/')}
             className="breadcrumbInitial"
@@ -113,7 +122,7 @@ const TariffProcessing = (): JSX.Element => {
             Home
           </Link>
           <Link
-            id="siriuscomercial_tariff-tariff-processing_link_tarifario"
+            id={TARIFF_PROCESSING_LINK_TARIFF}
             color="inherit"
             onClick={() => history.push('/tarifario')}
             className="breadcrumbInitial"
@@ -121,7 +130,7 @@ const TariffProcessing = (): JSX.Element => {
           >
             Tarifário
           </Link>
-          <span className="breadcrumbEnd" id="siriuscomercial_tariff-tariff-processing_span_tarifasemprocessamento">Tarifas em processamento</span>
+          <span className="breadcrumbEnd" id={TARIFF_PROCESSING_SPAN_TITLE}>Tarifas em processamento</span>
         </Breadcrumbs>
         <TopButtonContainer>
             <GridButton>
@@ -129,7 +138,7 @@ const TariffProcessing = (): JSX.Element => {
                 <ColButton>
                   <ButtonContainer>
                     <Button
-                      id="siriuscomercial_tariff-tariff-processing_button_voltar"
+                      id={TARIFF_PROCESSING_BUTTON_BACK}
                       disabled={false}
                       text={'Voltar ao Tarifário'}
                       backgroundGreen={false}
@@ -142,7 +151,7 @@ const TariffProcessing = (): JSX.Element => {
                 <ColButton>
                   <ButtonContainer>
                     <Button
-                      id="siriuscomercial_tariff-tariff-processing_button_upload"
+                      id={TARIFF_PROCESSING_BUTTON_UPLOAD}
                       disabled={false}
                       text={'Fazer upload de tarifas'}
                       tooltip={'Fazer upload de tarifas'}

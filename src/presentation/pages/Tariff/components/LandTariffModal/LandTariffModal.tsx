@@ -35,6 +35,21 @@ import API from '../../../../../infrastructure/api'
 import { useCurrencies, useFrequency } from '../../../../hooks'
 import { TariffItemsTypes } from '../../../../../application/enum/tariffEnum'
 
+import {
+  TARIFF_LAND_TARIFF_MODAL_SPAN_AGENT,
+  TARIFF_LAND_TARIFF_MODAL_SPAN_COMPANY,
+  TARIFF_LAND_TARIFF_MODAL_SELECT_CURRENCY,
+  TARIFF_LAND_TARIFF_MODAL_INPUT_GENERALCARGODED,
+  TARIFF_LAND_TARIFF_MODAL_INPUT_GENERALCARGOCONS,
+  TARIFF_LAND_TARIFF_MODAL_INPUT_IMOCARGODED,
+  TARIFF_LAND_TARIFF_MODAL_INPUT_IMOCARGOCONS,
+  TARIFF_LAND_TARIFF_MODAL_SELECT_FREQUENCY,
+  TARIFF_LAND_TARIFF_MODAL_INPUT_TXROUTE,
+  TARIFF_LAND_TARIFF_MODAL_INPUT_TRANSITTIME,
+  TARIFF_LAND_TARIFF_MODAL_INPUT_DTVALIDITY,
+  TARIFF_LAND_TARIFF_MODAL_BUTTON_CANCEL,
+  TARIFF_LAND_TARIFF_MODAL_BUTTON_SAVE
+} from '../../../../../ids'
 interface TariffValues {
   idTariffTypeValues: number
   value: string
@@ -229,8 +244,8 @@ const LandTariffModal = ({
                     <TableBodyRow>
                       <StyledTableCell width="45%" align="left">
                         <ColumnDiv>
-                          <span id="siriuscomercial_tariff-LandTariffModal_span_agent">{data.agent}</span>
-                          <span id="siriuscomercial_tariff-LandTariffModal_span_landCompany">{data.landCompany}</span>
+                          <span id={TARIFF_LAND_TARIFF_MODAL_SPAN_AGENT}>{data.agent}</span>
+                          <span id={TARIFF_LAND_TARIFF_MODAL_SPAN_COMPANY}>{data.landCompany}</span>
                         </ColumnDiv>
                       </StyledTableCell>
                       <StyledTableCell width="40%" align="left">
@@ -249,7 +264,7 @@ const LandTariffModal = ({
                               renderInput={(params) => (
                                 <div ref={params.InputProps.ref}>
                                   <Input
-                                    id="siriuscomercial_tariff-LandTariffModal_input_currency"
+                                    id={TARIFF_LAND_TARIFF_MODAL_SELECT_CURRENCY}
                                     {...params.inputProps}
                                     width="84px"
                                     placeholder={data.currency}
@@ -277,7 +292,7 @@ const LandTariffModal = ({
                   {I18n.t('components.tariffModal.generalCargoDed')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
-                  id="siriuscomercial_tariff-LandTariffModal_input_generalCargoDed"
+                  id={TARIFF_LAND_TARIFF_MODAL_INPUT_GENERALCARGODED}
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -298,7 +313,7 @@ const LandTariffModal = ({
                   {I18n.t('components.tariffModal.generalCargoCons')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
-                  id="siriuscomercial_tariff-LandTariffModal_input_generalCargoCons"
+                  id={TARIFF_LAND_TARIFF_MODAL_INPUT_GENERALCARGOCONS}
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -319,7 +334,7 @@ const LandTariffModal = ({
                   {I18n.t('components.tariffModal.ImoCargoDed')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
-                  id="siriuscomercial_tariff-LandTariffModal_input_imoCargoDed"
+                  id={TARIFF_LAND_TARIFF_MODAL_INPUT_IMOCARGODED}
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -340,7 +355,7 @@ const LandTariffModal = ({
                   {I18n.t('components.tariffModal.ImoCargoCons')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
-                  id="siriuscomercial_tariff-LandTariffModal_input_imoCargoCons"
+                  id={TARIFF_LAND_TARIFF_MODAL_INPUT_IMOCARGOCONS}
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -362,7 +377,7 @@ const LandTariffModal = ({
                 <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <ControlledSelect
-                id="siriuscomercial_tariff-LandTariffModal_select_frequency"
+                id={TARIFF_LAND_TARIFF_MODAL_SELECT_FREQUENCY}
                 labelId="frequency-label"
                 value={data.frequency}
                 onChange={(e) => setData({ ...data, frequency: e.target.value })}
@@ -394,7 +409,7 @@ const LandTariffModal = ({
                   <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <ControlledInput
-                id="siriuscomercial_tariff-LandTariffModal_input_txRoute"
+                id={TARIFF_LAND_TARIFF_MODAL_INPUT_TXROUTE}
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
                 invalid={
                   invalidInput &&
@@ -418,7 +433,7 @@ const LandTariffModal = ({
                   <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <ControlledInput
-                id="siriuscomercial_tariff-LandTariffModal_input_transitTime"
+                id={TARIFF_LAND_TARIFF_MODAL_INPUT_TRANSITTIME}
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
                 invalid={
                   invalidInput &&
@@ -436,7 +451,7 @@ const LandTariffModal = ({
                 {I18n.t('components.tariffModal.validity')}<RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <NumberInput
-                id="siriuscomercial_tariff-LandTariffModal_input_dtValidity"
+                id={TARIFF_LAND_TARIFF_MODAL_INPUT_DTVALIDITY}
                 format={'##/##/####'}
                 mask={['D', 'D', 'M', 'M', 'Y', 'Y', 'Y', 'Y']}
                 placeholder="DD/MM/YYYY"
@@ -457,7 +472,7 @@ const LandTariffModal = ({
               <Grid item xs={10}>
                 <ButtonDiv>
                   <Button
-                    id="siriuscomercial_tariff-LandTariffModal_button_close"
+                    id={TARIFF_LAND_TARIFF_MODAL_BUTTON_CANCEL}
                     disabled={false}
                     text={I18n.t('components.tariffModal.cancel')}
                     tooltip={I18n.t('components.tariffModal.cancel')}
@@ -470,7 +485,7 @@ const LandTariffModal = ({
               <Grid item xs={2}>
                 <ButtonDiv>
                   <Button
-                    id="siriuscomercial_tariff-LandTariffModal_button_save"
+                    id={TARIFF_LAND_TARIFF_MODAL_BUTTON_SAVE}
                     disabled={false}
                     text={I18n.t('components.tariffModal.save')}
                     tooltip={I18n.t('components.tariffModal.save')}
