@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom'
 import { I18n } from 'react-redux-i18n'
 import { Root, ChildrenContainer, ExtensionMenuContainer } from './style'
 
-const Wrapper = ({ children }): JSX.Element => {
+const Wrapper = ({ children }: any): JSX.Element => {
   const [open, setOpen] = useState(false)
   const history = useHistory()
 

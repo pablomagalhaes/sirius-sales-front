@@ -40,14 +40,14 @@ const App = (): JSX.Element => {
   )
 }
 
-const ErrorFallback = ({ error }): JSX.Element => {
+const ErrorFallback = ({ error }: any): JSX.Element => {
   useEffect(() => {
-    toast.error(error.message)
+    toast.error(error.message as any)
   }, [])
 
   return <App/>
 }
 
 export default withErrorBoundary(App, {
-  FallbackComponent: ({ error }) => <ErrorFallback error={error} />
+  FallbackComponent: ({ error }: any) => <ErrorFallback error={error} />
 })
