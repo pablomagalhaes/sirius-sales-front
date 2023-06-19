@@ -29,7 +29,7 @@ import {
   CloseIconContainer
 } from '../../../../components/StyledComponents/modalStyles'
 import { Button } from 'fiorde-fe-components'
-import { usePartnerList, useOriginDestination,useBusinessPartnerByType, useCurrencies } from '../../../../hooks'
+import { usePartnerList, useOriginDestination, useBusinessPartnerByType, useCurrencies } from '../../../../hooks'
 import { OriginDestinyTypes } from '../../../../../application/enum/enum'
 import { NumberInput } from '../../../NewProposal/steps/StepsStyles'
 import FormatNumber from '../../../../../application/utils/formatNumber'
@@ -47,7 +47,7 @@ interface TariffValues {
 export interface TariffUploadData {
   agent: AgentType
   origin: string
-  destiny: string,
+  destiny: string
   airCompany: AgentType
   weight1: TariffValues | null
   weight2: TariffValues | null
@@ -128,10 +128,10 @@ const TariffImportHandsOnModal = ({
   }
 
   const addOn = (): void => {
-    if(validateData() === false) setInvalidInput(true)
+    if (!validateData()) setInvalidInput(true)
     else {
-        console.log(data)
-        handleOnClose()
+      console.log(data)
+      handleOnClose()
     }
   }
   const rgxFloat = /^[0-9]*,?[0-9]*$/
@@ -265,7 +265,7 @@ const TariffImportHandsOnModal = ({
               PaperComponent={(params: any) => <StyledPaper {...params} />}
             />
             </Grid>
-            <Grid item xs={6} style={{marginTop: '-45px'}}>
+            <Grid item xs={6} style={{ marginTop: '-45px' }}>
             <FormLabel component="legend" error={
               (invalidInput && data.agent.id === null)
             }>
@@ -315,7 +315,7 @@ const TariffImportHandsOnModal = ({
               PaperComponent={(params: any) => <StyledPaper {...params} />}
             />
             </Grid>
-            <Grid item xs={6} style={{marginTop: '-45px'}}>
+            <Grid item xs={6} style={{ marginTop: '-45px' }}>
             <FormLabel component="legend" error={
               (invalidInput && data.airCompany.id === null)
             }>
@@ -370,7 +370,7 @@ const TariffImportHandsOnModal = ({
                 {I18n.t('components.tariffModal.currency')}
               </FormLabel>
               <Autocomplete
-                style={{marginTop: '-12px'}}
+                style={{ marginTop: '-12px' }}
                 value={data.currency}
                 options={currencyList.map((option) => option.id)}
                 disabled={false}
