@@ -101,8 +101,6 @@ const Tariff = (): JSX.Element => {
     const tariffType = getActivityFilter(quickFilterList)
     const validityTariff = getValidityFilter(quickFilterList)
 
-    changeFilterList(tariffType, tariffModalType, validityTariff)
-
     setFilter(() => ({
       ...filterDefault,
       tariffModalType,
@@ -134,6 +132,10 @@ const Tariff = (): JSX.Element => {
   useEffect(() => {
     setOrderBy(SelectorsValuesTypes.Validity)
   }, [filter.tariffModalType])
+
+  useEffect(() => {
+    changeFilterList(filter)
+  }, [filter])
 
   const handleExportTariff = (): void => {}
 
