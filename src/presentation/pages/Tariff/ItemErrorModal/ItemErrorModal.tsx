@@ -27,6 +27,17 @@ import {
 import { Button } from 'fiorde-fe-components'
 import { chooseStatusColor, chooseStatusLabel } from '../../../../utils'
 
+import {
+  TARIFF_TARIFF_PROCESSING_ITEM_ERROR_MODAL_SPAN_NOME,
+  TARIFF_TARIFF_PROCESSING_ITEM_ERROR_MODAL_SPAN_DATAHORAPROCESSAMENTO,
+  TARIFF_TARIFF_PROCESSING_ITEM_ERROR_MODAL_SPAN_USUARIO,
+  TARIFF_TARIFF_PROCESSING_ITEM_ERROR_MODAL_SPAN_TIPO,
+  TARIFF_TARIFF_PROCESSING_ITEM_ERROR_MODAL_SPAN_MODAL,
+  TARIFF_TARIFF_PROCESSING_ITEM_ERROR_MODAL_SPAN_AGENTE,
+  TARIFF_TARIFF_PROCESSING_ITEM_ERROR_MODAL_SPAN_STATUSPROCESSAMENTO,
+  TARIFF_TARIFF_PROCESSING_ITEM_ERROR_MODAL_BUTTON_CLOSE
+} from '../../../../ids'
+
 interface ItemErrorModalProps {
   theme?: any
   open: boolean
@@ -70,13 +81,13 @@ const ItemErrorModal = ({
           <Grid container spacing={5} style={{ width: '100%' }}>
             <Grid item xs={12}>
               <UnorderedList>
-                <li><span id="siriuscomercial_tariff-tariff-processing-itemErrorModal_span_nome">{I18n.t('pages.tariff.itemErrorModal.txFileName')}</span> {item?.txFileName}</li>
-                <li><span id="siriuscomercial_tariff-tariff-processing-itemErrorModal_span_data-hora-processamento">{I18n.t('pages.tariff.itemErrorModal.dtProcess')}</span> {moment(item?.dtProcess).format('DD/MM/YYYY')}</li>
-                <li><span id="siriuscomercial_tariff-tariff-processing-itemErrorModal_span_usuario">{I18n.t('pages.tariff.itemErrorModal.userCreation')}</span> {item?.userCreation}</li>
-                <li><span id="siriuscomercial_tariff-tariff-processing-itemErrorModal_span_tipo">{I18n.t('pages.tariff.itemErrorModal.tariffType')}</span> {item?.tariffType}</li>
-                <li><span id="siriuscomercial_tariff-tariff-processing-itemErrorModal_span_modal">{I18n.t('pages.tariff.itemErrorModal.tariffModalType')}</span> {item?.tariffModalType}</li>
-                <li><span id="siriuscomercial_tariff-tariff-processing-itemErrorModal_span_agente">{I18n.t('pages.tariff.itemErrorModal.nmAgent')}</span> {item?.nmAgent}</li>
-                <li><span id="siriuscomercial_tariff-tariff-processing-itemErrorModal_span_status-do-processamento" style={{ float: 'left' }}>{I18n.t('pages.tariff.itemErrorModal.txStatus')}</span>
+                <li><span id={TARIFF_TARIFF_PROCESSING_ITEM_ERROR_MODAL_SPAN_NOME}>{I18n.t('pages.tariff.itemErrorModal.txFileName')}</span> {item?.txFileName}</li>
+                <li><span id={TARIFF_TARIFF_PROCESSING_ITEM_ERROR_MODAL_SPAN_DATAHORAPROCESSAMENTO}>{I18n.t('pages.tariff.itemErrorModal.dtProcess')}</span> {moment(item?.dtProcess).format('DD/MM/YYYY')}</li>
+                <li><span id={TARIFF_TARIFF_PROCESSING_ITEM_ERROR_MODAL_SPAN_USUARIO}>{I18n.t('pages.tariff.itemErrorModal.userCreation')}</span> {item?.userCreation}</li>
+                <li><span id={TARIFF_TARIFF_PROCESSING_ITEM_ERROR_MODAL_SPAN_TIPO}>{I18n.t('pages.tariff.itemErrorModal.tariffType')}</span> {item?.tariffType}</li>
+                <li><span id={TARIFF_TARIFF_PROCESSING_ITEM_ERROR_MODAL_SPAN_MODAL}>{I18n.t('pages.tariff.itemErrorModal.tariffModalType')}</span> {item?.tariffModalType}</li>
+                <li><span id={TARIFF_TARIFF_PROCESSING_ITEM_ERROR_MODAL_SPAN_AGENTE}>{I18n.t('pages.tariff.itemErrorModal.nmAgent')}</span> {item?.nmAgent}</li>
+                <li><span id={TARIFF_TARIFF_PROCESSING_ITEM_ERROR_MODAL_SPAN_STATUSPROCESSAMENTO} style={{ float: 'left' }}>{I18n.t('pages.tariff.itemErrorModal.txStatus')}</span>
                 <div style={{ borderRadius: '50%', height: '15px', width: '15px', marginLeft: '10px', float: 'left', backgroundColor: `${chooseStatusColor(item?.txStatus)}` }}></div>
                   <div style={{ lineHeight: '16px', marginLeft: '5px', float: 'left' }}>
                     {chooseStatusLabel(item?.txStatus)}
@@ -110,7 +121,7 @@ const ItemErrorModal = ({
               <Grid item xs={12}>
                 <Box display="flex" justifyContent="flex-end">
                  <Button
-                  id="siriuscomercial_tariff-tariff-processing_button_close"
+                  id={TARIFF_TARIFF_PROCESSING_ITEM_ERROR_MODAL_BUTTON_CLOSE}
                   disabled={false}
                   text={I18n.t('pages.tariff.itemErrorModal.close')}
                   tooltip={I18n.t('')}

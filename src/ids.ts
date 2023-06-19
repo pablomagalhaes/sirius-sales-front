@@ -41,7 +41,7 @@ export const TARIFF_SEA_FCL_TARIFF_MODAL_SELECT_CURRENCY = `${PREFIX_IDS}tariff-
 export const TARIFF_SEA_FCL_TARIFF_MODAL_INPUT_CONTAINER = `${PREFIX_IDS}tariff-sea-fcl-tariff-modal_input_container`
 export const TARIFF_SEA_FCL_TARIFF_MODAL_INPUT_DTVALIDITY = `${PREFIX_IDS}tariff-sea-fcl-tariff-modal_input_dtvalidity`
 export const TARIFF_SEA_FCL_TARIFF_MODAL_SELECT_FREQUENCY = `${PREFIX_IDS}tariff-sea-fcl-tariff-modal_select_frequency`
-export const TARIFF_SEA_FCL_TARIFF_MODAL_INPUT_TXROUTE = `${PREFIX_IDS}tariff-sea-fcl-tariff-modal_input_txrute`
+export const TARIFF_SEA_FCL_TARIFF_MODAL_INPUT_TXROUTE = `${PREFIX_IDS}tariff-sea-fcl-tariff-modal_input_txroute`
 export const TARIFF_SEA_FCL_TARIFF_MODAL_INPUT_TRANSITTIME = `${PREFIX_IDS}tariff-sea-fcl-tariff-modal_input_transittime`
 export const TARIFF_SEA_FCL_TARIFF_MODAL_BUTTON_CANCEL = `${PREFIX_IDS}tariff-sea-fcl-tariff-modal_button_cancel`
 export const TARIFF_SEA_FCL_TARIFF_MODAL_BUTTON_SAVE = `${PREFIX_IDS}tariff-sea-fcl-tariff-modal_button_save`
@@ -55,7 +55,7 @@ export const TARIFF_SEA_LCL_TARIFF_MODAL_INPUT_UNTILWEIGHT = `${PREFIX_IDS}tarif
 export const TARIFF_SEA_LCL_TARIFF_MODAL_INPUT_OVERWEIGHT = `${PREFIX_IDS}tariff-sea-lcl-tariff-modal_overweight`
 export const TARIFF_SEA_LCL_TARIFF_MODAL_INPUT_DTVALIDITY = `${PREFIX_IDS}tariff-sea-lcl-tariff-modal_input_dtvalidity`
 export const TARIFF_SEA_LCL_TARIFF_MODAL_SELECT_FREQUENCY = `${PREFIX_IDS}tariff-sea-lcl-tariff-modal_select_frequency`
-export const TARIFF_SEA_LCL_TARIFF_MODAL_INPUT_TXROUTE = `${PREFIX_IDS}tariff-sea-lcl-tariff-modal_input_txrute`
+export const TARIFF_SEA_LCL_TARIFF_MODAL_INPUT_TXROUTE = `${PREFIX_IDS}tariff-sea-lcl-tariff-modal_input_txroute`
 export const TARIFF_SEA_LCL_TARIFF_MODAL_INPUT_TRANSITTIME = `${PREFIX_IDS}tariff-sea-lcl-tariff-modal_input_transittime`
 export const TARIFF_SEA_LCL_TARIFF_MODAL_BUTTON_CANCEL = `${PREFIX_IDS}tariff-sea-lcl-tariff-modal_button_cancel`
 export const TARIFF_SEA_LCL_TARIFF_MODAL_BUTTON_SAVE = `${PREFIX_IDS}tariff-sea-lcl-tariff-modal_button_save`
@@ -66,6 +66,16 @@ export const TARIFF_UPLOAD_MODAL_SELECT_UPLOAD = `${PREFIX_IDS}tariff-upload-tar
 export const TARIFF_UPLOAD_MODAL_BUTTON_CLOSE = `${PREFIX_IDS}tariff-upload-tariff-modal_button_close`
 export const TARIFF_UPLOAD_MODAL_BUTTON_INITIATEPROCESS = `${PREFIX_IDS}tariff-upload-tariff-modal_button_iniciarprocessamento`
 export const TARIFF_UPLOAD_MODAL_BUTTON_PROCESSING = `${PREFIX_IDS}tariff-upload-tariff-modal_button_processando`
+
+// Modal Item Error
+export const TARIFF_TARIFF_PROCESSING_ITEM_ERROR_MODAL_SPAN_NOME = `${PREFIX_IDS}tariff_tariff-processing-item-error-modal_span_nome`
+export const TARIFF_TARIFF_PROCESSING_ITEM_ERROR_MODAL_SPAN_DATAHORAPROCESSAMENTO = `${PREFIX_IDS}tariff_tariff-processing-item-error-modal_span_datahoraprocessamento`
+export const TARIFF_TARIFF_PROCESSING_ITEM_ERROR_MODAL_SPAN_USUARIO = `${PREFIX_IDS}tariff_tariff-processing-item-error-modal_span_usuario`
+export const TARIFF_TARIFF_PROCESSING_ITEM_ERROR_MODAL_SPAN_TIPO = `${PREFIX_IDS}tariff_tariff-processing-item-error-modal_span_tipo`
+export const TARIFF_TARIFF_PROCESSING_ITEM_ERROR_MODAL_SPAN_MODAL = `${PREFIX_IDS}tariff_tariff-processing-item-error-modal_span_modal`
+export const TARIFF_TARIFF_PROCESSING_ITEM_ERROR_MODAL_SPAN_AGENTE = `${PREFIX_IDS}tariff_tariff-processing-item-error-modal_span_agente`
+export const TARIFF_TARIFF_PROCESSING_ITEM_ERROR_MODAL_SPAN_STATUSPROCESSAMENTO = `${PREFIX_IDS}tariff_tariff-processing-item-error-modal_span_statusprocessamento`
+export const TARIFF_TARIFF_PROCESSING_ITEM_ERROR_MODAL_BUTTON_CLOSE = `${PREFIX_IDS}tariff_tariff-processing-item-error-modal_button_close`
 
 // Tariff Processing
 export const TARIFF_PROCESSING_LINK_HOME = `${PREFIX_IDS}tariff-processing_link_home`
