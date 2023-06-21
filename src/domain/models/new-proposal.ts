@@ -1,8 +1,8 @@
-import { Agent } from './Agent'
-import { CargoVolume } from './CargoVolume'
-import { Cost } from './Cost'
-import { TotalCost } from './TotalCost'
-import { ProfitsProps } from './ProfitsProps'
+import { Agent } from '../Agent'
+import { CargoVolume } from '../CargoVolume'
+import { Cost } from '../Cost'
+import { TotalCost } from '../TotalCost'
+import { ProfitsProps } from '../ProfitsProps'
 
 export interface Proposal {
   idProposal?: number | null
@@ -32,7 +32,18 @@ export interface Proposal {
   destinationCityName: string
   destinationCityId: string
   idIncoterm: string // step2 incoterm id
-  cargo: Cargo[]
+  cargo: Array<{
+    id?: number | null
+    txCargo: string // descricao
+    isDangerous: boolean // step3 perigoso
+    idImoType: number // id IMO
+    idTemperature: number // step 3 id temperatura
+    idCargoContractingType: number | null // id especificacoes step3 (null observar comportamento)
+    codeUnDangerous: number // step 3 codigo
+    cargoVolumes?: CargoVolume[] // array de items adicionados
+    vlCwPurchase: number | null // chargeable weight compra
+    vlCwSale: number | null // chargeable weight venda
+  }>
   transitTime: number // step4 transit time
   idFrequency: number // step 4 id frequency
   route: string // step4 rota
@@ -45,17 +56,4 @@ export interface Proposal {
   clearenceIncluded: boolean
   agents: Agent[]
   profits: ProfitsProps[]
-}
-
-interface Cargo {
-  id?: number | undefined | null
-  txCargo: string
-  isDangerous: boolean
-  idImoType: number
-  idTemperature: number
-  idCargoContractingType: number | null
-  codeUnDangerous: number
-  cargoVolumes: CargoVolume[]
-  vlCwPurchase: number | null
-  vlCwSale: number | null
 }
