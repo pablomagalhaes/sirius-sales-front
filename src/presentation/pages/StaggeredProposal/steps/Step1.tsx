@@ -1,39 +1,28 @@
-import React, { useEffect, useState, useContext, Fragment } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
+  MenuItem,
   FormLabel,
   Grid,
-  InputAdornment,
-  RadioGroup
+  InputAdornment
 } from '@material-ui/core/'
 import { I18n } from 'react-redux-i18n'
 import {
   Title,
   Subtitle,
-  IconContainer,
-  Separator,
-  StyledRadio
+  SelectSpan,
+  Separator
 } from '../style'
+
 import IconComponent from '../../../../application/icons/IconComponent'
 import { withTheme } from 'styled-components'
+
+import ControlledSelect from '../../../components/ControlledSelect'
 import ControlledInput from '../../../components/ControlledInput'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import API from '../../../../infrastructure/api'
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import { Transport, TransportList } from '../../../../domain/Transport'
 import { StyledPaper } from './StepsStyles'
-import { ExitDialog } from 'fiorde-fe-components'
-
-
-export interface Agents {
-  id?: number | null
-  agent: string
-  idBusinessPartnerAgent?: number | null
-  shippingCompany: string
-  idBusinessPartnerTransportCompany?: number | null
-}
+import { PickerDateRange } from 'fiorde-fe-components'
 
 export interface Filled {
   step2: boolean
@@ -43,12 +32,8 @@ export interface Step1Props {
   invalidInput: boolean
   setCompleted: (completed: any) => void
   setFilled: (filled: any) => void
-  setProposalType: (proposal: string) => void
-  setModal: (modal: string) => void
   filled: Filled
   setStepLoaded: (steps: any) => void
-  setAgentList: (agent: Agents[]) => void
-  // setAgentList: (agent: string[]) => void
 }
 
 const Step1 = ({
@@ -56,38 +41,28 @@ const Step1 = ({
   invalidInput,
   setCompleted,
   setFilled,
-  setProposalType,
-  setModal,
   filled,
-  setStepLoaded,
-  setAgentList
+  setStepLoaded
 }: Step1Props): JSX.Element => {
-  const [transportList] = useState<Transport[]>(TransportList)
-  const [agentsList, setAgentsList] = useState<any[]>([])
-  const [businessPartnerList, setBusinessPartnerList] = useState<any[]>([])
-  const [partnerList, setPartnerList] = useState<any[]>([])
+  const [vigencyDate, setVigencyDate] = React.useState([null, null]);
+  const [partnerList, setPartnerList] = useState<any[]>([]);
   const [data, setData] = useState({
-    proposal: '',
-    serviceDesemb: false,
-    serviceTransport: false,
+    operation: '',
+    vigencyDate: vigencyDate,
     proposalValue: '',
-    modal: '',
     requester: ''
   })
 
-  const [showPopUp, setShowPopUp] = useState(false)
-  const [modalCopy, setModalCopy] = useState('')
-
-  const [selectedAgents, setSelectedAgents] = useState<Agents[]>([
+  const operationList = [
     {
-      id: null,
-      agent: '',
-      idBusinessPartnerAgent: null,
-      shippingCompany: '',
-      idBusinessPartnerTransportCompany: null
+      id: 1,
+      operation: 'Importação'
+    },
+    {
+      id: 2,
+      operation: 'Exportação'
     }
-  ])
-
+  ]
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -99,80 +74,133 @@ const Step1 = ({
         })
         .catch((err) => console.log(err))
     })
+    setStepLoaded((currentState) => ({ ...currentState, step1: true }))
   }, [])
 
-  // useEffect(() => {
-  //   if (
-  //     data.proposal !== '' &&
-  //     data.modal !== '' &&
-  //     data.requester !== ''
-  //   ) {
-  //     setCompleted((currentState) => ({ ...currentState, step1: true }))
-  //   } else {
-  //     setCompleted((currentState) => ({ ...currentState, step1: false }))
-  //   }
-  //   if (
-  //     data.proposal !== '' ||
-  //     data.modal !== ''
-  //   ) {
-  //     setFilled((currentState) => {
-  //       return { ...currentState, step1: true }
-  //     })
-  //   } else {
-  //     setFilled((currentState) => {
-  //       return { ...currentState, step1: false }
-  //     })
-  //   }
-  // }, [data])
+  useEffect(() => {
+    setData({ ...data, vigencyDate: vigencyDate })
+  }, [vigencyDate])
+
+  useEffect(() => {
+    if (data.proposalValue !== '' && data.operation !== '') {
+      setCompleted((currentState) => ({ ...currentState, step1: true }));
+    } else {
+      setCompleted((currentState) => ({ ...currentState, step1: false }));
+    }
+    if (data.proposalValue !== '' || data.operation !== '') {
+      setFilled((currentState) => {
+        return { ...currentState, step1: true }
+      })
+    } else {
+      setFilled((currentState) => {
+        return { ...currentState, step1: false }
+      })
+    }
+  }, [data])
+
+  console.log('data step1', data)
 
   return (
     <Separator>
       <Title>
-        1. {I18n.t('pages.newProposal.step1.title')}
-        <Subtitle>{I18n.t('pages.newProposal.step1.subtitle')}</Subtitle>
+        1. {I18n.t('pages.staggeredProposal.step1.title')}
+        <Subtitle>{I18n.t('pages.staggeredProposal.step1.subtitle')}</Subtitle>
       </Title>
       <Grid container spacing={5}>
-        <Grid item xs={6}> 
-          <FormLabel component="legend" error={data.proposalValue === '' && invalidInput}>
-            {I18n.t('pages.newProposal.step1.client')}:
+        <Grid item xs={6}>
+          <FormLabel
+            component="legend"
+            error={data.proposalValue === '' && invalidInput}
+          >
+            {I18n.t('pages.staggeredProposal.step1.client')}:
             <RedColorSpan> *</RedColorSpan>
           </FormLabel>
-              <Autocomplete
-                freeSolo
-                onChange={(e, newValue) =>
-                  setData({ ...data, proposalValue: String(newValue) })
-                }
-                options={ partnerList.map((item) => item.businessPartner.simpleName)}
-                value={data.proposalValue}
-                renderInput={(params) => (
-                  <div ref={params.InputProps.ref}>
-                    <ControlledInput
-                      {...params}
-                      id="search-client"
-                      toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                      invalid={data.proposalValue === '' && invalidInput}
-                      variant="outlined"
-                      size="small"
-                      placeholder={I18n.t('pages.newProposal.step1.searchClient')}
-                      $space
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconComponent
-                              name="search"
-                              defaultColor={
-                                theme?.commercial?.pages?.newProposal?.subtitle
-                              }
-                            />
-                          </InputAdornment>
-                        )
-                      }}
-                    />
-                  </div>
-                )}
-                PaperComponent={(params: any) => <StyledPaper {...params} />}
-              />
-          </Grid>
+          <Autocomplete
+            freeSolo
+            onChange={(e, newValue) =>
+              setData({ ...data, proposalValue: String(newValue) })
+            }
+            options={partnerList.map((item) => item.businessPartner.simpleName)}
+            value={data.proposalValue}
+            renderInput={(params) => (
+              <div ref={params.InputProps.ref}>
+                <ControlledInput
+                  {...params}
+                  id="search-client"
+                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                  invalid={data.proposalValue === '' && invalidInput}
+                  variant="outlined"
+                  size="small"
+                  placeholder={I18n.t(
+                    'pages.staggeredProposal.step1.searchClient'
+                  )}
+                  $space
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconComponent
+                          name="search"
+                          defaultColor={
+                            theme?.commercial?.pages?.newProposal?.subtitle
+                          }
+                        />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </div>
+            )}
+            PaperComponent={(params: any) => <StyledPaper {...params} />}
+          />
+        </Grid>
+        <Grid item xs={2}>
+          <FormLabel
+            component="legend"
+            error={invalidInput && data.operation.length === 0}
+          >
+            {I18n.t('pages.staggeredProposal.step1.operation')}
+            {<RedColorSpan> *</RedColorSpan>}
+          </FormLabel>
+          <ControlledSelect
+            value={data.operation}
+            onChange={(e) => setData({ ...data, operation: e.target.value })}
+            displayEmpty
+            disableUnderline
+            invalid={invalidInput && data.operation.length === 0}
+            toolTipTitle={I18n.t('components.itemModal.requiredField')}
+          >
+            <MenuItem disabled value="">
+              <SelectSpan placeholder={1}>
+                {I18n.t('pages.staggeredProposal.step1.choose')}
+              </SelectSpan>
+            </MenuItem>
+            {operationList.map((item) => (
+              <MenuItem key={item.id} value={item.id}>
+                <SelectSpan>{item.operation}</SelectSpan>
+              </MenuItem>
+            ))}
+          </ControlledSelect>
+        </Grid>
+        <Grid item xs={2}>
+          <FormLabel
+            component="legend"
+            error={invalidInput && data.operation.length === 0}
+          >
+            {I18n.t('pages.staggeredProposal.step1.vigencyDate')}
+            {<RedColorSpan> *</RedColorSpan>}
+          </FormLabel>
+          <div style={{ marginTop: '-8px' }}>
+            <PickerDateRange
+              defaultValue={data.vigencyDate}
+              endDateLabel="Data Final"
+              inputFormat=""
+              language="pt-br"
+              onChange={setVigencyDate}
+              placeHolderLabel="Periodo"
+              widthTx="250px"
+            />
+          </div>
+        </Grid>
       </Grid>
     </Separator>
   )

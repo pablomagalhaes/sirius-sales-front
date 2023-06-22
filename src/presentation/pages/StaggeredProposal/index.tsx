@@ -38,7 +38,7 @@ const StaggeredProposal = ({ theme }: StaggeredProposalProps): JSX.Element => {
   const [hover, setHover] = useState({ id: '', hover: false })
   const [invalidInput, setInvalidInput] = useState(false)
   const [leavingPage, setLeavingPage] = useState(false)
-  const [loadExistingProposal, setLoadExistingProposal] = useState(false)
+  const [loadExistingProposal, setLoadExistingProposal] = useState(true)
   const [modal, setModal] = useState('')
   const [totalCosts, setTotalCosts] = useState()
   const [proposalType, setProposalType] = useState('')
@@ -70,12 +70,12 @@ const StaggeredProposal = ({ theme }: StaggeredProposalProps): JSX.Element => {
   const steps = [
     {
       id: 'step1',
-      label: I18n.t('pages.StaggeredProposal.step1.title'),
+      label: I18n.t('pages.staggeredProposal.step1.title'),
       completed: completed.step1
     },
     {
       id: 'step2',
-      label: I18n.t('pages.StaggeredProposal.step2.title'),
+      label: I18n.t('pages.staggeredProposal.step2.title'),
       completed: completed.step2
     }
   ]
@@ -89,23 +89,24 @@ const StaggeredProposal = ({ theme }: StaggeredProposalProps): JSX.Element => {
   }
 
 
-  const handleSave = (): void => {
-    if (
-      completed.step1 &&
-      completed.step2
-    ) {
+  // const handleSave = (): void => {
+  //   if (
+  //     completed.step1 &&
+  //     completed.step2
+  //   ) {
 
-    } else{
+  //   } else{
 
-    }
+  //   }
      
-  }
+  // }
 
   const floatingButtonMenuItems = [
     {
       iconType: 'save',
       label: I18n.t('pages.newProposal.save'),
-      onClick: () => handleSave()
+      onClick: () => { }
+      // onClick: () => handleSave()
     }, {
       iconType: 'send',
       label: I18n.t('pages.newProposal.send'),
@@ -245,7 +246,7 @@ const StaggeredProposal = ({ theme }: StaggeredProposalProps): JSX.Element => {
           >
             Home
           </Link>
-          <span className="breadcrumbEnd">{I18n.t('pages.StaggeredProposal.title')}</span>
+          <span className="breadcrumbEnd">{I18n.t('pages.staggeredProposal.title')}</span>
         </Breadcrumbs>
         {/* <UserContainer>
           {editMode
@@ -296,7 +297,6 @@ const StaggeredProposal = ({ theme }: StaggeredProposalProps): JSX.Element => {
           </Button>
         </ButtonContainer>
       </TopContainer>
-     
       {leavingPage && <MessageExitDialog />}
       {loadExistingProposal &&
         <MainContainer ref={divRef}>
@@ -304,11 +304,8 @@ const StaggeredProposal = ({ theme }: StaggeredProposalProps): JSX.Element => {
             <Step1
               filled={filled}
               invalidInput={invalidInput}
-              setAgentList={setAgentList}
               setCompleted={setCompleted}
               setFilled={setFilled}
-              setModal={setModal}
-              setProposalType={setProposalType}
               setStepLoaded={setStepLoaded}
             />
           </div>
@@ -316,12 +313,8 @@ const StaggeredProposal = ({ theme }: StaggeredProposalProps): JSX.Element => {
             <div id="step2">
               <Step2
                 invalidInput={invalidInput}
-                modal={modal}
-                proposalType={proposalType}
-                setAgentList={setAgentList}
                 setCompleted={setCompleted}
                 setFilled={setFilled}
-                // updateAgentsIdsRef={updateAgentsIdsRef}
               />
             </div>
           </>
