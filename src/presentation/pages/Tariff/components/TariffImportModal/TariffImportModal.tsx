@@ -167,8 +167,6 @@ const TariffImportModal = ({
     } 
   }
 
-  console.log(totalTariffList)
-
   return (
     <Modal open={open} onClose={handleOnClose}>
       <ModalDiv>
