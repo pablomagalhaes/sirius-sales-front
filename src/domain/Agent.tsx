@@ -5,4 +5,5 @@ export interface Agent {
   idBusinessPartnerAgent?: number | null
   shippingCompany?: string
   idBusinessPartnerTransportCompany?: number | null
+  proposalImportFreightId?: number | null
 }
