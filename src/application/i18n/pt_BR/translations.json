@@ -331,7 +331,9 @@
         "tariff": "Tarifário",
         "display": "Exibir por",
         "export": "Exportar tarifas",
-        "orderBy": "Ordenar por"
+        "orderBy": "Ordenar por",
+        "exportList": "Exportar lista",
+        "last30days": "Últimos 30 dias"
       },
       "upload": {
         "import": "Importação",
@@ -452,7 +454,8 @@
         "land": "Detalhamento da tarifa - Rodoviário",
         "air": "Detalhamento da tarifa - Aéreo",
         "seaLcl": "Detalhamento da tarifa - Marítimo LCL",
-        "seaFcl": "Detalhamento da tarifa - Marítimo FCL"
+        "seaFcl": "Detalhamento da tarifa - Marítimo FCL",
+        "StaggeredProposal": "Escalonadas aéreas"
       }
     },
     "filter": {
@@ -485,6 +488,9 @@
         "300": "+300kg",
         "500": "+500kg",
         "1ton": "+1ton"
+      },
+      "workStation": {
+        "buttonLabel": "Criar nova proposta"
       }
     }
   }
