@@ -24,6 +24,8 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import { StyledPaper } from './StepsStyles'
 import { PickerDateRange } from 'fiorde-fe-components'
 
+import { UpdateStaggeredProposal } from '../../../../domain/usecase'
+
 export interface Filled {
   step2: boolean
 }
@@ -34,6 +36,7 @@ export interface Step1Props {
   setFilled: (filled: any) => void
   filled: Filled
   setStepLoaded: (steps: any) => void
+  UpdateStaggeredProposal?: UpdateStaggeredProposal
 }
 
 const Step1 = ({
@@ -42,7 +45,8 @@ const Step1 = ({
   setCompleted,
   setFilled,
   filled,
-  setStepLoaded
+  setStepLoaded,
+  UpdateStaggeredProposal
 }: Step1Props): JSX.Element => {
   const [vigencyDate, setVigencyDate] = React.useState([null, null]);
   const [partnerList, setPartnerList] = useState<any[]>([]);

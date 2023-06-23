@@ -20,12 +20,20 @@ import Step1 from './steps/Step1'
 import Step2 from './steps/Step2'
 
 import { useHistory, useLocation } from 'react-router-dom'
+import { UpdateStaggeredProposal } from '../../../domain/usecase'
+
+
+// export interface StaggeredProposalProps {
+//   theme: any
+// }
 
 export interface StaggeredProposalProps {
   theme: any
+  UpdateStaggeredProposal?: UpdateStaggeredProposal
 }
 
-const StaggeredProposal = ({ theme }: StaggeredProposalProps): JSX.Element => {
+const StaggeredProposal = ({ theme, UpdateStaggeredProposal }: StaggeredProposalProps): JSX.Element => {
+
   const [action, setAction] = useState('')
   const [agentList, setAgentList] = useState<[]>([])
   const [clicked, setClicked] = useState({ id: '', clicked: false })
@@ -307,6 +315,7 @@ const StaggeredProposal = ({ theme }: StaggeredProposalProps): JSX.Element => {
               setCompleted={setCompleted}
               setFilled={setFilled}
               setStepLoaded={setStepLoaded}
+              UpdateStaggeredProposal={UpdateStaggeredProposal}
             />
           </div>
           {stepLoaded.step1 && <>
