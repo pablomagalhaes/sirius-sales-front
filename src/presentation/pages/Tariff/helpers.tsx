@@ -1,6 +1,8 @@
 import API from '../../../infrastructure/api'
 import { ValidityTypes } from '../../../application/enum/tariffEnum'
 import { ModalTypes, IconTypes, AcitivityTypes } from '../../../application/enum/enum'
+import { I18n } from 'react-redux-i18n'
+
 
 const getModalFilter = (quickFilterList): string => {
   const modalFilter = quickFilterList.find((item) => item.type === 'modal')
@@ -71,4 +73,43 @@ const getTariffByFilter = async (filter?: any): Promise<any> => {
 
 const convertToDecimal = (value: number): string => String(value.toFixed(2)).replace('.', ',')
 
-export { getValidityFilter, getActivityFilter, getModalFilter, convertToDecimal, getTariffByFilter }
+const capitalizeFirstLetter = (word: any): string => {
+  // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+  return word.charAt(0) + word.substring(1).toLowerCase()
+}
+
+const chooseStatusColor = (status: any): string => {
+  switch (status) {
+    case I18n.t('pages.tariff.tariffTableProcessing.sucessLabel'):
+      return '#6CD99A'
+    case I18n.t('pages.tariff.tariffTableProcessing.errorLabel'):
+      return '#FF7373'
+    case I18n.t('pages.tariff.tariffTableProcessing.parcialLabel'):
+      return '#F2D16D'
+    default:
+      return '#D9DCE6'
+  }
+}
+
+let statusLabel = ''
+
+const chooseStatusLabel = (status: any): string => {
+  const sucess = I18n.t('pages.tariff.tariffTableProcessing.sucessLabel')
+  switch (status) {
+    case sucess:
+      statusLabel = 'Sucesso'
+      return statusLabel
+    // eslint-disable-next-line no-duplicate-case
+    case 'PARCIAL':
+      statusLabel = 'Parcial'
+      return statusLabel
+    // eslint-disable-next-line no-duplicate-case
+    case 'ERRO':
+      statusLabel = 'Erro'
+      return statusLabel
+    default:
+      return status
+  }
+}
+
+export { getValidityFilter, getActivityFilter, getModalFilter, convertToDecimal, getTariffByFilter, capitalizeFirstLetter, chooseStatusColor, chooseStatusLabel }

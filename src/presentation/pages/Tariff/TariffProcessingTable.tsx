@@ -12,7 +12,7 @@ import {
 import moment from 'moment'
 import { I18n } from 'react-redux-i18n'
 
-import { chooseStatusColor, capitalizeFirstLetter } from '../../../utils'
+import { chooseStatusColor, capitalizeFirstLetter } from './helpers'
 export interface TariffProcessingTableProps {
   rows: any[]
   handleSelectedItem: (id: any) => void
@@ -77,8 +77,8 @@ const TariffProcessingTable = ({
                       float: 'left',
                       marginRight: '5px',
                       backgroundColor: `${chooseStatusColor(row.txStatus)}`
-                    }}
-                  ></div>
+                    }}>
+                  </div>
                   <div
                     style={{
                       lineHeight: '16px',

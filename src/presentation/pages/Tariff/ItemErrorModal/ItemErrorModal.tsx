@@ -25,7 +25,7 @@ import {
   CloseIconContainer
 } from '../../../components/StyledComponents/modalStyles'
 import { Button } from 'fiorde-fe-components'
-import { chooseStatusColor, chooseStatusLabel } from '../../../../utils'
+import { chooseStatusColor, chooseStatusLabel } from '../helpers'
 
 import {
   TARIFF_TARIFF_PROCESSING_ITEM_ERROR_MODAL_SPAN_NOME,
