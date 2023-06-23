@@ -559,6 +559,13 @@
           }
         }
       }
+    },
+    "filter": {
+      "addFilterLabel": "Filtros avançados",
+      "applyLabel": "Aplicar",
+      "approveLabel": "Salvar Filtro",
+      "cleanLabel": "Limpar",
+      "myFilterLabel": "Meus Filtros"
     }
   }  
 }
