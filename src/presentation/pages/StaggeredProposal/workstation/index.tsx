@@ -42,33 +42,22 @@ import RejectModal from '../../../components/RejectModal/RejectModal'
 import Filter from '../components/filter'
 import { SelectorsValuesTypes } from '../../../../application/enum/tariffEnum'
 import { StaggeredProposalContext } from '../context/StaggeredProposalContext'
+import useTariffProposal from '../../../hooks/tariff/useTariffProposal'
 
 const Proposal = (): JSX.Element => {
   const { filter, setFilter }: any = useContext(StaggeredProposalContext)
+  const { content: proposalList, totalElements: totalProposalList, setParams, refetch } = useTariffProposal()
   const [openReject, setOpenReject] = useState(false)
   const [openDisplay, setOpenDisplay] = useState(false)
   const [reference, setReference] = useState('')
   const [proposalId, setProposalId] = useState('')
   const [orderAsc, setOrderAsc] = useState(true)
   const [orderBy, setOrderBy] = useState<string>(SelectorsValuesTypes.Validity)
-  const [proposalList, setProposalList] = useState<any[]>([])
-  const [totalProposalList, setTotalProposalList] = useState<number>(0)
 
   const history = useHistory()
 
-  const getProposalByFilter = (): void => {
-    void (async function () {
-      await API.getProposals(filter)
-        .then((response) => {
-          setProposalList(response.content)
-          setTotalProposalList(response.totalElements)
-        })
-        .catch((err) => console.log(err))
-    })()
-  }
-
   useEffect(() => {
-    getProposalByFilter()
+    setParams(filter)
   }, [filter])
 
   const verifyStatus = (status): any => {
@@ -182,7 +171,7 @@ const Proposal = (): JSX.Element => {
     void (async function () {
       await API.putStatus(id, status, reason)
         .then(() => {
-          getProposalByFilter()
+          refetch()
         })
         .catch((err) => console.log(err))
     })()

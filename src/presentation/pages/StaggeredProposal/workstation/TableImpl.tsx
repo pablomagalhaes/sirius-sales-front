@@ -69,8 +69,8 @@ const TableImpl = ({
     {
       label: 'Operação/Referência/Cliente',
       key: 'refClient',
-      render: ({ reference, client, type }: any) => (
-                <ClientCell title={reference} subtitle={client} type={type} />
+      render: ({ referenceTariffProposal, nmBusinessPartnerCustomer, txTariffType }: any) => (
+                <ClientCell title={referenceTariffProposal} subtitle={nmBusinessPartnerCustomer} type={txTariffType} />
       ),
       size: 8
     },
@@ -103,14 +103,14 @@ const TableImpl = ({
     },
     {
       label: 'Inicio vigência',
-      key: 'opening',
-      render: ({ opening }: any) => <LabelCell>{opening}</LabelCell>,
+      key: 'validityDateStart',
+      render: ({ validityDateStart }: any) => <LabelCell>{validityDateStart}</LabelCell>,
       size: 3
     },
     {
       label: 'Fim vigência',
-      key: 'opening',
-      render: ({ opening }: any) => <LabelCell>{opening}</LabelCell>,
+      key: 'validityDateEnd',
+      render: ({ validityDateEnd }: any) => <LabelCell>{validityDateEnd}</LabelCell>,
       size: 3
     },
     {
