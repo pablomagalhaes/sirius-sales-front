@@ -35,6 +35,21 @@ import API from '../../../../../infrastructure/api'
 import { useCurrencies, useFrequency } from '../../../../hooks'
 import { TariffItemsTypes } from '../../../../../application/enum/tariffEnum'
 
+import {
+  TARIFF_SEA_LCL_TARIFF_MODAL_SPAN_AGENT,
+  TARIFF_SEA_LCL_TARIFF_MODAL_SPAN_COMPANY,
+  TARIFF_SEA_LCL_TARIFF_MODAL_SELECT_CURRENCY,
+  TARIFF_SEA_LCL_TARIFF_MODAL_INPUT_MINVALUE,
+  TARIFF_SEA_LCL_TARIFF_MODAL_INPUT_UNTILWEIGHT,
+  TARIFF_SEA_LCL_TARIFF_MODAL_INPUT_OVERWEIGHT,
+  TARIFF_SEA_LCL_TARIFF_MODAL_INPUT_DTVALIDITY,
+  TARIFF_SEA_LCL_TARIFF_MODAL_SELECT_FREQUENCY,
+  TARIFF_SEA_LCL_TARIFF_MODAL_INPUT_TXROUTE,
+  TARIFF_SEA_LCL_TARIFF_MODAL_INPUT_TRANSITTIME,
+  TARIFF_SEA_LCL_TARIFF_MODAL_BUTTON_CANCEL,
+  TARIFF_SEA_LCL_TARIFF_MODAL_BUTTON_SAVE
+} from '../../../../../ids'
+
 interface TariffValues {
   idTariffTypeValues: number
   value: string
@@ -225,8 +240,8 @@ const SeaLclTariffModal = ({
                     <TableBodyRow>
                       <StyledTableCell width="45%" align="left">
                         <ColumnDiv>
-                          <span>{data.agent}</span>
-                          <span>{data.seaCompany}</span>
+                        <span id={TARIFF_SEA_LCL_TARIFF_MODAL_SPAN_AGENT}>{data.agent}</span>
+                        <span id={TARIFF_SEA_LCL_TARIFF_MODAL_SPAN_COMPANY}> {data.seaCompany}</span>
                         </ColumnDiv>
                       </StyledTableCell>
                       <StyledTableCell width="40%" align="left">
@@ -245,6 +260,7 @@ const SeaLclTariffModal = ({
                               renderInput={(params) => (
                                 <div ref={params.InputProps.ref}>
                                   <Input
+                                    id={TARIFF_SEA_LCL_TARIFF_MODAL_SELECT_CURRENCY}
                                     {...params.inputProps}
                                     width="84px"
                                     placeholder={data.currency}
@@ -272,6 +288,7 @@ const SeaLclTariffModal = ({
                 {I18n.t('components.tariffModal.minValue')}<RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <NumberInput
+                id={TARIFF_SEA_LCL_TARIFF_MODAL_INPUT_MINVALUE}
                 decimalSeparator={','}
                 thousandSeparator={'.'}
                 decimalScale={2}
@@ -292,6 +309,7 @@ const SeaLclTariffModal = ({
                   {I18n.t('components.tariffModal.untilWeight')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
+                  id={TARIFF_SEA_LCL_TARIFF_MODAL_INPUT_UNTILWEIGHT}
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -312,6 +330,7 @@ const SeaLclTariffModal = ({
                   {I18n.t('components.tariffModal.overWeight')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
+                  id={TARIFF_SEA_LCL_TARIFF_MODAL_INPUT_OVERWEIGHT}
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -332,7 +351,7 @@ const SeaLclTariffModal = ({
                 {I18n.t('components.tariffModal.validity')}<RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <NumberInput
-                id="no-label-field"
+                id={TARIFF_SEA_LCL_TARIFF_MODAL_INPUT_DTVALIDITY}
                 format={'##/##/####'}
                 mask={['D', 'D', 'M', 'M', 'Y', 'Y', 'Y', 'Y']}
                 placeholder="DD/MM/YYYY"
@@ -354,8 +373,8 @@ const SeaLclTariffModal = ({
                 <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <ControlledSelect
+                id={TARIFF_SEA_LCL_TARIFF_MODAL_SELECT_FREQUENCY}
                 labelId="frequency-label"
-                id="frequency"
                 value={data.frequency}
                 onChange={(e) => setData({ ...data, frequency: e.target.value })}
                 displayEmpty
@@ -386,6 +405,7 @@ const SeaLclTariffModal = ({
                   <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <ControlledInput
+                id={TARIFF_SEA_LCL_TARIFF_MODAL_INPUT_TXROUTE}
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
                 invalid={
                   invalidInput &&
@@ -409,6 +429,7 @@ const SeaLclTariffModal = ({
                   <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <ControlledInput
+                id={TARIFF_SEA_LCL_TARIFF_MODAL_INPUT_TRANSITTIME}
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
                 invalid={
                   invalidInput &&
@@ -426,6 +447,7 @@ const SeaLclTariffModal = ({
               <Grid item xs={10}>
                 <ButtonDiv>
                   <Button
+                    id={TARIFF_SEA_LCL_TARIFF_MODAL_BUTTON_CANCEL}
                     disabled={false}
                     text={I18n.t('components.tariffModal.cancel')}
                     tooltip={I18n.t('components.tariffModal.cancel')}
@@ -438,6 +460,7 @@ const SeaLclTariffModal = ({
               <Grid item xs={2}>
                 <ButtonDiv>
                   <Button
+                    id={TARIFF_SEA_LCL_TARIFF_MODAL_BUTTON_SAVE}
                     disabled={false}
                     text={I18n.t('components.tariffModal.save')}
                     tooltip={I18n.t('components.tariffModal.save')}

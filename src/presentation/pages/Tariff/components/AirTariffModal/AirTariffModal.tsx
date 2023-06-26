@@ -34,6 +34,19 @@ import ControlledSelect from '../../../../components/ControlledSelect'
 import API from '../../../../../infrastructure/api'
 import { useCurrencies, useFrequency } from '../../../../hooks'
 import { TariffItemsTypes } from '../../../../../application/enum/tariffEnum'
+import {
+  TARIFF_AIR_TARIFF_MODAL_SPAN_AGENT,
+  TARIFF_AIR_TARIFF_MODAL_SPAN_COMPANY,
+  TARIFF_AIR_TARIFF_MODAL_SELECT_CURRENCY,
+  TARIFF_AIR_TARIFF_MODAL_INPUT_MINVALUE,
+  TARIFF_AIR_TARIFF_MODAL_INPUT_WEIGHT,
+  TARIFF_AIR_TARIFF_MODAL_INPUT_DATA,
+  TARIFF_AIR_TARIFF_MODAL_SELECT_FREQUENCY,
+  TARIFF_AIR_TARIFF_MODAL_INPUT_TXROUTE,
+  TARIFF_AIR_TARIFF_MODAL_INPUT_TRANSITTIME,
+  TARIFF_AIR_TARIFF_MODAL_BUTTON_CANCEL,
+  TARIFF_AIR_TARIFF_MODAL_BUTTON_SAVE
+} from '../../../../../ids'
 
 interface TariffValues {
   idTariffTypeValues: number
@@ -237,8 +250,8 @@ const AirTariffModal = ({
                     <TableBodyRow>
                       <StyledTableCell width="45%" align="left">
                         <ColumnDiv>
-                          <span>{data.agent}</span>
-                          <span>{data.airCompany}</span>
+                          <span id={TARIFF_AIR_TARIFF_MODAL_SPAN_AGENT}>{data.agent}</span>
+                          <span id={TARIFF_AIR_TARIFF_MODAL_SPAN_COMPANY}>{data.airCompany}</span>
                         </ColumnDiv>
                       </StyledTableCell>
                       <StyledTableCell width="40%" align="left">
@@ -258,6 +271,7 @@ const AirTariffModal = ({
                                 <div ref={params.InputProps.ref}>
                                   <Input
                                     {...params.inputProps}
+                                    id={TARIFF_AIR_TARIFF_MODAL_SELECT_CURRENCY}
                                     width="84px"
                                     placeholder={data.currency}
                                     toolTipTitle={I18n.t('components.tariffModal.requiredField')}
@@ -284,6 +298,7 @@ const AirTariffModal = ({
                 {I18n.t('components.tariffModal.minValue')}<RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <NumberInput
+                id={TARIFF_AIR_TARIFF_MODAL_INPUT_MINVALUE}
                 decimalSeparator={','}
                 thousandSeparator={'.'}
                 decimalScale={2}
@@ -305,6 +320,7 @@ const AirTariffModal = ({
                   {I18n.t('components.tariffModal.weight1')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
+                  id={`${TARIFF_AIR_TARIFF_MODAL_INPUT_WEIGHT}1`}
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -324,6 +340,7 @@ const AirTariffModal = ({
                   {I18n.t('components.tariffModal.weight2')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
+                  id={`${TARIFF_AIR_TARIFF_MODAL_INPUT_WEIGHT}2`}
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -343,6 +360,7 @@ const AirTariffModal = ({
                   {I18n.t('components.tariffModal.weight3')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
+                  id={`${TARIFF_AIR_TARIFF_MODAL_INPUT_WEIGHT}3`}
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -362,6 +380,7 @@ const AirTariffModal = ({
                   {I18n.t('components.tariffModal.weight4')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
+                  id={`${TARIFF_AIR_TARIFF_MODAL_INPUT_WEIGHT}4`}
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -381,6 +400,7 @@ const AirTariffModal = ({
                   {I18n.t('components.tariffModal.weight5')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
+                  id={`${TARIFF_AIR_TARIFF_MODAL_INPUT_WEIGHT}5`}
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -402,7 +422,7 @@ const AirTariffModal = ({
                 {I18n.t('components.tariffModal.validity')}<RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <NumberInput
-                id="no-label-field"
+                id={TARIFF_AIR_TARIFF_MODAL_INPUT_DATA}
                 format={'##/##/####'}
                 mask={['D', 'D', 'M', 'M', 'Y', 'Y', 'Y', 'Y']}
                 placeholder="DD/MM/YYYY"
@@ -425,7 +445,7 @@ const AirTariffModal = ({
               </FormLabel>
               <ControlledSelect
                 labelId="frequency-label"
-                id="frequency"
+                id={TARIFF_AIR_TARIFF_MODAL_SELECT_FREQUENCY}
                 value={data.frequency}
                 onChange={(e) => setData({ ...data, frequency: e.target.value })}
                 displayEmpty
@@ -456,6 +476,7 @@ const AirTariffModal = ({
                   <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <ControlledInput
+                id={TARIFF_AIR_TARIFF_MODAL_INPUT_TXROUTE}
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
                 invalid={
                   invalidInput &&
@@ -479,6 +500,7 @@ const AirTariffModal = ({
                   <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <ControlledInput
+                id={TARIFF_AIR_TARIFF_MODAL_INPUT_TRANSITTIME}
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
                 invalid={
                   invalidInput &&
@@ -496,6 +518,7 @@ const AirTariffModal = ({
               <Grid item xs={10}>
                 <ButtonDiv>
                   <Button
+                    id={TARIFF_AIR_TARIFF_MODAL_BUTTON_CANCEL}
                     disabled={false}
                     text={I18n.t('components.tariffModal.cancel')}
                     tooltip={I18n.t('components.tariffModal.cancel')}
@@ -508,6 +531,7 @@ const AirTariffModal = ({
               <Grid item xs={2}>
                 <ButtonDiv>
                   <Button
+                    id={TARIFF_AIR_TARIFF_MODAL_BUTTON_SAVE}
                     disabled={false}
                     text={I18n.t('components.tariffModal.save')}
                     tooltip={I18n.t('components.tariffModal.save')}

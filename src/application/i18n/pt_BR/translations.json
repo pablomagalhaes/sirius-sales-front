@@ -325,6 +325,7 @@
       }
     },
     "tariff": {
+      "tariffProcessingTitle": "Tarifas em processamento",
       "mainPage": {
         "home": "Home",
         "tariff": "Tarifário",
@@ -429,7 +430,7 @@
             }
           }
         }
-      },
+      },  
       "constants": {
         "frequency": {
           "daily": "DIÁRIO",
@@ -452,6 +453,111 @@
         "air": "Detalhamento da tarifa - Aéreo",
         "seaLcl": "Detalhamento da tarifa - Marítimo LCL",
         "seaFcl": "Detalhamento da tarifa - Marítimo FCL"
+      },
+      "tariffTableProcessing": {
+        "sucessLabel": "SUCESSO",
+        "parcialLabel": "PARCIAL",
+        "errorLabel": "ERRO"
+      },
+      "itemErrorModal": {
+        "subtitleLog": "Log de erros",
+        "title": "Detalhes: Upload de tarifas",
+        "close": "Fechar",
+        "txFileName": "Arquivo:",
+        "dtProcess": "Data/Hora de processamento:",
+        "userCreation": "Usuário:",
+        "tariffType": "Tipo:",
+        "tariffModalType": "Modal:",
+        "nmAgent": "Agente:",
+        "txStatus": "Status do processamento:",
+        "line": "Linha",
+        "keyErros": {
+          "key": {
+            "log": {
+              "error": {
+                "air": {
+                  "cia": "Error to read column Air Cia"
+                },
+                "origin": {
+                  "": "Error to read column Origin",
+                  "country": "Error to read column Origin Country",
+                  "state": "Error to read column Origin State",
+                  "city": "Error to read column Origin City"
+                },
+                "destiny": {
+                  "": "Error to read column Destiny",
+                  "country": "Error to read column Destiny Country",
+                  "state": "Error to read column Destiny State",
+                  "city": "Error to read column Destiny City"
+                },
+                "transit": {
+                  "time": "Error to read column Transit Time"
+                },
+                "validity": "Error to read column Validity",
+                "currency": "Error to read column Currency",
+                "minimum": {
+                  "value": "Error to read column Minimum Value"
+                },
+                "45kg": "Error to read column 45kg",
+                "100kg": "Error to read column 100kg",
+                "300kg": "Error to read column 300kg",
+                "500kg": "Error to read column 500kg",
+                "1ton": "Error to read column 1ton",
+                "route": "Error to read column Route",
+                "frequency": "Error to read column Frequency",
+                "road": {
+                  "transport": "Error to read column Road Transport"
+                },
+                "vl": {
+                  "geral": {
+                    "ded": "Error to read column Vl Geral Ded.",
+                    "cons": "Error to read column Vl Geral Cons."
+                  },
+                  "imo": {
+                    "ded": "Error to read column Vl IMO Ded.",
+                    "cons": "Error to read column Vl IMO Cons."
+                  },
+                  "ate": {
+                    "7w": "Error to read column Vl até 7w/m"
+                  },
+                  "container": {
+                    "20": "Error to read column Vl Container 20",
+                    "40": "Error to read column Vl Container 40"
+                  }
+                },
+                "coloader": "Error to read column Coloader",
+                "up": "Error to read column Up",
+                "find": {
+                  "origin": {
+                    "land": "Unable to find Origin Land informed"
+                  },
+                  "destiny": {
+                    "land": "Unable to find Destination Land informed"
+                  },
+                  "air": "Unable to find Air Cia informed",
+                  "business": {
+                    "partner": "Unable to find Business Partner"
+                  },
+                  "source": {
+                    "destination": "Unable to find Source/Destination informed"
+                  }
+                },
+                "convert": {
+                  "agent": "IdAgent is incorretly",
+                  "file": "error converter file!"
+                },
+                "not": {
+                  "mapped": "Error not mapped"
+                },
+                "delimiter": "Delimiter has to be ;",
+                "header": {
+                  "name": "A header name is wrong!",
+                  "missing": "A header name is missing!"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "filter": {
@@ -461,5 +567,5 @@
       "cleanLabel": "Limpar",
       "myFilterLabel": "Meus Filtros"
     }
-  }
+  }  
 }
