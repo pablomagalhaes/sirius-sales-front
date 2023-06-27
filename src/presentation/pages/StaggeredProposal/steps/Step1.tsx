@@ -51,6 +51,7 @@ const Step1 = ({
   const [vigencyDate, setVigencyDate] = React.useState([null, null]);
   const [partnerList, setPartnerList] = useState<any[]>([]);
   const [data, setData] = useState({
+    idBusinessPartnerCustomer: null,
     operation: '',
     vigencyDate: vigencyDate,
     proposalValue: '',
@@ -114,7 +115,7 @@ const Step1 = ({
         <Grid item xs={6}>
           <FormLabel
             component="legend"
-            error={data.proposalValue === '' && invalidInput}
+            error={data.idBusinessPartnerCustomer === '' && invalidInput}
           >
             {I18n.t('pages.staggeredProposal.step1.client')}:
             <RedColorSpan> *</RedColorSpan>
@@ -122,17 +123,18 @@ const Step1 = ({
           <Autocomplete
             freeSolo
             onChange={(e, newValue) =>
-              setData({ ...data, proposalValue: String(newValue) })
+              console.log('newValue', newValue)
+              // setData({ ...data, idBusinessPartnerCustomer: String(newValue) })
             }
             options={partnerList.map((item) => item.businessPartner.simpleName)}
-            value={data.proposalValue}
+            value={data.idBusinessPartnerCustomer}
             renderInput={(params) => (
               <div ref={params.InputProps.ref}>
                 <ControlledInput
                   {...params}
                   id="search-client"
                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                  invalid={data.proposalValue === '' && invalidInput}
+                  invalid={data.idBusinessPartnerCustomer === '' && invalidInput}
                   variant="outlined"
                   size="small"
                   placeholder={I18n.t(

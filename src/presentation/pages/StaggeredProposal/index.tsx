@@ -21,18 +21,19 @@ import Step2 from './steps/Step2'
 
 import { useHistory, useLocation } from 'react-router-dom'
 import { UpdateStaggeredProposal } from '../../../domain/usecase'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 
 // export interface StaggeredProposalProps {
 //   theme: any
 // }
 
-export interface StaggeredProposalProps {
+type StaggeredProposalProps = {
   theme: any
-  UpdateStaggeredProposal?: UpdateStaggeredProposal
+  updateStaggeredProposal: UpdateStaggeredProposal
 }
 
-const StaggeredProposal = ({ theme, UpdateStaggeredProposal }: StaggeredProposalProps): JSX.Element => {
+const StaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProposalProps): JSX.Element => {
 
   const [action, setAction] = useState('')
   const [agentList, setAgentList] = useState<[]>([])
@@ -54,11 +55,10 @@ const StaggeredProposal = ({ theme, UpdateStaggeredProposal }: StaggeredProposal
   const [showSaveMessage, setShowSaveMessage] = useState(false)
   const [specifications, setSpecifications] = useState('')
 
+  const queryClient = useQueryClient()
 
   const history = useHistory()
   const location = useLocation()
-
-
 
   const [completed, setCompleted] = useState({
     step1: false,
@@ -96,25 +96,35 @@ const StaggeredProposal = ({ theme, UpdateStaggeredProposal }: StaggeredProposal
     setHover(hoverState)
   }
 
+  const mutation = useMutation({
+    mutationFn: async (newData: any) => {
+      return await updateStaggeredProposal.update(newData)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['updateStaggedProposal'])
+    }
+  })
 
-  // const handleSave = (): void => {
-  //   if (
-  //     completed.step1 &&
-  //     completed.step2
-  //   ) {
-
-  //   } else{
-
-  //   }
-     
-  // }
+  const handleSave = (): void => {
+    console.log('completed', completed)
+    if (
+      completed.step1 &&
+      completed.step2
+    ) {
+      const params = {
+        idBusinessPartnerCustomer: 1
+      }
+      mutation.mutate(params)
+    } else {
+      console.log('error')
+    }
+  }
 
   const floatingButtonMenuItems = [
     {
       iconType: 'save',
       label: I18n.t('pages.newProposal.save'),
-      onClick: () => { }
-      // onClick: () => handleSave()
+      onClick: () => handleSave()
     }, {
       iconType: 'send',
       label: I18n.t('pages.newProposal.send'),
@@ -315,7 +325,6 @@ const StaggeredProposal = ({ theme, UpdateStaggeredProposal }: StaggeredProposal
               setCompleted={setCompleted}
               setFilled={setFilled}
               setStepLoaded={setStepLoaded}
-              UpdateStaggeredProposal={UpdateStaggeredProposal}
             />
           </div>
           {stepLoaded.step1 && <>
