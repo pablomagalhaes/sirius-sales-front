@@ -20,6 +20,7 @@ const Root = styled.div`
 `
 const ExtensionMenuContainer = styled.div`
   position: fixed;
+  z-index: 1;
 `
 
 const ChildrenContainer = styled.div`
@@ -31,6 +32,7 @@ const ChildrenContainer = styled.div`
   flex-direction: column;
   transition: padding-left 0.2s;
   transition-timing-function: linear;
+  z-index: 0;
 `
 
 export { Root, ChildrenContainer, ExtensionMenuContainer }

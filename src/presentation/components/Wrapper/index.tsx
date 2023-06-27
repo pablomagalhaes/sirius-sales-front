@@ -29,15 +29,17 @@ const Wrapper = ({ children }: any): JSX.Element => {
     {
       icon: 'tariff',
       label: I18n.t('components.header.tariff'),
-      onclick: () => history.push('/tarifario'),
+      onclick: function noRefCheck () {},
       subMenuItems: [
+        {
+          label: I18n.t('components.header.tariff'),
+          onClick: () => history.push('/tarifario')
+        },
+        {
+          label: I18n.t('components.header.escalonada'),
+          onClick: () => history.push('/propostaEscalonada'),
+        }
       ]
-    },
-    {
-      icon: 'proposal',
-      label: I18n.t('components.header.escalonada'),
-      onclick: () => history.push('/propostaEscalonada'),
-      subMenuItems: []
     },
     // {
     //   icon: 'tariff',

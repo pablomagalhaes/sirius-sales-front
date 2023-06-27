@@ -20,12 +20,21 @@ import Step1 from './steps/Step1'
 import Step2 from './steps/Step2'
 
 import { useHistory, useLocation } from 'react-router-dom'
+import { UpdateStaggeredProposal } from '../../../domain/usecase'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-export interface StaggeredProposalProps {
+
+// export interface StaggeredProposalProps {
+//   theme: any
+// }
+
+type StaggeredProposalProps = {
   theme: any
+  updateStaggeredProposal: UpdateStaggeredProposal
 }
 
-const StaggeredProposal = ({ theme }: StaggeredProposalProps): JSX.Element => {
+const StaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProposalProps): JSX.Element => {
+
   const [action, setAction] = useState('')
   const [agentList, setAgentList] = useState<[]>([])
   const [clicked, setClicked] = useState({ id: '', clicked: false })
@@ -38,7 +47,7 @@ const StaggeredProposal = ({ theme }: StaggeredProposalProps): JSX.Element => {
   const [hover, setHover] = useState({ id: '', hover: false })
   const [invalidInput, setInvalidInput] = useState(false)
   const [leavingPage, setLeavingPage] = useState(false)
-  const [loadExistingProposal, setLoadExistingProposal] = useState(false)
+  const [loadExistingProposal, setLoadExistingProposal] = useState(true)
   const [modal, setModal] = useState('')
   const [totalCosts, setTotalCosts] = useState()
   const [proposalType, setProposalType] = useState('')
@@ -46,11 +55,10 @@ const StaggeredProposal = ({ theme }: StaggeredProposalProps): JSX.Element => {
   const [showSaveMessage, setShowSaveMessage] = useState(false)
   const [specifications, setSpecifications] = useState('')
 
+  const queryClient = useQueryClient()
 
   const history = useHistory()
   const location = useLocation()
-
-
 
   const [completed, setCompleted] = useState({
     step1: false,
@@ -70,12 +78,12 @@ const StaggeredProposal = ({ theme }: StaggeredProposalProps): JSX.Element => {
   const steps = [
     {
       id: 'step1',
-      label: I18n.t('pages.StaggeredProposal.step1.title'),
+      label: I18n.t('pages.staggeredProposal.step1.title'),
       completed: completed.step1
     },
     {
       id: 'step2',
-      label: I18n.t('pages.StaggeredProposal.step2.title'),
+      label: I18n.t('pages.staggeredProposal.step2.title'),
       completed: completed.step2
     }
   ]
@@ -88,17 +96,28 @@ const StaggeredProposal = ({ theme }: StaggeredProposalProps): JSX.Element => {
     setHover(hoverState)
   }
 
+  const mutation = useMutation({
+    mutationFn: async (newData: any) => {
+      return await updateStaggeredProposal.update(newData)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['updateStaggedProposal'])
+    }
+  })
 
   const handleSave = (): void => {
+    console.log('completed', completed)
     if (
       completed.step1 &&
       completed.step2
     ) {
-
-    } else{
-
+      const params = {
+        idBusinessPartnerCustomer: 1
+      }
+      mutation.mutate(params)
+    } else {
+      console.log('error')
     }
-     
   }
 
   const floatingButtonMenuItems = [
@@ -245,7 +264,7 @@ const StaggeredProposal = ({ theme }: StaggeredProposalProps): JSX.Element => {
           >
             Home
           </Link>
-          <span className="breadcrumbEnd">{I18n.t('pages.StaggeredProposal.title')}</span>
+          <span className="breadcrumbEnd">{I18n.t('pages.staggeredProposal.title')}</span>
         </Breadcrumbs>
         {/* <UserContainer>
           {editMode
@@ -296,7 +315,6 @@ const StaggeredProposal = ({ theme }: StaggeredProposalProps): JSX.Element => {
           </Button>
         </ButtonContainer>
       </TopContainer>
-     
       {leavingPage && <MessageExitDialog />}
       {loadExistingProposal &&
         <MainContainer ref={divRef}>
@@ -304,11 +322,8 @@ const StaggeredProposal = ({ theme }: StaggeredProposalProps): JSX.Element => {
             <Step1
               filled={filled}
               invalidInput={invalidInput}
-              setAgentList={setAgentList}
               setCompleted={setCompleted}
               setFilled={setFilled}
-              setModal={setModal}
-              setProposalType={setProposalType}
               setStepLoaded={setStepLoaded}
             />
           </div>
@@ -316,12 +331,8 @@ const StaggeredProposal = ({ theme }: StaggeredProposalProps): JSX.Element => {
             <div id="step2">
               <Step2
                 invalidInput={invalidInput}
-                modal={modal}
-                proposalType={proposalType}
-                setAgentList={setAgentList}
                 setCompleted={setCompleted}
                 setFilled={setFilled}
-                // updateAgentsIdsRef={updateAgentsIdsRef}
               />
             </div>
           </>
