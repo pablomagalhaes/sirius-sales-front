@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
-import { Home, NewProposal, Proposal, NewProposalExportation, Tariff, TariffProcessing } from '../../pages'
+import { Home, NewProposal, Proposal, NewProposalExportation, Tariff, StaggeredProposal } from '../../pages'
 import Wrapper from '../Wrapper'
 import { ProposalContextProvider } from '../../pages/NewProposal/context/ProposalContext'
 import { TariffContextProvider } from '../../pages/Tariff/context/TariffContext'
@@ -36,9 +36,9 @@ const Routes = (): JSX.Element => (
               <Tariff />
             </Wrapper>
           </Route>
-          <Route exact path="/tarifario-processamentos">
+          <Route exact path="/propostaEscalonada">
             <Wrapper>
-              <TariffProcessing />
+              <StaggeredProposal />
             </Wrapper>
           </Route>
         </Switch>

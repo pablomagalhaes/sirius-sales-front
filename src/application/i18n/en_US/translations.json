@@ -70,7 +70,8 @@
       "home": "Home",
       "indicators": "Commercial Indicators",
       "proposal": "Proposal",
-      "tariff": "Tariff"
+      "tariff": "Tariff",
+      "escalonada": "Proposta Escalonada"
     },
     "itemModal": {
       "amount": "Amount: ",
@@ -562,6 +563,15 @@
       "approveLabel": "Salvar Filtro",
       "cleanLabel": "Limpar",
       "myFilterLabel": "Meus Filtros"
+    },
+    "StaggeredProposal": {
+      "title": "Proposta Escalonada",
+      "step1": {
+        "title": "Serviço"
+      },
+      "step2": {
+        "title": "Tarifas"
+      }
     }
   }
 }
