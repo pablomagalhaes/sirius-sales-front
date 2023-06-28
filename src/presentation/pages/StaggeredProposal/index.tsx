@@ -23,14 +23,9 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { UpdateStaggeredProposal } from '../../../domain/usecase'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-
-// export interface StaggeredProposalProps {
-//   theme: any
-// }
-
 type StaggeredProposalProps = {
   theme: any
-  updateStaggeredProposal: UpdateStaggeredProposal
+  updateStaggeredProposal?: UpdateStaggeredProposal
 }
 
 const StaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProposalProps): JSX.Element => {
@@ -62,17 +57,17 @@ const StaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProposal
 
   const [completed, setCompleted] = useState({
     step1: false,
-    step2: false,
+    step2: false
   })
 
   const [filled, setFilled] = useState({
     step1: false,
-    step2: false,
+    step2: false
   })
 
   const [stepLoaded, setStepLoaded] = useState({
     step1: false,
-    step2: false,
+    step2: false
   })
 
   const steps = [
@@ -107,17 +102,23 @@ const StaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProposal
 
   const handleSave = (): void => {
     console.log('completed', completed)
-    if (
-      completed.step1 &&
-      completed.step2
-    ) {
-      const params = {
-        idBusinessPartnerCustomer: 1
-      }
-      mutation.mutate(params)
-    } else {
-      console.log('error')
+
+    const params = {
+      idBusinessPartnerCustomer: 1
     }
+    mutation.mutate(params)
+
+    // if (
+    //   completed.step1 &&
+    //   completed.step2
+    // ) {
+    //   const params = {
+    //     idBusinessPartnerCustomer: 1
+    //   }
+    //   mutation.mutate(params)
+    // } else {
+    //   console.log('error')
+    // }
   }
 
   const floatingButtonMenuItems = [
@@ -133,22 +134,24 @@ const StaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProposal
   ]
 
   // Menu suspenso após proposta ter sido salva
-  const floatingButtonMenuItemsAfterSaved = [
-    {
-      iconType: 'save',
-      label: I18n.t('pages.newProposal.save'),
-      // onClick: () => handleSave()
-    }, {
-      iconType: 'file',
-      label: I18n.t('pages.newProposal.viewDownload'),
-      // onClick: () => handleOpen()
-    },
-    {
-      iconType: 'send',
-      label: I18n.t('pages.newProposal.send'),
-      onClick: () => { }
-    }
-  ]
+  // const floatingButtonMenuItemsAfterSaved = [
+  //   {
+  //     iconType: 'save',
+  //     label: I18n.t('pages.newProposal.save'),
+  //     // onClick: () => handleSave()
+  //   }, {
+  //     iconType: 'file',
+  //     label: I18n.t('pages.newProposal.viewDownload'),
+  //     // onClick: () => handleOpen()
+  //   },
+  //   {
+  //     iconType: 'send',
+  //     label: I18n.t('pages.newProposal.send'),
+  //     onClick: () => { }
+  //   }
+  // ]
+
+
 
 
   const MessageExitDialog = (): JSX.Element => {
@@ -179,12 +182,10 @@ const StaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProposal
         setAction('home')
         return true
       }
-      
       if ((element.id === 'logo_sirius' || element.querySelector('#logo_sirius')) && element.tagName !== 'DIV') {
         setAction('home')
         return true
       }
-     
       if ((element.id === 'home' || element.querySelector('#home')) && element.tagName !== 'DIV') {
         setAction('commercial-home')
         return true

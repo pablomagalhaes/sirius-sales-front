@@ -4,6 +4,7 @@ export interface StaggeredProposalModel {
   dtValidity: string
   dtValidityEnd: string
   proposalTariff: ProposalTariff[]
+  freightValues: FreightValues[]
 }
 interface ProposalTariff {
   origin?: string

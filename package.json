@@ -79,6 +79,7 @@
     "@types/systemjs": "6.1.1",
     "@types/webpack-env": "1.16.2",
     "@typescript-eslint/parser": "^5.59.8",
+    "antd": "^5.6.3",
     "axios": "0.26.0",
     "dotenv": "10.0.0",
     "moment": "^2.29.4",

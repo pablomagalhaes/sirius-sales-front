@@ -1,4 +1,4 @@
-import { StaggeredProposalModel } from '../models'
+import { StaggeredProposalModel } from '../models/staggered-proposal-model'
 
 export interface UpdateStaggeredProposal {
   update: (params: UpdateStaggeredProposal.Params) => Promise<UpdateStaggeredProposal.Model>
@@ -12,7 +12,6 @@ export namespace UpdateStaggeredProposal {
     dtValidity: string
     dtValidityEnd: string
     proposalTariff: ProposalTariff[]
-    freightValues: FreightValues[]
   }
 
   interface ProposalTariff {

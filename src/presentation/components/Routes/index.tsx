@@ -5,44 +5,47 @@ import { Home, NewProposal, Proposal, NewProposalExportation, Tariff, StaggeredP
 import Wrapper from '../Wrapper'
 import { ProposalContextProvider } from '../../pages/NewProposal/context/ProposalContext'
 import { TariffContextProvider } from '../../pages/Tariff/context/TariffContext'
+import { StaggeredProposalContextProvider } from '../../pages/StaggeredProposal/context/StaggeredProposalContext'
 
 const Routes = (): JSX.Element => (
   <ProposalContextProvider>
     <TariffContextProvider>
-      <BrowserRouter basename="/#/comercial">
-        <Switch>
-          <Route exact path="/">
-            <Wrapper>
-              <Home />
-            </Wrapper>
-          </Route>
-          <Route exact path="/proposta">
-            <Wrapper>
-              <Proposal />
-            </Wrapper>
-          </Route>
-          <Route exact path="/novaProposta">
-            <Wrapper>
-              <NewProposal />
-            </Wrapper>
-          </Route>
-          <Route exact path="/novaPropostaExportacao">
-            <Wrapper>
-              <NewProposalExportation />
-            </Wrapper>
-          </Route>
-          <Route exact path="/tarifario">
-            <Wrapper>
-              <Tariff />
-            </Wrapper>
-          </Route>
-          <Route exact path="/propostaEscalonada">
-            <Wrapper>
-              <StaggeredProposal />
-            </Wrapper>
-          </Route>
-        </Switch>
-      </BrowserRouter>
+      <StaggeredProposalContextProvider>
+        <BrowserRouter basename="/#/comercial">
+          <Switch>
+            <Route exact path="/">
+              <Wrapper>
+                <Home />
+              </Wrapper>
+            </Route>
+            <Route exact path="/proposta">
+              <Wrapper>
+                <Proposal />
+              </Wrapper>
+            </Route>
+            <Route exact path="/novaProposta">
+              <Wrapper>
+                <NewProposal />
+              </Wrapper>
+            </Route>
+            <Route exact path="/novaPropostaExportacao">
+              <Wrapper>
+                <NewProposalExportation />
+              </Wrapper>
+            </Route>
+            <Route exact path="/tarifario">
+              <Wrapper>
+                <Tariff />
+              </Wrapper>
+            </Route>
+            <Route exact path="/propostaEscalonada">
+              <Wrapper>
+                <StaggeredProposal />
+              </Wrapper>
+            </Route>
+          </Switch>
+        </BrowserRouter>
+      </StaggeredProposalContextProvider>
     </TariffContextProvider>
   </ProposalContextProvider>
 )

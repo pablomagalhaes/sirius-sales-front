@@ -6,14 +6,11 @@ import {
   FormLabel,
   Grid,
   InputAdornment,
-  RadioGroup
-import React, { useEffect, useState } from 'react'
-import {
-  MenuItem,
-  FormLabel,
-  Grid,
-  InputAdornment
+  RadioGroup,
+  MenuItem
+
 } from '@material-ui/core/'
+
 import { I18n } from 'react-redux-i18n'
 import {
   Title,
@@ -34,6 +31,8 @@ import { StyledPaper } from './StepsStyles'
 import { PickerDateRange } from 'fiorde-fe-components'
 
 import { UpdateStaggeredProposal } from '../../../../domain/usecase'
+
+import { StaggeredProposalContext, StaggeredProposalProps } from '../context/StaggeredProposalContext'
 
 export interface Filled {
   step2: boolean
@@ -57,14 +56,56 @@ const Step1 = ({
   setStepLoaded,
   UpdateStaggeredProposal
 }: Step1Props): JSX.Element => {
-  const [vigencyDate, setVigencyDate] = React.useState([null, null]);
-  const [partnerList, setPartnerList] = useState<any[]>([]);
+  const [vigencyDate, setVigencyDate] = React.useState([null, null])
+  const [partnerList, setPartnerList] = useState<any[]>([])
+  const [partner, setPartner] = useState<any>('')
+
+  const { staggeredproposal, setStaggeredProposal }: StaggeredProposalProps = useContext(StaggeredProposalContext)
+
+  // const [data, setData] = useState({
+  //   idBusinessPartnerCustomer: null,
+  //   operation: '',
+  //   vigencyDate: vigencyDate,
+  //   proposalValue: '',
+  //   requester: ''
+  // })
+
   const [data, setData] = useState({
-    idBusinessPartnerCustomer: null,
-    operation: '',
-    vigencyDate: vigencyDate,
-    proposalValue: '',
-    requester: ''
+    idBusinessPartnerCustomer: 1,
+    tariffType: 'IMPORT',
+    dtValidity: '2023-03-12T00:00-03:00',
+    dtValidityEnd: '2023-03-15T00:00-03:00',
+    proposalTariff: [
+      {
+        origin: 'ARBUE',
+        destination: 'SSZ',
+        idAgent: 1,
+        idBusinessPartnerTransporter: 2,
+        currency: 'ARS',
+        frequency: 1,
+        vlFrequency: 3,
+        freightValues: [
+          {
+            vlMinimum: '90',
+            until45kg: '4.56',
+            until100kg: '4.57',
+            until300kg: '4.58',
+            until500kg: '50.01',
+            until1000kg: '1000.52',
+            buyOrSell: 'BUY'
+          },
+          {
+            vlMinimum: '90',
+            until45kg: '4.56',
+            until100kg: '4.57',
+            until300kg: '4.58',
+            until500kg: '50.01',
+            until1000kg: '1000.52',
+            buyOrSell: 'SELL'
+          }
+        ]
+      }
+    ]
   })
 
   const operationList = [
@@ -91,17 +132,17 @@ const Step1 = ({
     setStepLoaded((currentState) => ({ ...currentState, step1: true }))
   }, [])
 
-  useEffect(() => {
-    setData({ ...data, vigencyDate: vigencyDate })
-  }, [vigencyDate])
+  // useEffect(() => {
+  //   setData({ ...data, vigencyDate: vigencyDate })
+  // }, [vigencyDate])
 
   useEffect(() => {
-    if (data.proposalValue !== '' && data.operation !== '') {
-      setCompleted((currentState) => ({ ...currentState, step1: true }));
+    if (data.idBusinessPartnerCustomer !== null && data.tariffType !== '') {
+      setCompleted((currentState) => ({ ...currentState, step1: true }))
     } else {
-      setCompleted((currentState) => ({ ...currentState, step1: false }));
+      setCompleted((currentState) => ({ ...currentState, step1: false }))
     }
-    if (data.proposalValue !== '' || data.operation !== '') {
+    if (data.idBusinessPartnerCustomer !== null || data.tariffType !== '') {
       setFilled((currentState) => {
         return { ...currentState, step1: true }
       })
@@ -112,7 +153,19 @@ const Step1 = ({
     }
   }, [data])
 
+  const handleClient = (newValue): any => {
+    setPartner(newValue)
+    const client = partnerList.filter((ptn) => ptn.businessPartner.simpleName === newValue)[0]?.businessPartner.id
+    setData({ ...data, idBusinessPartnerCustomer: Number(client) })
+
+    setStaggeredProposal({
+      ...staggeredproposal,
+      idBusinessPartnerCustomer: Number(client)
+    })
+  }
+
   console.log('data step1', data)
+  console.log('staggeredproposal step1', staggeredproposal)
 
   return (
     <Separator>
@@ -124,26 +177,23 @@ const Step1 = ({
         <Grid item xs={6}>
           <FormLabel
             component="legend"
-            error={data.idBusinessPartnerCustomer === '' && invalidInput}
+            error={data.idBusinessPartnerCustomer === null && invalidInput}
           >
             {I18n.t('pages.staggeredProposal.step1.client')}:
             <RedColorSpan> *</RedColorSpan>
           </FormLabel>
           <Autocomplete
             freeSolo
-            onChange={(e, newValue) =>
-              console.log('newValue', newValue)
-              // setData({ ...data, idBusinessPartnerCustomer: String(newValue) })
-            }
+            onChange={(e, newValue) => { handleClient(newValue) }}
             options={partnerList.map((item) => item.businessPartner.simpleName)}
-            value={data.idBusinessPartnerCustomer}
+            value={partner}
             renderInput={(params) => (
               <div ref={params.InputProps.ref}>
                 <ControlledInput
                   {...params}
                   id="search-client"
                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                  invalid={data.idBusinessPartnerCustomer === '' && invalidInput}
+                  invalid={data.idBusinessPartnerCustomer === null && invalidInput}
                   variant="outlined"
                   size="small"
                   placeholder={I18n.t(
@@ -160,7 +210,7 @@ const Step1 = ({
                           }
                         />
                       </InputAdornment>
-                    ),
+                    )
                   }}
                 />
               </div>
@@ -171,17 +221,17 @@ const Step1 = ({
         <Grid item xs={2}>
           <FormLabel
             component="legend"
-            error={invalidInput && data.operation.length === 0}
+            error={invalidInput && data.tariffType.length === 0}
           >
             {I18n.t('pages.staggeredProposal.step1.operation')}
             {<RedColorSpan> *</RedColorSpan>}
           </FormLabel>
           <ControlledSelect
-            value={data.operation}
-            onChange={(e) => setData({ ...data, operation: e.target.value })}
+            value={data.tariffType}
+            onChange={(e) => setData({ ...data, tariffType: e.target.value })}
             displayEmpty
             disableUnderline
-            invalid={invalidInput && data.operation.length === 0}
+            invalid={invalidInput && data.tariffType.length === 0}
             toolTipTitle={I18n.t('components.itemModal.requiredField')}
           >
             <MenuItem disabled value="">
@@ -199,13 +249,13 @@ const Step1 = ({
         <Grid item xs={2}>
           <FormLabel
             component="legend"
-            error={invalidInput && data.operation.length === 0}
+            error={invalidInput && data.tariffType.length === 0}
           >
             {I18n.t('pages.staggeredProposal.step1.vigencyDate')}
             {<RedColorSpan> *</RedColorSpan>}
           </FormLabel>
           <div style={{ marginTop: '-8px' }}>
-            <PickerDateRange
+            {/* <PickerDateRange
               defaultValue={data.vigencyDate}
               endDateLabel="Data Final"
               inputFormat=""
@@ -213,7 +263,7 @@ const Step1 = ({
               onChange={setVigencyDate}
               placeHolderLabel="Periodo"
               widthTx="250px"
-            />
+            /> */}
           </div>
         </Grid>
       </Grid>

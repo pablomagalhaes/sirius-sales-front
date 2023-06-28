@@ -1,4 +1,4 @@
-import { PREFIX_IDS } from './constants'
+import { PREFIX_IDS } from './utils/constants'
 
 // Tariff
 export const TARIFF_MAINPAGE_SPAN_TARIFF = `${PREFIX_IDS}tariff-mainpage_span_tariff`
