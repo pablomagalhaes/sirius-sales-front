@@ -1,6 +1,6 @@
-import { LocalStorageAdapter } from '@/infra/cache'
-import { ID_ORGANIZATION_TYPE } from '@/enums'
-import { makeAuthorizeHttpClientDecorator } from '@/main/factories/decorators'
+import { LocalStorageAdapter } from '../../infra/cache'
+import { ID_ORGANIZATION_TYPE } from '../../enums'
+import { makeAuthorizeHttpClientDecorator } from '../../main/factories/decorators'
 
 export class ServiceUser {
   localStorageAdapter = new LocalStorageAdapter()

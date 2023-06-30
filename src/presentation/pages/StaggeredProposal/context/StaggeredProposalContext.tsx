@@ -1,5 +1,5 @@
 import React, { createContext, useState, useMemo } from 'react'
-import { StaggeredProposalModel } from '@/domain/models'
+import { StaggeredProposalModel } from '../../../../domain/models'
 
 export const emptyStaggeredProposalValue: StaggeredProposalModel = {
   idBusinessPartnerCustomer: 1,

@@ -5,6 +5,7 @@ const dotenv = require('dotenv')
 const path = require('path')
 
 module.exports = (webpackConfigEnv, argv) => {
+ 
   let pathEnv = ''
   if (webpackConfigEnv.isLocal) {
     pathEnv = './env/.env.dev'

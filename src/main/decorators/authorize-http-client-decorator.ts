@@ -1,7 +1,7 @@
-import { HttpClient, HttpRequest, HttpResponse, HttpStatusCode } from '@/data/protocols/http'
+import { HttpClient, HttpRequest, HttpResponse, HttpStatusCode } from '../../data/protocols/http'
 import { notification } from 'antd'
-import { LocalStorageAdapter } from '@/infra/cache'
-import { ServiceUser } from '@/data/usecase/service-user'
+import { LocalStorageAdapter } from '../../infra/cache'
+import { ServiceUser } from '../../data/usecase/service-user'
 
 export class AuthorizeHttpClientDecorator implements HttpClient {
   constructor (

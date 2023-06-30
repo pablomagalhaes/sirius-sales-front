@@ -1,5 +1,5 @@
-import { SetStorage, GetStorage } from '@/data/protocols/cache'
-import { PREFIX_LOCALSTORAGE } from '@/utils/constants'
+import { SetStorage, GetStorage } from '../../data/protocols/cache'
+import { PREFIX_LOCALSTORAGE } from '../../utils/constants'
 
 export class LocalStorageAdapter implements SetStorage, GetStorage {
   set (key: string, value: object): void {

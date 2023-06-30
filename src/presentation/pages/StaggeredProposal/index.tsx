@@ -23,12 +23,16 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { UpdateStaggeredProposal } from '../../../domain/usecase'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-type StaggeredProposalProps = {
-  theme: any
-  updateStaggeredProposal?: UpdateStaggeredProposal
+import { StaggeredProposalContext, StaggeredProposalProps } from './context/StaggeredProposalContext'
+
+type StaggeredProps = {
+  theme: any;
+  updateStaggeredProposal: UpdateStaggeredProposal;
 }
 
-const StaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProposalProps): JSX.Element => {
+const StaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps): JSX.Element => {
+
+  const { staggeredproposal, setStaggeredProposal }: StaggeredProposalProps = useContext(StaggeredProposalContext)
 
   const [action, setAction] = useState('')
   const [agentList, setAgentList] = useState<[]>([])
@@ -103,9 +107,10 @@ const StaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProposal
   const handleSave = (): void => {
     console.log('completed', completed)
 
-    const params = {
-      idBusinessPartnerCustomer: 1
-    }
+    const params = staggeredproposal
+
+    console.log('params', params)
+
     mutation.mutate(params)
 
     // if (
@@ -150,8 +155,6 @@ const StaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProposal
   //     onClick: () => { }
   //   }
   // ]
-
-
 
 
   const MessageExitDialog = (): JSX.Element => {
