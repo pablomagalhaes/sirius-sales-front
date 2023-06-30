@@ -7,7 +7,12 @@ import { ProposalContextProvider } from '../../pages/NewProposal/context/Proposa
 import { TariffContextProvider } from '../../pages/Tariff/context/TariffContext'
 import { StaggeredProposalContextProvider } from '../../pages/StaggeredProposal/context/StaggeredProposalContext'
 
-import { makeAdminDetail } from '../../../main/factories/pages/staggered-proposal/update-staggered-proposal-factory'
+// import { makeAdminDetail } from '../../../main/factories/pages/staggered-proposal/update-staggered-proposal-factory'
+
+
+import { makeRemoteUpdateStaggeredProposal } from '../../../main/factories/usecases/remote-update-staggered-proposal-factory'
+
+
 
 const Routes = (): JSX.Element => (
   <ProposalContextProvider>
@@ -40,9 +45,9 @@ const Routes = (): JSX.Element => (
                 <Tariff />
               </Wrapper>
             </Route>
-            <Route exact path="/propostaEscalonada" component={makeAdminDetail}>
+            <Route exact path="/propostaEscalonada">
               <Wrapper>
-                <StaggeredProposal />
+                <StaggeredProposal updateStaggeredProposal={makeRemoteUpdateStaggeredProposal()}/>
               </Wrapper>
             </Route>
           </Switch>

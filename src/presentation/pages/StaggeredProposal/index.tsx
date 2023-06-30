@@ -97,7 +97,7 @@ const StaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps): 
 
   const mutation = useMutation({
     mutationFn: async (newData: any) => {
-      return await updateStaggeredProposal.update(newData)
+      return await updateStaggeredProposal.updateStaggered(newData)
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['updateStaggedProposal'])

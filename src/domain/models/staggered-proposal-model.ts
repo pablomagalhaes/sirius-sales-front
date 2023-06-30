@@ -1,4 +1,5 @@
 export interface StaggeredProposalModel {
+  idTariffProposalStatus: number
   idBusinessPartnerCustomer: number
   tariffType: string
   dtValidity: string

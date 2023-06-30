@@ -71,6 +71,7 @@ const Step1 = ({
   // })
 
   const [data, setData] = useState({
+    idTariffProposalStatus: 1,
     idBusinessPartnerCustomer: 1,
     tariffType: 'IMPORT',
     dtValidity: '2023-03-12T00:00-03:00',

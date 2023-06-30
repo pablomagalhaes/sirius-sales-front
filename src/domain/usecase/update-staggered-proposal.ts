@@ -1,12 +1,15 @@
 import { StaggeredProposalModel } from '../models/staggered-proposal-model'
 
 export interface UpdateStaggeredProposal {
-  update: (params: UpdateStaggeredProposal.Params) => Promise<UpdateStaggeredProposal.Model>
+ 
+  updateStaggered: (params: UpdateStaggeredProposal.Params) => Promise<UpdateStaggeredProposal.Model>
+
 }
 
 export namespace UpdateStaggeredProposal {
 
   export type Params = {
+    idTariffProposalStatus: number
     idBusinessPartnerCustomer: number
     tariffType: string
     dtValidity: string

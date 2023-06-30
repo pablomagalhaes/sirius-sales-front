@@ -5,12 +5,14 @@ import { LocalStorageAdapter } from '../cache'
 // import { refreshAuthenticate } from '../../dataSource/request'
 // import { setUserOnStorage } from '@/utils/users'
 
+import instance from '../../infrastructure/instance'
+
 export class AxiosHttpClient implements HttpClient {
   async request (data: HttpRequest): Promise<HttpResponse> {
     let axiosResponse: AxiosResponse
     const storage = new LocalStorageAdapter()
     try {
-      axiosResponse = await axios.request({
+      axiosResponse = await instance.request({
         url: data.url,
         method: data.method,
         data: data.body,
@@ -26,14 +28,16 @@ export class AxiosHttpClient implements HttpClient {
       })
 
       if (axiosStatus === HttpStatusCode.unauthorized) {
+        console.log('unauthorized')
+
         const alwaysLogged = JSON.parse(storage.get('always_logged'))
         if (alwaysLogged) {
           // const response = await refreshAuthenticate()
         //   setUserOnStorage(response)
-          window.location.reload()
+          //window.location.reload()
         } else {
-          storage.clear()
-          window.location.href = '/login'
+          //storage.clear()
+          //window.location.href = '/login'
         }
       }
     }

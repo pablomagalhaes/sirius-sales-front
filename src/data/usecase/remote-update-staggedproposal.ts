@@ -9,7 +9,7 @@ export class RemoteUpdateStaggeredProposal implements UpdateStaggeredProposal {
     private readonly httpClient: HttpClient<RemoteUpdateStaggeredProposal.Model>
   ) {}
 
-  async update (params: UpdateStaggeredProposal.Params): Promise<UpdateStaggeredProposal.Model> {
+  async updateStaggered (params: UpdateStaggeredProposal.Params): Promise<UpdateStaggeredProposal.Model> {
     const httpResponse = await this.httpClient.request({
       url: this.url,
       method: 'post',
@@ -18,7 +18,7 @@ export class RemoteUpdateStaggeredProposal implements UpdateStaggeredProposal {
     const remoteUpdateAdmin = httpResponse.body
     switch (httpResponse.statusCode) {
       case HttpStatusCode.ok: return remoteUpdateAdmin
-      case HttpStatusCode.forbidden: throw new AccessDeniedError()
+      // case HttpStatusCode.forbidden: throw new AccessDeniedError()
       default: throw new UnexpectedError()
     }
   }

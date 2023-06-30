@@ -2,6 +2,7 @@ import React, { createContext, useState, useMemo } from 'react'
 import { StaggeredProposalModel } from '../../../../domain/models'
 
 export const emptyStaggeredProposalValue: StaggeredProposalModel = {
+  idTariffProposalStatus: 1,
   idBusinessPartnerCustomer: 1,
   tariffType: 'IMPORT',
   dtValidity: '2023-03-12T00:00-03:00',

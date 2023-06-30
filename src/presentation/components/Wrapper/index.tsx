@@ -37,7 +37,7 @@ const Wrapper = ({ children }: any): JSX.Element => {
         },
         {
           label: I18n.t('components.header.escalonada'),
-          onClick: () => history.push('/propostaEscalonada'),
+          onClick: () => history.push('/propostaEscalonada')
         }
       ]
     },
