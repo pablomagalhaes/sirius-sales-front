@@ -20,12 +20,20 @@ import Step1 from './steps/Step1'
 import Step2 from './steps/Step2'
 
 import { useHistory, useLocation } from 'react-router-dom'
+import { UpdateStaggeredProposal } from '../../../domain/usecase'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-export interface StaggeredProposalProps {
-  theme: any
+import { StaggeredProposalContext, StaggeredProposalProps } from './context/StaggeredProposalContext'
+
+type StaggeredProps = {
+  theme: any;
+  updateStaggeredProposal: UpdateStaggeredProposal;
 }
 
-const StaggeredProposal = ({ theme }: StaggeredProposalProps): JSX.Element => {
+const StaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps): JSX.Element => {
+
+  const { staggeredproposal, setStaggeredProposal }: StaggeredProposalProps = useContext(StaggeredProposalContext)
+
   const [action, setAction] = useState('')
   const [agentList, setAgentList] = useState<[]>([])
   const [clicked, setClicked] = useState({ id: '', clicked: false })
@@ -46,25 +54,24 @@ const StaggeredProposal = ({ theme }: StaggeredProposalProps): JSX.Element => {
   const [showSaveMessage, setShowSaveMessage] = useState(false)
   const [specifications, setSpecifications] = useState('')
 
+  const queryClient = useQueryClient()
 
   const history = useHistory()
   const location = useLocation()
 
-
-
   const [completed, setCompleted] = useState({
     step1: false,
-    step2: false,
+    step2: false
   })
 
   const [filled, setFilled] = useState({
     step1: false,
-    step2: false,
+    step2: false
   })
 
   const [stepLoaded, setStepLoaded] = useState({
     step1: false,
-    step2: false,
+    step2: false
   })
 
   const steps = [
@@ -88,25 +95,42 @@ const StaggeredProposal = ({ theme }: StaggeredProposalProps): JSX.Element => {
     setHover(hoverState)
   }
 
+  const mutation = useMutation({
+    mutationFn: async (newData: any) => {
+      return await updateStaggeredProposal.updateStaggered(newData)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['updateStaggedProposal'])
+    }
+  })
 
-  // const handleSave = (): void => {
-  //   if (
-  //     completed.step1 &&
-  //     completed.step2
-  //   ) {
+  const handleSave = (): void => {
+    console.log('completed', completed)
 
-  //   } else{
+    const params = staggeredproposal
 
-  //   }
-     
-  // }
+    console.log('params', params)
+
+    mutation.mutate(params)
+
+    // if (
+    //   completed.step1 &&
+    //   completed.step2
+    // ) {
+    //   const params = {
+    //     idBusinessPartnerCustomer: 1
+    //   }
+    //   mutation.mutate(params)
+    // } else {
+    //   console.log('error')
+    // }
+  }
 
   const floatingButtonMenuItems = [
     {
       iconType: 'save',
       label: I18n.t('pages.newProposal.save'),
-      onClick: () => { }
-      // onClick: () => handleSave()
+      onClick: () => handleSave()
     }, {
       iconType: 'send',
       label: I18n.t('pages.newProposal.send'),
@@ -115,22 +139,22 @@ const StaggeredProposal = ({ theme }: StaggeredProposalProps): JSX.Element => {
   ]
 
   // Menu suspenso após proposta ter sido salva
-  const floatingButtonMenuItemsAfterSaved = [
-    {
-      iconType: 'save',
-      label: I18n.t('pages.newProposal.save'),
-      // onClick: () => handleSave()
-    }, {
-      iconType: 'file',
-      label: I18n.t('pages.newProposal.viewDownload'),
-      // onClick: () => handleOpen()
-    },
-    {
-      iconType: 'send',
-      label: I18n.t('pages.newProposal.send'),
-      onClick: () => { }
-    }
-  ]
+  // const floatingButtonMenuItemsAfterSaved = [
+  //   {
+  //     iconType: 'save',
+  //     label: I18n.t('pages.newProposal.save'),
+  //     // onClick: () => handleSave()
+  //   }, {
+  //     iconType: 'file',
+  //     label: I18n.t('pages.newProposal.viewDownload'),
+  //     // onClick: () => handleOpen()
+  //   },
+  //   {
+  //     iconType: 'send',
+  //     label: I18n.t('pages.newProposal.send'),
+  //     onClick: () => { }
+  //   }
+  // ]
 
 
   const MessageExitDialog = (): JSX.Element => {
@@ -161,12 +185,10 @@ const StaggeredProposal = ({ theme }: StaggeredProposalProps): JSX.Element => {
         setAction('home')
         return true
       }
-      
       if ((element.id === 'logo_sirius' || element.querySelector('#logo_sirius')) && element.tagName !== 'DIV') {
         setAction('home')
         return true
       }
-     
       if ((element.id === 'home' || element.querySelector('#home')) && element.tagName !== 'DIV') {
         setAction('commercial-home')
         return true

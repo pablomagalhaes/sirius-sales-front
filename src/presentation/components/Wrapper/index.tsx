@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom'
 import { I18n } from 'react-redux-i18n'
 import { Root, ChildrenContainer, ExtensionMenuContainer } from './style'
 
-const Wrapper = ({ children }): JSX.Element => {
+const Wrapper = ({ children }: any): JSX.Element => {
   const [open, setOpen] = useState(false)
   const history = useHistory()
 
@@ -37,10 +37,25 @@ const Wrapper = ({ children }): JSX.Element => {
         },
         {
           label: I18n.t('components.header.escalonada'),
-          onClick: () => history.push('/propostaEscalonada'),
+          onClick: () => history.push('/propostaEscalonada')
         }
       ]
     },
+    // {
+    //   icon: 'tariff',
+    //   label: I18n.t('components.header.tariff'),
+    //   onclick: function noRefCheck () {},
+    //   subMenuItems: [
+    //     {
+    //       label: I18n.t('components.header.tariff'),
+    //       onclick: () => history.push('/tarifario')
+    //     },
+    //     {
+    //       label: I18n.t('components.header.escalonada'),
+    //       onclick: function noRefCheck(){}
+    //     }
+    //   ]
+    // },
     {
       icon: 'chart',
       label: I18n.t('components.header.indicators'),

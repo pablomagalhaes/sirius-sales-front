@@ -295,8 +295,23 @@ const getCountProposal = async (params): Promise<any> => {
   }
 }
 
-const getTariffs = async (activity: string, modal: string, validity?: string): Promise<any> => {
-  const url: string = `/sirius-tariff-api/tariff/region/country/${String(activity)}/${String(modal)}/${validity !== null ? String(validity) : 'VALID'}`
+const getTariffs = async (params): Promise<any> => {
+  const url: string = '/sirius-tariff-api/tariff/region/country/'
+  try {
+    const res = await instance.get(url, {
+      params,
+      paramsSerializer: params => {
+        return qs.stringify(params, { arrayFormat: 'comma' })
+      }
+    })
+    return res.data
+  } catch (error) {
+    toast.error(String(error) + ' | Request:  ' + String(url))
+  }
+}
+
+const getTariffsByFilter = async (direction: string, orderByList: string, page: number, size: number): Promise<any> => {
+  const url: string = `/sirius-tariff-api/upload/file/filter?direction=${String(direction)}&orderByList=${String(orderByList)}&page=${Number(page)}&size=${Number(size)}`
   try {
     const res = await instance.get(url)
     return res.data
@@ -304,6 +319,7 @@ const getTariffs = async (activity: string, modal: string, validity?: string): P
     toast.error(String(error) + ' | Request:  ' + String(url))
   }
 }
+
 
 const downloadProposal = async (language: string, idProposal: string): Promise<any> => {
   const url: string = `/sirius-business-proposal-api/proposal/report/${idProposal}/PDF/${language}`
@@ -410,7 +426,8 @@ const API = {
   downloadProposal,
   editTariff,
   uploadTariff,
-  getTariffProposal
+  getTariffProposal,
+  getTariffsByFilter
 }
 
 export default API

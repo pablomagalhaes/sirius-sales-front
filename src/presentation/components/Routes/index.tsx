@@ -5,12 +5,16 @@ import { Home, NewProposal, Proposal, NewProposalExportation, Tariff, StaggeredP
 import Wrapper from '../Wrapper'
 import { ProposalContextProvider } from '../../pages/NewProposal/context/ProposalContext'
 import { TariffContextProvider } from '../../pages/Tariff/context/TariffContext'
-import { StaggeredProposalProvider } from '../../pages/StaggeredProposal/context/StaggeredProposalContext'
+import { StaggeredProposalContextProvider } from '../../pages/StaggeredProposal/context/StaggeredProposalContext'
+
+// import { makeAdminDetail } from '../../../main/factories/pages/staggered-proposal/update-staggered-proposal-factory'
+
+import { makeRemoteUpdateStaggeredProposal } from '../../../main/factories/usecases/remote-update-staggered-proposal-factory'
 
 const Routes = (): JSX.Element => (
   <ProposalContextProvider>
     <TariffContextProvider>
-      <StaggeredProposalProvider>
+      <StaggeredProposalContextProvider>
         <BrowserRouter basename="/#/comercial">
           <Switch>
             <Route exact path="/">
@@ -40,12 +44,12 @@ const Routes = (): JSX.Element => (
             </Route>
             <Route exact path="/propostaEscalonada">
               <Wrapper>
-                <StaggeredProposal />
+                <StaggeredProposal updateStaggeredProposal={makeRemoteUpdateStaggeredProposal()}/>
               </Wrapper>
             </Route>
           </Switch>
         </BrowserRouter>
-      </StaggeredProposalProvider>
+      </StaggeredProposalContextProvider>
     </TariffContextProvider>
   </ProposalContextProvider>
 )

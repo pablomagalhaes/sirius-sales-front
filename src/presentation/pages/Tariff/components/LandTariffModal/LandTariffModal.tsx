@@ -35,6 +35,21 @@ import API from '../../../../../infrastructure/api'
 import { useCurrencies, useFrequency } from '../../../../hooks'
 import { TariffItemsTypes } from '../../../../../application/enum/tariffEnum'
 
+import {
+  TARIFF_LAND_TARIFF_MODAL_SPAN_AGENT,
+  TARIFF_LAND_TARIFF_MODAL_SPAN_COMPANY,
+  TARIFF_LAND_TARIFF_MODAL_SELECT_CURRENCY,
+  TARIFF_LAND_TARIFF_MODAL_INPUT_GENERALCARGODED,
+  TARIFF_LAND_TARIFF_MODAL_INPUT_GENERALCARGOCONS,
+  TARIFF_LAND_TARIFF_MODAL_INPUT_IMOCARGODED,
+  TARIFF_LAND_TARIFF_MODAL_INPUT_IMOCARGOCONS,
+  TARIFF_LAND_TARIFF_MODAL_SELECT_FREQUENCY,
+  TARIFF_LAND_TARIFF_MODAL_INPUT_TXROUTE,
+  TARIFF_LAND_TARIFF_MODAL_INPUT_TRANSITTIME,
+  TARIFF_LAND_TARIFF_MODAL_INPUT_DTVALIDITY,
+  TARIFF_LAND_TARIFF_MODAL_BUTTON_CANCEL,
+  TARIFF_LAND_TARIFF_MODAL_BUTTON_SAVE
+} from '../../../../../ids'
 interface TariffValues {
   idTariffTypeValues: number
   value: string
@@ -229,8 +244,8 @@ const LandTariffModal = ({
                     <TableBodyRow>
                       <StyledTableCell width="45%" align="left">
                         <ColumnDiv>
-                          <span>{data.agent}</span>
-                          <span>{data.landCompany}</span>
+                          <span id={TARIFF_LAND_TARIFF_MODAL_SPAN_AGENT}>{data.agent}</span>
+                          <span id={TARIFF_LAND_TARIFF_MODAL_SPAN_COMPANY}>{data.landCompany}</span>
                         </ColumnDiv>
                       </StyledTableCell>
                       <StyledTableCell width="40%" align="left">
@@ -249,6 +264,7 @@ const LandTariffModal = ({
                               renderInput={(params) => (
                                 <div ref={params.InputProps.ref}>
                                   <Input
+                                    id={TARIFF_LAND_TARIFF_MODAL_SELECT_CURRENCY}
                                     {...params.inputProps}
                                     width="84px"
                                     placeholder={data.currency}
@@ -276,6 +292,7 @@ const LandTariffModal = ({
                   {I18n.t('components.tariffModal.generalCargoDed')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
+                  id={TARIFF_LAND_TARIFF_MODAL_INPUT_GENERALCARGODED}
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -296,6 +313,7 @@ const LandTariffModal = ({
                   {I18n.t('components.tariffModal.generalCargoCons')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
+                  id={TARIFF_LAND_TARIFF_MODAL_INPUT_GENERALCARGOCONS}
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -316,6 +334,7 @@ const LandTariffModal = ({
                   {I18n.t('components.tariffModal.ImoCargoDed')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
+                  id={TARIFF_LAND_TARIFF_MODAL_INPUT_IMOCARGODED}
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -336,6 +355,7 @@ const LandTariffModal = ({
                   {I18n.t('components.tariffModal.ImoCargoCons')}<RedColorSpan> *</RedColorSpan>
                 </FormLabel>
                 <NumberInput
+                  id={TARIFF_LAND_TARIFF_MODAL_INPUT_IMOCARGOCONS}
                   decimalSeparator={','}
                   thousandSeparator={'.'}
                   decimalScale={2}
@@ -357,8 +377,8 @@ const LandTariffModal = ({
                 <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <ControlledSelect
+                id={TARIFF_LAND_TARIFF_MODAL_SELECT_FREQUENCY}
                 labelId="frequency-label"
-                id="frequency"
                 value={data.frequency}
                 onChange={(e) => setData({ ...data, frequency: e.target.value })}
                 displayEmpty
@@ -389,6 +409,7 @@ const LandTariffModal = ({
                   <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <ControlledInput
+                id={TARIFF_LAND_TARIFF_MODAL_INPUT_TXROUTE}
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
                 invalid={
                   invalidInput &&
@@ -412,6 +433,7 @@ const LandTariffModal = ({
                   <RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <ControlledInput
+                id={TARIFF_LAND_TARIFF_MODAL_INPUT_TRANSITTIME}
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
                 invalid={
                   invalidInput &&
@@ -429,7 +451,7 @@ const LandTariffModal = ({
                 {I18n.t('components.tariffModal.validity')}<RedColorSpan> *</RedColorSpan>
               </FormLabel>
               <NumberInput
-                id="no-label-field"
+                id={TARIFF_LAND_TARIFF_MODAL_INPUT_DTVALIDITY}
                 format={'##/##/####'}
                 mask={['D', 'D', 'M', 'M', 'Y', 'Y', 'Y', 'Y']}
                 placeholder="DD/MM/YYYY"
@@ -450,6 +472,7 @@ const LandTariffModal = ({
               <Grid item xs={10}>
                 <ButtonDiv>
                   <Button
+                    id={TARIFF_LAND_TARIFF_MODAL_BUTTON_CANCEL}
                     disabled={false}
                     text={I18n.t('components.tariffModal.cancel')}
                     tooltip={I18n.t('components.tariffModal.cancel')}
@@ -462,6 +485,7 @@ const LandTariffModal = ({
               <Grid item xs={2}>
                 <ButtonDiv>
                   <Button
+                    id={TARIFF_LAND_TARIFF_MODAL_BUTTON_SAVE}
                     disabled={false}
                     text={I18n.t('components.tariffModal.save')}
                     tooltip={I18n.t('components.tariffModal.save')}

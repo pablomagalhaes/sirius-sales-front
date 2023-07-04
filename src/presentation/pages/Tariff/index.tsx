@@ -23,7 +23,10 @@ import {
   TopButtonContainer,
   TopContainer,
   ButtonContainer,
-  MidleTypography
+  MidleTypography,
+  GridButton,
+  RowButton,
+  ColButton
 } from './style'
 import { ExitToApp } from '@material-ui/icons/'
 import { useHistory } from 'react-router-dom'
@@ -39,6 +42,13 @@ import { OrderTypes, IconTypes } from '../../../application/enum/enum'
 import useTariffs from '../../hooks/tariff/useTariffs'
 import Filter from './components/filter'
 import { TariffContext, filterDefault } from './context/TariffContext'
+
+import {
+  TARIFF_MAINPAGE_SPAN_TARIFF,
+  TARIFF_MAINPAGE_LINK_HOME,
+  TARIFF_MAINPAGE_LINK_TARIFFPROCESSING,
+  TARIFF_BUTTON_UPLOAD
+} from '../../../ids'
 
 const Tariff = (): JSX.Element => {
   const { data: tariffList = [], changeFilterList } = useTariffs()
@@ -101,8 +111,6 @@ const Tariff = (): JSX.Element => {
     const tariffType = getActivityFilter(quickFilterList)
     const validityTariff = getValidityFilter(quickFilterList)
 
-    changeFilterList(tariffType, tariffModalType, validityTariff)
-
     setFilter(() => ({
       ...filterDefault,
       tariffModalType,
@@ -134,6 +142,10 @@ const Tariff = (): JSX.Element => {
   useEffect(() => {
     setOrderBy(SelectorsValuesTypes.Validity)
   }, [filter.tariffModalType])
+
+  useEffect(() => {
+    changeFilterList(filter)
+  }, [filter])
 
   const handleExportTariff = (): void => {}
 
@@ -180,6 +192,7 @@ const Tariff = (): JSX.Element => {
       <TopContainer>
         <Breadcrumbs separator=">" aria-label="breadcrumb">
           <Link
+            id={TARIFF_MAINPAGE_LINK_HOME}
             color="inherit"
             onClick={() => history.push('/')}
             className="breadcrumbInitial"
@@ -187,25 +200,42 @@ const Tariff = (): JSX.Element => {
           >
             {I18n.t('pages.tariff.mainPage.home')}
           </Link>
-          <span className="breadcrumbEnd">{I18n.t('pages.tariff.mainPage.tariff')}</span>
+          <span className="breadcrumbEnd" id={TARIFF_MAINPAGE_SPAN_TARIFF}>{I18n.t('pages.tariff.mainPage.tariff')}</span>
         </Breadcrumbs>
         <TopButtonContainer>
-          <ButtonContainer>
-            <Button
-              disabled={false}
-              text={I18n.t('pages.tariff.upload.mainLabel')}
-              tooltip={I18n.t('pages.tariff.upload.mainLabel')}
-              backgroundGreen={true}
-              icon="upload"
-              onAction={() => { }}
-              popover
-              position="left"
-
-              >
-              <FloatingMenu menuItems={floatingButtonMenuItems} />
-            </Button>
-            <TariffUploadModal setClose={() => setOpen(false)} open={open} type={uploadType}/>
-          </ButtonContainer>
+          <GridButton>
+            <RowButton>
+              <ColButton>
+                <Link
+                  id={TARIFF_MAINPAGE_LINK_TARIFFPROCESSING}
+                  color="inherit"
+                  onClick={() => history.push('/tarifario-processamentos')}
+                  className="breadcrumbInitial"
+                  style={{ cursor: 'pointer', textAlign: 'left', color: '#087a7a' }}
+                >
+                  Ver todos os processamentos
+                </Link>
+              </ColButton>
+              <ColButton>
+              <ButtonContainer>
+                <Button
+                  id={TARIFF_BUTTON_UPLOAD}
+                  disabled={false}
+                  text={I18n.t('pages.tariff.upload.mainLabel')}
+                  tooltip={I18n.t('pages.tariff.upload.mainLabel')}
+                  backgroundGreen={true}
+                  icon="upload"
+                  onAction={() => { }}
+                  popover
+                  position="left"
+                  >
+                  <FloatingMenu menuItems={floatingButtonMenuItems} />
+                </Button>
+                <TariffUploadModal setClose={() => setOpen(false)} open={open} type={uploadType}/>
+              </ButtonContainer>
+              </ColButton>
+            </RowButton>
+          </GridButton>
         </TopButtonContainer>
       </TopContainer>
       <MidleContainer>

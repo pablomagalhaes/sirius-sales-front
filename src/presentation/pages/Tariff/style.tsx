@@ -256,6 +256,23 @@ const MainTariffContainer = styled.div`
   width: 100%; 
 `
 
+const GridButton = styled.div`
+
+`
+
+const RowButton = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: flex-end;
+  align-content: flex-start;
+  flex-direction: row;
+`
+
+const ColButton = styled.div`
+  margin: 10px;
+`
+
 const TableCell = withStyles({
   root: {
     borderBottom: 'none'
@@ -297,6 +314,9 @@ export {
   MidleContainer,
   MainTariffContainer,
   MidleTypography,
+  GridButton,
+  RowButton,
   IconDisplay,
-  RedColorSpan
+  RedColorSpan,
+  ColButton
 }

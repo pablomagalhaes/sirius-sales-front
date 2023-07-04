@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${String(pdfjs.version)}/pdf.worker.js`
 
-export function Pdf (props): JSX.Element {
+export function Pdf ({ props }: any): JSX.Element {
   const [numPages, setNumPages] = useState(null)
 
   const onDocumentLoadSuccess = ({ numPages }): void => {
