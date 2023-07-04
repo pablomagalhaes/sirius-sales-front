@@ -378,7 +378,7 @@ const uploadTariff = async (type: string, modal: string, setProgress: Function, 
 }
 
 const getTariffProposal = async (params): Promise<any> => {
-  const url: string = '/sirius-tariff-api/tariff/tariffProposal/filter'
+  const url: string = '/sirius-tariff-api/tariff/proposal'
   try {
     const res = await instance.get(url, {
       params,

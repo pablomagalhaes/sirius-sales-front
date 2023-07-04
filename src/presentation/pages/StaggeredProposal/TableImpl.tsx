@@ -3,18 +3,13 @@ import React, { useState } from 'react'
 import { Button, Popover } from '@material-ui/core'
 import { I18n } from 'react-redux-i18n'
 import {
-  AirplaneCell,
   ClientCell,
   LabelCell,
-  OriginCell,
   ResponsibleCell,
   MenuIconCell,
   StatusCell,
-  HighwayCell,
-  MaritimeCell,
   Table, FloatingMenu, AlertIconCircle, ControlledToolTip
 } from 'fiorde-fe-components'
-import API from '../../../infrastructure/api'
 
 export interface TableImplProps {
   rows: any[]
@@ -69,8 +64,8 @@ const TableImpl = ({
     {
       label: 'Operação/Referência/Cliente',
       key: 'refClient',
-      render: ({ referenceTariffProposal, nmBusinessPartnerCustomer, txTariffType }: any) => (
-                <ClientCell title={referenceTariffProposal} subtitle={nmBusinessPartnerCustomer} type={txTariffType} />
+      render: ({ referenceTariffProposal, nmBusinessPartnerCustomer, type }: any) => (
+                <ClientCell title={referenceTariffProposal} subtitle={nmBusinessPartnerCustomer} type={type} />
       ),
       size: 8
     },

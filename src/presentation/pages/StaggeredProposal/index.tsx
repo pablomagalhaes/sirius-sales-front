@@ -58,7 +58,7 @@ const Proposal = (): JSX.Element => {
 
   useEffect(() => {
     setParams(filter)
-  }, [filter])
+  }, [])
 
   const verifyStatus = (status): any => {
     switch (status) {
@@ -134,34 +134,22 @@ const Proposal = (): JSX.Element => {
   const getProposalItems = (proposalList): any => {
     const array: any = []
     for (const proposal of proposalList) {
-      const opening = new Date(proposal.openingDate).toLocaleDateString('pt-BR')
-      const shelfLife = new Date(proposal.validityDate).toLocaleDateString(
-        'pt-BR'
-      )
-      const validityDate = new Date(proposal.validityDate)
-      const showWarning = verifyWarning(proposal.status, validityDate)
-      const status = verifyStatus(proposal.status)
-      const modal = verifyModal(proposal.modal)
-      const type = verifyType(proposal.operation)
+      const validityDateEnd = new Date(proposal.validityDateEnd).toLocaleDateString('pt-BR')
+      const validityDateStart = new Date(proposal.validityDateStart).toLocaleDateString('pt-BR')
+      const status = verifyStatus(proposal.nmTariffProposalStatus)
+      const type = verifyType(proposal.txTariffType)
       const item = {
-        client: proposal.clientName,
-        destination: proposal.modal === 'LAND' ? proposal.destinationCityName : proposal.destinationId,
-        iconterm: proposal.incotermId,
-        isLate: showWarning,
-        key: proposal.idProposal,
+        nmBusinessPartnerCustomer: proposal.nmBusinessPartnerCustomer,
+        referenceTariffProposal: proposal.referenceTariffProposal,
+        key: proposal.referenceTariffProposal,
+        validityDateEnd,
+        validityDateStart,
         menuItems: menuItemsList(status, proposal.idProposal, proposal.reference, proposal.operation),
-        modal,
-        numio: proposal.numIO,
-        opening,
-        origin: proposal.modal === 'LAND' ? proposal.originCityName : proposal.originId,
-        reference: proposal.reference,
-        responsible: proposal.responsible,
-        shelfLife,
+        responsible: proposal.userCreationName,
         status,
         type,
-        isClientReturnLate: proposal.overdueClientResponse
+        isClientReturnLate: false
       }
-
       array.push(item)
     }
     return array
