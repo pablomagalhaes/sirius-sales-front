@@ -14,13 +14,13 @@ import {
   Separator
 } from '../style'
 
-import IconComponent from '../../../../application/icons/IconComponent'
+import IconComponent from '../../../../../application/icons/IconComponent'
 import { withTheme } from 'styled-components'
 
-import ControlledSelect from '../../../components/ControlledSelect'
-import ControlledInput from '../../../components/ControlledInput'
-import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
-import API from '../../../../infrastructure/api'
+import ControlledSelect from '../../../../components/ControlledSelect'
+import ControlledInput from '../../../../components/ControlledInput'
+import { RedColorSpan } from '../../../../components/StyledComponents/modalStyles'
+import API from '../../../../../infrastructure/api'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { StyledPaper } from './StepsStyles'
 import { PickerDateRange } from 'fiorde-fe-components'

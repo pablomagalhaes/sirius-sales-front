@@ -1,363 +1,536 @@
-import React, { useState, useCallback, useEffect, useContext, useRef } from 'react'
-import { Button, ExitDialog, FloatingMenu, Steps, Messages } from 'fiorde-fe-components'
-import { Breadcrumbs, Link } from '@material-ui/core/'
+import React, { useEffect, useState, useContext } from 'react'
 import {
-  ButtonContainer,
-  Header,
-  MainContainer,
-  ReferenceCode,
+  Button,
+  Pagination
+} from 'fiorde-fe-components'
+import TableImpl from './TableImpl'
+import { Breadcrumbs, Link, Select, MenuItem } from '@material-ui/core/'
+import {
+  ArrowIconContainer,
+  BottomSideContainer,
+  DropdownMenuContainer,
+  ExportListContainer,
+  ExportListSpan,
+  LeftSideListHeaderContainer,
+  ListHeaderContainer,
+  ListMainTitleSpan,
+  ListTextSpan,
+  OrderByContainer,
+  PaginationContainer,
+  PaginationMainContainer,
+  RightSideListHeaderContainer,
   RootContainer,
+  RowFilterContainer,
+  TableContainer,
+  TopButtonContainer,
   TopContainer,
-  UserContainer,
-  Username,
-  MessageContainer,
-  Status
+  ButtonContainer
 } from './style'
-import { withTheme } from 'styled-components'
+import ProposalDisplayModal from '../../components/ProposalDisplayModal/ProposalDisplayModal'
+import { ExitToApp } from '@material-ui/icons/'
+import { useHistory } from 'react-router-dom'
+import UpArrow from '../../../application/icons/UpArrow'
+import API from '../../../infrastructure/api'
+import ArrowDown from '../../../application/icons/ArrowDown'
+import { orderButtonMenuItems } from './constants'
 import { I18n } from 'react-redux-i18n'
-import IconComponent from '../../../application/icons/IconComponent'
-import Step1 from './steps/Step1'
-import Step2 from './steps/Step2'
+import {
+  StatusProposalEnum,
+  StatusProposalStringEnum
+} from '../../../application/enum/statusProposalEnum'
+import RejectModal from '../../components/RejectModal/RejectModal'
+import Filter from './components/filter'
+import { SelectorsValuesTypes } from '../../../application/enum/tariffEnum'
+import { StaggeredProposalContext } from './context/StaggeredProposalContext'
+import useTariffProposal from '../../hooks/tariff/useTariffProposal'
 
-import { useHistory, useLocation } from 'react-router-dom'
-import { UpdateStaggeredProposal } from '../../../domain/usecase'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-
-import { StaggeredProposalContext, StaggeredProposalProps } from './context/StaggeredProposalContext'
-
-type StaggeredProps = {
-  theme: any;
-  updateStaggeredProposal: UpdateStaggeredProposal;
-}
-
-const StaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps): JSX.Element => {
-
-  const { staggeredproposal, setStaggeredProposal }: StaggeredProposalProps = useContext(StaggeredProposalContext)
-
-  const [action, setAction] = useState('')
-  const [agentList, setAgentList] = useState<[]>([])
-  const [clicked, setClicked] = useState({ id: '', clicked: false })
-  const [containerTypeList, setContainerTypeList] = useState<any[]>([])
-  const [costData, setCostData] = useState(0)
-  const [cw, setCw] = useState(0)
-  const [cwSale, setCwSale] = useState(0)
-  const [duplicateMode, setduplicateMode] = useState(false)
-  const [editMode, setEditMode] = useState(false)
-  const [hover, setHover] = useState({ id: '', hover: false })
-  const [invalidInput, setInvalidInput] = useState(false)
-  const [leavingPage, setLeavingPage] = useState(false)
-  const [loadExistingProposal, setLoadExistingProposal] = useState(true)
-  const [modal, setModal] = useState('')
-  const [totalCosts, setTotalCosts] = useState()
-  const [proposalType, setProposalType] = useState('')
-  const [serviceList, setServiceList] = useState<any[]>([])
-  const [showSaveMessage, setShowSaveMessage] = useState(false)
-  const [specifications, setSpecifications] = useState('')
-
-  const queryClient = useQueryClient()
+const Proposal = (): JSX.Element => {
+  const { filter, setFilter }: any = useContext(StaggeredProposalContext)
+  const { content: proposalList, totalElements: totalProposalList, setParams, refetch } = useTariffProposal()
+  const [openReject, setOpenReject] = useState(false)
+  const [openDisplay, setOpenDisplay] = useState(false)
+  const [reference, setReference] = useState('')
+  const [proposalId, setProposalId] = useState('')
+  const [orderAsc, setOrderAsc] = useState(true)
+  const [orderBy, setOrderBy] = useState<string>(SelectorsValuesTypes.Validity)
 
   const history = useHistory()
-  const location = useLocation()
-
-  const [completed, setCompleted] = useState({
-    step1: false,
-    step2: false
-  })
-
-  const [filled, setFilled] = useState({
-    step1: false,
-    step2: false
-  })
-
-  const [stepLoaded, setStepLoaded] = useState({
-    step1: false,
-    step2: false
-  })
-
-  const steps = [
-    {
-      id: 'step1',
-      label: I18n.t('pages.staggeredProposal.step1.title'),
-      completed: completed.step1
-    },
-    {
-      id: 'step2',
-      label: I18n.t('pages.staggeredProposal.step2.title'),
-      completed: completed.step2
-    }
-  ]
-
-  const handleClick = (clickState): void => {
-    setClicked(clickState)
-  }
-
-  const handleHover = (hoverState): void => {
-    setHover(hoverState)
-  }
-
-  const mutation = useMutation({
-    mutationFn: async (newData: any) => {
-      return await updateStaggeredProposal.updateStaggered(newData)
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(['updateStaggedProposal'])
-    }
-  })
-
-  const handleSave = (): void => {
-    console.log('completed', completed)
-
-    const params = staggeredproposal
-
-    console.log('params', params)
-
-    mutation.mutate(params)
-
-    // if (
-    //   completed.step1 &&
-    //   completed.step2
-    // ) {
-    //   const params = {
-    //     idBusinessPartnerCustomer: 1
-    //   }
-    //   mutation.mutate(params)
-    // } else {
-    //   console.log('error')
-    // }
-  }
-
-  const floatingButtonMenuItems = [
-    {
-      iconType: 'save',
-      label: I18n.t('pages.newProposal.save'),
-      onClick: () => handleSave()
-    }, {
-      iconType: 'send',
-      label: I18n.t('pages.newProposal.send'),
-      onClick: () => { }
-    }
-  ]
-
-  // Menu suspenso após proposta ter sido salva
-  // const floatingButtonMenuItemsAfterSaved = [
-  //   {
-  //     iconType: 'save',
-  //     label: I18n.t('pages.newProposal.save'),
-  //     // onClick: () => handleSave()
-  //   }, {
-  //     iconType: 'file',
-  //     label: I18n.t('pages.newProposal.viewDownload'),
-  //     // onClick: () => handleOpen()
-  //   },
-  //   {
-  //     iconType: 'send',
-  //     label: I18n.t('pages.newProposal.send'),
-  //     onClick: () => { }
-  //   }
-  // ]
-
-
-  const MessageExitDialog = (): JSX.Element => {
-    useEffect(() => {
-      if (filled.step1 ||
-        filled.step2) {
-        setLeavingPage(true)
-      } else {
-        setLeavingPage(false)
-      }
-    }, [])
-
-    return (
-      <ExitDialog
-        cancelButtonText={I18n.t('pages.newProposal.unsavedChanges.cancelMessage')}
-        confirmButtonText={I18n.t('pages.newProposal.unsavedChanges.confirmMessage')}
-        message={I18n.t('pages.newProposal.unsavedChanges.message')}
-        onPressCancel={() => setLeavingPage(false)}
-        onPressConfirm={() => executeAction()}
-        title={I18n.t('pages.newProposal.unsavedChanges.title')}
-      />
-    )
-  }
-
-  const validateAction = (element): boolean => {
-    if (element.tagName !== 'HTML') {
-      if (element.id === 'button_home' || element.querySelector('#button_home') || element.id === 'mini-logo' || element.querySelector('#mini-logo')) {
-        setAction('home')
-        return true
-      }
-      if ((element.id === 'logo_sirius' || element.querySelector('#logo_sirius')) && element.tagName !== 'DIV') {
-        setAction('home')
-        return true
-      }
-      if ((element.id === 'home' || element.querySelector('#home')) && element.tagName !== 'DIV') {
-        setAction('commercial-home')
-        return true
-      }
-      if ((element.id === 'proposal' || element.querySelector('#proposal')) && element.tagName !== 'DIV') {
-        setAction('proposals')
-        return true
-      }
-      if ((element.id === 'tariff' || element.querySelector('#tariff')) && element.tagName !== 'DIV') {
-        setAction('commercial-home')
-        return true
-      }
-      if ((element.id === 'chart' || element.querySelector('#chart')) && element.tagName !== 'DIV') {
-        setAction('commercial-home')
-        return true
-      }
-      if (element.id === 'exit_button') {
-        setAction('logout')
-        return true
-      }
-    }
-    return false
-  }
-
-  const executeAction = (): void => {
-    switch (action) {
-      case 'home':
-        history.go(-4)
-        break
-      case 'commercial-home':
-        history.push('/')
-        break
-      case 'proposals':
-        history.push('/proposta')
-        break
-      case 'logout':
-        break
-    }
-  }
 
   useEffect(() => {
-    window.addEventListener('beforeunload', (event) => {
-      event.returnValue = setLeavingPage(true)
-    })
-  }, [])
+    setParams(filter)
+  }, [filter])
 
-  const useOnClickOutside = (handler): void => {
-    useEffect(() => {
-      const listener = (event: any): void => {
-        if (!validateAction(event.target)) {
-          return
-        }
-        handler(event)
-      }
-      document.addEventListener('mousedown', listener)
-      document.addEventListener('touchstart', listener)
-      return () => {
-        document.removeEventListener('mousedown', listener)
-        document.removeEventListener('touchstart', listener)
-      }
-    }, [handler])
+  const verifyStatus = (status): any => {
+    switch (status) {
+      case 'Open':
+        return StatusProposalEnum.ABERTA
+      case 'Awaiting Customer Return':
+        return StatusProposalEnum.AGUARDANDO_RETORNO_CLIENTE
+      case 'Revision':
+        return StatusProposalEnum.EM_REVISAO
+      case 'Approved':
+        return StatusProposalEnum.APROVADA
+      case 'Discard':
+        return StatusProposalEnum.REJEITADA
+      case 'Canceled':
+        return StatusProposalEnum.CANCELADA
+      case 'Automatically Canceled':
+        return StatusProposalEnum.CANCELAMENTO_AUTOMATICO
+    }
   }
-  const divRef = useRef()
 
-  const handler = useCallback(() => { setLeavingPage(true) }, [])
-  useOnClickOutside(handler)
+  const checkBusinessDays = (date): any => {
+    const dateWeekday = date.getDay()
+    switch (dateWeekday) {
+      case 4:
+        date.setDate(Number(date.getDate()) + 5)
+        break
+      case 5:
+        date.setDate(Number(date.getDate()) + 5)
+        break
+      case 6:
+        date.setDate(Number(date.getDate()) + 4)
+        break
+      default:
+        date.setDate(Number(date.getDate()) + 3)
+        break
+    }
+    return date
+  }
+
+  const verifyWarning = (status: string, validityDate: Date): boolean => {
+    const warningDate = checkBusinessDays(new Date())
+
+    let showWarning = false
+    if (
+      status !== 'Aprovada' &&
+      status !== 'Rejeitada' &&
+      status !== 'Cancelada' &&
+      status !== 'Cancelamento Automático'
+    ) {
+      showWarning = validityDate <= warningDate || validityDate === warningDate
+    }
+    return showWarning
+  }
+
+  const verifyModal = (modal: string): string => {
+    if (modal === 'AIR') {
+      return 'aereo'
+    } else if (modal === 'SEA') {
+      return 'maritimo'
+    } else {
+      return 'rodoviario'
+    }
+  }
+
+  const verifyType = (type: String): string => {
+    if (type === 'IMPORT FREIGHT') {
+      return 'importation'
+    } else {
+      return 'exportation'
+    }
+  }
+
+  const getProposalItems = (proposalList): any => {
+    const array: any = []
+    for (const proposal of proposalList) {
+      const opening = new Date(proposal.openingDate).toLocaleDateString('pt-BR')
+      const shelfLife = new Date(proposal.validityDate).toLocaleDateString(
+        'pt-BR'
+      )
+      const validityDate = new Date(proposal.validityDate)
+      const showWarning = verifyWarning(proposal.status, validityDate)
+      const status = verifyStatus(proposal.status)
+      const modal = verifyModal(proposal.modal)
+      const type = verifyType(proposal.operation)
+      const item = {
+        client: proposal.clientName,
+        destination: proposal.modal === 'LAND' ? proposal.destinationCityName : proposal.destinationId,
+        iconterm: proposal.incotermId,
+        isLate: showWarning,
+        key: proposal.idProposal,
+        menuItems: menuItemsList(status, proposal.idProposal, proposal.reference, proposal.operation),
+        modal,
+        numio: proposal.numIO,
+        opening,
+        origin: proposal.modal === 'LAND' ? proposal.originCityName : proposal.originId,
+        reference: proposal.reference,
+        responsible: proposal.responsible,
+        shelfLife,
+        status,
+        type,
+        isClientReturnLate: proposal.overdueClientResponse
+      }
+
+      array.push(item)
+    }
+    return array
+  }
+
+  const setStatus = (id: any, status: string, reason?: string): void => {
+    void (async function () {
+      await API.putStatus(id, status, reason)
+        .then(() => {
+          refetch()
+        })
+        .catch((err) => console.log(err))
+    })()
+  }
+
+  const editEventPage = (id: any, operationType: any): void => {
+    if (operationType === 'IMPORT FREIGHT') {
+      history.push({
+        pathname: '/novaProposta',
+        state: { proposalId: id }
+      })
+    } else {
+      history.push({
+        pathname: '/novaPropostaExportacao',
+        state: { proposalId: id }
+      })
+    }
+  }
+
+  const duplicateEventPage = (id: any, operationType: any): void => {
+    if (operationType === 'IMPORT FREIGHT') {
+      history.push({
+        pathname: '/novaProposta',
+        state: { proposalId: id, eventType: 'duplicate' }
+      })
+    } else {
+      history.push({
+        pathname: '/novaPropostaExportacao',
+        state: { proposalId: id, eventType: 'duplicate' }
+      })
+    }
+  }
+
+  const menuItemsList = (status: any, id: any, ref: any, operationType: any): void => {
+    const array: any = []
+    switch (status) {
+      case StatusProposalEnum.ABERTA:
+        array.push(
+          {
+            iconType: 'edit',
+            label: I18n.t('pages.proposal.table.editLabel'),
+            onClick: () => {
+              editEventPage(id, operationType)
+            }
+          },
+          {
+            iconType: 'duplicate',
+            label: I18n.t('pages.proposal.table.duplicateLabel'),
+            onClick: () => {
+              duplicateEventPage(id, operationType)
+            }
+          },
+          {
+            iconType: 'forward',
+            label: I18n.t('pages.proposal.table.confirmLabel'),
+            onClick: () => {
+              setStatus(id, StatusProposalStringEnum.AGUARDANDO_RETORNO_CLIENTE)
+            }
+          },
+          {
+            iconType: 'cancel',
+            label: I18n.t('pages.proposal.table.cancelLabel'),
+            onClick: () => {
+              setStatus(id, StatusProposalStringEnum.CANCELADA)
+            }
+          }
+        )
+        return array
+      case StatusProposalEnum.AGUARDANDO_RETORNO_CLIENTE:
+        array.push(
+          {
+            iconType: 'file',
+            label: I18n.t('pages.proposal.table.viewDownload'),
+            onClick: () => {
+              setOpenDisplay(true)
+              setProposalId(id)
+            }
+          },
+          {
+            iconType: 'duplicate',
+            label: I18n.t('pages.proposal.table.duplicateLabel'),
+            onClick: () => {
+              duplicateEventPage(id, operationType)
+            }
+          },
+          {
+            iconType: 'fileReview',
+            label: I18n.t('pages.proposal.table.reviewLabel'),
+            onClick: () => {
+              setStatus(id, StatusProposalStringEnum.EM_REVISAO)
+            }
+          },
+          {
+            iconType: 'cancel',
+            label: I18n.t('pages.proposal.table.cancelLabel'),
+            onClick: () => {
+              setStatus(id, StatusProposalStringEnum.CANCELADA)
+            }
+          },
+          {
+            iconType: 'thumbsUp',
+            label: I18n.t('pages.proposal.table.approveLabel'),
+            onClick: () => {
+              setStatus(id, StatusProposalStringEnum.APROVADA)
+            }
+          },
+          {
+            iconType: 'thumbsDown',
+            label: I18n.t('pages.proposal.table.rejectLabel'),
+            onClick: () => {
+              setOpenReject(true)
+              setReference(ref)
+              setProposalId(id)
+            }
+          }
+        )
+        return array
+      case StatusProposalEnum.EM_REVISAO:
+        array.push(
+          {
+            iconType: 'edit',
+            label: I18n.t('pages.proposal.table.editLabel'),
+            onClick: () => {
+              editEventPage(id, operationType)
+            }
+          },
+          {
+            iconType: 'duplicate',
+            label: I18n.t('pages.proposal.table.duplicateLabel'),
+            onClick: () => {
+              duplicateEventPage(id, operationType)
+            }
+          },
+          {
+            iconType: 'forward',
+            label: I18n.t('pages.proposal.table.confirmLabel'),
+            onClick: () => {
+              setStatus(id, StatusProposalStringEnum.AGUARDANDO_RETORNO_CLIENTE)
+            }
+          },
+          {
+            iconType: 'cancel',
+            label: I18n.t('pages.proposal.table.cancelLabel'),
+            onClick: () => {
+              setStatus(id, StatusProposalStringEnum.CANCELADA)
+            }
+          }
+        )
+        return array
+      case StatusProposalEnum.APROVADA:
+        array.push(
+          {
+            iconType: 'file',
+            label: I18n.t('pages.proposal.table.viewDownload'),
+            onClick: () => { }
+          },
+          {
+            iconType: 'duplicate',
+            label: I18n.t('pages.proposal.table.duplicateLabel'),
+            onClick: () => {
+              duplicateEventPage(id, operationType)
+            }
+          })
+        return array
+      case StatusProposalEnum.REJEITADA:
+      case StatusProposalEnum.CANCELADA:
+        array.push({
+          iconType: 'duplicate',
+          label: I18n.t('pages.proposal.table.duplicateLabel'),
+          onClick: () => {
+            duplicateEventPage(id, operationType)
+          }
+        })
+        return array
+      default:
+        array.push({
+          iconType: 'duplicate',
+          label: I18n.t('pages.proposal.table.duplicateLabel'),
+          onClick: () => {
+            duplicateEventPage(id, operationType)
+          }
+        })
+        return array
+    }
+  }
+
+  const handleExportList = (): void => {}
+
+  const cleanFilter = (): void => {
+    delete filter.referenceProposal
+    delete filter.idBusinessPartnerCustomer
+    delete filter.operationType
+    delete filter.idOrigin
+    delete filter.idDestination
+    delete filter.idIncoterm
+    delete filter.idTransport
+    delete filter.status
+    delete filter['openingDate.dtBegin']
+    delete filter['openingDate.dtEnd']
+    delete filter['validityDate.dtBegin']
+    delete filter['validityDate.dtEnd']
+
+    setFilter(() => ({
+      direction: 'ASC',
+      orderByList: 'openingDate',
+      page: 0,
+      size: 10
+    }))
+  }
+
+  const showMsgTotalResult = (): string => {
+    const keys = Object.keys(filter)
+
+    /* eslint-disable no-prototype-builtins */
+    const direction = filter.hasOwnProperty('direction')
+    const orderByList = filter.hasOwnProperty('orderByList')
+    const page = filter.hasOwnProperty('page')
+    const size = filter.hasOwnProperty('size')
+
+    if (
+      keys.length === 4 &&
+      Boolean(page) &&
+      Boolean(size) &&
+      Boolean(direction) &&
+      Boolean(orderByList)
+    ) {
+      return `${I18n.t('pages.tariff.titles.StaggeredProposal')} (${totalProposalList}) - ${I18n.t('pages.tariff.mainPage.last30days')}`
+    }
+    return `Resultado do filtro (${totalProposalList})`
+  }
+  const handleCloseReject = (): void => {
+    setOpenReject(false)
+    setReference('')
+    setProposalId('')
+  }
+
+  const handleCloseDisplay = (): void => {
+    setOpenDisplay(false)
+    setProposalId('')
+  }
 
   return (
     <RootContainer>
-      <Header>
+      <TopContainer>
         <Breadcrumbs separator=">" aria-label="breadcrumb">
           <Link
-            className="breadcrumbInitial"
             color="inherit"
             onClick={() => history.push('/')}
+            className="breadcrumbInitial"
             style={{ cursor: 'pointer' }}
           >
-            Home
+            {I18n.t('pages.tariff.mainPage.home')}
           </Link>
-          <span className="breadcrumbEnd">{I18n.t('pages.staggeredProposal.title')}</span>
+          <span>{I18n.t('pages.tariff.mainPage.tariff')}</span>
+          <span className="breadcrumbEnd">{I18n.t('pages.tariff.titles.StaggeredProposal')}</span>
         </Breadcrumbs>
-        {/* <UserContainer>
-          {editMode
-            ? <>
-              {I18n.t('pages.newProposal.reference')}
-              <ReferenceCode>
-                {proposal?.referenceProposal}
-              </ReferenceCode>
-            </>
-            : null
-          }
-          {I18n.t('pages.newProposal.encharged')}
-          <IconComponent name="user" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
-          <Username>
-            {getEnchargedFullname()}
-          </Username>
-          {editMode && proposal.idProposalStatus === 1
-            ? <Status className="open">{I18n.t('pages.proposal.table.openLabel')}</Status>
-            : null
-          }
-          {editMode && proposal.idProposalStatus === 3
-            ? <Status className="inReview">{I18n.t('pages.proposal.table.inRevisionLabel')}</Status>
-            : null
-          }
-        </UserContainer> */}
-      </Header>
-      <TopContainer>
-        <Steps
-          clicked={clicked}
-          handleClick={handleClick}
-          handleHover={handleHover}
-          hover={hover}
-          offset={-270}
-          steps={steps}
-        />
-        <ButtonContainer>
-          <Button
-            backgroundGreen
-            disabled={false}
-            icon="arrow"
-            onAction={() => { }}
-            popover
-            position="right"
-            text={I18n.t('pages.newProposal.buttonFinish')}
-            tooltip={I18n.t('pages.newProposal.buttonFinish')}
-          >
-            <FloatingMenu menuItems={floatingButtonMenuItems} />
-          </Button>
-        </ButtonContainer>
-      </TopContainer>
-      {leavingPage && <MessageExitDialog />}
-      {loadExistingProposal &&
-        <MainContainer ref={divRef}>
-          <div id="step1">
-            <Step1
-              filled={filled}
-              invalidInput={invalidInput}
-              setCompleted={setCompleted}
-              setFilled={setFilled}
-              setStepLoaded={setStepLoaded}
-            />
-          </div>
-          {stepLoaded.step1 && <>
-            <div id="step2">
-              <Step2
-                invalidInput={invalidInput}
-                setCompleted={setCompleted}
-                setFilled={setFilled}
+        <TopButtonContainer>
+          <ButtonContainer>
+            <Button
+              disabled={false}
+              text={I18n.t('pages.staggeredProposal.workStation.buttonLabel')}
+              tooltip={I18n.t('pages.staggeredProposal.workStation.buttonLabel')}
+              backgroundGreen={true}
+              icon="add"
+              onAction={() => { }}
+              position="left"
               />
-            </div>
-          </>
-          }
-        </MainContainer>
-      }
-      {showSaveMessage &&
-        <MessageContainer>
-          <Messages
-            buttonText={I18n.t('pages.newProposal.saveMessage.buttonText')}
-            closable={true}
-            closeAlert={() => { setShowSaveMessage(false) } }
-            closeMessage={I18n.t('pages.newProposal.saveMessage.closeMessage')}
-            goBack={() => { history.push('/proposta') } }
-            message={I18n.t('pages.newProposal.saveMessage.message')}
-            // message={`${String(I18n.t('pages.newProposal.saveMessage.message'))} ${String(proposal?.referenceProposal)}.`}
-            severity={'success'}
-          />
-        </MessageContainer>}
+          </ButtonContainer>
+        </TopButtonContainer>
+      </TopContainer>
+      <RowFilterContainer>
+        <Filter
+          cleanFilter={cleanFilter}
+        />
+      </RowFilterContainer>
+      <ListHeaderContainer>
+        <LeftSideListHeaderContainer>
+          <ListMainTitleSpan>{showMsgTotalResult()}</ListMainTitleSpan>
+          <ExportListContainer onClick={handleExportList}>
+            <ExitToApp />
+            <ExportListSpan>{I18n.t('pages.tariff.mainPage.exportList')}</ExportListSpan>
+          </ExportListContainer>
+        </LeftSideListHeaderContainer>
+        <RightSideListHeaderContainer>
+          <OrderByContainer>
+            <ListTextSpan>{I18n.t('pages.tariff.mainPage.orderBy')}:</ListTextSpan>
+            <DropdownMenuContainer>
+              <Select
+                className="select-style"
+                disableUnderline
+                onChange={(e) => setOrderBy(String(e.target.value))}
+                placeholder={orderBy}
+                value={orderBy}
+              >
+                {orderButtonMenuItems(filter.tariffModalType).map((item) => (
+                  <MenuItem
+                    key={`${String(item.value)}_key`}
+                    value={item.value}
+                  >
+                    <span>{item.description}</span>
+                  </MenuItem>
+                ))}
+              </Select>
+            </DropdownMenuContainer>
+            <ArrowIconContainer
+              onClick={() => setOrderAsc((order) => !order)}
+              $rotate={orderAsc}
+            >
+              {orderAsc ? <ArrowDown /> : <UpArrow />}
+            </ArrowIconContainer>
+          </OrderByContainer>
+        </RightSideListHeaderContainer>
+      </ListHeaderContainer>
+      <BottomSideContainer>
+        <TableContainer>
+          <TableImpl
+            rows={getProposalItems(proposalList)}
+            />
+            <RejectModal
+              open={openReject}
+              setClose={handleCloseReject}
+              title={I18n.t('components.rejectModal.title')}
+              reference={reference}
+              proposalId={proposalId}
+              setStatus={setStatus}
+            />
+            <ProposalDisplayModal
+              open={openDisplay}
+              setClose={handleCloseDisplay}
+              idProposal={proposalId}
+            />
+        </TableContainer>
+        <PaginationContainer>
+          <PaginationMainContainer>
+            <Pagination
+              count={totalProposalList}
+              labelDisplay={I18n.t('components.Pagination.labelDisplay')}
+              labelDisplayedRows={I18n.t('components.Pagination.labelDisplayedRows')}
+              labelRowsPerPage={I18n.t('components.Pagination.labelRowsPerPage')}
+              onPageChange={(value) =>
+                setFilter((filter: any) => ({ ...filter, page: value }))
+              }
+              onRowsPerPageChange={(value) =>
+                setFilter((filter: any) => ({
+                  ...filter,
+                  size: value,
+                  page: 0
+                }))
+              }
+              tooltipBack={I18n.t('components.Pagination.tooltipBack')}
+              tooltipFirst={I18n.t('components.Pagination.tooltipFirst')}
+              tooltipLast={I18n.t('components.Pagination.tooltipLast')}
+              tooltipNext={I18n.t('components.Pagination.tooltipNext')}
+            />
+          </PaginationMainContainer>
+        </PaginationContainer>
+      </BottomSideContainer>
     </RootContainer>
   )
 }
 
-export default withTheme(StaggeredProposal)
+export default Proposal

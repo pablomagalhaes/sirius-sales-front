@@ -1,6 +1,6 @@
 
-import { SelectorsValuesTypes } from '../../../../application/enum/tariffEnum'
-import { ModalTypes } from '../../../../application/enum/enum'
+import { SelectorsValuesTypes } from '../../../application/enum/tariffEnum'
+import { ModalTypes } from '../../../application/enum/enum'
 import { I18n } from 'react-redux-i18n'
 
 const orderButtonMenuItems = (modal: string): any => {

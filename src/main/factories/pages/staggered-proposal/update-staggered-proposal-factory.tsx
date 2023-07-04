@@ -1,10 +1,10 @@
 import React from 'react'
 import { makeRemoteUpdateStaggeredProposal } from '../../usecases/remote-update-staggered-proposal-factory'
-import { StaggeredProposal } from '../../../../presentation/pages'
+import NewStaggeredProposal from '../../../../presentation/pages/StaggeredProposal/newStaggeredProposal';
 
 export const makeAdminDetail: React.FC = (props) => {
   return (
-    <StaggeredProposal
+    <NewStaggeredProposal
       {...props}
       updateStaggeredProposal={makeRemoteUpdateStaggeredProposal()}
     />

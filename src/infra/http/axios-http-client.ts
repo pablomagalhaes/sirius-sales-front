@@ -1,4 +1,4 @@
-import { notification } from 'antd'
+// import { notification } from 'antd'
 import axios, { AxiosResponse } from 'axios'
 import { HttpRequest, HttpResponse, HttpClient, HttpStatusCode } from '../../data/protocols/http'
 import { LocalStorageAdapter } from '../cache'
@@ -22,7 +22,7 @@ export class AxiosHttpClient implements HttpClient {
       axiosResponse = error.response
       const axiosStatus: number = error?.response?.status
       const axiosMessage: string = error?.response?.data?.message || 'Erro'
-      notification.error({
+      console.error({
         message: `Error: ${axiosStatus?.toString()}`,
         description: axiosMessage
       })

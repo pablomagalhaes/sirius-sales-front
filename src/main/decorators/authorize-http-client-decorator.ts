@@ -1,5 +1,5 @@
 import { HttpClient, HttpRequest, HttpResponse, HttpStatusCode } from '../../data/protocols/http'
-import { notification } from 'antd'
+// import { notification } from 'antd'
 import { LocalStorageAdapter } from '../../infra/cache'
 import { ServiceUser } from '../../data/usecase/service-user'
 
@@ -22,20 +22,20 @@ export class AuthorizeHttpClientDecorator implements HttpClient {
     switch (httpResponse.statusCode) {
       case HttpStatusCode.ok:
         if (data.method !== 'get') {
-          notification.success({
+          console.log({
             message: 'Sucesso!',
             description: httpResponse?.body?.message
           })
         }
         break
       case HttpStatusCode.alert:
-        notification.warning({
+        console.log({
           message: 'Alerta!',
           description: httpResponse?.body?.message
         })
         break
       default:
-        notification.error({
+        console.error({
           message: 'Erro!',
           description: httpResponse?.body?.message
         })
