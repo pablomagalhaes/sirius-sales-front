@@ -377,21 +377,6 @@ const uploadTariff = async (type: string, modal: string, setProgress: Function, 
   }
 }
 
-const getTariffProposal = async (params): Promise<any> => {
-  const url: string = '/sirius-tariff-api/tariff/proposal'
-  try {
-    const res = await instance.get(url, {
-      params,
-      paramsSerializer: params => {
-        return qs.stringify(params, { arrayFormat: 'comma' })
-      }
-    })
-    return res.data
-  } catch (error) {
-    toast.error(String(error) + ' | Request:  ' + String(url))
-  }
-}
-
 const API = {
   getContainerType,
   getCurrencies,
@@ -426,7 +411,6 @@ const API = {
   downloadProposal,
   editTariff,
   uploadTariff,
-  getTariffProposal,
   getTariffsByFilter
 }
 

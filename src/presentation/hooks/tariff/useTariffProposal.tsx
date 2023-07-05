@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import API from '../../../infrastructure/api'
 
 import { QueryKeys } from '../../../application/enum/queryKeys'
 

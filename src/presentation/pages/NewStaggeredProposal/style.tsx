@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { Radio } from '@material-ui/core/'
-import { primary } from '../../../../application/themes'
+import { primary } from '../../../application/themes'
 
 interface StyledRadioProps {
   color?: string

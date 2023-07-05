@@ -15,15 +15,15 @@ import {
 } from './style'
 import { withTheme } from 'styled-components'
 import { I18n } from 'react-redux-i18n'
-import IconComponent from '../../../../application/icons/IconComponent'
+import IconComponent from '../../../application/icons/IconComponent'
 import Step1 from './steps/Step1'
 import Step2 from './steps/Step2'
 
 import { useHistory, useLocation } from 'react-router-dom'
-import { UpdateStaggeredProposal } from '../../../../domain/usecase'
+import { UpdateStaggeredProposal } from '../../../domain/usecase'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { StaggeredProposalContext, StaggeredProposalProps } from '../context/StaggeredProposalContext'
+import { StaggeredProposalContext, StaggeredProposalProps } from '../StaggeredProposal/context/StaggeredProposalContext'
 
 type StaggeredProps = {
   theme: any;

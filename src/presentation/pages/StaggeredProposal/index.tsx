@@ -41,7 +41,7 @@ import {
 import RejectModal from '../../components/RejectModal/RejectModal'
 import Filter from './components/filter'
 import { SelectorsValuesTypes } from '../../../application/enum/tariffEnum'
-import { StaggeredProposalContext } from './context/StaggeredProposalContext'
+import { StaggeredProposalContext, filterDefault } from './context/StaggeredProposalContext'
 import useTariffProposal from '../../hooks/tariff/useTariffProposal'
 
 const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
@@ -59,7 +59,7 @@ const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
 
   useEffect(() => {
     setParams(filter)
-  }, [])
+  }, [filter])
 
   const verifyStatus = (status): any => {
     switch (status) {
@@ -320,10 +320,7 @@ const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
     delete filter['validityDate.dtEnd']
 
     setFilter(() => ({
-      direction: 'ASC',
-      orderByList: 'openingDate',
-      page: 0,
-      size: 10
+      ...filterDefault
     }))
   }
 
