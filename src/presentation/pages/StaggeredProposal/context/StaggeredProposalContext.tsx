@@ -1,13 +1,13 @@
 import React, { createContext, useState, useMemo } from 'react'
 
-import { SelectorsValuesTypes } from '../../../../application/enum/tariffEnum'
+import { SelectorsValuesTypes } from '../../../../application/enum/staggeredProposalEnum'
 import { OrderTypes } from '../../../../application/enum/enum'
 import { StaggeredProposalModel } from '../../../../domain/models'
 
 export const filterDefault = {
   page: 0,
   size: 10,
-  orderByList: `${SelectorsValuesTypes.Reference},${OrderTypes.Descendent}`
+  orderByList: `${SelectorsValuesTypes.Validity},${OrderTypes.Ascendent}`
 }
 
 export const emptyStaggeredProposalValue: StaggeredProposalModel = {

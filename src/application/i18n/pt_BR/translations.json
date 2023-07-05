@@ -608,7 +608,9 @@
         "status": "Status",
         "responsible": "Responsável",
         "import": "Importação",
-        "export": "Exportação"
+        "export": "Exportação",
+        "origin": "Origem",
+        "destination": "Destino"
       }
     }
   }  

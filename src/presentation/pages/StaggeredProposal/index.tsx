@@ -40,9 +40,10 @@ import {
 } from '../../../application/enum/statusProposalEnum'
 import RejectModal from '../../components/RejectModal/RejectModal'
 import Filter from './components/filter'
-import { SelectorsValuesTypes } from '../../../application/enum/tariffEnum'
+import { SelectorsValuesTypes } from '../../../application/enum/staggeredProposalEnum'
 import { StaggeredProposalContext, filterDefault } from './context/StaggeredProposalContext'
 import useTariffProposal from '../../hooks/tariff/useTariffProposal'
+import { OrderTypes } from '../../../application/enum/enum'
 
 const Proposal = ({ loadStaggeredProposal }): JSX.Element => {
   const { filter, setFilter }: any = useContext(StaggeredProposalContext)
@@ -353,6 +354,17 @@ const Proposal = ({ loadStaggeredProposal }): JSX.Element => {
     setProposalId('')
   }
 
+  const handleOrderDirection = (): string => {
+    if (orderAsc) {
+      return OrderTypes.Ascendent
+    }
+    return OrderTypes.Descendent
+  }
+
+  useEffect(() => {
+    setFilter((filter: any) => ({ ...filter, orderByList: `${orderBy},${handleOrderDirection()}` }))
+  }, [orderAsc, orderBy])
+
   return (
     <RootContainer>
       <TopContainer>
@@ -406,7 +418,7 @@ const Proposal = ({ loadStaggeredProposal }): JSX.Element => {
                 placeholder={orderBy}
                 value={orderBy}
               >
-                {orderButtonMenuItems(filter.tariffModalType).map((item) => (
+                {orderButtonMenuItems().map((item) => (
                   <MenuItem
                     key={`${String(item.value)}_key`}
                     value={item.value}

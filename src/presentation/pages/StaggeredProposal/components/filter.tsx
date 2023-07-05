@@ -2,13 +2,10 @@ import React, { useState, useContext } from 'react'
 import { RowFilter } from 'fiorde-fe-components'
 
 import { I18n } from 'react-redux-i18n'
-import { ModalTypes, OriginDestinyTypes } from '../../../../application/enum/enum'
+import { OriginDestinyTypes } from '../../../../application/enum/enum'
 import {
   useOriginDestination,
-  usePartnerList,
-  useMercosulCountries,
-  useMercosulCities,
-  useMercosulStates
+  usePartnerList
 } from '../../../hooks'
 import { StaggeredProposalContext } from '../context/StaggeredProposalContext'
 import { StatusProposalEnum } from '../../../../application/enum/statusProposalEnum'
@@ -23,9 +20,6 @@ const Filter = ({
 }: FilterProps): JSX.Element => {
   const { data: originDestinationList = [] } = useOriginDestination()
   const { partnerList, partnerSimpleNameList } = usePartnerList()
-  const { data: originDestinationCountries = [] } = useMercosulCountries()
-  const { data: originDestinationStates = [] } = useMercosulStates()
-  const { data: originDestinationCities = [] } = useMercosulCities()
   const { setFilter }: any = useContext(StaggeredProposalContext)
   const [radioValue, setRadioValue] = useState('')
 
