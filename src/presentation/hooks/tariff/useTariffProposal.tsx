@@ -4,12 +4,12 @@ import API from '../../../infrastructure/api'
 
 import { QueryKeys } from '../../../application/enum/queryKeys'
 
-const useTariffProposal = (): any => {
+const useTariffProposal = (loadStaggeredProposal): any => {
   const [params, setParams] = useState()
 
   const getTariffProposal = async (): Promise<any> => {
     if (params !== undefined) {
-      const data = await API.getTariffProposal(params)
+      const data = await loadStaggeredProposal.loadStaggered(params)
       return data
     }
   }

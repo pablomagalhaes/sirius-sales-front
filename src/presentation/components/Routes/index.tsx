@@ -10,6 +10,7 @@ import { StaggeredProposalContextProvider } from '../../pages/StaggeredProposal/
 // import { makeAdminDetail } from '../../../main/factories/pages/staggered-proposal/update-staggered-proposal-factory'
 
 import { makeRemoteUpdateStaggeredProposal } from '../../../main/factories/usecases/remote-update-staggered-proposal-factory'
+import { MakeStaggeredProposal } from '../../../main/factories/pages/staggered-proposal/staggered-proposal-factory'
 
 const Routes = (): JSX.Element => (
   <ProposalContextProvider>
@@ -44,7 +45,7 @@ const Routes = (): JSX.Element => (
             </Route>
             <Route exact path="/propostaEscalonada">
               <Wrapper>
-                <StaggeredProposal />
+                <MakeStaggeredProposal />
               </Wrapper>
             </Route>
             <Route exact path="/novaPropostaEscalonada">

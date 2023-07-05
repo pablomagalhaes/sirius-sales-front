@@ -44,9 +44,10 @@ import { SelectorsValuesTypes } from '../../../application/enum/tariffEnum'
 import { StaggeredProposalContext } from './context/StaggeredProposalContext'
 import useTariffProposal from '../../hooks/tariff/useTariffProposal'
 
-const Proposal = (): JSX.Element => {
+const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
   const { filter, setFilter }: any = useContext(StaggeredProposalContext)
-  const { content: proposalList, totalElements: totalProposalList, setParams, refetch } = useTariffProposal()
+
+  const { content: proposalList, totalElements: totalProposalList, setParams, refetch } = useTariffProposal(loadStaggeredProposal)
   const [openReject, setOpenReject] = useState(false)
   const [openDisplay, setOpenDisplay] = useState(false)
   const [reference, setReference] = useState('')
@@ -76,50 +77,6 @@ const Proposal = (): JSX.Element => {
         return StatusProposalEnum.CANCELADA
       case 'Automatically Canceled':
         return StatusProposalEnum.CANCELAMENTO_AUTOMATICO
-    }
-  }
-
-  const checkBusinessDays = (date): any => {
-    const dateWeekday = date.getDay()
-    switch (dateWeekday) {
-      case 4:
-        date.setDate(Number(date.getDate()) + 5)
-        break
-      case 5:
-        date.setDate(Number(date.getDate()) + 5)
-        break
-      case 6:
-        date.setDate(Number(date.getDate()) + 4)
-        break
-      default:
-        date.setDate(Number(date.getDate()) + 3)
-        break
-    }
-    return date
-  }
-
-  const verifyWarning = (status: string, validityDate: Date): boolean => {
-    const warningDate = checkBusinessDays(new Date())
-
-    let showWarning = false
-    if (
-      status !== 'Aprovada' &&
-      status !== 'Rejeitada' &&
-      status !== 'Cancelada' &&
-      status !== 'Cancelamento Automático'
-    ) {
-      showWarning = validityDate <= warningDate || validityDate === warningDate
-    }
-    return showWarning
-  }
-
-  const verifyModal = (modal: string): string => {
-    if (modal === 'AIR') {
-      return 'aereo'
-    } else if (modal === 'SEA') {
-      return 'maritimo'
-    } else {
-      return 'rodoviario'
     }
   }
 

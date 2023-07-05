@@ -1,29 +1,30 @@
 import { HttpClient, HttpStatusCode } from '../protocols/http'
 import { StaggeredProposalModel } from '../models/staggered-proposal-model'
-import { UpdateStaggeredProposal } from '../../domain/usecase/update-staggered-proposal'
-import { AccessDeniedError, UnexpectedError } from '../../domain/errors'
+import { LoadStaggeredProposal } from '../../domain/usecase/load-staggered-proposal'
+import { UnexpectedError } from '../../domain/errors'
 
-export class RemoteUpdateStaggeredProposal implements UpdateStaggeredProposal {
+export class RemoteLoadStaggeredProposal implements LoadStaggeredProposal {
   constructor (
     private readonly url: string,
-    private readonly httpClient: HttpClient<RemoteUpdateStaggeredProposal.Model>
+    private readonly httpClient: HttpClient<RemoteLoadStaggeredProposal.Model>
   ) {}
 
-  async updateStaggered (params: UpdateStaggeredProposal.Params): Promise<UpdateStaggeredProposal.Model> {
+  async loadStaggered (params: LoadStaggeredProposal.Params): Promise<LoadStaggeredProposal.Model> {
+    console.log('entrou2')
     const httpResponse = await this.httpClient.request({
       url: this.url,
-      method: 'post',
+      method: 'get',
       body: params
     })
-    const remoteUpdateAdmin = httpResponse.body
+    const remoteLoadAdmin = httpResponse.body
     switch (httpResponse.statusCode) {
-      case HttpStatusCode.ok: return remoteUpdateAdmin
+      case HttpStatusCode.ok: return remoteLoadAdmin
       // case HttpStatusCode.forbidden: throw new AccessDeniedError()
       default: throw new UnexpectedError()
     }
   }
 }
 
-export namespace RemoteUpdateStaggeredProposal {
+export namespace RemoteLoadStaggeredProposal {
   export type Model = StaggeredProposalModel
 }
