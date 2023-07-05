@@ -597,6 +597,18 @@
       },
       "workStation": {
         "buttonLabel": "Criar nova proposta"
+      },
+      "filter": {
+        "reference": "Ref. proposta",
+        "client": "Cliente",
+        "processType": "Tipo de processo",
+        "period": "Período",
+        "startDate": "Dt. Início da Vigência",
+        "endDate": "Dt. Fim da Vigência",
+        "status": "Status",
+        "responsible": "Responsável",
+        "import": "Importação",
+        "export": "Exportação"
       }
     }
   }  

@@ -59,6 +59,7 @@ const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
 
   useEffect(() => {
     setParams(filter)
+    console.log(filter)
   }, [filter])
 
   const verifyStatus = (status): any => {
@@ -81,7 +82,7 @@ const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
   }
 
   const verifyType = (type: String): string => {
-    if (type === 'IMPORT FREIGHT') {
+    if (type === 'IMPORT') {
       return 'importation'
     } else {
       return 'exportation'
@@ -328,16 +329,14 @@ const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
     const keys = Object.keys(filter)
 
     /* eslint-disable no-prototype-builtins */
-    const direction = filter.hasOwnProperty('direction')
     const orderByList = filter.hasOwnProperty('orderByList')
     const page = filter.hasOwnProperty('page')
     const size = filter.hasOwnProperty('size')
 
     if (
-      keys.length === 4 &&
+      keys.length === 3 &&
       Boolean(page) &&
       Boolean(size) &&
-      Boolean(direction) &&
       Boolean(orderByList)
     ) {
       return `${I18n.t('pages.tariff.titles.StaggeredProposal')} (${totalProposalList}) - ${I18n.t('pages.tariff.mainPage.last30days')}`
