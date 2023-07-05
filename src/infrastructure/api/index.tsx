@@ -320,7 +320,6 @@ const getTariffsByFilter = async (direction: string, orderByList: string, page: 
   }
 }
 
-
 const downloadProposal = async (language: string, idProposal: string): Promise<any> => {
   const url: string = `/sirius-business-proposal-api/proposal/report/${idProposal}/PDF/${language}`
   try {

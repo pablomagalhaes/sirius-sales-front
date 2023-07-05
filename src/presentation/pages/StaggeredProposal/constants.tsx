@@ -37,7 +37,6 @@ const orderButtonMenuItems = (modal: string): any => {
   ]
 }
 
-
 // mock
 const TableRows = (): any => {
   const array: any = []

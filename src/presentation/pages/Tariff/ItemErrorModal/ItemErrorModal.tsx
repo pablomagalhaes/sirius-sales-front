@@ -95,7 +95,7 @@ const ItemErrorModal = ({
                 </li>
               </UnorderedList>
             </Grid>
-            <Grid item xs={12} style={{paddingTop: '0px'}}>
+            <Grid item xs={12} style={{ paddingTop: '0px' }}>
               <Typography variant="subtitle1" gutterBottom>
                 {I18n.t('pages.tariff.itemErrorModal.subtitleLog')}
               </Typography>

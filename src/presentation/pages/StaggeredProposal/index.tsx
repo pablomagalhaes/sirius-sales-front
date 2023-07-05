@@ -44,7 +44,7 @@ import { SelectorsValuesTypes } from '../../../application/enum/tariffEnum'
 import { StaggeredProposalContext, filterDefault } from './context/StaggeredProposalContext'
 import useTariffProposal from '../../hooks/tariff/useTariffProposal'
 
-const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
+const Proposal = ({ loadStaggeredProposal }): JSX.Element => {
   const { filter, setFilter }: any = useContext(StaggeredProposalContext)
 
   const { content: proposalList, totalElements: totalProposalList, setParams, refetch } = useTariffProposal(loadStaggeredProposal)
@@ -59,7 +59,6 @@ const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
 
   useEffect(() => {
     setParams(filter)
-    console.log(filter)
   }, [filter])
 
   const verifyStatus = (status): any => {

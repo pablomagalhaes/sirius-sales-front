@@ -26,12 +26,11 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { StaggeredProposalContext, StaggeredProposalProps } from '../StaggeredProposal/context/StaggeredProposalContext'
 
 type StaggeredProps = {
-  theme: any;
-  updateStaggeredProposal: UpdateStaggeredProposal;
+  theme: any
+  updateStaggeredProposal: UpdateStaggeredProposal
 }
 
 const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps): JSX.Element => {
-
   const { staggeredproposal, setStaggeredProposal }: StaggeredProposalProps = useContext(StaggeredProposalContext)
 
   const [action, setAction] = useState('')
@@ -155,7 +154,6 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
   //     onClick: () => { }
   //   }
   // ]
-
 
   const MessageExitDialog = (): JSX.Element => {
     useEffect(() => {

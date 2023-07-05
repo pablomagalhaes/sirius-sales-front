@@ -120,7 +120,7 @@ const Filter = ({
       })
       setFilter((filter: any) => ({
         ...filter,
-        idTariffProposalStatus : [statusList]
+        idTariffProposalStatus: [statusList]
       }))
     }
 
@@ -150,7 +150,6 @@ const Filter = ({
 
     const selectedDates = findKeyFilter(selectedFiltersRowFilter, I18n.t('pages.staggeredProposal.filter.period'))
     if (selectedDates !== undefined) {
-      console.log(selectedFiltersRowFilter)
       const type = selectedFiltersRowFilter[4].checkBoxSelecteds
       const size = selectedDates.length
       if (type[0] === I18n.t('pages.staggeredProposal.filter.startDate')) {
@@ -278,14 +277,13 @@ const Filter = ({
     {
       label: I18n.t('pages.staggeredProposal.filter.status'),
       checkboxList1: menuItems.statusTypes,
-      pickerLabel1: I18n.t('pages.staggeredProposal.filter.status'),
+      pickerLabel1: I18n.t('pages.staggeredProposal.filter.status')
     },
     {
       label: I18n.t('pages.staggeredProposal.filter.responsible'),
       textField: I18n.t('pages.staggeredProposal.filter.responsible')
-    },
+    }
   ]
-
 
   const handleChangeModal = (
     handleCleanAll: () => void,
