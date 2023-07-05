@@ -29,9 +29,33 @@ const Wrapper = ({ children }: any): JSX.Element => {
     {
       icon: 'tariff',
       label: I18n.t('components.header.tariff'),
-      onclick: () => history.push('/tarifario'),
-      subMenuItems: []
+      onclick: function noRefCheck () {},
+      subMenuItems: [
+        {
+          label: I18n.t('components.header.tariff'),
+          onClick: () => history.push('/tarifario')
+        },
+        {
+          label: I18n.t('components.header.escalonada'),
+          onClick: () => history.push('/propostaEscalonada')
+        }
+      ]
     },
+    // {
+    //   icon: 'tariff',
+    //   label: I18n.t('components.header.tariff'),
+    //   onclick: function noRefCheck () {},
+    //   subMenuItems: [
+    //     {
+    //       label: I18n.t('components.header.tariff'),
+    //       onclick: () => history.push('/tarifario')
+    //     },
+    //     {
+    //       label: I18n.t('components.header.escalonada'),
+    //       onclick: function noRefCheck(){}
+    //     }
+    //   ]
+    // },
     {
       icon: 'chart',
       label: I18n.t('components.header.indicators'),
@@ -42,7 +66,13 @@ const Wrapper = ({ children }: any): JSX.Element => {
   return (
     <Root>
       <ExtensionMenuContainer>
-        <ExtensionMenu menuItems={menuItems} module="" onChange={handleChange} selectedSubItem={undefined} selectedSubMenu={undefined} />
+        <ExtensionMenu
+          menuItems={menuItems}
+          module=""
+          onChange={handleChange}
+          selectedSubItem={undefined}
+          selectedSubMenu={undefined}
+        />
       </ExtensionMenuContainer>
       <ChildrenContainer isOpen={open}>{children}</ChildrenContainer>
     </Root>

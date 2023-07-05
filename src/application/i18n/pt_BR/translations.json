@@ -71,7 +71,8 @@
       "home": "Home",
       "indicators": "Indicadores Comerciais",
       "proposal": "Proposta",
-      "tariff": "Tarifário"
+      "tariff": "Tarifário",
+      "escalonada": "Proposta Escalonada"
     },
     "itemModal": {
       "amount": "Qtd: ",
@@ -331,7 +332,9 @@
         "tariff": "Tarifário",
         "display": "Exibir por",
         "export": "Exportar tarifas",
-        "orderBy": "Ordenar por"
+        "orderBy": "Ordenar por",
+        "exportList": "Exportar lista",
+        "last30days": "Últimos 30 dias"
       },
       "upload": {
         "import": "Importação",
@@ -452,7 +455,8 @@
         "land": "Detalhamento da tarifa - Rodoviário",
         "air": "Detalhamento da tarifa - Aéreo",
         "seaLcl": "Detalhamento da tarifa - Marítimo LCL",
-        "seaFcl": "Detalhamento da tarifa - Marítimo FCL"
+        "seaFcl": "Detalhamento da tarifa - Marítimo FCL",
+        "StaggeredProposal": "Escalonadas aéreas"
       },
       "tariffTableProcessing": {
         "sucessLabel": "SUCESSO",
@@ -566,6 +570,34 @@
       "approveLabel": "Salvar Filtro",
       "cleanLabel": "Limpar",
       "myFilterLabel": "Meus Filtros"
+    },
+    "staggeredProposal": {
+      "title": "Proposta Escalonada",
+      "step1": {
+        "title": "Serviço",
+        "subtitle": "Escolha o cliente e informe as particularidades do serviço.",
+        "searchClient": "Procurar cliente por código ou nome...",
+        "operation": "Operação",
+        "vigencyDate": "Vigência",
+        "choose": "Escolha...",
+        "client": "Cliente"
+      },
+      "step2": {
+        "title": "Tarifas",
+        "subtitle": "Selecione a tabela correspondente ao tarifário para essa negociação.",
+        "agent": "Agente",
+        "ciaArea": "Cia. Aérea",
+        "coin": "Moeda",
+        "minValue": "Valor Minimo",
+        "45": "+45kg",
+        "100": "+100kg",
+        "300": "+300kg",
+        "500": "+500kg",
+        "1ton": "+1ton"
+      },
+      "workStation": {
+        "buttonLabel": "Criar nova proposta"
+      }
     }
   }  
 }

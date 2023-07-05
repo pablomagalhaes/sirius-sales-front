@@ -11,7 +11,8 @@ enum QueryKeys {
   businessPartnerColoader = 'businessPartnerColoader',
   tariffs = 'tariffs',
   tariffsByCountry = 'tariffsByCountry',
-  frequency = 'frequency'
+  frequency = 'frequency',
+  tariffProposal = 'tariffProposal'
 }
 
 export { QueryKeys }
