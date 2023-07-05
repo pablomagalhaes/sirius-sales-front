@@ -44,6 +44,7 @@ import API from '../../../../infrastructure/api'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import { CargoVolume } from '../../../../domain/CargoVolume'
 import CwModal from '../../../components/CwModal/CwModal'
+import FormatNumber from '../../../../application/utils/formatNumber'
 
 interface Step3Props {
   theme?: any
@@ -258,15 +259,15 @@ const Step3 = ({
               idCargoVolume: cargo.id,
               idCargo: proposal.cargo[0].id,
               amount: String(cargo.valueQuantity),
-              cubage: completeDecimalPlaces(cargo?.valueCubage),
-              diameter: completeDecimalPlaces(cargo?.valueDiameter),
-              height: completeDecimalPlaces(cargo?.valueHeight),
-              length: completeDecimalPlaces(cargo?.valueLength),
-              rawWeight: completeDecimalPlaces(cargo?.valueGrossWeight),
+              cubage: FormatNumber.convertNumberToString(cargo?.valueCubage),
+              diameter: FormatNumber.convertNumberToString(cargo?.valueDiameter),
+              height: FormatNumber.convertNumberToString(cargo?.valueHeight),
+              length: FormatNumber.convertNumberToString(cargo?.valueLength),
+              rawWeight: FormatNumber.convertNumberToString(cargo?.valueGrossWeight),
               type: marineFCL()
                 ? verifyContainerById(cargo.idContainerType as string)
                 : verifyPackagingById(cargo.idPackaging as number),
-              width: completeDecimalPlaces(cargo?.valueWidth),
+              width: FormatNumber.convertNumberToString(cargo?.valueWidth),
               id: id++,
               stack: cargo?.isStacked as any
             })
@@ -347,10 +348,6 @@ const Step3 = ({
 
   const isAir = (): boolean => {
     return modal === 'AIR'
-  }
-
-  const completeDecimalPlaces = (num: any): string => {
-    return num.toFixed(2).replace('.', ',')
   }
 
   const handleCwClose = (): void => {
