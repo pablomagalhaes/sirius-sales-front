@@ -1,7 +1,7 @@
 import { HttpClient, HttpRequest, HttpResponse, HttpStatusCode } from '../../data/protocols/http'
 // import { notification } from 'antd'
 import { LocalStorageAdapter } from '../../infra/cache'
-import { ServiceUser } from '../../data/usecase/service-user'
+// import { ServiceUser } from '../../data/usecase/service-user'
 
 export class AuthorizeHttpClientDecorator implements HttpClient {
   constructor (
@@ -43,14 +43,14 @@ export class AuthorizeHttpClientDecorator implements HttpClient {
     }
 
     if (httpResponse.statusCode === HttpStatusCode.unauthorized) {
-      const user = new ServiceUser()
-      if (user.isAlwaysLogged()) {
-        await user.refreshAuthenticate()
-        window.location.reload()
-      } else {
-        this.storage.clear()
-        window.location.href = '/login'
-      }
+      // const user = new ServiceUser()
+      // if (user.isAlwaysLogged()) {
+      //   await user.refreshAuthenticate()
+      //   window.location.reload()
+      // } else {
+      //   this.storage.clear()
+      //   window.location.href = '/login'
+      // }
     }
     return httpResponse
   }

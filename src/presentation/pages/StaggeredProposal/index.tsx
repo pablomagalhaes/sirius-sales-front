@@ -40,11 +40,12 @@ import {
 } from '../../../application/enum/statusProposalEnum'
 import RejectModal from '../../components/RejectModal/RejectModal'
 import Filter from './components/filter'
-import { SelectorsValuesTypes } from '../../../application/enum/tariffEnum'
+import { SelectorsValuesTypes } from '../../../application/enum/staggeredProposalEnum'
 import { StaggeredProposalContext, filterDefault } from './context/StaggeredProposalContext'
 import useTariffProposal from '../../hooks/tariff/useTariffProposal'
+import { OrderTypes } from '../../../application/enum/enum'
 
-const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
+const Proposal = ({ loadStaggeredProposal }): JSX.Element => {
   const { filter, setFilter }: any = useContext(StaggeredProposalContext)
 
   const { content: proposalList, totalElements: totalProposalList, setParams, refetch } = useTariffProposal(loadStaggeredProposal)
@@ -81,7 +82,7 @@ const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
   }
 
   const verifyType = (type: String): string => {
-    if (type === 'IMPORT FREIGHT') {
+    if (type === 'IMPORT') {
       return 'importation'
     } else {
       return 'exportation'
@@ -328,16 +329,14 @@ const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
     const keys = Object.keys(filter)
 
     /* eslint-disable no-prototype-builtins */
-    const direction = filter.hasOwnProperty('direction')
     const orderByList = filter.hasOwnProperty('orderByList')
     const page = filter.hasOwnProperty('page')
     const size = filter.hasOwnProperty('size')
 
     if (
-      keys.length === 4 &&
+      keys.length === 3 &&
       Boolean(page) &&
       Boolean(size) &&
-      Boolean(direction) &&
       Boolean(orderByList)
     ) {
       return `${I18n.t('pages.tariff.titles.StaggeredProposal')} (${totalProposalList}) - ${I18n.t('pages.tariff.mainPage.last30days')}`
@@ -354,6 +353,17 @@ const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
     setOpenDisplay(false)
     setProposalId('')
   }
+
+  const handleOrderDirection = (): string => {
+    if (orderAsc) {
+      return OrderTypes.Ascendent
+    }
+    return OrderTypes.Descendent
+  }
+
+  useEffect(() => {
+    setFilter((filter: any) => ({ ...filter, orderByList: `${orderBy},${handleOrderDirection()}` }))
+  }, [orderAsc, orderBy])
 
   return (
     <RootContainer>
@@ -408,7 +418,7 @@ const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
                 placeholder={orderBy}
                 value={orderBy}
               >
-                {orderButtonMenuItems(filter.tariffModalType).map((item) => (
+                {orderButtonMenuItems().map((item) => (
                   <MenuItem
                     key={`${String(item.value)}_key`}
                     value={item.value}

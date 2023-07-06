@@ -167,7 +167,7 @@ const Step1 = ({
 
   console.log('data step1', data)
   console.log('staggeredproposal step1', staggeredproposal)
-  
+
   return (
     <Separator>
       <Title>

@@ -58,8 +58,8 @@ const Step2 = ({
   setFilled,
   theme
 }: Step2Props): JSX.Element => {
-  const [vigencyDate, setVigencyDate] = React.useState([null, null]);
-  const [partnerList, setPartnerList] = useState<any[]>([]);
+  const [vigencyDate, setVigencyDate] = React.useState([null, null])
+  const [partnerList, setPartnerList] = useState<any[]>([])
   const [data, setData] = useState({
     operation: '',
     vigencyDate: vigencyDate,
@@ -80,7 +80,7 @@ const Step2 = ({
   }, [])
 
   useEffect(() => {
-    setData({ ...data, vigencyDate: vigencyDate });
+    setData({ ...data, vigencyDate: vigencyDate })
   }, [vigencyDate])
 
   useEffect(() => {

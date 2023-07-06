@@ -3,7 +3,6 @@ import { ValidityTypes } from '../../../application/enum/tariffEnum'
 import { ModalTypes, IconTypes, AcitivityTypes } from '../../../application/enum/enum'
 import { I18n } from 'react-redux-i18n'
 
-
 const getModalFilter = (quickFilterList): string => {
   const modalFilter = quickFilterList.find((item) => item.type === 'modal')
   let type: string = ''

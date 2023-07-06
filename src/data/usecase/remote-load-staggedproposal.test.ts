@@ -9,10 +9,9 @@ export const filterDefault = {
 }
 
 describe('StaggeredProposalService', () => {
-  const service = new RemoteLoadStaggeredProposal
+  const service = new RemoteLoadStaggeredProposal()
 
   it('should set proposal', () => {
-
     service.loadStaggered(filterDefault)
 
     expect(service.loadStaggered).toEqual(filterDefault)

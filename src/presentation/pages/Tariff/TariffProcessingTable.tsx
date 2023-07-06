@@ -89,7 +89,7 @@ const TariffProcessingTable = ({
                       row.txStatus ===
                       I18n.t('pages.tariff.tariffTableProcessing.sucessLabel')
                         ? () => {}
-                        : (e) => handleClick(e, index, row.idUploadFile )
+                        : (e) => handleClick(e, index, row.idUploadFile)
                     }
                   >
                     {capitalizeFirstLetter(row.txStatus)}
