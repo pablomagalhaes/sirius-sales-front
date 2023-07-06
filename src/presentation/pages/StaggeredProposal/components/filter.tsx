@@ -147,7 +147,7 @@ const Filter = ({
       const type = selectedFiltersRowFilter[4].checkBoxSelecteds
       const size = selectedDates.length
       if (type[0] === I18n.t('pages.staggeredProposal.filter.startDate')) {
-        const openedDates = selectedDates[size - 1].split(' - ')
+        const openedDates = selectedDates[size === 2 ? size - 2 : size - 1].split(' - ')
 
         const [openedDayBegin, openedMonthBegin, openedYearBegin] =
           openedDates[0].split('/')
