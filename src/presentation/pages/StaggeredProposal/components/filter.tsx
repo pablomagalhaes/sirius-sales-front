@@ -164,7 +164,7 @@ const Filter = ({
         setFilter((filter: any) => ({
           ...filter,
           'validityDateStart.dtBegin': openedDtBeginFormated,
-          'validityDateEnd.dtBegin': openedDtEndFormated
+          'validityDateStart.dtEnd': openedDtEndFormated
         }))
       }
 
@@ -185,7 +185,7 @@ const Filter = ({
 
         setFilter((filter: any) => ({
           ...filter,
-          'validityDateStart.dtEnd': validateDtBeginFormated,
+          'validityDateEnd.dtBegin': validateDtBeginFormated,
           'validityDateEnd.dtEnd': validateDtEndFormated
         }))
       }
