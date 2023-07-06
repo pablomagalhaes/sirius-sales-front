@@ -147,7 +147,7 @@ const Filter = ({
       const type = selectedFiltersRowFilter[4].checkBoxSelecteds
       const size = selectedDates.length
       if (type[0] === I18n.t('pages.staggeredProposal.filter.startDate')) {
-        const openedDates = selectedDates[size - 1].split(' - ')
+        const openedDates = selectedDates[size === 2 ? size - 2 : size - 1].split(' - ')
 
         const [openedDayBegin, openedMonthBegin, openedYearBegin] =
           openedDates[0].split('/')
@@ -164,7 +164,7 @@ const Filter = ({
         setFilter((filter: any) => ({
           ...filter,
           'validityDateStart.dtBegin': openedDtBeginFormated,
-          'validityDateEnd.dtBegin': openedDtEndFormated
+          'validityDateStart.dtEnd': openedDtEndFormated
         }))
       }
 
@@ -185,7 +185,7 @@ const Filter = ({
 
         setFilter((filter: any) => ({
           ...filter,
-          'validityDateStart.dtEnd': validateDtBeginFormated,
+          'validityDateEnd.dtBegin': validateDtBeginFormated,
           'validityDateEnd.dtEnd': validateDtEndFormated
         }))
       }
