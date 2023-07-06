@@ -17,3 +17,13 @@ export enum StatusProposalStringEnum {
   CANCELADA = 'Canceled',
   CANCELAMENTO_AUTOMATICO = 'Automatically Canceled',
 }
+
+export enum StatusStaggeredProposalStringEnum {
+  ABERTA = 'open',
+  AGUARDANDO_RETORNO_CLIENTE = 'awaitingCustomerReturn',
+  EM_REVISAO = 'revision',
+  APROVADA = 'approved',
+  REJEITADA = 'discard',
+  CANCELADA = 'canceled',
+  CANCELAMENTO_AUTOMATICO = 'automaticallyCanceled',
+}
