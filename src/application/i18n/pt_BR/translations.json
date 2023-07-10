@@ -55,7 +55,8 @@
       "rejection": "como rejeitada pelo cliente.",
       "display": "Ela será exibida na área de Propostas Concluídas como “Rejeitada”.",
       "cancel": "Cancelar",
-      "confirm": "Confirmar rejeição"
+      "confirm": "Confirmar rejeição",
+      "details": "Detalhe o motivo de rejeição"
     },
     "fareModal": {
       "agent": "Agente:",
