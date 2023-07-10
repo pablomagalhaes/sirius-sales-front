@@ -327,6 +327,34 @@ const AddAgentButtonWrapper = styled.div`
   justify-content: flex-start;
   margin-top: 20px;
 `
+const ButtonWrapper = styled.div`
+  margin-top: 15px;
+`
+
+const ButtonDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  align-content: flex-start;
+`
+
+const ImportButtonDiv = styled.div`
+  display: flex;
+  justify-content: left;
+  width: 100%;
+`
+
+const AddButtonDiv = styled.div`
+  display: flex;
+  justify-content: left;
+  width: 100%;
+  margin-left: 30px;
+  button {
+    height: 50px;
+  }
+`
 
 export {
   AddAgentButtonWrapper,
@@ -355,5 +383,9 @@ export {
   BottomValueContainer,
   BottomContainer,
   ChargeContainer,
-  EditIconContainer
+  EditIconContainer,
+  ButtonWrapper,
+  ButtonDiv,
+  ImportButtonDiv,
+  AddButtonDiv
 }

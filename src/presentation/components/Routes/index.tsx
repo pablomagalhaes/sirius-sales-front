@@ -48,11 +48,11 @@ const Routes = (): JSX.Element => (
                 <MakeStaggeredProposal />
               </Wrapper>
             </Route>
-            {/* <Route exact path="/novaPropostaEscalonada">
+            <Route exact path="/novaPropostaEscalonada">
               <Wrapper>
                 <NewStaggeredProposal updateStaggeredProposal={makeRemoteUpdateStaggeredProposal()}/>
               </Wrapper>
-            </Route> */}
+            </Route>
           </Switch>
         </BrowserRouter>
       </StaggeredProposalContextProvider>

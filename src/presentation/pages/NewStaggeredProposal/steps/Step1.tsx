@@ -171,8 +171,8 @@ const Step1 = ({
   return (
     <Separator>
       <Title>
-        1. {I18n.t('pages.staggeredProposal.step1.title')}
-        <Subtitle>{I18n.t('pages.staggeredProposal.step1.subtitle')}</Subtitle>
+        1. {I18n.t('pages.staggeredProposal.newStaggeredProposal.step1.title')}
+        <Subtitle>{I18n.t('pages.staggeredProposal.newStaggeredProposal.step1.subtitle')}</Subtitle>
       </Title>
       <Grid container spacing={5}>
         <Grid item xs={6}>
@@ -180,7 +180,7 @@ const Step1 = ({
             component="legend"
             error={data.idBusinessPartnerCustomer === null && invalidInput}
           >
-            {I18n.t('pages.staggeredProposal.step1.client')}:
+            {I18n.t('pages.staggeredProposal.newStaggeredProposal.step1.client')}:
             <RedColorSpan> *</RedColorSpan>
           </FormLabel>
           <Autocomplete
@@ -198,7 +198,7 @@ const Step1 = ({
                   variant="outlined"
                   size="small"
                   placeholder={I18n.t(
-                    'pages.staggeredProposal.step1.searchClient'
+                    'pages.staggeredProposal.newStaggeredProposal.step1.searchClient'
                   )}
                   $space
                   InputProps={{
@@ -224,7 +224,7 @@ const Step1 = ({
             component="legend"
             error={invalidInput && data.tariffType.length === 0}
           >
-            {I18n.t('pages.staggeredProposal.step1.operation')}
+            {I18n.t('pages.staggeredProposal.newStaggeredProposal.step1.operation')}
             {<RedColorSpan> *</RedColorSpan>}
           </FormLabel>
           <ControlledSelect
@@ -237,7 +237,7 @@ const Step1 = ({
           >
             <MenuItem disabled value="">
               <SelectSpan placeholder={1}>
-                {I18n.t('pages.staggeredProposal.step1.choose')}
+                {I18n.t('pages.staggeredProposal.newStaggeredProposal.step1.choose')}
               </SelectSpan>
             </MenuItem>
             {operationList.map((item) => (
@@ -252,7 +252,7 @@ const Step1 = ({
             component="legend"
             error={invalidInput && data.tariffType.length === 0}
           >
-            {I18n.t('pages.staggeredProposal.step1.vigencyDate')}
+            {I18n.t('pages.staggeredProposal.newStaggeredProposal.step1.vigencyDate')}
             {<RedColorSpan> *</RedColorSpan>}
           </FormLabel>
           <div style={{ marginTop: '-8px' }}>

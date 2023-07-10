@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useContext, useRef } from 'react'
 import { Button, ExitDialog, FloatingMenu, Steps, Messages } from 'fiorde-fe-components'
-import { Breadcrumbs, Link } from '@material-ui/core/'
+import { Breadcrumbs, Link, Grid } from '@material-ui/core/'
 import {
   ButtonContainer,
   Header,
@@ -11,7 +11,11 @@ import {
   UserContainer,
   Username,
   MessageContainer,
-  Status
+  Status,
+  ButtonWrapper,
+  ButtonDiv,
+  ImportButtonDiv,
+  AddButtonDiv
 } from './style'
 import { withTheme } from 'styled-components'
 import { I18n } from 'react-redux-i18n'
@@ -77,12 +81,12 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
   const steps = [
     {
       id: 'step1',
-      label: I18n.t('pages.staggeredProposal.step1.title'),
+      label: I18n.t('pages.staggeredProposal.newStaggeredProposal.step1.title'),
       completed: completed.step1
     },
     {
       id: 'step2',
-      label: I18n.t('pages.staggeredProposal.step2.title'),
+      label: I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.title'),
       completed: completed.step2
     }
   ]
@@ -341,6 +345,51 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
             </div>
           </>
           }
+
+          <Grid item xs={12} container direction="row" justify="flex-start">
+            <Grid item xs={2}>
+              <ImportButtonDiv>
+                <Button
+                  onAction={() => {}}
+                  text={I18n.t('pages.staggeredProposal.newStaggeredProposal.ImportTariff')}
+                  icon="tariff"
+                  backgroundGreen={true}
+                  tooltip={I18n.t('pages.staggeredProposal.newStaggeredProposal.ImportTariff')}
+                />
+              </ImportButtonDiv>
+            </Grid>
+            <Grid item xs={2}>
+              <AddButtonDiv>
+                <Button
+                  onAction={() => {}}
+                  text={I18n.t('pages.staggeredProposal.newStaggeredProposal.AddManual')}
+                  icon="add"
+                  backgroundGreen={false}
+                  tooltip={I18n.t('pages.staggeredProposal.newStaggeredProposal.AddManual')}
+                  style={{ height: '50px' }}
+                />
+              </AddButtonDiv>
+            </Grid>
+          </Grid>
+
+            {/* <Grid container spacing={2}>
+              <ButtonDiv>
+                <Button
+                  onAction={() => {}}
+                  text={I18n.t('pages.staggeredProposal.newStaggeredProposal.ImportTariff')}
+                  icon="tariff"
+                  backgroundGreen={true}
+                  tooltip={I18n.t('pages.staggeredProposal.newStaggeredProposal.ImportTariff')}
+                />
+                <Button
+                  onAction={() => {}}
+                  text={I18n.t('pages.staggeredProposal.newStaggeredProposal.AddManual')}
+                  icon="add"
+                  backgroundGreen={true}
+                  tooltip={I18n.t('pages.staggeredProposal.newStaggeredProposal.AddManual')}
+                />
+              </ButtonDiv>
+            </Grid> */}
         </MainContainer>
       }
       {showSaveMessage &&
