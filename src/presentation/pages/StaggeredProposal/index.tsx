@@ -105,7 +105,7 @@ const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposa
         key: proposal.referenceTariffProposal,
         validityDateEnd,
         validityDateStart,
-        menuItems: menuItemsList(status, proposal.idTariffCustomer, proposal.reference),
+        menuItems: menuItemsList(status, proposal.idTariffCustomer, proposal.referenceTariffProposal),
         responsible: proposal.userCreationName,
         status,
         type,
@@ -126,8 +126,8 @@ const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposa
     }
   })
 
-  const setStatus = async (id: number, status: string): Promise<void> => {
-    const params = { id, status }
+  const setStatus = async (id: number, status: string, value?: string, detail?: string): Promise<void> => {
+    const params = { id, status, value, detail }
     mutation.mutate(params)
   }
 
@@ -384,6 +384,7 @@ const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposa
               reference={reference}
               proposalId={proposalId}
               setStatus={setStatus}
+              detailed={true}
             />
             <ProposalDisplayModal
               open={openDisplay}

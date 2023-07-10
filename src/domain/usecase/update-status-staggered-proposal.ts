@@ -11,6 +11,8 @@ export namespace UpdateStatusStaggeredProposal {
   export type Params = {
     id: number
     status: string
+    value?: string
+    detail?: string
   }
 
   export type Model = StaggeredProposalModel

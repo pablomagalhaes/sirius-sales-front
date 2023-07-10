@@ -10,15 +10,18 @@ export class RemoteUpdateStatusStaggeredProposal implements UpdateStatusStaggere
   ) {}
 
   async updateStatusStaggered (params: UpdateStatusStaggeredProposal.Params): Promise<UpdateStatusStaggeredProposal.Model> {
-    const { id, status } = params
+    const { id, status, value, detail } = params
     const httpResponse = await this.httpClient.request({
       url: `${this.url}/${id}/${status}`,
-      method: 'put'
+      method: 'put',
+      body: {
+        reasonStatus: value,
+        dsRejectReason: detail
+      }
     })
     const remoteUpdateAdmin = httpResponse.body
     switch (httpResponse.statusCode) {
       case HttpStatusCode.ok: return remoteUpdateAdmin
-      // case HttpStatusCode.forbidden: throw new AccessDeniedError()
       default: throw new UnexpectedError()
     }
   }

@@ -21,7 +21,8 @@ export const ModalDiv = styled.div`
     props.theme?.commercial?.components?.itemModal?.backgroundColor};
   border-radius: 4px;
   width: 537px;
-  height: 350px;
+  min-height: 350px;
+  padding-bottom: 35px;
   position: absolute;
   top: 50%;
   left: 50%;

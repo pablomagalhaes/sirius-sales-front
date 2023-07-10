@@ -55,7 +55,8 @@
       "rejection": "as rejected by the customer.",
       "display": "It will be displayed as “Rejected”.",
       "cancel": "Cancel",
-      "confirm": "Confirm Rejected"
+      "confirm": "Confirm Rejected",
+      "details": "Detalhe o motivo de rejeição"
     },
     "fareModal": {
       "choose": "Choose...",

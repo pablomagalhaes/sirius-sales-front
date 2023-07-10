@@ -17,15 +17,24 @@ import {
 } from '../StyledComponents/modalStyles'
 import { StatusProposalStringEnum } from '../../../application/enum/statusProposalEnum'
 import { Button } from 'fiorde-fe-components'
+import ControlledInput from '../ControlledInput'
+import {
+  TARIFF_REJECT_MODAL_BUTTON_CONFIRM,
+  TARIFF_REJECT_MODAL_BUTTON_CANCEL,
+  TARIFF_REJECT_MODAL_INPUT_DETAIL,
+  TARIFF_REJECT_MODAL_RADIO_SERVICE,
+  TARIFF_REJECT_MODAL_RADIO_PRICE
+} from '../../../ids'
 
 interface RejectModalProps {
   theme?: any
   open: boolean
   setClose: () => void
-  setStatus: (id: any, status: string, reason?: string) => void
+  setStatus: (id: any, status: string, reason?: string, detail?: string) => void
   title: string
   reference: string
   proposalId: string
+  detailed?: boolean
 }
 
 const RejectModal = ({
@@ -35,9 +44,11 @@ const RejectModal = ({
   setStatus,
   title,
   reference,
-  proposalId
+  proposalId,
+  detailed
 }: RejectModalProps): JSX.Element => {
   const [value, setValue] = useState('')
+  const [detail, setDetail] = useState('')
   const [invalidInput, setInvalidInput] = useState(false)
 
   const handleOnClose = (): void => {
@@ -53,8 +64,11 @@ const RejectModal = ({
   const handleStatusChange = (): void => {
     if (value === '') {
       setInvalidInput(true)
-    } else {
+    } else if (detail === '') {
       setStatus(proposalId, StatusProposalStringEnum.REJEITADA, value)
+      handleOnClose()
+    } else {
+      setStatus(proposalId, StatusProposalStringEnum.REJEITADA, value, detail)
       handleOnClose()
     }
   }
@@ -77,7 +91,7 @@ const RejectModal = ({
           </RowReverseDiv>
         </HeaderDiv>
         <MainDiv>
-          <Grid container spacing={5} style={{ width: '100%' }}>
+          <Grid container spacing={2} style={{ width: '100%' }}>
             <Grid item xs={12}>
               <FormLabel component="legend">{I18n.t('components.rejectModal.reason')}<RedColorSpan> *</RedColorSpan></FormLabel>
               <RadioGroup
@@ -91,19 +105,41 @@ const RejectModal = ({
                   value="Price"
                   control={<StyledRadio color={getColor()} />}
                   label={I18n.t('components.rejectModal.price')}
+                  id={TARIFF_REJECT_MODAL_RADIO_PRICE}
                 />
                 <FormControlLabel
                   style={{ marginLeft: '20px' }}
                   value="Service"
                   control={<StyledRadio color={getColor()} />}
                   label={I18n.t('components.rejectModal.service')}
+                  id={TARIFF_REJECT_MODAL_RADIO_SERVICE}
                 />
               </RadioGroup>
             </Grid>
+            {detailed &&
+              <Grid item xs={12}>
+                <FormLabel component="legend">
+                  {I18n.t('components.rejectModal.details')}:
+                </FormLabel>
+                <ControlledInput
+                  id={TARIFF_REJECT_MODAL_INPUT_DETAIL}
+                  toolTipTitle={I18n.t('components.rejectModal.details')}
+                  invalid={false}
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                  placeholder=''
+                  onChange={(e) => setDetail(e.target.value)}
+                  value={detail}
+                  $space
+                />
+              </Grid>
+            }
             <Grid item xs={12}
                   container
                   direction="column"
-                  justify="center">
+                  justify="center"
+                  style={{ marginTop: '30px' }}>
               <Typography variant="body1" gutterBottom>
                 {I18n.t('components.rejectModal.definition')} Ref. {reference} {I18n.t('components.rejectModal.rejection')}
               </Typography>
@@ -111,10 +147,11 @@ const RejectModal = ({
                 {I18n.t('components.rejectModal.display')}
               </Typography>
             </Grid>
-            <Grid container spacing={2}>
+            <Grid container spacing={2} style={{ marginRight: '50px' }}>
               <Grid item xs={8}>
                 <Box display="flex" justifyContent="flex-end">
                 <Button
+                  id={TARIFF_REJECT_MODAL_BUTTON_CANCEL}
                   disabled={false}
                   text={I18n.t('components.rejectModal.cancel')}
                   tooltip={I18n.t('components.rejectModal.cancel')}
@@ -126,6 +163,7 @@ const RejectModal = ({
               </Grid>
               <Grid item xs={4} >
                 <Button
+                  id={TARIFF_REJECT_MODAL_BUTTON_CONFIRM}
                   disabled={false}
                   text={I18n.t('components.rejectModal.confirm')}
                   tooltip={I18n.t('components.rejectModal.confirm')}
