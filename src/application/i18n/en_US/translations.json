@@ -386,7 +386,8 @@
         "agent": "Agente",
         "closeButtonLabel": "Cancelar",
         "addButtonLabel": "Adicionar",
-        "searchButtonLabel": "BUscar"
+        "searchButtonLabel": "Buscar",
+        "selectedsItems": "item selecionado"
       },
       "tariffTable": {
         "edit": "Ver detalhes ou editar tarifa",
