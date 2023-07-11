@@ -6,6 +6,7 @@ enum SelectorsValuesTypes {
   CityOrigin = 'originCity.nameCity',
   CityDestination = 'destinationCity.nameCity',
   Validity = 'validityDate',
+  Reference = "Reference"
 }
 
 enum TariffItemsTypes {

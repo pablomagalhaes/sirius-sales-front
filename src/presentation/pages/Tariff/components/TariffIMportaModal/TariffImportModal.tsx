@@ -7,9 +7,11 @@ import {
   TableBody,
   TableContainer,
   TableHead,
-  TableRow
+  TableRow,
+  TableCell,
+  Checkbox
 } from '@material-ui/core'
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import CloseIcon from '../../../../../application/icons/CloseIcon'
 import Autocomplete, {
   createFilterOptions
@@ -21,9 +23,11 @@ import {
   CloseButtonDiv,
   ModalDiv,
   MainDiv,
-  TableCell,
+  TableBodyCell,
   PaginationContainer,
-  PaginationMainContainer
+  PaginationMainContainer,
+  CheckboxCell,
+  NoBreakLine
 } from './TariffImportModalStyles'
 import { I18n } from 'react-redux-i18n'
 import {
@@ -37,6 +41,9 @@ import { Button, Pagination } from 'fiorde-fe-components'
 import { usePartnerList, useOriginDestination } from '../../../../hooks'
 import { OriginDestinyTypes } from '../../../../../application/enum/enum'
 import { TariffContext } from '../../context/TariffContext'
+import useTariffsByCountry from '../../../../hooks/tariff/useTariffsByCountry'
+import { TariffItemsTypes } from '../../../../../application/enum/tariffEnum'
+
 interface AgentType {
   name: string
   id: number | null | undefined
@@ -46,16 +53,19 @@ export interface TariffUploadData {
   origin: string
   destiny: string
 }
+
 interface TariffUploadProps {
   theme?: any
   open: boolean
   setClose: () => void
 }
+
 export const initialState = {
   agent: { name: '', id: null },
   origin: '',
   destiny: ''
 }
+
 const TariffImportModal = ({
   theme,
   open,
@@ -63,37 +73,39 @@ const TariffImportModal = ({
 }: TariffUploadProps): JSX.Element => {
   const { partnerList: agentsList } = usePartnerList()
   const { data: originDestinationList = [] } = useOriginDestination()
-  const { filter, setFilter }: any = useContext(TariffContext)
+  const { setFilter, filter }: any = useContext(TariffContext)
+  const { content: tariffData, totalElements: totalTariffList, setParams, refetch } = useTariffsByCountry()
+
   const [data, setData] = useState<TariffUploadData>(initialState)
+  const [selecteds, setSelecteds] = useState<string[]>([])
   const [invalidInput, setInvalidInput] = useState(false)
+
   const filterOptions = createFilterOptions({
     matchFrom: 'any',
     limit: 500
   })
+
   const handleOnClose = (): void => {
     setData(initialState)
     setInvalidInput(false)
     setClose()
   }
+
   const validateData = (): boolean => {
     return !(
       (data.origin?.length === 0) ||
-      (data.destiny?.length === 0) ||
-      (data.agent.id === null)
+      (data.destiny?.length === 0)
     )
   }
-  const mockedData = [{
-    airCompany: 'TAM CARGO',
-    agent: 'MOLFINO HNS',
-    validity: '04/10/2022',
-    currency: 'USD',
-    minimun: '90,00',
-    Until45: '4,67',
-    Until100: '4,50',
-    Until300: '4,50',
-    Until500: '4,50',
-    Until1000: '4,02'
-  }]
+
+  useEffect(() => {
+    setParams(filter)
+  }, [filter])
+
+  useEffect(() => {
+    if(open === true) setParams()
+  }, [open])
+
   const getOriginDestinyList = (): string[] => {
     const actualList: string[] = []
     originDestinationList?.forEach((item: any): void => {
@@ -103,6 +115,58 @@ const TariffImportModal = ({
     })
     return actualList
   }
+
+  const getTariffValue = (type: string, tariff: any): number => {
+    const tariffValue = tariff.tariffTypeValues.find(each => each.tariffType.description === type)
+    return tariffValue?.value
+  }
+
+  const createTable = (): any => {
+    const tariffs: any = []
+    tariffData.forEach((tariff: any) => {
+      tariffs.push({
+        id: tariff.idTariff,
+        airCompany: tariff.dsBusinessPartnerTransporter,
+        agent: tariff.nmAgent,
+        dtValidity: new Date(tariff.validityDate).toLocaleDateString('pt-BR'),
+        currency: tariff.currency,
+        minValue: getTariffValue(TariffItemsTypes.Minimun, tariff),
+        weight1: getTariffValue(TariffItemsTypes.Until45, tariff),
+        weight2: getTariffValue(TariffItemsTypes.Until100, tariff),
+        weight3: getTariffValue(TariffItemsTypes.Until300, tariff),
+        weight4: getTariffValue(TariffItemsTypes.Until500, tariff),
+        weight5: getTariffValue(TariffItemsTypes.Until1000, tariff),
+      })
+    })
+    return tariffs
+  }
+  console.log(tariffData)
+  const searchTariffs = (): void => {
+    if(validateData() === true) {
+      setInvalidInput(false)
+      if(data.agent.id === null) {
+        setFilter((filter: any) => ({
+          ...filter,
+          size: 3,
+          tariffModalType: 'AIR', 
+          idOrigin: data.origin.split(' - ')[0],
+          idDestination: data.destiny.split(' - ')[0]
+        }))
+      } else {
+        setFilter((filter: any) => ({
+          ...filter,
+          size: 3,
+          tariffModalType: 'AIR', 
+          idBusinessPartnerAgent: data.agent.id, 
+          idOrigin: data.origin.split(' - ')[0],
+          idDestination: data.destiny.split(' - ')[0]
+        }))
+      }
+    } else {
+      setInvalidInput(true)
+    } 
+  }
+
   return (
     <Modal open={open} onClose={handleOnClose}>
       <ModalDiv>
@@ -115,7 +179,7 @@ const TariffImportModal = ({
           </RowReverseDiv>
         </HeaderDiv>
         <MainDiv>
-          <Grid container spacing={1}>
+          <Grid container spacing={5}>
             <Grid item xs={6}>
             <FormLabel component="legend" error={
               (invalidInput && data.origin.length === 0)
@@ -168,7 +232,7 @@ const TariffImportModal = ({
             </Grid>
             <Grid item xs={6}>
             <FormLabel component="legend" error={
-              (invalidInput && data.origin.length === 0)
+              (invalidInput && data.destiny.length === 0)
             }>
                 {I18n.t('pages.tariff.tariffImport.destiny')}
               <RedColorSpan> *</RedColorSpan>
@@ -180,13 +244,13 @@ const TariffImportModal = ({
               }
               options={getOriginDestinyList()}
               filterOptions={filterOptions}
-              value={data.origin}
+              value={data.destiny}
               disabled={false}
               renderInput={(params) => (
                 <div ref={params.InputProps.ref}>
                   <ControlledInput
                     {...params}
-                    id="search-origin"
+                    id="search-destiny"
                     toolTipTitle={
                       invalidInput
                         ? I18n.t('components.itemModal.requiredField')
@@ -216,10 +280,9 @@ const TariffImportModal = ({
               PaperComponent={(params: any) => <StyledPaper {...params} />}
             />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={6} style={{marginTop: '-45px'}}>
             <FormLabel component="legend">
                 {I18n.t('pages.tariff.tariffImport.agent')}
-              <RedColorSpan> *</RedColorSpan>
             </FormLabel>
             <Autocomplete
               freeSolo
@@ -261,35 +324,70 @@ const TariffImportModal = ({
               PaperComponent={(params: any) => <StyledPaper {...params} />}
             />
             </Grid>
+            <Grid item xs={6}>
+              <Button
+                  disabled={!validateData()}
+                  text={I18n.t('pages.tariff.tariffImport.searchButtonLabel')}
+                  tooltip={I18n.t('pages.tariff.tariffImport.searchButtonLabel')}
+                  backgroundGreen={true}
+                  icon=""
+                  onAction={searchTariffs}
+                />
+            </Grid>
           </Grid>
-          <TableContainer>
+          <TableContainer style={{marginTop: '20px', minHeight: '150px'}}>
             <Table >
               <TableHead>
                 <TableRow>
-                  {Object.keys(mockedData[0])
-                    .map((column: string) => <TableCell key={column}>{column}</TableCell>)
+                  <CheckboxCell align="right">
+                    <Checkbox
+                      checked={selecteds.length === tariffData.length && selecteds.length !== 0}
+                      onChange={() =>{
+                        if (selecteds.length === tariffData.length) {
+                          setSelecteds([])
+                        } else {
+                          setSelecteds(tariffData.map((row: any) => row.idTariff))
+                        }
+                      }}
+                    />
+                  </CheckboxCell>
+                  {Object.values(I18n.t('pages.tariff.tariffImport.table'))
+                    .map((column: string) => <TableCell style={{paddingLeft: 0}} key={column}>{column}</TableCell>)
                   }
                 </TableRow>
               </TableHead>
               <TableBody>
-                {mockedData.map((row, index) => (
-                  <TableRow
-                    key={index}
-                  >
-                      {Object.values(row).map((each: string) =>
-                        <TableCell key={each} align="left">
-                          {each}
-                        </TableCell>)
+                {createTable().map((tariff: any, index: number) => (
+                  <TableRow key={tariff.id}>
+                    <TableBodyCell align="right">
+                      <Checkbox
+                        checked={selecteds.some((selected) => selected === tariff.id)}
+                        onChange={() => {
+                          if(selecteds.some((selected) => selected === tariff.id)) {
+                            setSelecteds((selecteds) => selecteds.filter((selected) => selected !== tariff.id))
+                          } else {
+                            setSelecteds((selecteds) => [...selecteds, tariff.id])
+                          }
+                        }}
+                      />
+                    </TableBodyCell>
+                    {Object.values(tariff).filter((_e, index) => index !== 0).map((each: any) =>
+                      <TableBodyCell key={`${each}-${index}`} align="left">
+                        {each}
+                      </TableBodyCell>)
                     }
+
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
+          <hr style={{backgroundColor: '#E3E5EB', border: '0', height: '1px'}}/>
           <PaginationContainer>
             <PaginationMainContainer>
+              <NoBreakLine>{selecteds.length} {selecteds.length > 1 ? I18n.t('pages.tariff.tariffImport.selectedsItems') : I18n.t('pages.tariff.tariffImport.selectedItem') }</NoBreakLine>
               <Pagination
-                count={10}
+                count={totalTariffList}
                 labelDisplay={I18n.t('components.Pagination.labelDisplay')}
                 labelDisplayedRows={I18n.t('components.Pagination.labelDisplayedRows')}
                 labelRowsPerPage={I18n.t('components.Pagination.labelRowsPerPage')}
@@ -311,20 +409,30 @@ const TariffImportModal = ({
               />
             </PaginationMainContainer>
           </PaginationContainer>
-        <Grid item xs={12} container={true} direction="row" justify="flex-end">
-          <Grid item xs={6}>
+        <Grid item xs={12} container={true} direction="row" justify="flex-end" alignItems="center">
+          <Grid item>
             <CloseButtonDiv>
               <Button
                 disabled={false}
-                text={I18n.t('pages.tariff.upload.closeButtonLabel')}
-                tooltip={I18n.t('pages.tariff.upload.closeButtonLabel')}
+                text={I18n.t('pages.tariff.tariffImport.closeButtonLabel')}
+                tooltip={I18n.t('pages.tariff.tariffImport.closeButtonLabel')}
                 backgroundGreen={false}
                 icon=""
                 onAction={handleOnClose}
               />
             </CloseButtonDiv>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item>
+            <div>
+              <Button
+                disabled={selecteds.length === 0}
+                text={I18n.t('pages.tariff.tariffImport.addButtonLabel')}
+                tooltip={I18n.t('pages.tariff.tariffImport.addButtonLabel')}
+                backgroundGreen={true}
+                icon=""
+                onAction={searchTariffs}
+              />
+            </div>
           </Grid>
         </Grid>
         </MainDiv>
@@ -332,4 +440,5 @@ const TariffImportModal = ({
     </Modal >
   )
 }
+
 export default TariffImportModal
