@@ -383,6 +383,15 @@
         "specification": "Especificação",
         "agent": "Agente"
       },
+      "tariffImport": {
+        "title": "Tarifários aéreos",
+        "origin": "Origem",
+        "destiny": "Destino",
+        "agent": "Agente",
+        "closeButtonLabel": "Cancelar",
+        "addButtonLabel": "Adicionar",
+        "searchButtonLabel": "BUscar"
+      },
       "tariffTable": {
         "edit": "Ver detalhes ou editar tarifa",
         "validUntil": "Vencimento em",

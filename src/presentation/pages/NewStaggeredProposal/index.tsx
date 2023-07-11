@@ -29,6 +29,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { StaggeredProposalContext, StaggeredProposalProps } from '../StaggeredProposal/context/StaggeredProposalContext'
 
+import TariffImportModal from '../Tariff/components/TariffIMportaModal/TariffImportModal'
+
 type StaggeredProps = {
   theme: any;
   updateStaggeredProposal: UpdateStaggeredProposal;
@@ -57,6 +59,12 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
   const [serviceList, setServiceList] = useState<any[]>([])
   const [showSaveMessage, setShowSaveMessage] = useState(false)
   const [specifications, setSpecifications] = useState('')
+
+  const [openImport, setOpenImport] = useState(false)
+
+
+  const [open, setOpen] = useState(false)
+  const [uploadType, setUploadType] = useState('')
 
   const queryClient = useQueryClient()
 
@@ -350,7 +358,9 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
             <Grid item xs={2}>
               <ImportButtonDiv>
                 <Button
-                  onAction={() => {}}
+                  onAction={() => {
+                    setOpenImport(true)
+                  }}
                   text={I18n.t('pages.staggeredProposal.newStaggeredProposal.ImportTariff')}
                   icon="tariff"
                   backgroundGreen={true}
@@ -371,25 +381,10 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
               </AddButtonDiv>
             </Grid>
           </Grid>
-
-            {/* <Grid container spacing={2}>
-              <ButtonDiv>
-                <Button
-                  onAction={() => {}}
-                  text={I18n.t('pages.staggeredProposal.newStaggeredProposal.ImportTariff')}
-                  icon="tariff"
-                  backgroundGreen={true}
-                  tooltip={I18n.t('pages.staggeredProposal.newStaggeredProposal.ImportTariff')}
-                />
-                <Button
-                  onAction={() => {}}
-                  text={I18n.t('pages.staggeredProposal.newStaggeredProposal.AddManual')}
-                  icon="add"
-                  backgroundGreen={true}
-                  tooltip={I18n.t('pages.staggeredProposal.newStaggeredProposal.AddManual')}
-                />
-              </ButtonDiv>
-            </Grid> */}
+          <TariffImportModal 
+            setClose={() => setOpenImport(false)} 
+            open={openImport} 
+            />
         </MainContainer>
       }
       {showSaveMessage &&
