@@ -518,7 +518,10 @@ const Proposal = (): JSX.Element => {
           {
             iconType: 'file',
             label: I18n.t('pages.proposal.table.viewDownload'),
-            onClick: () => { }
+            onClick: () => { 
+              setOpenDisplay(true)
+              setProposalId(id)
+             }
           },
           {
             iconType: 'duplicate',
