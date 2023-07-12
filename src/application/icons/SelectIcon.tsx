@@ -6,4 +6,5 @@ const SelectIcon = (): JSX.Element => {
     </svg>
   )
 }
+
 export default SelectIcon

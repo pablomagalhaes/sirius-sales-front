@@ -343,7 +343,7 @@ const TariffImportModal = ({
                     <Checkbox
                       checked={selecteds.length === tariffData.length && selecteds.length !== 0}
                       onChange={() =>{
-                        if (selecteds.length === tariffData.length) {
+                        if(selecteds.length === tariffData.length) {
                           setSelecteds([])
                         } else {
                           setSelecteds(tariffData.map((row: any) => row.idTariff))

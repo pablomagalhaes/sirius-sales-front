@@ -29,7 +29,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { StaggeredProposalContext, StaggeredProposalProps } from '../StaggeredProposal/context/StaggeredProposalContext'
 
-import TariffImportModal from '../Tariff/components/TariffIMportaModal/TariffImportModal'
+import TariffImportModal from '../StaggeredProposal/components/TariffImportModal/TariffImportModal'
 
 type StaggeredProps = {
   theme: any
