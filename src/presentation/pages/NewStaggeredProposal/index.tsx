@@ -30,6 +30,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { StaggeredProposalContext, StaggeredProposalProps } from '../StaggeredProposal/context/StaggeredProposalContext'
 
 import TariffImportModal from '../StaggeredProposal/components/TariffImportModal/TariffImportModal'
+import TariffImportHandsOnModal from '../StaggeredProposal/components/TariffImportModal/TariffImportHandsOnModal'
 
 type StaggeredProps = {
   theme: any
@@ -60,6 +61,7 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
   const [specifications, setSpecifications] = useState('')
 
   const [openImport, setOpenImport] = useState(false)
+  const [openImportHandsOn, setOpenImportHandsOn] = useState(false)
 
 
   const [open, setOpen] = useState(false)
@@ -369,7 +371,9 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
             <Grid item xs={2}>
               <AddButtonDiv>
                 <Button
-                  onAction={() => {}}
+                  onAction={() => {
+                    setOpenImportHandsOn(true)
+                  }}
                   text={I18n.t('pages.staggeredProposal.newStaggeredProposal.AddManual')}
                   icon="add"
                   backgroundGreen={false}
@@ -383,6 +387,10 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
             setClose={() => setOpenImport(false)} 
             open={openImport} 
             />
+          <TariffImportHandsOnModal 
+            setClose={() => setOpenImportHandsOn(false)} 
+            open={openImportHandsOn} 
+          />
         </MainContainer>
       }
       {showSaveMessage &&

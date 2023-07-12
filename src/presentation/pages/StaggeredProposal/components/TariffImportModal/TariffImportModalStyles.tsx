@@ -200,3 +200,43 @@ export const CheckboxCell = withStyles({
 export const NoBreakLine = styled.span`
   white-space: nowrap;
 `
+
+export const Input = styled.input`
+  text-indent: 10px;
+  border: 1px solid ${(props: { invalid: boolean, filled: string | null, theme: any }) =>
+          props.invalid
+                  ? '#FF4D4D'
+                  : props.filled != null && props.filled.length > 0
+                          ? '#43BFB5'
+                          : props.theme?.commercial?.components?.itemModal?.border};
+  margin-top: 12px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  width: 110px;
+  height: 32px;
+  margin-right: 14px;
+  font-family: DM Sans;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 150%;
+  letter-spacing: 0.02em;
+  color: ${(props: { disabled: boolean, theme: any }) =>
+          props.disabled ? props.theme?.commercial?.pages?.newProposal?.placeholder : props.theme?.commercial?.components?.itemModal?.inputFontColor};
+  background: ${(props: { disabled: boolean, theme: any }) =>
+          props.disabled ? props.theme?.commercial?.components?.itemModal?.disabledBackground : props.theme?.commercial?.components?.itemModal?.backgroundColor};
+
+  :focus {
+    outline: none;
+    border-color: #43bfb5;
+  }
+
+  ::placeholder {
+    color: #999dac;
+    opacity: 1;
+  }
+
+  &:hover {
+    border: 1px solid #43bfb5;
+  }
+`

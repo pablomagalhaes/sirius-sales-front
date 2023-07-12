@@ -42,7 +42,6 @@ import { OrderTypes, IconTypes } from '../../../application/enum/enum'
 import useTariffs from '../../hooks/tariff/useTariffs'
 import Filter from './components/filter'
 import { TariffContext, filterDefault } from './context/TariffContext'
-import TariffImportModal from './components/TariffImportModal/TariffImportModal'
 
 import {
   TARIFF_MAINPAGE_SPAN_TARIFF,
