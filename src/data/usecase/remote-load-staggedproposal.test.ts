@@ -1,20 +1,12 @@
 import { RemoteLoadStaggeredProposal } from './remote-load-staggedproposal'
-import { OrderTypes } from '../../application/enum/enum'
-import { SelectorsValuesTypes } from '../../application/enum/tariffEnum'
-
-export const filterDefault = {
-  page: 0,
-  size: 10,
-  orderByList: `${SelectorsValuesTypes.Reference},${OrderTypes.Descendent}`
-}
+import { loadProposalMock } from './staggered-proposal-mock'
 
 describe('StaggeredProposalService', () => {
-  const service = new RemoteLoadStaggeredProposal
+  const service = new RemoteLoadStaggeredProposal()
 
   it('should set proposal', () => {
+    service.loadStaggered(loadProposalMock)
 
-    service.loadStaggered(filterDefault)
-
-    expect(service.loadStaggered).toEqual(filterDefault)
+    expect(service.loadStaggered).toEqual(loadProposalMock)
   })
 })

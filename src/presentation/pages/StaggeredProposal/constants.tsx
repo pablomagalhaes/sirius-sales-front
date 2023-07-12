@@ -1,64 +1,38 @@
 
-import { SelectorsValuesTypes } from '../../../application/enum/tariffEnum'
-import { ModalTypes } from '../../../application/enum/enum'
+import { SelectorsValuesTypes } from '../../../application/enum/staggeredProposalEnum'
 import { I18n } from 'react-redux-i18n'
 
-const orderButtonMenuItems = (modal: string): any => {
-  const getBusinessPartnerType = (): string => {
-    switch (modal) {
-      case ModalTypes.Sea:
-        return I18n.t('pages.tariff.orderSelectors.seaBusinessPartner')
-      case ModalTypes.Land:
-        return I18n.t('pages.tariff.orderSelectors.landBusinessPartner')
-    }
-    return I18n.t('pages.tariff.orderSelectors.airBusinessPartner')
-  }
+const orderButtonMenuItems = (): any => {
   return [
     {
-      value: SelectorsValuesTypes.Agent,
-      description: I18n.t('pages.tariff.orderSelectors.agent')
+      value: SelectorsValuesTypes.Reference,
+      description: I18n.t('pages.staggeredProposal.filter.reference')
     },
     {
-      value: SelectorsValuesTypes.PartnerTransporter,
-      description: getBusinessPartnerType()
+      value: SelectorsValuesTypes.Client,
+      description: I18n.t('pages.staggeredProposal.filter.client')
     },
     {
-      value: modal === ModalTypes.Land ? SelectorsValuesTypes.CityOrigin : SelectorsValuesTypes.Origin,
-      description: I18n.t('pages.tariff.orderSelectors.origin')
+      value: SelectorsValuesTypes.Responsible,
+      description: I18n.t('pages.staggeredProposal.filter.responsible')
     },
     {
-      value: modal === ModalTypes.Land ? SelectorsValuesTypes.CityDestination : SelectorsValuesTypes.Destination,
-      description: I18n.t('pages.tariff.orderSelectors.destination')
+      value: SelectorsValuesTypes.Origin,
+      description: I18n.t('pages.staggeredProposal.filter.origin')
+    },
+    {
+      value: SelectorsValuesTypes.Destination,
+      description: I18n.t('pages.staggeredProposal.filter.destination')
     },
     {
       value: SelectorsValuesTypes.Validity,
-      description: I18n.t('pages.tariff.orderSelectors.validity')
+      description: I18n.t('pages.staggeredProposal.filter.startDate')
+    },
+    {
+      value: SelectorsValuesTypes.EndValidity,
+      description: I18n.t('pages.staggeredProposal.filter.endDate')
     }
   ]
 }
 
-
-// mock
-const TableRows = (): any => {
-  const array: any = []
-  Array.from(Array(20), (value, i: number) => {
-    const item = {
-      key: i,
-      reference: 'PC-000004/20',
-      client: 'EUROFARMA LABORATORIOS',
-      origin: 'GUARULHOS',
-      destination: 'MANAUS',
-      opening: '26/01/2021',
-      shelfLife: '10/07/2023',
-      iconterm: 'CFR',
-      numio: '000001/20',
-      responsible: 'Cristina A.',
-      status: 'aberto',
-      type: 'importation'
-    }
-    return array.push(item)
-  })
-  return array
-}
-
-export { TableRows, orderButtonMenuItems }
+export { orderButtonMenuItems }

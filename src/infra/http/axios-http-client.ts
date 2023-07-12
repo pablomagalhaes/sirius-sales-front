@@ -34,10 +34,10 @@ export class AxiosHttpClient implements HttpClient {
         if (alwaysLogged) {
           // const response = await refreshAuthenticate()
         //   setUserOnStorage(response)
-          //window.location.reload()
+          // window.location.reload()
         } else {
-          //storage.clear()
-          //window.location.href = '/login'
+          // storage.clear()
+          // window.location.href = '/login'
         }
       }
     }

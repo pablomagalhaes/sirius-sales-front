@@ -1,7 +1,7 @@
 import { StaggeredProposalModel } from '../models/staggered-proposal-model'
 
 export interface UpdateStaggeredProposal {
- 
+
   updateStaggered: (params: UpdateStaggeredProposal.Params) => Promise<UpdateStaggeredProposal.Model>
 
 }

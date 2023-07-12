@@ -162,7 +162,6 @@ const PaginationMainContainer = styled.div`
   }
 `
 
-
 const TopContainer = styled.div`
   margin: 18px 0;
   display: flex;

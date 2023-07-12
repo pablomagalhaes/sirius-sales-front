@@ -32,12 +32,11 @@ import { StaggeredProposalContext, StaggeredProposalProps } from '../StaggeredPr
 import TariffImportModal from '../Tariff/components/TariffIMportaModal/TariffImportModal'
 
 type StaggeredProps = {
-  theme: any;
-  updateStaggeredProposal: UpdateStaggeredProposal;
+  theme: any
+  updateStaggeredProposal: UpdateStaggeredProposal
 }
 
 const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps): JSX.Element => {
-
   const { staggeredproposal, setStaggeredProposal }: StaggeredProposalProps = useContext(StaggeredProposalContext)
 
   const [action, setAction] = useState('')
@@ -167,7 +166,6 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
   //     onClick: () => { }
   //   }
   // ]
-
 
   const MessageExitDialog = (): JSX.Element => {
     useEffect(() => {

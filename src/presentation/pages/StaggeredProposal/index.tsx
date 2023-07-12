@@ -36,15 +36,18 @@ import { orderButtonMenuItems } from './constants'
 import { I18n } from 'react-redux-i18n'
 import {
   StatusProposalEnum,
-  StatusProposalStringEnum
+  StatusStaggeredProposalStringEnum
 } from '../../../application/enum/statusProposalEnum'
 import RejectModal from '../../components/RejectModal/RejectModal'
 import Filter from './components/filter'
-import { SelectorsValuesTypes } from '../../../application/enum/tariffEnum'
+import { SelectorsValuesTypes } from '../../../application/enum/staggeredProposalEnum'
 import { StaggeredProposalContext, filterDefault } from './context/StaggeredProposalContext'
 import useTariffProposal from '../../hooks/tariff/useTariffProposal'
+import { OrderTypes } from '../../../application/enum/enum'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { UpdateStatusStaggeredProposal } from '../../../domain/usecase'
 
-const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
+const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposal }): JSX.Element => {
   const { filter, setFilter }: any = useContext(StaggeredProposalContext)
 
   const { content: proposalList, totalElements: totalProposalList, setParams, refetch } = useTariffProposal(loadStaggeredProposal)
@@ -56,6 +59,7 @@ const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
   const [orderBy, setOrderBy] = useState<string>(SelectorsValuesTypes.Validity)
 
   const history = useHistory()
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     setParams(filter)
@@ -81,7 +85,7 @@ const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
   }
 
   const verifyType = (type: String): string => {
-    if (type === 'IMPORT FREIGHT') {
+    if (type === 'IMPORT') {
       return 'importation'
     } else {
       return 'exportation'
@@ -101,7 +105,7 @@ const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
         key: proposal.referenceTariffProposal,
         validityDateEnd,
         validityDateStart,
-        menuItems: menuItemsList(status, proposal.idProposal, proposal.reference, proposal.operation),
+        menuItems: menuItemsList(status, proposal.idTariffCustomer, proposal.referenceTariffProposal),
         responsible: proposal.userCreationName,
         status,
         type,
@@ -112,45 +116,22 @@ const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
     return array
   }
 
-  const setStatus = (id: any, status: string, reason?: string): void => {
-    void (async function () {
-      await API.putStatus(id, status, reason)
-        .then(() => {
-          refetch()
-        })
-        .catch((err) => console.log(err))
-    })()
-  }
-
-  const editEventPage = (id: any, operationType: any): void => {
-    if (operationType === 'IMPORT FREIGHT') {
-      history.push({
-        pathname: '/novaProposta',
-        state: { proposalId: id }
-      })
-    } else {
-      history.push({
-        pathname: '/novaPropostaExportacao',
-        state: { proposalId: id }
-      })
+  const mutation = useMutation({
+    mutationFn: async (params: UpdateStatusStaggeredProposal.Params) => {
+      return await updateStatusStaggeredProposal.updateStatusStaggered(params)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['updateStatusStaggeredProposal'])
+      refetch()
     }
+  })
+
+  const setStatus = async (id: number, status: string, value?: string, detail?: string): Promise<void> => {
+    const params = { id, status, value, detail }
+    mutation.mutate(params)
   }
 
-  const duplicateEventPage = (id: any, operationType: any): void => {
-    if (operationType === 'IMPORT FREIGHT') {
-      history.push({
-        pathname: '/novaProposta',
-        state: { proposalId: id, eventType: 'duplicate' }
-      })
-    } else {
-      history.push({
-        pathname: '/novaPropostaExportacao',
-        state: { proposalId: id, eventType: 'duplicate' }
-      })
-    }
-  }
-
-  const menuItemsList = (status: any, id: any, ref: any, operationType: any): void => {
+  const menuItemsList = (status: any, id: any, ref: any): void => {
     const array: any = []
     switch (status) {
       case StatusProposalEnum.ABERTA:
@@ -159,28 +140,20 @@ const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
             iconType: 'edit',
             label: I18n.t('pages.proposal.table.editLabel'),
             onClick: () => {
-              editEventPage(id, operationType)
-            }
-          },
-          {
-            iconType: 'duplicate',
-            label: I18n.t('pages.proposal.table.duplicateLabel'),
-            onClick: () => {
-              duplicateEventPage(id, operationType)
             }
           },
           {
             iconType: 'forward',
             label: I18n.t('pages.proposal.table.confirmLabel'),
             onClick: () => {
-              setStatus(id, StatusProposalStringEnum.AGUARDANDO_RETORNO_CLIENTE)
+              setStatus(id, StatusStaggeredProposalStringEnum.AGUARDANDO_RETORNO_CLIENTE)
             }
           },
           {
             iconType: 'cancel',
             label: I18n.t('pages.proposal.table.cancelLabel'),
             onClick: () => {
-              setStatus(id, StatusProposalStringEnum.CANCELADA)
+              setStatus(id, StatusStaggeredProposalStringEnum.CANCELADA)
             }
           }
         )
@@ -196,31 +169,24 @@ const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
             }
           },
           {
-            iconType: 'duplicate',
-            label: I18n.t('pages.proposal.table.duplicateLabel'),
-            onClick: () => {
-              duplicateEventPage(id, operationType)
-            }
-          },
-          {
             iconType: 'fileReview',
             label: I18n.t('pages.proposal.table.reviewLabel'),
             onClick: () => {
-              setStatus(id, StatusProposalStringEnum.EM_REVISAO)
+              setStatus(id, StatusStaggeredProposalStringEnum.EM_REVISAO)
             }
           },
           {
             iconType: 'cancel',
             label: I18n.t('pages.proposal.table.cancelLabel'),
             onClick: () => {
-              setStatus(id, StatusProposalStringEnum.CANCELADA)
+              setStatus(id, StatusStaggeredProposalStringEnum.CANCELADA)
             }
           },
           {
             iconType: 'thumbsUp',
             label: I18n.t('pages.proposal.table.approveLabel'),
             onClick: () => {
-              setStatus(id, StatusProposalStringEnum.APROVADA)
+              setStatus(id, StatusStaggeredProposalStringEnum.APROVADA)
             }
           },
           {
@@ -240,28 +206,20 @@ const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
             iconType: 'edit',
             label: I18n.t('pages.proposal.table.editLabel'),
             onClick: () => {
-              editEventPage(id, operationType)
-            }
-          },
-          {
-            iconType: 'duplicate',
-            label: I18n.t('pages.proposal.table.duplicateLabel'),
-            onClick: () => {
-              duplicateEventPage(id, operationType)
             }
           },
           {
             iconType: 'forward',
             label: I18n.t('pages.proposal.table.confirmLabel'),
             onClick: () => {
-              setStatus(id, StatusProposalStringEnum.AGUARDANDO_RETORNO_CLIENTE)
+              setStatus(id, StatusStaggeredProposalStringEnum.AGUARDANDO_RETORNO_CLIENTE)
             }
           },
           {
             iconType: 'cancel',
             label: I18n.t('pages.proposal.table.cancelLabel'),
             onClick: () => {
-              setStatus(id, StatusProposalStringEnum.CANCELADA)
+              setStatus(id, StatusStaggeredProposalStringEnum.CANCELADA)
             }
           }
         )
@@ -272,33 +230,11 @@ const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
             iconType: 'file',
             label: I18n.t('pages.proposal.table.viewDownload'),
             onClick: () => { }
-          },
-          {
-            iconType: 'duplicate',
-            label: I18n.t('pages.proposal.table.duplicateLabel'),
-            onClick: () => {
-              duplicateEventPage(id, operationType)
-            }
           })
         return array
       case StatusProposalEnum.REJEITADA:
       case StatusProposalEnum.CANCELADA:
-        array.push({
-          iconType: 'duplicate',
-          label: I18n.t('pages.proposal.table.duplicateLabel'),
-          onClick: () => {
-            duplicateEventPage(id, operationType)
-          }
-        })
-        return array
       default:
-        array.push({
-          iconType: 'duplicate',
-          label: I18n.t('pages.proposal.table.duplicateLabel'),
-          onClick: () => {
-            duplicateEventPage(id, operationType)
-          }
-        })
         return array
     }
   }
@@ -328,16 +264,14 @@ const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
     const keys = Object.keys(filter)
 
     /* eslint-disable no-prototype-builtins */
-    const direction = filter.hasOwnProperty('direction')
     const orderByList = filter.hasOwnProperty('orderByList')
     const page = filter.hasOwnProperty('page')
     const size = filter.hasOwnProperty('size')
 
     if (
-      keys.length === 4 &&
+      keys.length === 3 &&
       Boolean(page) &&
       Boolean(size) &&
-      Boolean(direction) &&
       Boolean(orderByList)
     ) {
       return `${I18n.t('pages.tariff.titles.StaggeredProposal')} (${totalProposalList}) - ${I18n.t('pages.tariff.mainPage.last30days')}`
@@ -354,6 +288,17 @@ const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
     setOpenDisplay(false)
     setProposalId('')
   }
+
+  const handleOrderDirection = (): string => {
+    if (orderAsc) {
+      return OrderTypes.Ascendent
+    }
+    return OrderTypes.Descendent
+  }
+
+  useEffect(() => {
+    setFilter((filter: any) => ({ ...filter, orderByList: `${orderBy},${handleOrderDirection()}` }))
+  }, [orderAsc, orderBy])
 
   return (
     <RootContainer>
@@ -413,7 +358,7 @@ const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
                 placeholder={orderBy}
                 value={orderBy}
               >
-                {orderButtonMenuItems(filter.tariffModalType).map((item) => (
+                {orderButtonMenuItems().map((item) => (
                   <MenuItem
                     key={`${String(item.value)}_key`}
                     value={item.value}
@@ -444,6 +389,7 @@ const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
               reference={reference}
               proposalId={proposalId}
               setStatus={setStatus}
+              detailed={true}
             />
             <ProposalDisplayModal
               open={openDisplay}
@@ -480,4 +426,4 @@ const Proposal = ( { loadStaggeredProposal }): JSX.Element => {
   )
 }
 
-export default Proposal
+export default StaggeredProposal

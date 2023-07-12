@@ -83,3 +83,10 @@ export const TARIFF_PROCESSING_LINK_TARIFF = `${PREFIX_IDS}tariff-processing_lin
 export const TARIFF_PROCESSING_BUTTON_BACK = `${PREFIX_IDS}tariff-processing_button_back`
 export const TARIFF_PROCESSING_BUTTON_UPLOAD = `${PREFIX_IDS}tariff-processing_button_upload`
 export const TARIFF_PROCESSING_SPAN_TITLE = `${PREFIX_IDS}tariff-processing_span_title`
+
+// Reject Modal
+export const TARIFF_REJECT_MODAL_INPUT_DETAIL = `${PREFIX_IDS}_tariff-reject-modal_input_detail`
+export const TARIFF_REJECT_MODAL_BUTTON_CANCEL = `${PREFIX_IDS}_tariff-reject-modal_button_cancel`
+export const TARIFF_REJECT_MODAL_BUTTON_CONFIRM = `${PREFIX_IDS}_tariff-reject-modal_button_confirm`
+export const TARIFF_REJECT_MODAL_RADIO_PRICE = `${PREFIX_IDS}_tariff-reject-modal_radio_price`
+export const TARIFF_REJECT_MODAL_RADIO_SERVICE = `${PREFIX_IDS}_tariff-reject-modal_radio_service`

@@ -55,7 +55,8 @@
       "rejection": "como rejeitada pelo cliente.",
       "display": "Ela será exibida na área de Propostas Concluídas como “Rejeitada”.",
       "cancel": "Cancelar",
-      "confirm": "Confirmar rejeição"
+      "confirm": "Confirmar rejeição",
+      "details": "Detalhe o motivo de rejeição"
     },
     "fareModal": {
       "agent": "Agente:",
@@ -611,6 +612,20 @@
       },
       "workStation": {
         "buttonLabel": "Criar nova proposta"
+      },
+      "filter": {
+        "reference": "Ref. proposta",
+        "client": "Cliente",
+        "processType": "Tipo de processo",
+        "period": "Período",
+        "startDate": "Dt. Início da Vigência",
+        "endDate": "Dt. Fim da Vigência",
+        "status": "Status",
+        "responsible": "Responsável",
+        "import": "Importação",
+        "export": "Exportação",
+        "origin": "Origem",
+        "destination": "Destino"
       }
     }
   }  
