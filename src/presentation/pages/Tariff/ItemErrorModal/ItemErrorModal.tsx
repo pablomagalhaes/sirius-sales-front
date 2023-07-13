@@ -101,10 +101,10 @@ const ItemErrorModal = ({
               </Typography>
               <ListInner>
                 <List>
-                  {item?.errors.map((item: any) => {
+                {item?.errors.map((item: any, index) => {
                     return (
                       <>
-                        <ListItem>
+                        <ListItem key={index}>
                           <ListItemIcon>
                             <AlertIcon />
                           </ListItemIcon>
