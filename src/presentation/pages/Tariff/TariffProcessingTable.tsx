@@ -34,12 +34,16 @@ const TariffProcessingTable = ({
 }: TariffProcessingTableProps): JSX.Element => {
   const [state, setState] = useState({ anchorEl: null, currentKey: null })
   const [filter, setFilter] = useState<any>(defaultFilter)
-  const [totalFilesList, setTotalFilesList] = useState<number>(3)
+  const [totalFilesList, setTotalFilesList] = useState<number>(1)
 
   const handleClick = (event: any, key: any, id: any): void => {
     setState({ anchorEl: event.currentTarget, currentKey: key })
     handleSelectedItem(id)
   }
+
+  useEffect(() => {
+    setTotalFilesList(rows.length)
+  },[rows])
 
   return (
     <>
