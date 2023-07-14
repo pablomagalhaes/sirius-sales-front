@@ -76,6 +76,7 @@ const Step1 = ({
     tariffType: 'IMPORT',
     dtValidity: '2023-03-12T00:00-03:00',
     dtValidityEnd: '2023-03-15T00:00-03:00',
+    vigencyDate: vigencyDate,
     proposalTariff: [
       {
         origin: 'ARBUE',
@@ -256,7 +257,7 @@ const Step1 = ({
             {<RedColorSpan> *</RedColorSpan>}
           </FormLabel>
           <div style={{ marginTop: '-8px' }}>
-            {/* <PickerDateRange
+            <PickerDateRange
               defaultValue={data.vigencyDate}
               endDateLabel="Data Final"
               inputFormat=""
@@ -264,7 +265,7 @@ const Step1 = ({
               onChange={setVigencyDate}
               placeHolderLabel="Periodo"
               widthTx="250px"
-            /> */}
+            />
           </div>
         </Grid>
       </Grid>

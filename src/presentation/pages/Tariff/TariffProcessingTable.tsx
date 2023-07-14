@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Table, TableCell, TableRow } from '@material-ui/core'
 import { Pagination } from 'fiorde-fe-components'
 import {
@@ -34,12 +34,19 @@ const TariffProcessingTable = ({
 }: TariffProcessingTableProps): JSX.Element => {
   const [state, setState] = useState({ anchorEl: null, currentKey: null })
   const [filter, setFilter] = useState<any>(defaultFilter)
-  const [totalFilesList, setTotalFilesList] = useState<number>(3)
+  const [totalFilesList, setTotalFilesList] = useState<number>(1)
 
   const handleClick = (event: any, key: any, id: any): void => {
     setState({ anchorEl: event.currentTarget, currentKey: key })
     handleSelectedItem(id)
   }
+
+  useEffect(() => {
+    setTotalFilesList(rows.length)
+  },[rows])
+
+  console.log('totalFilesList', totalFilesList)
+  console.log('rows', rows)
 
   return (
     <>

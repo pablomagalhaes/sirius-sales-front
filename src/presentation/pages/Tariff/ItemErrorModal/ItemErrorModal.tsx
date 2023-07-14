@@ -101,18 +101,17 @@ const ItemErrorModal = ({
               </Typography>
               <ListInner>
                 <List>
-                  {item?.errors.map((item: any) => {
+                  {item?.errors.map((item: any, index) => {
                     return (
-                      <>
-                        <ListItem>
-                          <ListItemIcon>
-                            <AlertIcon />
-                          </ListItemIcon>
-                          <ListItemText>
-                            {I18n.t('pages.tariff.itemErrorModal.line')} {item.line} : {I18n.t(`pages.tariff.itemErrorModal.keyErros.${item.keyLog}`)}
-                          </ListItemText>
-                        </ListItem>
-                      </>)
+                      <ListItem key={index}>
+                        <ListItemIcon>
+                          <AlertIcon />
+                        </ListItemIcon>
+                        <ListItemText>
+                          {I18n.t('pages.tariff.itemErrorModal.line')} {item.line} : {I18n.t(`pages.tariff.itemErrorModal.keyErros.${item.keyLog}`)}
+                        </ListItemText>
+                      </ListItem>
+                    )
                   })}
                 </List>
               </ListInner>

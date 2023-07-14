@@ -326,11 +326,12 @@ const TariffImportModal = ({
             </Grid>
             <Grid item xs={6}>
               <Button
-                  disabled={!validateData()}
+                  // disabled={!validateData()}
                   text={I18n.t('pages.tariff.tariffImport.searchButtonLabel')}
                   tooltip={I18n.t('pages.tariff.tariffImport.searchButtonLabel')}
                   backgroundGreen={true}
-                  icon=""
+                  icon="search"
+                  position="right"
                   onAction={searchTariffs}
                 />
             </Grid>
