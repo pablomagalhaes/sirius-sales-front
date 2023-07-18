@@ -58,6 +58,14 @@
       "confirm": "Confirmar rejeição",
       "details": "Detalhe o motivo de rejeição"
     },
+    "cancelModal": {
+      "title": "Cancelar Proposta",
+      "definition": "Você está cancelando a proposta abaixo:",
+      "display": "Ela será exibida na área de Propostas com o status “Cancelada”.",
+      "cancel": "Cancelar",
+      "confirm": "Confirmar cancelamento",
+      "details": "Detalhe o motivo do cancelamento"
+    },
     "fareModal": {
       "agent": "Agente:",
       "choose": "Escolha...",
