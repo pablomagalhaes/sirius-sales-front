@@ -13,7 +13,7 @@ export const ModalDiv = styled.div`
   background-color: ${(props: any) =>
     props.theme?.commercial?.components?.itemModal?.backgroundColor};
   border-radius: 4px;
-  width: 737px;
+  width: 857px;
   position: absolute;
   top: 50%;
   left: 50%;
