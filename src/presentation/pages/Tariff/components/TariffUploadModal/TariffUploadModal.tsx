@@ -1,5 +1,6 @@
 import { Modal, Grid, FormLabel, RadioGroup, FormControlLabel } from '@material-ui/core'
 import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import CloseIcon from '../../../../../application/icons/CloseIcon'
 import {
   StyledRadio,
@@ -65,6 +66,8 @@ const TariffUploadModal = ({
   const [invalidInput, setInvalidInput] = useState(false)
   const [file, setFile] = useState<File | undefined>()
   const [progress, setProgress] = useState<number>(0)
+
+  const history = useHistory()
 
   const uploadTariff = async (): Promise<void> => {
     if (validateData() && data.modal !== null && file !== undefined) {
@@ -262,7 +265,7 @@ const TariffUploadModal = ({
                       tooltip={I18n.t('pages.tariff.upload.processingButtonLabel')}
                       backgroundGreen={true}
                       icon=""
-                      onAction={() => console.log('')}
+                      onAction={() => history.push('/tarifario-processamentos')}
                     />
                   }
                 </ButtonDiv>

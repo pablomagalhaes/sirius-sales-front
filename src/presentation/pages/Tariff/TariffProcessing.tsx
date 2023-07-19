@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Button, FloatingMenu } from 'fiorde-fe-components'
+import { Button, FloatingMenu, Pagination } from 'fiorde-fe-components'
 import { Breadcrumbs, Link, Typography } from '@material-ui/core/'
-
+import {
+  TableContainer,
+  PaginationContainer,
+  PaginationMainContainer,
+} from './TariffProcessingTableStyle'
 import {
   LeftSideListHeaderContainer,
   ListHeaderContainer,
@@ -51,7 +55,7 @@ const TariffProcessing = (): JSX.Element => {
   const [openErrorModal, setOpenErrorModal] = useState(false)
   const [tariffList, setTariffList] = useState<any[]>([])
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [totalFilesList, setTotalFilesList] = useState<number>(3)
+  const [totalFilesList, setTotalFilesList] = useState<number>(0)
   const [itemId, setItemId] = useState('')
   const history = useHistory()
   const [open, setOpen] = useState(false)
@@ -182,10 +186,36 @@ const TariffProcessing = (): JSX.Element => {
         </LeftSideListHeaderContainer>
       </ListHeaderContainer>
       <BottomSideContainer>
+        <TableContainer>
           <TariffProcessingTable
            rows={tariffList}
            handleSelectedItem={handleSelectedItem}
           />
+            <PaginationContainer>
+              <PaginationMainContainer>
+                <Pagination
+                  count={totalFilesList}
+                  labelDisplay="exibindo"
+                  labelDisplayedRows="de"
+                  labelRowsPerPage="Arquivos por página"
+                  onPageChange={(value) =>
+                    setFilter((filter: any) => ({ ...filter, page: value }))
+                  }
+                  onRowsPerPageChange={(value) =>
+                    setFilter((filter: any) => ({
+                      ...filter,
+                      size: value,
+                      page: 0
+                    }))
+                  }
+                  tooltipBack="Anterior"
+                  tooltipFirst="Primeira"
+                  tooltipLast="Última"
+                  tooltipNext="Próxima"
+                />
+              </PaginationMainContainer>
+            </PaginationContainer>
+        </TableContainer>
           <ItemErrorModal
             open={openErrorModal}
             setClose={handleCloseErrorModal}
