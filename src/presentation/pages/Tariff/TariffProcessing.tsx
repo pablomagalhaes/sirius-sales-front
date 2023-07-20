@@ -4,7 +4,7 @@ import { Breadcrumbs, Link, Typography } from '@material-ui/core/'
 import {
   TableContainer,
   PaginationContainer,
-  PaginationMainContainer,
+  PaginationMainContainer
 } from './TariffProcessingTableStyle'
 import {
   LeftSideListHeaderContainer,

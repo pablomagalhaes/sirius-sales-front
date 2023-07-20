@@ -10,6 +10,7 @@ import {
   StatusCell,
   Table, FloatingMenu, AlertIconCircle, ControlledToolTip
 } from 'fiorde-fe-components'
+import ValidityDisplay from '../../components/ValidityDisplay/ValidityDisplay'
 
 export interface TableImplProps {
   rows: any[]
@@ -105,7 +106,7 @@ const TableImpl = ({
     {
       label: 'Fim vigência',
       key: 'validityDateEnd',
-      render: ({ validityDateEnd }: any) => <LabelCell>{validityDateEnd}</LabelCell>,
+      render: ({ validityDateEnd }: any) => <LabelCell><ValidityDisplay validity={validityDateEnd} /></LabelCell>,
       size: 3
     },
     {
