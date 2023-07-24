@@ -293,7 +293,7 @@ const AirTariffModal = ({
                 </StyledTable>
               </SubDiv>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={4}>
               <FormLabel component="legend" error={invalidInput && data.minValue?.value.length === 0}>
                 {I18n.t('components.tariffModal.minValue')}<RedColorSpan> *</RedColorSpan>
               </FormLabel>
@@ -314,7 +314,7 @@ const AirTariffModal = ({
                 style={{ marginRight: '3px' }}
               />
             </Grid>
-            <Grid item xs={7} container={true} spacing={1} direction="row" justify="center">
+            <Grid item xs={12} container={true} spacing={1} direction="row" justify="center">
                 <Grid item xs={12} md>
                 <FormLabel component="legend" error={invalidInput && data.weight1?.value.length === 0} >
                   {I18n.t('components.tariffModal.weight1')}<RedColorSpan> *</RedColorSpan>
@@ -438,7 +438,7 @@ const AirTariffModal = ({
                 modal
               />
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={3}>
               <FormLabel component="legend">
                 {I18n.t('components.tariffModal.frequency')}
                 <RedColorSpan> *</RedColorSpan>
