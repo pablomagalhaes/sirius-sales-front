@@ -90,3 +90,8 @@ export const TARIFF_REJECT_MODAL_BUTTON_CANCEL = `${PREFIX_IDS}_tariff-reject-mo
 export const TARIFF_REJECT_MODAL_BUTTON_CONFIRM = `${PREFIX_IDS}_tariff-reject-modal_button_confirm`
 export const TARIFF_REJECT_MODAL_RADIO_PRICE = `${PREFIX_IDS}_tariff-reject-modal_radio_price`
 export const TARIFF_REJECT_MODAL_RADIO_SERVICE = `${PREFIX_IDS}_tariff-reject-modal_radio_service`
+
+// Cancel Modal
+export const TARIFF_CANCEL_MODAL_INPUT_DETAIL = `${PREFIX_IDS}_tariff-reject-modal_input_detail`
+export const TARIFF_CANCEL_MODAL_BUTTON_CANCEL = `${PREFIX_IDS}_tariff-reject-modal_button_cancel`
+export const TARIFF_CANCEL_MODAL_BUTTON_CONFIRM = `${PREFIX_IDS}_tariff-reject-modal_button_confirm`

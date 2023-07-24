@@ -46,12 +46,14 @@ import useTariffProposal from '../../hooks/tariff/useTariffProposal'
 import { OrderTypes } from '../../../application/enum/enum'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { UpdateStatusStaggeredProposal } from '../../../domain/usecase'
+import CancelModal from '../../components/CancelModal/CancelModal'
 
 const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposal }): JSX.Element => {
   const { filter, setFilter }: any = useContext(StaggeredProposalContext)
 
   const { content: proposalList, totalElements: totalProposalList, setParams, refetch } = useTariffProposal(loadStaggeredProposal)
   const [openReject, setOpenReject] = useState(false)
+  const [openCancel, setOpenCancel] = useState(false)
   const [openDisplay, setOpenDisplay] = useState(false)
   const [reference, setReference] = useState('')
   const [proposalId, setProposalId] = useState('')
@@ -153,7 +155,9 @@ const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposa
             iconType: 'cancel',
             label: I18n.t('pages.proposal.table.cancelLabel'),
             onClick: () => {
-              setStatus(id, StatusStaggeredProposalStringEnum.CANCELADA)
+              setOpenCancel(true)
+              setReference(ref)
+              setProposalId(id)
             }
           }
         )
@@ -179,7 +183,9 @@ const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposa
             iconType: 'cancel',
             label: I18n.t('pages.proposal.table.cancelLabel'),
             onClick: () => {
-              setStatus(id, StatusStaggeredProposalStringEnum.CANCELADA)
+              setOpenCancel(true)
+              setReference(ref)
+              setProposalId(id)
             }
           },
           {
@@ -219,7 +225,9 @@ const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposa
             iconType: 'cancel',
             label: I18n.t('pages.proposal.table.cancelLabel'),
             onClick: () => {
-              setStatus(id, StatusStaggeredProposalStringEnum.CANCELADA)
+              setOpenCancel(true)
+              setReference(ref)
+              setProposalId(id)
             }
           }
         )
@@ -280,6 +288,12 @@ const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposa
   }
   const handleCloseReject = (): void => {
     setOpenReject(false)
+    setReference('')
+    setProposalId('')
+  }
+
+  const handleCloseCancel = (): void => {
+    setOpenCancel(false)
     setReference('')
     setProposalId('')
   }
@@ -385,6 +399,13 @@ const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposa
               proposalId={proposalId}
               setStatus={setStatus}
               detailed={true}
+            />
+            <CancelModal
+              open={openCancel}
+              setClose={handleCloseCancel}
+              reference={reference}
+              proposalId={proposalId}
+              setStatus={setStatus}
             />
             <ProposalDisplayModal
               open={openDisplay}
