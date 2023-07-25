@@ -23,6 +23,7 @@ const RootContainer = styled.div`
     font-size: 14px;
     margin-top: 30px;
     margin-bottom: 10px;
+    font-weight: 700;
     @media only screen and (max-width: 1200px) {
       overflow-wrap: break-word;
     }

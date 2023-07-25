@@ -5,7 +5,7 @@ import {
   InputAdornment,
   Box
 } from '@material-ui/core'
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import CloseIcon from '../../../../../application/icons/CloseIcon'
 import Autocomplete, {
   createFilterOptions
@@ -34,6 +34,8 @@ import { OriginDestinyTypes } from '../../../../../application/enum/enum'
 import { NumberInput } from '../../../NewProposal/steps/StepsStyles'
 import FormatNumber from '../../../../../application/utils/formatNumber'
 
+import { StaggeredProposalContext, StaggeredProposalProps } from '../../context/StaggeredProposalContext'
+
 interface AgentType {
   name: string
   id: number | null | undefined
@@ -49,12 +51,12 @@ export interface TariffUploadData {
   origin: string
   destiny: string
   airCompany: AgentType
-  weight1: TariffValues | null
-  weight2: TariffValues | null
-  weight3: TariffValues | null
-  weight4: TariffValues | null
-  weight5: TariffValues | null
-  minValue: TariffValues | null
+  until45kg: TariffValues | null
+  until100kg: TariffValues | null
+  until300kg: TariffValues | null
+  until500kg: TariffValues | null
+  until1000kg: TariffValues | null
+  vlMinimum: TariffValues | null
   currency: string | null
 }
 
@@ -62,6 +64,7 @@ interface TariffUploadProps {
   theme?: any
   open: boolean
   setClose: () => void
+  setShowList: () => void
 }
 
 export const initialState = {
@@ -69,19 +72,20 @@ export const initialState = {
   origin: '',
   destiny: '',
   airCompany: { name: '', id: null },
-  weight1: null,
-  weight2: null,
-  weight3: null,
-  weight4: null,
-  weight5: null,
+  until45kg: null,
+  until100kg: null,
+  until300kg: null,
+  until500kg: null,
+  until1000kg: null,
   currency: null,
-  minValue: null
+  vlMinimum: null
 }
 
 const TariffImportHandsOnModal = ({
   theme,
   open,
-  setClose
+  setClose,
+  setShowList
 }: TariffUploadProps): JSX.Element => {
   const { partnerList: agentsList } = usePartnerList()
   const { data: originDestinationList = [] } = useOriginDestination()
@@ -96,6 +100,8 @@ const TariffImportHandsOnModal = ({
     limit: 500
   })
 
+  const { staggeredproposal, setStaggeredProposal }: StaggeredProposalProps = useContext(StaggeredProposalContext)
+
   const handleOnClose = (): void => {
     setData(initialState)
     setInvalidInput(false)
@@ -108,12 +114,12 @@ const TariffImportHandsOnModal = ({
       (data.destiny?.length === 0) ||
       (data.agent.id === null) ||
       (data.airCompany.id === null) ||
-      (data.weight1 === null || data.weight1.value?.length === 0) ||
-      (data.weight2 === null || data.weight2.value?.length === 0) ||
-      (data.weight3 === null || data.weight3.value?.length === 0) ||
-      (data.weight4 === null || data.weight4.value?.length === 0) ||
-      (data.weight5 === null || data.weight5.value?.length === 0) ||
-      (data.minValue === null || data.minValue.value?.length === 0)
+      (data.until45kg === null || data.until45kg.value?.length === 0) ||
+      (data.until100kg === null || data.until100kg.value?.length === 0) ||
+      (data.until300kg === null || data.until300kg.value?.length === 0) ||
+      (data.until500kg === null || data.until500kg.value?.length === 0) ||
+      (data.until1000kg === null || data.until1000kg.value?.length === 0) ||
+      (data.vlMinimum === null || data.vlMinimum.value?.length === 0)
     )
   }
 
@@ -130,7 +136,45 @@ const TariffImportHandsOnModal = ({
   const addOn = (): void => {
     if (!validateData()) setInvalidInput(true)
     else {
-      console.log(data)
+      const arrTariff = []
+
+      console.log('addOn', data)
+      const total = staggeredproposal.proposalTariff.length
+
+      const newObject = {
+        idProposalTariff: total + 1,
+        origin: data.origin,
+        destination: data.destiny,
+        idAgent: data.agent.id,
+        nmAgent: data.agent.name,
+        idBusinessPartnerTransporter: data.airCompany.id,
+        dsBusinessPartnerTransporter: data.airCompany.name,
+        currency: data.currency,
+        frequency: null,
+        vlFrequency: null,
+        freightValues: [
+          {
+            vlMinimum: String(data.vlMinimum),
+            until45kg: String(data.until45kg),
+            until100kg: String(data.until100kg),
+            until300kg: String(data.until300kg),
+            until500kg: String(data.until500kg),
+            until1000kg: String(data.until1000kg),
+            buyOrSell: 'BUY'
+          }
+        ]
+      }
+
+      arrTariff.push(newObject)
+      const odd = staggeredproposal.proposalTariff
+      const combined = [newObject, ...odd]
+
+      setStaggeredProposal({
+        ...staggeredproposal,
+        proposalTariff: combined
+      })
+
+      setShowList()
       handleOnClose()
     }
   }
@@ -141,17 +185,12 @@ const TariffImportHandsOnModal = ({
   }
 
   const handleValues = (e, key): void => {
-    if (data[key] !== null) {
-      setData(
-        {
-          ...data,
-          [key]: {
-            idTariffTypeValues: data[key].idTariffTypeValues,
-            value: e.target.value
-          }
-        }
-      )
-    }
+    setData(
+      {
+        ...data,
+        [key]: parseInt(e.target.value)
+      }
+    )
   }
 
   return (
@@ -329,7 +368,8 @@ const TariffImportHandsOnModal = ({
                 (item) => item.businessPartner.simpleName
               )}
               onChange={(_e, newValue) => {
-                const { simpleName: name, id } = airPartners.find((item: any) => item.simpleName === newValue)
+                const { id } = airPartners.find((item: any) => item.businessPartner.simpleName === newValue)
+                const name = newValue
                 setData((data) => ({
                   ...data,
                   airCompany: { name, id }
@@ -364,39 +404,56 @@ const TariffImportHandsOnModal = ({
               )} />
             </Grid>
           </Grid>
+
           <Grid item xs={12} container={true} spacing={1} direction="row" justify="center">
+
           <Grid item xs={12} md>
-              <FormLabel component="legend" error={invalidInput && data.minValue?.value.length === 0}>
+              <FormLabel component="legend" error={invalidInput && data.vlMinimum?.value.length === 0}>
                 {I18n.t('components.tariffModal.currency')}
               </FormLabel>
-              <Autocomplete
-                style={{ marginTop: '-12px' }}
-                value={data.currency}
-                options={currencyList.map((option) => option.id)}
-                disabled={false}
-                onChange={(_e, value) =>
-                  setData({ ...data, currency: value })
-                }
-                renderInput={(params) => (
-                  <div ref={params.InputProps.ref}>
-                    <Input
-                      {...params.inputProps}
-                      width="84px"
-                      placeholder={data.currency}
-                      toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-                      invalid={invalidInput && data.currency?.length === 0}
-                      disabled={false}
-                    />
-                    <Box className="dropdown">
-                      <ArrowDropDownIcon />
-                    </Box>
-                  </div>
-                )}
-                PaperComponent={(params: any) => <StyledPaper {...params} />}
-              />
+                  <Autocomplete
+                    value={data.currency}
+                    options={currencyList.map((option) => option.id)}
+                    disabled={false}
+                    onChange={(_e, value) =>
+                      setData({ ...data, currency: value })
+                    }
+                    renderInput={(params) => (
+                      <div ref={params.InputProps.ref}>
+                      <ControlledInput
+                        {...params}
+                        id="search-origin"
+                        toolTipTitle={
+                          invalidInput
+                            ? I18n.t('components.itemModal.requiredField')
+                            : ''
+                        }
+                        invalid={invalidInput && data.origin.length === 0}
+                        variant="outlined"
+                        size="small"
+                        $space
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconComponent
+                                name="arrow"
+                                defaultColor={
+                                  theme?.commercial?.pages?.newProposal
+                                    ?.subtitle
+                                }
+                              />
+                            </InputAdornment>
+                          )
+                        }}
+                      />
+                      </div>
+                    )}
+                    PaperComponent={(params: any) => <StyledPaper {...params} />}
+                  />
             </Grid>
+
             <Grid item xs={12} md>
-              <FormLabel component="legend" error={invalidInput && data.minValue?.value.length === 0}>
+              <FormLabel component="legend" error={invalidInput && data.vlMinimum?.value.length === 0}>
                 {I18n.t('components.tariffModal.minValue')}
               </FormLabel>
               <NumberInput
@@ -406,9 +463,9 @@ const TariffImportHandsOnModal = ({
                 format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                 customInput={ControlledInput}
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-                invalid={invalidInput && data.minValue === null}
-                value={data.minValue != null ? data.minValue.value : ''}
-                onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'minValue') }}
+                invalid={invalidInput && data.vlMinimum === null}
+                value={data.vlMinimum != null ? data.vlMinimum.value : ''}
+                onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'vlMinimum') }}
                 variant="outlined"
                 size="small"
                 modal
@@ -416,7 +473,7 @@ const TariffImportHandsOnModal = ({
               />
             </Grid>
             <Grid item xs={12} md>
-              <FormLabel component="legend" error={invalidInput && data.weight1?.value.length === 0} >
+              <FormLabel component="legend" error={invalidInput && data.until45kg?.value.length === 0} >
                 {I18n.t('components.tariffModal.weight1')}
               </FormLabel>
               <NumberInput
@@ -426,16 +483,17 @@ const TariffImportHandsOnModal = ({
                 format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                 customInput={ControlledInput}
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-                invalid={invalidInput && data.weight1?.value.length === 0}
-                value={data.weight1 != null ? data.weight1.value : ''}
-                onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'weight1') }}
+                invalid={invalidInput && data.until45kg?.value.length === 0}
+                value={data.until45kg != null ? data.until45kg.value : ''}
+                onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'until45kg') }}
                 variant="outlined"
                 size="small"
                 modal
+                style={{ height: '20px' }}
               />
               </Grid>
               <Grid item xs={12} md>
-              <FormLabel component="legend" error={invalidInput && data.weight2?.value.length === 0} >
+              <FormLabel component="legend" error={invalidInput && data.until100kg?.value.length === 0} >
                 {I18n.t('components.tariffModal.weight2')}
               </FormLabel>
               <NumberInput
@@ -445,16 +503,17 @@ const TariffImportHandsOnModal = ({
                 format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                 customInput={ControlledInput}
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-                invalid={invalidInput && data.weight2?.value.length === 0}
-                value={data.weight2 != null ? data.weight2.value : ''}
-                onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'weight2') }}
+                invalid={invalidInput && data.until100kg?.value.length === 0}
+                value={data.until100kg != null ? data.until100kg.value : ''}
+                onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'until100kg') }}
                 variant="outlined"
                 size="small"
                 modal
+                style={{ height: '20px' }}
               />
               </Grid>
               <Grid item xs={12} md>
-              <FormLabel component="legend" error={invalidInput && data.weight3?.value.length === 0} >
+              <FormLabel component="legend" error={invalidInput && data.until300kg?.value.length === 0} >
                 {I18n.t('components.tariffModal.weight3')}
               </FormLabel>
               <NumberInput
@@ -464,16 +523,17 @@ const TariffImportHandsOnModal = ({
                 format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                 customInput={ControlledInput}
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-                invalid={invalidInput && data.weight3?.value.length === 0}
-                value={data.weight3 != null ? data.weight3.value : ''}
-                onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'weight3') }}
+                invalid={invalidInput && data.until300kg?.value.length === 0}
+                value={data.until300kg != null ? data.until300kg.value : ''}
+                onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'until300kg') }}
                 variant="outlined"
                 size="small"
                 modal
+                style={{ height: '20px' }}
               />
               </Grid>
               <Grid item xs={12} md>
-              <FormLabel component="legend" error={invalidInput && data.weight4?.value.length === 0} >
+              <FormLabel component="legend" error={invalidInput && data.until500kg?.value.length === 0} >
                 {I18n.t('components.tariffModal.weight4')}
               </FormLabel>
               <NumberInput
@@ -483,16 +543,17 @@ const TariffImportHandsOnModal = ({
                 format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                 customInput={ControlledInput}
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-                invalid={invalidInput && data.weight4?.value.length === 0}
-                value={data.weight4 != null ? data.weight4.value : ''}
-                onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'weight4') }}
+                invalid={invalidInput && data.until500kg?.value.length === 0}
+                value={data.until500kg != null ? data.until500kg.value : ''}
+                onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'until500kg') }}
                 variant="outlined"
                 size="small"
                 modal
+                style={{ height: '20px' }}
               />
               </Grid>
               <Grid item xs={12} md>
-              <FormLabel component="legend" error={invalidInput && data.weight5?.value.length === 0} >
+              <FormLabel component="legend" error={invalidInput && data.until1000kg?.value.length === 0} >
                 {I18n.t('components.tariffModal.weight5')}
               </FormLabel>
               <NumberInput
@@ -502,13 +563,13 @@ const TariffImportHandsOnModal = ({
                 format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                 customInput={ControlledInput}
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-                invalid={invalidInput && data.weight5?.value.length === 0}
-                value={data.weight5 != null ? data.weight5.value : ''}
-                onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'weight5') }}
+                invalid={invalidInput && data.until1000kg?.value.length === 0}
+                value={data.until1000kg != null ? data.until1000kg.value : ''}
+                onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'until1000kg') }}
                 variant="outlined"
                 size="small"
                 modal
-                style={{ marginRight: '3px' }}
+                style={{ marginRight: '3px', height: '20px' }}
               />
               </Grid>
               </Grid>

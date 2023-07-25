@@ -14,6 +14,9 @@ const HeightDiv = styled.div`
   min-height: 650px; // Para que o stepper marque o Step 6 corretamente
 `
 const NumberInput = styled(NumberFormat)`
+  & .MuiOutlinedInput-marginDense input {
+    height: 20px;
+  }
 `
 const StyledPaper = styled(Paper)`
     border: 1px solid ${(props: any) => props.theme?.commercial?.pages?.proposal?.dropdownBorderColor} !important;

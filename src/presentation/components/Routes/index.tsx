@@ -5,60 +5,64 @@ import { Home, NewProposal, Proposal, NewProposalExportation, Tariff, TariffProc
 import Wrapper from '../Wrapper'
 import { ProposalContextProvider } from '../../pages/NewProposal/context/ProposalContext'
 import { TariffContextProvider } from '../../pages/Tariff/context/TariffContext'
+
 import { StaggeredProposalContextProvider } from '../../pages/StaggeredProposal/context/StaggeredProposalContext'
+
+import { ImportStaggeredProposalContextProvider } from '../../pages/StaggeredProposal/context/ImportStaggeredProposalContext'
 
 import { MakeStaggeredProposal } from '../../../main/factories/pages/staggered-proposal/staggered-proposal-factory'
 import { makeRemoteUpdateStaggeredProposal } from '../../../main/factories/usecases/remote-update-staggered-proposal-factory'
-
 
 const Routes = (): JSX.Element => (
   <ProposalContextProvider>
     <TariffContextProvider>
       <StaggeredProposalContextProvider>
-        <BrowserRouter basename="/#/comercial">
-          <Switch>
-            <Route exact path="/">
+        <ImportStaggeredProposalContextProvider>
+          <BrowserRouter basename="/#/comercial">
+            <Switch>
+              <Route exact path="/">
+                <Wrapper>
+                  <Home />
+                </Wrapper>
+              </Route>
+              <Route exact path="/proposta">
+                <Wrapper>
+                  <Proposal />
+                </Wrapper>
+              </Route>
+              <Route exact path="/novaProposta">
+                <Wrapper>
+                  <NewProposal />
+                </Wrapper>
+              </Route>
+              <Route exact path="/novaPropostaExportacao">
+                <Wrapper>
+                  <NewProposalExportation />
+                </Wrapper>
+              </Route>
+              <Route exact path="/tarifario">
+                <Wrapper>
+                  <Tariff />
+                </Wrapper>
+              </Route>
+              <Route exact path="/propostaEscalonada">
+                <Wrapper>
+                  <MakeStaggeredProposal />
+                </Wrapper>
+              </Route>
+              <Route exact path="/tarifario-processamentos">
+                <Wrapper>
+                  <TariffProcessing />
+                </Wrapper>
+              </Route>
+              <Route exact path="/novaPropostaEscalonada">
               <Wrapper>
-                <Home />
-              </Wrapper>
-            </Route>
-            <Route exact path="/proposta">
-              <Wrapper>
-                <Proposal />
-              </Wrapper>
-            </Route>
-            <Route exact path="/novaProposta">
-              <Wrapper>
-                <NewProposal />
-              </Wrapper>
-            </Route>
-            <Route exact path="/novaPropostaExportacao">
-              <Wrapper>
-                <NewProposalExportation />
-              </Wrapper>
-            </Route>
-            <Route exact path="/tarifario">
-              <Wrapper>
-                <Tariff />
-              </Wrapper>
-            </Route>
-            <Route exact path="/propostaEscalonada">
-              <Wrapper>
-                <MakeStaggeredProposal />
-              </Wrapper>
-            </Route>
-            <Route exact path="/tarifario-processamentos">
-              <Wrapper>
-                <TariffProcessing />
-              </Wrapper>
-            </Route>
-            <Route exact path="/novaPropostaEscalonada">
-            <Wrapper>
-                <NewStaggeredProposal updateStaggeredProposal={makeRemoteUpdateStaggeredProposal()}/>
-              </Wrapper>
-            </Route>
-          </Switch>
-        </BrowserRouter>
+                  <NewStaggeredProposal updateStaggeredProposal={makeRemoteUpdateStaggeredProposal()}/>
+                </Wrapper>
+              </Route>
+            </Switch>
+          </BrowserRouter>
+        </ImportStaggeredProposalContextProvider>
       </StaggeredProposalContextProvider>
     </TariffContextProvider>
   </ProposalContextProvider>

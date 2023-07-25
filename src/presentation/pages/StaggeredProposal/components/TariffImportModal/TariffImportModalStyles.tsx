@@ -185,14 +185,14 @@ export const PaginationMainContainer = styled.div`
 export const TableBodyCell = withStyles({
   root: {
     borderBottom: 'none',
-    paddingRight: 10, 
+    paddingRight: 10,
     paddingLeft: 0
   }
 })(MuiTableCell)
 
 export const CheckboxCell = withStyles({
   root: {
-    paddingRight: 10, 
+    paddingRight: 10,
     paddingLeft: 0
   }
 })(MuiTableCell)

@@ -43,6 +43,10 @@ import { OriginDestinyTypes } from '../../../../../application/enum/enum'
 import { TariffContext } from '../../../Tariff/context/TariffContext'
 import useTariffsByCountry from '../../../../hooks/tariff/useTariffsByCountry'
 import { TariffItemsTypes } from '../../../../../application/enum/tariffEnum'
+import FormatNumber from '../../../../../application/utils/formatNumber'
+
+import { StaggeredProposalContext, StaggeredProposalProps } from '../../context/StaggeredProposalContext'
+import { ImportStaggeredProposalContext, ImportStaggeredProposalProps } from '../../context/ImportStaggeredProposalContext'
 
 interface AgentType {
   name: string
@@ -58,6 +62,7 @@ interface TariffUploadProps {
   theme?: any
   open: boolean
   setClose: () => void
+  setShowList: () => void
 }
 
 export const initialState = {
@@ -69,12 +74,16 @@ export const initialState = {
 const TariffImportModal = ({
   theme,
   open,
-  setClose
+  setClose,
+  setShowList
 }: TariffUploadProps): JSX.Element => {
   const { partnerList: agentsList } = usePartnerList()
   const { data: originDestinationList = [] } = useOriginDestination()
   const { setFilter, filter }: any = useContext(TariffContext)
   const { content: tariffData, totalElements: totalTariffList, setParams, refetch } = useTariffsByCountry()
+
+  const { staggeredproposal, setStaggeredProposal }: StaggeredProposalProps = useContext(StaggeredProposalContext)
+  const { importstaggeredproposal, setImportStaggeredProposal }: ImportStaggeredProposalProps = useContext(ImportStaggeredProposalContext)
 
   const [data, setData] = useState<TariffUploadData>(initialState)
   const [selecteds, setSelecteds] = useState<string[]>([])
@@ -103,7 +112,7 @@ const TariffImportModal = ({
   }, [filter])
 
   useEffect(() => {
-    if(open === true) setParams()
+    if (open) setParams()
   }, [open])
 
   const getOriginDestinyList = (): string[] => {
@@ -135,20 +144,20 @@ const TariffImportModal = ({
         weight2: getTariffValue(TariffItemsTypes.Until100, tariff),
         weight3: getTariffValue(TariffItemsTypes.Until300, tariff),
         weight4: getTariffValue(TariffItemsTypes.Until500, tariff),
-        weight5: getTariffValue(TariffItemsTypes.Until1000, tariff),
+        weight5: getTariffValue(TariffItemsTypes.Until1000, tariff)
       })
     })
     return tariffs
   }
-  console.log(tariffData)
+
   const searchTariffs = (): void => {
-    if(validateData() === true) {
+    if (validateData()) {
       setInvalidInput(false)
-      if(data.agent.id === null) {
+      if (data.agent.id === null) {
         setFilter((filter: any) => ({
           ...filter,
           size: 3,
-          tariffModalType: 'AIR', 
+          tariffModalType: 'AIR',
           idOrigin: data.origin.split(' - ')[0],
           idDestination: data.destiny.split(' - ')[0]
         }))
@@ -156,15 +165,73 @@ const TariffImportModal = ({
         setFilter((filter: any) => ({
           ...filter,
           size: 3,
-          tariffModalType: 'AIR', 
-          idBusinessPartnerAgent: data.agent.id, 
+          tariffModalType: 'AIR',
+          idBusinessPartnerAgent: data.agent.id,
           idOrigin: data.origin.split(' - ')[0],
           idDestination: data.destiny.split(' - ')[0]
         }))
       }
     } else {
       setInvalidInput(true)
-    } 
+    }
+  }
+
+  const handleImports = (): void => {
+    console.log('handleImports tariffData', tariffData)
+
+    const total = staggeredproposal.proposalTariff.length
+
+    if (tariffData.length > 0) {
+      const newObject = tariffData.map((obj, index) => {
+        return {
+          ...obj,
+          idProposalTariff: total + 1,
+          origin: data.origin,
+          destination: data.destiny,
+          idAgent: obj.idBusinessPartnerAgent,
+          idBusinessPartnerTransporter: obj.idBusinessPartnerTransporter,
+          currency: obj.currency,
+          frequency: 1,
+          vlFrequency: 3,
+          freightValues: [
+            {
+              vlMinimum: String(obj.tariffTypeValues.filter(item => item.tariffType.description === 'MINIMUN').map(filteredValue =>
+                filteredValue.value)[0]),
+              until45kg: String(obj.tariffTypeValues.filter(item => item.tariffType.description === 'UNTIL45KG').map(filteredValue =>
+                filteredValue.value)[0]),
+              until100kg: String(obj.tariffTypeValues.filter(item => item.tariffType.description === 'UNTIL100KG').map(filteredValue =>
+                filteredValue.value)[0]),
+              until300kg: String(obj.tariffTypeValues.filter(item => item.tariffType.description === 'UNTIL300KG').map(filteredValue =>
+                filteredValue.value)[0]),
+              until500kg: String(obj.tariffTypeValues.filter(item => item.tariffType.description === 'UNTIL500KG').map(filteredValue =>
+                filteredValue.value)[0]),
+              until1000kg: String(obj.tariffTypeValues.filter(item => item.tariffType.description === 'UNTIL1000KG').map(filteredValue =>
+                filteredValue.value)[0]),
+              buyOrSell: obj.tariffTypeValues[index].buyOrSell
+            }
+          ]
+        }
+      })
+
+      const odd = staggeredproposal.proposalTariff
+      const combined = [newObject[0], ...odd]
+
+      setStaggeredProposal({
+        ...staggeredproposal,
+        proposalTariff: combined
+      })
+
+      setShowList()
+      handleOnClose()
+    }
+  }
+
+  const checkIsNumber = (value: any): any => {
+    if (isNaN(value)) {
+      return value
+    } else {
+      return FormatNumber.rightToLeftFormatter(value, 2)
+    }
   }
 
   return (
@@ -280,7 +347,7 @@ const TariffImportModal = ({
               PaperComponent={(params: any) => <StyledPaper {...params} />}
             />
             </Grid>
-            <Grid item xs={6} style={{marginTop: '-45px'}}>
+            <Grid item xs={6} style={{ marginTop: '-45px' }}>
             <FormLabel component="legend">
                 {I18n.t('pages.tariff.tariffImport.agent')}
             </FormLabel>
@@ -336,14 +403,14 @@ const TariffImportModal = ({
                 />
             </Grid>
           </Grid>
-          <TableContainer style={{marginTop: '20px', minHeight: '150px'}}>
+          <TableContainer style={{ marginTop: '20px', minHeight: '150px' }}>
             <Table >
               <TableHead>
                 <TableRow>
                   <CheckboxCell align="right">
                     <Checkbox
                       checked={selecteds.length === tariffData.length && selecteds.length !== 0}
-                      onChange={() =>{
+                      onChange={() => {
                         if (selecteds.length === tariffData.length) {
                           setSelecteds([])
                         } else {
@@ -353,7 +420,7 @@ const TariffImportModal = ({
                     />
                   </CheckboxCell>
                   {Object.values(I18n.t('pages.tariff.tariffImport.table'))
-                    .map((column: string) => <TableCell style={{paddingLeft: 0}} key={column}>{column}</TableCell>)
+                    .map((column: string) => <TableCell style={{ paddingLeft: 0 }} key={column}>{column}</TableCell>)
                   }
                 </TableRow>
               </TableHead>
@@ -364,7 +431,7 @@ const TariffImportModal = ({
                       <Checkbox
                         checked={selecteds.some((selected) => selected === tariff.id)}
                         onChange={() => {
-                          if(selecteds.some((selected) => selected === tariff.id)) {
+                          if (selecteds.some((selected) => selected === tariff.id)) {
                             setSelecteds((selecteds) => selecteds.filter((selected) => selected !== tariff.id))
                           } else {
                             setSelecteds((selecteds) => [...selecteds, tariff.id])
@@ -374,7 +441,8 @@ const TariffImportModal = ({
                     </TableBodyCell>
                     {Object.values(tariff).filter((_e, index) => index !== 0).map((each: any) =>
                       <TableBodyCell key={`${each}-${index}`} align="left">
-                        {each}
+                        {/* {each} */}
+                        {checkIsNumber(each)}
                       </TableBodyCell>)
                     }
 
@@ -383,7 +451,7 @@ const TariffImportModal = ({
               </TableBody>
             </Table>
           </TableContainer>
-          <hr style={{backgroundColor: '#E3E5EB', border: '0', height: '1px'}}/>
+          <hr style={{ backgroundColor: '#E3E5EB', border: '0', height: '1px' }}/>
           <PaginationContainer>
             <PaginationMainContainer>
               <NoBreakLine>{selecteds.length} {selecteds.length > 1 ? I18n.t('pages.tariff.tariffImport.selectedsItems') : I18n.t('pages.tariff.tariffImport.selectedItem') }</NoBreakLine>
@@ -431,7 +499,7 @@ const TariffImportModal = ({
                 tooltip={I18n.t('pages.tariff.tariffImport.addButtonLabel')}
                 backgroundGreen={true}
                 icon=""
-                onAction={searchTariffs}
+                onAction={handleImports}
               />
             </div>
           </Grid>

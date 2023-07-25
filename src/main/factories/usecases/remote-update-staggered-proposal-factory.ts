@@ -5,4 +5,4 @@ import { makeAxiosHttpClient } from '../../../main/factories/http/axios-http-cli
 import { makeApiUrl } from '../http'
 
 export const makeRemoteUpdateStaggeredProposal = (): UpdateStaggeredProposal =>
-  new RemoteUpdateStaggeredProposal(makeApiUrl('/sirius-tariff-api/tariff/tariffProposal'), makeAxiosHttpClient())
+  new RemoteUpdateStaggeredProposal(makeApiUrl('/sirius-tariff-api/tariff/proposal/'), makeAxiosHttpClient())

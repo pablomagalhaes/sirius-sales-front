@@ -62,48 +62,32 @@ const Step1 = ({
 
   const { staggeredproposal, setStaggeredProposal }: StaggeredProposalProps = useContext(StaggeredProposalContext)
 
-  // const [data, setData] = useState({
-  //   idBusinessPartnerCustomer: null,
-  //   operation: '',
-  //   vigencyDate: vigencyDate,
-  //   proposalValue: '',
-  //   requester: ''
-  // })
-
   const [data, setData] = useState({
-    idTariffProposalStatus: 1,
-    idBusinessPartnerCustomer: 1,
-    tariffType: 'IMPORT',
-    dtValidity: '2023-03-12T00:00-03:00',
-    dtValidityEnd: '2023-03-15T00:00-03:00',
+    idTariffProposalStatus: null,
+    idBusinessPartnerCustomer: null,
+    tariffType: '',
+    dtValidity: '',
+    dtValidityEnd: '',
     vigencyDate: vigencyDate,
     proposalTariff: [
       {
-        origin: 'ARBUE',
-        destination: 'SSZ',
-        idAgent: 1,
-        idBusinessPartnerTransporter: 2,
-        currency: 'ARS',
-        frequency: 1,
-        vlFrequency: 3,
+        idProposalTariff: null,
+        origin: '',
+        destination: '',
+        idAgent: null,
+        idBusinessPartnerTransporter: null,
+        currency: '',
+        frequency: null,
+        vlFrequency: null,
         freightValues: [
           {
-            vlMinimum: '90',
-            until45kg: '4.56',
-            until100kg: '4.57',
-            until300kg: '4.58',
-            until500kg: '50.01',
-            until1000kg: '1000.52',
-            buyOrSell: 'BUY'
-          },
-          {
-            vlMinimum: '90',
-            until45kg: '4.56',
-            until100kg: '4.57',
-            until300kg: '4.58',
-            until500kg: '50.01',
-            until1000kg: '1000.52',
-            buyOrSell: 'SELL'
+            vlMinimum: '',
+            until45kg: '',
+            until100kg: '',
+            until300kg: '',
+            until500kg: '',
+            until1000kg: '',
+            buyOrSell: ''
           }
         ]
       }
@@ -134,10 +118,6 @@ const Step1 = ({
     setStepLoaded((currentState) => ({ ...currentState, step1: true }))
   }, [])
 
-  // useEffect(() => {
-  //   setData({ ...data, vigencyDate: vigencyDate })
-  // }, [vigencyDate])
-
   useEffect(() => {
     if (data.idBusinessPartnerCustomer !== null && data.tariffType !== '') {
       setCompleted((currentState) => ({ ...currentState, step1: true }))
@@ -159,15 +139,28 @@ const Step1 = ({
     setPartner(newValue)
     const client = partnerList.filter((ptn) => ptn.businessPartner.simpleName === newValue)[0]?.businessPartner.id
     setData({ ...data, idBusinessPartnerCustomer: Number(client) })
-
     setStaggeredProposal({
       ...staggeredproposal,
+      idTariffProposalStatus: Number(1),
       idBusinessPartnerCustomer: Number(client)
     })
   }
 
-  console.log('data step1', data)
-  console.log('staggeredproposal step1', staggeredproposal)
+  useEffect(() => {
+    const TarifType = operationList.filter((ptn) => ptn.id === Number(data.tariffType))[0]?.operation
+    setStaggeredProposal({
+      ...staggeredproposal,
+      tariffType: String(TarifType)
+    })
+  }, [data.tariffType])
+
+  useEffect(() => {
+    setStaggeredProposal({
+      ...staggeredproposal,
+      dtValidity: String(vigencyDate[0]),
+      dtValidityEnd: String(vigencyDate[1])
+    })
+  }, [vigencyDate])
 
   return (
     <Separator>
@@ -229,14 +222,15 @@ const Step1 = ({
             {<RedColorSpan> *</RedColorSpan>}
           </FormLabel>
           <ControlledSelect
-            value={data.tariffType}
+            value={data?.tariffType}
             onChange={(e) => setData({ ...data, tariffType: e.target.value })}
+            // onChange={(e) => handleTaryffType(e.target.value)}
             displayEmpty
             disableUnderline
             invalid={invalidInput && data.tariffType.length === 0}
             toolTipTitle={I18n.t('components.itemModal.requiredField')}
           >
-            <MenuItem disabled value="">
+            <MenuItem disabled value={data?.tariffType}>
               <SelectSpan placeholder={1}>
                 {I18n.t('pages.staggeredProposal.newStaggeredProposal.step1.choose')}
               </SelectSpan>
@@ -258,7 +252,7 @@ const Step1 = ({
           </FormLabel>
           <div style={{ marginTop: '-8px' }}>
             <PickerDateRange
-              defaultValue={data.vigencyDate}
+              defaultValue={vigencyDate}
               endDateLabel="Data Final"
               inputFormat=""
               language="pt-br"

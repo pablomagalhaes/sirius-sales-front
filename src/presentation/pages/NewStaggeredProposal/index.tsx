@@ -63,6 +63,9 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
   const [openImport, setOpenImport] = useState(false)
   const [openImportHandsOn, setOpenImportHandsOn] = useState(false)
 
+  const [importList, setImportList] = useState<any[]>([])
+
+  const [ShowList, setShowList] = useState<boolean>(false)
 
   const [open, setOpen] = useState(false)
   const [uploadType, setUploadType] = useState('')
@@ -119,24 +122,50 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
 
   const handleSave = (): void => {
     console.log('completed', completed)
+    console.log('handleSave staggeredproposal', staggeredproposal)
 
-    const params = staggeredproposal
+    const params = {
+      idTariffProposalStatus: staggeredproposal.idTariffProposalStatus,
+      idBusinessPartnerCustomer: staggeredproposal.idBusinessPartnerCustomer,
+      tariffType: staggeredproposal.tariffType,
+      dtValidity: staggeredproposal.dtValidity,
+      dtValidityEnd: staggeredproposal.dtValidityEnd,
+      proposalTariff: {}
+    }
 
-    console.log('params', params)
+    const newObject = staggeredproposal.proposalTariff.map((obj, index) => {
+      if (obj.origin !== '') {
+        return {
+          origin: obj.origin.split(' - ')[0],
+          destination: obj.destination.split(' - ')[0],
+          idAgent: obj.idAgent,
+          idBusinessPartnerTransporter: obj.idBusinessPartnerTransporter,
+          currency: obj.currency,
+          frequency: obj.frequency,
+          vlFrequency: obj.vlFrequency,
+          freightValues: [
+            {
+              vlMinimum: obj.freightValues[index].vlMinimum,
+              until45kg: obj.freightValues[index].until45kg,
+              until100kg: obj.freightValues[index].until100kg,
+              until300kg: obj.freightValues[index].until300kg,
+              until500kg: obj.freightValues[index].until500kg,
+              until1000kg: obj.freightValues[index].until1000kg,
+              buyOrSell: obj.freightValues[index].buyOrSell
+            }
+          ]
+        }
+      }
+    })
 
+    params.proposalTariff = newObject
     mutation.mutate(params)
 
-    // if (
-    //   completed.step1 &&
-    //   completed.step2
-    // ) {
-    //   const params = {
-    //     idBusinessPartnerCustomer: 1
-    //   }
-    //   mutation.mutate(params)
-    // } else {
-    //   console.log('error')
-    // }
+    if (completed.step1) {
+      mutation.mutate(params)
+    } else {
+      console.log('error')
+    }
   }
 
   const floatingButtonMenuItems = [
@@ -171,12 +200,12 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
 
   const MessageExitDialog = (): JSX.Element => {
     useEffect(() => {
-      if (filled.step1 ||
-        filled.step2) {
-        setLeavingPage(true)
-      } else {
-        setLeavingPage(false)
-      }
+      // if (filled.step1 ||
+      //   filled.step2) {
+      //   setLeavingPage(true)
+      // } else {
+      //   setLeavingPage(false)
+      // }
     }, [])
 
     return (
@@ -241,11 +270,11 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
     }
   }
 
-  useEffect(() => {
-    window.addEventListener('beforeunload', (event) => {
-      event.returnValue = setLeavingPage(true)
-    })
-  }, [])
+  // useEffect(() => {
+  //   window.addEventListener('beforeunload', (event) => {
+  //     event.returnValue = setLeavingPage(true)
+  //   })
+  // }, [])
 
   const useOnClickOutside = (handler): void => {
     useEffect(() => {
@@ -265,8 +294,14 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
   }
   const divRef = useRef()
 
-  const handler = useCallback(() => { setLeavingPage(true) }, [])
-  useOnClickOutside(handler)
+  // const handleImport = (importdata): void => {
+  //   console.log('index importdata', importdata)
+  //   setImportList(importdata)
+  // }
+  // const handler = useCallback(() => { setLeavingPage(true) }, [])
+  // useOnClickOutside(handler)
+
+  console.log('staggeredproposal index', staggeredproposal)
 
   return (
     <RootContainer>
@@ -349,6 +384,7 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
                 invalidInput={invalidInput}
                 setCompleted={setCompleted}
                 setFilled={setFilled}
+                ShowList={ShowList}
               />
             </div>
           </>
@@ -383,13 +419,15 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
               </AddButtonDiv>
             </Grid>
           </Grid>
-          <TariffImportModal 
-            setClose={() => setOpenImport(false)} 
-            open={openImport} 
+          <TariffImportModal
+            setClose={() => setOpenImport(false)}
+            open={openImport}
+            setShowList={() => setShowList(true)}
             />
-          <TariffImportHandsOnModal 
-            setClose={() => setOpenImportHandsOn(false)} 
-            open={openImportHandsOn} 
+          <TariffImportHandsOnModal
+            setClose={() => setOpenImportHandsOn(false)}
+            open={openImportHandsOn}
+            setShowList={() => setShowList(true)}
           />
         </MainContainer>
       }
