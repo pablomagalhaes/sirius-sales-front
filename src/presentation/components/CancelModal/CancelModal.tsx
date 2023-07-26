@@ -12,7 +12,7 @@ import {
   HeaderDiv,
   RowReverseDiv,
   Title,
-  CloseIconContainer,
+  CloseIconContainer
 } from '../StyledComponents/modalStyles'
 import { StatusStaggeredProposalStringEnum } from '../../../application/enum/statusProposalEnum'
 import { Button } from 'fiorde-fe-components'
@@ -20,7 +20,7 @@ import ControlledInput from '../ControlledInput'
 import {
   TARIFF_CANCEL_MODAL_BUTTON_CONFIRM,
   TARIFF_CANCEL_MODAL_BUTTON_CANCEL,
-  TARIFF_CANCEL_MODAL_INPUT_DETAIL,
+  TARIFF_CANCEL_MODAL_INPUT_DETAIL
 } from '../../../ids'
 
 interface CancelModalProps {
@@ -36,7 +36,7 @@ const CancelModal = ({
   setClose,
   setStatus,
   reference,
-  proposalId,
+  proposalId
 }: CancelModalProps): JSX.Element => {
   const [detail, setDetail] = useState('')
 
@@ -88,6 +88,7 @@ const CancelModal = ({
                 placeholder=''
                 onChange={(e) => setDetail(e.target.value)}
                 value={detail}
+                inputProps={{ maxLength: 150 }}
                 $space
               />
               <Typography variant="subtitle1" gutterBottom>

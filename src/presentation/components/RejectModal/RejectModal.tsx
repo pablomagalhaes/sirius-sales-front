@@ -131,6 +131,7 @@ const RejectModal = ({
                   placeholder=''
                   onChange={(e) => setDetail(e.target.value)}
                   value={detail}
+                  inputProps={{ maxLength: 150 }}
                   $space
                 />
               </Grid>
