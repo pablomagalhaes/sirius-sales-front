@@ -29,6 +29,7 @@ import API from '../../../../infrastructure/api'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { StyledPaper } from './StepsStyles'
 import { PickerDateRange } from 'fiorde-fe-components'
+import moment from 'moment'
 
 import { UpdateStaggeredProposal } from '../../../../domain/usecase'
 
@@ -71,7 +72,6 @@ const Step1 = ({
     vigencyDate: vigencyDate,
     proposalTariff: [
       {
-        idProposalTariff: null,
         origin: '',
         destination: '',
         idAgent: null,
@@ -79,17 +79,7 @@ const Step1 = ({
         currency: '',
         frequency: null,
         vlFrequency: null,
-        freightValues: [
-          {
-            vlMinimum: '',
-            until45kg: '',
-            until100kg: '',
-            until300kg: '',
-            until500kg: '',
-            until1000kg: '',
-            buyOrSell: ''
-          }
-        ]
+        freightValues: []
       }
     ]
   })
@@ -97,11 +87,11 @@ const Step1 = ({
   const operationList = [
     {
       id: 1,
-      operation: 'Importação'
+      operation: 'IMPORT'
     },
     {
       id: 2,
-      operation: 'Exportação'
+      operation: 'EXPORTATION'
     }
   ]
 
@@ -155,10 +145,12 @@ const Step1 = ({
   }, [data.tariffType])
 
   useEffect(() => {
+
+
     setStaggeredProposal({
       ...staggeredproposal,
-      dtValidity: String(vigencyDate[0]),
-      dtValidityEnd: String(vigencyDate[1])
+      dtValidity: moment(vigencyDate[0]).format(),
+      dtValidityEnd: moment(vigencyDate[1]).format()
     })
   }, [vigencyDate])
 

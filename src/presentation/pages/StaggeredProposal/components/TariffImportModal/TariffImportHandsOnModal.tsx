@@ -137,18 +137,11 @@ const TariffImportHandsOnModal = ({
     if (!validateData()) setInvalidInput(true)
     else {
       const arrTariff = []
-
-      console.log('addOn', data)
-      const total = staggeredproposal.proposalTariff.length
-
       const newObject = {
-        idProposalTariff: total + 1,
         origin: data.origin,
         destination: data.destiny,
         idAgent: data.agent.id,
-        nmAgent: data.agent.name,
         idBusinessPartnerTransporter: data.airCompany.id,
-        dsBusinessPartnerTransporter: data.airCompany.name,
         currency: data.currency,
         frequency: null,
         vlFrequency: null,
@@ -166,8 +159,9 @@ const TariffImportHandsOnModal = ({
       }
 
       arrTariff.push(newObject)
+
       const odd = staggeredproposal.proposalTariff
-      const combined = [newObject, ...odd]
+      const combined = [...odd, newObject]
 
       setStaggeredProposal({
         ...staggeredproposal,

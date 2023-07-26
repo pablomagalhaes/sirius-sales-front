@@ -89,11 +89,9 @@ const Step2 = ({
       {ShowList && (
         <>
           {staggeredproposal?.proposalTariff?.map((item, index) => {
-            if (item.origin !== '') {
-              return (
-                <InputRow key={index} item={item}/>
-              )
-            }
+            return (
+              <InputRow key={index} chave={index} item={item}/>
+            )
           })}
         <Divider />
         </>

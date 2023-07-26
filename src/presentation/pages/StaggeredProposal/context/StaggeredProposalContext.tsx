@@ -16,29 +16,7 @@ export const emptyStaggeredProposalValue: StaggeredProposalModel = {
   tariffType: '',
   dtValidity: '',
   dtValidityEnd: '',
-  proposalTariff: [
-    {
-      idProposalTariff: null,
-      origin: '',
-      destination: '',
-      idAgent: null,
-      idBusinessPartnerTransporter: null,
-      currency: '',
-      frequency: null,
-      vlFrequency: null,
-      freightValues: [
-        {
-          vlMinimum: '',
-          until45kg: '',
-          until100kg: '',
-          until300kg: '',
-          until500kg: '',
-          until1000kg: '',
-          buyOrSell: ''
-        }
-      ]
-    }
-  ]
+  proposalTariff: []
 }
 
 interface StaggeredProposalContextProviderProps {

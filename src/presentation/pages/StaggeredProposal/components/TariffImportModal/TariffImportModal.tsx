@@ -177,15 +177,10 @@ const TariffImportModal = ({
   }
 
   const handleImports = (): void => {
-    console.log('handleImports tariffData', tariffData)
-
-    const total = staggeredproposal.proposalTariff.length
 
     if (tariffData.length > 0) {
       const newObject = tariffData.map((obj, index) => {
         return {
-          ...obj,
-          idProposalTariff: total + 1,
           origin: data.origin,
           destination: data.destiny,
           idAgent: obj.idBusinessPartnerAgent,
@@ -214,7 +209,7 @@ const TariffImportModal = ({
       })
 
       const odd = staggeredproposal.proposalTariff
-      const combined = [newObject[0], ...odd]
+      const combined = [...odd, newObject[0]]
 
       setStaggeredProposal({
         ...staggeredproposal,
@@ -441,7 +436,6 @@ const TariffImportModal = ({
                     </TableBodyCell>
                     {Object.values(tariff).filter((_e, index) => index !== 0).map((each: any) =>
                       <TableBodyCell key={`${each}-${index}`} align="left">
-                        {/* {each} */}
                         {checkIsNumber(each)}
                       </TableBodyCell>)
                     }

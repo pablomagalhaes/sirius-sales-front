@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext, Fragment } from 'react'
 import {
   MenuItem,
   FormLabel,
@@ -16,21 +16,18 @@ import {
   TextInnerCell
 } from '../steps/StepsStyles'
 
-import IconComponent from '../../../../application/icons/IconComponent'
 import { withTheme } from 'styled-components'
 
 import ControlledSelect from '../../../components/ControlledSelect'
 import ControlledInput from '../../../components/ControlledInput'
-import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import API from '../../../../infrastructure/api'
-import Autocomplete from '@material-ui/lab/Autocomplete'
 import { MenuIconCell, FloatingMenu } from 'fiorde-fe-components'
 
 import { NumberInput, FormLabelInner, ButtonInner } from './styles'
 import FormatNumber from '../../../../application/utils/formatNumber'
+import { usePartnerList, useBusinessPartnerByType } from '../../../hooks'
 
 import { StaggeredProposalContext, StaggeredProposalProps } from '../../StaggeredProposal/context/StaggeredProposalContext'
-import { LineSeparator } from '../../NewProposalExportation/steps/StepsStyles'
 
 interface InputRowProps {
   invalidInput?: boolean
@@ -38,6 +35,7 @@ interface InputRowProps {
   setFilled?: (filled: any) => void
   theme: any
   item?: any
+  chave?: any
 }
 
 interface Frequency {
@@ -50,9 +48,13 @@ const InputRow = ({
   setCompleted,
   setFilled,
   theme,
-  item
+  item,
+  chave
 }: InputRowProps): JSX.Element => {
   const { staggeredproposal, setStaggeredProposal }: StaggeredProposalProps = useContext(StaggeredProposalContext)
+
+  const { partnerList: agentsList } = usePartnerList()
+  const { airPartners } = useBusinessPartnerByType()
 
   const [data, setData] = useState({
     until45kg: null,
@@ -64,14 +66,11 @@ const InputRow = ({
     vlFrequency: null
   })
 
-  // const [open, setOpen] = useState(false);
-
   const floatingButtonMenuItems = [
     {
       label: 'Excluir tarifa',
       onClick: () => {
         handleRemove()
-        // console.log('Item removido')
       }
     }
   ]
@@ -106,11 +105,6 @@ const InputRow = ({
     })()
   }, [])
 
-  // const decimalToString = (value: number | null | undefined): string => {
-  //   if (value !== null && value !== undefined) { return String(value?.toFixed(2)).replace('.', ',') }
-  //   return ''
-  // }
-
   const rgxFloat = /^[0-9]*,?[0-9]*$/
   const validateFloatInput = (value: string): RegExpMatchArray | null => {
     return value.match(rgxFloat)
@@ -126,10 +120,8 @@ const InputRow = ({
   }
 
   const handleRemove = (): void => {
-    const tariff = item.idProposalTariff
     const staggered = staggeredproposal?.proposalTariff
-    const newArr = staggered.filter((obj) => obj.idProposalTariff !== tariff)
-
+    const newArr = staggered.filter((item, index) => index !== chave)
     setStaggeredProposal({
       ...staggeredproposal,
       proposalTariff: newArr
@@ -137,42 +129,54 @@ const InputRow = ({
   }
 
   useEffect(() => {
-    console.log('handleValues staggeredproposal', staggeredproposal)
-    console.log('handleValues data', data)
-
-    const id = item.idProposalTariff
     const originalData = staggeredproposal?.proposalTariff
 
-    const updatedData = originalData.map((obj, index) => {
-      if (obj.idProposalTariff === id) {
-        return {
-          ...obj,
-          frequency: data.frequency,
-          vlFrequency: data.vlFrequency,
-          freightValues: [
-            {
-              vlMinimum: obj?.freightValues[index].vlMinimum,
-              until45kg: data.until45kg !== null ? String(data.until45kg) : obj.freightValues[index].until45kg,
-              until100kg: data.until100kg !== null ? String(data.until100kg) : obj.freightValues[index].until100kg,
-              until300kg: data.until300kg !== null ? String(data.until300kg) : obj.freightValues[index].until300kg,
-              until500kg: data.until500kg !== null ? String(data.until500kg) : obj.freightValues[index].until500kg,
-              until1000kg: data.until1000kg !== null ? String(data.until1000kg) : obj.freightValues[index].until1000kg,
-              buyOrSell: obj?.freightValues[index].buyOrSell
-            }
-          ]
+    if (data.until45kg !== null || data.until100kg !== null || data.until300kg !== null || data.until500kg !== null || data.until1000kg !== null) {
+      const updatedData = originalData.map((obj, index) => {
+        if (index === chave) {
+          return {
+            ...obj,
+            frequency: data.frequency,
+            vlFrequency: data.vlFrequency,
+            freightValues: [
+              obj?.freightValues[0],
+              {
+                vlMinimum: obj?.freightValues[0].vlMinimum,
+                until45kg: String(data.until45kg) ,
+                until100kg: String(data.until100kg),
+                until300kg: String(data.until300kg),
+                until500kg: String(data.until500kg),
+                until1000kg: String(data.until1000kg),
+                buyOrSell: 'SELL'
+              }
+            ]
+          }
+        } else {
+          return obj
         }
-      }
-    })
+      })
 
-    console.log('updatedData', updatedData)
-    
+      setStaggeredProposal({
+        ...staggeredproposal,
+        proposalTariff: updatedData
+      })
+    }
   }, [data])
 
-  console.log('item', item)
+  const getAgentName = (id): void => {
+    const { simpleName } = agentsList.find((item: any) => item.id === id)
+    return simpleName
+  }
+
+  const getBusinessPartnerName = (id): void => {
+    const getObj = airPartners.find((item: any) => item.id === id)
+    const simpleName = getObj.businessPartner.simpleName
+    return simpleName
+  }
 
   return (
     <>
-      <Title>2.1 De {item?.origin} - {item?.destination}</Title>
+      <Title>2.{(chave + 1)} De {item?.origin} - {item?.destination}</Title>
       <Grid
         container
         spacing={1}
@@ -231,73 +235,78 @@ const InputRow = ({
       >
         <Grid item xs={2}>
           <FormLabelInner component="legend">
-            <TextCell>{item?.nmAgent}</TextCell>
+            <TextCell>{getAgentName(item?.idAgent)}</TextCell>
           </FormLabelInner>
         </Grid>
 
         <Grid item xs={2}>
-          <FormLabelInner component="legend">{item?.dsBusinessPartnerTransporter}</FormLabelInner>
+          <FormLabelInner component="legend">
+            {getBusinessPartnerName(item?.idBusinessPartnerTransporter)}
+          </FormLabelInner>
         </Grid>
+
         <Grid item xs={1}>
           <FormLabelInner component="legend">{item?.currency}</FormLabelInner>
         </Grid>
 
         {item?.freightValues?.map((line, index: number) => {
-          return (
-              <>
-                <Grid item xs={1}>
-                  <FormLabelInner component="legend">
-                    {FormatNumber.rightToLeftFormatter(line.vlMinimum, 2)}
-                  </FormLabelInner>
-                </Grid>
-                <Grid item xs={1}>
-                  <FormLabelInner component="legend">
-                    {FormatNumber.rightToLeftFormatter(line.until45kg, 2)}
-                  </FormLabelInner>
-                </Grid>
-                <Grid item xs={1}>
-                  <FormLabelInner component="legend">
-                    {FormatNumber.rightToLeftFormatter(line.until100kg, 2)}
-                  </FormLabelInner>
-                </Grid>
-                <Grid item xs={1}>
-                  <FormLabelInner component="legend">
-                    {FormatNumber.rightToLeftFormatter(line.until300kg, 2)}
-                  </FormLabelInner>
-                </Grid>
-                <Grid item xs={1}>
-                  <FormLabelInner component="legend">
-                    {FormatNumber.rightToLeftFormatter(line.until500kg, 2)}
-                  </FormLabelInner>
-                </Grid>
-                <Grid item xs={1}>
-                  <FormLabelInner component="legend">
-                    {FormatNumber.rightToLeftFormatter(line.until1000kg, 2)}
-                  </FormLabelInner>
-                </Grid>
-                <Grid item xs={1}>
-                  <ButtonInner aria-describedby={id} onClick={handleClick}>
-                    <MenuIconCell />
-                  </ButtonInner>
-                 <Popover
-                      id={id}
-                      open={open}
-                      anchorEl={anchorEl}
-                      onClose={handleClose}
-                      anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'center'
-                      }}
-                      transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'center'
-                      }}
-                    >
-                        <FloatingMenu menuItems={floatingButtonMenuItems} />
-                    </Popover>
-                </Grid>
-              </>
-          )
+          if (line?.buyOrSell !== 'SELL') {
+            return (
+              <Fragment key={index}>
+                  <Grid key={index} item xs={1}>
+                    <FormLabelInner component="legend">
+                      {FormatNumber.rightToLeftFormatter(line?.vlMinimum, 2)}
+                    </FormLabelInner>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <FormLabelInner component="legend">
+                      {FormatNumber.rightToLeftFormatter(line?.until45kg, 2)}
+                    </FormLabelInner>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <FormLabelInner component="legend">
+                      {FormatNumber.rightToLeftFormatter(line?.until100kg, 2)}
+                    </FormLabelInner>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <FormLabelInner component="legend">
+                      {FormatNumber.rightToLeftFormatter(line?.until300kg, 2)}
+                    </FormLabelInner>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <FormLabelInner component="legend">
+                      {FormatNumber.rightToLeftFormatter(line?.until500kg, 2)}
+                    </FormLabelInner>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <FormLabelInner component="legend">
+                      {FormatNumber.rightToLeftFormatter(line?.until1000kg, 2)}
+                    </FormLabelInner>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <ButtonInner aria-describedby={id} onClick={handleClick}>
+                      <MenuIconCell />
+                    </ButtonInner>
+                  <Popover
+                        id={id}
+                        open={open}
+                        anchorEl={anchorEl}
+                        onClose={handleClose}
+                        anchorOrigin={{
+                          vertical: 'bottom',
+                          horizontal: 'center'
+                        }}
+                        transformOrigin={{
+                          vertical: 'top',
+                          horizontal: 'center'
+                        }}
+                      >
+                          <FloatingMenu menuItems={floatingButtonMenuItems} />
+                      </Popover>
+                  </Grid>
+              </Fragment>
+            )
+          }
         })}
 
       </Grid>

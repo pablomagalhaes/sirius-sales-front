@@ -8,7 +8,6 @@ export interface StaggeredProposalModel {
   proposalTariff: ProposalTariff[]
 }
 interface ProposalTariff {
-  idProposalTariff?: number
   origin?: string
   destination: string
   idAgent: number

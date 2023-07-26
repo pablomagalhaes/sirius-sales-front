@@ -1,25 +1,18 @@
-import React, { useState, useCallback, useEffect, useContext, useRef } from 'react'
+import React, { useState, useEffect, useContext, useRef } from 'react'
 import { Button, ExitDialog, FloatingMenu, Steps, Messages } from 'fiorde-fe-components'
 import { Breadcrumbs, Link, Grid } from '@material-ui/core/'
 import {
   ButtonContainer,
   Header,
   MainContainer,
-  ReferenceCode,
   RootContainer,
   TopContainer,
-  UserContainer,
-  Username,
   MessageContainer,
-  Status,
-  ButtonWrapper,
-  ButtonDiv,
   ImportButtonDiv,
   AddButtonDiv
 } from './style'
 import { withTheme } from 'styled-components'
 import { I18n } from 'react-redux-i18n'
-import IconComponent from '../../../application/icons/IconComponent'
 import Step1 from './steps/Step1'
 import Step2 from './steps/Step2'
 
@@ -41,39 +34,22 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
   const { staggeredproposal, setStaggeredProposal }: StaggeredProposalProps = useContext(StaggeredProposalContext)
 
   const [action, setAction] = useState('')
-  const [agentList, setAgentList] = useState<[]>([])
   const [clicked, setClicked] = useState({ id: '', clicked: false })
-  const [containerTypeList, setContainerTypeList] = useState<any[]>([])
-  const [costData, setCostData] = useState(0)
-  const [cw, setCw] = useState(0)
-  const [cwSale, setCwSale] = useState(0)
-  const [duplicateMode, setduplicateMode] = useState(false)
-  const [editMode, setEditMode] = useState(false)
   const [hover, setHover] = useState({ id: '', hover: false })
   const [invalidInput, setInvalidInput] = useState(false)
   const [leavingPage, setLeavingPage] = useState(false)
   const [loadExistingProposal, setLoadExistingProposal] = useState(true)
   const [modal, setModal] = useState('')
-  const [totalCosts, setTotalCosts] = useState()
-  const [proposalType, setProposalType] = useState('')
-  const [serviceList, setServiceList] = useState<any[]>([])
   const [showSaveMessage, setShowSaveMessage] = useState(false)
-  const [specifications, setSpecifications] = useState('')
 
   const [openImport, setOpenImport] = useState(false)
   const [openImportHandsOn, setOpenImportHandsOn] = useState(false)
 
-  const [importList, setImportList] = useState<any[]>([])
-
   const [ShowList, setShowList] = useState<boolean>(false)
-
-  const [open, setOpen] = useState(false)
-  const [uploadType, setUploadType] = useState('')
 
   const queryClient = useQueryClient()
 
   const history = useHistory()
-  const location = useLocation()
 
   const [completed, setCompleted] = useState({
     step1: false,
@@ -121,47 +97,27 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
   })
 
   const handleSave = (): void => {
-    console.log('completed', completed)
-    console.log('handleSave staggeredproposal', staggeredproposal)
-
-    const params = {
-      idTariffProposalStatus: staggeredproposal.idTariffProposalStatus,
-      idBusinessPartnerCustomer: staggeredproposal.idBusinessPartnerCustomer,
-      tariffType: staggeredproposal.tariffType,
-      dtValidity: staggeredproposal.dtValidity,
-      dtValidityEnd: staggeredproposal.dtValidityEnd,
-      proposalTariff: {}
-    }
-
-    const newObject = staggeredproposal.proposalTariff.map((obj, index) => {
-      if (obj.origin !== '') {
-        return {
-          origin: obj.origin.split(' - ')[0],
-          destination: obj.destination.split(' - ')[0],
-          idAgent: obj.idAgent,
-          idBusinessPartnerTransporter: obj.idBusinessPartnerTransporter,
-          currency: obj.currency,
-          frequency: obj.frequency,
-          vlFrequency: obj.vlFrequency,
-          freightValues: [
-            {
-              vlMinimum: obj.freightValues[index].vlMinimum,
-              until45kg: obj.freightValues[index].until45kg,
-              until100kg: obj.freightValues[index].until100kg,
-              until300kg: obj.freightValues[index].until300kg,
-              until500kg: obj.freightValues[index].until500kg,
-              until1000kg: obj.freightValues[index].until1000kg,
-              buyOrSell: obj.freightValues[index].buyOrSell
-            }
-          ]
-        }
-      }
-    })
-
-    params.proposalTariff = newObject
-    mutation.mutate(params)
-
     if (completed.step1) {
+      const params = {
+        idBusinessPartnerCustomer: staggeredproposal.idBusinessPartnerCustomer,
+        tariffType: staggeredproposal.tariffType,
+        idTariffProposalStatus: staggeredproposal.idTariffProposalStatus,
+        dtValidity: staggeredproposal.dtValidity,
+        dtValidityEnd: staggeredproposal.dtValidityEnd,
+        proposalTariff: []
+      }
+
+      const newObject = staggeredproposal?.proposalTariff.map((obj, index) => {
+        if (obj?.origin !== '') {
+          return {
+            ...obj,
+            origin: obj.origin.split(' - ')[0],
+            destination: obj.destination.split(' - ')[0]
+          }
+        }
+      })
+
+      params.proposalTariff = newObject
       mutation.mutate(params)
     } else {
       console.log('error')
@@ -300,8 +256,6 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
   // }
   // const handler = useCallback(() => { setLeavingPage(true) }, [])
   // useOnClickOutside(handler)
-
-  console.log('staggeredproposal index', staggeredproposal)
 
   return (
     <RootContainer>
