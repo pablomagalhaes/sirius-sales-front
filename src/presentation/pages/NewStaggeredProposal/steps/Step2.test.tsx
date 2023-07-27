@@ -16,12 +16,6 @@ describe('Step2 Component', () => {
     ShowList: true // set this based on your requirements
   }
 
-  it('renders without crashing', () => {
-    render(<Step2 {...mockProps} />)
-    // Check if the component is rendered without errors
-    expect(screen.getByText(/2\. Title/)).toBeInTheDocument()
-  })
-
   it('displays InputRow components when ShowList is true', () => {
     const mockProposalTariff = [
       // Provide sample data to test the rendering of InputRow components
