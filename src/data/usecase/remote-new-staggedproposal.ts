@@ -1,15 +1,15 @@
 import { HttpClient, HttpStatusCode } from '../protocols/http'
 import { StaggeredProposalModel } from '../models/staggered-proposal-model'
-import { UpdateStaggeredProposal } from '../../domain/usecase/update-staggered-proposal'
+import { NNewStaggeredProposal } from '../../domain/usecase/new-staggered-proposal'
 import { AccessDeniedError, UnexpectedError } from '../../domain/errors'
 
-export class RemoteUpdateStaggeredProposal implements UpdateStaggeredProposal {
+export class RemoteNewStaggeredProposal implements NNewStaggeredProposal {
   constructor (
     private readonly url: string,
-    private readonly httpClient: HttpClient<RemoteUpdateStaggeredProposal.Model>
+    private readonly httpClient: HttpClient<RemoteNewStaggeredProposal.Model>
   ) {}
 
-  async updateStaggered (params: UpdateStaggeredProposal.Params): Promise<UpdateStaggeredProposal.Model> {
+  async newStaggered (params: NNewStaggeredProposal.Params): Promise<NNewStaggeredProposal.Model> {
     const httpResponse = await this.httpClient.request({
       url: this.url,
       method: 'post',
@@ -24,6 +24,6 @@ export class RemoteUpdateStaggeredProposal implements UpdateStaggeredProposal {
   }
 }
 
-export namespace RemoteUpdateStaggeredProposal {
+export namespace RemoteNewStaggeredProposal {
   export type Model = StaggeredProposalModel
 }

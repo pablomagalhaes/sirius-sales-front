@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
-import { Home, NewProposal, Proposal, NewProposalExportation, Tariff, TariffProcessing, NewStaggeredProposal } from '../../pages'
+import { Home, NewProposal, Proposal, NewProposalExportation, Tariff, TariffProcessing } from '../../pages'
 import Wrapper from '../Wrapper'
 import { ProposalContextProvider } from '../../pages/NewProposal/context/ProposalContext'
 import { TariffContextProvider } from '../../pages/Tariff/context/TariffContext'

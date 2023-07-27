@@ -32,7 +32,7 @@ import {
   STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP1__INPUT_VIGENCY
 } from '../../../../ids'
 
-import { UpdateStaggeredProposal } from '../../../../domain/usecase'
+import { NNewStaggeredProposal } from '../../../../domain/usecase'
 
 import { StaggeredProposalContext, StaggeredProposalProps } from '../../StaggeredProposal/context/StaggeredProposalContext'
 
@@ -46,7 +46,7 @@ export interface Step1Props {
   setFilled: (filled: any) => void
   filled: Filled
   setStepLoaded: (steps: any) => void
-  UpdateStaggeredProposal?: UpdateStaggeredProposal
+  NewStaggeredProposal?: NNewStaggeredProposal
 }
 
 const Step1 = ({
@@ -56,7 +56,7 @@ const Step1 = ({
   setFilled,
   filled,
   setStepLoaded,
-  UpdateStaggeredProposal
+  NewStaggeredProposal
 }: Step1Props): JSX.Element => {
   const [vigencyDate, setVigencyDate] = React.useState([null, null])
   const [partnerList, setPartnerList] = useState<any[]>([])

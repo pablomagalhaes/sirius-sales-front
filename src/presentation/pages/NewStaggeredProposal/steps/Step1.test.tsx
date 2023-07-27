@@ -15,7 +15,7 @@ describe('Step1 Component', () => {
     setFilled: jest.fn(),
     filled: { step2: true }, // set this based on your requirements
     setStepLoaded: jest.fn(),
-    UpdateStaggeredProposal: jest.fn()
+    NewStaggeredProposal: jest.fn()
   }
 
   it('should render the searchClient input components', () => {

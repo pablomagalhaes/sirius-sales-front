@@ -17,7 +17,7 @@ import Step1 from './steps/Step1'
 import Step2 from './steps/Step2'
 
 import { useHistory } from 'react-router-dom'
-import { UpdateStaggeredProposal } from '../../../domain/usecase'
+import { NNewStaggeredProposal } from '../../../domain/usecase'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { StaggeredProposalContext, StaggeredProposalProps } from '../StaggeredProposal/context/StaggeredProposalContext'
@@ -35,10 +35,10 @@ import {
 
 type StaggeredProps = {
   theme: any
-  updateStaggeredProposal: UpdateStaggeredProposal
+  newStaggeredProposal: NNewStaggeredProposal
 }
 
-const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps): JSX.Element => {
+const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): JSX.Element => {
   const { staggeredproposal, setStaggeredProposal }: StaggeredProposalProps = useContext(StaggeredProposalContext)
 
   const [action, setAction] = useState('')
@@ -97,7 +97,7 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
 
   const mutation = useMutation({
     mutationFn: async (newData: any) => {
-      return await updateStaggeredProposal.updateStaggered(newData)
+      return await newStaggeredProposal.newStaggered(newData)
 
     },
     onSuccess: () => {
