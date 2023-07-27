@@ -90,3 +90,39 @@ export const TARIFF_REJECT_MODAL_BUTTON_CANCEL = `${PREFIX_IDS}_tariff-reject-mo
 export const TARIFF_REJECT_MODAL_BUTTON_CONFIRM = `${PREFIX_IDS}_tariff-reject-modal_button_confirm`
 export const TARIFF_REJECT_MODAL_RADIO_PRICE = `${PREFIX_IDS}_tariff-reject-modal_radio_price`
 export const TARIFF_REJECT_MODAL_RADIO_SERVICE = `${PREFIX_IDS}_tariff-reject-modal_radio_service`
+
+// Cancel Modal
+export const TARIFF_CANCEL_MODAL_INPUT_DETAIL = `${PREFIX_IDS}_tariff-reject-modal_input_detail`
+export const TARIFF_CANCEL_MODAL_BUTTON_CANCEL = `${PREFIX_IDS}_tariff-reject-modal_button_cancel`
+export const TARIFF_CANCEL_MODAL_BUTTON_CONFIRM = `${PREFIX_IDS}_tariff-reject-modal_button_confirm`
+
+// STAGGEREDPROPOSAL NEWSTAGGEREDPROPOSAL
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_LINK_HOME = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal_link_home`
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_BUTTON_SAVE = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal_button_save`
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_BUTTON_MODAL_IMPORT = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal_button_modal_import`
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_BUTTON_MODAL_IMPORT_ON_HANDS = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal_button_modal_import_on_hands`
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_SPAN_MAINPAGE = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal_span_mainpage`
+
+// STAGGEREDPROPOSAL NEWSTAGGEREDPROPOSAL STEP1
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP1__INPUT_CLIENT = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step1_select_client`
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP1__SELECT_TARIFFTYPE = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step1_select_tarifftype`
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP1__INPUT_VIGENCY = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step1_input_vigency`
+
+// STAGGEREDPROPOSAL NEWSTAGGEREDPROPOSAL STEP2
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_AGENT = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step2_label_agent`
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_CIAAREA = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step2_label_ciaarea`
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_COIN = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step2_label_coin`
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_VMINIMUM = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step2_label_vminimum`
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_UNTIL45kg = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step2_label_until45kg`
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_UNTIL100kg = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step2_label_until100kg`
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_UNTIL300kg = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step2_label_until300kg`
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_UNTIL500kg = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step2_label_until500kg`
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_UNTIL1000kg = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step2_label_until1000kg`
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__INPUT_UNTIL45kg = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step2_input_until45kg`
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__INPUT_UNTIL100kg = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step2_input_until100kg`
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__INPUT_UNTIL300kg = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step2_input_until300kg`
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__INPUT_UNTIL500kg = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step2_input_until500kg`
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__INPUT_UNTIL1000kg = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step2_input_until1000kg`
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__BUTTON_DELETE = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step2_button_delete`
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__INPUT_FREQUENCY = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step2_input_frequency`
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__SELECT_VLFREQUENCY = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step2_select_vlfrequency`

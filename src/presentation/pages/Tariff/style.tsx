@@ -279,18 +279,6 @@ const TableCell = withStyles({
   }
 })(MuiTableCell)
 
-const IconDisplay = styled.div`
-  display: flex;
-
-  .icon {
-    margin-right: 5px;
-  }
-`
-const RedColorSpan = styled.span`
-  color: ${(props: any) =>
-    props.theme?.commercial?.components?.itemModal?.redAsterisk};
-`
-
 export {
   RootContainer,
   ListHeaderContainer,
@@ -316,7 +304,5 @@ export {
   MidleTypography,
   GridButton,
   RowButton,
-  IconDisplay,
-  RedColorSpan,
   ColButton
 }

@@ -25,6 +25,14 @@ import { StaggeredProposalContext, StaggeredProposalProps } from '../StaggeredPr
 import TariffImportModal from '../StaggeredProposal/components/TariffImportModal/TariffImportModal'
 import TariffImportHandsOnModal from '../StaggeredProposal/components/TariffImportModal/TariffImportHandsOnModal'
 
+import { 
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_LINK_HOME,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_BUTTON_SAVE,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_BUTTON_MODAL_IMPORT,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_BUTTON_MODAL_IMPORT_ON_HANDS,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_SPAN_MAINPAGE
+} from '../../../ids'
+
 type StaggeredProps = {
   theme: any
   updateStaggeredProposal: UpdateStaggeredProposal
@@ -257,6 +265,7 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
       <Header>
         <Breadcrumbs separator=">" aria-label="breadcrumb">
           <Link
+            id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_LINK_HOME}
             className="breadcrumbInitial"
             color="inherit"
             onClick={() => history.push('/')}
@@ -264,7 +273,7 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
           >
             Home
           </Link>
-          <span className="breadcrumbEnd">{I18n.t('pages.staggeredProposal.title')}</span>
+          <span id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_SPAN_MAINPAGE} className="breadcrumbEnd">{I18n.t('pages.staggeredProposal.title')}</span>
         </Breadcrumbs>
       </Header>
       <TopContainer>
@@ -278,6 +287,7 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
         />
         <ButtonContainer>
           <Button
+            id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_BUTTON_SAVE}
             backgroundGreen
             disabled={false}
             icon="arrow"
@@ -319,6 +329,7 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
             <Grid item xs={2}>
               <ImportButtonDiv>
                 <Button
+                  id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_BUTTON_MODAL_IMPORT}
                   onAction={() => {
                     setOpenImport(true)
                   }}
@@ -332,6 +343,7 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
             <Grid item xs={2}>
               <AddButtonDiv>
                 <Button
+                  id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_BUTTON_MODAL_IMPORT_ON_HANDS}
                   onAction={() => {
                     setOpenImportHandsOn(true)
                   }}

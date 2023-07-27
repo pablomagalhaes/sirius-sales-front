@@ -26,6 +26,12 @@ import { StyledPaper } from './StepsStyles'
 import { PickerDateRange } from 'fiorde-fe-components'
 import moment from 'moment'
 
+import { 
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP1__INPUT_CLIENT,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP1__SELECT_TARIFFTYPE,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP1__INPUT_VIGENCY
+} from '../../../../ids'
+
 import { UpdateStaggeredProposal } from '../../../../domain/usecase'
 
 import { StaggeredProposalContext, StaggeredProposalProps } from '../../StaggeredProposal/context/StaggeredProposalContext'
@@ -182,7 +188,7 @@ const Step1 = ({
                 <ControlledInput
                   {...params}
                   data-testid="search-client"
-                  id="search-client"
+                  id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP1__INPUT_CLIENT}
                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
                   invalid={data.idBusinessPartnerCustomer === null && invalidInput}
                   variant="outlined"
@@ -218,6 +224,7 @@ const Step1 = ({
             {<RedColorSpan> *</RedColorSpan>}
           </FormLabel>
           <ControlledSelect
+            id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP1__SELECT_TARIFFTYPE}
             data-testid="tariffType"
             value={operation}
             // onChange={(e) => setData({ ...data, tariffType: e.target.value })}

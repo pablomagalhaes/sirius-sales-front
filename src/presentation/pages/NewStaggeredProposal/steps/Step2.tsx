@@ -10,8 +10,8 @@ import {
 } from './StepsStyles'
 
 import { withTheme } from 'styled-components'
-import InputRow from '../components/InputRow'
 
+import InputRow from '../components/InputRow'
 import { StaggeredProposalContext, StaggeredProposalProps } from '../../StaggeredProposal/context/StaggeredProposalContext'
 
 interface Step2Props {

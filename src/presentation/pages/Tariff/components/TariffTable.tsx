@@ -1,20 +1,18 @@
 import React, { useState, useEffect, useContext } from 'react'
 
 import { Table, TableBody, TableContainer, TableHead, TableRow, Button, Popover } from '@material-ui/core'
-import { Pagination, ListSwitcher, MenuIconCell, FloatingMenu, ControlledToolTip } from 'fiorde-fe-components'
-import { PaginationContainer, PaginationMainContainer, MainTariffContainer, TableCell, IconDisplay, RedColorSpan } from '../style'
+import { Pagination, ListSwitcher, MenuIconCell, FloatingMenu } from 'fiorde-fe-components'
+import { PaginationContainer, PaginationMainContainer, MainTariffContainer, TableCell } from '../style'
 import AirTariffModal from './AirTariffModal/AirTariffModal'
 import SeaFclTariffModal from './SeaFclTariffModal/SeaFclTariffModal'
 import SeaLclTariffModal from './SeaLclTariffModal/SeaLclTariffModal'
 import LandTariffModal from './LandTariffModal/LandTariffModal'
-import WarnIconClicked from '../../../../application/icons/WarnClicked'
-import AlertClickedIcon from '../../../../application/icons/AlertClicked'
-import moment from 'moment'
 import { I18n } from 'react-redux-i18n'
 import useTariffsByCountry from '../../../hooks/tariff/useTariffsByCountry'
 import { TariffContext } from '../context/TariffContext'
 import { TariffItemsTypes } from '../../../../application/enum/tariffEnum'
 import { ModalTypes, TxChargeTypes } from '../../../../application/enum/enum'
+import ValidityDisplay from '../../../components/ValidityDisplay/ValidityDisplay'
 
 import { convertToDecimal } from '../helpers'
 
@@ -132,43 +130,6 @@ const TariffTable = ({
     }
     return array
   }
-  const validityDisplay = (validity: string): JSX.Element => {
-    const today = moment().startOf('day')
-    const date = moment(validity, 'DD/MM/YYYY')
-    const timeDiff = date.diff(today, 'days')
-    if (timeDiff < 0) {
-      return (
-      <IconDisplay>
-        <ControlledToolTip
-          placement="top"
-          title={I18n.t('pages.tariff.tariffTable.overdue')}
-          open={true}
-          disabled={true}
-          getTitle={false}
-        >
-          <div className='icon'><AlertClickedIcon/></div>
-        </ControlledToolTip>
-        <RedColorSpan>{validity}</RedColorSpan>
-      </IconDisplay>
-      )
-    } else if (timeDiff <= 7) {
-      return (
-      <IconDisplay>
-        <ControlledToolTip
-          placement="top"
-          title={`${String(I18n.t('pages.tariff.tariffTable.validUntil'))} ${timeDiff} ${String(I18n.t('pages.tariff.tariffTable.days'))}`}
-          open={true}
-          disabled={true}
-          getTitle={false}
-        >
-          <div className='icon'><WarnIconClicked/></div>
-        </ControlledToolTip>
-        {validity}
-      </IconDisplay>
-      )
-    }
-    return <>{validity}</>
-  }
 
   useEffect(() => {
     const payload = filter.tariffModalType === ModalTypes.Sea
@@ -212,11 +173,11 @@ const TariffTable = ({
                 {filter.tariffModalType === ModalTypes.Sea
                   ? Object.keys(I18n.t(`pages.tariff.tariffTable.columns.SEA.${seaType}`)).map((each: string) =>
                     <TableCell key={each} align="left">
-                      {each === 'validity' ? validityDisplay(row[each]) : row[each] }
+                      {each === 'validity' ? <ValidityDisplay validity={row[each]} /> : row[each] }
                     </TableCell>)
                   : Object.keys(I18n.t(`pages.tariff.tariffTable.columns.${String(filter.tariffModalType)}`)).map((each: string) =>
                     <TableCell key={each} align="left">
-                      {each === 'validity' ? validityDisplay(row[each]) : row[each] }
+                      {each === 'validity' ? <ValidityDisplay validity={row[each]} /> : row[each] }
                     </TableCell>)
                 }
                 <TableCell>
