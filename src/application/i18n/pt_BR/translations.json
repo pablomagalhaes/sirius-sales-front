@@ -608,7 +608,9 @@
           "operation": "Operação",
           "vigencyDate": "Vigência",
           "choose": "Escolha...",
-          "client": "Cliente"
+          "client": "Cliente",
+          "import": "Importação",
+          "export": "Exportação"
         },
         "step2": {
           "title": "Tarifas",
@@ -622,6 +624,11 @@
           "300": "+300kg",
           "500": "+500kg",
           "1ton": "+1ton"
+        },
+        "saveMessage": {
+          "buttonText": "Voltar à lista",
+          "closeMessage": "Continuar editando",
+          "message": "Proposta salva com sucesso"
         }
       },
       "workStation": {

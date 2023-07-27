@@ -604,7 +604,9 @@
           "operation": "Operação",
           "vigencyDate": "Vigência",
           "choose": "Escolha...",
-          "client": "Cliente"
+          "client": "Cliente",
+          "import": "Import",
+          "export": "Exportation"
         },
         "step2": {
           "title": "Tarifas",
@@ -635,7 +637,12 @@
           "export": "Exportação",
           "origin": "Origem",
           "destination": "Destino"
-        }
+        },
+        "saveMessage": {
+          "buttonText": "Voltar à lista",
+          "closeMessage": "Continuar editando",
+          "message": "Proposta salva com sucesso"
+       }
       }
     }
   }

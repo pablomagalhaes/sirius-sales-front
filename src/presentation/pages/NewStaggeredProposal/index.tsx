@@ -16,9 +16,9 @@ import { I18n } from 'react-redux-i18n'
 import Step1 from './steps/Step1'
 import Step2 from './steps/Step2'
 
-import { useHistory, useLocation } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { UpdateStaggeredProposal } from '../../../domain/usecase'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { StaggeredProposalContext, StaggeredProposalProps } from '../StaggeredProposal/context/StaggeredProposalContext'
 
@@ -90,9 +90,11 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
   const mutation = useMutation({
     mutationFn: async (newData: any) => {
       return await updateStaggeredProposal.updateStaggered(newData)
+
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['updateStaggedProposal'])
+      setShowSaveMessage(true)
     }
   })
 
@@ -250,13 +252,6 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
   }
   const divRef = useRef()
 
-  // const handleImport = (importdata): void => {
-  //   console.log('index importdata', importdata)
-  //   setImportList(importdata)
-  // }
-  // const handler = useCallback(() => { setLeavingPage(true) }, [])
-  // useOnClickOutside(handler)
-
   return (
     <RootContainer>
       <Header>
@@ -271,30 +266,6 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
           </Link>
           <span className="breadcrumbEnd">{I18n.t('pages.staggeredProposal.title')}</span>
         </Breadcrumbs>
-        {/* <UserContainer>
-          {editMode
-            ? <>
-              {I18n.t('pages.newProposal.reference')}
-              <ReferenceCode>
-                {proposal?.referenceProposal}
-              </ReferenceCode>
-            </>
-            : null
-          }
-          {I18n.t('pages.newProposal.encharged')}
-          <IconComponent name="user" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
-          <Username>
-            {getEnchargedFullname()}
-          </Username>
-          {editMode && proposal.idProposalStatus === 1
-            ? <Status className="open">{I18n.t('pages.proposal.table.openLabel')}</Status>
-            : null
-          }
-          {editMode && proposal.idProposalStatus === 3
-            ? <Status className="inReview">{I18n.t('pages.proposal.table.inRevisionLabel')}</Status>
-            : null
-          }
-        </UserContainer> */}
       </Header>
       <TopContainer>
         <Steps
@@ -388,13 +359,12 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
       {showSaveMessage &&
         <MessageContainer>
           <Messages
-            buttonText={I18n.t('pages.newProposal.saveMessage.buttonText')}
+            buttonText={I18n.t('pages.staggeredProposal.newStaggeredProposal.saveMessage.buttonText')}
             closable={true}
             closeAlert={() => { setShowSaveMessage(false) } }
-            closeMessage={I18n.t('pages.newProposal.saveMessage.closeMessage')}
-            goBack={() => { history.push('/proposta') } }
-            message={I18n.t('pages.newProposal.saveMessage.message')}
-            // message={`${String(I18n.t('pages.newProposal.saveMessage.message'))} ${String(proposal?.referenceProposal)}.`}
+            closeMessage={I18n.t('pages.staggeredProposal.newStaggeredProposal.saveMessage.closeMessage')}
+            goBack={() => { history.push('/propostaEscalonada') } }
+            message={I18n.t('pages.staggeredProposal.newStaggeredProposal.saveMessage.message')}
             severity={'success'}
           />
         </MessageContainer>}

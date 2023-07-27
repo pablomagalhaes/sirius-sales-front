@@ -8,11 +8,21 @@ const NumberInput = styled(NumberFormat)`
   }
 `
 
-const FormLabelInner = styled(FormLabel)`
-  color: #000000!important;
-  font-weight: bold!important;
+const FormLabelHeader = styled(FormLabel)`
+  color: #545454!important;
+  font-weight: 400!important;
   letter: 2%!important;
-  font-size: 18px!important;
+  font-size: 14px!important;
+  text-align: ${(props) => (props.center ? 'center' : 'left')};
+  
+`
+
+const FormLabelInner = styled(FormLabel)`
+  color: #222222!important;
+  font-weight: 500!important;
+  letter: 2%!important;
+  font-size: 16px!important;
+  text-align: ${(props) => (props.center ? 'center' : 'left')};
 `
 
 const ButtonInner = styled(Button)`
@@ -21,6 +31,7 @@ const ButtonInner = styled(Button)`
 
 export {
   NumberInput,
+  FormLabelHeader,
   FormLabelInner,
   ButtonInner
 }

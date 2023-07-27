@@ -23,7 +23,7 @@ import ControlledInput from '../../../components/ControlledInput'
 import API from '../../../../infrastructure/api'
 import { MenuIconCell, FloatingMenu } from 'fiorde-fe-components'
 
-import { NumberInput, FormLabelInner, ButtonInner } from './styles'
+import { NumberInput, FormLabelHeader, FormLabelInner, ButtonInner } from './styles'
 import FormatNumber from '../../../../application/utils/formatNumber'
 import { usePartnerList, useBusinessPartnerByType } from '../../../hooks'
 
@@ -168,10 +168,10 @@ const InputRow = ({
     return simpleName
   }
 
-  const getBusinessPartnerName = (id): void => {
-    const getObj = airPartners.find((item: any) => item.id === id)
-    const simpleName = getObj.businessPartner.simpleName
-    return simpleName
+  const getBusinessPartnerName = (id): string => {
+    const getObj = airPartners?.find((item: any) => item.businessPartner.id === id)
+    const simpleName = getObj?.businessPartner?.simpleName
+    return simpleName || ''
   }
 
   return (
@@ -180,51 +180,52 @@ const InputRow = ({
       <Grid
         container
         spacing={1}
+        alignItems="center"
       >
         <Grid item xs={2}>
-          <FormLabel component="legend">
+          <FormLabelHeader component="legend">
             {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.agent')}:
-          </FormLabel>
+          </FormLabelHeader>
         </Grid>
         <Grid item xs={2}>
-          <FormLabel component="legend">
+          <FormLabelHeader component="legend">
             {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.ciaArea')}
-          </FormLabel>
+          </FormLabelHeader>
         </Grid>
         <Grid item xs={1}>
-          <FormLabel component="legend">
+          <FormLabelHeader component="legend">
             {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.coin')}
-          </FormLabel>
+          </FormLabelHeader>
         </Grid>
         <Grid item xs={1}>
-          <FormLabel component="legend">
+          <FormLabelHeader component="legend">
             {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.minValue')}
-          </FormLabel>
+          </FormLabelHeader>
         </Grid>
         <Grid item xs={1}>
-          <FormLabel component="legend">
+          <FormLabelHeader component="legend" center>
             {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.45')}
-          </FormLabel>
+          </FormLabelHeader>
         </Grid>
         <Grid item xs={1}>
-          <FormLabel component="legend">
+          <FormLabelHeader component="legend" center>
             {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.100')}
-          </FormLabel>
+          </FormLabelHeader>
         </Grid>
         <Grid item xs={1}>
-          <FormLabel component="legend">
+          <FormLabelHeader component="legend" center>
             {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.300')}
-          </FormLabel>
+          </FormLabelHeader>
         </Grid>
         <Grid item xs={1}>
-          <FormLabel component="legend">
+          <FormLabelHeader component="legend" center>
             {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.500')}
-          </FormLabel>
+          </FormLabelHeader>
         </Grid>
         <Grid item xs={1}>
-          <FormLabel component="legend">
+          <FormLabelHeader component="legend" center>
             {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.1ton')}
-          </FormLabel>
+          </FormLabelHeader>
         </Grid>
         <Grid item xs={1}></Grid>
       </Grid>
@@ -259,27 +260,27 @@ const InputRow = ({
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
-                    <FormLabelInner component="legend">
+                    <FormLabelInner component="legend" center>
                       {FormatNumber.rightToLeftFormatter(line?.until45kg, 2)}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
-                    <FormLabelInner component="legend">
+                    <FormLabelInner component="legend" center>
                       {FormatNumber.rightToLeftFormatter(line?.until100kg, 2)}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
-                    <FormLabelInner component="legend">
+                    <FormLabelInner component="legend" center>
                       {FormatNumber.rightToLeftFormatter(line?.until300kg, 2)}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
-                    <FormLabelInner component="legend">
+                    <FormLabelInner component="legend" center>
                       {FormatNumber.rightToLeftFormatter(line?.until500kg, 2)}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
-                    <FormLabelInner component="legend">
+                    <FormLabelInner component="legend" center>
                       {FormatNumber.rightToLeftFormatter(line?.until1000kg, 2)}
                     </FormLabelInner>
                   </Grid>
@@ -448,7 +449,7 @@ const InputRow = ({
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 invalid={invalidInput && data.frequency.length === 0}
                 variant="outlined"
-                value={data.frequency}
+                value={data.frequency || ''}
                 size="small"
                 InputProps={{
                   inputProps: {
@@ -473,7 +474,7 @@ const InputRow = ({
             <ControlledSelect
               labelId="frequency-label"
               id="vlFrequency"
-              value={data.vlFrequency}
+              value={data.vlFrequency || ''}
               onChange={(e) => setData({ ...data, vlFrequency: e.target.value })}
               displayEmpty
               disableUnderline

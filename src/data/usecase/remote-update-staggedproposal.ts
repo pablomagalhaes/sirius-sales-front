@@ -17,7 +17,7 @@ export class RemoteUpdateStaggeredProposal implements UpdateStaggeredProposal {
     })
     const remoteUpdateAdmin = httpResponse.body
     switch (httpResponse.statusCode) {
-      case HttpStatusCode.ok: return remoteUpdateAdmin
+      case HttpStatusCode.created: return remoteUpdateAdmin
       // case HttpStatusCode.forbidden: throw new AccessDeniedError()
       default: throw new UnexpectedError()
     }

@@ -362,8 +362,9 @@ const TariffImportHandsOnModal = ({
                 (item) => item.businessPartner.simpleName
               )}
               onChange={(_e, newValue) => {
-                const { id } = airPartners.find((item: any) => item.businessPartner.simpleName === newValue)
+                const getPartner = airPartners.find((item: any) => item.businessPartner.simpleName === newValue)
                 const name = newValue
+                const id = getPartner.businessPartner.id
                 setData((data) => ({
                   ...data,
                   airCompany: { name, id }

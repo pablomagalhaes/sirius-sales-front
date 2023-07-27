@@ -177,9 +177,10 @@ const TariffImportModal = ({
   }
 
   const handleImports = (): void => {
-
     if (tariffData.length > 0) {
-      const newObject = tariffData.map((obj, index) => {
+      const filterObject = tariffData.filter((item) => selecteds.includes(item.idTariff))
+
+      const newObject = filterObject.map((obj, index) => {
         return {
           origin: data.origin,
           destination: data.destiny,

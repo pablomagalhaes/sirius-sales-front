@@ -1,14 +1,9 @@
-import React, { useEffect, useState, useContext, Fragment } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import {
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
   FormLabel,
   Grid,
   InputAdornment,
-  RadioGroup,
   MenuItem
-
 } from '@material-ui/core/'
 
 import { I18n } from 'react-redux-i18n'
@@ -60,6 +55,7 @@ const Step1 = ({
   const [vigencyDate, setVigencyDate] = React.useState([null, null])
   const [partnerList, setPartnerList] = useState<any[]>([])
   const [partner, setPartner] = useState<any>('')
+  const [operation, setOperation] = useState<any>('')
 
   const { staggeredproposal, setStaggeredProposal }: StaggeredProposalProps = useContext(StaggeredProposalContext)
 
@@ -87,11 +83,11 @@ const Step1 = ({
   const operationList = [
     {
       id: 1,
-      operation: 'IMPORT'
+      operation: I18n.t('pages.staggeredProposal.newStaggeredProposal.step1.import')
     },
     {
       id: 2,
-      operation: 'EXPORTATION'
+      operation: I18n.t('pages.staggeredProposal.newStaggeredProposal.step1.export')
     }
   ]
 
@@ -137,7 +133,7 @@ const Step1 = ({
   }
 
   useEffect(() => {
-    const TarifType = operationList.filter((ptn) => ptn.id === Number(data.tariffType))[0]?.operation
+    const TarifType = data?.tariffType
     setStaggeredProposal({
       ...staggeredproposal,
       tariffType: String(TarifType)
@@ -145,14 +141,21 @@ const Step1 = ({
   }, [data.tariffType])
 
   useEffect(() => {
-
-
     setStaggeredProposal({
       ...staggeredproposal,
       dtValidity: moment(vigencyDate[0]).format(),
       dtValidityEnd: moment(vigencyDate[1]).format()
     })
   }, [vigencyDate])
+
+  const handleTariffType = (newValue): any => {
+    setOperation(newValue)
+    if (newValue === 1) {
+      setData({ ...data, tariffType: 'IMPORT' })
+    } else {
+      setData({ ...data, tariffType: 'EXPORT' })
+    }
+  }
 
   return (
     <Separator>
@@ -178,6 +181,7 @@ const Step1 = ({
               <div ref={params.InputProps.ref}>
                 <ControlledInput
                   {...params}
+                  data-testid="search-client"
                   id="search-client"
                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
                   invalid={data.idBusinessPartnerCustomer === null && invalidInput}
@@ -214,9 +218,10 @@ const Step1 = ({
             {<RedColorSpan> *</RedColorSpan>}
           </FormLabel>
           <ControlledSelect
-            value={data?.tariffType}
-            onChange={(e) => setData({ ...data, tariffType: e.target.value })}
-            // onChange={(e) => handleTaryffType(e.target.value)}
+            data-testid="tariffType"
+            value={operation}
+            // onChange={(e) => setData({ ...data, tariffType: e.target.value })}
+            onChange={(e) => handleTariffType(e.target.value)}
             displayEmpty
             disableUnderline
             invalid={invalidInput && data.tariffType.length === 0}
@@ -244,6 +249,7 @@ const Step1 = ({
           </FormLabel>
           <div style={{ marginTop: '-8px' }}>
             <PickerDateRange
+              data-testid="vigency"
               defaultValue={vigencyDate}
               endDateLabel="Data Final"
               inputFormat=""

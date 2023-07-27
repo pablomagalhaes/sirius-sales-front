@@ -140,18 +140,16 @@ const TextInnerGreyCell = styled.p`
   font-size: 16px;
   font-style: normal;
   font-weight: bold;
-  margin: 0px;
-  padding: 7px
+  text-align: right;
+  margin: 10px 50px 0px 0px;  
 `
 
 const TextInnerCell = styled.p`
-  font-family: DM Sans;
   font-size: 16px;
   font-style: normal;
-  font-weight: bold;
-  text-align: right
-  margin: 0px;
-  padding-right: 35px;
+  font-weight: 400;
+  text-align: right;
+  margin-right: 50px;
 `
 
 const InputContainer = styled.div`
