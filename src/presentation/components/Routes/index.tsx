@@ -11,7 +11,7 @@ import { StaggeredProposalContextProvider } from '../../pages/StaggeredProposal/
 import { ImportStaggeredProposalContextProvider } from '../../pages/StaggeredProposal/context/ImportStaggeredProposalContext'
 
 import { MakeStaggeredProposal } from '../../../main/factories/pages/staggered-proposal/staggered-proposal-factory'
-import { makeRemoteUpdateStaggeredProposal } from '../../../main/factories/usecases/remote-update-staggered-proposal-factory'
+import { MakeNewStaggeredProposal } from '../../../main/factories/pages/new-staggered-proposal/new-staggered-proposal-factory'
 
 const Routes = (): JSX.Element => (
   <ProposalContextProvider>
@@ -56,8 +56,8 @@ const Routes = (): JSX.Element => (
                 </Wrapper>
               </Route>
               <Route exact path="/novaPropostaEscalonada">
-              <Wrapper>
-                  <NewStaggeredProposal updateStaggeredProposal={makeRemoteUpdateStaggeredProposal()}/>
+                <Wrapper>
+                  <MakeNewStaggeredProposal />
                 </Wrapper>
               </Route>
             </Switch>
