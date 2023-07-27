@@ -15,9 +15,9 @@ export class RemoteNewStaggeredProposal implements NNewStaggeredProposal {
       method: 'post',
       body: params
     })
-    const remoteUpdateAdmin = httpResponse.body
+    const remotNewStaggeredProposal = httpResponse.body
     switch (httpResponse.statusCode) {
-      case HttpStatusCode.created: return remoteUpdateAdmin
+      case HttpStatusCode.created: return remotNewStaggeredProposal
       // case HttpStatusCode.forbidden: throw new AccessDeniedError()
       default: throw new UnexpectedError()
     }
