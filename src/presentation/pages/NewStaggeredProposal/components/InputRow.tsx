@@ -255,19 +255,19 @@ const InputRow = ({
         spacing={1}
       >
         <Grid item xs={2}>
-          <FormLabelInner component="legend">
+          <FormLabelInner component="legend" id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_AGENT}>
             <TextCell>{getAgentName(item?.idAgent)}</TextCell>
           </FormLabelInner>
         </Grid>
 
         <Grid item xs={2}>
-          <FormLabelInner component="legend">
+          <FormLabelInner component="legend" id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_CIAAREA}>
             {getBusinessPartnerName(item?.idBusinessPartnerTransporter)}
           </FormLabelInner>
         </Grid>
 
         <Grid item xs={1}>
-          <FormLabelInner component="legend">{item?.currency}</FormLabelInner>
+          <FormLabelInner id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_COIN} component="legend">{item?.currency}</FormLabelInner>
         </Grid>
 
         {item?.freightValues?.map((line, index: number) => {
@@ -275,32 +275,39 @@ const InputRow = ({
             return (
               <Fragment key={index}>
                   <Grid key={index} item xs={1}>
-                    <FormLabelInner component="legend">
+                    <FormLabelInner component="legend" id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_VMINIMUM}>
                       {FormatNumber.rightToLeftFormatter(line?.vlMinimum, 2)}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
-                    <FormLabelInner component="legend" center>
+                    <FormLabelInner component="legend" center id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_UNTIL45kg}>
                       {FormatNumber.rightToLeftFormatter(line?.until45kg, 2)}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
-                    <FormLabelInner component="legend" center>
+                    <FormLabelInner component="legend" center
+                    id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_UNTIL100kg}>
                       {FormatNumber.rightToLeftFormatter(line?.until100kg, 2)}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
-                    <FormLabelInner component="legend" center>
+                    <FormLabelInner component="legend" center
+                    id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_UNTIL300kg}
+                    >
                       {FormatNumber.rightToLeftFormatter(line?.until300kg, 2)}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
-                    <FormLabelInner component="legend" center>
+                    <FormLabelInner component="legend" center
+                    id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_UNTIL500kg}
+                    >
                       {FormatNumber.rightToLeftFormatter(line?.until500kg, 2)}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
-                    <FormLabelInner component="legend" center>
+                    <FormLabelInner component="legend" center
+                    id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_UNTIL1000kg}
+                    >
                       {FormatNumber.rightToLeftFormatter(line?.until1000kg, 2)}
                     </FormLabelInner>
                   </Grid>
