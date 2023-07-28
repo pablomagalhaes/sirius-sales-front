@@ -43,6 +43,7 @@ import {
   StatusProposalStringEnum
 } from '../../../application/enum/statusProposalEnum'
 import RejectModal from '../../components/RejectModal/RejectModal'
+import CancelModal from '../../components/CancelModal/CancelModal'
 
 const defaultFilter = {
   direction: 'ASC',
@@ -55,6 +56,7 @@ const Proposal = (): JSX.Element => {
   const [filter, setFilter] = useState<any>(defaultFilter)
   const [openReject, setOpenReject] = useState(false)
   const [openDisplay, setOpenDisplay] = useState(false)
+  const [openCancel, setOpenCancel] = useState(false)
   const [reference, setReference] = useState('')
   const [proposalId, setProposalId] = useState('')
   const [incotermList, setIncotermList] = useState<any[]>([])
@@ -359,9 +361,9 @@ const Proposal = (): JSX.Element => {
     return array
   }
 
-  const setStatus = (id: any, status: string, reason?: string): void => {
+  const setStatus = (id: any, status: string, reason?: string, detail?: string): void => {
     void (async function () {
-      await API.putStatus(id, status, reason)
+      await API.putStatus(id, status, reason, detail)
         .then(() => {
           getProposalByFilter()
         })
@@ -427,7 +429,9 @@ const Proposal = (): JSX.Element => {
             iconType: 'cancel',
             label: I18n.t('pages.proposal.table.cancelLabel'),
             onClick: () => {
-              setStatus(id, StatusProposalStringEnum.CANCELADA)
+              setOpenCancel(true)
+              setReference(ref)
+              setProposalId(id)
             }
           }
         )
@@ -460,7 +464,9 @@ const Proposal = (): JSX.Element => {
             iconType: 'cancel',
             label: I18n.t('pages.proposal.table.cancelLabel'),
             onClick: () => {
-              setStatus(id, StatusProposalStringEnum.CANCELADA)
+              setOpenCancel(true)
+              setReference(ref)
+              setProposalId(id)
             }
           },
           {
@@ -508,7 +514,9 @@ const Proposal = (): JSX.Element => {
             iconType: 'cancel',
             label: I18n.t('pages.proposal.table.cancelLabel'),
             onClick: () => {
-              setStatus(id, StatusProposalStringEnum.CANCELADA)
+              setOpenCancel(true)
+              setReference(ref)
+              setProposalId(id)
             }
           }
         )
@@ -987,6 +995,12 @@ const Proposal = (): JSX.Element => {
     setProposalId('')
   }
 
+  const handleCloseCancel = (): void => {
+    setOpenCancel(false)
+    setReference('')
+    setProposalId('')
+  }
+
   return (
     <RootContainer>
       <TopContainer>
@@ -1092,6 +1106,13 @@ const Proposal = (): JSX.Element => {
               open={openReject}
               setClose={handleCloseReject}
               title={I18n.t('components.rejectModal.title')}
+              reference={reference}
+              proposalId={proposalId}
+              setStatus={setStatus}
+            />
+            <CancelModal
+              open={openCancel}
+              setClose={handleCloseCancel}
               reference={reference}
               proposalId={proposalId}
               setStatus={setStatus}

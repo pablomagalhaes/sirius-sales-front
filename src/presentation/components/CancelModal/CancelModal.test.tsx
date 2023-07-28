@@ -7,7 +7,7 @@ const props = {
   setClose: () => { },
   setStatus: () => { },
   reference: 'BP220000098',
-  proposalId: '98',
+  proposalId: '98'
 }
 
 test('should show text Cancelar Proposta', () => {
