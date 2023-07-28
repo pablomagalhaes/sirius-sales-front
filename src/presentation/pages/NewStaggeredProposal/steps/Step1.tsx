@@ -32,7 +32,7 @@ import {
   STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP1__INPUT_VIGENCY
 } from '../../../../ids'
 
-import { NNewStaggeredProposal } from '../../../../domain/usecase'
+import { CreateStaggeredProposal } from '../../../../domain/usecase'
 
 import { StaggeredProposalContext, StaggeredProposalProps } from '../../StaggeredProposal/context/StaggeredProposalContext'
 
@@ -46,7 +46,7 @@ export interface Step1Props {
   setFilled: (filled: any) => void
   filled: Filled
   setStepLoaded: (steps: any) => void
-  NewStaggeredProposal?: NNewStaggeredProposal
+  NewStaggeredProposal?: CreateStaggeredProposal
 }
 
 const Step1 = ({

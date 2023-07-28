@@ -17,7 +17,7 @@ import Step1 from './steps/Step1'
 import Step2 from './steps/Step2'
 
 import { useHistory } from 'react-router-dom'
-import { NNewStaggeredProposal } from '../../../domain/usecase'
+import { CreateStaggeredProposal } from '../../../domain/usecase'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { StaggeredProposalContext, StaggeredProposalProps } from '../StaggeredProposal/context/StaggeredProposalContext'
@@ -35,7 +35,7 @@ import {
 
 type StaggeredProps = {
   theme: any
-  newStaggeredProposal: NNewStaggeredProposal
+  newStaggeredProposal: CreateStaggeredProposal
 }
 
 const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): JSX.Element => {
