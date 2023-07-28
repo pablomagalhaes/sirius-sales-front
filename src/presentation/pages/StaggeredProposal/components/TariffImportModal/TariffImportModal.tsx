@@ -153,15 +153,20 @@ const TariffImportModal = ({
   const searchTariffs = (): void => {
     if (validateData()) {
       setInvalidInput(false)
-      if (data.agent.id === null) {
-        setFilter((filter: any) => ({
-          ...filter,
-          size: 3,
-          tariffModalType: 'AIR',
-          idOrigin: data.origin.split(' - ')[0],
-          idDestination: data.destiny.split(' - ')[0]
-        }))
-      } else {
+      const tariffModalType = 'AIR'
+      const tariffType = 'IMPORT'
+      const validityTariff = 'VALID'
+
+      setFilter((filter: any) => ({
+        ...filter,
+        size: 3,
+        tariffModalType: tariffModalType,
+        validityTariff: validityTariff,
+        tariffType: tariffType,
+        idOrigin: data.origin.split(' - ')[0],
+        idDestination: data.destiny.split(' - ')[0]
+      }))
+    } else {
         setFilter((filter: any) => ({
           ...filter,
           size: 3,
