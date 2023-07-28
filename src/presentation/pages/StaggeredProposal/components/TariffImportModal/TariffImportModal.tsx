@@ -45,8 +45,9 @@ import useTariffsByCountry from '../../../../hooks/tariff/useTariffsByCountry'
 import { TariffItemsTypes } from '../../../../../application/enum/tariffEnum'
 import FormatNumber from '../../../../../application/utils/formatNumber'
 
+
 import { StaggeredProposalContext, StaggeredProposalProps } from '../../context/StaggeredProposalContext'
-import { ImportStaggeredProposalContext, ImportStaggeredProposalProps } from '../../context/ImportStaggeredProposalContext'
+
 
 interface AgentType {
   name: string
@@ -83,7 +84,6 @@ const TariffImportModal = ({
   const { content: tariffData, totalElements: totalTariffList, setParams, refetch } = useTariffsByCountry()
 
   const { staggeredproposal, setStaggeredProposal }: StaggeredProposalProps = useContext(StaggeredProposalContext)
-  const { importstaggeredproposal, setImportStaggeredProposal }: ImportStaggeredProposalProps = useContext(ImportStaggeredProposalContext)
 
   const [data, setData] = useState<TariffUploadData>(initialState)
   const [selecteds, setSelecteds] = useState<string[]>([])
@@ -157,16 +157,17 @@ const TariffImportModal = ({
       const tariffType = 'IMPORT'
       const validityTariff = 'VALID'
 
-      setFilter((filter: any) => ({
-        ...filter,
-        size: 3,
-        tariffModalType: tariffModalType,
-        validityTariff: validityTariff,
-        tariffType: tariffType,
-        idOrigin: data.origin.split(' - ')[0],
-        idDestination: data.destiny.split(' - ')[0]
-      }))
-    } else {
+      if (data.agent.id === null) {
+        setFilter((filter: any) => ({
+          ...filter,
+          size: 3,
+          tariffModalType: tariffModalType,
+          validityTariff: validityTariff,
+          tariffType: tariffType,
+          idOrigin: data.origin.split(' - ')[0],
+          idDestination: data.destiny.split(' - ')[0]
+        }))
+      } else {
         setFilter((filter: any) => ({
           ...filter,
           size: 3,
