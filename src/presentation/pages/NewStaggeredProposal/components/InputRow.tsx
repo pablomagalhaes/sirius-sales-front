@@ -24,23 +24,23 @@ import API from '../../../../infrastructure/api'
 import { MenuIconCell, FloatingMenu } from 'fiorde-fe-components'
 
 import {
-  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_AGENT,
-  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_CIAAREA,
-  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_COIN,
-  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_VMINIMUM,
-  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_UNTIL45kg,
-  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_UNTIL100kg,
-  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_UNTIL300kg,
-  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_UNTIL500kg,
-  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_UNTIL1000kg,
-  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__INPUT_UNTIL45kg,
-  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__INPUT_UNTIL100kg,
-  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__INPUT_UNTIL300kg,
-  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__INPUT_UNTIL500kg,
-  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__INPUT_UNTIL1000kg,
-  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__BUTTON_DELETE,
-  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__INPUT_FREQUENCY,
-  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__SELECT_VLFREQUENCY
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_AGENT,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_CIAAREA,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_COIN,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_VMINIMUM,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL45KG,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL100KG,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL300KG,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL500KG,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL1000KG,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_INPUT_UNTIL45KG,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_INPUT_UNTIL100KG,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_INPUT_UNTIL300KG,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_INPUT_UNTIL500KG,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_INPUT_UNTIL1000KG,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_BUTTON_DELETE,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_INPUT_FREQUENCY,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_SELECT_VLFREQUENCY
 } from '../../../../ids'
 
 import { NumberInput, FormLabelHeader, FormLabelInner, ButtonInner } from './styles'
@@ -75,8 +75,7 @@ const InputRow = ({
 
   const { partnerList: agentsList } = usePartnerList()
   const { airPartners } = useBusinessPartnerByType()
-
-  const [data, setData] = useState({
+  const initialData = {
     until45kg: null,
     until100kg: null,
     until300kg: null,
@@ -84,7 +83,8 @@ const InputRow = ({
     until1000kg: null,
     frequency: null,
     vlFrequency: null
-  })
+  }
+  const [data, setData] = useState(initialData)
 
   const floatingButtonMenuItems = [
     {
@@ -123,6 +123,20 @@ const InputRow = ({
         .then((response) => setFrequencyList(response))
         .catch((err) => console.log(err))
     })()
+    if (item.freightValues[1] !== undefined) {
+      setData({
+        until45kg: { value: item.freightValues[1]?.until45kg },
+        until100kg: { value: item.freightValues[1]?.until100kg },
+        until300kg: { value: item.freightValues[1]?.until300kg },
+        until500kg: { value: item.freightValues[1]?.until500kg },
+        until1000kg: { value: item.freightValues[1]?.until1000kg },
+        frequency: item.frequency || null,
+        vlFrequency: item.vlFrequency || null
+      })
+    }
+    return () => {
+      setData(initialData)
+    }
   }, [])
 
   const rgxFloat = /^[0-9]*,?[0-9]*$/
@@ -161,12 +175,13 @@ const InputRow = ({
             freightValues: [
               obj?.freightValues[0],
               {
+                ...obj?.freightValues[1],
                 vlMinimum: obj?.freightValues[0].vlMinimum,
-                until45kg: String(data.until45kg) ,
-                until100kg: String(data.until100kg),
-                until300kg: String(data.until300kg),
-                until500kg: String(data.until500kg),
-                until1000kg: String(data.until1000kg),
+                until45kg: data.until45kg?.value !== undefined ? data.until45kg.value : String(data.until45kg),
+                until100kg: data.until100kg?.value !== undefined ? data.until100kg.value : String(data.until100kg),
+                until300kg: data.until300kg?.value !== undefined ? data.until300kg.value : String(data.until300kg),
+                until500kg: data.until500kg?.value !== undefined ? data.until500kg.value : String(data.until500kg),
+                until1000kg: data.until1000kg?.value !== undefined ? data.until1000kg.value : String(data.until1000kg),
                 buyOrSell: 'SELL'
               }
             ]
@@ -196,54 +211,54 @@ const InputRow = ({
 
   return (
     <>
-      <Title>2.{(chave + 1)} De {item?.origin} - {item?.destination}</Title>
+      <Title>2.{(Number(chave) + 1)} De {item?.origin} - {item?.destination}</Title>
       <Grid
         container
         spacing={1}
         alignItems="center"
       >
         <Grid item xs={2}>
-          <FormLabelHeader component="legend" id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_AGENT}>
+          <FormLabelHeader component="legend" id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_AGENT}>
             {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.agent')}:
           </FormLabelHeader>
         </Grid>
         <Grid item xs={2}>
-          <FormLabelHeader component="legend" id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_CIAAREA}>
+          <FormLabelHeader component="legend" id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_CIAAREA}>
             {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.ciaArea')}
           </FormLabelHeader>
         </Grid>
         <Grid item xs={1}>
-          <FormLabelHeader component="legend" id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_COIN}>
+          <FormLabelHeader component="legend" id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_COIN}>
             {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.coin')}
           </FormLabelHeader>
         </Grid>
         <Grid item xs={1}>
-          <FormLabelHeader component="legend" id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_VMINIMUM}>
+          <FormLabelHeader component="legend" id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_VMINIMUM}>
             {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.minValue')}
           </FormLabelHeader>
         </Grid>
         <Grid item xs={1}>
-          <FormLabelHeader component="legend" center id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_UNTIL45kg}>
+          <FormLabelHeader component="legend" center id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL45KG}>
             {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.45')}
           </FormLabelHeader>
         </Grid>
         <Grid item xs={1}>
-          <FormLabelHeader component="legend" center id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_UNTIL100kg}>
+          <FormLabelHeader component="legend" center id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL100KG}>
             {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.100')}
           </FormLabelHeader>
         </Grid>
         <Grid item xs={1}>
-          <FormLabelHeader component="legend" center id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_UNTIL300kg}>
+          <FormLabelHeader component="legend" center id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL300KG}>
             {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.300')}
           </FormLabelHeader>
         </Grid>
         <Grid item xs={1}>
-          <FormLabelHeader component="legend" center id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_UNTIL500kg}>
+          <FormLabelHeader component="legend" center id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL500KG}>
             {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.500')}
           </FormLabelHeader>
         </Grid>
         <Grid item xs={1}>
-          <FormLabelHeader component="legend" center id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_UNTIL1000kg}>
+          <FormLabelHeader component="legend" center id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL1000KG}>
             {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.1ton')}
           </FormLabelHeader>
         </Grid>
@@ -255,19 +270,19 @@ const InputRow = ({
         spacing={1}
       >
         <Grid item xs={2}>
-          <FormLabelInner component="legend" id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_AGENT}>
+          <FormLabelInner component="legend" id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_AGENT}>
             <TextCell>{getAgentName(item?.idAgent)}</TextCell>
           </FormLabelInner>
         </Grid>
 
         <Grid item xs={2}>
-          <FormLabelInner component="legend" id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_CIAAREA}>
+          <FormLabelInner component="legend" id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_CIAAREA}>
             {getBusinessPartnerName(item?.idBusinessPartnerTransporter)}
           </FormLabelInner>
         </Grid>
 
         <Grid item xs={1}>
-          <FormLabelInner id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_COIN} component="legend">{item?.currency}</FormLabelInner>
+          <FormLabelInner id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_COIN} component="legend">{item?.currency}</FormLabelInner>
         </Grid>
 
         {item?.freightValues?.map((line, index: number) => {
@@ -275,44 +290,44 @@ const InputRow = ({
             return (
               <Fragment key={index}>
                   <Grid key={index} item xs={1}>
-                    <FormLabelInner component="legend" id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_VMINIMUM}>
+                    <FormLabelInner component="legend" id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_VMINIMUM}>
                       {FormatNumber.rightToLeftFormatter(line?.vlMinimum, 2)}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
-                    <FormLabelInner component="legend" center id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_UNTIL45kg}>
+                    <FormLabelInner component="legend" center id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL45KG}>
                       {FormatNumber.rightToLeftFormatter(line?.until45kg, 2)}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
                     <FormLabelInner component="legend" center
-                    id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_UNTIL100kg}>
+                    id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL100KG}>
                       {FormatNumber.rightToLeftFormatter(line?.until100kg, 2)}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
                     <FormLabelInner component="legend" center
-                    id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_UNTIL300kg}
+                    id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL300KG}
                     >
                       {FormatNumber.rightToLeftFormatter(line?.until300kg, 2)}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
                     <FormLabelInner component="legend" center
-                    id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_UNTIL500kg}
+                    id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL500KG}
                     >
                       {FormatNumber.rightToLeftFormatter(line?.until500kg, 2)}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
                     <FormLabelInner component="legend" center
-                    id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__LABEL_UNTIL1000kg}
+                    id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL1000KG}
                     >
                       {FormatNumber.rightToLeftFormatter(line?.until1000kg, 2)}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
-                    <ButtonInner id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__BUTTON_DELETE} aria-describedby={id} onClick={handleClick}>
+                    <ButtonInner id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_BUTTON_DELETE} aria-describedby={id} onClick={handleClick}>
                       <MenuIconCell />
                     </ButtonInner>
                   <Popover
@@ -335,6 +350,7 @@ const InputRow = ({
               </Fragment>
             )
           }
+          return <></>
         })}
 
       </Grid>
@@ -361,7 +377,7 @@ const InputRow = ({
           background: '#F0F1F5'
         }}>
           <NumberInput
-            id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__INPUT_UNTIL45kg}
+            id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_INPUT_UNTIL45KG}
             decimalSeparator={','}
             thousandSeparator={'.'}
             decimalScale={2}
@@ -381,7 +397,7 @@ const InputRow = ({
           background: '#F0F1F5'
         }}>
           <NumberInput
-            id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__INPUT_UNTIL100kg}
+            id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_INPUT_UNTIL100KG}
             decimalSeparator={','}
             thousandSeparator={'.'}
             decimalScale={2}
@@ -401,14 +417,14 @@ const InputRow = ({
           background: '#F0F1F5'
         }}>
           <NumberInput
-            id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__INPUT_UNTIL300kg}
+            id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_INPUT_UNTIL300KG}
             decimalSeparator={','}
             thousandSeparator={'.'}
             decimalScale={2}
             format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
             customInput={ControlledInput}
             toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-            invalid={invalidInput && data.until300kg === null}
+            invalid={invalidInput && data.until300kg.value === null}
             value={data.until300kg != null ? data.until300kg.value : ''}
             onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'until300kg') }}
             variant="outlined"
@@ -421,7 +437,7 @@ const InputRow = ({
           background: '#F0F1F5'
         }} >
           <NumberInput
-            id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__INPUT_UNTIL500kg}
+            id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_INPUT_UNTIL500KG}
             decimalSeparator={','}
             thousandSeparator={'.'}
             decimalScale={2}
@@ -441,14 +457,14 @@ const InputRow = ({
           background: '#F0F1F5'
         }} >
           <NumberInput
-            id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__INPUT_UNTIL1000kg}
+            id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_INPUT_UNTIL1000KG}
             decimalSeparator={','}
             thousandSeparator={'.'}
             decimalScale={2}
             format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
             customInput={ControlledInput}
             toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-            invalid={invalidInput && data.until1000kg === null}
+            invalid={invalidInput && data.until1000kg.value === null}
             value={data.until1000kg != null ? data.until1000kg.value : ''}
             onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'until1000kg') }}
             variant="outlined"
@@ -477,7 +493,7 @@ const InputRow = ({
         <Grid item xs={1}>
             <InputContainer>
               <ControlledInput
-                id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__INPUT_FREQUENCY}
+                id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_INPUT_FREQUENCY}
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 invalid={invalidInput && data.frequency.length === 0}
                 variant="outlined"
@@ -505,7 +521,7 @@ const InputRow = ({
         <Grid item xs={3}>
             <ControlledSelect
               labelId="frequency-label"
-              id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__SELECT_VLFREQUENCY}
+              id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_SELECT_VLFREQUENCY}
               value={data.vlFrequency || ''}
               onChange={(e) => setData({ ...data, vlFrequency: e.target.value })}
               displayEmpty

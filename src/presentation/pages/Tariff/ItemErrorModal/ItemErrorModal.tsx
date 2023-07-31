@@ -108,7 +108,7 @@ const ItemErrorModal = ({
                         <AlertIcon />
                       </ListItemIcon>
                       <ListItemText>
-                        {I18n.t('pages.tariff.itemErrorModal.line')} {item.line} : {I18n.t(`pages.tariff.itemErrorModal.keyErros.${item.keyLog}`)}
+                        {I18n.t('pages.tariff.itemErrorModal.line')} {item.line} : {I18n.t(`pages.tariff.itemErrorModal.keyErros.${String(item.keyLog)}`)}
                       </ListItemText>
                     </ListItem>
                   )

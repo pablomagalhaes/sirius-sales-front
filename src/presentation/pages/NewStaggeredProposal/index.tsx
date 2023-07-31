@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
-import { Button, ExitDialog, FloatingMenu, Steps, Messages } from 'fiorde-fe-components'
+import { Button, FloatingMenu, Steps, Messages } from 'fiorde-fe-components'
 import { Breadcrumbs, Link, Grid } from '@material-ui/core/'
 import {
   ButtonContainer,
@@ -16,22 +16,24 @@ import { I18n } from 'react-redux-i18n'
 import Step1 from './steps/Step1'
 import Step2 from './steps/Step2'
 
-import { useHistory } from 'react-router-dom'
+import { useHistory,useLocation } from 'react-router-dom'
 import { CreateStaggeredProposal } from '../../../domain/usecase'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { StaggeredProposalContext, StaggeredProposalProps } from '../StaggeredProposal/context/StaggeredProposalContext'
+import { StaggeredProposalContext, StaggeredProposalProps , emptyStaggeredProposalValue } from '../StaggeredProposal/context/StaggeredProposalContext'
 
 import TariffImportModal from '../StaggeredProposal/components/TariffImportModal/TariffImportModal'
 import TariffImportHandsOnModal from '../StaggeredProposal/components/TariffImportModal/TariffImportHandsOnModal'
 
-import { 
+import {
   STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_LINK_HOME,
   STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_BUTTON_SAVE,
   STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_BUTTON_MODAL_IMPORT,
   STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_BUTTON_MODAL_IMPORT_ON_HANDS,
   STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_SPAN_MAINPAGE
 } from '../../../ids'
+
+import API from '../../../infrastructure/api'
 
 type StaggeredProps = {
   theme: any
@@ -41,13 +43,13 @@ type StaggeredProps = {
 const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): JSX.Element => {
   const { staggeredproposal, setStaggeredProposal }: StaggeredProposalProps = useContext(StaggeredProposalContext)
 
-  const [action, setAction] = useState('')
+  // const [action, setAction] = useState('')
   const [clicked, setClicked] = useState({ id: '', clicked: false })
   const [hover, setHover] = useState({ id: '', hover: false })
   const [invalidInput, setInvalidInput] = useState(false)
-  const [leavingPage, setLeavingPage] = useState(false)
-  const [loadExistingProposal, setLoadExistingProposal] = useState(true)
-  const [modal, setModal] = useState('')
+  // const [leavingPage, setLeavingPage] = useState(false)
+  const [loadExistingProposal, setLoadExistingProposal] = useState(false)
+  const [editMode, setEditMode] = useState(false)
   const [showSaveMessage, setShowSaveMessage] = useState(false)
 
   const [openImport, setOpenImport] = useState(false)
@@ -58,6 +60,7 @@ const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): 
   const queryClient = useQueryClient()
 
   const history = useHistory()
+  const location = useLocation()
 
   const [completed, setCompleted] = useState({
     step1: false,
@@ -98,7 +101,6 @@ const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): 
   const mutation = useMutation({
     mutationFn: async (newData: any) => {
       return await newStaggeredProposal.newStaggered(newData)
-
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['updateStaggedProposal'])
@@ -107,30 +109,43 @@ const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): 
   })
 
   const handleSave = (): void => {
+    const proposalId = location.state?.proposalId
     if (completed.step1) {
-      const params = {
-        idBusinessPartnerCustomer: staggeredproposal.idBusinessPartnerCustomer,
-        tariffType: staggeredproposal.tariffType,
-        idTariffProposalStatus: staggeredproposal.idTariffProposalStatus,
-        dtValidity: staggeredproposal.dtValidity,
-        dtValidityEnd: staggeredproposal.dtValidityEnd,
-        proposalTariff: []
-      }
-
-      const newObject = staggeredproposal?.proposalTariff.map((obj, index) => {
-        if (obj?.origin !== '') {
-          return {
-            ...obj,
-            origin: obj.origin.split(' - ')[0],
-            destination: obj.destination.split(' - ')[0]
-          }
+      setInvalidInput(false)
+      if (loadExistingProposal) {
+        void (async function () {
+          await API.putTariffProposal(proposalId, staggeredproposal)
+            .then((response) => {
+              history.push('/propostaEscalonada')
+            })
+            .catch((err) => console.log(err))
+        })()
+      } else {
+        const params = {
+          idBusinessPartnerCustomer: staggeredproposal.idBusinessPartnerCustomer,
+          tariffType: staggeredproposal.tariffType,
+          idTariffProposalStatus: Number(1),
+          dtValidity: staggeredproposal.dtValidity,
+          dtValidityEnd: staggeredproposal.dtValidityEnd,
+          proposalTariff: []
         }
-      })
 
-      params.proposalTariff = newObject
-      mutation.mutate(params)
+        const newObject = staggeredproposal?.proposalTariff.map((obj) => {
+          if (obj?.origin !== '') {
+            return {
+              ...obj,
+              origin: obj.origin.split(' - ')[0],
+              destination: obj.destination.split(' - ')[0]
+            }
+          }
+          return { ...obj }
+        })
+
+        params.proposalTariff = newObject
+        mutation.mutate(params)
+      }
     } else {
-      console.log('error')
+      setInvalidInput(true)
     }
   }
 
@@ -164,100 +179,68 @@ const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): 
   //   }
   // ]
 
-  const MessageExitDialog = (): JSX.Element => {
-    useEffect(() => {
-      // if (filled.step1 ||
-      //   filled.step2) {
-      //   setLeavingPage(true)
-      // } else {
-      //   setLeavingPage(false)
-      // }
-    }, [])
+  // const MessageExitDialog = (): JSX.Element => {
+  //   useEffect(() => {
+  //     // if (filled.step1 ||
+  //     //   filled.step2) {
+  //     //   setLeavingPage(true)
+  //     // } else {
+  //     //   setLeavingPage(false)
+  //     // }
+  //   }, [])
 
-    return (
-      <ExitDialog
-        cancelButtonText={I18n.t('pages.newProposal.unsavedChanges.cancelMessage')}
-        confirmButtonText={I18n.t('pages.newProposal.unsavedChanges.confirmMessage')}
-        message={I18n.t('pages.newProposal.unsavedChanges.message')}
-        onPressCancel={() => setLeavingPage(false)}
-        onPressConfirm={() => executeAction()}
-        title={I18n.t('pages.newProposal.unsavedChanges.title')}
-      />
-    )
-  }
+  //   return (
+  //     <ExitDialog
+  //       cancelButtonText={I18n.t('pages.newProposal.unsavedChanges.cancelMessage')}
+  //       confirmButtonText={I18n.t('pages.newProposal.unsavedChanges.confirmMessage')}
+  //       message={I18n.t('pages.newProposal.unsavedChanges.message')}
+  //       onPressCancel={() => setLeavingPage(false)}
+  //       onPressConfirm={() => executeAction()}
+  //       title={I18n.t('pages.newProposal.unsavedChanges.title')}
+  //     />
+  //   )
+  // }
 
-  const validateAction = (element): boolean => {
-    if (element.tagName !== 'HTML') {
-      if (element.id === 'button_home' || element.querySelector('#button_home') || element.id === 'mini-logo' || element.querySelector('#mini-logo')) {
-        setAction('home')
-        return true
-      }
-      if ((element.id === 'logo_sirius' || element.querySelector('#logo_sirius')) && element.tagName !== 'DIV') {
-        setAction('home')
-        return true
-      }
-      if ((element.id === 'home' || element.querySelector('#home')) && element.tagName !== 'DIV') {
-        setAction('commercial-home')
-        return true
-      }
-      if ((element.id === 'proposal' || element.querySelector('#proposal')) && element.tagName !== 'DIV') {
-        setAction('proposals')
-        return true
-      }
-      if ((element.id === 'tariff' || element.querySelector('#tariff')) && element.tagName !== 'DIV') {
-        setAction('commercial-home')
-        return true
-      }
-      if ((element.id === 'chart' || element.querySelector('#chart')) && element.tagName !== 'DIV') {
-        setAction('commercial-home')
-        return true
-      }
-      if (element.id === 'exit_button') {
-        setAction('logout')
-        return true
-      }
+  // const executeAction = (): void => {
+  //   switch (action) {
+  //     case 'home':
+  //       history.go(-4)
+  //       break
+  //     case 'commercial-home':
+  //       history.push('/')
+  //       break
+  //     case 'proposals':
+  //       history.push('/proposta')
+  //       break
+  //     case 'logout':
+  //       break
+  //   }
+  // }
+
+  useEffect(() => {
+    const proposalId = location.state?.proposalId
+    if (proposalId !== undefined && proposalId !== null) {
+      setLoadExistingProposal(true)
+      void (async function () {
+        await API.getTariffProposal(proposalId)
+          .then((response) => {
+            setStaggeredProposal(response)
+          })
+          .catch((err) => console.log(err))
+      })()
+    } else {
+      setLoadExistingProposal(false)
     }
-    return false
-  }
+    return () => setStaggeredProposal(emptyStaggeredProposalValue)
+  }, [])
 
-  const executeAction = (): void => {
-    switch (action) {
-      case 'home':
-        history.go(-4)
-        break
-      case 'commercial-home':
-        history.push('/')
-        break
-      case 'proposals':
-        history.push('/proposta')
-        break
-      case 'logout':
-        break
-    }
-  }
+  useEffect(() => {
+    if (staggeredproposal?.idTariffProposalStatus !== null) {
+      setEditMode(true)
+      setShowList(true)
+    } else setEditMode(false)
+  }, [staggeredproposal])
 
-  // useEffect(() => {
-  //   window.addEventListener('beforeunload', (event) => {
-  //     event.returnValue = setLeavingPage(true)
-  //   })
-  // }, [])
-
-  const useOnClickOutside = (handler): void => {
-    useEffect(() => {
-      const listener = (event: any): void => {
-        if (!validateAction(event.target)) {
-          return
-        }
-        handler(event)
-      }
-      document.addEventListener('mousedown', listener)
-      document.addEventListener('touchstart', listener)
-      return () => {
-        document.removeEventListener('mousedown', listener)
-        document.removeEventListener('touchstart', listener)
-      }
-    }, [handler])
-  }
   const divRef = useRef()
 
   return (
@@ -301,8 +284,74 @@ const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): 
           </Button>
         </ButtonContainer>
       </TopContainer>
-      {leavingPage && <MessageExitDialog />}
-      {loadExistingProposal &&
+      {/* {leavingPage && <MessageExitDialog />} */}
+      {!loadExistingProposal &&
+        <MainContainer ref={divRef}>
+          <div id="step1">
+            <Step1
+              filled={filled}
+              invalidInput={invalidInput}
+              setCompleted={setCompleted}
+              setFilled={setFilled}
+              setStepLoaded={setStepLoaded}
+            />
+          </div>
+          {stepLoaded.step1 && <>
+            <div id="step2">
+              <Step2
+                invalidInput={invalidInput}
+                setCompleted={setCompleted}
+                setFilled={setFilled}
+                ShowList={ShowList}
+              />
+            </div>
+          </>
+          }
+
+          <Grid item xs={12} container direction="row" justify="flex-start">
+            <Grid item xs={2}>
+              <ImportButtonDiv>
+                <Button
+                  id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_BUTTON_MODAL_IMPORT}
+                  onAction={() => {
+                    setOpenImport(true)
+                  }}
+                  text={I18n.t('pages.staggeredProposal.newStaggeredProposal.ImportTariff')}
+                  icon="tariff"
+                  backgroundGreen={true}
+                  tooltip={I18n.t('pages.staggeredProposal.newStaggeredProposal.ImportTariff')}
+                />
+              </ImportButtonDiv>
+            </Grid>
+            <Grid item xs={2}>
+              <AddButtonDiv>
+                <Button
+                  id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_BUTTON_MODAL_IMPORT_ON_HANDS}
+                  onAction={() => {
+                    setOpenImportHandsOn(true)
+                  }}
+                  text={I18n.t('pages.staggeredProposal.newStaggeredProposal.AddManual')}
+                  icon="add"
+                  backgroundGreen={false}
+                  tooltip={I18n.t('pages.staggeredProposal.newStaggeredProposal.AddManual')}
+                  style={{ height: '50px' }}
+                />
+              </AddButtonDiv>
+            </Grid>
+          </Grid>
+          <TariffImportModal
+            setClose={() => setOpenImport(false)}
+            open={openImport}
+            setShowList={() => setShowList(true)}
+            />
+          <TariffImportHandsOnModal
+            setClose={() => setOpenImportHandsOn(false)}
+            open={openImportHandsOn}
+            setShowList={() => setShowList(true)}
+          />
+        </MainContainer>
+      }
+      {editMode &&
         <MainContainer ref={divRef}>
           <div id="step1">
             <Step1
