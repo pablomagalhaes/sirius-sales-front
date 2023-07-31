@@ -1,62 +1,63 @@
-import React, { useState, useCallback, useEffect, useContext, useRef } from 'react'
+import React, { useState, useEffect, useContext, useRef } from 'react'
 import { Button, ExitDialog, FloatingMenu, Steps, Messages } from 'fiorde-fe-components'
-import { Breadcrumbs, Link } from '@material-ui/core/'
+import { Breadcrumbs, Link, Grid } from '@material-ui/core/'
 import {
   ButtonContainer,
   Header,
   MainContainer,
-  ReferenceCode,
   RootContainer,
   TopContainer,
-  UserContainer,
-  Username,
   MessageContainer,
-  Status
+  ImportButtonDiv,
+  AddButtonDiv
 } from './style'
 import { withTheme } from 'styled-components'
 import { I18n } from 'react-redux-i18n'
-import IconComponent from '../../../application/icons/IconComponent'
 import Step1 from './steps/Step1'
 import Step2 from './steps/Step2'
 
-import { useHistory, useLocation } from 'react-router-dom'
-import { UpdateStaggeredProposal } from '../../../domain/usecase'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useHistory } from 'react-router-dom'
+import { CreateStaggeredProposal } from '../../../domain/usecase'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { StaggeredProposalContext, StaggeredProposalProps } from '../StaggeredProposal/context/StaggeredProposalContext'
 
+import TariffImportModal from '../StaggeredProposal/components/TariffImportModal/TariffImportModal'
+import TariffImportHandsOnModal from '../StaggeredProposal/components/TariffImportModal/TariffImportHandsOnModal'
+
+import { 
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_LINK_HOME,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_BUTTON_SAVE,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_BUTTON_MODAL_IMPORT,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_BUTTON_MODAL_IMPORT_ON_HANDS,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_SPAN_MAINPAGE
+} from '../../../ids'
+
 type StaggeredProps = {
   theme: any
-  updateStaggeredProposal: UpdateStaggeredProposal
+  newStaggeredProposal: CreateStaggeredProposal
 }
 
-const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps): JSX.Element => {
+const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): JSX.Element => {
   const { staggeredproposal, setStaggeredProposal }: StaggeredProposalProps = useContext(StaggeredProposalContext)
 
   const [action, setAction] = useState('')
-  const [agentList, setAgentList] = useState<[]>([])
   const [clicked, setClicked] = useState({ id: '', clicked: false })
-  const [containerTypeList, setContainerTypeList] = useState<any[]>([])
-  const [costData, setCostData] = useState(0)
-  const [cw, setCw] = useState(0)
-  const [cwSale, setCwSale] = useState(0)
-  const [duplicateMode, setduplicateMode] = useState(false)
-  const [editMode, setEditMode] = useState(false)
   const [hover, setHover] = useState({ id: '', hover: false })
   const [invalidInput, setInvalidInput] = useState(false)
   const [leavingPage, setLeavingPage] = useState(false)
   const [loadExistingProposal, setLoadExistingProposal] = useState(true)
   const [modal, setModal] = useState('')
-  const [totalCosts, setTotalCosts] = useState()
-  const [proposalType, setProposalType] = useState('')
-  const [serviceList, setServiceList] = useState<any[]>([])
   const [showSaveMessage, setShowSaveMessage] = useState(false)
-  const [specifications, setSpecifications] = useState('')
+
+  const [openImport, setOpenImport] = useState(false)
+  const [openImportHandsOn, setOpenImportHandsOn] = useState(false)
+
+  const [ShowList, setShowList] = useState<boolean>(false)
 
   const queryClient = useQueryClient()
 
   const history = useHistory()
-  const location = useLocation()
 
   const [completed, setCompleted] = useState({
     step1: false,
@@ -76,12 +77,12 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
   const steps = [
     {
       id: 'step1',
-      label: I18n.t('pages.staggeredProposal.step1.title'),
+      label: I18n.t('pages.staggeredProposal.newStaggeredProposal.step1.title'),
       completed: completed.step1
     },
     {
       id: 'step2',
-      label: I18n.t('pages.staggeredProposal.step2.title'),
+      label: I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.title'),
       completed: completed.step2
     }
   ]
@@ -96,33 +97,41 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
 
   const mutation = useMutation({
     mutationFn: async (newData: any) => {
-      return await updateStaggeredProposal.updateStaggered(newData)
+      return await newStaggeredProposal.newStaggered(newData)
+
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['updateStaggedProposal'])
+      setShowSaveMessage(true)
     }
   })
 
   const handleSave = (): void => {
-    console.log('completed', completed)
+    if (completed.step1) {
+      const params = {
+        idBusinessPartnerCustomer: staggeredproposal.idBusinessPartnerCustomer,
+        tariffType: staggeredproposal.tariffType,
+        idTariffProposalStatus: staggeredproposal.idTariffProposalStatus,
+        dtValidity: staggeredproposal.dtValidity,
+        dtValidityEnd: staggeredproposal.dtValidityEnd,
+        proposalTariff: []
+      }
 
-    const params = staggeredproposal
+      const newObject = staggeredproposal?.proposalTariff.map((obj, index) => {
+        if (obj?.origin !== '') {
+          return {
+            ...obj,
+            origin: obj.origin.split(' - ')[0],
+            destination: obj.destination.split(' - ')[0]
+          }
+        }
+      })
 
-    console.log('params', params)
-
-    mutation.mutate(params)
-
-    // if (
-    //   completed.step1 &&
-    //   completed.step2
-    // ) {
-    //   const params = {
-    //     idBusinessPartnerCustomer: 1
-    //   }
-    //   mutation.mutate(params)
-    // } else {
-    //   console.log('error')
-    // }
+      params.proposalTariff = newObject
+      mutation.mutate(params)
+    } else {
+      console.log('error')
+    }
   }
 
   const floatingButtonMenuItems = [
@@ -157,12 +166,12 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
 
   const MessageExitDialog = (): JSX.Element => {
     useEffect(() => {
-      if (filled.step1 ||
-        filled.step2) {
-        setLeavingPage(true)
-      } else {
-        setLeavingPage(false)
-      }
+      // if (filled.step1 ||
+      //   filled.step2) {
+      //   setLeavingPage(true)
+      // } else {
+      //   setLeavingPage(false)
+      // }
     }, [])
 
     return (
@@ -227,11 +236,11 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
     }
   }
 
-  useEffect(() => {
-    window.addEventListener('beforeunload', (event) => {
-      event.returnValue = setLeavingPage(true)
-    })
-  }, [])
+  // useEffect(() => {
+  //   window.addEventListener('beforeunload', (event) => {
+  //     event.returnValue = setLeavingPage(true)
+  //   })
+  // }, [])
 
   const useOnClickOutside = (handler): void => {
     useEffect(() => {
@@ -251,14 +260,12 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
   }
   const divRef = useRef()
 
-  const handler = useCallback(() => { setLeavingPage(true) }, [])
-  useOnClickOutside(handler)
-
   return (
     <RootContainer>
       <Header>
         <Breadcrumbs separator=">" aria-label="breadcrumb">
           <Link
+            id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_LINK_HOME}
             className="breadcrumbInitial"
             color="inherit"
             onClick={() => history.push('/')}
@@ -266,32 +273,8 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
           >
             Home
           </Link>
-          <span className="breadcrumbEnd">{I18n.t('pages.staggeredProposal.title')}</span>
+          <span id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_SPAN_MAINPAGE} className="breadcrumbEnd">{I18n.t('pages.staggeredProposal.title')}</span>
         </Breadcrumbs>
-        {/* <UserContainer>
-          {editMode
-            ? <>
-              {I18n.t('pages.newProposal.reference')}
-              <ReferenceCode>
-                {proposal?.referenceProposal}
-              </ReferenceCode>
-            </>
-            : null
-          }
-          {I18n.t('pages.newProposal.encharged')}
-          <IconComponent name="user" defaultColor={theme?.commercial?.pages?.newProposal?.subtitle} />
-          <Username>
-            {getEnchargedFullname()}
-          </Username>
-          {editMode && proposal.idProposalStatus === 1
-            ? <Status className="open">{I18n.t('pages.proposal.table.openLabel')}</Status>
-            : null
-          }
-          {editMode && proposal.idProposalStatus === 3
-            ? <Status className="inReview">{I18n.t('pages.proposal.table.inRevisionLabel')}</Status>
-            : null
-          }
-        </UserContainer> */}
       </Header>
       <TopContainer>
         <Steps
@@ -304,6 +287,7 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
         />
         <ButtonContainer>
           <Button
+            id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_BUTTON_SAVE}
             backgroundGreen
             disabled={false}
             icon="arrow"
@@ -335,22 +319,64 @@ const NewStaggeredProposal = ({ theme, updateStaggeredProposal }: StaggeredProps
                 invalidInput={invalidInput}
                 setCompleted={setCompleted}
                 setFilled={setFilled}
+                ShowList={ShowList}
               />
             </div>
           </>
           }
+
+          <Grid item xs={12} container direction="row" justify="flex-start">
+            <Grid item xs={2}>
+              <ImportButtonDiv>
+                <Button
+                  id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_BUTTON_MODAL_IMPORT}
+                  onAction={() => {
+                    setOpenImport(true)
+                  }}
+                  text={I18n.t('pages.staggeredProposal.newStaggeredProposal.ImportTariff')}
+                  icon="tariff"
+                  backgroundGreen={true}
+                  tooltip={I18n.t('pages.staggeredProposal.newStaggeredProposal.ImportTariff')}
+                />
+              </ImportButtonDiv>
+            </Grid>
+            <Grid item xs={2}>
+              <AddButtonDiv>
+                <Button
+                  id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_BUTTON_MODAL_IMPORT_ON_HANDS}
+                  onAction={() => {
+                    setOpenImportHandsOn(true)
+                  }}
+                  text={I18n.t('pages.staggeredProposal.newStaggeredProposal.AddManual')}
+                  icon="add"
+                  backgroundGreen={false}
+                  tooltip={I18n.t('pages.staggeredProposal.newStaggeredProposal.AddManual')}
+                  style={{ height: '50px' }}
+                />
+              </AddButtonDiv>
+            </Grid>
+          </Grid>
+          <TariffImportModal
+            setClose={() => setOpenImport(false)}
+            open={openImport}
+            setShowList={() => setShowList(true)}
+            />
+          <TariffImportHandsOnModal
+            setClose={() => setOpenImportHandsOn(false)}
+            open={openImportHandsOn}
+            setShowList={() => setShowList(true)}
+          />
         </MainContainer>
       }
       {showSaveMessage &&
         <MessageContainer>
           <Messages
-            buttonText={I18n.t('pages.newProposal.saveMessage.buttonText')}
+            buttonText={I18n.t('pages.staggeredProposal.newStaggeredProposal.saveMessage.buttonText')}
             closable={true}
             closeAlert={() => { setShowSaveMessage(false) } }
-            closeMessage={I18n.t('pages.newProposal.saveMessage.closeMessage')}
-            goBack={() => { history.push('/proposta') } }
-            message={I18n.t('pages.newProposal.saveMessage.message')}
-            // message={`${String(I18n.t('pages.newProposal.saveMessage.message'))} ${String(proposal?.referenceProposal)}.`}
+            closeMessage={I18n.t('pages.staggeredProposal.newStaggeredProposal.saveMessage.closeMessage')}
+            goBack={() => { history.push('/propostaEscalonada') } }
+            message={I18n.t('pages.staggeredProposal.newStaggeredProposal.saveMessage.message')}
             severity={'success'}
           />
         </MessageContainer>}

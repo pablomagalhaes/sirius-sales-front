@@ -1,14 +1,9 @@
-import React, { useEffect, useState, useContext, Fragment } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import {
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
   FormLabel,
   Grid,
   InputAdornment,
-  RadioGroup,
   MenuItem
-
 } from '@material-ui/core/'
 
 import { I18n } from 'react-redux-i18n'
@@ -29,8 +24,15 @@ import API from '../../../../infrastructure/api'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { StyledPaper } from './StepsStyles'
 import { PickerDateRange } from 'fiorde-fe-components'
+import moment from 'moment'
 
-import { UpdateStaggeredProposal } from '../../../../domain/usecase'
+import { 
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP1__INPUT_CLIENT,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP1__SELECT_TARIFFTYPE,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP1__INPUT_VIGENCY
+} from '../../../../ids'
+
+import { CreateStaggeredProposal } from '../../../../domain/usecase'
 
 import { StaggeredProposalContext, StaggeredProposalProps } from '../../StaggeredProposal/context/StaggeredProposalContext'
 
@@ -44,7 +46,7 @@ export interface Step1Props {
   setFilled: (filled: any) => void
   filled: Filled
   setStepLoaded: (steps: any) => void
-  UpdateStaggeredProposal?: UpdateStaggeredProposal
+  NewStaggeredProposal?: CreateStaggeredProposal
 }
 
 const Step1 = ({
@@ -54,57 +56,32 @@ const Step1 = ({
   setFilled,
   filled,
   setStepLoaded,
-  UpdateStaggeredProposal
+  NewStaggeredProposal
 }: Step1Props): JSX.Element => {
   const [vigencyDate, setVigencyDate] = React.useState([null, null])
   const [partnerList, setPartnerList] = useState<any[]>([])
   const [partner, setPartner] = useState<any>('')
+  const [operation, setOperation] = useState<any>('')
 
   const { staggeredproposal, setStaggeredProposal }: StaggeredProposalProps = useContext(StaggeredProposalContext)
 
-  // const [data, setData] = useState({
-  //   idBusinessPartnerCustomer: null,
-  //   operation: '',
-  //   vigencyDate: vigencyDate,
-  //   proposalValue: '',
-  //   requester: ''
-  // })
-
   const [data, setData] = useState({
-    idTariffProposalStatus: 1,
-    idBusinessPartnerCustomer: 1,
-    tariffType: 'IMPORT',
-    dtValidity: '2023-03-12T00:00-03:00',
-    dtValidityEnd: '2023-03-15T00:00-03:00',
+    idTariffProposalStatus: null,
+    idBusinessPartnerCustomer: null,
+    tariffType: '',
+    dtValidity: '',
+    dtValidityEnd: '',
+    vigencyDate: vigencyDate,
     proposalTariff: [
       {
-        origin: 'ARBUE',
-        destination: 'SSZ',
-        idAgent: 1,
-        idBusinessPartnerTransporter: 2,
-        currency: 'ARS',
-        frequency: 1,
-        vlFrequency: 3,
-        freightValues: [
-          {
-            vlMinimum: '90',
-            until45kg: '4.56',
-            until100kg: '4.57',
-            until300kg: '4.58',
-            until500kg: '50.01',
-            until1000kg: '1000.52',
-            buyOrSell: 'BUY'
-          },
-          {
-            vlMinimum: '90',
-            until45kg: '4.56',
-            until100kg: '4.57',
-            until300kg: '4.58',
-            until500kg: '50.01',
-            until1000kg: '1000.52',
-            buyOrSell: 'SELL'
-          }
-        ]
+        origin: '',
+        destination: '',
+        idAgent: null,
+        idBusinessPartnerTransporter: null,
+        currency: '',
+        frequency: null,
+        vlFrequency: null,
+        freightValues: []
       }
     ]
   })
@@ -112,11 +89,11 @@ const Step1 = ({
   const operationList = [
     {
       id: 1,
-      operation: 'Importação'
+      operation: I18n.t('pages.staggeredProposal.newStaggeredProposal.step1.import')
     },
     {
       id: 2,
-      operation: 'Exportação'
+      operation: I18n.t('pages.staggeredProposal.newStaggeredProposal.step1.export')
     }
   ]
 
@@ -132,10 +109,6 @@ const Step1 = ({
     })
     setStepLoaded((currentState) => ({ ...currentState, step1: true }))
   }, [])
-
-  // useEffect(() => {
-  //   setData({ ...data, vigencyDate: vigencyDate })
-  // }, [vigencyDate])
 
   useEffect(() => {
     if (data.idBusinessPartnerCustomer !== null && data.tariffType !== '') {
@@ -158,21 +131,43 @@ const Step1 = ({
     setPartner(newValue)
     const client = partnerList.filter((ptn) => ptn.businessPartner.simpleName === newValue)[0]?.businessPartner.id
     setData({ ...data, idBusinessPartnerCustomer: Number(client) })
-
     setStaggeredProposal({
       ...staggeredproposal,
+      idTariffProposalStatus: Number(1),
       idBusinessPartnerCustomer: Number(client)
     })
   }
 
-  console.log('data step1', data)
-  console.log('staggeredproposal step1', staggeredproposal)
+  useEffect(() => {
+    const TarifType = data?.tariffType
+    setStaggeredProposal({
+      ...staggeredproposal,
+      tariffType: String(TarifType)
+    })
+  }, [data.tariffType])
+
+  useEffect(() => {
+    setStaggeredProposal({
+      ...staggeredproposal,
+      dtValidity: moment(vigencyDate[0]).format(),
+      dtValidityEnd: moment(vigencyDate[1]).format()
+    })
+  }, [vigencyDate])
+
+  const handleTariffType = (newValue): any => {
+    setOperation(newValue)
+    if (newValue === 1) {
+      setData({ ...data, tariffType: 'IMPORT' })
+    } else {
+      setData({ ...data, tariffType: 'EXPORT' })
+    }
+  }
 
   return (
     <Separator>
       <Title>
-        1. {I18n.t('pages.staggeredProposal.step1.title')}
-        <Subtitle>{I18n.t('pages.staggeredProposal.step1.subtitle')}</Subtitle>
+        1. {I18n.t('pages.staggeredProposal.newStaggeredProposal.step1.title')}
+        <Subtitle>{I18n.t('pages.staggeredProposal.newStaggeredProposal.step1.subtitle')}</Subtitle>
       </Title>
       <Grid container spacing={5}>
         <Grid item xs={6}>
@@ -180,7 +175,7 @@ const Step1 = ({
             component="legend"
             error={data.idBusinessPartnerCustomer === null && invalidInput}
           >
-            {I18n.t('pages.staggeredProposal.step1.client')}:
+            {I18n.t('pages.staggeredProposal.newStaggeredProposal.step1.client')}:
             <RedColorSpan> *</RedColorSpan>
           </FormLabel>
           <Autocomplete
@@ -192,13 +187,14 @@ const Step1 = ({
               <div ref={params.InputProps.ref}>
                 <ControlledInput
                   {...params}
-                  id="search-client"
+                  data-testid="search-client"
+                  id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP1__INPUT_CLIENT}
                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
                   invalid={data.idBusinessPartnerCustomer === null && invalidInput}
                   variant="outlined"
                   size="small"
                   placeholder={I18n.t(
-                    'pages.staggeredProposal.step1.searchClient'
+                    'pages.staggeredProposal.newStaggeredProposal.step1.searchClient'
                   )}
                   $space
                   InputProps={{
@@ -224,20 +220,23 @@ const Step1 = ({
             component="legend"
             error={invalidInput && data.tariffType.length === 0}
           >
-            {I18n.t('pages.staggeredProposal.step1.operation')}
+            {I18n.t('pages.staggeredProposal.newStaggeredProposal.step1.operation')}
             {<RedColorSpan> *</RedColorSpan>}
           </FormLabel>
           <ControlledSelect
-            value={data.tariffType}
-            onChange={(e) => setData({ ...data, tariffType: e.target.value })}
+            id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP1__SELECT_TARIFFTYPE}
+            data-testid="tariffType"
+            value={operation}
+            // onChange={(e) => setData({ ...data, tariffType: e.target.value })}
+            onChange={(e) => handleTariffType(e.target.value)}
             displayEmpty
             disableUnderline
             invalid={invalidInput && data.tariffType.length === 0}
             toolTipTitle={I18n.t('components.itemModal.requiredField')}
           >
-            <MenuItem disabled value="">
+            <MenuItem disabled value={data?.tariffType}>
               <SelectSpan placeholder={1}>
-                {I18n.t('pages.staggeredProposal.step1.choose')}
+                {I18n.t('pages.staggeredProposal.newStaggeredProposal.step1.choose')}
               </SelectSpan>
             </MenuItem>
             {operationList.map((item) => (
@@ -252,19 +251,20 @@ const Step1 = ({
             component="legend"
             error={invalidInput && data.tariffType.length === 0}
           >
-            {I18n.t('pages.staggeredProposal.step1.vigencyDate')}
+            {I18n.t('pages.staggeredProposal.newStaggeredProposal.step1.vigencyDate')}
             {<RedColorSpan> *</RedColorSpan>}
           </FormLabel>
           <div style={{ marginTop: '-8px' }}>
-            {/* <PickerDateRange
-              defaultValue={data.vigencyDate}
+            <PickerDateRange
+              data-testid="vigency"
+              defaultValue={vigencyDate}
               endDateLabel="Data Final"
               inputFormat=""
               language="pt-br"
               onChange={setVigencyDate}
               placeHolderLabel="Periodo"
               widthTx="250px"
-            /> */}
+            />
           </div>
         </Grid>
       </Grid>

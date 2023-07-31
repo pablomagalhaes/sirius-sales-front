@@ -28,12 +28,11 @@ export class AxiosHttpClient implements HttpClient {
       })
 
       if (axiosStatus === HttpStatusCode.unauthorized) {
-        console.log('unauthorized')
 
         const alwaysLogged = JSON.parse(storage.get('always_logged'))
         if (alwaysLogged) {
           // const response = await refreshAuthenticate()
-        //   setUserOnStorage(response)
+          //   setUserOnStorage(response)
           // window.location.reload()
         } else {
           // storage.clear()

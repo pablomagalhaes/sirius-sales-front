@@ -1,10 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Table, TableCell, TableRow } from '@material-ui/core'
-import { Pagination } from 'fiorde-fe-components'
 import {
-  TableContainer,
-  PaginationContainer,
-  PaginationMainContainer,
   TableHeader,
   TableBod
 } from './TariffProcessingTableStyle'

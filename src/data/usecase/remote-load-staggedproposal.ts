@@ -14,6 +14,7 @@ export class RemoteLoadStaggeredProposal implements LoadStaggeredProposal {
     const urlParams = qs.stringify(params, { arrayFormat: 'comma' })
 
     const httpResponse = await this.httpClient.request({
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       url: `${this.url}?${urlParams}`,
       method: 'get'
     })

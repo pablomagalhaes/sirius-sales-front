@@ -1,4 +1,5 @@
 export interface StaggeredProposalModel {
+  // map(arg0: (item: any, index: any) => JSX.Element): unknown
   idTariffProposalStatus: number
   idBusinessPartnerCustomer: number
   tariffType: string

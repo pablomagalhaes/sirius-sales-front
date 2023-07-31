@@ -1,5 +1,5 @@
 export * from './new-proposal'
 export * from './new-proposal-exportation'
-export * from './update-staggered-proposal'
+export * from './new-staggered-proposal'
 export * from './load-staggered-proposal'
 export * from './update-status-staggered-proposal'

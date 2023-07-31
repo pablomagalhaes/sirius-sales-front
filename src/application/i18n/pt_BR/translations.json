@@ -392,6 +392,30 @@
         "specification": "Especificação",
         "agent": "Agente"
       },
+      "tariffImport": {
+        "title": "Tarifários aéreos",
+        "subtitle": "Adicionar tarifa manualmente",
+        "origin": "Origem",
+        "destiny": "Destino",
+        "agent": "Agente",
+        "closeButtonLabel": "Cancelar",
+        "addButtonLabel": "Adicionar",
+        "searchButtonLabel": "Buscar",
+        "selectedsItems": "itens selecionados",
+        "selectedItem": "item selecionado",
+        "table": {
+          "airCompany": "Cia. Aérea",
+          "agent": "Agente",
+          "validity": "Validade",
+          "currency": "Moeda",
+          "minimun": "Mínimo",
+          "plus45": "+45kg",
+          "plus100": "+100kg",
+          "plus300": "+300kg",
+          "plus500": "+500kg",
+          "plus1000": "+1ton"
+        }
+      },
       "tariffTable": {
         "edit": "Ver detalhes ou editar tarifa",
         "validUntil": "Vencimento em",
@@ -582,27 +606,38 @@
     },
     "staggeredProposal": {
       "title": "Proposta Escalonada",
-      "step1": {
-        "title": "Serviço",
-        "subtitle": "Escolha o cliente e informe as particularidades do serviço.",
-        "searchClient": "Procurar cliente por código ou nome...",
-        "operation": "Operação",
-        "vigencyDate": "Vigência",
-        "choose": "Escolha...",
-        "client": "Cliente"
-      },
-      "step2": {
-        "title": "Tarifas",
-        "subtitle": "Selecione a tabela correspondente ao tarifário para essa negociação.",
-        "agent": "Agente",
-        "ciaArea": "Cia. Aérea",
-        "coin": "Moeda",
-        "minValue": "Valor Minimo",
-        "45": "+45kg",
-        "100": "+100kg",
-        "300": "+300kg",
-        "500": "+500kg",
-        "1ton": "+1ton"
+      "newStaggeredProposal": {
+        "ImportTariff": "Importar tarifário",
+        "AddManual": "Adicionar manualmente",
+        "step1": {
+          "title": "Serviço",
+          "subtitle": "Escolha o cliente e informe as particularidades do serviço.",
+          "searchClient": "Procurar cliente por código ou nome...",
+          "operation": "Operação",
+          "vigencyDate": "Vigência",
+          "choose": "Escolha...",
+          "client": "Cliente",
+          "import": "Importação",
+          "export": "Exportação"
+        },
+        "step2": {
+          "title": "Tarifas",
+          "subtitle": "Selecione a tabela correspondente ao tarifário para essa negociação.",
+          "agent": "Agente",
+          "ciaArea": "Cia. Aérea",
+          "coin": "Moeda",
+          "minValue": "Valor Minimo",
+          "45": "+45kg",
+          "100": "+100kg",
+          "300": "+300kg",
+          "500": "+500kg",
+          "1ton": "+1ton"
+        },
+        "saveMessage": {
+          "buttonText": "Voltar à lista",
+          "closeMessage": "Continuar editando",
+          "message": "Proposta salva com sucesso"
+        }
       },
       "workStation": {
         "buttonLabel": "Criar nova proposta"

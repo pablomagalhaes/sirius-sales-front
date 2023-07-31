@@ -4,6 +4,7 @@ import ShipIcon from './ShipIcon'
 import TruckIcon from './TruckIcon'
 import UserIcon from './UserIcon'
 import SearchIcon from './SearchIcon'
+import SelectIcon from './SelectIcon'
 
 interface IconComponentProps {
   name: string
@@ -22,6 +23,8 @@ const IconComponent = ({ name, ...props }: IconComponentProps): JSX.Element => {
       return <UserIcon {...props} />
     case 'search':
       return <SearchIcon {...props} />
+    case 'arrow':
+      return <SelectIcon/>
     default:
       return <div />
   }

@@ -337,7 +337,12 @@ const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposa
               tooltip={I18n.t('pages.staggeredProposal.workStation.buttonLabel')}
               backgroundGreen={true}
               icon="add"
-              onAction={() => { }}
+              onAction={() =>
+                history.push({
+                  pathname: '/novaPropostaEscalonada',
+                  state: { proposalId: null }
+                })
+              }
               position="left"
               />
           </ButtonContainer>
