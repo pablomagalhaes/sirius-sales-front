@@ -35,7 +35,7 @@ import { CreateStaggeredProposal } from '../../../../domain/usecase'
 
 import { StaggeredProposalContext, StaggeredProposalProps } from '../../StaggeredProposal/context/StaggeredProposalContext'
 
-import { AcitivityTypes } from '../../../../application/enum/enum'
+import { AcitivityTypes, OperationTypes } from '../../../../application/enum/enum'
 
 export interface Filled {
   step2: boolean
@@ -159,8 +159,8 @@ const Step1 = ({
           resolve()
           const client = response.filter((ptn) => ptn.businessPartner.id === staggeredproposal.idBusinessPartnerCustomer)[0]?.businessPartner.simpleName
           setPartner(client)
-          if (staggeredproposal.tariffType === AcitivityTypes.Import) setOperation(1)
-          if (staggeredproposal.tariffType === AcitivityTypes.Export) setOperation(2)
+          if (staggeredproposal.tariffType === AcitivityTypes.Import) setOperation(OperationTypes.Import)
+          if (staggeredproposal.tariffType === AcitivityTypes.Export) setOperation(OperationTypes.Export)
           setVigencyDate([staggeredproposal.dtValidity, staggeredproposal.dtValidityEnd])
         })
         .catch((err) => console.log(err))
