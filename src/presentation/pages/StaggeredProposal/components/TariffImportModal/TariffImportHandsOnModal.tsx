@@ -33,6 +33,19 @@ import { usePartnerList, useOriginDestination, useBusinessPartnerByType, useCurr
 import { OriginDestinyTypes } from '../../../../../application/enum/enum'
 import { NumberInput } from '../../../NewProposal/steps/StepsStyles'
 import FormatNumber from '../../../../../application/utils/formatNumber'
+import {
+   TARIFF_IMPORT_HANDSON_MODAL_INPUT_ORIGIN,
+   TARIFF_IMPORT_HANDSON_MODAL_INPUT_DESTINATION,
+   TARIFF_IMPORT_HANDSON_MODAL_INPUT_AGENT,
+   TARIFF_IMPORT_HANDSON_MODAL_INPUT_AIR,
+   TARIFF_IMPORT_HANDSON_MODAL_INPUT_CURRENCY,
+   TARIFF_IMPORT_HANDSON_MODAL_INPUT_MINIMUN,
+   TARIFF_IMPORT_HANDSON_MODAL_INPUT_UNTIL45KG,
+   TARIFF_IMPORT_HANDSON_MODAL_INPUT_UNTIL100KG,
+   TARIFF_IMPORT_HANDSON_MODAL_INPUT_UNTIL300KG,
+   TARIFF_IMPORT_HANDSON_MODAL_INPUT_UNTIL500KG,
+   TARIFF_IMPORT_HANDSON_MODAL_INPUT_UNTIL1000KG,
+} from '../../../../../ids'
 
 import { StaggeredProposalContext, StaggeredProposalProps } from '../../context/StaggeredProposalContext'
 
@@ -67,7 +80,7 @@ interface TariffUploadProps {
   setShowList: () => void
 }
 
-export const initialState = {
+ export const initialState = {
   agent: { name: '', id: null },
   origin: '',
   destiny: '',
@@ -207,6 +220,7 @@ const TariffImportHandsOnModal = ({
                 {I18n.t('pages.tariff.tariffImport.origin')}
             </FormLabel>
             <Autocomplete
+              id={TARIFF_IMPORT_HANDSON_MODAL_INPUT_ORIGIN}
               freeSolo
               onChange={(e, newValue) =>
                 setData({ ...data, origin: String(newValue ?? '') })
@@ -256,6 +270,7 @@ const TariffImportHandsOnModal = ({
                 {I18n.t('pages.tariff.tariffImport.destiny')}
             </FormLabel>
             <Autocomplete
+              id={TARIFF_IMPORT_HANDSON_MODAL_INPUT_DESTINATION}
               freeSolo
               onChange={(e, newValue) =>
                 setData({ ...data, destiny: String(newValue ?? '') })
@@ -305,6 +320,7 @@ const TariffImportHandsOnModal = ({
                 {I18n.t('pages.tariff.tariffImport.agent')}
             </FormLabel>
             <Autocomplete
+              id={TARIFF_IMPORT_HANDSON_MODAL_INPUT_AGENT}
               freeSolo
               options={agentsList.map((item: any) => item.simpleName)}
               onChange={(_e, newValue): void => {
@@ -355,6 +371,7 @@ const TariffImportHandsOnModal = ({
                 {I18n.t('pages.tariff.tariffImport.table.airCompany')}
             </FormLabel>
             <Autocomplete
+              id={TARIFF_IMPORT_HANDSON_MODAL_INPUT_AIR}
               disabled={false}
               size="small"
               closeIcon={null}
@@ -407,6 +424,7 @@ const TariffImportHandsOnModal = ({
                 {I18n.t('components.tariffModal.currency')}
               </FormLabel>
                   <Autocomplete
+                    id={TARIFF_IMPORT_HANDSON_MODAL_INPUT_CURRENCY}
                     value={data.currency}
                     options={currencyList.map((option) => option.id)}
                     disabled={false}
@@ -452,6 +470,7 @@ const TariffImportHandsOnModal = ({
                 {I18n.t('components.tariffModal.minValue')}
               </FormLabel>
               <NumberInput
+                id={TARIFF_IMPORT_HANDSON_MODAL_INPUT_MINIMUN}
                 decimalSeparator={','}
                 thousandSeparator={'.'}
                 decimalScale={2}
@@ -472,6 +491,7 @@ const TariffImportHandsOnModal = ({
                 {I18n.t('components.tariffModal.weight1')}
               </FormLabel>
               <NumberInput
+                id={TARIFF_IMPORT_HANDSON_MODAL_INPUT_UNTIL45KG}
                 decimalSeparator={','}
                 thousandSeparator={'.'}
                 decimalScale={2}
@@ -492,6 +512,7 @@ const TariffImportHandsOnModal = ({
                 {I18n.t('components.tariffModal.weight2')}
               </FormLabel>
               <NumberInput
+                id={TARIFF_IMPORT_HANDSON_MODAL_INPUT_UNTIL100KG}
                 decimalSeparator={','}
                 thousandSeparator={'.'}
                 decimalScale={2}
@@ -512,6 +533,7 @@ const TariffImportHandsOnModal = ({
                 {I18n.t('components.tariffModal.weight3')}
               </FormLabel>
               <NumberInput
+                id={TARIFF_IMPORT_HANDSON_MODAL_INPUT_UNTIL300KG}
                 decimalSeparator={','}
                 thousandSeparator={'.'}
                 decimalScale={2}
@@ -532,6 +554,7 @@ const TariffImportHandsOnModal = ({
                 {I18n.t('components.tariffModal.weight4')}
               </FormLabel>
               <NumberInput
+                id={TARIFF_IMPORT_HANDSON_MODAL_INPUT_UNTIL500KG}
                 decimalSeparator={','}
                 thousandSeparator={'.'}
                 decimalScale={2}
@@ -552,6 +575,7 @@ const TariffImportHandsOnModal = ({
                 {I18n.t('components.tariffModal.weight5')}
               </FormLabel>
               <NumberInput
+                id={TARIFF_IMPORT_HANDSON_MODAL_INPUT_UNTIL1000KG}
                 decimalSeparator={','}
                 thousandSeparator={'.'}
                 decimalScale={2}

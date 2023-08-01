@@ -126,3 +126,25 @@ export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__INPUT_UNTIL1000kg = `
 export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__BUTTON_DELETE = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step2_button_delete`
 export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__INPUT_FREQUENCY = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step2_input_frequency`
 export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2__SELECT_VLFREQUENCY = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step2_select_vlfrequency`
+
+// Tariff Import Modal
+export const TARIFF_IMPORT_MODAL_INPUT_ORIGIN = `${PREFIX_IDS}_tariff-import-modal_input_origin`
+export const TARIFF_IMPORT_MODAL_INPUT_DESTINATION = `${PREFIX_IDS}_tariff-import-modal_input_destination`
+export const TARIFF_IMPORT_MODAL_INPUT_AGENT = `${PREFIX_IDS}_tariff-import-modal_input_agent`
+export const TARIFF_IMPORT_MODAL_BUTTON_SEARCH = `${PREFIX_IDS}_tariff-import-modal_button_search`
+export const TARIFF_IMPORT_MODAL_BUTTON_ADD = `${PREFIX_IDS}_tariff-import-modal_button_add`
+export const TARIFF_IMPORT_MODAL_BUTTON_CANCEL = `${PREFIX_IDS}_tariff-import-modal_button_cancel`
+export const TARIFF_IMPORT_MODAL_CHECKBOX_ITEM = `${PREFIX_IDS}_tariff-import-modal_checkbox_item`
+
+// Tariff Import HandsOn Modal
+export const TARIFF_IMPORT_HANDSON_MODAL_INPUT_ORIGIN = `${PREFIX_IDS}_tariff-import-handson-modal_input_origin`
+export const TARIFF_IMPORT_HANDSON_MODAL_INPUT_DESTINATION = `${PREFIX_IDS}_tariff-import-handson-modal_input_destination`
+export const TARIFF_IMPORT_HANDSON_MODAL_INPUT_AGENT = `${PREFIX_IDS}_tariff-import-handson-modal_input_agent`
+export const TARIFF_IMPORT_HANDSON_MODAL_INPUT_AIR = `${PREFIX_IDS}_tariff-import-handson-modal_input_air`
+export const TARIFF_IMPORT_HANDSON_MODAL_INPUT_CURRENCY = `${PREFIX_IDS}_tariff-import-handson-modal_input_currency`
+export const TARIFF_IMPORT_HANDSON_MODAL_INPUT_MINIMUN = `${PREFIX_IDS}_tariff-import-handson-modal_input_minimun`
+export const TARIFF_IMPORT_HANDSON_MODAL_INPUT_UNTIL45KG = `${PREFIX_IDS}_tariff-import-handson-modal_input_until45kg`
+export const TARIFF_IMPORT_HANDSON_MODAL_INPUT_UNTIL100KG = `${PREFIX_IDS}_tariff-import-handson-modal_input_until100kg`
+export const TARIFF_IMPORT_HANDSON_MODAL_INPUT_UNTIL300KG = `${PREFIX_IDS}_tariff-import-handson-modal_input_until300kg`
+export const TARIFF_IMPORT_HANDSON_MODAL_INPUT_UNTIL500KG = `${PREFIX_IDS}_tariff-import-handson-modal_input_until500kg`
+export const TARIFF_IMPORT_HANDSON_MODAL_INPUT_UNTIL1000KG = `${PREFIX_IDS}_tariff-import-handson-modal_input_until1000kg`

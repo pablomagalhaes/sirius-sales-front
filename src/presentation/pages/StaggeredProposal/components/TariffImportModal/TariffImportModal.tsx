@@ -44,10 +44,17 @@ import { TariffContext } from '../../../Tariff/context/TariffContext'
 import useTariffsByCountry from '../../../../hooks/tariff/useTariffsByCountry'
 import { TariffItemsTypes } from '../../../../../application/enum/tariffEnum'
 import FormatNumber from '../../../../../application/utils/formatNumber'
-
+import {
+  TARIFF_IMPORT_MODAL_INPUT_ORIGIN,
+  TARIFF_IMPORT_MODAL_INPUT_DESTINATION,
+  TARIFF_IMPORT_MODAL_INPUT_AGENT,
+  TARIFF_IMPORT_MODAL_BUTTON_SEARCH,
+  TARIFF_IMPORT_MODAL_BUTTON_ADD,
+  TARIFF_IMPORT_MODAL_BUTTON_CANCEL,
+  TARIFF_IMPORT_MODAL_CHECKBOX_ITEM,
+} from '../../../../../ids'
 
 import { StaggeredProposalContext, StaggeredProposalProps } from '../../context/StaggeredProposalContext'
-
 
 interface AgentType {
   name: string
@@ -66,7 +73,7 @@ interface TariffUploadProps {
   setShowList: () => void
 }
 
-export const initialState = {
+  export const initialState = {
   agent: { name: '', id: null },
   origin: '',
   destiny: ''
@@ -257,6 +264,7 @@ const TariffImportModal = ({
               <RedColorSpan> *</RedColorSpan>
             </FormLabel>
             <Autocomplete
+              id={TARIFF_IMPORT_MODAL_INPUT_ORIGIN}
               freeSolo
               onChange={(e, newValue) =>
                 setData({ ...data, origin: String(newValue ?? '') })
@@ -307,6 +315,7 @@ const TariffImportModal = ({
               <RedColorSpan> *</RedColorSpan>
             </FormLabel>
             <Autocomplete
+              id={TARIFF_IMPORT_MODAL_INPUT_DESTINATION}
               freeSolo
               onChange={(e, newValue) =>
                 setData({ ...data, destiny: String(newValue ?? '') })
@@ -354,6 +363,7 @@ const TariffImportModal = ({
                 {I18n.t('pages.tariff.tariffImport.agent')}
             </FormLabel>
             <Autocomplete
+              id={TARIFF_IMPORT_MODAL_INPUT_AGENT}
               freeSolo
               options={agentsList.map((item: any) => item.simpleName)}
               onChange={(_e, newValue): void => {
@@ -396,6 +406,7 @@ const TariffImportModal = ({
             <Grid item xs={6}>
               <Button
                   // disabled={!validateData()}
+                  id={TARIFF_IMPORT_MODAL_BUTTON_SEARCH}
                   text={I18n.t('pages.tariff.tariffImport.searchButtonLabel')}
                   tooltip={I18n.t('pages.tariff.tariffImport.searchButtonLabel')}
                   backgroundGreen={true}
@@ -431,6 +442,7 @@ const TariffImportModal = ({
                   <TableRow key={tariff.id}>
                     <TableBodyCell align="right">
                       <Checkbox
+                        id={TARIFF_IMPORT_MODAL_CHECKBOX_ITEM}
                         checked={selecteds.some((selected) => selected === tariff.id)}
                         onChange={() => {
                           if (selecteds.some((selected) => selected === tariff.id)) {
@@ -483,6 +495,7 @@ const TariffImportModal = ({
           <Grid item>
             <CloseButtonDiv>
               <Button
+                id={TARIFF_IMPORT_MODAL_BUTTON_CANCEL}
                 disabled={false}
                 text={I18n.t('pages.tariff.tariffImport.closeButtonLabel')}
                 tooltip={I18n.t('pages.tariff.tariffImport.closeButtonLabel')}
@@ -495,6 +508,7 @@ const TariffImportModal = ({
           <Grid item>
             <div>
               <Button
+                id={TARIFF_IMPORT_MODAL_BUTTON_ADD}
                 disabled={selecteds.length === 0}
                 text={I18n.t('pages.tariff.tariffImport.addButtonLabel')}
                 tooltip={I18n.t('pages.tariff.tariffImport.addButtonLabel')}
