@@ -45,9 +45,7 @@ import useTariffsByCountry from '../../../../hooks/tariff/useTariffsByCountry'
 import { TariffItemsTypes } from '../../../../../application/enum/tariffEnum'
 import FormatNumber from '../../../../../application/utils/formatNumber'
 
-
 import { StaggeredProposalContext, StaggeredProposalProps } from '../../context/StaggeredProposalContext'
-
 
 interface AgentType {
   name: string
@@ -81,7 +79,7 @@ const TariffImportModal = ({
   const { partnerList: agentsList } = usePartnerList()
   const { data: originDestinationList = [] } = useOriginDestination()
   const { setFilter, filter }: any = useContext(TariffContext)
-  const { content: tariffData, totalElements: totalTariffList, setParams, refetch } = useTariffsByCountry()
+  const { content: tariffData, totalElements: totalTariffList, setParams } = useTariffsByCountry()
 
   const { staggeredproposal, setStaggeredProposal }: StaggeredProposalProps = useContext(StaggeredProposalContext)
 
@@ -442,7 +440,7 @@ const TariffImportModal = ({
                       />
                     </TableBodyCell>
                     {Object.values(tariff).filter((_e, index) => index !== 0).map((each: any) =>
-                      <TableBodyCell key={`${each}-${index}`} align="left">
+                      <TableBodyCell key={`${String(each)}-${String(index)}`} align="left">
                         {checkIsNumber(each)}
                       </TableBodyCell>)
                     }

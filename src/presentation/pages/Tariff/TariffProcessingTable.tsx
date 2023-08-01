@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Table, TableCell, TableRow } from '@material-ui/core'
 import {
   TableHeader,
@@ -18,10 +18,7 @@ const TariffProcessingTable = ({
   rows,
   handleSelectedItem
 }: TariffProcessingTableProps): JSX.Element => {
-  const [state, setState] = useState({ anchorEl: null, currentKey: null })
-
   const handleClick = (event: any, key: any, id: any): void => {
-    setState({ anchorEl: event.currentTarget, currentKey: key })
     handleSelectedItem(id)
   }
 

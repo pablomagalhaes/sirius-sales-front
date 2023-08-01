@@ -16,7 +16,7 @@ export namespace CreateStaggeredProposal {
   }
 
   interface ProposalTariff {
-    origin?: string
+    origin: string
     destination: string
     idAgent: number
     idBusinessPartnerTransporter: number
