@@ -42,6 +42,7 @@ const CancelModal = ({
 
   const handleOnClose = (): void => {
     setClose()
+    setDetail('')
   }
 
   const handleStatusChange = (): void => {

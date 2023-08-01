@@ -1,5 +1,5 @@
 // import { notification } from 'antd'
-import axios, { AxiosResponse } from 'axios'
+import { AxiosResponse } from 'axios'
 import { HttpRequest, HttpResponse, HttpClient, HttpStatusCode } from '../../data/protocols/http'
 import { LocalStorageAdapter } from '../cache'
 // import { refreshAuthenticate } from '../../dataSource/request'
@@ -28,7 +28,6 @@ export class AxiosHttpClient implements HttpClient {
       })
 
       if (axiosStatus === HttpStatusCode.unauthorized) {
-
         const alwaysLogged = JSON.parse(storage.get('always_logged'))
         if (alwaysLogged) {
           // const response = await refreshAuthenticate()

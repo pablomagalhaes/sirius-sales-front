@@ -30,7 +30,6 @@ import ProposalDisplayModal from '../../components/ProposalDisplayModal/Proposal
 import { ExitToApp } from '@material-ui/icons/'
 import { useHistory } from 'react-router-dom'
 import UpArrow from '../../../application/icons/UpArrow'
-import API from '../../../infrastructure/api'
 import ArrowDown from '../../../application/icons/ArrowDown'
 import { orderButtonMenuItems } from './constants'
 import { I18n } from 'react-redux-i18n'
@@ -45,10 +44,17 @@ import { StaggeredProposalContext, filterDefault } from './context/StaggeredProp
 import useTariffProposal from '../../hooks/tariff/useTariffProposal'
 import { OrderTypes } from '../../../application/enum/enum'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { UpdateStatusStaggeredProposal } from '../../../domain/usecase'
+import { UpdateStatusStaggeredProposal , LoadStaggeredProposal } from '../../../domain/usecase'
 import CancelModal from '../../components/CancelModal/CancelModal'
 
-const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposal }): JSX.Element => {
+interface StaggeredProposalProps {
+  loadStaggeredProposal: LoadStaggeredProposal
+  updateStatusStaggeredProposal: {
+    updateStatusStaggered: Function
+  }
+}
+
+const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposal }: StaggeredProposalProps): JSX.Element => {
   const { filter, setFilter }: any = useContext(StaggeredProposalContext)
 
   const { content: proposalList, totalElements: totalProposalList, setParams, refetch } = useTariffProposal(loadStaggeredProposal)
@@ -142,6 +148,10 @@ const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposa
             iconType: 'edit',
             label: I18n.t('pages.proposal.table.editLabel'),
             onClick: () => {
+              history.push({
+                pathname: '/novaPropostaEscalonada',
+                state: { proposalId: id }
+              })
             }
           },
           {
@@ -212,6 +222,10 @@ const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposa
             iconType: 'edit',
             label: I18n.t('pages.proposal.table.editLabel'),
             onClick: () => {
+              history.push({
+                pathname: '/novaPropostaEscalonada',
+                state: { proposalId: id }
+              })
             }
           },
           {
@@ -282,9 +296,9 @@ const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposa
       Boolean(size) &&
       Boolean(orderByList)
     ) {
-      return `${I18n.t('pages.tariff.titles.StaggeredProposal')} (${totalProposalList}) - ${I18n.t('pages.tariff.mainPage.last30days')}`
+      return `${String(I18n.t('pages.tariff.titles.StaggeredProposal'))} (${String(totalProposalList)}) - ${String(I18n.t('pages.tariff.mainPage.last30days'))}`
     }
-    return `Resultado do filtro (${totalProposalList})`
+    return `Resultado do filtro (${String(totalProposalList)})`
   }
   const handleCloseReject = (): void => {
     setOpenReject(false)

@@ -26,15 +26,16 @@ import { StyledPaper } from './StepsStyles'
 import { PickerDateRange } from 'fiorde-fe-components'
 import moment from 'moment'
 
-import { 
-  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP1__INPUT_CLIENT,
-  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP1__SELECT_TARIFFTYPE,
-  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP1__INPUT_VIGENCY
+import {
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP1_INPUT_CLIENT,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP1_SELECT_TARIFFTYPE
 } from '../../../../ids'
 
 import { CreateStaggeredProposal } from '../../../../domain/usecase'
 
 import { StaggeredProposalContext, StaggeredProposalProps } from '../../StaggeredProposal/context/StaggeredProposalContext'
+
+import { AcitivityTypes, OperationTypes } from '../../../../application/enum/enum'
 
 export interface Filled {
   step2: boolean
@@ -64,8 +65,7 @@ const Step1 = ({
   const [operation, setOperation] = useState<any>('')
 
   const { staggeredproposal, setStaggeredProposal }: StaggeredProposalProps = useContext(StaggeredProposalContext)
-
-  const [data, setData] = useState({
+  const initialData = {
     idTariffProposalStatus: null,
     idBusinessPartnerCustomer: null,
     tariffType: '',
@@ -84,7 +84,8 @@ const Step1 = ({
         freightValues: []
       }
     ]
-  })
+  }
+  const [data, setData] = useState(initialData)
 
   const operationList = [
     {
@@ -96,19 +97,6 @@ const Step1 = ({
       operation: I18n.t('pages.staggeredProposal.newStaggeredProposal.step1.export')
     }
   ]
-
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const getPartners = new Promise<void>((resolve) => {
-      API.getPartner()
-        .then((response) => {
-          setPartnerList(response)
-          resolve()
-        })
-        .catch((err) => console.log(err))
-    })
-    setStepLoaded((currentState) => ({ ...currentState, step1: true }))
-  }, [])
 
   useEffect(() => {
     if (data.idBusinessPartnerCustomer !== null && data.tariffType !== '') {
@@ -133,7 +121,6 @@ const Step1 = ({
     setData({ ...data, idBusinessPartnerCustomer: Number(client) })
     setStaggeredProposal({
       ...staggeredproposal,
-      idTariffProposalStatus: Number(1),
       idBusinessPartnerCustomer: Number(client)
     })
   }
@@ -153,6 +140,39 @@ const Step1 = ({
       dtValidityEnd: moment(vigencyDate[1]).format()
     })
   }, [vigencyDate])
+
+  useEffect(() => {
+    setData({
+      idTariffProposalStatus: staggeredproposal.idTariffProposalStatus,
+      idBusinessPartnerCustomer: staggeredproposal.idBusinessPartnerCustomer,
+      tariffType: staggeredproposal.tariffType,
+      dtValidity: staggeredproposal.dtValidity,
+      dtValidityEnd: staggeredproposal.dtValidityEnd,
+      vigencyDate: vigencyDate,
+      proposalTariff: [...staggeredproposal.proposalTariff]
+    })
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const getPartners = new Promise<void>((resolve) => {
+      API.getPartner()
+        .then((response) => {
+          setPartnerList(response)
+          resolve()
+          const client = response.filter((ptn) => ptn.businessPartner.id === staggeredproposal.idBusinessPartnerCustomer)[0]?.businessPartner.simpleName
+          setPartner(client)
+          if (staggeredproposal.tariffType === AcitivityTypes.Import) setOperation(OperationTypes.Import)
+          if (staggeredproposal.tariffType === AcitivityTypes.Export) setOperation(OperationTypes.Export)
+          setVigencyDate([staggeredproposal.dtValidity, staggeredproposal.dtValidityEnd])
+        })
+        .catch((err) => console.log(err))
+    })
+    setStepLoaded((currentState) => ({ ...currentState, step1: true }))
+    return () => {
+      setData(initialData)
+      setPartner('')
+      setOperation('')
+      setVigencyDate([null, null])
+    }
+  }, [])
 
   const handleTariffType = (newValue): any => {
     setOperation(newValue)
@@ -188,7 +208,7 @@ const Step1 = ({
                 <ControlledInput
                   {...params}
                   data-testid="search-client"
-                  id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP1__INPUT_CLIENT}
+                  id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP1_INPUT_CLIENT}
                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
                   invalid={data.idBusinessPartnerCustomer === null && invalidInput}
                   variant="outlined"
@@ -224,7 +244,7 @@ const Step1 = ({
             {<RedColorSpan> *</RedColorSpan>}
           </FormLabel>
           <ControlledSelect
-            id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP1__SELECT_TARIFFTYPE}
+            id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP1_SELECT_TARIFFTYPE}
             data-testid="tariffType"
             value={operation}
             // onChange={(e) => setData({ ...data, tariffType: e.target.value })}

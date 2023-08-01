@@ -2,8 +2,7 @@ import {
   Modal,
   Grid,
   FormLabel,
-  InputAdornment,
-  Box
+  InputAdornment
 } from '@material-ui/core'
 import React, { useState, useContext } from 'react'
 import CloseIcon from '../../../../../application/icons/CloseIcon'
@@ -12,18 +11,15 @@ import Autocomplete, {
 } from '@material-ui/lab/Autocomplete'
 import ControlledInput from '../../../../components/ControlledInput'
 import IconComponent from '../../../../../application/icons/IconComponent'
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import {
   StyledPaper,
   CloseButtonDiv,
   ModalDiv,
-  MainDiv,
-  Input
+  MainDiv
 } from './TariffImportModalStyles'
 import { I18n } from 'react-redux-i18n'
 import {
   HeaderDiv,
-  RedColorSpan,
   RowReverseDiv,
   Title,
   CloseIconContainer

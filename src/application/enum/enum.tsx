@@ -52,6 +52,11 @@ enum AcitivityTypes {
   Export = 'EXPORT'
 }
 
+enum OperationTypes {
+  Import = 1,
+  Export = 2
+}
+
 export {
   ModalTypes,
   OrderTypes,
@@ -60,5 +65,6 @@ export {
   OriginDestinyTypes,
   TxChargeTypes,
   IconTypes,
-  AcitivityTypes
+  AcitivityTypes,
+  OperationTypes
 }

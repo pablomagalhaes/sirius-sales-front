@@ -1,7 +1,7 @@
 import { HttpClient, HttpStatusCode } from '../protocols/http'
 import { StaggeredProposalModel } from '../models/staggered-proposal-model'
 import { CreateStaggeredProposal } from '../../domain/usecase/new-staggered-proposal'
-import { AccessDeniedError, UnexpectedError } from '../../domain/errors'
+import { UnexpectedError } from '../../domain/errors'
 
 export class RemoteNewStaggeredProposal implements CreateStaggeredProposal {
   constructor (

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useContext } from 'react'
 import {
   Divider
 } from '@material-ui/core/'
@@ -29,7 +29,7 @@ const Step2 = ({
   theme,
   ShowList
 }: Step2Props): JSX.Element => {
-  const { staggeredproposal, setStaggeredProposal }: StaggeredProposalProps = useContext(StaggeredProposalContext)
+  const { staggeredproposal }: StaggeredProposalProps = useContext(StaggeredProposalContext)
 
   return (
     <>
