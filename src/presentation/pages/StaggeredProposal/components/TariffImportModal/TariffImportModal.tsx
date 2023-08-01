@@ -51,7 +51,7 @@ import {
   TARIFF_IMPORT_MODAL_BUTTON_SEARCH,
   TARIFF_IMPORT_MODAL_BUTTON_ADD,
   TARIFF_IMPORT_MODAL_BUTTON_CANCEL,
-  TARIFF_IMPORT_MODAL_CHECKBOX_ITEM,
+  TARIFF_IMPORT_MODAL_CHECKBOX_ITEM
 } from '../../../../../ids'
 
 import { StaggeredProposalContext, StaggeredProposalProps } from '../../context/StaggeredProposalContext'
@@ -73,7 +73,7 @@ interface TariffUploadProps {
   setShowList: () => void
 }
 
-  export const initialState = {
+export const initialState = {
   agent: { name: '', id: null },
   origin: '',
   destiny: ''
