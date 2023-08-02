@@ -136,6 +136,7 @@ const TextCell = styled.p`
 `
 
 const TextInnerGreyCell = styled.p`
+  color: ${(props: { invalid: boolean, theme: any }) => props?.invalid && props.theme?.commercial?.components?.costTable?.errorText};
   font-family: DM Sans;
   font-size: 16px;
   font-style: normal;
@@ -145,6 +146,7 @@ const TextInnerGreyCell = styled.p`
 `
 
 const TextInnerCell = styled.p`
+  color: ${(props: { invalid: boolean, theme: any }) => props?.invalid && props.theme?.commercial?.components?.costTable?.errorText};
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -155,6 +157,15 @@ const TextInnerCell = styled.p`
 const InputContainer = styled.div`
   display: flex;
   align-items: center;
+`
+
+const DateRange = styled.div`
+  & .MuiInputBase-root {
+    border-style: ${(props: { invalid: boolean, theme: any }) => props?.invalid && 'solid'};
+    border-color: ${(props: { invalid: boolean, theme: any }) => props?.invalid && props.theme?.commercial?.components?.costTable?.errorText};
+    border-width: ${(props: { invalid: boolean, theme: any }) => props?.invalid && '1px'};
+    margin-top: -8px;
+  }
 `
 
 export {
@@ -173,5 +184,6 @@ export {
   TextCell,
   InputContainer,
   TextInnerCell,
-  TextInnerGreyCell
+  TextInnerGreyCell,
+  DateRange
 }

@@ -11,7 +11,6 @@ import {
   Title,
   SelectSpan,
   TextCell,
-  InputContainer,
   TextInnerGreyCell,
   TextInnerCell
 } from '../steps/StepsStyles'
@@ -67,7 +66,6 @@ const InputRow = ({
   invalidInput,
   setCompleted,
   setFilled,
-  theme,
   item,
   chave
 }: InputRowProps): JSX.Element => {
@@ -138,6 +136,30 @@ const InputRow = ({
       setData(initialData)
     }
   }, [])
+
+  useEffect(() => {
+    if (
+      (data.until45kg !== null && String(data.until45kg) !== 'NaN') &&
+      (data.until100kg !== null && String(data.until100kg) !== 'NaN') &&
+      (data.until300kg !== null && String(data.until300kg) !== 'NaN') &&
+      (data.until500kg !== null && String(data.until500kg) !== 'NaN') &&
+      (data.until1000kg !== null && String(data.until1000kg) !== 'NaN') &&
+      (data.frequency !== null && String(data.frequency) !== 'NaN') &&
+      data.vlFrequency !== null) {
+      setCompleted((currentState) => ({ ...currentState, step2: true }))
+    } else {
+      setCompleted((currentState) => ({ ...currentState, step2: false }))
+    }
+    if (data.until45kg !== null || data.until100kg !== null || data.until300kg !== null || data.until500kg !== null || data.until1000kg || data.frequency !== null || data.vlFrequency !== null) {
+      setFilled((currentState) => {
+        return { ...currentState, step2: true }
+      })
+    } else {
+      setFilled((currentState) => {
+        return { ...currentState, step2: false }
+      })
+    }
+  }, [data])
 
   const rgxFloat = /^[0-9]*,?[0-9]*$/
   const validateFloatInput = (value: string): RegExpMatchArray | null => {
@@ -371,7 +393,11 @@ const InputRow = ({
               background: '#F0F1F5'
             }}
         >
-         <TextInnerGreyCell>Tarifas para venda:</TextInnerGreyCell>
+         <TextInnerGreyCell
+          invalid={invalidInput && (data.until45kg === null || data.until100kg === null || data.until300kg === null || data.until500kg === null || data.until1000kg === null)}
+          >
+            Tarifas para venda:
+          </TextInnerGreyCell>
         </Grid>
         <Grid item xs={1} style={{
           background: '#F0F1F5'
@@ -383,8 +409,8 @@ const InputRow = ({
             decimalScale={2}
             format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
             customInput={ControlledInput}
-            toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-            invalid={invalidInput && data.until45kg === null}
+            toolTipTitle=""
+            invalid={invalidInput && (data.until45kg === null || String(data.until45kg) === 'NaN')}
             value={data.until45kg != null ? data.until45kg.value : ''}
             onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'until45kg') }}
             variant="outlined"
@@ -403,8 +429,8 @@ const InputRow = ({
             decimalScale={2}
             format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
             customInput={ControlledInput}
-            toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-            invalid={invalidInput && data.until100kg === null}
+            toolTipTitle=""
+            invalid={invalidInput && (data.until100kg === null || String(data.until100kg) === 'NaN')}
             value={data.until100kg != null ? data.until100kg.value : ''}
             onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'until100kg') }}
             variant="outlined"
@@ -423,8 +449,8 @@ const InputRow = ({
             decimalScale={2}
             format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
             customInput={ControlledInput}
-            toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-            invalid={invalidInput && data.until300kg.value === null}
+            toolTipTitle=""
+            invalid={invalidInput && (data.until300kg === null || String(data.until300kg) === 'NaN')}
             value={data.until300kg != null ? data.until300kg.value : ''}
             onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'until300kg') }}
             variant="outlined"
@@ -443,8 +469,8 @@ const InputRow = ({
             decimalScale={2}
             format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
             customInput={ControlledInput}
-            toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-            invalid={invalidInput && data.until500kg === null}
+            toolTipTitle=""
+            invalid={invalidInput && (data.until500kg === null || String(data.until500kg) === 'NaN')}
             value={data.until500kg != null ? data.until500kg.value : ''}
             onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'until500kg') }}
             variant="outlined"
@@ -463,8 +489,8 @@ const InputRow = ({
             decimalScale={2}
             format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
             customInput={ControlledInput}
-            toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-            invalid={invalidInput && data.until1000kg.value === null}
+            toolTipTitle=""
+            invalid={invalidInput && (data.until1000kg === null || String(data.until1000kg) === 'NaN')}
             value={data.until1000kg != null ? data.until1000kg.value : ''}
             onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'until1000kg') }}
             variant="outlined"
@@ -488,32 +514,30 @@ const InputRow = ({
         <Grid item xs={2}>
         </Grid>
         <Grid item xs={2}>
-          <TextInnerCell>Frequência:</TextInnerCell>
+          <TextInnerCell invalid={invalidInput && (data.frequency === null || data.vlFrequency === null)}>Frequência*:</TextInnerCell>
         </Grid>
         <Grid item xs={1}>
-            <InputContainer>
-              <ControlledInput
-                id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_INPUT_FREQUENCY}
-                toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                invalid={invalidInput && data.frequency.length === 0}
-                variant="outlined"
-                value={data.frequency || ''}
-                size="small"
-                InputProps={{
-                  inputProps: {
-                    max: 99,
-                    min: 1
-                  }
-                }}
-                type="number"
-                // onChange={(e) => setData({ ...data, frequency: e.target.value })}
-                onChange={(e) => {
-                  valuesFrequency(e)
-                }}
-              />
-            </InputContainer>
+          <ControlledInput
+            id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_INPUT_FREQUENCY}
+            toolTipTitle={I18n.t('components.itemModal.requiredField')}
+            invalid={invalidInput && data.frequency === null}
+            variant="outlined"
+            value={data.frequency || ''}
+            size="small"
+            InputProps={{
+              inputProps: {
+                max: 99,
+                min: 1
+              }
+            }}
+            type="number"
+            // onChange={(e) => setData({ ...data, frequency: e.target.value })}
+            onChange={(e) => {
+              valuesFrequency(e)
+            }}
+          />
         </Grid>
-        <Grid item xs={1} style={{ alignSelf: 'center' }}>
+        <Grid item xs={1} style={{ marginTop: '15px' }}>
           <FormLabel component="span" style={{ margin: '0 0 0 10px' }}>
             {I18n.t('pages.newProposal.step4.times')}
           </FormLabel>
@@ -526,7 +550,7 @@ const InputRow = ({
               onChange={(e) => setData({ ...data, vlFrequency: e.target.value })}
               displayEmpty
               disableUnderline
-              invalid={invalidInput && data.vlFrequency.length === 0}
+              invalid={invalidInput && data.vlFrequency === null}
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
             >
               <MenuItem disabled value={data.vlFrequency}>

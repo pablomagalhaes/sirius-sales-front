@@ -22,7 +22,7 @@ import ControlledInput from '../../../components/ControlledInput'
 import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import API from '../../../../infrastructure/api'
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import { StyledPaper } from './StepsStyles'
+import { StyledPaper, DateRange } from './StepsStyles'
 import { PickerDateRange } from 'fiorde-fe-components'
 import moment from 'moment'
 
@@ -99,12 +99,12 @@ const Step1 = ({
   ]
 
   useEffect(() => {
-    if (data.idBusinessPartnerCustomer !== null && data.tariffType !== '') {
+    if (data.idBusinessPartnerCustomer !== null && data.tariffType !== '' && data.vigencyDate[0] !== '' && data.vigencyDate[1] !== '' && data.vigencyDate[0] !== null && data.vigencyDate[1] !== null) {
       setCompleted((currentState) => ({ ...currentState, step1: true }))
     } else {
       setCompleted((currentState) => ({ ...currentState, step1: false }))
     }
-    if (data.idBusinessPartnerCustomer !== null || data.tariffType !== '') {
+    if (data.idBusinessPartnerCustomer !== null || data.tariffType !== '' || data.vigencyDate[0] !== '' || data.vigencyDate[1] !== '' || data.vigencyDate[0] !== null || data.vigencyDate[1] !== null) {
       setFilled((currentState) => {
         return { ...currentState, step1: true }
       })
@@ -139,7 +139,13 @@ const Step1 = ({
       dtValidity: moment(vigencyDate[0]).format(),
       dtValidityEnd: moment(vigencyDate[1]).format()
     })
+    setData({
+      ...data,
+      vigencyDate
+    })
   }, [vigencyDate])
+
+  console.log(data)
 
   useEffect(() => {
     setData({
@@ -269,12 +275,12 @@ const Step1 = ({
         <Grid item xs={2}>
           <FormLabel
             component="legend"
-            error={invalidInput && data.tariffType.length === 0}
+            error={invalidInput && (data.vigencyDate[0] === '' || data.vigencyDate[0] === null || data.vigencyDate[1] === '' || data.vigencyDate[1] === null)}
           >
             {I18n.t('pages.staggeredProposal.newStaggeredProposal.step1.vigencyDate')}
             {<RedColorSpan> *</RedColorSpan>}
           </FormLabel>
-          <div style={{ marginTop: '-8px' }}>
+          <DateRange invalid={invalidInput && (data.vigencyDate[0] === '' || data.vigencyDate[0] === null || data.vigencyDate[1] === '' || data.vigencyDate[1] === null)}>
             <PickerDateRange
               data-testid="vigency"
               defaultValue={vigencyDate}
@@ -285,7 +291,8 @@ const Step1 = ({
               placeHolderLabel="Periodo"
               widthTx="250px"
             />
-          </div>
+            {(invalidInput && (data.vigencyDate[0] === '' || data.vigencyDate[0] === null || data.vigencyDate[1] === '' || data.vigencyDate[1] === null)) && <RedColorSpan>Campo obrigatório</RedColorSpan>}
+          </DateRange>
         </Grid>
       </Grid>
     </Separator>
