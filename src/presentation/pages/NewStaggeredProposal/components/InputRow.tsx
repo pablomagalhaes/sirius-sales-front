@@ -350,7 +350,7 @@ const InputRow = ({
               </Fragment>
             )
           }
-          return <></>
+          return <Fragment key={index}></Fragment>
         })}
 
       </Grid>
