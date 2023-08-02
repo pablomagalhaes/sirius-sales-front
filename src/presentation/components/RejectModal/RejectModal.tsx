@@ -55,6 +55,7 @@ const RejectModal = ({
     setClose()
     setValue('')
     setInvalidInput(false)
+    setDetail('')
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
