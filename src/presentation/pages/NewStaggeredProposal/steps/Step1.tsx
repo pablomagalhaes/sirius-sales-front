@@ -145,8 +145,6 @@ const Step1 = ({
     })
   }, [vigencyDate])
 
-  console.log(data)
-
   useEffect(() => {
     setData({
       idTariffProposalStatus: staggeredproposal.idTariffProposalStatus,
