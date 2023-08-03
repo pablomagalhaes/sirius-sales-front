@@ -1,6 +1,6 @@
 import React from 'react'
 
-const RemoveIcon = (props: {onClick: () => void}): JSX.Element => {
+const RemoveIcon = (props: {onClick: () => void}, id?: string): JSX.Element => {
   return (
     <svg
       onClick={props.onClick}
