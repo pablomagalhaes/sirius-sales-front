@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import {
   Divider
 } from '@material-ui/core/'
@@ -30,6 +30,22 @@ const Step2 = ({
   ShowList
 }: Step2Props): JSX.Element => {
   const { staggeredproposal }: StaggeredProposalProps = useContext(StaggeredProposalContext)
+  const [TariffLine, setTariffLine] = useState([])
+
+  useEffect(() => {
+    const duplicated = staggeredproposal?.proposalTariff.map((current, i, array) => {
+      // Number of duplicates
+      const duplicatesCount = array
+        .slice(0, i)
+        .filter(el => el.origin.startsWith(current.origin) && el.destination.startsWith(current.destination))
+        .length
+      return {
+        ...current,
+        duplicate: duplicatesCount > 0
+      }
+    })
+    setTariffLine(duplicated)
+  }, [staggeredproposal?.proposalTariff])
 
   return (
     <>
@@ -40,7 +56,7 @@ const Step2 = ({
       </Title>
       {ShowList && (
         <>
-          {staggeredproposal?.proposalTariff?.map((item, index) => {
+          {TariffLine?.map((item, index) => {
             return (
               <InputRow key={index} chave={index} item={item}/>
             )
