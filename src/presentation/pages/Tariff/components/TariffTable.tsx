@@ -141,7 +141,7 @@ const TariffTable = ({
   }, [expanded, filter, seaType, openModal])
 
   useEffect(() => {
-    if(params !== undefined) {
+    if (params !== undefined) {
       refetch()
     }
   }, [params])
