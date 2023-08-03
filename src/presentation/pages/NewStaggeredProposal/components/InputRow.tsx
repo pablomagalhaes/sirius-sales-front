@@ -23,6 +23,8 @@ import ControlledInput from '../../../components/ControlledInput'
 import API from '../../../../infrastructure/api'
 import { MenuIconCell, FloatingMenu } from 'fiorde-fe-components'
 
+import RemoveIcon from '../../../../application/icons/RemoveIcon'
+
 import {
   STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_AGENT,
   STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_CIAAREA,
@@ -40,7 +42,8 @@ import {
   STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_INPUT_UNTIL1000KG,
   STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_BUTTON_DELETE,
   STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_INPUT_FREQUENCY,
-  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_SELECT_VLFREQUENCY
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_SELECT_VLFREQUENCY,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_BUTTON_REMOVEDUPLICATE
 } from '../../../../ids'
 
 import { NumberInput, FormLabelHeader, FormLabelInner, ButtonInner } from './styles'
@@ -89,22 +92,23 @@ const InputRow = ({
   const floatingButtonMenuItems = [
     {
       label: 'Excluir tarifa',
-      onClick: () => {
+      onClick: (e) => {
         handleRemove()
       }
     }
   ]
 
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
+  const [state, setState] = useState({ anchorEl: null, currentKey: null })
 
-  const handleClick = (event: any, chave: number): void => {
-    setAnchorEl(event.currentTarget)
+  const handleClick = (event: any, key: any): void => {
+    setState({ anchorEl: event.currentTarget, currentKey: key })
   }
 
   const handleClose = (): void => {
-    setAnchorEl(null)
+    setState({ anchorEl: null, currentKey: null })
   }
 
+  const { anchorEl, currentKey } = state
   const open = Boolean(anchorEl)
   const id = open ? 'simple-popover' : undefined
 
@@ -155,6 +159,15 @@ const InputRow = ({
 
   const handleRemove = (): void => {
     const staggered = staggeredproposal?.proposalTariff
+    const newArr = staggered.filter((item, index) => index !== state.currentKey)
+    setStaggeredProposal({
+      ...staggeredproposal,
+      proposalTariff: newArr
+    })
+  }
+
+  const handleRemoveDuplicated = (chave): any => {
+    const staggered = staggeredproposal?.proposalTariff
     const newArr = staggered.filter((item, index) => index !== chave)
     setStaggeredProposal({
       ...staggeredproposal,
@@ -166,7 +179,7 @@ const InputRow = ({
     const originalData = staggeredproposal?.proposalTariff
 
     if (data.until45kg !== null || data.until100kg !== null || data.until300kg !== null || data.until500kg !== null || data.until1000kg !== null) {
-      const updatedData = originalData.map((obj, index) => {
+      const updatedData = originalData.map((obj, index: number) => {
         if (index === chave) {
           return {
             ...obj,
@@ -327,25 +340,36 @@ const InputRow = ({
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
-                    <ButtonInner id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_BUTTON_DELETE} aria-describedby={id} onClick={handleClick}>
-                      <MenuIconCell />
-                    </ButtonInner>
-                  <Popover
-                        id={id}
-                        open={open}
-                        anchorEl={anchorEl}
-                        onClose={handleClose}
-                        anchorOrigin={{
-                          vertical: 'bottom',
-                          horizontal: 'center'
-                        }}
-                        transformOrigin={{
-                          vertical: 'top',
-                          horizontal: 'center'
-                        }}
-                      >
-                          <FloatingMenu menuItems={floatingButtonMenuItems} />
-                      </Popover>
+                  {item.duplicate
+                    ? (
+                        <FormLabelInner component="legend" center style={{ cursor: 'pointer' }}>
+                          <RemoveIcon
+                          id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_BUTTON_REMOVEDUPLICATE} onClick={() => handleRemoveDuplicated(chave)} />
+                        </FormLabelInner>
+                      )
+                    : (
+                        <>
+                          <ButtonInner id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_BUTTON_DELETE} aria-describedby={id} onClick={(e) => handleClick(e, chave)}>
+                            <MenuIconCell />
+                          </ButtonInner>
+                            <Popover
+                              id={id}
+                              open={open}
+                              anchorEl={anchorEl}
+                              onClose={handleClose}
+                              anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'center'
+                              }}
+                              transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'center'
+                              }}
+                            >
+                                <FloatingMenu menuItems={floatingButtonMenuItems} />
+                            </Popover>
+                        </>
+                      )}
                   </Grid>
               </Fragment>
             )
