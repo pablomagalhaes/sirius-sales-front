@@ -126,6 +126,7 @@ export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_INPUT_UNTIL1000KG = `$
 export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_BUTTON_DELETE = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step2_button_delete`
 export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_INPUT_FREQUENCY = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step2_input_frequency`
 export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_SELECT_VLFREQUENCY = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step2_select_vlfrequency`
+export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_BUTTON_REMOVEDUPLICATE = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal-step2_button_removeduplicate`
 
 // Tariff Import Modal
 export const TARIFF_IMPORT_MODAL_INPUT_ORIGIN = `${PREFIX_IDS}_tariff-import-modal_input_origin`

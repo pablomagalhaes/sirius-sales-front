@@ -42,7 +42,8 @@ import {
   STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_INPUT_UNTIL1000KG,
   STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_BUTTON_DELETE,
   STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_INPUT_FREQUENCY,
-  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_SELECT_VLFREQUENCY
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_SELECT_VLFREQUENCY,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_BUTTON_REMOVEDUPLICATE
 } from '../../../../ids'
 
 import { NumberInput, FormLabelHeader, FormLabelInner, ButtonInner } from './styles'
@@ -342,7 +343,8 @@ const InputRow = ({
                   {item.duplicate
                     ? (
                         <FormLabelInner component="legend" center style={{ cursor: 'pointer' }}>
-                          <RemoveIcon onClick={() => handleRemoveDuplicated(chave)} />
+                          <RemoveIcon
+                          id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_BUTTON_REMOVEDUPLICATE} onClick={() => handleRemoveDuplicated(chave)} />
                         </FormLabelInner>
                       )
                     : (
