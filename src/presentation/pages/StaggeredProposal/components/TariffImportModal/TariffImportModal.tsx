@@ -239,7 +239,7 @@ const TariffImportModal = ({
     if (isNaN(value)) {
       return value
     } else {
-      return FormatNumber.rightToLeftFormatter(value, 2)
+      return value !== null ? Number(value.toString().replace(',', '.')).toFixed(2).replace('.', ',') : '-'
     }
   }
 

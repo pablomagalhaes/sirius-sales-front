@@ -191,7 +191,7 @@ const TariffImportHandsOnModal = ({
     setData(
       {
         ...data,
-        [key]: parseInt(e.target.value)
+        [key]: e.target.value
       }
     )
   }
