@@ -110,7 +110,7 @@ const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): 
 
   const handleSave = (): void => {
     const proposalId = location.state?.proposalId
-    if (completed.step1) {
+    if (completed.step1 && staggeredproposal?.proposalTariff.length > 0 && completed.step2) {
       setInvalidInput(false)
       if (loadExistingProposal) {
         void (async function () {

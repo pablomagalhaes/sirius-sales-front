@@ -13,7 +13,7 @@ import { withTheme } from 'styled-components'
 
 import InputRow from '../components/InputRow'
 import { StaggeredProposalContext, StaggeredProposalProps } from '../../StaggeredProposal/context/StaggeredProposalContext'
-
+import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 interface Step2Props {
   invalidInput: boolean
   setCompleted: (completed: any) => void
@@ -26,7 +26,6 @@ const Step2 = ({
   invalidInput,
   setCompleted,
   setFilled,
-  theme,
   ShowList
 }: Step2Props): JSX.Element => {
   const { staggeredproposal }: StaggeredProposalProps = useContext(StaggeredProposalContext)
@@ -54,11 +53,12 @@ const Step2 = ({
         2. {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.title')}
         <Subtitle>{I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.subtitle')}</Subtitle>
       </Title>
+      {(invalidInput && staggeredproposal?.proposalTariff.length === 0) && <RedColorSpan>É obrigatório informar alguma tarifa.</RedColorSpan>}
       {ShowList && (
         <>
           {TariffLine?.map((item, index) => {
             return (
-              <InputRow key={index} chave={index} item={item}/>
+              <InputRow key={index} chave={index} item={item} setCompleted={setCompleted} setFilled={setFilled} invalidInput={invalidInput}/>
             )
           })}
         <Divider />
