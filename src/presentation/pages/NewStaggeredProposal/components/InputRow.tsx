@@ -291,39 +291,39 @@ const InputRow = ({
               <Fragment key={index}>
                   <Grid key={index} item xs={1}>
                     <FormLabelInner component="legend" id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_VMINIMUM}>
-                      {line.vlMinimum !== null ? Number(line.vlMinimum.toString().replace(',', '.')).toFixed(2).replace('.', ',') : '-'}
+                      {FormatNumber.convertStringToNumber(line.vlMinimum !== null ? line.vlMinimum : '-')}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
                     <FormLabelInner component="legend" center id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL45KG}>
-                      {line.until45kg !== null ? Number(line.until45kg.toString().replace(',', '.')).toFixed(2).replace('.', ',') : '-'}
+                      {FormatNumber.convertStringToNumber(line.until45kg !== null ? line.until45kg : '-')}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
                     <FormLabelInner component="legend" center
                     id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL100KG}>
-                      {line.until100kg !== null ? Number(line.until100kg.toString().replace(',', '.')).toFixed(2).replace('.', ',') : '-'}
+                      {FormatNumber.convertStringToNumber(line.until100kg !== null ? line.until100kg : '-')}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
                     <FormLabelInner component="legend" center
                     id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL300KG}
                     >
-                      {line.until300kg !== null ? Number(line.until300kg.toString().replace(',', '.')).toFixed(2).replace('.', ',') : '-'}
+                      {FormatNumber.convertStringToNumber(line.until300kg !== null ? line.until300kg : '-')}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
                     <FormLabelInner component="legend" center
                     id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL500KG}
                     >
-                      {line.until500kg !== null ? Number(line.until500kg.toString().replace(',', '.')).toFixed(2).replace('.', ',') : '-'}
+                      {FormatNumber.convertStringToNumber(line.until500kg !== null ? line.until500kg : '-')}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
                     <FormLabelInner component="legend" center
                     id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL1000KG}
                     >
-                      {line.until1000kg !== null ? Number(line.until1000kg.toString().replace(',', '.')).toFixed(2).replace('.', ',') : '-'}
+                      {FormatNumber.convertStringToNumber(line.until1000kg !== null ? line.until1000kg : '-')}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
