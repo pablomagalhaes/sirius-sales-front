@@ -11,7 +11,6 @@ import {
   Title,
   SelectSpan,
   TextCell,
-  InputContainer,
   TextInnerGreyCell,
   TextInnerCell
 } from '../steps/StepsStyles'
@@ -22,6 +21,8 @@ import ControlledSelect from '../../../components/ControlledSelect'
 import ControlledInput from '../../../components/ControlledInput'
 import API from '../../../../infrastructure/api'
 import { MenuIconCell, FloatingMenu } from 'fiorde-fe-components'
+
+import RemoveIcon from '../../../../application/icons/RemoveIcon'
 
 import {
   STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_AGENT,
@@ -40,7 +41,8 @@ import {
   STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_INPUT_UNTIL1000KG,
   STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_BUTTON_DELETE,
   STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_INPUT_FREQUENCY,
-  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_SELECT_VLFREQUENCY
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_SELECT_VLFREQUENCY,
+  STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_BUTTON_REMOVEDUPLICATE
 } from '../../../../ids'
 
 import { NumberInput, FormLabelHeader, FormLabelInner, ButtonInner } from './styles'
@@ -67,7 +69,6 @@ const InputRow = ({
   invalidInput,
   setCompleted,
   setFilled,
-  theme,
   item,
   chave
 }: InputRowProps): JSX.Element => {
@@ -89,22 +90,23 @@ const InputRow = ({
   const floatingButtonMenuItems = [
     {
       label: 'Excluir tarifa',
-      onClick: () => {
+      onClick: (e) => {
         handleRemove()
       }
     }
   ]
 
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
+  const [state, setState] = useState({ anchorEl: null, currentKey: null })
 
-  const handleClick = (event: any, chave: number): void => {
-    setAnchorEl(event.currentTarget)
+  const handleClick = (event: any, key: any): void => {
+    setState({ anchorEl: event.currentTarget, currentKey: key })
   }
 
   const handleClose = (): void => {
-    setAnchorEl(null)
+    setState({ anchorEl: null, currentKey: null })
   }
 
+  const { anchorEl, currentKey } = state
   const open = Boolean(anchorEl)
   const id = open ? 'simple-popover' : undefined
 
@@ -139,6 +141,30 @@ const InputRow = ({
     }
   }, [])
 
+  useEffect(() => {
+    if (
+      (data.until45kg !== null && String(data.until45kg) !== 'NaN') &&
+      (data.until100kg !== null && String(data.until100kg) !== 'NaN') &&
+      (data.until300kg !== null && String(data.until300kg) !== 'NaN') &&
+      (data.until500kg !== null && String(data.until500kg) !== 'NaN') &&
+      (data.until1000kg !== null && String(data.until1000kg) !== 'NaN') &&
+      (data.frequency !== null && String(data.frequency) !== 'NaN') &&
+      data.vlFrequency !== null) {
+      setCompleted((currentState) => ({ ...currentState, step2: true }))
+    } else {
+      setCompleted((currentState) => ({ ...currentState, step2: false }))
+    }
+    if (data.until45kg !== null || data.until100kg !== null || data.until300kg !== null || data.until500kg !== null || data.until1000kg || data.frequency !== null || data.vlFrequency !== null) {
+      setFilled((currentState) => {
+        return { ...currentState, step2: true }
+      })
+    } else {
+      setFilled((currentState) => {
+        return { ...currentState, step2: false }
+      })
+    }
+  }, [data])
+
   const rgxFloat = /^[0-9]*,?[0-9]*$/
   const validateFloatInput = (value: string): RegExpMatchArray | null => {
     return value.match(rgxFloat)
@@ -148,12 +174,21 @@ const InputRow = ({
     setData(
       {
         ...data,
-        [key]: parseInt(e.target.value)
+        [key]: e.target.value
       }
     )
   }
 
   const handleRemove = (): void => {
+    const staggered = staggeredproposal?.proposalTariff
+    const newArr = staggered.filter((item, index) => index !== state.currentKey)
+    setStaggeredProposal({
+      ...staggeredproposal,
+      proposalTariff: newArr
+    })
+  }
+
+  const handleRemoveDuplicated = (chave): any => {
     const staggered = staggeredproposal?.proposalTariff
     const newArr = staggered.filter((item, index) => index !== chave)
     setStaggeredProposal({
@@ -166,7 +201,7 @@ const InputRow = ({
     const originalData = staggeredproposal?.proposalTariff
 
     if (data.until45kg !== null || data.until100kg !== null || data.until300kg !== null || data.until500kg !== null || data.until1000kg !== null) {
-      const updatedData = originalData.map((obj, index) => {
+      const updatedData = originalData.map((obj, index: number) => {
         if (index === chave) {
           return {
             ...obj,
@@ -291,61 +326,72 @@ const InputRow = ({
               <Fragment key={index}>
                   <Grid key={index} item xs={1}>
                     <FormLabelInner component="legend" id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_VMINIMUM}>
-                      {FormatNumber.rightToLeftFormatter(line?.vlMinimum, 2)}
+                      {FormatNumber.convertStringToNumber(line.vlMinimum !== null ? line.vlMinimum : '-')}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
                     <FormLabelInner component="legend" center id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL45KG}>
-                      {FormatNumber.rightToLeftFormatter(line?.until45kg, 2)}
+                      {FormatNumber.convertStringToNumber(line.until45kg !== null ? line.until45kg : '-')}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
                     <FormLabelInner component="legend" center
                     id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL100KG}>
-                      {FormatNumber.rightToLeftFormatter(line?.until100kg, 2)}
+                      {FormatNumber.convertStringToNumber(line.until100kg !== null ? line.until100kg : '-')}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
                     <FormLabelInner component="legend" center
                     id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL300KG}
                     >
-                      {FormatNumber.rightToLeftFormatter(line?.until300kg, 2)}
+                      {FormatNumber.convertStringToNumber(line.until300kg !== null ? line.until300kg : '-')}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
                     <FormLabelInner component="legend" center
                     id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL500KG}
                     >
-                      {FormatNumber.rightToLeftFormatter(line?.until500kg, 2)}
+                      {FormatNumber.convertStringToNumber(line.until500kg !== null ? line.until500kg : '-')}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
                     <FormLabelInner component="legend" center
                     id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL1000KG}
                     >
-                      {FormatNumber.rightToLeftFormatter(line?.until1000kg, 2)}
+                      {FormatNumber.convertStringToNumber(line.until1000kg !== null ? line.until1000kg : '-')}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
-                    <ButtonInner id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_BUTTON_DELETE} aria-describedby={id} onClick={handleClick}>
-                      <MenuIconCell />
-                    </ButtonInner>
-                  <Popover
-                        id={id}
-                        open={open}
-                        anchorEl={anchorEl}
-                        onClose={handleClose}
-                        anchorOrigin={{
-                          vertical: 'bottom',
-                          horizontal: 'center'
-                        }}
-                        transformOrigin={{
-                          vertical: 'top',
-                          horizontal: 'center'
-                        }}
-                      >
-                          <FloatingMenu menuItems={floatingButtonMenuItems} />
-                      </Popover>
+                  {item.duplicate
+                    ? (
+                        <FormLabelInner component="legend" center style={{ cursor: 'pointer' }}>
+                          <RemoveIcon
+                          id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_BUTTON_REMOVEDUPLICATE} onClick={() => handleRemoveDuplicated(chave)} />
+                        </FormLabelInner>
+                      )
+                    : (
+                        <>
+                          <ButtonInner id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_BUTTON_DELETE} aria-describedby={id} onClick={(e) => handleClick(e, chave)}>
+                            <MenuIconCell />
+                          </ButtonInner>
+                            <Popover
+                              id={id}
+                              open={open}
+                              anchorEl={anchorEl}
+                              onClose={handleClose}
+                              anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'center'
+                              }}
+                              transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'center'
+                              }}
+                            >
+                                <FloatingMenu menuItems={floatingButtonMenuItems} />
+                            </Popover>
+                        </>
+                      )}
                   </Grid>
               </Fragment>
             )
@@ -371,7 +417,11 @@ const InputRow = ({
               background: '#F0F1F5'
             }}
         >
-         <TextInnerGreyCell>Tarifas para venda:</TextInnerGreyCell>
+         <TextInnerGreyCell
+          invalid={invalidInput && (data.until45kg === null || data.until100kg === null || data.until300kg === null || data.until500kg === null || data.until1000kg === null)}
+          >
+            Tarifas para venda:
+          </TextInnerGreyCell>
         </Grid>
         <Grid item xs={1} style={{
           background: '#F0F1F5'
@@ -383,8 +433,8 @@ const InputRow = ({
             decimalScale={2}
             format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
             customInput={ControlledInput}
-            toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-            invalid={invalidInput && data.until45kg === null}
+            toolTipTitle=""
+            invalid={invalidInput && (data.until45kg === null || String(data.until45kg) === 'NaN')}
             value={data.until45kg != null ? data.until45kg.value : ''}
             onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'until45kg') }}
             variant="outlined"
@@ -404,8 +454,8 @@ const InputRow = ({
             decimalScale={2}
             format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
             customInput={ControlledInput}
-            toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-            invalid={invalidInput && data.until100kg === null}
+            toolTipTitle=""
+            invalid={invalidInput && (data.until100kg === null || String(data.until100kg) === 'NaN')}
             value={data.until100kg != null ? data.until100kg.value : ''}
             onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'until100kg') }}
             variant="outlined"
@@ -425,8 +475,8 @@ const InputRow = ({
             decimalScale={2}
             format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
             customInput={ControlledInput}
-            toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-            invalid={invalidInput && data.until300kg.value === null}
+            toolTipTitle=""
+            invalid={invalidInput && (data.until300kg === null || String(data.until300kg) === 'NaN')}
             value={data.until300kg != null ? data.until300kg.value : ''}
             onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'until300kg') }}
             variant="outlined"
@@ -446,8 +496,8 @@ const InputRow = ({
             decimalScale={2}
             format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
             customInput={ControlledInput}
-            toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-            invalid={invalidInput && data.until500kg === null}
+            toolTipTitle=""
+            invalid={invalidInput && (data.until500kg === null || String(data.until500kg) === 'NaN')}
             value={data.until500kg != null ? data.until500kg.value : ''}
             onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'until500kg') }}
             variant="outlined"
@@ -467,8 +517,8 @@ const InputRow = ({
             decimalScale={2}
             format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
             customInput={ControlledInput}
-            toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-            invalid={invalidInput && data.until1000kg.value === null}
+            toolTipTitle=""
+            invalid={invalidInput && (data.until1000kg === null || String(data.until1000kg) === 'NaN')}
             value={data.until1000kg != null ? data.until1000kg.value : ''}
             onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'until1000kg') }}
             variant="outlined"
@@ -493,32 +543,30 @@ const InputRow = ({
         <Grid item xs={2}>
         </Grid>
         <Grid item xs={2}>
-          <TextInnerCell>Frequência:</TextInnerCell>
+          <TextInnerCell invalid={invalidInput && (data.frequency === null || data.vlFrequency === null)}>Frequência*:</TextInnerCell>
         </Grid>
         <Grid item xs={1}>
-            <InputContainer>
-              <ControlledInput
-                id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_INPUT_FREQUENCY}
-                toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                invalid={invalidInput && data.frequency.length === 0}
-                variant="outlined"
-                value={data.frequency || ''}
-                size="small"
-                InputProps={{
-                  inputProps: {
-                    max: 99,
-                    min: 1
-                  }
-                }}
-                type="number"
-                // onChange={(e) => setData({ ...data, frequency: e.target.value })}
-                onChange={(e) => {
-                  valuesFrequency(e)
-                }}
-              />
-            </InputContainer>
+          <ControlledInput
+            id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_INPUT_FREQUENCY}
+            toolTipTitle={I18n.t('components.itemModal.requiredField')}
+            invalid={invalidInput && data.frequency === null}
+            variant="outlined"
+            value={data.frequency || ''}
+            size="small"
+            InputProps={{
+              inputProps: {
+                max: 99,
+                min: 1
+              }
+            }}
+            type="number"
+            // onChange={(e) => setData({ ...data, frequency: e.target.value })}
+            onChange={(e) => {
+              valuesFrequency(e)
+            }}
+          />
         </Grid>
-        <Grid item xs={1} style={{ alignSelf: 'center' }}>
+        <Grid item xs={1} style={{ marginTop: '15px' }}>
           <FormLabel component="span" style={{ margin: '0 0 0 10px' }}>
             {I18n.t('pages.newProposal.step4.times')}
           </FormLabel>
@@ -531,7 +579,7 @@ const InputRow = ({
               onChange={(e) => setData({ ...data, vlFrequency: e.target.value })}
               displayEmpty
               disableUnderline
-              invalid={invalidInput && data.vlFrequency.length === 0}
+              invalid={invalidInput && data.vlFrequency === null}
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
             >
               <MenuItem disabled value={data.vlFrequency}>
