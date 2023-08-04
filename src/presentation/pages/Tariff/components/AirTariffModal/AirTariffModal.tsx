@@ -312,6 +312,7 @@ const AirTariffModal = ({
                 size="small"
                 modal
                 style={{ marginRight: '3px' }}
+                inputProps={{ maxLength: 12 }}
               />
             </Grid>
             <Grid item xs={12} container={true} spacing={1} direction="row" justify="center">
@@ -333,6 +334,7 @@ const AirTariffModal = ({
                   variant="outlined"
                   size="small"
                   modal
+                  inputProps={{ maxLength: 12 }}
                 />
                 </Grid>
                 <Grid item xs={12} md>
@@ -353,6 +355,7 @@ const AirTariffModal = ({
                   variant="outlined"
                   size="small"
                   modal
+                  inputProps={{ maxLength: 12 }}
                 />
                 </Grid>
                 <Grid item xs={12} md>
@@ -373,6 +376,7 @@ const AirTariffModal = ({
                   variant="outlined"
                   size="small"
                   modal
+                  inputProps={{ maxLength: 12 }}
                 />
                 </Grid>
                 <Grid item xs={12} md>
@@ -393,6 +397,7 @@ const AirTariffModal = ({
                   variant="outlined"
                   size="small"
                   modal
+                  inputProps={{ maxLength: 12 }}
                 />
                 </Grid>
                 <Grid item xs={12} md>
@@ -414,6 +419,7 @@ const AirTariffModal = ({
                   size="small"
                   modal
                   style={{ marginRight: '3px' }}
+                  inputProps={{ maxLength: 12 }}
                 />
                 </Grid>
             </Grid>
@@ -436,6 +442,7 @@ const AirTariffModal = ({
                 variant="outlined"
                 size="small"
                 modal
+                inputProps={{ maxLength: 12 }}
               />
             </Grid>
             <Grid item xs={3}>

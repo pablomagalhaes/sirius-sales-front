@@ -391,6 +391,7 @@ const InputRow = ({
             size="small"
             modal
             style={{ marginRight: '3px' }}
+            inputProps={{ maxLength: 12 }}
           />
         </Grid>
         <Grid item xs={1} style={{
@@ -411,6 +412,7 @@ const InputRow = ({
             size="small"
             modal
             style={{ marginRight: '3px' }}
+            inputProps={{ maxLength: 12 }}
           />
         </Grid>
         <Grid item xs={1} style={{
@@ -431,6 +433,7 @@ const InputRow = ({
             size="small"
             modal
             style={{ marginRight: '3px' }}
+            inputProps={{ maxLength: 12 }}
           />
         </Grid>
         <Grid item xs={1} style={{
@@ -451,6 +454,7 @@ const InputRow = ({
             size="small"
             modal
             style={{ marginRight: '3px' }}
+            inputProps={{ maxLength: 12 }}
           />
         </Grid>
         <Grid item xs={1} style={{
@@ -471,6 +475,7 @@ const InputRow = ({
             size="small"
             modal
             style={{ marginRight: '3px' }}
+            inputProps={{ maxLength: 12 }}
           />
         </Grid>
         <Grid item xs={1}></Grid>
