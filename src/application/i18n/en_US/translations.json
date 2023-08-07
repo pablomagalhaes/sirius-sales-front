@@ -627,7 +627,8 @@
           "100": "+100kg",
           "300": "+300kg",
           "500": "+500kg",
-          "1ton": "+1ton"
+          "1ton": "+1ton",
+          "duplicateTariffText": "Tarifa duplicada, Selecione uma tarifa diferente"
         },
         "workStation": {
           "buttonLabel": "Criar nova proposta"
