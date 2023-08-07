@@ -45,7 +45,7 @@ import {
   STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_BUTTON_REMOVEDUPLICATE
 } from '../../../../ids'
 
-import { NumberInput, FormLabelHeader, FormLabelInner, ButtonInner } from './styles'
+import { NumberInput, FormLabelHeader, FormLabelInner, ButtonInner, RedText } from './styles'
 import FormatNumber from '../../../../application/utils/formatNumber'
 import { usePartnerList, useBusinessPartnerByType } from '../../../hooks'
 
@@ -591,6 +591,21 @@ const InputRow = ({
         </Grid>
         <Grid item xs={1}></Grid>
       </Grid>
+      {item.duplicate && (
+        <Grid
+          container
+          spacing={1}
+          style={{
+            padding: '10px 0px 10px 0px'
+          }}
+        >
+          <Grid item xs={6}>
+            <RedText>
+              {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.duplicateTariffText')}
+            </RedText>
+          </Grid>
+        </Grid>
+      )}
     </>
   )
 }

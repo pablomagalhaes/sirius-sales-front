@@ -29,9 +29,20 @@ const ButtonInner = styled(Button)`
   margin-top: 15px!important;
 `
 
+const RedText = styled.p`
+font-family: DM Sans;
+font-size: 16px;
+color: #ff0000;
+font-style: normal;
+font-weight: 200;
+text-align: left;
+margin: 10px 50px 0px 0px;
+`
+
 export {
   NumberInput,
   FormLabelHeader,
   FormLabelInner,
-  ButtonInner
+  ButtonInner,
+  RedText
 }
