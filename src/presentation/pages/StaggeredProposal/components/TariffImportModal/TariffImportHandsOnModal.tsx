@@ -117,6 +117,10 @@ const TariffImportHandsOnModal = ({
     setClose()
   }
 
+  const MaxLenth = {
+    maxLength: 12
+  }
+
   const validateData = (): boolean => {
     return !(
       (data.origin?.length === 0) ||
@@ -481,7 +485,7 @@ const TariffImportHandsOnModal = ({
                 size="small"
                 modal
                 style={{ marginRight: '3px' }}
-                inputProps={{ maxLength: 12 }}
+                inputProps={MaxLenth}
               />
             </Grid>
             <Grid item xs={12} md>
@@ -503,7 +507,7 @@ const TariffImportHandsOnModal = ({
                 size="small"
                 modal
                 style={{ height: '20px' }}
-                inputProps={{ maxLength: 12 }}
+                inputProps={MaxLenth}
               />
               </Grid>
               <Grid item xs={12} md>
@@ -525,7 +529,7 @@ const TariffImportHandsOnModal = ({
                 size="small"
                 modal
                 style={{ height: '20px' }}
-                inputProps={{ maxLength: 12 }}
+                inputProps={MaxLenth}
               />
               </Grid>
               <Grid item xs={12} md>
@@ -547,7 +551,7 @@ const TariffImportHandsOnModal = ({
                 size="small"
                 modal
                 style={{ height: '20px' }}
-                inputProps={{ maxLength: 12 }}
+                inputProps={MaxLenth}
               />
               </Grid>
               <Grid item xs={12} md>
@@ -569,7 +573,7 @@ const TariffImportHandsOnModal = ({
                 size="small"
                 modal
                 style={{ height: '20px' }}
-                inputProps={{ maxLength: 12 }}
+                inputProps={MaxLenth}
               />
               </Grid>
               <Grid item xs={12} md>
@@ -591,7 +595,7 @@ const TariffImportHandsOnModal = ({
                 size="small"
                 modal
                 style={{ marginRight: '3px', height: '20px' }}
-                inputProps={{ maxLength: 12 }}
+                inputProps={MaxLenth}
               />
               </Grid>
               </Grid>
