@@ -37,11 +37,13 @@ import { I18n } from 'react-redux-i18n'
 import TariffTable from './components/TariffTable'
 import { getModalFilter, getActivityFilter, getValidityFilter } from './helpers'
 import TariffUploadModal from './components/TariffUploadModal/TariffUploadModal'
+import TariffExportModal from './components/TariffExportModal/TariffExportModal'
 import { SelectorsValuesTypes, QuickFilterTypes, ValidityTypes } from '../../../application/enum/tariffEnum'
 import { OrderTypes, IconTypes } from '../../../application/enum/enum'
 import useTariffs from '../../hooks/tariff/useTariffs'
 import Filter from './components/filter'
 import { TariffContext, filterDefault } from './context/TariffContext'
+import API from '../../../infrastructure/api'
 
 import {
   TARIFF_MAINPAGE_SPAN_TARIFF,
@@ -61,8 +63,10 @@ const Tariff = (): JSX.Element => {
     { type: QuickFilterTypes.Modal, status: I18n.t('pages.tariff.modals.air') }
   ])
   const [tabs, setTabs] = useState<any[]>()
+  const [tabSelection, setTabSelection] = useState<string>('')
   const [countryExpanded, setCountryExpanded] = useState<string>('')
   const [open, setOpen] = useState(false)
+  const [openExport, setOpenExport] = useState(false)
   const [uploadType, setUploadType] = useState('')
 
   const history = useHistory()
@@ -78,6 +82,19 @@ const Tariff = (): JSX.Element => {
       onClick: () => { setUploadType(I18n.t('pages.tariff.upload.export')); setOpen(true) }
     }
   ]
+
+  useEffect(() => {
+    const collection = document.getElementsByClassName('MuiTab-wrapper')
+    for (let i = 0; i < collection.length; i++) {
+      const tabText = collection[i].firstElementChild.textContent
+      collection[i].addEventListener('click', () => setTabSelection(tabText))
+      collection[i].firstElementChild.addEventListener('click', () => setTabSelection(tabText))
+    }
+  }, [tabs])
+
+  useEffect(() => {
+    if (tariffList.length > 0) setTabSelection(tariffList[0].region)
+  }, [tariffList])
 
   const createTabs = (): void => {
     const regionsTabs: any[] = []
@@ -147,8 +164,6 @@ const Tariff = (): JSX.Element => {
     changeFilterList(filter)
   }, [filter])
 
-  const handleExportTariff = (): void => {}
-
   const cardFilters = [
     {
       iconType: IconTypes.Import,
@@ -186,6 +201,29 @@ const Tariff = (): JSX.Element => {
       uniqueChoice: true
     }
   ]
+
+  const handleExport = async (): Promise<void> => {
+    const countriesToExport = tariffList.find((each: any) => each.region === String(tabSelection).replace(/ /g,''))?.countries
+    let tariffsToExport = []
+    await Promise.all(countriesToExport?.map(async (country: string) => {
+      const payload = { ...filter, txRegion: tabSelection, txCountry: country }
+      await API.getTariffsByCountry(payload)
+        .then((response) => {
+          tariffsToExport = [...tariffsToExport, ...response.content]
+        })
+        .catch((err) => console.log(err))
+    }))
+    const exportByAgent = {}
+    tariffsToExport.forEach((tariff: any) => {
+      !exportByAgent[tariff.nmAgent] ? exportByAgent[tariff.nmAgent] = [tariff] : exportByAgent[tariff.nmAgent].push(tariff)
+    })
+    console.log(exportByAgent)
+  }
+
+  const createExportPath = (): string => {
+    return `${String(quickFilterList.find((filter) => filter?.type === QuickFilterTypes.Activity)?.status)} > 
+    ${String(quickFilterList.find((filter) => filter?.type === QuickFilterTypes.Modal)?.status)} > ${String(tabSelection)}`
+  }
 
   return (
     <RootContainer>
@@ -253,10 +291,11 @@ const Tariff = (): JSX.Element => {
           />
         </LeftSideListHeaderContainer>
         <RightSideListHeaderContainer>
-          <ExportTariffContainer onClick={handleExportTariff}>
+          <ExportTariffContainer onClick={() => setOpenExport(true)}>
             <ExitToApp />
             <ExportListSpan>{I18n.t('pages.tariff.mainPage.export')}</ExportListSpan>
           </ExportTariffContainer>
+          <TariffExportModal setClose={() => setOpenExport(false)} open={openExport} handleExport={handleExport} createExportPath={createExportPath}/>
           <OrderByContainer>
             <ListTextSpan>{I18n.t('pages.tariff.mainPage.orderBy')}:</ListTextSpan>
             <DropdownMenuContainer>

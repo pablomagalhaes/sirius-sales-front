@@ -6,7 +6,6 @@ import { QueryKeys } from '../../../application/enum/queryKeys'
 
 const useTariffsByCountry = (): any => {
   const [params, setParams] = useState()
-
   const getTariffsByCountry = async (): Promise<any> => {
     if (params !== undefined) {
       const data = await API.getTariffsByCountry(params)

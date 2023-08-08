@@ -362,6 +362,12 @@
           "errorMessage": "Formato de arquivo inválido. Escolha um arquivo .csv"
         }
       },
+      "export": {
+        "title": "Exportar tarifas",
+        "subtitle": "Será exportado os dados da tela",
+        "button": "Exportar",
+        "message": "*O arquivo de dados será exportado no mesmo formato utilizado para upload de tarifas."
+      },
       "orderSelectors": {
         "agent": "Agente",
         "origin": "Origem",
