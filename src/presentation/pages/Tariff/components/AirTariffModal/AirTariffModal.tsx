@@ -105,6 +105,10 @@ const AirTariffModal = ({
   const rgxFloat = /^[0-9]*,?[0-9]*$/
   const rgxInt = /^[0-9]*$/
 
+  const MaxLenth = {
+    maxLength: 12
+  }
+
   useEffect(() => {
     if (dataProp !== initialState) {
       const getTariffValue = (type: string): any => {
@@ -312,6 +316,7 @@ const AirTariffModal = ({
                 size="small"
                 modal
                 style={{ marginRight: '3px' }}
+                inputProps={MaxLenth}
               />
             </Grid>
             <Grid item xs={12} container={true} spacing={1} direction="row" justify="center">
@@ -333,6 +338,7 @@ const AirTariffModal = ({
                   variant="outlined"
                   size="small"
                   modal
+                  inputProps={MaxLenth}
                 />
                 </Grid>
                 <Grid item xs={12} md>
@@ -353,6 +359,7 @@ const AirTariffModal = ({
                   variant="outlined"
                   size="small"
                   modal
+                  inputProps={MaxLenth}
                 />
                 </Grid>
                 <Grid item xs={12} md>
@@ -373,6 +380,7 @@ const AirTariffModal = ({
                   variant="outlined"
                   size="small"
                   modal
+                  inputProps={MaxLenth}
                 />
                 </Grid>
                 <Grid item xs={12} md>
@@ -393,6 +401,7 @@ const AirTariffModal = ({
                   variant="outlined"
                   size="small"
                   modal
+                  inputProps={MaxLenth}
                 />
                 </Grid>
                 <Grid item xs={12} md>
@@ -414,6 +423,7 @@ const AirTariffModal = ({
                   size="small"
                   modal
                   style={{ marginRight: '3px' }}
+                  inputProps={MaxLenth}
                 />
                 </Grid>
             </Grid>
@@ -436,6 +446,7 @@ const AirTariffModal = ({
                 variant="outlined"
                 size="small"
                 modal
+                inputProps={MaxLenth}
               />
             </Grid>
             <Grid item xs={3}>

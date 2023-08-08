@@ -96,6 +96,10 @@ const InputRow = ({
     }
   ]
 
+  const MaxLenth = {
+    maxLength: 12
+  }
+
   const [state, setState] = useState({ anchorEl: null, currentKey: null })
 
   const handleClick = (event: any, key: any): void => {
@@ -441,6 +445,7 @@ const InputRow = ({
             size="small"
             modal
             style={{ marginRight: '3px' }}
+            inputProps={MaxLenth}
           />
         </Grid>
         <Grid item xs={1} style={{
@@ -461,6 +466,7 @@ const InputRow = ({
             size="small"
             modal
             style={{ marginRight: '3px' }}
+            inputProps={MaxLenth}
           />
         </Grid>
         <Grid item xs={1} style={{
@@ -481,6 +487,7 @@ const InputRow = ({
             size="small"
             modal
             style={{ marginRight: '3px' }}
+            inputProps={MaxLenth}
           />
         </Grid>
         <Grid item xs={1} style={{
@@ -501,6 +508,7 @@ const InputRow = ({
             size="small"
             modal
             style={{ marginRight: '3px' }}
+            inputProps={MaxLenth}
           />
         </Grid>
         <Grid item xs={1} style={{
@@ -521,6 +529,7 @@ const InputRow = ({
             size="small"
             modal
             style={{ marginRight: '3px' }}
+            inputProps={MaxLenth}
           />
         </Grid>
         <Grid item xs={1}></Grid>
