@@ -1,4 +1,4 @@
-import { Modal, Grid, FormLabel, RadioGroup, FormControlLabel } from '@material-ui/core'
+import { Modal, Grid, FormLabel, RadioGroup, FormControlLabel, InputAdornment } from '@material-ui/core'
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import CloseIcon from '../../../../../application/icons/CloseIcon'
@@ -9,9 +9,7 @@ import {
   ModalDiv,
   MainDiv,
   DragAndDropDiv,
-  Form,
-  SelectEmpty,
-  Item
+  StyledPaper
 } from './TariffUploadModalStyles'
 import { I18n } from 'react-redux-i18n'
 import {
@@ -25,6 +23,9 @@ import { Button, DragAndDrop } from 'fiorde-fe-components'
 import { usePartnerList } from '../../../../hooks'
 import useUploadTariff from '../../../../hooks/tariff/useUploadTariff'
 import { TariffTypes } from '../../../../../application/enum/enum'
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import ControlledInput from '../../../../components/ControlledInput'
+import IconComponent from '../../../../../application/icons/IconComponent'
 
 import {
   TARIFF_UPLOAD_MODAL_RADIO_SEATYPES,
@@ -55,6 +56,7 @@ export const initialState = {
 }
 
 const TariffUploadModal = ({
+  theme,
   type,
   open,
   setClose
@@ -182,38 +184,60 @@ const TariffUploadModal = ({
                   <RedColorSpan> *</RedColorSpan>
                 )}
               </FormLabel>
-              <Form variant="outlined">
-                <SelectEmpty
-                  labelId="demo-simple-select-outlined-label"
-                  id={TARIFF_UPLOAD_MODAL_SELECT_UPLOAD}
-                  value={data.agent.name}
-                  displayEmpty
-                  inputProps={{ 'aria-label': 'Without label' }}
-                  onChange={(e) => {
-                    setData({
-                      ...data,
-                      agent: {
-                        name: String(e.target.value) ?? '',
-                        idBusinessPartnerAgent: getidBusinessPartnerAgent(String(e.target.value))
+              <Autocomplete
+                id={TARIFF_UPLOAD_MODAL_SELECT_UPLOAD}
+                disabled={false}
+                size="small"
+                closeIcon={null}
+                options={agentsList.map(
+                  (item) => item.simpleName
+                )}
+                onChange={(e, newValue) => {
+                  setData({
+                    ...data,
+                    agent: {
+                      name: String(newValue) ?? '',
+                      idBusinessPartnerAgent: getidBusinessPartnerAgent(String(newValue))
+                    }
+                  })
+                }}
+                value={data.agent.name}
+                renderInput={(params: any) => (
+                  <div ref={params.InputProps.ref}>
+                    <ControlledInput
+                      {...params}
+                      id="search-name"
+                      toolTipTitle={I18n.t(
+                        'components.itemModal.requiredField'
+                      )}
+                      value={data.agent.name}
+                      invalid={type === I18n.t('pages.tariff.upload.import') && data.agent.name.length === 0 && invalidInput}
+                      variant="outlined"
+                      placeholder={
+                        data.agent.name.length === 0 &&
+                        I18n.t('pages.newProposal.step2.searchAgents')
                       }
-                    })
-                  }}
-                  invalidData={type === I18n.t('pages.tariff.upload.import') && data.agent.name.length === 0 && invalidInput}
-                  disableUnderline={true}
-                >
-                  <Item value="">
-                    <em> </em>
-                  </Item>
-                  {agentsList.map((item) =>
-                    <Item
-                      value={item.simpleName}
-                      key={item.id}
-                    >
-                      {item.simpleName}
-                    </Item>
-                  )}
-                </SelectEmpty>
-              </Form>
+                      $space
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconComponent
+                              name="search"
+                              defaultColor={
+                                theme?.commercial?.pages?.newProposal
+                                  ?.subtitle
+                              }
+                            />
+                          </InputAdornment>
+                        )
+                      }}
+                    />
+                  </div>
+                )}
+                PaperComponent={(params: any) => (
+                  <StyledPaper {...params} />
+                )}
+              />
             </Grid>
             <DragAndDropDiv>
               <DragAndDrop
