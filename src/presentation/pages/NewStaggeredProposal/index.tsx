@@ -113,8 +113,46 @@ const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): 
     if (completed.step1 && staggeredproposal?.proposalTariff.length > 0 && completed.step2) {
       setInvalidInput(false)
       if (loadExistingProposal) {
+
+        const params = {
+          idBusinessPartnerCustomer: staggeredproposal.idBusinessPartnerCustomer,
+          tariffType: staggeredproposal.tariffType,
+          idTariffProposalStatus: Number(1),
+          dtValidity: staggeredproposal.dtValidity,
+          dtValidityEnd: staggeredproposal.dtValidityEnd,
+          proposalTariff: []
+        }
+
+        const newObject = staggeredproposal?.proposalTariff.map((obj) => {
+          if (obj?.origin !== '') {
+            return {
+              ...obj,
+              origin: obj.origin.split(' - ')[0],
+              destination: obj.destination.split(' - ')[0],
+              freightValues: obj.freightValues.map((item) => {
+                if(item.buyOrSell === 'SELL') {
+                  return {
+                    vlMinimum: item.vlMinimum,
+                    until45kg: item.until45kg.replace(/,/g, '.'),
+                    until100kg: item.until100kg.replace(/,/g, '.'),
+                    until300kg: item.until300kg.replace(/,/g, '.'),
+                    until500kg: item.until500kg.replace(/,/g, '.'),
+                    until1000kg: item.until1000kg.replace(/,/g, '.'),
+                    buyOrSell: item.buyOrSell
+                  }
+                } else {
+                  return item
+                }
+              })
+            }
+          }
+          return { ...obj }
+        })
+
+        params.proposalTariff = newObject
+
         void (async function () {
-          await API.putTariffProposal(proposalId, staggeredproposal)
+          await API.putTariffProposal(proposalId, params)
             .then((response) => {
               history.push('/propostaEscalonada')
             })
@@ -135,7 +173,18 @@ const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): 
             return {
               ...obj,
               origin: obj.origin.split(' - ')[0],
-              destination: obj.destination.split(' - ')[0]
+              destination: obj.destination.split(' - ')[0],
+              freightValues: obj.freightValues.map((item) => {
+                return {
+                  vlMinimum: item.vlMinimum.replace(/,/g, '.'),
+                  until45kg: item.until45kg.replace(/,/g, '.'),
+                  until100kg: item.until100kg.replace(/,/g, '.'),
+                  until300kg: item.until300kg.replace(/,/g, '.'),
+                  until500kg: item.until500kg.replace(/,/g, '.'),
+                  until1000kg: item.until1000kg.replace(/,/g, '.'),
+                  buyOrSell: item.buyOrSell
+                }
+              })
             }
           }
           return { ...obj }

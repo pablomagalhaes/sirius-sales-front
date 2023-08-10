@@ -131,11 +131,11 @@ const InputRow = ({
     })()
     if (item.freightValues[1] !== undefined) {
       setData({
-        until45kg: { value: item.freightValues[1]?.until45kg },
-        until100kg: { value: item.freightValues[1]?.until100kg },
-        until300kg: { value: item.freightValues[1]?.until300kg },
-        until500kg: { value: item.freightValues[1]?.until500kg },
-        until1000kg: { value: item.freightValues[1]?.until1000kg },
+        until45kg: { value: FormatNumber.convertNumberToString(item.freightValues[1]?.until45kg !== null ? item.freightValues[1]?.until45kg : null) },
+        until100kg: { value: FormatNumber.convertNumberToString(item.freightValues[1]?.until100kg !== null ? item.freightValues[1]?.until100kg : null) },
+        until300kg: { value: FormatNumber.convertNumberToString(item.freightValues[1]?.until300kg !== null ? item.freightValues[1]?.until300kg : null) },
+        until500kg: { value: FormatNumber.convertNumberToString(item.freightValues[1]?.until500kg !== null ? item.freightValues[1]?.until500kg : null) },
+        until1000kg: { value: FormatNumber.convertNumberToString(item.freightValues[1]?.until1000kg !== null ? item.freightValues[1]?.until1000kg : null) },
         frequency: item.frequency || null,
         vlFrequency: item.vlFrequency || null
       })
@@ -330,39 +330,39 @@ const InputRow = ({
               <Fragment key={index}>
                   <Grid key={index} item xs={1}>
                     <FormLabelInner component="legend" id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_VMINIMUM}>
-                      {FormatNumber.convertStringToNumber(line.vlMinimum !== null ? line.vlMinimum : '-')}
+                   {line.vlMinimum}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
                     <FormLabelInner component="legend" center id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL45KG}>
-                      {FormatNumber.convertStringToNumber(line.until45kg !== null ? line.until45kg : '-')}
+                      {line.until45kg}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
                     <FormLabelInner component="legend" center
                     id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL100KG}>
-                      {FormatNumber.convertStringToNumber(line.until100kg !== null ? line.until100kg : '-')}
+                    {line.until100kg}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
                     <FormLabelInner component="legend" center
                     id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL300KG}
                     >
-                      {FormatNumber.convertStringToNumber(line.until300kg !== null ? line.until300kg : '-')}
+                     {line.until300kg}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
                     <FormLabelInner component="legend" center
                     id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL500KG}
                     >
-                      {FormatNumber.convertStringToNumber(line.until500kg !== null ? line.until500kg : '-')}
+                     {line.until500kg}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
                     <FormLabelInner component="legend" center
                     id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL1000KG}
                     >
-                      {FormatNumber.convertStringToNumber(line.until1000kg !== null ? line.until1000kg : '-')}
+                    {line.until1000kg}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>

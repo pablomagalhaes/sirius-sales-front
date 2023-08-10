@@ -132,7 +132,7 @@ const TextCell = styled.p`
   font-family: DM Sans;
   font-size: 16px;
   font-style: normal;
-  font-weight: bold;
+  font-weight: 400;
 `
 
 const TextInnerGreyCell = styled.p`
