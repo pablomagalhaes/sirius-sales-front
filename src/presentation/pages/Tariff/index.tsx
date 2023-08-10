@@ -68,6 +68,7 @@ const Tariff = (): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [openExport, setOpenExport] = useState(false)
   const [uploadType, setUploadType] = useState('')
+  const [exportData, setExportData] = useState<any>([])
 
   const history = useHistory()
 
@@ -217,7 +218,7 @@ const Tariff = (): JSX.Element => {
     tariffsToExport.forEach((tariff: any) => {
       !exportByAgent[tariff.nmAgent] ? exportByAgent[tariff.nmAgent] = [tariff] : exportByAgent[tariff.nmAgent].push(tariff)
     })
-    console.log(exportByAgent)
+    setExportData(exportByAgent)
   }
 
   const createExportPath = (): string => {
@@ -291,11 +292,11 @@ const Tariff = (): JSX.Element => {
           />
         </LeftSideListHeaderContainer>
         <RightSideListHeaderContainer>
-          <ExportTariffContainer onClick={() => setOpenExport(true)}>
+          <ExportTariffContainer onClick={() => { setOpenExport(true); handleExport() }}>
             <ExitToApp />
             <ExportListSpan>{I18n.t('pages.tariff.mainPage.export')}</ExportListSpan>
           </ExportTariffContainer>
-          <TariffExportModal setClose={() => setOpenExport(false)} open={openExport} handleExport={handleExport} createExportPath={createExportPath}/>
+          <TariffExportModal setClose={() => setOpenExport(false)} open={openExport} createExportPath={createExportPath} exportData={exportData}/>
           <OrderByContainer>
             <ListTextSpan>{I18n.t('pages.tariff.mainPage.orderBy')}:</ListTextSpan>
             <DropdownMenuContainer>
