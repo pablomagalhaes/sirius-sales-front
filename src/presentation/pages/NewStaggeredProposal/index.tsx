@@ -211,22 +211,22 @@ const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): 
   ]
 
   // Menu suspenso após proposta ter sido salva
-  // const floatingButtonMenuItemsAfterSaved = [
-  //   {
-  //     iconType: 'save',
-  //     label: I18n.t('pages.newProposal.save'),
-  //     // onClick: () => handleSave()
-  //   }, {
-  //     iconType: 'file',
-  //     label: I18n.t('pages.newProposal.viewDownload'),
-  //     // onClick: () => handleOpen()
-  //   },
-  //   {
-  //     iconType: 'send',
-  //     label: I18n.t('pages.newProposal.send'),
-  //     onClick: () => { }
-  //   }
-  // ]
+  const floatingButtonMenuItemsAfterSaved = [
+    {
+      iconType: 'save',
+      label: I18n.t('pages.newProposal.save'),
+      onClick: () => handleSave()
+    }, {
+      iconType: 'file',
+      label: I18n.t('pages.newProposal.viewDownload'),
+      // onClick: () => handleOpen()
+    },
+    {
+      iconType: 'send',
+      label: I18n.t('pages.newProposal.send'),
+      onClick: () => { }
+    }
+  ]
 
   // const MessageExitDialog = (): JSX.Element => {
   //   useEffect(() => {
@@ -329,7 +329,7 @@ const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): 
             text={I18n.t('pages.newProposal.buttonFinish')}
             tooltip={I18n.t('pages.newProposal.buttonFinish')}
           >
-            <FloatingMenu menuItems={floatingButtonMenuItems} />
+            <FloatingMenu menuItems={(location.state?.proposalId || showSaveMessage) ? floatingButtonMenuItemsAfterSaved : floatingButtonMenuItems} />
           </Button>
         </ButtonContainer>
       </TopContainer>
@@ -474,7 +474,8 @@ const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): 
             closeAlert={() => { setShowSaveMessage(false) } }
             closeMessage={I18n.t('pages.staggeredProposal.newStaggeredProposal.saveMessage.closeMessage')}
             goBack={() => { history.push('/propostaEscalonada') } }
-            message={I18n.t('pages.staggeredProposal.newStaggeredProposal.saveMessage.message')}
+            message={`${String(I18n.t('pages.staggeredProposal.newStaggeredProposal.saveMessage.message'))} 
+            ${String('')}.`}
             severity={'success'}
           />
         </MessageContainer>}

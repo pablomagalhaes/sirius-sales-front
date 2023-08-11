@@ -635,7 +635,7 @@
           "duplicateTariffText": "Tarifa duplicada, Selecione uma tarifa diferente"
         },
         "saveMessage": {
-          "buttonText": "Voltar à lista",
+          "buttonText": "Voltar à lista de propostas",
           "closeMessage": "Continuar editando",
           "message": "Proposta salva com sucesso"
         }
