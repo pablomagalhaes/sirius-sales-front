@@ -1103,12 +1103,14 @@ const Proposal = (): JSX.Element => {
             rows={getProposalItems(proposalList)}
             />
             <RejectModal
-              open={openReject}
+              // open={openReject}
+              open={true}
               setClose={handleCloseReject}
               title={I18n.t('components.rejectModal.title')}
               reference={reference}
               proposalId={proposalId}
               setStatus={setStatus}
+              detailed={true}
             />
             <CancelModal
               open={openCancel}

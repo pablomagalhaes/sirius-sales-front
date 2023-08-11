@@ -142,7 +142,7 @@ const RejectModal = ({
                   direction="column"
                   justify="center"
                   style={{ marginTop: '30px' }}>
-              <Typography variant="body1" gutterBottom>
+              <Typography variant="body1" gutterBottom style={{ color: '#000000' }}>
                 {I18n.t('components.rejectModal.definition')} Ref. {reference} {I18n.t('components.rejectModal.rejection')}
               </Typography>
               <Typography variant="subtitle1" gutterBottom>
