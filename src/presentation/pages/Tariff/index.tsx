@@ -35,7 +35,7 @@ import ArrowDown from '../../../application/icons/ArrowDown'
 import { orderButtonMenuItems } from './constants'
 import { I18n } from 'react-redux-i18n'
 import TariffTable from './components/TariffTable'
-import { getModalFilter, getActivityFilter, getValidityFilter } from './helpers'
+import { getModalFilter, getActivityFilter, getValidityFilter , orderCsv } from './helpers'
 import TariffUploadModal from './components/TariffUploadModal/TariffUploadModal'
 import TariffExportModal from './components/TariffExportModal/TariffExportModal'
 import { SelectorsValuesTypes, QuickFilterTypes, ValidityTypes } from '../../../application/enum/tariffEnum'
@@ -204,10 +204,11 @@ const Tariff = (): JSX.Element => {
   ]
 
   const handleExport = async (): Promise<void> => {
-    const countriesToExport = tariffList.find((each: any) => each.region === String(tabSelection).replace(/ /g,''))?.countries
+    const region = String(tabSelection).replace(/ /g,'')
+    const countriesToExport = tariffList.find((each: any) => each.region === region)?.countries
     let tariffsToExport = []
     await Promise.all(countriesToExport?.map(async (country: string) => {
-      const payload = { ...filter, txRegion: tabSelection, txCountry: country }
+      const payload = { ...filter, txRegion: region, txCountry: country }
       await API.getTariffsByCountry(payload)
         .then((response) => {
           tariffsToExport = [...tariffsToExport, ...response.content]
@@ -216,7 +217,9 @@ const Tariff = (): JSX.Element => {
     }))
     const exportByAgent = {}
     tariffsToExport.forEach((tariff: any) => {
-      !exportByAgent[tariff.nmAgent] ? exportByAgent[tariff.nmAgent] = [tariff] : exportByAgent[tariff.nmAgent].push(tariff)
+      !exportByAgent[tariff.nmAgent]
+        ? exportByAgent[tariff.nmAgent] = [orderCsv(tariff)]
+        : exportByAgent[tariff.nmAgent].push(orderCsv(tariff))
     })
     setExportData(exportByAgent)
   }

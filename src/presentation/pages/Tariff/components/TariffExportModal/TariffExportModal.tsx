@@ -16,11 +16,13 @@ import {
   CloseIconContainer
 } from '../../../../components/StyledComponents/modalStyles'
 import { Button } from 'fiorde-fe-components'
+import JSZip from 'jszip'
+import Papa from 'papaparse'
+import { saveAs } from 'file-saver'
 
 import {
   TARIFF_EXPORT_MODAL_BUTTON
 } from '../../../../../ids'
-import { CSVLink } from 'react-csv'
 
 interface TariffUploadProps {
   open: boolean
@@ -38,25 +40,39 @@ const TariffUploadModal = ({
   const handleOnClose = (): void => {
     setClose()
   }
-
-  const handleExport = (): void => {
-    Object.keys(exportData).map((agent) => {
-      document.getElementById(agent).click()
-      return ''
-    })
-    handleOnClose()
-  }
-
-  const generateFileName = (agent): string => {
+  const createDate = (): string => {
     const today = new Date()
     const date = today.toISOString().split('T')[0].split('-')
     const orderedDate = date[2] + date[1] + date[0].substring(2, 4)
+    return orderedDate
+  }
+
+  const handleExport = async (): Promise<void> => {
+    const zip = new JSZip()
+    const path = createExportPath()
+    const continent = String(path).split(' > ')[2]
+    const date = createDate()
+    Object.entries(exportData).forEach(([agent, file]: [string, any[]]) => {
+      const csvData = Papa.unparse(file, { delimiter: ';' })
+      const blob = new Blob([csvData], { type: 'text/csv' })
+      const fileName = generateFileName(agent)
+      zip.file(`${fileName}.csv`, blob)
+    })
+    zip.generateAsync({ type: 'blob' }).then(content => {
+      saveAs(content, `${String(date)}_Tarifario_Arquivos_Exportados_${String(continent)}`)
+    })
+
+    handleOnClose()
+  }
+
+  const generateFileName = (agent: string): string => {
+    const date = createDate()
     const path = createExportPath()
     const type = String(path).split(' > ')[0].substring(0,3)
     const modal = String(path).split(' > ')[1].toLowerCase().replace('á', 'a').replace('é', 'e').replace('í', 'i')
-    const agentName = agent.replace(/\s/g, '').toLowerCase().replace('.', '').replace(',', '')
-    const finalName = `${String(orderedDate)}_${String(type)}_${String(modal)}_${String(agentName)}`
-    return finalName.substring(0, 256)
+    const agentName = agent.replace(/\s/g, '').toLowerCase().replace('.', '').replace('.', '').replace(',', '')
+    const finalName = `${String(date)}_${String(type)}_${String(modal)}_${String(agentName)}`
+    return finalName.replace(/[\n\r]/g, '').replace(/\s/g, '').substring(0, 256)
   }
 
   return (
@@ -78,19 +94,6 @@ const TariffUploadModal = ({
             {createExportPath()}
           </Grid>
         </ExportDiv>
-        {Object.entries(exportData).length > 0 &&
-          Object.entries(exportData).map((data) =>
-            <CSVLink
-            data={data[1]}
-            filename={generateFileName(data[0])}
-            className="btn btn-primary"
-            target="_blank"
-            key={data[0]}
-          >
-            <div id={data[0]} style={{ display: 'none' }}>-</div>
-          </CSVLink>
-          )
-        }
         <MainDiv>
           <Grid item xs={12}>
             <ButtonDiv>
