@@ -108,7 +108,8 @@ const ItemModal = ({
     if (marineFCL()) {
       return !(
         data.type?.length === 0 ||
-        data.amount.length === 0)
+        data.amount.length === 0 ||
+        data.cubage.length === 0)
     } else {
       return !(
         (data.type === null || data.type?.length === 0) ||
@@ -117,7 +118,7 @@ const ItemModal = ({
         (data.height === null || data.height?.length === 0) ||
         (data.width === null || data.width?.length === 0) ||
         (data.length === null || data.length?.length === 0) ||
-        (data.cubage === null || data.cubage?.length === 0))
+        (data.cubage === null || data.cubage?.length === 0 || data.cubage === '0,00'))
     }
   }
 
@@ -343,7 +344,7 @@ const ItemModal = ({
             {!(marineFCL()) && <Grid item xs={3}>
               <FormLabel component="legend" error={
                   invalidInput && !(marineFCL()) &&
-                  (data.cubage === null || data.cubage.length === 0)
+                  (data.cubage === null || data.cubage.length === 0 || data.cubage === '0,00')
                 }>
                 {I18n.t('components.itemModal.cubage')}
                 {(modal === 'AIR' ||
@@ -359,7 +360,7 @@ const ItemModal = ({
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
                 invalid={
                   invalidInput && !(marineFCL()) &&
-                  (data.cubage === null || data.cubage.length === 0)
+                  (data.cubage === null || data.cubage.length === 0 || data.cubage === '0,00')
                 }
                 value={data.cubage != null ? data.cubage : ''}
                 onChange={e => { validateFloatInput(e.target.value) !== null && (setData({ ...data, cubage: e.target.value })) }}
