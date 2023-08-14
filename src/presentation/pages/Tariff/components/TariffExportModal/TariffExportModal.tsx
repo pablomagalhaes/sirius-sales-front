@@ -46,7 +46,7 @@ const TariffUploadModal = ({
     const orderedDate = date[2] + date[1] + date[0].substring(2, 4)
     return orderedDate
   }
-
+  console.log(exportData)
   const handleExport = async (): Promise<void> => {
     const zip = new JSZip()
     const path = createExportPath()
@@ -81,7 +81,7 @@ const TariffUploadModal = ({
         <HeaderDiv>
           <Title>{I18n.t('pages.tariff.export.title')}</Title>
           <RowReverseDiv>
-            <CloseIconContainer>
+            <CloseIconContainer data-testid="close-button">
               <CloseIcon onClick={handleOnClose} />
             </CloseIconContainer>
           </RowReverseDiv>
@@ -99,6 +99,7 @@ const TariffUploadModal = ({
             <ButtonDiv>
               <Button
                 id={TARIFF_EXPORT_MODAL_BUTTON}
+                data-testid="export-button"
                 text={I18n.t('pages.tariff.export.button')}
                 tooltip={I18n.t('pages.tariff.export.button')}
                 backgroundGreen={true}
