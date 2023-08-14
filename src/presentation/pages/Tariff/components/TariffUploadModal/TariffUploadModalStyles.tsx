@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Box, Radio, MenuItem, Select, FormControl } from '@material-ui/core'
+import { Box, Radio, MenuItem, Select, FormControl,Paper } from '@material-ui/core'
 import { primary } from '../../../../../application/themes'
 
 interface StyledRadioProps {
@@ -147,4 +147,11 @@ export const SelectEmpty = styled(Select)`
 export const Item = styled(MenuItem)`
   font-weight: 400;
   font-size: 14px;
+`
+
+export const StyledPaper = styled(Paper)`
+    border: 1px solid ${(props: any) => props.theme?.commercial?.pages?.proposal?.dropdownBorderColor} !important;
+    background-color: ${(props: any) => props.theme?.commercial?.pages?.proposal?.dropdownBackgroundColor} !important;
+    color: ${(props: any) => props.theme?.commercial?.pages?.proposal?.dropdownFontColor} !important;
+    box-sizing: border-box;
 `
