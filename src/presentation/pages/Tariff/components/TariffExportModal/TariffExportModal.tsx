@@ -46,7 +46,7 @@ const TariffUploadModal = ({
     const zip = new JSZip()
     const path = createExportPath()
     const continent = String(path).split(' > ')[2]
-    const date = moment().format("DDMMYY")
+    const date = moment().format('DDMMYY')
     Object.entries(exportData).forEach(([agent, file]: [string, any[]]) => {
       const csvData = Papa.unparse(file, { delimiter: ';' })
       const blob = new Blob([csvData], { type: 'text/csv' })
@@ -61,7 +61,7 @@ const TariffUploadModal = ({
   }
 
   const generateFileName = (agent: string): string => {
-    const date = moment().format("DDMMYY")
+    const date = moment().format('DDMMYY')
     const path = createExportPath()
     const type = String(path).split(' > ')[0].substring(0,3)
     const modal = String(path).split(' > ')[1].toLowerCase().replace('á', 'a').replace('é', 'e').replace('í', 'i')
