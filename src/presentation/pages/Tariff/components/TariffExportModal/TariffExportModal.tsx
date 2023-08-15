@@ -19,6 +19,7 @@ import { Button } from 'fiorde-fe-components'
 import JSZip from 'jszip'
 import Papa from 'papaparse'
 import { saveAs } from 'file-saver'
+import moment from 'moment'
 
 import {
   TARIFF_EXPORT_MODAL_BUTTON
@@ -40,18 +41,12 @@ const TariffUploadModal = ({
   const handleOnClose = (): void => {
     setClose()
   }
-  const createDate = (): string => {
-    const today = new Date()
-    const date = today.toISOString().split('T')[0].split('-')
-    const orderedDate = date[2] + date[1] + date[0].substring(2, 4)
-    return orderedDate
-  }
-  console.log(exportData)
+
   const handleExport = async (): Promise<void> => {
     const zip = new JSZip()
     const path = createExportPath()
     const continent = String(path).split(' > ')[2]
-    const date = createDate()
+    const date = moment().format("DDMMYY")
     Object.entries(exportData).forEach(([agent, file]: [string, any[]]) => {
       const csvData = Papa.unparse(file, { delimiter: ';' })
       const blob = new Blob([csvData], { type: 'text/csv' })
@@ -66,7 +61,7 @@ const TariffUploadModal = ({
   }
 
   const generateFileName = (agent: string): string => {
-    const date = createDate()
+    const date = moment().format("DDMMYY")
     const path = createExportPath()
     const type = String(path).split(' > ')[0].substring(0,3)
     const modal = String(path).split(' > ')[1].toLowerCase().replace('á', 'a').replace('é', 'e').replace('í', 'i')
