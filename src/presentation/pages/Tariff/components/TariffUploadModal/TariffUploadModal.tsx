@@ -99,6 +99,11 @@ const TariffUploadModal = ({
     reset()
   }
 
+  const handleAnotherPage = (): void => {
+    handleOnClose()
+    history.push('/tarifario-processamentos')
+  }
+
   const validateData = (): boolean => {
     return !(
       (data.modal === null || data.modal?.length === 0) ||
@@ -289,7 +294,7 @@ const TariffUploadModal = ({
                       tooltip={I18n.t('pages.tariff.upload.processingButtonLabel')}
                       backgroundGreen={true}
                       icon=""
-                      onAction={() => history.push('/tarifario-processamentos')}
+                      onAction={handleAnotherPage}
                     />
                   }
                 </ButtonDiv>
