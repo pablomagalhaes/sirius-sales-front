@@ -149,3 +149,6 @@ export const TARIFF_IMPORT_HANDSON_MODAL_INPUT_UNTIL100KG = `${PREFIX_IDS}_tarif
 export const TARIFF_IMPORT_HANDSON_MODAL_INPUT_UNTIL300KG = `${PREFIX_IDS}_tariff-import-handson-modal_input_until300kg`
 export const TARIFF_IMPORT_HANDSON_MODAL_INPUT_UNTIL500KG = `${PREFIX_IDS}_tariff-import-handson-modal_input_until500kg`
 export const TARIFF_IMPORT_HANDSON_MODAL_INPUT_UNTIL1000KG = `${PREFIX_IDS}_tariff-import-handson-modal_input_until1000kg`
+
+// Tariff Export Modal
+export const TARIFF_EXPORT_MODAL_BUTTON = `${PREFIX_IDS}_tariff-export-modal_button`
