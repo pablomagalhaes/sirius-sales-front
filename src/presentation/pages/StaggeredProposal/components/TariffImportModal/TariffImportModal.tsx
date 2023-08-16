@@ -163,10 +163,11 @@ const TariffImportModal = ({
       const tariffModalType = 'AIR'
       const tariffType = 'IMPORT'
       const validityTariff = 'VALID'
-
       if (data.agent.id === null) {
-        setFilter((filter: any) => ({
-          ...filter,
+        const newFilter = { ...filter }
+        delete newFilter.idBusinessPartnerAgent
+        setFilter(() => ({
+          ...newFilter,
           size: 3,
           tariffModalType: tariffModalType,
           validityTariff: validityTariff,
@@ -178,7 +179,9 @@ const TariffImportModal = ({
         setFilter((filter: any) => ({
           ...filter,
           size: 3,
-          tariffModalType: 'AIR',
+          tariffModalType: tariffModalType,
+          validityTariff: validityTariff,
+          tariffType: tariffType,
           idBusinessPartnerAgent: data.agent.id,
           idOrigin: data.origin.split(' - ')[0],
           idDestination: data.destiny.split(' - ')[0]
@@ -367,11 +370,18 @@ const TariffImportModal = ({
               freeSolo
               options={agentsList.map((item: any) => item.simpleName)}
               onChange={(_e, newValue): void => {
-                const { simpleName: name, id } = agentsList.find((item: any) => item.simpleName === newValue)
-                setData((data) => ({
-                  ...data,
-                  agent: { name, id }
-                }))
+                if (newValue !== null) {
+                  const { simpleName: name, id } = agentsList.find((item: any) => item.simpleName === newValue)
+                  setData((data) => ({
+                    ...data,
+                    agent: { name, id }
+                  }))
+                } else {
+                  setData((data) => ({
+                    ...data,
+                    agent: { name: '', id: null }
+                  }))
+                }
               }}
               value={data.agent.name}
               renderInput={(params) => (
