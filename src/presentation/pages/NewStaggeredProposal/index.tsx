@@ -442,6 +442,7 @@ const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): 
               open={openDisplay}
               setClose={() => setOpenDisplay(false)}
               idProposal={idProposal}
+              downloadProposal={API.downloadStaggeredProposal}
             />
         </MainContainer>
       }

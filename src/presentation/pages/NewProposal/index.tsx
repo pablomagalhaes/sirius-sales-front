@@ -533,6 +533,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           open={open}
           setClose={handleClose}
           idProposal={proposal.idProposal}
+          downloadProposal={API.downloadProposal}
         />
       {leavingPage && <MessageExitDialog />}
       {loadExistingProposal &&
