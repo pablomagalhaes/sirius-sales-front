@@ -251,7 +251,10 @@ const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposa
           {
             iconType: 'file',
             label: I18n.t('pages.proposal.table.viewDownload'),
-            onClick: () => { }
+            onClick: () => {
+              setOpenDisplay(true)
+              setProposalId(id)
+            }
           })
         return array
       case StatusProposalEnum.REJEITADA:

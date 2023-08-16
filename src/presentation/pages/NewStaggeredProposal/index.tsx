@@ -24,6 +24,7 @@ import { StaggeredProposalContext, StaggeredProposalProps , emptyStaggeredPropos
 
 import TariffImportModal from '../StaggeredProposal/components/TariffImportModal/TariffImportModal'
 import TariffImportHandsOnModal from '../StaggeredProposal/components/TariffImportModal/TariffImportHandsOnModal'
+import ProposalDisplayModal from '../../components/ProposalDisplayModal/ProposalDisplayModal'
 
 import {
   STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_LINK_HOME,
@@ -52,6 +53,7 @@ const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): 
   const [idProposal, setIdProposal] = useState('')
 
   const [openImport, setOpenImport] = useState(false)
+  const [openDisplay, setOpenDisplay] = useState(false)
   const [openImportHandsOn, setOpenImportHandsOn] = useState(false)
 
   const [ShowList, setShowList] = useState<boolean>(false)
@@ -217,8 +219,10 @@ const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): 
       onClick: () => handleSave()
     }, {
       iconType: 'file',
-      label: I18n.t('pages.newProposal.viewDownload')
-      // onClick: () => handleOpen()
+      label: I18n.t('pages.newProposal.viewDownload'),
+      onClick: () => {
+        setOpenDisplay(true)
+      }
     },
     {
       iconType: 'send',
@@ -434,6 +438,11 @@ const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): 
             open={openImportHandsOn}
             setShowList={() => setShowList(true)}
           />
+          <ProposalDisplayModal
+              open={openDisplay}
+              setClose={() => setOpenDisplay(false)}
+              idProposal={idProposal}
+            />
         </MainContainer>
       }
       {showSaveMessage &&
