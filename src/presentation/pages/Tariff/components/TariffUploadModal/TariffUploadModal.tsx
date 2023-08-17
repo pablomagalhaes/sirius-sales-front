@@ -193,13 +193,20 @@ const TariffUploadModal = ({
                   (item) => item.simpleName
                 )}
                 onChange={(e, newValue) => {
-                  setData({
-                    ...data,
-                    agent: {
-                      name: String(newValue) ?? '',
-                      idBusinessPartnerAgent: getidBusinessPartnerAgent(String(newValue))
-                    }
-                  })
+                  if (newValue !== null) {
+                    setData({
+                      ...data,
+                      agent: {
+                        name: String(newValue) ?? '',
+                        idBusinessPartnerAgent: getidBusinessPartnerAgent(String(newValue))
+                      }
+                    })
+                  } else {
+                    setData({
+                      ...data,
+                      agent: { name: '', idBusinessPartnerAgent: null }
+                    })
+                  }
                 }}
                 value={data.agent.name}
                 renderInput={(params: any) => (
