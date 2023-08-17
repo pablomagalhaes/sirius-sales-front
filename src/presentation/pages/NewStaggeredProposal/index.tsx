@@ -113,7 +113,6 @@ const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): 
     if (completed.step1 && staggeredproposal?.proposalTariff.length > 0 && completed.step2) {
       setInvalidInput(false)
       if (loadExistingProposal) {
-
         const params = {
           idBusinessPartnerCustomer: staggeredproposal.idBusinessPartnerCustomer,
           tariffType: staggeredproposal.tariffType,
@@ -130,7 +129,7 @@ const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): 
               origin: obj.origin.split(' - ')[0],
               destination: obj.destination.split(' - ')[0],
               freightValues: obj.freightValues.map((item) => {
-                if(item.buyOrSell === 'SELL') {
+                if (item.buyOrSell === 'SELL') {
                   return {
                     vlMinimum: item.vlMinimum,
                     until45kg: item.until45kg.replace(/,/g, '.'),
