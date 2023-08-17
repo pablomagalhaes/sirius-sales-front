@@ -1,6 +1,6 @@
 import API from '../../../infrastructure/api'
-import { ValidityTypes } from '../../../application/enum/tariffEnum'
-import { ModalTypes, IconTypes, AcitivityTypes } from '../../../application/enum/enum'
+import { ValidityTypes, TariffItemsTypes } from '../../../application/enum/tariffEnum'
+import { ModalTypes, IconTypes, AcitivityTypes, TxChargeTypes } from '../../../application/enum/enum'
 import { I18n } from 'react-redux-i18n'
 
 const getModalFilter = (quickFilterList): string => {
@@ -111,4 +111,92 @@ const chooseStatusLabel = (status: any): string => {
   }
 }
 
-export { getValidityFilter, getActivityFilter, getModalFilter, convertToDecimal, getTariffByFilter, capitalizeFirstLetter, chooseStatusColor, chooseStatusLabel }
+const orderCsv = (tariff: any): any => {
+  let response
+  const getTariffTypeValue = (type: string): string => {
+    const res = tariff.tariffTypeValues.find(each => each.tariffType.description === type)
+    if (res !== undefined) return convertToDecimal(res.value)
+    return ''
+  }
+  if (tariff.tariffModalType !== '') {
+    switch (tariff.tariffModalType) {
+      case ModalTypes.Air:
+        response = {
+          'Cia Aérea': tariff.dsBusinessPartnerTransporter,
+          País: tariff.originDestination[0]?.name,
+          Origem: tariff.origin,
+          Destino: tariff.destination,
+          'Transit Time': tariff.transitTime,
+          Validade: new Date(tariff.validityDate).toLocaleDateString('pt-BR'),
+          Moeda: tariff.currency,
+          'Vl Minimo': getTariffTypeValue(TariffItemsTypes.Minimun),
+          '45kg': getTariffTypeValue(TariffItemsTypes.Until45),
+          '100kg': getTariffTypeValue(TariffItemsTypes.Until100),
+          '300kg': getTariffTypeValue(TariffItemsTypes.Until300),
+          '500kg': getTariffTypeValue(TariffItemsTypes.Until500),
+          '1ton': getTariffTypeValue(TariffItemsTypes.Until1000),
+          Rota: tariff.route,
+          Frequência: tariff.frequency ? tariff.frequency : ''
+        }
+        break
+      case ModalTypes.Sea:
+        if (tariff.txChargeType === TxChargeTypes.Lcl) {
+          response = {
+            'Armador/Coloader': tariff.dsBusinessPartnerTransporter,
+            País: tariff.originDestination[0]?.name,
+            Origem: tariff.origin,
+            Destino: tariff.destination,
+            'Transit Time': tariff.transitTime,
+            Validade: new Date(tariff.validityDate).toLocaleDateString('pt-BR'),
+            Moeda: tariff.currency,
+            'Vl Minimo': getTariffTypeValue(TariffItemsTypes.Minimun),
+            'Vl até 7w/m': getTariffTypeValue(TariffItemsTypes.Vluntil7wm),
+            Acima: getTariffTypeValue(TariffItemsTypes.Over),
+            Rota: tariff.route,
+            Frequência: tariff.frequency ? tariff.frequency : ''
+          }
+        }
+        if (tariff.txChargeType === TxChargeTypes.Fcl) {
+          response = {
+            'Armador/Coloader': tariff.dsBusinessPartnerTransporter,
+            País: tariff.originDestination[0]?.name,
+            Origem: tariff.origin,
+            Destino: tariff.destination,
+            'Transit Time': tariff.transitTime,
+            Validade: new Date(tariff.validityDate).toLocaleDateString('pt-BR'),
+            Moeda: tariff.currency,
+            'Vl Container 20': getTariffTypeValue(TariffItemsTypes.Vlcontainer20),
+            'Vl Container 40': getTariffTypeValue(TariffItemsTypes.Vlcontainer40),
+            Rota: tariff.route,
+            Frequência: tariff.frequency ? tariff.frequency : ''
+          }
+        }
+        break
+      case ModalTypes.Land:
+        response = {
+          'Transp Rodoviária': tariff.dsBusinessPartnerTransporter,
+          'País Origem': tariff.originCountry,
+          'Estado Origem': tariff.originState,
+          'Cidade Origem': tariff.originCity,
+          'País Destino': tariff.destinationCountry,
+          'Estado Destino': tariff.destinationState,
+          'Cidade Destino': tariff.destinationCity,
+          'Transit Time': tariff.transitTime,
+          Validade: new Date(tariff.validityDate).toLocaleDateString('pt-BR'),
+          Moeda: tariff.currency,
+          'Vl Geral Ded.': getTariffTypeValue(TariffItemsTypes.Vlgeneralded),
+          'Vl IMO Ded.': getTariffTypeValue(TariffItemsTypes.Vlimoded),
+          'Vl Geral Cons.': getTariffTypeValue(TariffItemsTypes.Vlgeneralcons),
+          'Vl IMO Cons.': getTariffTypeValue(TariffItemsTypes.Vlimocons),
+          Rota: tariff.route,
+          Frequência: tariff.frequency ? tariff.frequency : ''
+        }
+        break
+      default:
+        break
+    }
+  }
+  return response
+}
+
+export { orderCsv, getValidityFilter, getActivityFilter, getModalFilter, convertToDecimal, getTariffByFilter, capitalizeFirstLetter, chooseStatusColor, chooseStatusLabel }

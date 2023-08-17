@@ -110,7 +110,7 @@ const InputRow = ({
     setState({ anchorEl: null, currentKey: null })
   }
 
-  const { anchorEl, currentKey } = state
+  const { anchorEl } = state
   const open = Boolean(anchorEl)
   const id = open ? 'simple-popover' : undefined
 

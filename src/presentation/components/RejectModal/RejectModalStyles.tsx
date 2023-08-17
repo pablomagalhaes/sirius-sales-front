@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Box, Radio } from '@material-ui/core'
+import { Box, Radio, Typography } from '@material-ui/core'
 import { primary } from '../../../application/themes'
 
 styled(Box)`
@@ -90,4 +90,7 @@ export const MainDiv = styled.div`
 export const CheckBoxArea = styled.div`
   display: flex;
   cursor: pointer;
+`
+export const TypographyBold = styled(Typography)`
+  color: #000000 !important;
 `

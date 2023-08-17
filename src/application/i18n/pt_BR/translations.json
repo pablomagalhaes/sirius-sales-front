@@ -362,6 +362,12 @@
           "errorMessage": "Formato de arquivo inválido. Escolha um arquivo .csv"
         }
       },
+      "export": {
+        "title": "Exportar tarifas",
+        "subtitle": "Será exportado os dados da tela",
+        "button": "Exportar",
+        "message": "*O arquivo de dados será exportado no mesmo formato utilizado para upload de tarifas."
+      },
       "orderSelectors": {
         "agent": "Agente",
         "origin": "Origem",
@@ -513,83 +519,83 @@
             "log": {
               "error": {
                 "air": {
-                  "cia": "Error to read column Air Cia"
+                  "cia": "Erro ao ler coluna Cia Aérea."
                 },
                 "origin": {
-                  "": "Error to read column Origin",
-                  "country": "Error to read column Origin Country",
-                  "state": "Error to read column Origin State",
-                  "city": "Error to read column Origin City"
+                  "": "Erro ao ler a coluna Origem",
+                  "country": "Erro ao ler a coluna país de origem",
+                  "state": "Erro ao ler a coluna estado de origem",
+                  "city": "Erro ao ler a coluna cidade de origem"
                 },
                 "destiny": {
-                  "": "Error to read column Destiny",
-                  "country": "Error to read column Destiny Country",
-                  "state": "Error to read column Destiny State",
-                  "city": "Error to read column Destiny City"
+                  "": "Erro ao ler a coluna Destino",
+                  "country": "Erro ao ler a coluna país de destino",
+                  "state": "Erro ao ler a coluna estado de destino",
+                  "city": "Erro ao ler a coluna cidade de destino"
                 },
                 "transit": {
-                  "time": "Error to read column Transit Time"
+                  "time": "Erro ao ler a coluna Tempo de Transito"
                 },
-                "validity": "Error to read column Validity",
-                "currency": "Error to read column Currency",
+                "validity": "Erro ao ler a coluna Validade",
+                "currency": "Erro ao ler a coluna Moeda",
                 "minimum": {
-                  "value": "Error to read column Minimum Value"
+                  "value": "Erro ao ler a coluna Valor Mínimo"
                 },
-                "45kg": "Error to read column 45kg",
-                "100kg": "Error to read column 100kg",
-                "300kg": "Error to read column 300kg",
-                "500kg": "Error to read column 500kg",
-                "1ton": "Error to read column 1ton",
-                "route": "Error to read column Route",
-                "frequency": "Error to read column Frequency",
+                "45kg": "Erro ao ler a coluna 45KG",
+                "100kg": "Erro ao ler a coluna 100KG",
+                "300kg": "Erro ao ler a coluna 300KG",
+                "500kg": "Erro ao ler a coluna 500KG",
+                "1ton": "Erro ao ler a coluna 1ton",
+                "route": "Erro ao ler a coluna rota",
+                "frequency": "Erro ao ler a coluna frequência",
                 "road": {
-                  "transport": "Error to read column Road Transport"
+                  "transport": "Erro ao ler a coluna transportadora"
                 },
                 "vl": {
                   "geral": {
-                    "ded": "Error to read column Vl Geral Ded.",
-                    "cons": "Error to read column Vl Geral Cons."
+                    "ded": "Erro ao ler a coluna Vl Geral Ded.",
+                    "cons": "Erro ao ler a coluna Vl Geral Cons."
                   },
                   "imo": {
-                    "ded": "Error to read column Vl IMO Ded.",
-                    "cons": "Error to read column Vl IMO Cons."
+                    "ded": "Erro ao ler a coluna Vl IMO Ded.",
+                    "cons": "Erro ao ler a coluna Vl IMO Cons."
                   },
                   "ate": {
-                    "7w": "Error to read column Vl até 7w/m"
+                    "7w": "Erro ao ler a coluna Vl 7w/m"
                   },
                   "container": {
-                    "20": "Error to read column Vl Container 20",
-                    "40": "Error to read column Vl Container 40"
+                    "20": "Erro ao ler a coluna Vl Container  20",
+                    "40": "Erro ao ler a coluna Vl Container 40"
                   }
                 },
-                "coloader": "Error to read column Coloader",
+                "coloader": "Erro ao ler a coluna Coloader",
                 "up": "Error to read column Up",
                 "find": {
                   "origin": {
-                    "land": "Unable to find Origin Land informed"
+                    "land": "Não foi possível encontrar a origem informada."
                   },
                   "destiny": {
-                    "land": "Unable to find Destination Land informed"
+                    "land": "Não foi possível encontrar a destino informada."
                   },
-                  "air": "Unable to find Air Cia informed",
+                  "air": "Não foi possível localizar a Cia Aérea informada.",
                   "business": {
-                    "partner": "Unable to find Business Partner"
+                    "partner": "Não foi possivel localizar o Agente."
                   },
                   "source": {
-                    "destination": "Unable to find Source/Destination informed"
+                    "destination": "Não foi possível encontrar a Origem/Destino informado."
                   }
                 },
                 "convert": {
-                  "agent": "IdAgent is incorretly",
-                  "file": "error converter file!"
+                  "agent": "IdAgent esta incorreto.",
+                  "file": "Erro ao converter Arquivo!"
                 },
                 "not": {
-                  "mapped": "Error not mapped"
+                  "mapped": "Erro não mapeado."
                 },
-                "delimiter": "Delimiter has to be ;",
+                "delimiter": "O Delimitador deve ser ;",
                 "header": {
-                  "name": "A header name is wrong!",
-                  "missing": "A header name is missing!"
+                  "name": "Uma coluna do cabeçalho está errado!",
+                  "missing": "Esta faltando uma coluna do cabeçalho!"
                 }
               }
             }

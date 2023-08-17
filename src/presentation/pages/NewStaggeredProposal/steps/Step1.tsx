@@ -141,7 +141,9 @@ const Step1 = ({
     })
     setData({
       ...data,
-      vigencyDate
+      vigencyDate,
+      dtValidity: moment(vigencyDate[0]).format(),
+      dtValidityEnd: moment(vigencyDate[1]).format()
     })
   }, [vigencyDate])
 

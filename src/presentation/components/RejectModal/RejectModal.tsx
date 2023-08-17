@@ -5,7 +5,8 @@ import { withTheme } from 'styled-components'
 import {
   StyledRadio,
   ModalDiv,
-  MainDiv
+  MainDiv,
+  TypographyBold
 } from './RejectModalStyles'
 import { I18n } from 'react-redux-i18n'
 import {
@@ -142,9 +143,9 @@ const RejectModal = ({
                   direction="column"
                   justify="center"
                   style={{ marginTop: '30px' }}>
-              <Typography variant="body1" gutterBottom>
+              <TypographyBold variant="body1" gutterBottom >
                 {I18n.t('components.rejectModal.definition')} Ref. {reference} {I18n.t('components.rejectModal.rejection')}
-              </Typography>
+              </TypographyBold>
               <Typography variant="subtitle1" gutterBottom>
                 {I18n.t('components.rejectModal.display')}
               </Typography>

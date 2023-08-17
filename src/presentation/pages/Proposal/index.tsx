@@ -1109,6 +1109,7 @@ const Proposal = (): JSX.Element => {
               reference={reference}
               proposalId={proposalId}
               setStatus={setStatus}
+              detailed={true}
             />
             <CancelModal
               open={openCancel}
