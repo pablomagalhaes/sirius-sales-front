@@ -2,7 +2,6 @@ import { Modal } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
 import CloseIcon from '../../../application/icons/CloseIcon'
 import { withTheme } from 'styled-components'
-import API from '../../../infrastructure/api'
 import {
   LanguageDiv,
   ModalDiv,
@@ -24,12 +23,14 @@ interface ProposalDisplayProps {
   open: boolean
   setClose: () => void
   idProposal: string | null
+  downloadProposal: Function
 }
 
 const ProposalDisplayModal = ({
   open,
   setClose,
-  idProposal
+  idProposal,
+  downloadProposal
 }: ProposalDisplayProps): JSX.Element => {
   const locale = localStorage.getItem('locale') ?? 'pt'
   const dispatch = useDispatch()
@@ -59,7 +60,7 @@ const ProposalDisplayModal = ({
   useEffect(() => {
     if (open && idProposal !== null && language !== undefined) {
       void (async function () {
-        await API.downloadProposal(language === 'pt' ? language + '_BR' : language + '_US', idProposal)
+        await downloadProposal(language === 'pt' ? language + '_BR' : language + '_US', idProposal)
           .then((response) => setProposal(response.body))
           .catch((err) => console.log(err))
       })()

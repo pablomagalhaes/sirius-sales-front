@@ -1122,6 +1122,7 @@ const Proposal = (): JSX.Element => {
               open={openDisplay}
               setClose={handleCloseDisplay}
               idProposal={proposalId}
+              downloadProposal={API.downloadProposal}
             />
         </TableContainer>
         <PaginationContainer>

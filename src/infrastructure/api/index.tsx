@@ -332,6 +332,16 @@ const downloadProposal = async (language: string, idProposal: string): Promise<a
   }
 }
 
+const downloadStaggeredProposal = async (language: string, idProposal: string): Promise<any> => {
+  const url: string = `/sirius-tariff-api/tariff/proposal/report/${idProposal}/PDF/${language}`
+  try {
+    const res = await instance.get(url)
+    return res.data
+  } catch (error) {
+    toast.error(String(error) + ' | Request:  ' + String(url))
+  }
+}
+
 const getTariffsByCountry = async (params): Promise<any> => {
   const url: string = '/sirius-tariff-api/tariff/filter'
   try {
@@ -434,7 +444,8 @@ const API = {
   uploadTariff,
   getTariffsByFilter,
   getTariffProposal,
-  putTariffProposal
+  putTariffProposal,
+  downloadStaggeredProposal
 }
 
 export default API

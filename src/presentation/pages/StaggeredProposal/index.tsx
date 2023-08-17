@@ -46,6 +46,7 @@ import { OrderTypes } from '../../../application/enum/enum'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { UpdateStatusStaggeredProposal , LoadStaggeredProposal } from '../../../domain/usecase'
 import CancelModal from '../../components/CancelModal/CancelModal'
+import API from '../../../infrastructure/api'
 
 interface StaggeredProposalProps {
   loadStaggeredProposal: LoadStaggeredProposal
@@ -251,7 +252,10 @@ const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposa
           {
             iconType: 'file',
             label: I18n.t('pages.proposal.table.viewDownload'),
-            onClick: () => { }
+            onClick: () => {
+              setOpenDisplay(true)
+              setProposalId(id)
+            }
           })
         return array
       case StatusProposalEnum.REJEITADA:
@@ -430,6 +434,7 @@ const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposa
               open={openDisplay}
               setClose={handleCloseDisplay}
               idProposal={proposalId}
+              downloadProposal={API.downloadStaggeredProposal}
             />
         </TableContainer>
         <PaginationContainer>
