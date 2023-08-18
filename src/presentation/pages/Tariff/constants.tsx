@@ -36,4 +36,16 @@ const orderButtonMenuItems = (modal: string): any => {
   ]
 }
 
-export { orderButtonMenuItems }
+
+const orderButtonMenuItemsTable = [
+  {
+    value: 'dtProcess',
+    description: 'Data/Hora de Processamento'
+  },
+  {
+    value: 'txStatus',
+    description: 'Status do Processamento'
+  }
+]
+
+export { orderButtonMenuItems, orderButtonMenuItemsTable }
