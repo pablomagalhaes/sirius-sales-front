@@ -343,6 +343,7 @@ const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): 
                   icon="tariff"
                   backgroundGreen={true}
                   tooltip={I18n.t('pages.staggeredProposal.newStaggeredProposal.ImportTariff')}
+                  disabled={false}
                 />
               </ImportButtonDiv>
             </Grid>
@@ -357,7 +358,7 @@ const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): 
                   icon="add"
                   backgroundGreen={false}
                   tooltip={I18n.t('pages.staggeredProposal.newStaggeredProposal.AddManual')}
-                  style={{ height: '50px' }}
+                  disabled={false}
                 />
               </AddButtonDiv>
             </Grid>
@@ -409,6 +410,7 @@ const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): 
                   icon="tariff"
                   backgroundGreen={true}
                   tooltip={I18n.t('pages.staggeredProposal.newStaggeredProposal.ImportTariff')}
+                  disabled={false}
                 />
               </ImportButtonDiv>
             </Grid>
@@ -423,7 +425,7 @@ const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): 
                   icon="add"
                   backgroundGreen={false}
                   tooltip={I18n.t('pages.staggeredProposal.newStaggeredProposal.AddManual')}
-                  style={{ height: '50px' }}
+                  disabled={false}
                 />
               </AddButtonDiv>
             </Grid>

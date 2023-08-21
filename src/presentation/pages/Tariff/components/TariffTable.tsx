@@ -227,6 +227,7 @@ const TariffTable = ({
             labelDisplay={I18n.t('components.Pagination.labelDisplay')}
             labelDisplayedRows={I18n.t('components.Pagination.labelDisplayedRows')}
             labelRowsPerPage={I18n.t('components.Pagination.labelRowsPerPage')}
+            initialPage={filter.page}
             onPageChange={(value) =>
               setFilter((filter: any) => ({ ...filter, page: value }))
             }

@@ -162,7 +162,8 @@ const Tariff = (): JSX.Element => {
   }, [filter.tariffModalType])
 
   useEffect(() => {
-    changeFilterList(filter)
+    const newFilter = { ...filter, page: 0 }
+    changeFilterList(newFilter)
   }, [filter])
 
   const cardFilters = [
