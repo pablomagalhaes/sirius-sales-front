@@ -72,6 +72,7 @@ const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposa
 
   useEffect(() => {
     setParams(filter)
+    refetch()
   }, [filter])
 
   const verifyStatus = (status): any => {
