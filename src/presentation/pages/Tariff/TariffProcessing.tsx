@@ -48,7 +48,7 @@ import {
 
 const defaultFilter = {
   direction: 'DESC',
-  orderByList: 'tariffType',
+  orderByList: 'dtProcess',
   page: 0,
   size: 10,
   tariffModalType: '',

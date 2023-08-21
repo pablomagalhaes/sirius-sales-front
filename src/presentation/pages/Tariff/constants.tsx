@@ -43,7 +43,7 @@ const orderButtonMenuItemsTable = [
     description: 'Data/Hora de Processamento'
   },
   {
-    value: 'txStatus',
+    value: 'uploadStatus.txStatus',
     description: 'Status do Processamento'
   }
 ]
