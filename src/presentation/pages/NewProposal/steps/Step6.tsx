@@ -14,7 +14,7 @@ import {
   withTheme
 } from '@material-ui/core'
 import { ItemModalData } from '../../../components/ItemModal/ItemModal'
-import { ButtonWrapper, HeightDiv, NumberInput, StyledPaper, LineSeparator, ErrorText, UpperContainer, LowerContainer, TotalContainer } from './StepsStyles'
+import { ButtonWrapper, HeightDiv, NumberInput, StyledPaper, LineSeparator, ErrorText } from './StepsStyles'
 import { Button, Messages } from 'fiorde-fe-components'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import { Cost } from '../../../../domain/Cost'
@@ -1143,71 +1143,52 @@ const Step6 = ({
           <Subtitle>{I18n.t('pages.newProposal.step6.subtitle')}</Subtitle>
         </Title>
         <FormControl variant='outlined' size='small' className='form-size'>
+
           <>
+
             {(() => {
               if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
                 return (
                   <>
+
                     <Grid item xs={6}>
-                      <FormLabel component="legend"><strong>{I18n.t('pages.newProposal.step6.freightByAgent')}</strong></FormLabel>
+                      <FormLabel component="legend"><strong>{'Tarifas de compra por agente'}</strong></FormLabel>
                     </Grid>
+                    {proposal.agents.length > 0 &&
+                      ((proposal.agents[0].idBusinessPartnerAgent !== null) && (proposal.agents[0].idBusinessPartnerTransportCompany !== null)) && (
+                        <Grid container spacing={5}>
+                          <Grid item xs={3}>
+                            <FormLabel component='legend'>
+                              {I18n.t('pages.newProposal.step6.agent')}
+                            </FormLabel>
+                          </Grid>
+                          <Grid item xs={3}>
+                            <FormLabel component='legend'>{selectTypeModal()}</FormLabel>
+                          </Grid>
+                          <Grid item xs={2}>
+                            <FormLabel component='legend' error={invalidInput && data.some((each) => each.currencyPurchase === '')}>
+                              {I18n.t('pages.newProposal.step6.currencyPurchase')}
+                              <RedColorSpan> *</RedColorSpan>
+                            </FormLabel>
+                          </Grid>
+                          <Grid item xs={2}>
+                            <FormLabel component='legend' error={invalidInput && data.some((each) => each.valuePurchase === '' || each.valuePurchase === '0')}>
+                              {I18n.t('pages.newProposal.step6.valuePurchase')}
+                              <RedColorSpan> *</RedColorSpan>
+                            </FormLabel>
+                          </Grid>
+                        </Grid>
+                    )}
                     {proposal.agents.map((selectedAgent, index) => {
                       return ((selectedAgent.idBusinessPartnerAgent !== null) && (selectedAgent.idBusinessPartnerTransportCompany !== null)) && (
-                        <TotalContainer key={index}>
-                          <UpperContainer>
-                            <Grid container spacing={0}>
-                              <Grid item xs={1}>
-                                <FormLabel component='legend'>
-                                  {I18n.t('pages.newProposal.step6.agent')}:
-                                </FormLabel>
-                              </Grid>
-                              <Grid item xs={11}>
-                                <FormLabel component='legend'>
-                                  <strong>
-                                    {getAgentNameByidBusinessPartnerAgent(selectedAgent.idBusinessPartnerAgent)}
-                                  </strong>
-                                </FormLabel>
-                              </Grid>
-                              <Grid item xs={1} style={{marginTop: '-15px'}}>
-                                <FormLabel component='legend'>{selectTypeModal()}</FormLabel>
-                              </Grid>
-                              <Grid item xs={11} style={{marginTop: '-15px'}}>
-                                <FormLabel component='legend'>
-                                  <strong>
-                                    {getCorporateNameByidBusinessPartnerAgent(selectedAgent.idBusinessPartnerTransportCompany)}
-                                  </strong>
-                                </FormLabel>
-                              </Grid>
-                            </Grid>
-                          </UpperContainer>
-                          <LowerContainer>
+                          <Fragment key={index}>
                             <Grid container spacing={5}>
-                              <Grid item xs={2}>
-                                <FormLabel component='legend' error={invalidInput && data.some((each) => each.currencyPurchase === '')}>
-                                  {I18n.t('pages.newProposal.step6.currencyPurchase')}
-                                  <RedColorSpan> *</RedColorSpan>
-                                </FormLabel>
+                              <Grid item xs={3}>
+                                <FormLabel component='legend'>{getAgentNameByidBusinessPartnerAgent(selectedAgent.idBusinessPartnerAgent)}</FormLabel>
                               </Grid>
-                              <Grid item xs={2}>
-                                <FormLabel component='legend' error={invalidInput && data.some((each) => each.valuePurchase === '' || each.valuePurchase === '0')}>
-                                  {I18n.t('pages.newProposal.step6.valuePurchase')}
-                                  <RedColorSpan> *</RedColorSpan>
-                                </FormLabel>
+                              <Grid item xs={3}>
+                                <FormLabel component='legend'>{getCorporateNameByidBusinessPartnerAgent(selectedAgent.idBusinessPartnerTransportCompany)}</FormLabel>
                               </Grid>
-                              <Grid item xs={2}>
-                                <FormLabel component='legend' error={invalidInput && (dataSales.currencySale === '' || dataSales.currencySale === '0')}>
-                                  {I18n.t('pages.newProposal.step6.currencySale')}
-                                  <RedColorSpan> *</RedColorSpan>
-                                </FormLabel>
-                              </Grid>
-                              <Grid item xs={2}>
-                                <FormLabel component='legend' error={invalidInput && (dataSales.valueSale === '' || dataSales.valueSale === '0')}>
-                                  {I18n.t('pages.newProposal.step6.valueSale')}
-                                  <RedColorSpan> *</RedColorSpan>
-                                </FormLabel>
-                              </Grid>
-                            </Grid>
-                            <Grid container spacing={5} style={{marginTop: '-35px'}}>
                               <Grid item xs={2}>
                                 <Autocomplete freeSolo value={data[index]?.currencyPurchase} onChange={(e, newValue) => {
                                   const newData = [...data]
@@ -1242,50 +1223,48 @@ const Step6 = ({
                                   }} toolTipTitle={I18n.t('components.itemModal.requiredField')}
                                   invalid={invalidInput && (data[index]?.valuePurchase === '' || data[index]?.valuePurchase === '0')} value={data[index]?.valuePurchase} variant='outlined' size='small' />
                               </Grid>
-                              <Grid item xs={2} style={{ alignSelf: 'end' }}>
-                                <Autocomplete
-                                  freeSolo
-                                  value={dataSales.currencySale}
-                                  onChange={(e, newValue) => handleCurrencySale(newValue)}
-                                  options={currencyList.map((item) => item.id)} renderInput={(params) => (
-                                    <div ref={params.InputProps.ref}>
-                                      <ControlledInput {...params} id="currencies" toolTipTitle={I18n.t('components.itemModal.requiredField')} invalid={invalidInput && (dataSales.currencySale === '' || dataSales.currencySale === '0')}
-                                        variant="outlined" size="small" placeholder={I18n.t('components.itemModal.choose')}
-                                        InputProps={{
-                                          endAdornment: (
-                                            <InputAdornment position='end'>
-                                              <Box style={{ position: 'absolute', top: '7px', right: '0' }} {...params.inputProps} >
-                                                <ArrowDropDownIcon />
-                                              </Box>
-                                            </InputAdornment>
-                                          )
-                                        }}
-                                      />
-                                    </div>
-                                  )}
-                                  PaperComponent={(params: any) => <StyledPaper {...params} />}
-                                />
-                              </Grid>
-                              <Grid item xs={2} style={{ alignSelf: 'end' }}>
-                                <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
-                                  customInput={ControlledInput} onChange={(e, newValue) => handleValueSale(e.target.value)} toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                  invalid={invalidInput && (dataSales.valueSale === '' || dataSales.valueSale === '0')} value={dataSales.valueSale} variant='outlined' size='small' />
-                              </Grid>
                             </Grid>
-                            <ButtonWrapper>
-                              <Button
-                                onAction={() => console.log('')}
-                                text={I18n.t('pages.newProposal.step6.importButton')}
-                                icon="tariff"
-                                backgroundGreen={true}
-                                tooltip={I18n.t('pages.newProposal.step6.importButton')}
-                                disabled={false}
-                              />
-                            </ButtonWrapper>
-                          </LowerContainer>
-                        </TotalContainer>
+                          </Fragment>
                       )
                     })}
+                    <Fragment>
+                      <Grid container spacing={5}>
+                        <Grid item xs={6}>
+                          <FormLabel component='legend' error={invalidInput && (dataSales.currencySale === '' || dataSales.currencySale === '0')} style={{ textAlign: 'right' }}>
+                            Especificar o valor do frete para venda:
+                            </FormLabel>
+                        </Grid>
+                        <Grid item xs={2} style={{ alignSelf: 'end' }}>
+                          <Autocomplete
+                            freeSolo
+                            value={dataSales.currencySale}
+                            onChange={(e, newValue) => handleCurrencySale(newValue)}
+                            options={currencyList.map((item) => item.id)} renderInput={(params) => (
+                              <div ref={params.InputProps.ref}>
+                                <ControlledInput {...params} id="currencies" toolTipTitle={I18n.t('components.itemModal.requiredField')} invalid={invalidInput && (dataSales.currencySale === '' || dataSales.currencySale === '0')}
+                                  variant="outlined" size="small" placeholder={I18n.t('components.itemModal.choose')}
+                                  InputProps={{
+                                    endAdornment: (
+                                      <InputAdornment position='end'>
+                                        <Box style={{ position: 'absolute', top: '7px', right: '0' }} {...params.inputProps} >
+                                          <ArrowDropDownIcon />
+                                        </Box>
+                                      </InputAdornment>
+                                    )
+                                  }}
+                                />
+                              </div>
+                            )}
+                            PaperComponent={(params: any) => <StyledPaper {...params} />}
+                          />
+                        </Grid>
+                        <Grid item xs={2} style={{ alignSelf: 'end' }}>
+                          <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                            customInput={ControlledInput} onChange={(e, newValue) => handleValueSale(e.target.value)} toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                            invalid={invalidInput && (dataSales.valueSale === '' || dataSales.valueSale === '0')} value={dataSales.valueSale} variant='outlined' size='small' />
+                        </Grid>
+                      </Grid>
+                    </Fragment>
                   </>
                 )
               }
