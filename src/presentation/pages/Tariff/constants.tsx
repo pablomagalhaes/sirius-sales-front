@@ -36,16 +36,17 @@ const orderButtonMenuItems = (modal: string): any => {
   ]
 }
 
-
-const orderButtonMenuItemsTable = [
-  {
-    value: 'dtProcess',
-    description: 'Data/Hora de Processamento'
-  },
-  {
-    value: 'uploadStatus.txStatus',
-    description: 'Status do Processamento'
-  }
-]
+const orderButtonMenuItemsTable = (modal: string): any => {
+  return [
+    {
+      value: 'dtProcess',
+      description: I18n.t('pages.tariff.tariffProcessing.orderSelectors.dtProcess')
+    },
+    {
+      value: 'uploadStatus.txStatus',
+      description: I18n.t('pages.tariff.tariffProcessing.orderSelectors.uploadStatus')
+    }
+  ]
+}
 
 export { orderButtonMenuItems, orderButtonMenuItemsTable }

@@ -493,6 +493,12 @@
         "seaFcl": "Detalhamento da tarifa - Marítimo FCL",
         "StaggeredProposal": "Escalonadas aéreas"
       },
+      "tariffProcessing": {
+        "orderSelectors": {
+          "dtProcess": "Data/Hora de Processamento",
+          "uploadStatus": "Status do Processamento"
+        }
+      },
       "tariffTableProcessing": {
         "sucessLabel": "SUCESSO",
         "parcialLabel": "PARCIAL",

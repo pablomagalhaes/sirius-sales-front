@@ -34,9 +34,10 @@ import TariffProcessingTable from './TariffProcessingTable'
 import useTariffs from '../../hooks/tariff/useTariffs'
 import Filter from './components/filter'
 
-import { orderButtonMenuItems, orderButtonMenuItemsTable } from './constants'
+import { orderButtonMenuItemsTable } from './constants'
 import UpArrow from '../../../application/icons/UpArrow'
 import ArrowDown from '../../../application/icons/ArrowDown'
+import { OrderTypes } from '../../../application/enum/enum'
 
 import {
   TARIFF_PROCESSING_LINK_HOME,
@@ -47,7 +48,7 @@ import {
 } from '../../../ids'
 
 const defaultFilter = {
-  direction: 'DESC',
+  direction: OrderTypes.Descendent,
   orderByList: 'dtProcess',
   page: 0,
   size: 10,
@@ -86,10 +87,10 @@ const TariffProcessing = (): JSX.Element => {
 
   const handleOrderDirection = (): void => {
     if (orderAsc) {
-      setFilter((filter: any) => ({ ...filter, direction: 'DESC' }))
+      setFilter((filter: any) => ({ ...filter, direction: OrderTypes.Descendent }))
       setOrderAsc(false)
     } else {
-      setFilter((filter: any) => ({ ...filter, direction: 'ASC' }))
+      setFilter((filter: any) => ({ ...filter, direction: OrderTypes.Ascendent }))
       setOrderAsc(true)
     }
   }
@@ -224,7 +225,7 @@ const TariffProcessing = (): JSX.Element => {
                 placeholder={orderBy}
                 value={orderBy}
               >
-                {orderButtonMenuItemsTable.map((item) => (
+                {orderButtonMenuItemsTable(filter.tariffModalType).map((item) => (
                   <MenuItem
                     key={`${String(item.value)}_key`}
                     value={item.value}
