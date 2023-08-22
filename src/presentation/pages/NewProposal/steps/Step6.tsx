@@ -1168,10 +1168,10 @@ const Step6 = ({
                                   </strong>
                                 </FormLabel>
                               </Grid>
-                              <Grid item xs={1} style={{marginTop: '-15px'}}>
+                              <Grid item xs={1} style={{ marginTop: '-15px' }}>
                                 <FormLabel component='legend'>{selectTypeModal()}</FormLabel>
                               </Grid>
-                              <Grid item xs={11} style={{marginTop: '-15px'}}>
+                              <Grid item xs={11} style={{ marginTop: '-15px' }}>
                                 <FormLabel component='legend'>
                                   <strong>
                                     {getCorporateNameByidBusinessPartnerAgent(selectedAgent.idBusinessPartnerTransportCompany)}
@@ -1207,7 +1207,7 @@ const Step6 = ({
                                 </FormLabel>
                               </Grid>
                             </Grid>
-                            <Grid container spacing={5} style={{marginTop: '-35px'}}>
+                            <Grid container spacing={5} style={{ marginTop: '-35px' }}>
                               <Grid item xs={2}>
                                 <Autocomplete freeSolo value={data[index]?.currencyPurchase} onChange={(e, newValue) => {
                                   const newData = [...data]
