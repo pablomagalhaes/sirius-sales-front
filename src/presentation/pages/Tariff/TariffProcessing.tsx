@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, FloatingMenu, Pagination } from 'fiorde-fe-components'
-import { Breadcrumbs, Link, Typography } from '@material-ui/core/'
+import { Breadcrumbs, Link, Typography, Select, MenuItem } from '@material-ui/core/'
 import {
   TableContainer,
   PaginationContainer,
@@ -8,6 +8,7 @@ import {
 } from './TariffProcessingTableStyle'
 import {
   LeftSideListHeaderContainer,
+  RightSideListHeaderContainer,
   ListHeaderContainer,
   BottomSideContainer,
   RootContainer,
@@ -16,7 +17,11 @@ import {
   ButtonContainer,
   GridButton,
   RowButton,
-  ColButton
+  ColButton,
+  OrderByContainer,
+  ListTextSpan,
+  DropdownMenuContainer,
+  ArrowIconContainer
 } from './style'
 import { useHistory } from 'react-router-dom'
 import { I18n } from 'react-redux-i18n'
@@ -28,7 +33,11 @@ import TariffProcessingTable from './TariffProcessingTable'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import useTariffs from '../../hooks/tariff/useTariffs'
 import Filter from './components/filter'
-// import { TariffContext, filterDefault } from './context/TariffContext'
+
+import { orderButtonMenuItemsTable } from './constants'
+import UpArrow from '../../../application/icons/UpArrow'
+import ArrowDown from '../../../application/icons/ArrowDown'
+import { OrderTypes } from '../../../application/enum/enum'
 
 import {
   TARIFF_PROCESSING_LINK_HOME,
@@ -39,8 +48,8 @@ import {
 } from '../../../ids'
 
 const defaultFilter = {
-  direction: 'ASC',
-  orderByList: 'tariffType',
+  direction: OrderTypes.Descendent,
+  orderByList: 'dtProcess',
   page: 0,
   size: 10,
   tariffModalType: '',
@@ -65,6 +74,26 @@ const TariffProcessing = (): JSX.Element => {
     { type: 'activity', status: I18n.t('pages.tariff.upload.import') },
     { type: 'modal', status: I18n.t('pages.tariff.modals.air') }
   ])
+
+  const [openedOrderSelect, setOpenedOrderSelect] = useState(false)
+  const [orderAsc, setOrderAsc] = useState(false)
+  const [orderBy, setOrderBy] = useState<string>('dtProcess')
+
+  const handleOrderSelect = (value: React.SetStateAction<string>): void => {
+    setFilter((filter: any) => ({ ...filter, orderByList: value }))
+    setOrderBy(value)
+  } 
+
+
+  const handleOrderDirection = (): void => {
+    if (orderAsc) {
+      setFilter((filter: any) => ({ ...filter, direction: OrderTypes.Descendent }))
+      setOrderAsc(false)
+    } else {
+      setFilter((filter: any) => ({ ...filter, direction: OrderTypes.Ascendent }))
+      setOrderAsc(true)
+    }
+  }
 
   const floatingButtonMenuItems = [
     {
@@ -185,6 +214,36 @@ const TariffProcessing = (): JSX.Element => {
               cleanFilter={cleanFilter}
             />
         </LeftSideListHeaderContainer>
+        <RightSideListHeaderContainer>
+          <OrderByContainer>
+            <ListTextSpan>Ordenar:</ListTextSpan>
+            <DropdownMenuContainer showArrow={openedOrderSelect}>
+              <Select
+                className="select-style"
+                disableUnderline
+                onChange={(e) => handleOrderSelect(String(e.target.value))}
+                onOpen={() => setOpenedOrderSelect(!openedOrderSelect)}
+                placeholder={orderBy}
+                value={orderBy}
+              >
+                {orderButtonMenuItemsTable(filter.tariffModalType).map((item) => (
+                  <MenuItem
+                    key={`${String(item.value)}_key`}
+                    value={item.value}
+                  >
+                    <span>{item.description}</span>
+                  </MenuItem>
+                ))}
+              </Select>
+            </DropdownMenuContainer>
+            <ArrowIconContainer
+              onClick={handleOrderDirection}
+              $rotate={orderAsc}
+            >
+              {orderAsc ? <ArrowDown /> : <UpArrow />}
+            </ArrowIconContainer>
+          </OrderByContainer>
+        </RightSideListHeaderContainer>
       </ListHeaderContainer>
       <BottomSideContainer>
         <TableContainer>

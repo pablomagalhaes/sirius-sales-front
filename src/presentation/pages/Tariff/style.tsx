@@ -35,6 +35,7 @@ const ButtonContainer = styled.div`
 const ListHeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-bottom: 50px;
 `
 
 const LeftSideListHeaderContainer = styled.div`

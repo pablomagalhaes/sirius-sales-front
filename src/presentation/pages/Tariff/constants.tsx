@@ -36,4 +36,17 @@ const orderButtonMenuItems = (modal: string): any => {
   ]
 }
 
-export { orderButtonMenuItems }
+const orderButtonMenuItemsTable = (modal: string): any => {
+  return [
+    {
+      value: 'dtProcess',
+      description: I18n.t('pages.tariff.tariffProcessing.orderSelectors.dtProcess')
+    },
+    {
+      value: 'uploadStatus.txStatus',
+      description: I18n.t('pages.tariff.tariffProcessing.orderSelectors.uploadStatus')
+    }
+  ]
+}
+
+export { orderButtonMenuItems, orderButtonMenuItemsTable }
