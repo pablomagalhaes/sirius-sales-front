@@ -286,6 +286,8 @@
         "destiny": "Destiny",
         "differentCurrencySale": "Sale Currency must be the same for everyone",
         "expense": "Expense/Service",
+        "freightByAgent": "Frete de compra e venda por agente",
+        "importButton": "Importar do tarifário",
         "minValue": "Min. Value",
         "origin": "Origin",
         "originCost": "New origin cost",
