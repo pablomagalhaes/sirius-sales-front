@@ -149,6 +149,7 @@ const TariffProcessing = (): JSX.Element => {
                       icon="arrowLeft"
                       onAction={handleBack}
                       position="left"
+                      tooltip=''
                     />
                   </ButtonContainer>
                 </ColButton>

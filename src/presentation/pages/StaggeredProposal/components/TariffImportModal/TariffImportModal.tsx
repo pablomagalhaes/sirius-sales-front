@@ -415,7 +415,7 @@ const TariffImportModal = ({
             </Grid>
             <Grid item xs={6}>
               <Button
-                  // disabled={!validateData()}
+                  disabled={false}
                   id={TARIFF_IMPORT_MODAL_BUTTON_SEARCH}
                   text={I18n.t('pages.tariff.tariffImport.searchButtonLabel')}
                   tooltip={I18n.t('pages.tariff.tariffImport.searchButtonLabel')}
@@ -483,6 +483,7 @@ const TariffImportModal = ({
                 labelDisplay={I18n.t('components.Pagination.labelDisplay')}
                 labelDisplayedRows={I18n.t('components.Pagination.labelDisplayedRows')}
                 labelRowsPerPage={I18n.t('components.Pagination.labelRowsPerPage')}
+                initialRowsPerPage={3}
                 onPageChange={(value) =>
                   setFilter((filter: any) => ({ ...filter, page: value }))
                 }

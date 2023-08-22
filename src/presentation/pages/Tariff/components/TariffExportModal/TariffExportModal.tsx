@@ -100,6 +100,7 @@ const TariffUploadModal = ({
                 backgroundGreen={true}
                 icon=""
                 onAction={handleExport}
+                disabled={false}
                 />
             </ButtonDiv>
             <Message>{I18n.t('pages.tariff.export.message')}</Message>
