@@ -163,7 +163,7 @@ const Step6 = ({
       valueSale: '',
       valuePurchase: decimalToString(proposal.costs.find((cost): any => {
         if (cost.costType === CostTypes.Freight) {
-          if (cost?.agent?.idBusinessPartnerAgent === newAgent?.idBusinessPartnerAgent) {
+          if (cost?.agent?.idBusinessPartnerAgent === newAgent?.idBusinessPartnerAgent && cost.valuePurchase !== null) {
             return true
           }
         }
@@ -181,10 +181,17 @@ const Step6 = ({
     valuePurchase: decimalToString(proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.valuePurchase)
   })))
 
+  const getValueSale = (): string[] => {
+    return proposal.agents.map((agent) => {
+      return proposal.costs
+        .find(cost => cost.costType === CostTypes.Freight && cost.valuePurchase === null && cost.agent.idBusinessPartnerAgent === agent.idBusinessPartnerAgent)?.valueSale?.toFixed(2) ?? ''
+    })
+  }
+
   const [dataSales, setDataSales] = useState<any>({
     idCost: proposal.costs.find(cost => cost.costType === CostTypes.Freight && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.idCost ?? null,
-    currencySale: String(proposal.costs.find(cost => cost.costType === CostTypes.Freight && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.idCurrencySale ?? ''),
-    valueSale: String(proposal.costs.find(cost => cost.costType === CostTypes.Freight && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.valueSale?.toFixed(2) ?? '')
+    currencySale: String(proposal.costs.find(cost => cost.costType === CostTypes.Freight && (cost.valuePurchase === null))?.idCurrencySale ?? ''),
+    valueSale: getValueSale()
   })
 
   useEffect(() => {
@@ -294,7 +301,7 @@ const Step6 = ({
     proposal.costs = resultado
 
     if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
-      data.forEach((item): void => {
+      data.forEach((item, index): void => {
         const freightCostNew = {
           id: item?.idCost,
           idCost: item?.idCost,
@@ -307,9 +314,9 @@ const Step6 = ({
           valueSalePercent: 0,
           valueMinimumSale: null,
           agent: {
-            id: proposal.agents[0].id,
-            idBusinessPartnerAgent: proposal.agents[0].idBusinessPartnerAgent,
-            idBusinessPartnerTransportCompany: proposal.agents[0].idBusinessPartnerTransportCompany,
+            id: proposal.agents[index].id,
+            idBusinessPartnerAgent: proposal.agents[index].idBusinessPartnerAgent,
+            idBusinessPartnerTransportCompany: proposal.agents[index].idBusinessPartnerTransportCompany,
             proposalId: null
           },
           costType: CostTypes.Freight,
@@ -322,9 +329,6 @@ const Step6 = ({
           valueSaleTotal: null,
           valuePurchaseTotal: null
         }
-        freightCostArrayNew.push(freightCostNew)
-      })
-      if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
         const freightCostSale = {
           id: dataSales.idCost,
           idCost: dataSales.idCost,
@@ -337,27 +341,28 @@ const Step6 = ({
           valueSalePercent: 0,
           valueMinimumSale: null,
           agent: {
-            id: null,
-            idBusinessPartnerAgent: null,
-            idBusinessPartnerTransportCompany: null,
+            id: proposal.agents[index].id,
+            idBusinessPartnerAgent: proposal.agents[index].idBusinessPartnerAgent,
+            idBusinessPartnerTransportCompany: proposal.agents[index].idBusinessPartnerTransportCompany,
             proposalId: null
           },
           costType: CostTypes.Freight,
           idCurrencySale: dataSales.currencySale,
           idCurrencyPurchase: dataSales.currencySale,
-          valueSale: FormatNumber.convertStringToNumber(dataSales.valueSale),
+          valueSale: FormatNumber.convertStringToNumber(dataSales.valueSale[index]),
           valuePurchase: null,
           isPurchase: false,
           isSale: true,
           valueSaleTotal: null,
           valuePurchaseTotal: null
         }
+        freightCostArrayNew.push(freightCostNew)
         freightCostArrayNew.push(freightCostSale)
-      }
+      })
     }
 
     if ((proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
-      dataContainer.forEach((item): void => {
+      dataContainer.forEach((item, index): void => {
         const freightCostNew = {
           id: item?.idCost,
           idCost: item?.idCost,
@@ -370,9 +375,9 @@ const Step6 = ({
           valueSalePercent: 0,
           valueMinimumSale: null,
           agent: {
-            id: proposal.agents[0].id,
-            idBusinessPartnerAgent: proposal.agents[0].idBusinessPartnerAgent,
-            idBusinessPartnerTransportCompany: proposal.agents[0].idBusinessPartnerTransportCompany,
+            id: proposal.agents[index].id,
+            idBusinessPartnerAgent: proposal.agents[index].idBusinessPartnerAgent,
+            idBusinessPartnerTransportCompany: proposal.agents[index].idBusinessPartnerTransportCompany,
             proposalId: null
           },
           costType: CostTypes.Freight,
@@ -388,7 +393,6 @@ const Step6 = ({
         freightCostArrayNew.push(freightCostNew)
       })
     }
-
     return freightCostArrayNew
   }
 
@@ -631,8 +635,15 @@ const Step6 = ({
   }, [data, dataTotalCost, dataContainer])
 
   useEffect(() => {
+    console.log(proposal)
+  }, [proposal])
+  useEffect(() => {
     if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
-      if (data.every(d => d.currencyPurchase !== '') && data.every(d => d.valuePurchase !== '')) {
+      if (data.every(d => d.currencyPurchase !== '') &&
+      data.every(d => d.valuePurchase !== '') &&
+      dataSales.valueSale?.length !== 0 &&
+      (dataSales.valueSale.every(value => value !== '' && value !== '0')) &&
+      (dataSales.currencySale !== '' && dataSales.currencySale !== '0' && dataSales.currencySale !== null)) {
         setCompleted((currentState) => {
           return { ...currentState, step6: true }
         })
@@ -871,11 +882,11 @@ const Step6 = ({
 
   function renderTotalSurchage (): JSX.Element | undefined {
     if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND') {
-      if (dataSales.valueSale !== '' && dataSales.currencySale !== null) {
+      if (dataSales.valueSale?.length > 0 && dataSales.currencySale !== null) {
         return (
           <TotalSurcharge
             currency={dataSales.currencySale}
-            value={dataSales.valueSale}
+            value={FormatNumber.convertNumberToString(dataSales.valueSale.reduce((total: number, item: string) => FormatNumber.convertStringToNumber(item) + total, 0))}
             totalOtherFare={getSumTotalItem()}
             cw={cw}
             cwSale={cwSale}
@@ -906,7 +917,7 @@ const Step6 = ({
       }
     }
     if (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType)) {
-      if (dataSales.valueSale !== '' && dataSales.currencySale !== null) {
+      if (dataSales.valueSale?.length > 0 && dataSales.currencySale !== null) {
         return (
           <TotalSurcharge
             currency={dataSales.currencySale}
@@ -966,12 +977,12 @@ const Step6 = ({
     }
   }
 
-  function handleValueSale (newValue: string): void {
+  function handleValueSale (newValue: string, agent: any, index: number): void {
     const getCosts = [...proposal.costs]
-    const verifyIfCostsHasNullAgent = getCosts.some(cost => cost.costType === CostTypes.Freight && cost.agent.idBusinessPartnerAgent === null)
-    if (verifyIfCostsHasNullAgent) {
+    const verifyIfCostsHasNullPurchase = getCosts.some(cost => cost.costType === CostTypes.Freight && cost.valuePurchase === null)
+    if (verifyIfCostsHasNullPurchase) {
       const handleCosts = getCosts.map(cost => {
-        if (cost.costType === CostTypes.Freight && cost.agent.idBusinessPartnerAgent === null) {
+        if (cost.costType === CostTypes.Freight && cost.agent.idBusinessPartnerAgent === agent.idBusinessPartnerAgent) {
           return {
             ...cost,
             valueSale: Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, ''))
@@ -983,7 +994,9 @@ const Step6 = ({
         ...proposal,
         costs: handleCosts
       })
-      setDataSales({ ...dataSales, valueSale: newValue })
+      const newDataSales = [...dataSales.valueSale]
+      newDataSales[index] = newValue
+      setDataSales({ ...dataSales, valueSale: [...newDataSales] })
     } else {
       const newCost = {
         valueSale: Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, '')),
@@ -1004,7 +1017,7 @@ const Step6 = ({
         isSale: true,
         valueMinimumPurchase: null,
         valueMinimumSale: null,
-        valuePurchase: 0,
+        valuePurchase: null,
         valuePurchasePercent: null,
         valueSalePercent: 0,
         valueSaleTotal: null,
@@ -1014,16 +1027,18 @@ const Step6 = ({
         ...proposal,
         costs: [...proposal.costs, newCost]
       })
-      setDataSales({ ...dataSales, valueSale: Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, '')) })
+      const newDataSales = [...dataSales.valueSale]
+      newDataSales[index] = Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, ''))
+      setDataSales({ ...dataSales, valueSale: [...newDataSales] })
     }
   }
 
   function handleCurrencySale (newValue: string): void {
     const getCosts = [...proposal.costs]
-    const verifyIfCostsHasNullAgent = getCosts.some(cost => cost.costType === CostTypes.Freight && cost.agent.idBusinessPartnerAgent === null)
-    if (verifyIfCostsHasNullAgent) {
+    const verifyIfCostsHasNullPurchase = getCosts.some(cost => cost.costType === CostTypes.Freight && cost.valuePurchase === null)
+    if (verifyIfCostsHasNullPurchase) {
       const handleCosts = getCosts.map(cost => {
-        if (cost.costType === CostTypes.Freight && cost.agent.idBusinessPartnerAgent === null) {
+        if (cost.costType === CostTypes.Freight && cost.valuePurchase === null) {
           return {
             ...cost,
             idCurrencySale: newValue
@@ -1058,7 +1073,7 @@ const Step6 = ({
         isSale: true,
         valueMinimumPurchase: null,
         valueMinimumSale: null,
-        valuePurchase: 0,
+        valuePurchase: null,
         valuePurchasePercent: null,
         valueSale: 0,
         valueSalePercent: 0,
@@ -1195,13 +1210,13 @@ const Step6 = ({
                                 </FormLabel>
                               </Grid>
                               <Grid item xs={2}>
-                                <FormLabel component='legend' error={invalidInput && (dataSales.currencySale === '' || dataSales.currencySale === '0')}>
+                                <FormLabel component='legend' error={invalidInput && (dataSales.currencySale === '' || dataSales.currencySale === '0' || dataSales.currencySale === null)}>
                                   {I18n.t('pages.newProposal.step6.currencySale')}
                                   <RedColorSpan> *</RedColorSpan>
                                 </FormLabel>
                               </Grid>
                               <Grid item xs={2}>
-                                <FormLabel component='legend' error={invalidInput && (dataSales.valueSale === '' || dataSales.valueSale === '0')}>
+                                <FormLabel component='legend' error={invalidInput && (dataSales.valueSale?.length === 0 || dataSales.valueSale[0] === '' || dataSales.valueSale[0] === '0')}>
                                   {I18n.t('pages.newProposal.step6.valueSale')}
                                   <RedColorSpan> *</RedColorSpan>
                                 </FormLabel>
@@ -1249,7 +1264,8 @@ const Step6 = ({
                                   onChange={(e, newValue) => handleCurrencySale(newValue)}
                                   options={currencyList.map((item) => item.id)} renderInput={(params) => (
                                     <div ref={params.InputProps.ref}>
-                                      <ControlledInput {...params} id="currencies" toolTipTitle={I18n.t('components.itemModal.requiredField')} invalid={invalidInput && (dataSales.currencySale === '' || dataSales.currencySale === '0')}
+                                      <ControlledInput {...params} id="currencies" toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                      invalid={invalidInput && (dataSales.currencySale === '' || dataSales.currencySale === '0' || dataSales.currencySale === null)}
                                         variant="outlined" size="small" placeholder={I18n.t('components.itemModal.choose')}
                                         InputProps={{
                                           endAdornment: (
@@ -1268,8 +1284,8 @@ const Step6 = ({
                               </Grid>
                               <Grid item xs={2} style={{ alignSelf: 'end' }}>
                                 <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
-                                  customInput={ControlledInput} onChange={(e, newValue) => handleValueSale(e.target.value)} toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                  invalid={invalidInput && (dataSales.valueSale === '' || dataSales.valueSale === '0')} value={dataSales.valueSale} variant='outlined' size='small' />
+                                  customInput={ControlledInput} onChange={(e, newValue) => handleValueSale(e.target.value, selectedAgent, index)} toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                  invalid={invalidInput && (dataSales.valueSale?.length === 0 || dataSales.valueSale[0] === '' || dataSales.valueSale[0] === '0')} value={dataSales.valueSale[index]} variant='outlined' size='small' />
                               </Grid>
                             </Grid>
                             <ButtonWrapper>
