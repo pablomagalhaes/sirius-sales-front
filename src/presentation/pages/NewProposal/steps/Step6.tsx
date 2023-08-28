@@ -30,6 +30,8 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import { CalculationDataProps } from '../../../components/ChargeTable'
 import { CostTypes, FareItemsTypes } from '../../../../application/enum/costEnum'
 
+import TariffImportModal from '../components/TariffImportModal/TariffImportModal'
+
 interface Step6Props {
   totalCosts: any
   containerItems: ItemModalData[]
@@ -123,6 +125,10 @@ const Step6 = ({
   const [agentList, setAgentsList] = useState<any[]>([])
   const [businessPartner, setBusinessPartner] = useState<any[]>([])
   const [totalCharge, setTotalCharge] = useState<number>(0)
+
+  const [openImport, setOpenImport] = useState(false)
+  const [ShowList, setShowList] = useState<boolean>(false)
+
 
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => {
@@ -1461,6 +1467,20 @@ const Step6 = ({
             })()}
           </>
 
+            <Grid item xs={2}>
+                <Button
+                  // id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_BUTTON_MODAL_IMPORT}
+                  onAction={() => {
+                    setOpenImport(true)
+                  }}
+                  text={I18n.t('pages.staggeredProposal.newStaggeredProposal.ImportTariff')}
+                  icon="tariff"
+                  backgroundGreen={true}
+                  tooltip={I18n.t('pages.staggeredProposal.newStaggeredProposal.ImportTariff')}
+                  disabled={false}
+                />
+              </Grid>
+
           <LineSeparator />
 
           <Grid item xs={6}>
@@ -1525,7 +1545,13 @@ const Step6 = ({
           />
         </MessageContainer>
       )}
+      <TariffImportModal
+      setClose={() => setOpenImport(false)}
+      open={openImport}
+      setShowList={() => setShowList(true)}
+      />
     </Separator>
+
   )
 }
 
