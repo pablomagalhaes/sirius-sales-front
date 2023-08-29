@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useImperativeHandle, useState, Fragment } from 'react'
+import React, { useContext, useEffect, useImperativeHandle, useState } from 'react'
 import { I18n } from 'react-redux-i18n'
 import { MessageContainer, Separator, Subtitle, Title } from '../style'
 import FareModal, {
@@ -14,7 +14,7 @@ import {
   withTheme
 } from '@material-ui/core'
 import { ItemModalData } from '../../../components/ItemModal/ItemModal'
-import { ButtonWrapper, HeightDiv, NumberInput, StyledPaper, LineSeparator, ErrorText } from './StepsStyles'
+import { ButtonWrapper, HeightDiv, NumberInput, StyledPaper, LineSeparator, UpperContainer, LowerContainer, TotalContainer, FreightContainer, CargoContainer } from './StepsStyles'
 import { Button, Messages } from 'fiorde-fe-components'
 import { ProposalContext, ProposalProps } from '../../NewProposal/context/ProposalContext'
 import { Cost } from '../../../../domain/Cost'
@@ -163,7 +163,7 @@ const Step6 = ({
       valueSale: '',
       valuePurchase: decimalToString(proposal.costs.find((cost): any => {
         if (cost.costType === CostTypes.Freight) {
-          if (cost?.agent?.idBusinessPartnerAgent === newAgent?.idBusinessPartnerAgent) {
+          if (cost?.agent?.idBusinessPartnerAgent === newAgent?.idBusinessPartnerAgent && cost.valuePurchase !== null) {
             return true
           }
         }
@@ -178,13 +178,21 @@ const Step6 = ({
     currencySale: proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.idCurrencySale ?? '',
     currencyPurchase: proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.idCurrencyPurchase ?? '',
     valueSale: decimalToString(proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.valueSale),
-    valuePurchase: decimalToString(proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.valuePurchase)
+    valuePurchase: decimalToString(proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.valuePurchase),
+    valueQuantity: item.valueQuantity
   })))
+
+  const getValueSale = (): string[] => {
+    return proposal.agents.map((agent) => {
+      return proposal.costs
+        .find(cost => cost.costType === CostTypes.Freight && cost.valuePurchase === null && cost.agent?.idBusinessPartnerAgent === agent.idBusinessPartnerAgent)?.valueSale?.toFixed(2) ?? ''
+    })
+  }
 
   const [dataSales, setDataSales] = useState<any>({
     idCost: proposal.costs.find(cost => cost.costType === CostTypes.Freight && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.idCost ?? null,
-    currencySale: String(proposal.costs.find(cost => cost.costType === CostTypes.Freight && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.idCurrencySale ?? ''),
-    valueSale: String(proposal.costs.find(cost => cost.costType === CostTypes.Freight && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.valueSale?.toFixed(2) ?? '')
+    currencySale: String(proposal.costs.find(cost => cost.costType === CostTypes.Freight && (cost.valuePurchase === null))?.idCurrencySale ?? ''),
+    valueSale: getValueSale()
   })
 
   useEffect(() => {
@@ -223,7 +231,8 @@ const Step6 = ({
       currencySale: '',
       currencyPurchase: '',
       valueSale: '',
-      valuePurchase: ''
+      valuePurchase: '',
+      valueQuantity: newCargo.valueQuantity
     }))
     const unionCargos = [...dataContainer, ...newDataWithNewCargos]
     const getAllCargos = unionCargos.map(unionAgent => unionAgent.idContainerType)
@@ -294,7 +303,7 @@ const Step6 = ({
     proposal.costs = resultado
 
     if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
-      data.forEach((item): void => {
+      data.forEach((item, index): void => {
         const freightCostNew = {
           id: item?.idCost,
           idCost: item?.idCost,
@@ -307,9 +316,9 @@ const Step6 = ({
           valueSalePercent: 0,
           valueMinimumSale: null,
           agent: {
-            id: proposal.agents[0].id,
-            idBusinessPartnerAgent: proposal.agents[0].idBusinessPartnerAgent,
-            idBusinessPartnerTransportCompany: proposal.agents[0].idBusinessPartnerTransportCompany,
+            id: proposal.agents[index].id,
+            idBusinessPartnerAgent: proposal.agents[index].idBusinessPartnerAgent,
+            idBusinessPartnerTransportCompany: proposal.agents[index].idBusinessPartnerTransportCompany,
             proposalId: null
           },
           costType: CostTypes.Freight,
@@ -322,9 +331,6 @@ const Step6 = ({
           valueSaleTotal: null,
           valuePurchaseTotal: null
         }
-        freightCostArrayNew.push(freightCostNew)
-      })
-      if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
         const freightCostSale = {
           id: dataSales.idCost,
           idCost: dataSales.idCost,
@@ -337,27 +343,28 @@ const Step6 = ({
           valueSalePercent: 0,
           valueMinimumSale: null,
           agent: {
-            id: null,
-            idBusinessPartnerAgent: null,
-            idBusinessPartnerTransportCompany: null,
+            id: proposal.agents[index].id,
+            idBusinessPartnerAgent: proposal.agents[index].idBusinessPartnerAgent,
+            idBusinessPartnerTransportCompany: proposal.agents[index].idBusinessPartnerTransportCompany,
             proposalId: null
           },
           costType: CostTypes.Freight,
           idCurrencySale: dataSales.currencySale,
           idCurrencyPurchase: dataSales.currencySale,
-          valueSale: FormatNumber.convertStringToNumber(dataSales.valueSale),
+          valueSale: FormatNumber.convertStringToNumber(dataSales.valueSale[index]),
           valuePurchase: null,
           isPurchase: false,
           isSale: true,
           valueSaleTotal: null,
           valuePurchaseTotal: null
         }
+        freightCostArrayNew.push(freightCostNew)
         freightCostArrayNew.push(freightCostSale)
-      }
+      })
     }
 
     if ((proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
-      dataContainer.forEach((item): void => {
+      dataContainer.forEach((item, index): void => {
         const freightCostNew = {
           id: item?.idCost,
           idCost: item?.idCost,
@@ -388,7 +395,6 @@ const Step6 = ({
         freightCostArrayNew.push(freightCostNew)
       })
     }
-
     return freightCostArrayNew
   }
 
@@ -488,7 +494,6 @@ const Step6 = ({
                       ? Number(proposal.cargo[0].vlCwSale)
                       : null
                 }
-
                 API.postTotalCalculation(totalCostCalculationData)
                   .then((response) => {
                     resolve(Number(response?.valueSale))
@@ -633,7 +638,11 @@ const Step6 = ({
 
   useEffect(() => {
     if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
-      if (data.every(d => d.currencyPurchase !== '') && data.every(d => d.valuePurchase !== '')) {
+      if (data.every(d => d.currencyPurchase !== '') &&
+      data.every(d => d.valuePurchase !== '') &&
+      dataSales.valueSale?.length !== 0 &&
+      (dataSales.valueSale.every(value => value !== '' && value !== '0')) &&
+      (dataSales.currencySale !== '' && dataSales.currencySale !== '0' && dataSales.currencySale !== null)) {
         setCompleted((currentState) => {
           return { ...currentState, step6: true }
         })
@@ -745,7 +754,7 @@ const Step6 = ({
       costType: item.type,
       quantityContainer:
         specifications === 'fcl'
-          ? Number(containerItems[indexContainer].amount)
+          ? Number(containerItems[indexContainer]?.amount)
           : 0,
       valueGrossWeight: isNaN(Number(calculationData?.weight))
         ? 0
@@ -773,6 +782,7 @@ const Step6 = ({
       step5destiny: false,
       step6: false
     })
+
     const totalCostCalculationData = getTotalCalculationData(item)
 
     void (async function () {
@@ -871,11 +881,11 @@ const Step6 = ({
 
   function renderTotalSurchage (): JSX.Element | undefined {
     if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND') {
-      if (dataSales.valueSale !== '' && dataSales.currencySale !== null) {
+      if (dataSales.valueSale?.length > 0 && dataSales.currencySale !== null) {
         return (
           <TotalSurcharge
             currency={dataSales.currencySale}
-            value={dataSales.valueSale}
+            value={FormatNumber.convertNumberToString(dataSales.valueSale.reduce((total: number, item: string) => FormatNumber.convertStringToNumber(item) + total, 0))}
             totalOtherFare={getSumTotalItem()}
             cw={cw}
             cwSale={cwSale}
@@ -894,7 +904,7 @@ const Step6 = ({
         return (
           <TotalSurcharge
             currency={dataContainer[0]?.currencySale}
-            value={dataContainer.reduce((total, item) => Number(item.valueSale?.replace(',', '.')) + total, 0).toFixed(2).replace('.', ',')}
+            value={dataContainer.reduce((total, item) => Number(item.valueSale?.replace(',', '.')) * Number(item.valueQuantity) + total, 0).toFixed(2).replace('.', ',')}
             totalOtherFare={getSumTotalItem()}
             cw={cw}
             cwSale={cwSale}
@@ -906,7 +916,7 @@ const Step6 = ({
       }
     }
     if (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType)) {
-      if (dataSales.valueSale !== '' && dataSales.currencySale !== null) {
+      if (dataSales.valueSale?.length > 0 && dataSales.currencySale !== null) {
         return (
           <TotalSurcharge
             currency={dataSales.currencySale}
@@ -966,12 +976,12 @@ const Step6 = ({
     }
   }
 
-  function handleValueSale (newValue: string): void {
+  function handleValueSale (newValue: string, agent: any, index: number): void {
     const getCosts = [...proposal.costs]
-    const verifyIfCostsHasNullAgent = getCosts.some(cost => cost.costType === CostTypes.Freight && cost.agent.idBusinessPartnerAgent === null)
-    if (verifyIfCostsHasNullAgent) {
+    const verifyIfCostsHasNullPurchase = getCosts.some(cost => cost.costType === CostTypes.Freight && cost.valuePurchase === null)
+    if (verifyIfCostsHasNullPurchase) {
       const handleCosts = getCosts.map(cost => {
-        if (cost.costType === CostTypes.Freight && cost.agent.idBusinessPartnerAgent === null) {
+        if (cost.costType === CostTypes.Freight && cost.agent.idBusinessPartnerAgent === agent.idBusinessPartnerAgent) {
           return {
             ...cost,
             valueSale: Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, ''))
@@ -983,7 +993,9 @@ const Step6 = ({
         ...proposal,
         costs: handleCosts
       })
-      setDataSales({ ...dataSales, valueSale: newValue })
+      const newDataSales = [...dataSales.valueSale]
+      newDataSales[index] = newValue
+      setDataSales({ ...dataSales, valueSale: [...newDataSales] })
     } else {
       const newCost = {
         valueSale: Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, '')),
@@ -1004,7 +1016,7 @@ const Step6 = ({
         isSale: true,
         valueMinimumPurchase: null,
         valueMinimumSale: null,
-        valuePurchase: 0,
+        valuePurchase: null,
         valuePurchasePercent: null,
         valueSalePercent: 0,
         valueSaleTotal: null,
@@ -1014,16 +1026,18 @@ const Step6 = ({
         ...proposal,
         costs: [...proposal.costs, newCost]
       })
-      setDataSales({ ...dataSales, valueSale: Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, '')) })
+      const newDataSales = [...dataSales.valueSale]
+      newDataSales[index] = Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, ''))
+      setDataSales({ ...dataSales, valueSale: [...newDataSales] })
     }
   }
 
   function handleCurrencySale (newValue: string): void {
     const getCosts = [...proposal.costs]
-    const verifyIfCostsHasNullAgent = getCosts.some(cost => cost.costType === CostTypes.Freight && cost.agent.idBusinessPartnerAgent === null)
-    if (verifyIfCostsHasNullAgent) {
+    const verifyIfCostsHasNullPurchase = getCosts.some(cost => cost.costType === CostTypes.Freight && cost.valuePurchase === null)
+    if (verifyIfCostsHasNullPurchase) {
       const handleCosts = getCosts.map(cost => {
-        if (cost.costType === CostTypes.Freight && cost.agent.idBusinessPartnerAgent === null) {
+        if (cost.costType === CostTypes.Freight && cost.valuePurchase === null) {
           return {
             ...cost,
             idCurrencySale: newValue
@@ -1058,7 +1072,7 @@ const Step6 = ({
         isSale: true,
         valueMinimumPurchase: null,
         valueMinimumSale: null,
-        valuePurchase: 0,
+        valuePurchase: null,
         valuePurchasePercent: null,
         valueSale: 0,
         valueSalePercent: 0,
@@ -1134,8 +1148,8 @@ const Step6 = ({
     return businessPartner?.find((partner: any) => partner?.businessPartner?.id === idBusinessPartnerTransportCompany)?.businessPartner?.simpleName
   }
 
-  return (
-
+  if (proposal.agents.length > 0 && costData !== 0) {
+    return (
     <Separator>
       <HeightDiv>
         <Title>
@@ -1144,50 +1158,70 @@ const Step6 = ({
         </Title>
         <FormControl variant='outlined' size='small' className='form-size'>
           <>
-
             {(() => {
               if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
                 return (
                   <>
-
                     <Grid item xs={6}>
-                      <FormLabel component="legend"><strong>{'Tarifas de compra por agente'}</strong></FormLabel>
+                      <FormLabel component="legend"><strong>{I18n.t('pages.newProposal.step6.freightByAgent')}</strong></FormLabel>
                     </Grid>
-                    {proposal.agents.length > 0 &&
-                      ((proposal.agents[0].idBusinessPartnerAgent !== null) && (proposal.agents[0].idBusinessPartnerTransportCompany !== null)) && (
-                        <Grid container spacing={5}>
-                          <Grid item xs={3}>
-                            <FormLabel component='legend'>
-                              {I18n.t('pages.newProposal.step6.agent')}
-                            </FormLabel>
-                          </Grid>
-                          <Grid item xs={3}>
-                            <FormLabel component='legend'>{selectTypeModal()}</FormLabel>
-                          </Grid>
-                          <Grid item xs={2}>
-                            <FormLabel component='legend'>
-                              {I18n.t('pages.newProposal.step6.currencyPurchase')}
-                              <RedColorSpan> *</RedColorSpan>
-                            </FormLabel>
-                          </Grid>
-                          <Grid item xs={2}>
-                            <FormLabel component='legend'>
-                              {I18n.t('pages.newProposal.step6.valuePurchase')}
-                              <RedColorSpan> *</RedColorSpan>
-                            </FormLabel>
-                          </Grid>
-                        </Grid>
-                    )}
                     {proposal.agents.map((selectedAgent, index) => {
                       return ((selectedAgent.idBusinessPartnerAgent !== null) && (selectedAgent.idBusinessPartnerTransportCompany !== null)) && (
-                          <Fragment key={index}>
+                        <TotalContainer key={index}>
+                          <UpperContainer>
+                            <Grid container spacing={0}>
+                              <Grid item xs={1}>
+                                <FormLabel component='legend'>
+                                  {I18n.t('pages.newProposal.step6.agent')}:
+                                </FormLabel>
+                              </Grid>
+                              <Grid item xs={11}>
+                                <FormLabel component='legend'>
+                                  <strong>
+                                    {getAgentNameByidBusinessPartnerAgent(selectedAgent.idBusinessPartnerAgent)}
+                                  </strong>
+                                </FormLabel>
+                              </Grid>
+                              <Grid item xs={1} style={{ marginTop: '-15px' }}>
+                                <FormLabel component='legend'>{selectTypeModal()}</FormLabel>
+                              </Grid>
+                              <Grid item xs={11} style={{ marginTop: '-15px' }}>
+                                <FormLabel component='legend'>
+                                  <strong>
+                                    {getCorporateNameByidBusinessPartnerAgent(selectedAgent.idBusinessPartnerTransportCompany)}
+                                  </strong>
+                                </FormLabel>
+                              </Grid>
+                            </Grid>
+                          </UpperContainer>
+                          <LowerContainer>
                             <Grid container spacing={5}>
-                              <Grid item xs={3}>
-                                <FormLabel component='legend'>{getAgentNameByidBusinessPartnerAgent(selectedAgent.idBusinessPartnerAgent)}</FormLabel>
+                              <Grid item xs={2}>
+                                <FormLabel component='legend' error={invalidInput && data.some((each) => each.currencyPurchase === '')}>
+                                  {I18n.t('pages.newProposal.step6.currencyPurchase')}
+                                  <RedColorSpan> *</RedColorSpan>
+                                </FormLabel>
                               </Grid>
-                              <Grid item xs={3}>
-                                <FormLabel component='legend'>{getCorporateNameByidBusinessPartnerAgent(selectedAgent.idBusinessPartnerTransportCompany)}</FormLabel>
+                              <Grid item xs={2}>
+                                <FormLabel component='legend' error={invalidInput && data.some((each) => each.valuePurchase === '' || each.valuePurchase === '0')}>
+                                  {I18n.t('pages.newProposal.step6.valuePurchase')}
+                                  <RedColorSpan> *</RedColorSpan>
+                                </FormLabel>
                               </Grid>
+                              <Grid item xs={2}>
+                                <FormLabel component='legend' error={invalidInput && (dataSales.currencySale === '' || dataSales.currencySale === '0' || dataSales.currencySale === null)}>
+                                  {I18n.t('pages.newProposal.step6.currencySale')}
+                                  <RedColorSpan> *</RedColorSpan>
+                                </FormLabel>
+                              </Grid>
+                              <Grid item xs={2}>
+                                <FormLabel component='legend' error={invalidInput && (dataSales.valueSale?.length === 0 || dataSales.valueSale[0] === '' || dataSales.valueSale[0] === '0')}>
+                                  {I18n.t('pages.newProposal.step6.valueSale')}
+                                  <RedColorSpan> *</RedColorSpan>
+                                </FormLabel>
+                              </Grid>
+                            </Grid>
+                            <Grid container spacing={5} style={{ marginTop: '-35px' }}>
                               <Grid item xs={2}>
                                 <Autocomplete freeSolo value={data[index]?.currencyPurchase} onChange={(e, newValue) => {
                                   const newData = [...data]
@@ -1222,46 +1256,51 @@ const Step6 = ({
                                   }} toolTipTitle={I18n.t('components.itemModal.requiredField')}
                                   invalid={invalidInput && (data[index]?.valuePurchase === '' || data[index]?.valuePurchase === '0')} value={data[index]?.valuePurchase} variant='outlined' size='small' />
                               </Grid>
+                              <Grid item xs={2}>
+                                <Autocomplete
+                                  freeSolo
+                                  value={dataSales.currencySale}
+                                  onChange={(e, newValue) => handleCurrencySale(newValue)}
+                                  options={currencyList.map((item) => item.id)} renderInput={(params) => (
+                                    <div ref={params.InputProps.ref}>
+                                      <ControlledInput {...params} id="currencies" toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                      invalid={invalidInput && (dataSales.currencySale === '' || dataSales.currencySale === '0' || dataSales.currencySale === null)}
+                                        variant="outlined" size="small" placeholder={I18n.t('components.itemModal.choose')}
+                                        InputProps={{
+                                          endAdornment: (
+                                            <InputAdornment position='end'>
+                                              <Box style={{ position: 'absolute', top: '7px', right: '0' }} {...params.inputProps} >
+                                                <ArrowDropDownIcon />
+                                              </Box>
+                                            </InputAdornment>
+                                          )
+                                        }}
+                                      />
+                                    </div>
+                                  )}
+                                  PaperComponent={(params: any) => <StyledPaper {...params} />}
+                                />
+                              </Grid>
+                              <Grid item xs={2}>
+                                <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                                  customInput={ControlledInput} onChange={(e, newValue) => handleValueSale(e.target.value, selectedAgent, index)} toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                  invalid={invalidInput && (dataSales.valueSale?.length === 0 || dataSales.valueSale[0] === '' || dataSales.valueSale[0] === '0')} value={dataSales.valueSale[index]} variant='outlined' size='small' />
+                              </Grid>
                             </Grid>
-                          </Fragment>
+                            <ButtonWrapper>
+                              <Button
+                                onAction={() => console.log('')}
+                                text={I18n.t('pages.newProposal.step6.importButton')}
+                                icon="tariff"
+                                backgroundGreen={true}
+                                tooltip={I18n.t('pages.newProposal.step6.importButton')}
+                                disabled={false}
+                              />
+                            </ButtonWrapper>
+                          </LowerContainer>
+                        </TotalContainer>
                       )
                     })}
-                    <Fragment>
-                      <Grid container spacing={5}>
-                        <Grid item xs={6}>
-                          <FormLabel component='legend' style={{ textAlign: 'right' }}>Especificar o valor do frete para venda:</FormLabel>
-                        </Grid>
-                        <Grid item xs={2} style={{ alignSelf: 'end' }}>
-                          <Autocomplete
-                            freeSolo
-                            value={dataSales.currencySale}
-                            onChange={(e, newValue) => handleCurrencySale(newValue)}
-                            options={currencyList.map((item) => item.id)} renderInput={(params) => (
-                              <div ref={params.InputProps.ref}>
-                                <ControlledInput {...params} id="currencies" toolTipTitle={I18n.t('components.itemModal.requiredField')} invalid={invalidInput && (dataSales.currencySale === '' || dataSales.currencySale === '0')}
-                                  variant="outlined" size="small" placeholder={I18n.t('components.itemModal.choose')}
-                                  InputProps={{
-                                    endAdornment: (
-                                      <InputAdornment position='end'>
-                                        <Box style={{ position: 'absolute', top: '7px', right: '0' }} {...params.inputProps} >
-                                          <ArrowDropDownIcon />
-                                        </Box>
-                                      </InputAdornment>
-                                    )
-                                  }}
-                                />
-                              </div>
-                            )}
-                            PaperComponent={(params: any) => <StyledPaper {...params} />}
-                          />
-                        </Grid>
-                        <Grid item xs={2} style={{ alignSelf: 'end' }}>
-                          <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
-                            customInput={ControlledInput} onChange={(e, newValue) => handleValueSale(e.target.value)} toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                            invalid={invalidInput && (dataSales.valueSale === '' || dataSales.valueSale === '0')} value={dataSales.valueSale} variant='outlined' size='small' />
-                        </Grid>
-                      </Grid>
-                    </Fragment>
                   </>
                 )
               }
@@ -1272,67 +1311,144 @@ const Step6 = ({
                 return (
                   <>
 
-                    <Grid item xs={6}>
-                      <FormLabel component="legend"><strong>{'Tarifas de compra e venda por container'}</strong></FormLabel>
+                  <Grid item xs={6}>
+                    <FormLabel component="legend"><strong>{I18n.t('pages.newProposal.step6.freightByAgent')}</strong></FormLabel>
+                  </Grid>
+
+                  <LineSeparator />
+                  <TotalContainer>
+                    <CargoContainer>
+                    <Grid container spacing={0}>
+                      <Grid item xs={1}>
+                        <FormLabel component="legend">
+                        {I18n.t('pages.newProposal.step6.agent')}:
+                        </FormLabel>
+                      </Grid>
+                      <Grid item xs={11}>
+                        <FormLabel component="legend">
+                        <strong>{ getAgentNameByidBusinessPartnerAgent(proposal?.agents[0]?.idBusinessPartnerAgent)}</strong>
+                        </FormLabel>
+                      </Grid>
+                      <Grid item xs={1}>
+                        <FormLabel component="legend">
+                          {selectTypeModal()}:
+                        </FormLabel>
+                      </Grid>
+                      <Grid item xs={11}>
+                        <FormLabel component="legend">
+                          <strong>{getCorporateNameByidBusinessPartnerAgent(proposal?.agents[0]?.idBusinessPartnerTransportCompany)}</strong>
+                        </FormLabel>
+                      </Grid>
                     </Grid>
-
-                    <LineSeparator />
-
-                    <Grid item xs={6}>
-                      <FormLabel component="legend">{'Agente: '}<strong>{getAgentNameByidBusinessPartnerAgent(proposal.agents[0].idBusinessPartnerAgent)}</strong>{' / Cia. Marítima: '}<strong>{getCorporateNameByidBusinessPartnerAgent(proposal.agents[0].idBusinessPartnerTransportCompany)}</strong></FormLabel>
-                    </Grid>
-
-                    {proposal.cargo[0].cargoVolumes.length > 0 &&
-                      dataContainer.length === proposal.cargo[0].cargoVolumes.length && (
-                        <Grid container spacing={5}>
-                          <Grid item xs={3}>
-                            <FormLabel component='legend'>
-                              Container
-                            </FormLabel>
-                          </Grid>
-                          <Grid item xs={2}>
-                            <FormLabel component='legend'>
-                              {I18n.t('pages.newProposal.step6.currencyPurchase')}
-                              <RedColorSpan> *</RedColorSpan>
-                            </FormLabel>
-                          </Grid>
-                          <Grid item xs={2}>
-                            <FormLabel component='legend'>
-                              {I18n.t('pages.newProposal.step6.valuePurchase')}
-                              <RedColorSpan> *</RedColorSpan>
-                            </FormLabel>
-                          </Grid>
-                          <Grid item xs={2}>
-                            <FormLabel component='legend'>
-                              {I18n.t('pages.newProposal.step6.currencySale')}
-                              <RedColorSpan> *</RedColorSpan>
-                            </FormLabel>
-                          </Grid>
-                          <Grid item xs={2}>
-                            <FormLabel component='legend'>
-                              {I18n.t('pages.newProposal.step6.valueSale')}
-                              <RedColorSpan> *</RedColorSpan>
-                            </FormLabel>
-                          </Grid>
-                        </Grid>
-                    )}
+                    </CargoContainer>
                     {proposal.cargo[0].cargoVolumes.map((cargoVolume, index, array) => {
                       return (dataContainer.length === array.length) && (
-                          <Fragment key={index}>
+                        <CargoContainer className="line-bottom">
+                          <Grid container spacing={5}>
+                            <Grid item xs={3}>
+                              <FormLabel component='legend'>
+                                Container
+                              </FormLabel>
+                            </Grid>
+                            <Grid item xs={2}>
+                              <FormLabel component='legend'>
+                                {I18n.t('pages.newProposal.step6.currencyPurchase')}
+                                <RedColorSpan> *</RedColorSpan>
+                              </FormLabel>
+                            </Grid>
+                            <Grid item xs={2}>
+                              <FormLabel component='legend'>
+                                {I18n.t('pages.newProposal.step6.valuePurchase')}
+                                <RedColorSpan> *</RedColorSpan>
+                              </FormLabel>
+                            </Grid>
+                            <Grid item xs={2}>
+                              <FormLabel component='legend'>
+                                {I18n.t('pages.newProposal.step6.currencySale')}
+                                <RedColorSpan> *</RedColorSpan>
+                              </FormLabel>
+                            </Grid>
+                            <Grid item xs={2}>
+                              <FormLabel component='legend'>
+                                {I18n.t('pages.newProposal.step6.valueSale')}
+                                <RedColorSpan> *</RedColorSpan>
+                              </FormLabel>
+                            </Grid>
+                          </Grid>
+                          <Grid container spacing={5}>
+                            <Grid item xs={3} style={{ marginTop: '-15px' }}>
+                              <FormLabel component='legend'><strong>{cargoVolume.type}</strong></FormLabel>
+                            </Grid>
 
-                            <Grid container spacing={5}>
-                              <Grid item xs={3}>
-                                <FormLabel component='legend'>{cargoVolume.type}</FormLabel>
-                              </Grid>
+                            <Grid item xs={2}>
+                              <Autocomplete
+                                freeSolo
+                                value={dataContainer[index]?.currencyPurchase}
+                                onChange={(e, newValue) => {
+                                  const newData = [...dataContainer]
+                                  newData[index].currencyPurchase = String(newValue ?? '')
+                                  handleContainerChange(newData, 'currencyPurchase', newValue, index, false)
+                                }}
+                                options={currencyList.map((item) => item.id)}
+                                renderInput={(params) => (
+                                  <div ref={params.InputProps.ref}>
+                                    <ControlledInput
+                                      {...params}
+                                      id="currencies"
+                                      toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                      invalid={invalidInput && dataContainer[index]?.currencyPurchase === ''}
+                                      variant="outlined"
+                                      size="small"
+                                      placeholder={I18n.t('components.itemModal.choose')}
+                                      InputProps={{
+                                        endAdornment: (
+                                          <InputAdornment position='end'>
+                                            <Box style={{ position: 'absolute', top: '7px', right: '0' }} {...params.inputProps} >
+                                              <ArrowDropDownIcon />
+                                            </Box>
+                                          </InputAdornment>
+                                        )
+                                      }}
+                                    />
+                                  </div>
+                                )}
+                                PaperComponent={(params: any) => <StyledPaper {...params} />}
+                              />
+                            </Grid>
 
-                              <Grid item xs={2}>
+                            <Grid item xs={2}>
+                              <NumberInput
+                                decimalSeparator={','}
+                                thousandSeparator={'.'}
+                                decimalScale={2}
+                                format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                                customInput={ControlledInput}
+                                onChange={(e) => {
+                                  const newData = [...dataContainer]
+                                  newData[index].valuePurchase = e.target.value
+                                  handleContainerChange(newData, 'valuePurchase', e.target.value, index, true)
+                                }}
+                                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                invalid={invalidInput && (dataContainer[index].valuePurchase === '' || dataContainer[index].valuePurchase === '0')}
+                                value={dataContainer[index].valuePurchase}
+                                variant='outlined'
+                                size='small'
+                              />
+                            </Grid>
+
+                            <Grid item xs={2}>
+                              <>
                                 <Autocomplete
                                   freeSolo
-                                  value={dataContainer[index]?.currencyPurchase}
+                                  value={dataContainer[index].currencySale}
                                   onChange={(e, newValue) => {
-                                    const newData = [...dataContainer]
-                                    newData[index].currencyPurchase = String(newValue ?? '')
-                                    handleContainerChange(newData, 'currencyPurchase', newValue, index, false)
+                                    const newData = dataContainer.map((data) => {
+                                      data.currencySale = String(newValue ?? '')
+                                      return data
+                                    })
+                                    // const newData = [...dataContainer]
+                                    // newData[index].currencySale = String(newValue ?? '')
+                                    handleContainerChange(newData, 'currencySale', newValue, index, false)
                                   }}
                                   options={currencyList.map((item) => item.id)}
                                   renderInput={(params) => (
@@ -1341,7 +1457,7 @@ const Step6 = ({
                                         {...params}
                                         id="currencies"
                                         toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                        invalid={invalidInput && dataContainer[index]?.currencyPurchase === ''}
+                                        invalid={invalidInput && dataContainer[index]?.currencySale === ''}
                                         variant="outlined"
                                         size="small"
                                         placeholder={I18n.t('components.itemModal.choose')}
@@ -1359,98 +1475,49 @@ const Step6 = ({
                                   )}
                                   PaperComponent={(params: any) => <StyledPaper {...params} />}
                                 />
-                              </Grid>
-
-                              <Grid item xs={2}>
-                                <NumberInput
-                                  decimalSeparator={','}
-                                  thousandSeparator={'.'}
-                                  decimalScale={2}
-                                  format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
-                                  customInput={ControlledInput}
-                                  onChange={(e) => {
-                                    const newData = [...dataContainer]
-                                    newData[index].valuePurchase = e.target.value
-                                    handleContainerChange(newData, 'valuePurchase', e.target.value, index, true)
-                                  }}
-                                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                  invalid={invalidInput && (dataContainer[index].valuePurchase === '' || dataContainer[index].valuePurchase === '0')}
-                                  value={dataContainer[index].valuePurchase}
-                                  variant='outlined'
-                                  size='small'
-                                />
-                              </Grid>
-
-                              <Grid item xs={2}>
-                                <>
-                                  <Autocomplete
-                                    freeSolo
-                                    value={dataContainer[index].currencySale}
-                                    onChange={(e, newValue) => {
-                                      const newData = [...dataContainer]
-                                      newData[index].currencySale = String(newValue ?? '')
-                                      handleContainerChange(newData, 'currencySale', newValue, index, false)
-                                    }}
-                                    options={currencyList.map((item) => item.id)}
-                                    renderInput={(params) => (
-                                      <div ref={params.InputProps.ref}>
-                                        <ControlledInput
-                                          {...params}
-                                          id="currencies"
-                                          toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                          invalid={invalidInput && dataContainer.some(row => row.currencySale !== dataContainer[0].currencySale)}
-                                          variant="outlined"
-                                          size="small"
-                                          placeholder={I18n.t('components.itemModal.choose')}
-                                          InputProps={{
-                                            endAdornment: (
-                                              <InputAdornment position='end'>
-                                                <Box style={{ position: 'absolute', top: '7px', right: '0' }} {...params.inputProps} >
-                                                  <ArrowDropDownIcon />
-                                                </Box>
-                                              </InputAdornment>
-                                            )
-                                          }}
-                                        />
-                                      </div>
-                                    )}
-                                    PaperComponent={(params: any) => <StyledPaper {...params} />}
-                                  />
-                                  {dataContainer.some(row => row.currencySale !== dataContainer[0].currencySale) &&
-                                    <ErrorText>
-                                      {I18n.t('pages.newProposal.step6.differentCurrencySale')}
-                                    </ErrorText>
-                                  }
-                                </>
-                              </Grid>
-
-                              <Grid item xs={2}>
-                                <NumberInput
-                                  decimalSeparator={','}
-                                  thousandSeparator={'.'}
-                                  decimalScale={2}
-                                  format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
-                                  customInput={ControlledInput}
-                                  onChange={(e) => {
-                                    const newData = [...dataContainer]
-                                    newData[index].valueSale = e.target.value
-                                    setDataContainer(newData)
-                                    handleContainerChange(newData, 'valueSale', e.target.value, index, true)
-                                  }}
-                                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                  invalid={invalidInput && (dataContainer[index].valueSale === '' || dataContainer[index].valueSale === '0')}
-                                  value={dataContainer[index].valueSale}
-                                  variant='outlined'
-                                  size='small'
-                                />
-                              </Grid>
-
+                              </>
                             </Grid>
 
-                          </Fragment>
+                            <Grid item xs={2}>
+                              <NumberInput
+                                decimalSeparator={','}
+                                thousandSeparator={'.'}
+                                decimalScale={2}
+                                format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                                customInput={ControlledInput}
+                                onChange={(e) => {
+                                  const newData = [...dataContainer]
+                                  newData[index].valueSale = e.target.value
+                                  setDataContainer(newData)
+                                  handleContainerChange(newData, 'valueSale', e.target.value, index, true)
+                                }}
+                                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                invalid={invalidInput && (dataContainer[index].valueSale === '' || dataContainer[index].valueSale === '0')}
+                                value={dataContainer[index].valueSale}
+                                variant='outlined'
+                                size='small'
+                              />
+                            </Grid>
+
+                          </Grid>
+                          <ButtonWrapper>
+                            <Button
+                              onAction={() => console.log('')}
+                              text={I18n.t('pages.newProposal.step6.importButton')}
+                              icon="tariff"
+                              backgroundGreen={true}
+                              tooltip={I18n.t('pages.newProposal.step6.importButton')}
+                              disabled={false}
+                            />
+                          </ButtonWrapper>
+
+                        </CargoContainer>
+
                       )
                     })}
-                  </>
+
+                  </TotalContainer>
+                </>
                 )
               }
             })()}
@@ -1463,6 +1530,7 @@ const Step6 = ({
           </Grid>
 
         </FormControl>
+
         {makeSurchargeTable(agentList)}
         <ButtonWrapper>
           <Button
@@ -1521,7 +1589,24 @@ const Step6 = ({
         </MessageContainer>
       )}
     </Separator>
-  )
+    )
+  } else {
+    return (
+      <Separator>
+        <HeightDiv>
+          <Title>
+            6. {I18n.t('pages.newProposal.step6.title')}
+            <Subtitle>{I18n.t('pages.newProposal.step6.subtitle')}</Subtitle>
+          </Title>
+          <TotalContainer>
+            <FreightContainer>
+              {I18n.t('pages.newProposal.step6.addFareTooltip')}
+            </FreightContainer>
+          </TotalContainer>
+        </HeightDiv>
+      </Separator>
+    )
+  }
 }
 
 export default withTheme(Step6)

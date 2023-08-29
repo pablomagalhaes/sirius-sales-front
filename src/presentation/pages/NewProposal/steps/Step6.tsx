@@ -82,7 +82,7 @@ const decimalToString = (value: number | null | undefined): string => {
 }
 
 const makeTableData = (costs): any => {
-  const getTarifas = costs.filter(cost => cost.costType === CostTypes.Tariff)
+  const getTarifas = costs?.filter(cost => cost.costType === CostTypes.Tariff)
   return getTarifas.map(cost => ({
     idCost: cost.idCost,
     selectedContainer: cost.idContainerType,
@@ -133,9 +133,9 @@ const Step6 = ({
   const currencyArray = new Map()
 
   // const [tableData, setTableData] = useState<FareModalData[]>([])
-  const [tableData, setTableData] = useState<FareModalData[]>(makeTableData(proposal.costs))
+  const [tableData, setTableData] = useState<FareModalData[]>(makeTableData(proposal?.costs))
   const [data, setData] = useState<any[]>(
-    proposal.agents.map(newAgent => ({
+    proposal?.agents.map(newAgent => ({
       idCost: proposal.costs.find((cost): any => {
         if (cost.costType === CostTypes.Freight) {
           if (cost?.agent?.idBusinessPartnerAgent === newAgent?.idBusinessPartnerAgent) {
@@ -185,7 +185,7 @@ const Step6 = ({
   const getValueSale = (): string[] => {
     return proposal.agents.map((agent) => {
       return proposal.costs
-        .find(cost => cost.costType === CostTypes.Freight && cost.valuePurchase === null && cost.agent.idBusinessPartnerAgent === agent.idBusinessPartnerAgent)?.valueSale?.toFixed(2) ?? ''
+        .find(cost => cost.costType === CostTypes.Freight && cost.valuePurchase === null && cost.agent?.idBusinessPartnerAgent === agent.idBusinessPartnerAgent)?.valueSale?.toFixed(2) ?? ''
     })
   }
 
@@ -754,7 +754,7 @@ const Step6 = ({
       costType: item.type,
       quantityContainer:
         specifications === 'fcl'
-          ? Number(containerItems[indexContainer].amount)
+          ? Number(containerItems[indexContainer]?.amount)
           : 0,
       valueGrossWeight: isNaN(Number(calculationData?.weight))
         ? 0
