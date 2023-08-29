@@ -68,6 +68,23 @@ const TotalContainer = styled.div`
   line-height: 150%;
   color: ${(props: any) => props.theme?.commercial?.components?.totalSurchage?.fontColor};
   letter-spacing: 0.02em;
+  .line-bottom {
+    border-top: 1px solid;
+    border-color: ${(props: any) => props.theme?.commercial?.components?.totalSurchage?.borderColor};
+  }
+`
+
+const FreightContainer = styled.div`
+  margin: 35px 0px;
+  font-weight: 400 !important;
+  width: 100%;
+  text-align: center !important;
+`
+
+const CargoContainer = styled.div`
+  margin: 5px 1%;
+  width: 98%;
+  padding-bottom: 25px;
 `
 
 export {
@@ -80,5 +97,7 @@ export {
   LineSeparator,
   UpperContainer,
   LowerContainer,
-  TotalContainer
+  TotalContainer,
+  FreightContainer,
+  CargoContainer
 }
