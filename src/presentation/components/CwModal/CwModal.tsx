@@ -11,6 +11,7 @@ import {
   ModalContainer,
   RedColorSpan,
   RowReverseDiv,
+  ReverseDiv,
   Title
 } from '../StyledComponents/modalStyles'
 import {
@@ -118,29 +119,31 @@ const CwModal = ({
                 />
               </CwValue>
             </Grid>
+            <Grid item xs={12}>
+              <ReverseDiv>
+                <ButtonDiv>
+                    <Button
+                      backgroundGreen={true}
+                      text={I18n.t('components.cwModal.save')}
+                      disabled={false}
+                      icon=""
+                      onAction={handleOnAction}
+                      tooltip=""
+                    />
+                  </ButtonDiv>
+                  <ButtonDiv green={true}>
+                    <Button
+                      backgroundGreen={false}
+                      text={I18n.t('components.cwModal.cancel')}
+                      disabled={false}
+                      icon=""
+                      onAction={handleOnClose}
+                      tooltip=""
+                    />
+                  </ButtonDiv>
+              </ReverseDiv>
+            </Grid>
           </Grid>
-          <RowReverseDiv>
-          <ButtonDiv>
-              <Button
-                backgroundGreen={true}
-                text={I18n.t('components.cwModal.save')}
-                disabled={false}
-                icon=""
-                onAction={handleOnAction}
-                tooltip=""
-              />
-            </ButtonDiv>
-            <ButtonDiv green={true}>
-              <Button
-                backgroundGreen={false}
-                text={I18n.t('components.cwModal.cancel')}
-                disabled={false}
-                icon=""
-                onAction={handleOnClose}
-                tooltip=""
-              />
-            </ButtonDiv>
-          </RowReverseDiv>
         </Form>
         <WarningDiv>
           <InfoIcon />
