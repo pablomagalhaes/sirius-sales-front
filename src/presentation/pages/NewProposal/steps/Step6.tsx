@@ -77,7 +77,7 @@ const ContractingTypeWithoutFcl = [
 ]
 
 const decimalToString = (value: number | null | undefined): string => {
-  if (value !== null && value !== undefined) { return String(value?.toFixed(2)).replace('.', ',') }
+  if (value !== null && value !== undefined) { return FormatNumber.convertNumberToString(value) }
   return ''
 }
 
@@ -304,6 +304,7 @@ const Step6 = ({
 
     if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
       data.forEach((item, index): void => {
+        const agent = proposal.agents[index]
         const freightCostNew = {
           id: item?.idCost,
           idCost: item?.idCost,
@@ -316,9 +317,9 @@ const Step6 = ({
           valueSalePercent: 0,
           valueMinimumSale: null,
           agent: {
-            id: proposal.agents[index].id,
-            idBusinessPartnerAgent: proposal.agents[index].idBusinessPartnerAgent,
-            idBusinessPartnerTransportCompany: proposal.agents[index].idBusinessPartnerTransportCompany,
+            id: agent.id,
+            idBusinessPartnerAgent: agent.idBusinessPartnerAgent,
+            idBusinessPartnerTransportCompany: agent.idBusinessPartnerTransportCompany,
             proposalId: null
           },
           costType: CostTypes.Freight,
@@ -343,9 +344,9 @@ const Step6 = ({
           valueSalePercent: 0,
           valueMinimumSale: null,
           agent: {
-            id: proposal.agents[index].id,
-            idBusinessPartnerAgent: proposal.agents[index].idBusinessPartnerAgent,
-            idBusinessPartnerTransportCompany: proposal.agents[index].idBusinessPartnerTransportCompany,
+            id: agent.id,
+            idBusinessPartnerAgent: agent.idBusinessPartnerAgent,
+            idBusinessPartnerTransportCompany: agent.idBusinessPartnerTransportCompany,
             proposalId: null
           },
           costType: CostTypes.Freight,
@@ -535,7 +536,7 @@ const Step6 = ({
                 totalItem:
                   cost.valueSale === 0
                     ? ''
-                    : Number(response[2]).toFixed(2).replace('.', ',')
+                    : FormatNumber.convertNumberToString(Number(response[2]))
               }
               if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
                 if (cost.costType === CostTypes.Tariff) {
@@ -596,9 +597,9 @@ const Step6 = ({
         valuePurchase: null, // valor compra
         valuePurchasePercent: 0, // 0 por enquanto
         valueMinimumPurchase: null, // minimo compra
-        valueSale: Number(row.saleValue.replace(',', '.')), // valor venda
+        valueSale: FormatNumber.convertStringToNumber(row.saleValue), // valor venda
         valueSalePercent: 0, // 0 por enquanto
-        valueMinimumSale: Number(row.minimumValue.replace(',', '.')), // minimo venda
+        valueMinimumSale: FormatNumber.convertStringToNumber(row.minimumValue), // minimo venda
         idCurrencyPurchase: 'nul', // tipo moeda NOTNULL VARCHAR(3)
         idCurrencySale: row.saleCurrency, // tipo moeda
         isPurchase: false, // checkbox compra
@@ -690,9 +691,7 @@ const Step6 = ({
           const totalCostCalculationData = getTotalCalculationData(item)
           API.postTotalCalculation(totalCostCalculationData)
             .then((response) => {
-              item.totalItem = Number(response?.valueSale)
-                ?.toFixed(2)
-                .replace('.', ',')
+              item.totalItem = FormatNumber.convertNumberToString(Number(response?.valueSale))
               resolve(newTableData.push(item))
             })
             .catch((err) => {
@@ -766,7 +765,7 @@ const Step6 = ({
         ? 0
         : calculationData?.cubageWeight,
       valuePurchase: 0,
-      valueSale: Number(item.saleValue.replace(',', '.')),
+      valueSale: FormatNumber.convertStringToNumber(item.saleValue),
       idCurrencyPurchase: '',
       idCurrencySale: item.saleCurrency,
       valuePurchaseCW:
@@ -788,9 +787,7 @@ const Step6 = ({
     void (async function () {
       await API.postTotalCalculation(totalCostCalculationData)
         .then((response) => {
-          item.totalItem = Number(response.valueSale)
-            .toFixed(2)
-            .replace('.', ',')
+          item.totalItem = FormatNumber.convertNumberToString(Number(response?.valueSale))
           item.saleCurrency = response.idCurrencySale
 
           if (item.id !== null) {
@@ -845,24 +842,24 @@ const Step6 = ({
 
   const completeDecimalPlaces = (num: number | null): string => {
     if (num === null) return '0'
-    return num.toFixed(2).replace('.', ',')
+    return FormatNumber.convertNumberToString(num)
   }
 
   const getSumTotalItem = (): string => {
     let totalSum: number = 0
     for (let index = 0; index < tableData.length; index++) {
       const item = tableData[index]
-      const MinValue = Number(item.minimumValue?.replace(',', '.'))
-      const TotalItem = Number(item.totalItem?.replace(',', '.'))
+      const MinValue = FormatNumber.convertStringToNumber(item.minimumValue)
+      const TotalItem = FormatNumber.convertStringToNumber(item.totalItem)
 
       if (MinValue > TotalItem) {
-        totalSum = totalSum + Number(item.minimumValue?.replace(',', '.'))
+        totalSum = totalSum + FormatNumber.convertStringToNumber(item.minimumValue)
       }
       if (MinValue <= TotalItem) {
-        totalSum = totalSum + Number(item.totalItem?.replace(',', '.'))
+        totalSum = totalSum + FormatNumber.convertStringToNumber(item.totalItem)
       }
     }
-    return totalSum.toFixed(2).replace('.', ',')
+    return FormatNumber.convertNumberToString(totalSum)
   }
 
   function disabledAddFareButton (): boolean {
@@ -904,7 +901,7 @@ const Step6 = ({
         return (
           <TotalSurcharge
             currency={dataContainer[0]?.currencySale}
-            value={dataContainer.reduce((total, item) => Number(item.valueSale?.replace(',', '.')) * Number(item.valueQuantity) + total, 0).toFixed(2).replace('.', ',')}
+            value={FormatNumber.convertNumberToString(dataContainer.reduce((total, item) => FormatNumber.convertStringToNumber(item.valueSale) * Number(item.valueQuantity) + total, 0))}
             totalOtherFare={getSumTotalItem()}
             cw={cw}
             cwSale={cwSale}
@@ -1148,6 +1145,10 @@ const Step6 = ({
     return businessPartner?.find((partner: any) => partner?.businessPartner?.id === idBusinessPartnerTransportCompany)?.businessPartner?.simpleName
   }
 
+  function inputValidation (field: any): boolean {
+    return field === '' || field === '0' || field === null
+  }
+
   if (proposal.agents.length > 0 && costData !== 0) {
     return (
     <Separator>
@@ -1197,25 +1198,25 @@ const Step6 = ({
                           <LowerContainer>
                             <Grid container spacing={5}>
                               <Grid item xs={2}>
-                                <FormLabel component='legend' error={invalidInput && data.some((each) => each.currencyPurchase === '')}>
+                                <FormLabel component='legend' error={invalidInput && data.some((each) => inputValidation(each.currencyPurchase))}>
                                   {I18n.t('pages.newProposal.step6.currencyPurchase')}
                                   <RedColorSpan> *</RedColorSpan>
                                 </FormLabel>
                               </Grid>
                               <Grid item xs={2}>
-                                <FormLabel component='legend' error={invalidInput && data.some((each) => each.valuePurchase === '' || each.valuePurchase === '0')}>
+                                <FormLabel component='legend' error={invalidInput && data.some((each) => inputValidation(each.valuePurchase))}>
                                   {I18n.t('pages.newProposal.step6.valuePurchase')}
                                   <RedColorSpan> *</RedColorSpan>
                                 </FormLabel>
                               </Grid>
                               <Grid item xs={2}>
-                                <FormLabel component='legend' error={invalidInput && (dataSales.currencySale === '' || dataSales.currencySale === '0' || dataSales.currencySale === null)}>
+                                <FormLabel component='legend' error={invalidInput && inputValidation(dataSales.currencySale)}>
                                   {I18n.t('pages.newProposal.step6.currencySale')}
                                   <RedColorSpan> *</RedColorSpan>
                                 </FormLabel>
                               </Grid>
                               <Grid item xs={2}>
-                                <FormLabel component='legend' error={invalidInput && (dataSales.valueSale?.length === 0 || dataSales.valueSale[0] === '' || dataSales.valueSale[0] === '0')}>
+                                <FormLabel component='legend' error={invalidInput && (dataSales.valueSale?.length === 0 || inputValidation(dataSales.valueSale[index]))}>
                                   {I18n.t('pages.newProposal.step6.valueSale')}
                                   <RedColorSpan> *</RedColorSpan>
                                 </FormLabel>
@@ -1254,7 +1255,7 @@ const Step6 = ({
                                     newData[index].valuePurchase = e.target.value
                                     handleValuePurchase(newData[index].agent.idBusinessPartnerAgent, newData, e.target.value)
                                   }} toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                  invalid={invalidInput && (data[index]?.valuePurchase === '' || data[index]?.valuePurchase === '0')} value={data[index]?.valuePurchase} variant='outlined' size='small' />
+                                  invalid={invalidInput && inputValidation(data[index]?.valuePurchase)} value={data[index]?.valuePurchase} variant='outlined' size='small' />
                               </Grid>
                               <Grid item xs={2}>
                                 <Autocomplete
@@ -1264,7 +1265,7 @@ const Step6 = ({
                                   options={currencyList.map((item) => item.id)} renderInput={(params) => (
                                     <div ref={params.InputProps.ref}>
                                       <ControlledInput {...params} id="currencies" toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                      invalid={invalidInput && (dataSales.currencySale === '' || dataSales.currencySale === '0' || dataSales.currencySale === null)}
+                                      invalid={invalidInput && inputValidation(dataSales.currencySale)}
                                         variant="outlined" size="small" placeholder={I18n.t('components.itemModal.choose')}
                                         InputProps={{
                                           endAdornment: (
@@ -1284,7 +1285,7 @@ const Step6 = ({
                               <Grid item xs={2}>
                                 <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                                   customInput={ControlledInput} onChange={(e, newValue) => handleValueSale(e.target.value, selectedAgent, index)} toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                  invalid={invalidInput && (dataSales.valueSale?.length === 0 || dataSales.valueSale[0] === '' || dataSales.valueSale[0] === '0')} value={dataSales.valueSale[index]} variant='outlined' size='small' />
+                                  invalid={invalidInput && (dataSales.valueSale?.length === 0 || inputValidation(dataSales.valueSale[index]))} value={dataSales.valueSale[index]} variant='outlined' size='small' />
                               </Grid>
                             </Grid>
                             <ButtonWrapper>
@@ -1429,7 +1430,7 @@ const Step6 = ({
                                   handleContainerChange(newData, 'valuePurchase', e.target.value, index, true)
                                 }}
                                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                invalid={invalidInput && (dataContainer[index].valuePurchase === '' || dataContainer[index].valuePurchase === '0')}
+                                invalid={invalidInput && inputValidation(dataContainer[index].valuePurchase)}
                                 value={dataContainer[index].valuePurchase}
                                 variant='outlined'
                                 size='small'
@@ -1492,7 +1493,7 @@ const Step6 = ({
                                   handleContainerChange(newData, 'valueSale', e.target.value, index, true)
                                 }}
                                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                invalid={invalidInput && (dataContainer[index].valueSale === '' || dataContainer[index].valueSale === '0')}
+                                invalid={invalidInput && inputValidation(dataContainer[index].valueSale)}
                                 value={dataContainer[index].valueSale}
                                 variant='outlined'
                                 size='small'
