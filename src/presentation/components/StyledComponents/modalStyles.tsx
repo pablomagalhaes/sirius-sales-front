@@ -151,3 +151,8 @@ export const ButtonDiv = styled.div`
   justify-content: center;
   width: 100%;
 `
+export const ReverseDiv = styled.div`
+  display: flex;
+  flex-direction: row-reverse;
+  justify-self: flex-end;
+`

@@ -152,3 +152,7 @@ export const TARIFF_IMPORT_HANDSON_MODAL_INPUT_UNTIL1000KG = `${PREFIX_IDS}_tari
 
 // Tariff Export Modal
 export const TARIFF_EXPORT_MODAL_BUTTON = `${PREFIX_IDS}_tariff-export-modal_button`
+
+// Proposal CW Modal
+export const PROPOSAL_CW_MODAL_SAVE_BUTTON = `${PREFIX_IDS}_proposal-cw-modal_save-button`
+export const PROPOSAL_CW_MODAL_CANCEL_BUTTON = `${PREFIX_IDS}_proposal-cw-modal_cancel-button`
