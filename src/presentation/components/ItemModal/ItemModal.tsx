@@ -108,8 +108,8 @@ const ItemModal = ({
     if (marineFCL()) {
       return !(
         data.type?.length === 0 ||
-        data.amount.length === 0 ||
-        data.cubage.length === 0)
+        data.amount.length === 0
+      )
     } else {
       return !(
         (data.type === null || data.type?.length === 0) ||
