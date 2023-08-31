@@ -72,7 +72,7 @@ const Step2 = ({
     })
     setTariffLine(newTariffLine)
   }, [staggeredproposal?.proposalTariff])
-  console.log(staggeredproposal)
+
   return (
     <>
     <Separator>
