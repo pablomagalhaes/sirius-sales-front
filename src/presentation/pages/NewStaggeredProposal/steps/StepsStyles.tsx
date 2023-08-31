@@ -1,4 +1,4 @@
-import { Paper } from '@material-ui/core'
+import { Paper, FormLabel } from '@material-ui/core'
 import styled from 'styled-components'
 import NumberFormat from 'react-number-format'
 
@@ -168,6 +168,19 @@ const DateRange = styled.div`
   }
 `
 
+const FormLabelHeader = styled(FormLabel)`
+  color: #545454!important;
+  font-weight: 400!important;
+  letter: 2%!important;
+  font-size: 14px!important;
+  text-align: ${(props) => (props.center ? 'center' : 'left')};
+  
+`
+
+const StepMainDiv = styled.div`
+  margin-top: 25px;
+`
+
 export {
   OriginDestLabel,
   ButtonWrapper,
@@ -185,5 +198,7 @@ export {
   InputContainer,
   TextInnerCell,
   TextInnerGreyCell,
-  DateRange
+  DateRange,
+  FormLabelHeader,
+  StepMainDiv
 }

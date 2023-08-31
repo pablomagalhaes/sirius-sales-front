@@ -82,8 +82,7 @@ const TariffProcessing = (): JSX.Element => {
   const handleOrderSelect = (value: React.SetStateAction<string>): void => {
     setFilter((filter: any) => ({ ...filter, orderByList: value }))
     setOrderBy(value)
-  } 
-
+  }
 
   const handleOrderDirection = (): void => {
     if (orderAsc) {

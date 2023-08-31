@@ -8,15 +8,6 @@ const NumberInput = styled(NumberFormat)`
   }
 `
 
-const FormLabelHeader = styled(FormLabel)`
-  color: #545454!important;
-  font-weight: 400!important;
-  letter: 2%!important;
-  font-size: 14px!important;
-  text-align: ${(props) => (props.center ? 'center' : 'left')};
-  
-`
-
 const FormLabelInner = styled(FormLabel)`
   color: #222222!important;
   font-weight: 500!important;
@@ -41,7 +32,6 @@ margin: 10px 50px 0px 0px;
 
 export {
   NumberInput,
-  FormLabelHeader,
   FormLabelInner,
   ButtonInner,
   RedText
