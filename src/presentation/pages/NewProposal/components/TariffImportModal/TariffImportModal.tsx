@@ -271,7 +271,6 @@ const TariffImportModal = ({
     if (isNaN(value)) {
       return value
     } else {
-      console.log('value',value)
       return (
         <>
           <Radio
