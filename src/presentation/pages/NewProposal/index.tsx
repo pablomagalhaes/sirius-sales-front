@@ -535,7 +535,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           idProposal={proposal.idProposal}
           downloadProposal={API.downloadProposal}
         />
-      {leavingPage && <MessageExitDialog />}
+      {/* {leavingPage && <MessageExitDialog />} */}
       {loadExistingProposal &&
         <MainContainer ref={divRef}>
           <div id="step1">

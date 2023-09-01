@@ -185,8 +185,10 @@ export const PaginationMainContainer = styled.div`
 export const TableBodyCell = withStyles({
   root: {
     borderBottom: 'none',
-    paddingRight: 10,
-    paddingLeft: 0
+    paddingRight: 5,
+    paddingLeft: 0,
+    width: '100px',
+    overflow: 'hidden'
   }
 })(MuiTableCell)
 

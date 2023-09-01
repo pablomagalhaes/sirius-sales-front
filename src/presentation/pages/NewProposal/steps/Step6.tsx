@@ -1549,6 +1549,7 @@ const Step6 = ({
       setClose={() => setOpenImport(false)}
       open={openImport}
       setShowList={() => setShowList(true)}
+      cwSale={cwSale}
       />
     </Separator>
 

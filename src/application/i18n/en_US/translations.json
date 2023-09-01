@@ -300,7 +300,32 @@
         "totalOrigin": "Total origin costs:",
         "totalOtherFees": "Total other fees:",
         "type": "Type",
-        "value": "Value:"
+        "value": "Value:",
+        "tariffImport": {
+          "title": "Tarifários aéreos",
+          "subtitle": "Adicionar tarifa manualmente",
+          "origin": "Origem",
+          "destiny": "Destino",
+          "agent": "Agente",
+          "airCompany": "Cia. Aérea",
+          "closeButtonLabel": "Cancelar",
+          "addButtonLabel": "Import",
+          "searchButtonLabel": "Buscar",
+          "selectedsItems": "itens selecionados",
+          "selectedItem": "item selecionado",
+          "table": {
+            "airCompany": "Cia. Aérea",
+            "agent": "Agente",
+            "validity": "Validade",
+            "currency": "Moeda",
+            "minimun": "Mínimo",
+            "plus45": "+45kg",
+            "plus100": "+100kg",
+            "plus300": "+300kg",
+            "plus500": "+500kg",
+            "plus1000": "+1ton"
+          }
+        }
       },
       "unsavedChanges": {
         "cancelMessage": "Cancel",
@@ -400,6 +425,7 @@
         "origin": "Origem",
         "destiny": "Destino",
         "agent": "Agente",
+        "airCompany": "Cia. Aérea",
         "closeButtonLabel": "Cancelar",
         "addButtonLabel": "Adicionar",
         "searchButtonLabel": "Buscar",
