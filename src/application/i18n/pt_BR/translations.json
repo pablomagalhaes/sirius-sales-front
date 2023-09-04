@@ -134,21 +134,32 @@
       "ImoCargoDed": "Carga IMO ded.: ",
       "ImoCargoCons": "Carga IMO cons.: ",
       "agentLandCompany": "Agente / Transportadora: "
+    },
+    "ProposalDisplayModal": {
+      "title": "Fazer download de proposta",
+      "buttonText": "Confirmar idioma e fazer download"
+    },
+    "Pagination": {
+      "tooltipBack": "Anterior",
+      "tooltipFirst": "Primeira",
+      "tooltipLast": "Última",
+      "tooltipNext": "Próxima",
+      "labelDisplay": "exibindo",
+      "labelDisplayedRows": "de",
+      "labelRowsPerPage": "Propostas por página"
+    },
+    "TariffImport": {
+      "Lcl": {
+        "airCompany": "Cia. Marítima",
+        "agent": "Agente",
+        "validity": "Validade",
+        "currency": "Moeda",
+        "minimun": "Valor Mínimo",
+        "until": "Até 7w/m",
+        "above": "Acima"
+      }
+    }
   },
-  "ProposalDisplayModal": {
-    "title": "Fazer download de proposta",
-    "buttonText": "Confirmar idioma e fazer download"
-  },
-  "Pagination": {
-    "tooltipBack": "Anterior",
-    "tooltipFirst": "Primeira",
-    "tooltipLast": "Última",
-    "tooltipNext": "Próxima",
-    "labelDisplay": "exibindo",
-    "labelDisplayedRows": "de",
-    "labelRowsPerPage": "Propostas por página"
-  }
-},
   "pages": {
     "newProposal": {
       "buttonFinish": "Concluir proposta",
@@ -308,7 +319,6 @@
         "valuePurchase": "Valor compra:",
         "valueSale": "Valor venda:",
         "tariffImport": {
-          "title": "Tarifários aéreos",
           "subtitle": "Adicionar tarifa manualmente",
           "origin": "Origem",
           "destiny": "Destino",
@@ -330,7 +340,10 @@
             "plus300": "+300kg",
             "plus500": "+500kg",
             "plus1000": "+1ton"
-          }
+          },
+          "title": "Importar do tarifário",
+          "importButton": "Importar",
+          "noTariffs": "Não foram encontradas tarifas para serem importadas"
         }
       },
       "unsavedChanges": {
