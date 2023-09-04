@@ -11,6 +11,7 @@ import {
   ModalContainer,
   RedColorSpan,
   RowReverseDiv,
+  ReverseDiv,
   Title
 } from '../StyledComponents/modalStyles'
 import {
@@ -27,6 +28,7 @@ import { I18n } from 'react-redux-i18n'
 import { Button } from 'fiorde-fe-components'
 import InfoIcon from '../../../application/icons/InfoIcon'
 import { CalculationDataProps } from '../ChargeTable'
+import { PROPOSAL_CW_MODAL_SAVE_BUTTON, PROPOSAL_CW_MODAL_CANCEL_BUTTON } from '../../../ids'
 
 interface CwProps {
   dataProp: CalculationDataProps
@@ -118,29 +120,33 @@ const CwModal = ({
                 />
               </CwValue>
             </Grid>
+            <Grid item xs={12}>
+              <ReverseDiv>
+                <ButtonDiv>
+                  <Button
+                    id={PROPOSAL_CW_MODAL_SAVE_BUTTON}
+                    backgroundGreen={true}
+                    text={I18n.t('components.cwModal.save')}
+                    disabled={false}
+                    icon=""
+                    onAction={handleOnAction}
+                    tooltip=""
+                  />
+                </ButtonDiv>
+                <ButtonDiv green={true}>
+                  <Button
+                    id={PROPOSAL_CW_MODAL_CANCEL_BUTTON}
+                    backgroundGreen={false}
+                    text={I18n.t('components.cwModal.cancel')}
+                    disabled={false}
+                    icon=""
+                    onAction={handleOnClose}
+                    tooltip=""
+                  />
+                </ButtonDiv>
+              </ReverseDiv>
+            </Grid>
           </Grid>
-          <RowReverseDiv>
-          <ButtonDiv>
-              <Button
-                backgroundGreen={true}
-                text={I18n.t('components.cwModal.save')}
-                disabled={false}
-                icon=""
-                onAction={handleOnAction}
-                tooltip=""
-              />
-            </ButtonDiv>
-            <ButtonDiv green={true}>
-              <Button
-                backgroundGreen={false}
-                text={I18n.t('components.cwModal.cancel')}
-                disabled={false}
-                icon=""
-                onAction={handleOnClose}
-                tooltip=""
-              />
-            </ButtonDiv>
-          </RowReverseDiv>
         </Form>
         <WarningDiv>
           <InfoIcon />

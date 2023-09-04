@@ -3,12 +3,10 @@ import {
   MenuItem,
   FormLabel,
   Grid,
-  Divider,
   Popover
 } from '@material-ui/core/'
 import { I18n } from 'react-redux-i18n'
 import {
-  Title,
   SelectSpan,
   TextCell,
   TextInnerGreyCell,
@@ -45,7 +43,7 @@ import {
   STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_BUTTON_REMOVEDUPLICATE
 } from '../../../../ids'
 
-import { NumberInput, FormLabelHeader, FormLabelInner, ButtonInner, RedText } from './styles'
+import { NumberInput, FormLabelInner, ButtonInner, RedText } from './styles'
 import FormatNumber from '../../../../application/utils/formatNumber'
 import { usePartnerList, useBusinessPartnerByType } from '../../../hooks'
 
@@ -153,7 +151,7 @@ const InputRow = ({
       (data.until500kg !== null && String(data.until500kg) !== 'NaN') &&
       (data.until1000kg !== null && String(data.until1000kg) !== 'NaN') &&
       (data.frequency !== null && String(data.frequency) !== 'NaN') &&
-      data.vlFrequency !== null) {
+      data.vlFrequency !== null && !item.duplicate) {
       setCompleted((currentState) => ({ ...currentState, step2: true }))
     } else {
       setCompleted((currentState) => ({ ...currentState, step2: false }))
@@ -190,6 +188,7 @@ const InputRow = ({
       ...staggeredproposal,
       proposalTariff: newArr
     })
+    setData(initialData)
   }
 
   const handleRemoveDuplicated = (chave): any => {
@@ -199,6 +198,7 @@ const InputRow = ({
       ...staggeredproposal,
       proposalTariff: newArr
     })
+    setData(initialData)
   }
 
   useEffect(() => {
@@ -250,60 +250,6 @@ const InputRow = ({
 
   return (
     <>
-      <Title>2.{(Number(chave) + 1)} De {item?.origin} - {item?.destination}</Title>
-      <Grid
-        container
-        spacing={1}
-        alignItems="center"
-      >
-        <Grid item xs={2}>
-          <FormLabelHeader component="legend" id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_AGENT}>
-            {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.agent')}:
-          </FormLabelHeader>
-        </Grid>
-        <Grid item xs={2}>
-          <FormLabelHeader component="legend" id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_CIAAREA}>
-            {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.ciaArea')}
-          </FormLabelHeader>
-        </Grid>
-        <Grid item xs={1}>
-          <FormLabelHeader component="legend" id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_COIN}>
-            {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.coin')}
-          </FormLabelHeader>
-        </Grid>
-        <Grid item xs={1}>
-          <FormLabelHeader component="legend" id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_VMINIMUM}>
-            {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.minValue')}
-          </FormLabelHeader>
-        </Grid>
-        <Grid item xs={1}>
-          <FormLabelHeader component="legend" center id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL45KG}>
-            {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.45')}
-          </FormLabelHeader>
-        </Grid>
-        <Grid item xs={1}>
-          <FormLabelHeader component="legend" center id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL100KG}>
-            {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.100')}
-          </FormLabelHeader>
-        </Grid>
-        <Grid item xs={1}>
-          <FormLabelHeader component="legend" center id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL300KG}>
-            {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.300')}
-          </FormLabelHeader>
-        </Grid>
-        <Grid item xs={1}>
-          <FormLabelHeader component="legend" center id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL500KG}>
-            {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.500')}
-          </FormLabelHeader>
-        </Grid>
-        <Grid item xs={1}>
-          <FormLabelHeader component="legend" center id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL1000KG}>
-            {I18n.t('pages.staggeredProposal.newStaggeredProposal.step2.1ton')}
-          </FormLabelHeader>
-        </Grid>
-        <Grid item xs={1}></Grid>
-      </Grid>
-      <Divider />
       <Grid
         container
         spacing={1}

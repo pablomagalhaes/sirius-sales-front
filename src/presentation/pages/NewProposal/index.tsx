@@ -235,7 +235,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       // eslint-disable-next-line
       newProposal.cargo[0].cargoVolumes.forEach(volume => volume[e] !== undefined && volume[e] === null && delete volume[e])
       // eslint-disable-next-line
-      newProposal.costs.forEach(cost => cost.agent[e] !== undefined && cost.agent[e] === null && delete cost.agent[e])
+      newProposal.costs.forEach(cost => cost.agent !== null && cost.agent[e] !== undefined && cost.agent[e] === null && delete cost.agent[e])
     });
     // eslint-disable-next-line
     ['originCityName', 'originCityId', 'destinationCityName', 'destinationCityId'].forEach(e => newProposal[e] !== undefined && delete newProposal[e])
