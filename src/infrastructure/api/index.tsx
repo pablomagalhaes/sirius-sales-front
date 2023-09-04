@@ -198,11 +198,11 @@ const putProposal = async (id, params): Promise<any> => {
 }
 
 const putStatus = async (id: any, status: string, reason?: string, detail?: string): Promise<any> => {
-  const payload = reason === undefined ? `${String(status)}` : `${String(status)}?reasonStatus=${String(reason)}`
-  const url: string = `/sirius-business-proposal-api/proposal/${String(id)}/status/${payload}`
+  const url: string = `/sirius-business-proposal-api/proposal/${String(id)}/status/${String(status)}`
   try {
     const res = await instance.put(url, {
-      dsRejectReason: detail
+      dsRejectReason: detail,
+      reasonStatus: reason
     })
     return res.data
   } catch (error) {
