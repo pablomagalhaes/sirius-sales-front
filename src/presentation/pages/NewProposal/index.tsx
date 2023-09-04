@@ -399,7 +399,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         setAction('proposals')
         return true
       }
-      if ((element.id === 'tariff' || element.querySelector('#tariff')) && element.tagName !== 'DIV') {
+      if ((element.id === 'tariff' || element.querySelector('#tariff')) && element.tagName !== 'DIV' && element.tagName !== 'BUTTON') {
         setAction('commercial-home')
         return true
       }

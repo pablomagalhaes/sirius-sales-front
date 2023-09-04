@@ -146,6 +146,17 @@
       "labelDisplay": "exibindo",
       "labelDisplayedRows": "de",
       "labelRowsPerPage": "Propostas por página"
+    },
+    "TariffImport": {
+      "Lcl": {
+        "airCompany": "Cia. Marítima",
+        "agent": "Agente",
+        "validity": "Validade",
+        "currency": "Moeda",
+        "minimun": "Valor Mínimo",
+        "until": "Até 7w/m",
+        "above": "Acima"
+      }
     }
   },
   "pages": {
@@ -302,7 +313,12 @@
         "totalOrigin": "Total origin costs:",
         "totalOtherFees": "Total other fees:",
         "type": "Type",
-        "value": "Value:"
+        "value": "Value:",
+        "tariffImport": {
+          "title": "Importar do tarifário",
+          "importButton": "Importar",
+          "noTariffs": "Não foram encontradas tarifas para serem importadas"
+        }
       },
       "unsavedChanges": {
         "cancelMessage": "Cancel",
