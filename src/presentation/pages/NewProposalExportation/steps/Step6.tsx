@@ -30,6 +30,7 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import { CalculationDataProps } from '../../../components/ChargeTable'
 import { CostTypes, FareItemsTypes } from '../../../../application/enum/costEnum'
 import TariffImportLclModal from '../../../components/TariffImport/TariffImportLclModal'
+import TariffImportLandModal from '../../../components/TariffImport/TariffImportLandModal'
 import { ModalTypes, AcitivityTypes } from '../../../../application/enum/enum'
 import RemoveIcon from '../../../../application/icons/RemoveIcon'
 
@@ -1177,7 +1178,7 @@ const Step6 = ({
   }
 
   const createTariffImportModal = (selectedAgent: any, index: number): JSX.Element => {
-    if (modal === ModalTypes.Sea && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType)) {
+    if (modal === ModalTypes.Sea) {
       return (
         <TariffImportLclModal
           setClose={() => setOpenImport(false)}
@@ -1190,6 +1191,25 @@ const Step6 = ({
             idBusinessPartnerTransportCompany: selectedAgent.idBusinessPartnerTransportCompany
           }}
           calculationData={calculationData}
+          getPurchase={getPurchase}
+          index={index}
+          type={AcitivityTypes.Export}
+        />
+      )
+    }
+    if (modal === ModalTypes.Land) {
+      return (
+        <TariffImportLandModal
+          setClose={() => setOpenImport(false)}
+          open={openImport}
+          typeModal={selectTypeModal()}
+          importFilter={{
+            originCity: proposal.originDestiny[0]?.originCityId,
+            destinationCity: proposal.originDestiny[0]?.destinationCityId,
+            idBusinessPartnerAgent: selectedAgent.idBusinessPartnerAgent,
+            idBusinessPartnerTransportCompany: selectedAgent.idBusinessPartnerTransportCompany
+          }}
+          isDangerous={proposal?.cargo[0]?.isDangerous}
           getPurchase={getPurchase}
           index={index}
           type={AcitivityTypes.Export}

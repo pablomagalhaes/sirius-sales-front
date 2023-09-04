@@ -149,13 +149,21 @@
     },
     "TariffImport": {
       "Lcl": {
-        "airCompany": "Cia. Marítima",
         "agent": "Agente",
         "validity": "Validade",
         "currency": "Moeda",
         "minimun": "Valor Mínimo",
         "until": "Até 7w/m",
         "above": "Acima"
+      },
+      "Land": {
+        "agent": "Agente",
+        "validity": "Validade",
+        "currency": "Moeda",
+        "generalDed": "Carga Geral ded.",
+        "imoDed": "Carga IMO ded.",
+        "generalCons": "Carga Geral cons.",
+        "imoCons": "Carga IMO cons."
       }
     }
   },
