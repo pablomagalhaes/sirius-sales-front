@@ -156,3 +156,7 @@ export const TARIFF_EXPORT_MODAL_BUTTON = `${PREFIX_IDS}_tariff-export-modal_but
 // Proposal CW Modal
 export const PROPOSAL_CW_MODAL_SAVE_BUTTON = `${PREFIX_IDS}_proposal-cw-modal_save-button`
 export const PROPOSAL_CW_MODAL_CANCEL_BUTTON = `${PREFIX_IDS}_proposal-cw-modal_cancel-button`
+
+// Tariff Import LCL Modal
+export const TARIFF_IMPORT_LCL_MODAL_BUTTON_IMPORT = `${PREFIX_IDS}_tariff-import-lcl-modal_button_import`
+export const TARIFF_IMPORT_LCL_MODAL_BUTTON_CANCEL = `${PREFIX_IDS}_tariff-import-lcl-modal_button_cancel`
