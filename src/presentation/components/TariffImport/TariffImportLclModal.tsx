@@ -34,7 +34,7 @@ import useTariffsByCountry from '../../hooks/tariff/useTariffsByCountry'
 import { TariffItemsTypes, ValidityTypes } from '../../../application/enum/tariffEnum'
 import FormatNumber from '../../../application/utils/formatNumber'
 import { TARIFF_IMPORT_LCL_MODAL_BUTTON_IMPORT, TARIFF_IMPORT_LCL_MODAL_BUTTON_CANCEL } from '../../../ids'
-import { TxChargeTypes, AcitivityTypes, ModalTypes } from '../../../application/enum/enum'
+import { TxChargeTypes, ModalTypes } from '../../../application/enum/enum'
 import { useOriginDestination, usePartnerList, useBusinessPartnerByType } from '../../hooks'
 
 interface TariffUploadProps {
@@ -46,6 +46,7 @@ interface TariffUploadProps {
   calculationData: any
   getPurchase: (value: string, currency: string, index: number) => void
   index: number
+  type: string
 }
 
 const TariffImportLclModal = ({
@@ -56,7 +57,8 @@ const TariffImportLclModal = ({
   typeModal,
   calculationData,
   getPurchase,
-  index
+  index,
+  type
 }: TariffUploadProps): JSX.Element => {
   const { filter }: any = useContext(TariffContext)
   const { content: tariffData, setParams } = useTariffsByCountry()
@@ -74,7 +76,7 @@ const TariffImportLclModal = ({
       ...importFilter,
       tariffModalType: ModalTypes.Sea,
       validityTariff: ValidityTypes.Valid,
-      tariffType: AcitivityTypes.Import,
+      tariffType: type,
       txCharge: TxChargeTypes.Lcl
     })
   }, [importFilter, filter])

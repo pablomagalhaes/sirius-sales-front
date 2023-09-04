@@ -29,6 +29,9 @@ import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import { CalculationDataProps } from '../../../components/ChargeTable'
 import { CostTypes, FareItemsTypes } from '../../../../application/enum/costEnum'
+import TariffImportLclModal from '../../../components/TariffImport/TariffImportLclModal'
+import { ModalTypes, AcitivityTypes } from '../../../../application/enum/enum'
+import RemoveIcon from '../../../../application/icons/RemoveIcon'
 
 interface Step6Props {
   totalCosts: any
@@ -123,6 +126,8 @@ const Step6 = ({
   const [agentList, setAgentsList] = useState<any[]>([])
   const [businessPartner, setBusinessPartner] = useState<any[]>([])
   const [totalCharge, setTotalCharge] = useState<number>(0)
+  const [openImport, setOpenImport] = useState<boolean>(false)
+  const [disable, setDisable] = useState<any[]>([])
 
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => {
@@ -1149,6 +1154,51 @@ const Step6 = ({
     return field === '' || field === '0' || field === null
   }
 
+  const getPurchase = (value: string, currency: string, index: number): void => {
+    const newData = [...data]
+    newData[index].valuePurchase = value
+    newData[index].currencyPurchase = currency
+    handleValuePurchase(newData[index].agent.idBusinessPartnerAgent, newData, value)
+    handleCurrencyPurchase(newData[index].agent.idBusinessPartnerAgent, newData, currency)
+    const newArr = [...disable]
+    newArr[index] = true
+    setDisable(newArr)
+  }
+
+  const cleanPurchase = (index: number): void => {
+    const newData = [...data]
+    newData[index].valuePurchase = ''
+    newData[index].currencyPurchase = ''
+    handleValuePurchase(newData[index].agent.idBusinessPartnerAgent, newData, '')
+    handleCurrencyPurchase(newData[index].agent.idBusinessPartnerAgent, newData, '')
+    const newArr = [...disable]
+    newArr[index] = false
+    setDisable(newArr)
+  }
+
+  const createTariffImportModal = (selectedAgent: any, index: number): JSX.Element => {
+    if (modal === ModalTypes.Sea && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType)) {
+      return (
+        <TariffImportLclModal
+          setClose={() => setOpenImport(false)}
+          open={openImport}
+          typeModal={selectTypeModal()}
+          importFilter={{
+            idOrigin: proposal.originDestiny[0]?.idOrigin,
+            idDestination: proposal.originDestiny[0]?.idDestination,
+            idBusinessPartnerAgent: selectedAgent.idBusinessPartnerAgent,
+            idBusinessPartnerTransportCompany: selectedAgent.idBusinessPartnerTransportCompany
+          }}
+          calculationData={calculationData}
+          getPurchase={getPurchase}
+          index={index}
+          type={AcitivityTypes.Export}
+        />
+      )
+    }
+    return <></>
+  }
+
   if (proposal.agents.length > 0 && costData !== 0) {
     return (
     <Separator>
@@ -1224,7 +1274,7 @@ const Step6 = ({
                             </Grid>
                             <Grid container spacing={5} style={{ marginTop: '-35px' }}>
                               <Grid item xs={2}>
-                                <Autocomplete freeSolo value={data[index]?.currencyPurchase} onChange={(e, newValue) => {
+                                <Autocomplete freeSolo value={data[index]?.currencyPurchase} disabled={disable[index]} onChange={(e, newValue) => {
                                   const newData = [...data]
                                   newData[index].currencyPurchase = String(newValue ?? '')
                                   handleCurrencyPurchase(newData[index].agent.idBusinessPartnerAgent, newData, newValue)
@@ -1249,13 +1299,19 @@ const Step6 = ({
                                 />
                               </Grid>
                               <Grid item xs={2}>
-                                <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
-                                  customInput={ControlledInput} onChange={(e) => {
-                                    const newData = [...data]
-                                    newData[index].valuePurchase = e.target.value
-                                    handleValuePurchase(newData[index].agent.idBusinessPartnerAgent, newData, e.target.value)
-                                  }} toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                  invalid={invalidInput && inputValidation(data[index]?.valuePurchase)} value={data[index]?.valuePurchase} variant='outlined' size='small' />
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                  <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                                    disabled={disable[index]}
+                                    customInput={ControlledInput} onChange={(e) => {
+                                      const newData = [...data]
+                                      newData[index].valuePurchase = e.target.value
+                                      handleValuePurchase(newData[index].agent.idBusinessPartnerAgent, newData, e.target.value)
+                                    }} toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                    invalid={invalidInput && inputValidation(data[index]?.valuePurchase)} value={data[index]?.valuePurchase} variant='outlined' size='small' />
+                                  <div style={{ marginLeft: '10px' }}>
+                                    <RemoveIcon onClick={() => cleanPurchase(index)} />
+                                  </div>
+                                </div>
                               </Grid>
                               <Grid item xs={2}>
                                 <Autocomplete
@@ -1290,7 +1346,7 @@ const Step6 = ({
                             </Grid>
                             <ButtonWrapper>
                               <Button
-                                onAction={() => console.log('')}
+                                onAction={() => setOpenImport(true)}
                                 text={I18n.t('pages.newProposal.step6.importButton')}
                                 icon="tariff"
                                 backgroundGreen={true}
@@ -1298,6 +1354,7 @@ const Step6 = ({
                                 disabled={false}
                               />
                             </ButtonWrapper>
+                            {createTariffImportModal(selectedAgent, index)}
                           </LowerContainer>
                         </TotalContainer>
                       )

@@ -30,7 +30,7 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import { CalculationDataProps } from '../../../components/ChargeTable'
 import { CostTypes, FareItemsTypes } from '../../../../application/enum/costEnum'
 import TariffImportLclModal from '../../../components/TariffImport/TariffImportLclModal'
-import { ModalTypes } from '../../../../application/enum/enum'
+import { ModalTypes, AcitivityTypes } from '../../../../application/enum/enum'
 import RemoveIcon from '../../../../application/icons/RemoveIcon'
 
 interface Step6Props {
@@ -128,8 +128,6 @@ const Step6 = ({
   const [totalCharge, setTotalCharge] = useState<number>(0)
   const [openImport, setOpenImport] = useState<boolean>(false)
   const [disable, setDisable] = useState<any[]>([])
-
-  console.log(proposal)
 
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => {
@@ -1194,6 +1192,7 @@ const Step6 = ({
           calculationData={calculationData}
           getPurchase={getPurchase}
           index={index}
+          type={AcitivityTypes.Import}
         />
       )
     }
