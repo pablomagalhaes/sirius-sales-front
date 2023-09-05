@@ -37,8 +37,8 @@ import {
 } from "../../../application/enum/tariffEnum"
 import FormatNumber from "../../../application/utils/formatNumber"
 import {
-  TARIFF_IMPORT_LCL_MODAL_BUTTON_IMPORT,
-  TARIFF_IMPORT_LCL_MODAL_BUTTON_CANCEL,
+  TARIFF_IMPORT_AIR_MODAL_BUTTON_IMPORT,
+  TARIFF_IMPORT_AIR_MODAL_BUTTON_CANCEL,
 } from "../../../ids"
 import { TxChargeTypes, ModalTypes } from "../../../application/enum/enum"
 import {
@@ -320,7 +320,7 @@ const TariffImportAirModal = ({
                 <Grid item>
                   <div>
                     <Button
-                      id={TARIFF_IMPORT_LCL_MODAL_BUTTON_IMPORT}
+                      id={TARIFF_IMPORT_AIR_MODAL_BUTTON_IMPORT}
                       disabled={false}
                       text={I18n.t(
                         "pages.newProposal.step6.tariffImport.importButton"
