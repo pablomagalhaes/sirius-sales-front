@@ -303,7 +303,7 @@ const TariffImportAirModal = ({
                 <Grid item>
                   <CloseButtonDiv>
                     <Button
-                      id={TARIFF_IMPORT_LCL_MODAL_BUTTON_CANCEL}
+                      id={TARIFF_IMPORT_AIR_MODAL_BUTTON_CANCEL}
                       disabled={false}
                       text={I18n.t(
                         "pages.tariff.tariffImport.closeButtonLabel"
