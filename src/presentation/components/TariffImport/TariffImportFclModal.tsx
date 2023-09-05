@@ -43,19 +43,19 @@ interface TariffUploadProps {
   setClose: () => void
   importFilter: any
   typeModal: string
-  calculationData: any
+  containerType: string
   getPurchase: (value: string, currency: string, index: number) => void
   index: number
   type: string
 }
 
-const TariffImportLclModal = ({
+const TariffImportFclModal = ({
   theme,
   open,
   setClose,
   importFilter,
   typeModal,
-  calculationData,
+  containerType,
   getPurchase,
   index,
   type
@@ -77,31 +77,21 @@ const TariffImportLclModal = ({
       tariffModalType: ModalTypes.Sea,
       validityTariff: ValidityTypes.Valid,
       tariffType: type,
-      txChargeType: TxChargeTypes.Lcl
+      txChargeType: TxChargeTypes.Fcl
     })
   }, [importFilter, filter])
 
   const calculateValue = (): void => {
-    const comparisonValue: number = (calculationData?.weight / 1000) > calculationData?.cubage ? calculationData?.weight / 1000 : calculationData?.cubage
-    const tariffUntil7wm = tariffData[0]?.tariffTypeValues.find(each => each.tariffType.description === TariffItemsTypes.Vluntil7wm)
-    const tariffOver = tariffData[0]?.tariffTypeValues.find(each => each.tariffType.description === TariffItemsTypes.Over)
-    const minimun = tariffData[0]?.tariffTypeValues.find(each => each.tariffType.description === TariffItemsTypes.Minimun)
-    let newValue: number
-
-    if (comparisonValue <= 7) {
-      newValue = tariffUntil7wm.value
-    } else {
-      newValue = tariffOver.value
-    }
-    if (minimun.value > newValue) {
-      newValue = minimun.value
-    }
-    setValue(FormatNumber.convertNumberToString(newValue))
+    const container20 = tariffData[0]?.tariffTypeValues.find(each => each.tariffType.description === TariffItemsTypes.Vlcontainer20)
+    const container40 = tariffData[0]?.tariffTypeValues.find(each => each.tariffType.description === TariffItemsTypes.Vlcontainer40)
+    if (Number(containerType[0]) === 2) setValue(FormatNumber.convertNumberToString(container20.value))
+    else if (Number(containerType[0]) === 4) setValue(FormatNumber.convertNumberToString(container40.value))
+    else setValue('')
   }
 
   useEffect(() => {
     if (tariffData.length > 0) calculateValue()
-  }, [calculationData, tariffData])
+  }, [containerType, tariffData])
 
   const getTariffValue = (type: string, tariff: any): number => {
     const tariffValue = tariff?.tariffTypeValues.find(each => each.tariffType.description === type)
@@ -117,11 +107,9 @@ const TariffImportLclModal = ({
       agent: tariffData[0]?.nmAgent,
       dtValidity: new Date(tariffData[0]?.validityDate).toLocaleDateString('pt-BR'),
       currency: tariffData[0]?.currency,
-      minValue: getTariffValue(TariffItemsTypes.Minimun, tariffData[0]),
-      until: getTariffValue(TariffItemsTypes.Vluntil7wm, tariffData[0]),
-      above: getTariffValue(TariffItemsTypes.Over, tariffData[0])
+      container20: getTariffValue(TariffItemsTypes.Vlcontainer20, tariffData[0]),
+      container40: getTariffValue(TariffItemsTypes.Vlcontainer40, tariffData[0])
     })
-
     return tariffs
   }
 
@@ -193,7 +181,7 @@ const TariffImportLclModal = ({
               <Table >
                 <TableHead>
                   <TableRow>
-                    {Object.values(I18n.t('components.TariffImport.Lcl'))
+                    {Object.values(I18n.t('components.TariffImport.Fcl'))
                       .map((column: string) => <TableCell style={{ paddingLeft: 0 }} key={column}>{column}</TableCell>)
                     }
                   </TableRow>
@@ -286,4 +274,4 @@ const TariffImportLclModal = ({
   )
 }
 
-export default TariffImportLclModal
+export default TariffImportFclModal
