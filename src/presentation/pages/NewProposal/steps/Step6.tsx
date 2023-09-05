@@ -29,11 +29,11 @@ import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import { CalculationDataProps } from '../../../components/ChargeTable'
 import { CostTypes, FareItemsTypes } from '../../../../application/enum/costEnum'
-import TariffImportLclModal from '../../../components/TariffImport/TariffImportLclModal'
 import { ModalTypes, AcitivityTypes } from '../../../../application/enum/enum'
 import RemoveIcon from '../../../../application/icons/RemoveIcon'
 
-import TariffImportModal from '../components/TariffImportModal/TariffImportModal'
+import TariffImportAirModal from '../../../components/TariffImport/TariffImportAirModal'
+import TariffImportLclModal from '../../../components/TariffImport/TariffImportLclModal'
 
 interface Step6Props {
   totalCosts: any
@@ -130,9 +130,6 @@ const Step6 = ({
   const [totalCharge, setTotalCharge] = useState<number>(0)
   const [openImport, setOpenImport] = useState<boolean>(false)
   const [disable, setDisable] = useState<any[]>([])
-
-  const [ShowList, setShowList] = useState<boolean>(false)
-
 
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => {
@@ -1200,8 +1197,28 @@ const Step6 = ({
           type={AcitivityTypes.Import}
         />
       )
+    } else if (modal === ModalTypes.Air) {
+      return (
+        <TariffImportAirModal
+          setClose={() => setOpenImport(false)}
+          open={openImport}
+          typeModal={selectTypeModal()}
+          importFilter={{
+            idOrigin: proposal.originDestiny[0]?.idOrigin,
+            idDestination: proposal.originDestiny[0]?.idDestination,
+            idBusinessPartnerAgent: selectedAgent.idBusinessPartnerAgent,
+            idBusinessPartnerTransportCompany: selectedAgent.idBusinessPartnerTransportCompany
+          }}
+          calculationData={calculationData}
+          getPurchase={getPurchase}
+          index={index}
+          type={AcitivityTypes.Import}
+          cwSale={cwSale}
+        />
+      )
+    } else {
+      return <></>
     }
-    return <></>
   }
 
   if (proposal.agents.length > 0 && costData !== 0) {
@@ -1351,7 +1368,6 @@ const Step6 = ({
                             </Grid>
                             <ButtonWrapper>
                               <Button
-                                // onAction={() => console.log('')}
                                 onAction={() => {
                                   setOpenImport(true)
                                 }}
@@ -1362,6 +1378,7 @@ const Step6 = ({
                                 disabled={false}
                               />
                             </ButtonWrapper>
+                            {/* Modal de Importação */}
                             {createTariffImportModal(selectedAgent, index)}
                           </LowerContainer>
                         </TotalContainer>
@@ -1668,12 +1685,6 @@ const Step6 = ({
           />
         </MessageContainer>
       )}
-      <TariffImportModal
-      setClose={() => setOpenImport(false)}
-      open={openImport}
-      setShowList={() => setShowList(true)}
-      cwSale={cwSale}
-      />
     </Separator>
     )
   } else {
