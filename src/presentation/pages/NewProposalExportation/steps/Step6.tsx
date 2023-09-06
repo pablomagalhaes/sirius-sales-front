@@ -29,10 +29,13 @@ import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import { CalculationDataProps } from '../../../components/ChargeTable'
 import { CostTypes, FareItemsTypes } from '../../../../application/enum/costEnum'
-import TariffImportLclModal from '../../../components/TariffImport/TariffImportLclModal'
 import { ModalTypes, AcitivityTypes } from '../../../../application/enum/enum'
 import RemoveIcon from '../../../../application/icons/RemoveIcon'
 import TariffImportFclModal from '../../../components/TariffImport/TariffImportFclModal'
+
+import TariffImportAirModal from '../../../components/TariffImport/TariffImportAirModal'
+import TariffImportLclModal from '../../../components/TariffImport/TariffImportLclModal'
+
 
 interface Step6Props {
   totalCosts: any
@@ -1222,9 +1225,30 @@ const Step6 = ({
           index={index}
           type={AcitivityTypes.Export}
         />
+    
       )
+    } else if (modal === ModalTypes.Air) {
+      return (
+        <TariffImportAirModal
+          setClose={() => setOpenImport(false)}
+          open={openImport}
+          typeModal={selectTypeModal()}
+          importFilter={{
+            idOrigin: proposal.originDestiny[0]?.idOrigin,
+            idDestination: proposal.originDestiny[0]?.idDestination,
+            idBusinessPartnerAgent: selectedAgent.idBusinessPartnerAgent,
+            idBusinessPartnerTransportCompany: selectedAgent.idBusinessPartnerTransportCompany
+          }}
+          calculationData={calculationData}
+          getPurchase={getPurchase}
+          index={index}
+          type={AcitivityTypes.Export}
+          cwSale={cwSale}
+        />
+      )
+    } else {
+      return <></>
     }
-    return <></>
   }
 
   if (proposal.agents.length > 0 && costData !== 0) {
