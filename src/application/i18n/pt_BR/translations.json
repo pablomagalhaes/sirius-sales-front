@@ -169,6 +169,14 @@
         "minimun": "Valor Mínimo",
         "until": "Até 7w/m",
         "above": "Acima"
+      },
+      "Fcl": {
+        "airCompany": "Cia. Marítima",
+        "agent": "Agente",
+        "validity": "Validade",
+        "currency": "Moeda",
+        "container20": "Container 20",
+        "container40": "Container 40"
       }
     }
   },
