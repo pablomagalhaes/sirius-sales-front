@@ -32,6 +32,7 @@ import { CostTypes, FareItemsTypes } from '../../../../application/enum/costEnum
 import TariffImportLclModal from '../../../components/TariffImport/TariffImportLclModal'
 import { ModalTypes, AcitivityTypes } from '../../../../application/enum/enum'
 import RemoveIcon from '../../../../application/icons/RemoveIcon'
+import TariffImportFclModal from '../../../components/TariffImport/TariffImportFclModal'
 
 interface Step6Props {
   totalCosts: any
@@ -128,6 +129,7 @@ const Step6 = ({
   const [totalCharge, setTotalCharge] = useState<number>(0)
   const [openImport, setOpenImport] = useState<boolean>(false)
   const [disable, setDisable] = useState<any[]>([])
+  const [modalIndex, setModalIndex] = useState<number>()
 
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => {
@@ -750,6 +752,10 @@ const Step6 = ({
     })()
   }, [])
 
+  useEffect(() => {
+    setDisable([])
+  }, [proposal.idTransport, proposal.cargo[0]?.idCargoContractingType])
+
   const getTotalCalculationData = (item): any => {
     const indexContainer = containerItems.findIndex(
       (container) => item.selectedContainer === container.type
@@ -1155,29 +1161,51 @@ const Step6 = ({
   }
 
   const getPurchase = (value: string, currency: string, index: number): void => {
-    const newData = [...data]
-    newData[index].valuePurchase = value
-    newData[index].currencyPurchase = currency
-    handleValuePurchase(newData[index].agent.idBusinessPartnerAgent, newData, value)
-    handleCurrencyPurchase(newData[index].agent.idBusinessPartnerAgent, newData, currency)
-    const newArr = [...disable]
-    newArr[index] = true
-    setDisable(newArr)
+    if ((proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
+      const newData = [...dataContainer]
+      newData[index].currencyPurchase = currency
+      newData[index].valuePurchase = value
+      handleContainerChange(newData, 'currencyPurchase', currency, index, false)
+      handleContainerChange(newData, 'valuePurchase', value, index, true)
+      const newArr = [...disable]
+      newArr[index] = true
+      setDisable(newArr)
+    } else {
+      const newData = [...data]
+      newData[index].valuePurchase = value
+      newData[index].currencyPurchase = currency
+      handleValuePurchase(newData[index].agent.idBusinessPartnerAgent, newData, value)
+      handleCurrencyPurchase(newData[index].agent.idBusinessPartnerAgent, newData, currency)
+      const newArr = [...disable]
+      newArr[index] = true
+      setDisable(newArr)
+    }
   }
 
   const cleanPurchase = (index: number): void => {
-    const newData = [...data]
-    newData[index].valuePurchase = ''
-    newData[index].currencyPurchase = ''
-    handleValuePurchase(newData[index].agent.idBusinessPartnerAgent, newData, '')
-    handleCurrencyPurchase(newData[index].agent.idBusinessPartnerAgent, newData, '')
-    const newArr = [...disable]
-    newArr[index] = false
-    setDisable(newArr)
+    if ((proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
+      const newData = [...dataContainer]
+      newData[index].currencyPurchase = ''
+      newData[index].valuePurchase = ''
+      handleContainerChange(newData, 'currencyPurchase', '', index, false)
+      handleContainerChange(newData, 'valuePurchase', '', index, true)
+      const newArr = [...disable]
+      newArr[index] = false
+      setDisable(newArr)
+    } else {
+      const newData = [...data]
+      newData[index].valuePurchase = ''
+      newData[index].currencyPurchase = ''
+      handleValuePurchase(newData[index].agent.idBusinessPartnerAgent, newData, '')
+      handleCurrencyPurchase(newData[index].agent.idBusinessPartnerAgent, newData, '')
+      const newArr = [...disable]
+      newArr[index] = false
+      setDisable(newArr)
+    }
   }
 
   const createTariffImportModal = (selectedAgent: any, index: number): JSX.Element => {
-    if (modal === ModalTypes.Sea && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType)) {
+    if (modal === ModalTypes.Sea) {
       return (
         <TariffImportLclModal
           setClose={() => setOpenImport(false)}
@@ -1308,9 +1336,9 @@ const Step6 = ({
                                       handleValuePurchase(newData[index].agent.idBusinessPartnerAgent, newData, e.target.value)
                                     }} toolTipTitle={I18n.t('components.itemModal.requiredField')}
                                     invalid={invalidInput && inputValidation(data[index]?.valuePurchase)} value={data[index]?.valuePurchase} variant='outlined' size='small' />
-                                  <div style={{ marginLeft: '10px' }}>
+                                  {disable[index] && <div style={{ marginLeft: '10px', cursor: 'pointer' }}>
                                     <RemoveIcon onClick={() => cleanPurchase(index)} />
-                                  </div>
+                                  </div>}
                                 </div>
                               </Grid>
                               <Grid item xs={2}>
@@ -1440,6 +1468,7 @@ const Step6 = ({
 
                             <Grid item xs={2}>
                               <Autocomplete
+                                disabled={disable[index]}
                                 freeSolo
                                 value={dataContainer[index]?.currencyPurchase}
                                 onChange={(e, newValue) => {
@@ -1475,23 +1504,30 @@ const Step6 = ({
                             </Grid>
 
                             <Grid item xs={2}>
-                              <NumberInput
-                                decimalSeparator={','}
-                                thousandSeparator={'.'}
-                                decimalScale={2}
-                                format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
-                                customInput={ControlledInput}
-                                onChange={(e) => {
-                                  const newData = [...dataContainer]
-                                  newData[index].valuePurchase = e.target.value
-                                  handleContainerChange(newData, 'valuePurchase', e.target.value, index, true)
-                                }}
-                                toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                invalid={invalidInput && inputValidation(dataContainer[index].valuePurchase)}
-                                value={dataContainer[index].valuePurchase}
-                                variant='outlined'
-                                size='small'
-                              />
+                              <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <NumberInput
+                                  disabled={disable[index]}
+                                  decimalSeparator={','}
+                                  thousandSeparator={'.'}
+                                  decimalScale={2}
+                                  format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                                  customInput={ControlledInput}
+                                  onChange={(e) => {
+                                    const newData = [...dataContainer]
+                                    newData[index].valuePurchase = e.target.value
+                                    handleContainerChange(newData, 'valuePurchase', e.target.value, index, true)
+                                  }}
+                                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                  invalid={invalidInput && inputValidation(dataContainer[index].valuePurchase)}
+                                  value={dataContainer[index].valuePurchase}
+                                  variant='outlined'
+                                  size='small'
+                                />
+                                {disable[index] && <div style={{ marginLeft: '10px', cursor: 'pointer' }}>
+                                  <RemoveIcon onClick={() => cleanPurchase(index)} />
+                                </div>}
+
+                              </div>
                             </Grid>
 
                             <Grid item xs={2}>
@@ -1560,7 +1596,7 @@ const Step6 = ({
                           </Grid>
                           <ButtonWrapper>
                             <Button
-                              onAction={() => console.log('')}
+                              onAction={() => { setOpenImport(true); setModalIndex(index) }}
                               text={I18n.t('pages.newProposal.step6.importButton')}
                               icon="tariff"
                               backgroundGreen={true}
@@ -1568,7 +1604,21 @@ const Step6 = ({
                               disabled={false}
                             />
                           </ButtonWrapper>
-
+                          <TariffImportFclModal
+                            setClose={() => setOpenImport(false)}
+                            open={openImport && modalIndex === index}
+                            typeModal={selectTypeModal()}
+                            importFilter={{
+                              idOrigin: proposal.originDestiny[0]?.idOrigin,
+                              idDestination: proposal.originDestiny[0]?.idDestination,
+                              idBusinessPartnerAgent: proposal?.agents[0]?.idBusinessPartnerAgent,
+                              idBusinessPartnerTransportCompany: proposal?.agents[0]?.idBusinessPartnerTransportCompany
+                            }}
+                            containerType={cargoVolume.idContainerType}
+                            getPurchase={getPurchase}
+                            index={index}
+                            type={AcitivityTypes.Export}
+                          />
                         </CargoContainer>
 
                       )
