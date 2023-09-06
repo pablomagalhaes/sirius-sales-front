@@ -1605,23 +1605,7 @@ const Step6 = ({
               }
             })()}
           </>
-
-            {/* <Grid item xs={2}>
-                <Button
-                  // id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_BUTTON_MODAL_IMPORT}
-                  onAction={() => {
-                    setOpenImport(true)
-                  }}
-                  text={I18n.t('pages.staggeredProposal.newStaggeredProposal.ImportTariff')}
-                  icon="tariff"
-                  backgroundGreen={true}
-                  tooltip={I18n.t('pages.staggeredProposal.newStaggeredProposal.ImportTariff')}
-                  disabled={false}
-                />
-              </Grid> */}
-
           <LineSeparator />
-
           <Grid item xs={6}>
             <FormLabel component="legend"><strong>{'Outras tarifas / surcharges'}</strong></FormLabel>
           </Grid>
