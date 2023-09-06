@@ -164,6 +164,14 @@
         "imoDed": "Carga IMO ded.",
         "generalCons": "Carga Geral cons.",
         "imoCons": "Carga IMO cons."
+      },
+      "Fcl": {
+        "airCompany": "Cia. Marítima",
+        "agent": "Agente",
+        "validity": "Validade",
+        "currency": "Moeda",
+        "container20": "Container 20",
+        "container40": "Container 40"
       }
     }
   },
