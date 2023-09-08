@@ -36,7 +36,6 @@ import TariffImportFclModal from '../../../components/TariffImport/TariffImportF
 import TariffImportAirModal from '../../../components/TariffImport/TariffImportAirModal'
 import TariffImportLclModal from '../../../components/TariffImport/TariffImportLclModal'
 
-
 interface Step6Props {
   totalCosts: any
   containerItems: ItemModalData[]
@@ -1225,7 +1224,7 @@ const Step6 = ({
           index={index}
           type={AcitivityTypes.Export}
         />
-    
+
       )
     } else if (modal === ModalTypes.Air) {
       return (
