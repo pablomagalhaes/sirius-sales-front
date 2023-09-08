@@ -533,7 +533,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
             text={I18n.t('pages.newProposal.buttonFinish')}
             tooltip={I18n.t('pages.newProposal.buttonFinish')}
           >
-            <FloatingMenu menuItems={proposal.idProposal != null ? floatingButtonMenuItemsAfterSaved : floatingButtonMenuItems} />
+            <FloatingMenu menuItems={proposal?.idProposal != null ? floatingButtonMenuItemsAfterSaved : floatingButtonMenuItems} />
           </Button>
         </ButtonContainer>
       </TopContainer>
