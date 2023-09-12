@@ -34,6 +34,7 @@ import TariffImportLandModal from '../../../components/TariffImport/TariffImport
 import { ModalTypes, AcitivityTypes } from '../../../../application/enum/enum'
 import RemoveIcon from '../../../../application/icons/RemoveIcon'
 import TariffImportFclModal from '../../../components/TariffImport/TariffImportFclModal'
+import TariffImportAirModal from '../../../components/TariffImport/TariffImportAirModal'
 
 interface Step6Props {
   totalCosts: any
@@ -1221,11 +1222,10 @@ const Step6 = ({
           calculationData={calculationData}
           getPurchase={getPurchase}
           index={index}
-          type={AcitivityTypes.Export}
+          type={AcitivityTypes.Import}
         />
       )
-    }
-    if (modal === ModalTypes.Land) {
+    } else if (modal === ModalTypes.Land) {
       return (
         <TariffImportLandModal
           setClose={() => setOpenImport(false)}
@@ -1240,11 +1240,31 @@ const Step6 = ({
           isDangerous={proposal?.cargo[0]?.isDangerous}
           getPurchase={getPurchase}
           index={index}
-          type={AcitivityTypes.Export}
+          type={AcitivityTypes.Import}
         />
       )
+    } else if (modal === ModalTypes.Air) {
+      return (
+        <TariffImportAirModal
+          setClose={() => setOpenImport(false)}
+          open={openImport}
+          typeModal={selectTypeModal()}
+          importFilter={{
+            idOrigin: proposal.originDestiny[0]?.idOrigin,
+            idDestination: proposal.originDestiny[0]?.idDestination,
+            idBusinessPartnerAgent: selectedAgent.idBusinessPartnerAgent,
+            idBusinessPartnerTransportCompany: selectedAgent.idBusinessPartnerTransportCompany
+          }}
+          calculationData={calculationData}
+          getPurchase={getPurchase}
+          index={index}
+          type={AcitivityTypes.Import}
+          cwSale={cwSale}
+        />
+      )
+    } else {
+      return <></>
     }
-    return <></>
   }
 
   if (proposal.agents.length > 0 && costData !== 0) {

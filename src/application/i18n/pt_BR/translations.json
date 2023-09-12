@@ -149,6 +149,18 @@
       "labelRowsPerPage": "Propostas por página"
     },
     "TariffImport": {
+      "Air": {
+        "airCompany": "Cia. Aérea",
+        "agent": "Agente",
+        "validity": "Validade",
+        "currency": "Moeda",
+        "minimun": "Mínimo",
+        "plus45": "+45kg",
+        "plus100": "+100kg",
+        "plus300": "+300kg",
+        "plus500": "+500kg",
+        "plus1000": "+1ton"
+      },
       "Lcl": {
         "agent": "Agente",
         "validity": "Validade",
@@ -335,6 +347,28 @@
         "valuePurchase": "Valor compra:",
         "valueSale": "Valor venda:",
         "tariffImport": {
+          "subtitle": "Adicionar tarifa manualmente",
+          "origin": "Origem",
+          "destiny": "Destino",
+          "agent": "Agente",
+          "airCompany": "Cia. Aérea",
+          "closeButtonLabel": "Cancelar",
+          "addButtonLabel": "Importar",
+          "searchButtonLabel": "Buscar",
+          "selectedsItems": "itens selecionados",
+          "selectedItem": "item selecionado",
+          "table": {
+            "airCompany": "Cia. Aérea",
+            "agent": "Agente",
+            "validity": "Validade",
+            "currency": "Moeda",
+            "minimun": "Mínimo",
+            "plus45": "+45kg",
+            "plus100": "+100kg",
+            "plus300": "+300kg",
+            "plus500": "+500kg",
+            "plus1000": "+1ton"
+          },
           "title": "Importar do tarifário",
           "importButton": "Importar",
           "noTariffs": "Não foram encontradas tarifas para serem importadas"
@@ -438,6 +472,7 @@
         "origin": "Origem",
         "destiny": "Destino",
         "agent": "Agente",
+        "airCompany": "Cia. Aérea",
         "closeButtonLabel": "Cancelar",
         "addButtonLabel": "Adicionar",
         "searchButtonLabel": "Buscar",

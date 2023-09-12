@@ -34,6 +34,7 @@ import TariffImportLandModal from '../../../components/TariffImport/TariffImport
 import { ModalTypes, AcitivityTypes } from '../../../../application/enum/enum'
 import RemoveIcon from '../../../../application/icons/RemoveIcon'
 import TariffImportFclModal from '../../../components/TariffImport/TariffImportFclModal'
+import TariffImportAirModal from '../../../components/TariffImport/TariffImportAirModal'
 
 interface Step6Props {
   totalCosts: any
@@ -1204,7 +1205,7 @@ const Step6 = ({
       setDisable(newArr)
     }
   }
-  console.log(proposal)
+
   const createTariffImportModal = (selectedAgent: any, index: number): JSX.Element => {
     if (modal === ModalTypes.Sea) {
       return (
@@ -1224,8 +1225,7 @@ const Step6 = ({
           type={AcitivityTypes.Import}
         />
       )
-    }
-    if (modal === ModalTypes.Land) {
+    } else if (modal === ModalTypes.Land) {
       return (
         <TariffImportLandModal
           setClose={() => setOpenImport(false)}
@@ -1243,8 +1243,28 @@ const Step6 = ({
           type={AcitivityTypes.Import}
         />
       )
+    } else if (modal === ModalTypes.Air) {
+      return (
+        <TariffImportAirModal
+          setClose={() => setOpenImport(false)}
+          open={openImport}
+          typeModal={selectTypeModal()}
+          importFilter={{
+            idOrigin: proposal.originDestiny[0]?.idOrigin,
+            idDestination: proposal.originDestiny[0]?.idDestination,
+            idBusinessPartnerAgent: selectedAgent.idBusinessPartnerAgent,
+            idBusinessPartnerTransportCompany: selectedAgent.idBusinessPartnerTransportCompany
+          }}
+          calculationData={calculationData}
+          getPurchase={getPurchase}
+          index={index}
+          type={AcitivityTypes.Import}
+          cwSale={cwSale}
+        />
+      )
+    } else {
+      return <></>
     }
-    return <></>
   }
 
   if (proposal.agents.length > 0 && costData !== 0) {
@@ -1394,7 +1414,9 @@ const Step6 = ({
                             </Grid>
                             <ButtonWrapper>
                               <Button
-                                onAction={() => setOpenImport(true)}
+                                onAction={() => {
+                                  setOpenImport(true)
+                                }}
                                 text={I18n.t('pages.newProposal.step6.importButton')}
                                 icon="tariff"
                                 backgroundGreen={true}
@@ -1402,6 +1424,7 @@ const Step6 = ({
                                 disabled={false}
                               />
                             </ButtonWrapper>
+                            {/* Modal de Importação */}
                             {createTariffImportModal(selectedAgent, index)}
                           </LowerContainer>
                         </TotalContainer>
@@ -1650,9 +1673,7 @@ const Step6 = ({
               }
             })()}
           </>
-
           <LineSeparator />
-
           <Grid item xs={6}>
             <FormLabel component="legend"><strong>{'Outras tarifas / surcharges'}</strong></FormLabel>
           </Grid>

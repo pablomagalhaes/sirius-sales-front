@@ -525,7 +525,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
             text={I18n.t('pages.newProposal.buttonFinish')}
             tooltip={I18n.t('pages.newProposal.buttonFinish')}
           >
-            <FloatingMenu menuItems={proposal.idProposal != null ? floatingButtonMenuItemsAfterSaved : floatingButtonMenuItems} />
+            <FloatingMenu menuItems={proposal?.idProposal != null ? floatingButtonMenuItemsAfterSaved : floatingButtonMenuItems} />
           </Button>
         </ButtonContainer>
       </TopContainer>
@@ -535,7 +535,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
           idProposal={proposal.idProposal}
           downloadProposal={API.downloadProposal}
         />
-      {leavingPage && <MessageExitDialog />}
+       {leavingPage && <MessageExitDialog />}
       {loadExistingProposal &&
         <MainContainer ref={divRef}>
           <div id="step1">
