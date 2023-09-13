@@ -29,12 +29,12 @@ import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import { CalculationDataProps } from '../../../components/ChargeTable'
 import { CostTypes, FareItemsTypes } from '../../../../application/enum/costEnum'
+import TariffImportLclModal from '../../../components/TariffImport/TariffImportLclModal'
+import TariffImportLandModal from '../../../components/TariffImport/TariffImportLandModal'
 import { ModalTypes, AcitivityTypes } from '../../../../application/enum/enum'
 import RemoveIcon from '../../../../application/icons/RemoveIcon'
 import TariffImportFclModal from '../../../components/TariffImport/TariffImportFclModal'
-
 import TariffImportAirModal from '../../../components/TariffImport/TariffImportAirModal'
-import TariffImportLclModal from '../../../components/TariffImport/TariffImportLclModal'
 
 interface Step6Props {
   totalCosts: any
@@ -1222,9 +1222,26 @@ const Step6 = ({
           calculationData={calculationData}
           getPurchase={getPurchase}
           index={index}
-          type={AcitivityTypes.Export}
+          type={AcitivityTypes.Import}
         />
-
+      )
+    } else if (modal === ModalTypes.Land) {
+      return (
+        <TariffImportLandModal
+          setClose={() => setOpenImport(false)}
+          open={openImport}
+          typeModal={selectTypeModal()}
+          importFilter={{
+            originCity: proposal.originDestiny[0]?.originCityId,
+            destinationCity: proposal.originDestiny[0]?.destinationCityId,
+            idBusinessPartnerAgent: selectedAgent.idBusinessPartnerAgent,
+            idBusinessPartnerTransportCompany: selectedAgent.idBusinessPartnerTransportCompany
+          }}
+          isDangerous={proposal?.cargo[0]?.isDangerous}
+          getPurchase={getPurchase}
+          index={index}
+          type={AcitivityTypes.Import}
+        />
       )
     } else if (modal === ModalTypes.Air) {
       return (
@@ -1241,7 +1258,7 @@ const Step6 = ({
           calculationData={calculationData}
           getPurchase={getPurchase}
           index={index}
-          type={AcitivityTypes.Export}
+          type={AcitivityTypes.Import}
           cwSale={cwSale}
         />
       )
