@@ -9,13 +9,13 @@ export enum StatusProposalEnum {
 }
 
 export enum StatusProposalStringEnum {
-  ABERTA = 'Open',
-  AGUARDANDO_RETORNO_CLIENTE = 'Awaiting Customer Return',
-  EM_REVISAO = 'Revision',
-  APROVADA = 'Approved',
+  ABERTA = 'open',
+  AGUARDANDO_RETORNO_CLIENTE = 'awaitingCustomerReturn',
+  EM_REVISAO = 'revision',
+  APROVADA = 'approved',
   REJEITADA = 'discard',
-  CANCELADA = 'Canceled',
-  CANCELAMENTO_AUTOMATICO = 'Automatically Canceled',
+  CANCELADA = 'canceled',
+  CANCELAMENTO_AUTOMATICO = 'automaticallyCanceled',
 }
 
 export enum StatusStaggeredProposalStringEnum {
