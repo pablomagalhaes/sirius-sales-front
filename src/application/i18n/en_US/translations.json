@@ -649,6 +649,8 @@
                     "land": "Unable to find Destination Land informed"
                   },
                   "air": "Unable to find Air Cia informed",
+                  "sea": "Unable to find Sea Cia informed",
+                  "land": "Unable to find Land Cia informed",
                   "business": {
                     "partner": "Unable to find Business Partner"
                   },

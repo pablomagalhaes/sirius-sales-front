@@ -653,6 +653,8 @@
                     "land": "Não foi possível encontrar a destino informada."
                   },
                   "air": "Não foi possível localizar a Cia Aérea informada.",
+                  "sea": "Não foi possível localizar a Cia Marítima informada.",
+                  "land": "Não foi possível localizar a Cia Rodoviária informada.",
                   "business": {
                     "partner": "Não foi possivel localizar o Agente."
                   },
