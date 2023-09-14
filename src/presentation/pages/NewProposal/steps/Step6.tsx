@@ -690,7 +690,7 @@ const Step6 = ({
     setDataTotalCost(
       Array.from(currencyArray, ([name, value]) => ({ name, value }))
     )
-  }, [tableData, data, dataContainer, tableData.length])
+  }, [tableData, data, dataContainer, tableData.length, dataSales])
 
   useEffect(() => {
     const newTableData: FareModalData[] = []
