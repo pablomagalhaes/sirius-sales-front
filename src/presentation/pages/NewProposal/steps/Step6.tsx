@@ -1454,7 +1454,7 @@ const Step6 = ({
                     </CargoContainer>
                     {proposal.cargo[0].cargoVolumes.map((cargoVolume, index, array) => {
                       return (dataContainer.length === array.length) && (
-                        <CargoContainer className="line-bottom">
+                        <CargoContainer className="line-bottom" key={index}>
                           <Grid container spacing={5}>
                             <Grid item xs={3}>
                               <FormLabel component='legend'>
