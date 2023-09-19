@@ -253,7 +253,7 @@ const InputRow = ({
     if (typeof x === 'number' && !isNaN(x)) {
       // check if it is integer
       if (Number.isInteger(x)) {
-        return FormatNumber.convertNumberToString(x)
+        return FormatNumber.convertNumberWithInterCoin(x)
       } else {
         return x
       }
