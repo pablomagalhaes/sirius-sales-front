@@ -93,15 +93,39 @@ const TariffImportAirModal = ({
   }, [importFilter, filter])
 
   const calculateValue = (): void => {
+
+    console.log('tariffData[0]', tariffData[0])
+
     const counts = tariffData[0].tariffTypeValues?.map((item) => {
       return item.value
     })
 
-    const closest = counts.reduce(function (prev, curr) {
+    console.log('counts', counts)
+
+    const counts2 = [45, 100, 300, 500, 1000]
+
+    console.log('counts2', counts2)
+
+  
+
+    const closest = counts2.reduce(function (prev, curr) {
       return Math.abs(curr - cwSale) < Math.abs(prev - cwSale) ? curr : prev
     })
+    console.log('closest', closest)
 
-    setValue(FormatNumber.convertNumberToString(closest))
+
+    const getIndex = counts2.indexOf(closest)
+
+    console.log('getIndex', getIndex)
+
+    const getCloset = counts[getIndex]
+
+    console.log('getCloset', getCloset)
+
+
+
+    setValue(FormatNumber.convertNumberToString(getCloset))
+
   }
 
   useEffect(() => {
@@ -154,7 +178,7 @@ const TariffImportAirModal = ({
             </CloseIconContainer>
           </RowReverseDiv>
         </HeaderDiv>
-        <MainDiv>
+         <MainDiv>
           <Grid container spacing={1}>
             <Grid item xs={6}>
               <FormLabel component="legend">
@@ -285,6 +309,7 @@ const TariffImportAirModal = ({
                                     control={<StyledRadio />}
                                     label={checkIsNumber(each)}
                                     id={''}
+                                    disabled={each !== value}
                                   />
                                 </RadioGroup>
                               </TableBodyCell>
