@@ -65,7 +65,7 @@ const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposa
   const [reference, setReference] = useState('')
   const [proposalId, setProposalId] = useState('')
   const [orderAsc, setOrderAsc] = useState(true)
-  const [orderBy, setOrderBy] = useState<string>(SelectorsValuesTypes.Validity)
+  const [orderBy, setOrderBy] = useState<string>(SelectorsValuesTypes.DateCreated)
 
   const history = useHistory()
   const queryClient = useQueryClient()
@@ -107,6 +107,7 @@ const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposa
     for (const proposal of proposalList) {
       const validityDateEnd = new Date(proposal.validityDateEnd).toLocaleDateString('pt-BR')
       const validityDateStart = new Date(proposal.validityDateStart).toLocaleDateString('pt-BR')
+      const dtCreated = new Date(proposal.dtCreated).toLocaleDateString('pt-BR')
       const status = verifyStatus(proposal.nmTariffProposalStatus)
       const type = verifyType(proposal.txTariffType)
       const item = {
@@ -115,6 +116,7 @@ const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposa
         key: proposal.referenceTariffProposal,
         validityDateEnd,
         validityDateStart,
+        dtCreated,
         menuItems: menuItemsList(status, proposal.idTariffCustomer, proposal.referenceTariffProposal),
         responsible: proposal.userCreationName,
         status,
