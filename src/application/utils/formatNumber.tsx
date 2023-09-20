@@ -21,8 +21,8 @@ const convertStringToNumber = (value: string | undefined | null): number | null 
   return null
 }
 
-const convertNumberWithInterCoin = (value: number | undefined | null): string | null => {
-  if (value !== null && value !== undefined) return new Intl.NumberFormat('pt-BR', { currency: 'BRL', minimumFractionDigits: 2 }).format(value)
+const convertNumberWithInterCoin = (value: number | undefined | null, currencyType): string | null => {
+  if (value !== null && value !== undefined) return new Intl.NumberFormat('pt-BR', { currency: currencyType, minimumFractionDigits: 2 }).format(value)
   return ''
 }
 

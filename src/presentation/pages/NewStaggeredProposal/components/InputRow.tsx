@@ -49,6 +49,8 @@ import { usePartnerList, useBusinessPartnerByType } from '../../../hooks'
 
 import { StaggeredProposalContext, StaggeredProposalProps } from '../../StaggeredProposal/context/StaggeredProposalContext'
 
+import { CurrencytemsTypes } from '../../../../application/enum/currencyEnum'
+
 interface InputRowProps {
   invalidInput?: boolean
   setCompleted?: (completed: any) => void
@@ -253,7 +255,7 @@ const InputRow = ({
     if (typeof x === 'number' && !isNaN(x)) {
       // check if it is integer
       if (Number.isInteger(x)) {
-        return FormatNumber.convertNumberWithInterCoin(x)
+        return FormatNumber.convertNumberWithInterCoin(x, CurrencytemsTypes.BRL)
       } else {
         return x
       }
