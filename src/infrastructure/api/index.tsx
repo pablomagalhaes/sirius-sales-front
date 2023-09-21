@@ -4,17 +4,17 @@ import { AxiosError } from 'axios'
 import qs from 'qs'
 import { toast } from 'react-toastify'
 
-const toastErrorMessage = (error: AxiosError, url: string): ReactElement  => {
+const toastErrorMessage = (error: AxiosError, url: string): ReactElement => {
   return (
-    <> 
+    <>
       {error.response.status > 499 && <>
-        <div style={{ fontSize: '15px', textAlign: 'center', marginBottom: '5px'}}>
+        <div style={{ fontSize: '15px', textAlign: 'center', marginBottom: '5px' }}>
           Entre em contato com o suporte técnico
-        </div> 
+        </div>
         <hr />
       </>}
-      <div style={{ fontSize: '12px'}}>
-        {String(error)}  Request:  {String(url)} 
+      <div style={{ fontSize: '12px' }}>
+        {String(error)}  Request:  {String(url)}
       </div>
     </>
   )
