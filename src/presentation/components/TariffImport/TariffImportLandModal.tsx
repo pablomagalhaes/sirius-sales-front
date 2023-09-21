@@ -84,8 +84,8 @@ const TariffImportLandModa = ({
   const calculateValue = (): void => {
     const imoDedValue = tariffData[0]?.tariffTypeValues.find(each => each.tariffType.description === TariffItemsTypes.Vlimoded)
     const genralDedValue = tariffData[0]?.tariffTypeValues.find(each => each.tariffType.description === TariffItemsTypes.Vlgeneralded)
-    if (isDangerous) setValue(FormatNumber.convertNumberToString(imoDedValue))
-    else setValue(FormatNumber.convertNumberToString(genralDedValue))
+    if (isDangerous) setValue(FormatNumber.convertNumberToString(Number(imoDedValue)))
+    else setValue(FormatNumber.convertNumberToString(Number(genralDedValue)))
   }
 
   useEffect(() => {
