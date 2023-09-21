@@ -76,7 +76,7 @@ const ChargeTable = ({ charges, onEdit, onDelete, specification, modal, setCalcu
             amount += Number(row.amount?.replace(',', '.'))
             cubage += Number(row.cubage?.replace(',', '.'))
             weight += Number(row.rawWeight?.replace(',', '.'))
-            cubageWeight = Number(cubage) / 0.006
+            cubageWeight = Number((Number(cubage) / 0.006).toFixed(2))
             return (
               <StyledTableRow key={i} noBorder={i + 1 === charges.length}>
                 <TableCell component="th" scope="row">
