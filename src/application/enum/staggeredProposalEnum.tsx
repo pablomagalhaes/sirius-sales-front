@@ -5,7 +5,8 @@ enum SelectorsValuesTypes {
   Destination = 'tariffCustomerLink.id.tariff.destination.name',
   Validity = 'tariffCustomerLink.id.tariff.validityDate',
   EndValidity = 'tariffCustomerLink.id.tariff.endValidityDate',
-  Reference = 'referenceTariffProposal'
+  Reference = 'referenceTariffProposal',
+  DateCreated = 'dtCreated'
 }
 
 export {

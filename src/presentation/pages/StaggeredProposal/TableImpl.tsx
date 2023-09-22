@@ -110,6 +110,12 @@ const TableImpl = ({
       size: 3
     },
     {
+      label: 'Dt. Abertura',
+      key: 'dtCreated',
+      render: ({ dtCreated }: any) => <LabelCell>{dtCreated}</LabelCell>,
+      size: 3
+    },
+    {
       label: 'Responsável',
       key: 'responsible',
       render: ({ responsible }: any) => <ResponsibleCell>{responsible}</ResponsibleCell>,

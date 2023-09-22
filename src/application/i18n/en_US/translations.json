@@ -722,6 +722,7 @@
           "processType": "Tipo de processo",
           "period": "Período",
           "startDate": "Dt. Início da Vigência",
+          "dateCreated": "Dt. Abertura",
           "endDate": "Dt. Fim da Vigência",
           "status": "Status",
           "responsible": "Responsável",

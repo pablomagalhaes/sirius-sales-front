@@ -31,6 +31,10 @@ const orderButtonMenuItems = (): any => {
     {
       value: SelectorsValuesTypes.EndValidity,
       description: I18n.t('pages.staggeredProposal.filter.endDate')
+    },
+    {
+      value: SelectorsValuesTypes.DateCreated,
+      description: I18n.t('pages.staggeredProposal.filter.dateCreated')
     }
   ]
 }
