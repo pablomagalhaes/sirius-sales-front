@@ -34,7 +34,7 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
   }
 
   const totalValue = (): number => {
-    return FormatNumber.convertStringToNumber(value) * cwSale
+    return FormatNumber.convertNumberToDecimal(FormatNumber.convertStringToNumber(value) * cwSale)
   }
 
   const totalPurchase = (): number[][] => {

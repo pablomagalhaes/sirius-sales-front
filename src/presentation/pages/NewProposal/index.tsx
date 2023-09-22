@@ -72,7 +72,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   useEffect(() => {
     void (async function () {
       await API.getContainerType()
-        .then((response) => { console.log(response); setContainerTypeList(response) })
+        .then((response) => { setContainerTypeList(response) })
         .catch((err) => console.log(err))
     })()
   }, [])
@@ -532,7 +532,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       <ProposalDisplayModal
           open={open}
           setClose={handleClose}
-          idProposal={proposal.idProposal}
+          idProposal={proposal?.idProposal}
           downloadProposal={API.downloadProposal}
         />
        {leavingPage && <MessageExitDialog />}

@@ -161,6 +161,7 @@
         "plus1000": "+1ton"
       },
       "Lcl": {
+        "seaCompany": "Cia. Marítima",
         "agent": "Agente",
         "validity": "Validade",
         "currency": "Moeda",
@@ -169,6 +170,7 @@
         "above": "Acima"
       },
       "Land": {
+        "landCompany": "Cia. Rodoviaria",
         "agent": "Agente",
         "validity": "Validade",
         "currency": "Moeda",
@@ -178,7 +180,7 @@
         "imoCons": "Carga IMO cons."
       },
       "Fcl": {
-        "airCompany": "Cia. Marítima",
+        "seaCompany": "Cia. Marítima",
         "agent": "Agente",
         "validity": "Validade",
         "currency": "Moeda",
@@ -722,6 +724,7 @@
           "processType": "Tipo de processo",
           "period": "Período",
           "startDate": "Dt. Início da Vigência",
+          "dateCreated": "Dt. Abertura",
           "endDate": "Dt. Fim da Vigência",
           "status": "Status",
           "responsible": "Responsável",

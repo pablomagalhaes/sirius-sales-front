@@ -46,7 +46,7 @@ import RejectModal from '../../components/RejectModal/RejectModal'
 import CancelModal from '../../components/CancelModal/CancelModal'
 
 const defaultFilter = {
-  direction: 'ASC',
+  direction: 'DESC',
   orderByList: 'openingDate',
   page: 0,
   size: 10
@@ -61,7 +61,7 @@ const Proposal = (): JSX.Element => {
   const [proposalId, setProposalId] = useState('')
   const [incotermList, setIncotermList] = useState<any[]>([])
   const [openedOrderSelect, setOpenedOrderSelect] = useState(false)
-  const [orderAsc, setOrderAsc] = useState(true)
+  const [orderAsc, setOrderAsc] = useState(false)
   const [orderBy, setOrderBy] = useState<string>('openingDate')
   const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
   const [originDestinationCountries, setoriginDestinationCountries] = useState<any[]>([])
@@ -869,7 +869,7 @@ const Proposal = (): JSX.Element => {
     delete filter['validityDate.dtEnd']
 
     setFilter(() => ({
-      direction: 'ASC',
+      direction: 'DESC',
       orderByList: 'openingDate',
       page: 0,
       size: 10

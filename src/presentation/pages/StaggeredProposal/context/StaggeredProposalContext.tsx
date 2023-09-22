@@ -7,7 +7,7 @@ import { StaggeredProposalModel } from '../../../../domain/models'
 export const filterDefault = {
   page: 0,
   size: 10,
-  orderByList: `${SelectorsValuesTypes.Validity},${OrderTypes.Ascendent}`
+  orderByList: `${SelectorsValuesTypes.DateCreated},${OrderTypes.Descendent}`
 }
 
 export const emptyStaggeredProposalValue: StaggeredProposalModel = {

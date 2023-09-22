@@ -5,6 +5,7 @@ import RemoveIcon from '../../../application/icons/RemoveIcon'
 import { IconsContainer, IndividualIconContainer, TableHeader, StyledTableRow, BottomRow } from './style'
 import { ItemModalData } from '../ItemModal/ItemModal'
 import { I18n } from 'react-redux-i18n'
+import FormatNumber from '../../../application/utils/formatNumber'
 
 export interface CalculationDataProps {
   weight: number | null
@@ -76,7 +77,7 @@ const ChargeTable = ({ charges, onEdit, onDelete, specification, modal, setCalcu
             amount += Number(row.amount?.replace(',', '.'))
             cubage += Number(row.cubage?.replace(',', '.'))
             weight += Number(row.rawWeight?.replace(',', '.'))
-            cubageWeight = Number(cubage) / 0.006
+            cubageWeight = FormatNumber.convertNumberToDecimal(Number(cubage) / 0.006)
             return (
               <StyledTableRow key={i} noBorder={i + 1 === charges.length}>
                 <TableCell component="th" scope="row">
