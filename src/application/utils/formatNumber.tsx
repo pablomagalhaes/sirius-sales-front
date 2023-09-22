@@ -32,7 +32,7 @@ const FormatNumber = {
   rightToLeftFormatter,
   convertNumberToString,
   convertStringToNumber,
-  convertNumberWithInterCoin
+  convertNumberWithInterCoin,
   convertNumberToDecimal
 }
 
