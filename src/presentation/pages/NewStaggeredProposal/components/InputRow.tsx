@@ -51,6 +51,8 @@ import { StaggeredProposalContext, StaggeredProposalProps } from '../../Staggere
 
 import { CurrencytemsTypes } from '../../../../application/enum/currencyEnum'
 
+import { LocaleTypes } from '../../../../application/enum/enum'
+
 interface InputRowProps {
   invalidInput?: boolean
   setCompleted?: (completed: any) => void
@@ -251,14 +253,8 @@ const InputRow = ({
   }
 
   const checkNumber = (x): any => {
-  // check if the passed value is a number
     if (typeof x === 'number' && !isNaN(x)) {
-      // check if it is integer
-      if (Number.isInteger(x)) {
-        return FormatNumber.convertNumberWithInterCoin(x, CurrencytemsTypes.BRL)
-      } else {
-        return x
-      }
+      return FormatNumber.convertNumberWithInterCoin(LocaleTypes.PT_BR, CurrencytemsTypes.BRL, x)
     } else {
       return x
     }

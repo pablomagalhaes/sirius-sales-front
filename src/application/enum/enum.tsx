@@ -57,6 +57,11 @@ enum OperationTypes {
   Export = 2
 }
 
+enum LocaleTypes {
+  PT_BR = 'pt-BR',
+  EN_US = 'en-US'
+}
+
 export {
   ModalTypes,
   OrderTypes,
@@ -66,5 +71,6 @@ export {
   TxChargeTypes,
   IconTypes,
   AcitivityTypes,
-  OperationTypes
+  OperationTypes,
+  LocaleTypes
 }
