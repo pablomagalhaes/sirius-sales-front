@@ -2,7 +2,7 @@ import React from 'react'
 
 const ToastAlertIcon = (): JSX.Element => {
   return (
-    <div style={{marginRight: '15px'}}>
+    <div style={{ marginRight: '15px' }}>
         <svg
             width="30"
             height="30"

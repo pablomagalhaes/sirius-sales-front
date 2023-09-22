@@ -6,12 +6,12 @@ import { toast } from 'react-toastify'
 import ToastAlertIcon from '../../application/icons/ToastAlertIcon'
 
 const toastErrorMessage = (error: AxiosError, url: string): any => {
-  if(error.response.status > 499) {
+  if (error.response.status > 499) {
     return toast.error(
       <>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <ToastAlertIcon />
-          <div style={{ fontWeight: '600'}}>Por favor, entre em contato com o suporte técnico.</div>
+          <div style={{ fontWeight: '600' }}>Por favor, entre em contato com o suporte técnico.</div>
         </div>
         <hr />
         <div>{String(error)}  Request:  {String(url)}</div>
@@ -26,7 +26,7 @@ const toastErrorMessage = (error: AxiosError, url: string): any => {
         </div>
       </>, { icon: false }
     )
-  } 
+  }
 }
 
 const getContainerType = async (params?): Promise<any> => {
