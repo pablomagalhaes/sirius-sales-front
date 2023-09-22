@@ -1316,13 +1316,13 @@ const Step6 = ({
                           <LowerContainer>
                             <Grid container spacing={5}>
                               <Grid item xs={2}>
-                                <FormLabel component='legend' error={invalidInput && data.some((each) => inputValidation(each.currencyPurchase))}>
+                                <FormLabel component='legend' error={invalidInput && data.some((each) => inputValidation(each.currencyPurchase))} disabled>
                                   {I18n.t('pages.newProposal.step6.currencyPurchase')}
                                   <RedColorSpan> *</RedColorSpan>
                                 </FormLabel>
                               </Grid>
                               <Grid item xs={2}>
-                                <FormLabel component='legend' error={invalidInput && data.some((each) => inputValidation(each.valuePurchase))}>
+                                <FormLabel component='legend' error={invalidInput && data.some((each) => inputValidation(each.valuePurchase))} disabled>
                                   {I18n.t('pages.newProposal.step6.valuePurchase')}
                                   <RedColorSpan> *</RedColorSpan>
                                 </FormLabel>

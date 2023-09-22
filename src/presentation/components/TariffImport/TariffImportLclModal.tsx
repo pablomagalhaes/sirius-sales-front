@@ -219,6 +219,7 @@ const TariffImportLclModal = ({
                                 control={<StyledRadio />}
                                 label={checkIsNumber(each)}
                                 id={''}
+                                disabled={each !== value}
                               />
                             </RadioGroup>
                           </TableBodyCell>
