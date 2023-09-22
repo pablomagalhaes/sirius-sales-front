@@ -21,10 +21,15 @@ const convertStringToNumber = (value: string | undefined | null): number | null 
   return null
 }
 
+const convertNumberToDecimal = (value: number): number => {
+  return Number(value.toFixed(2))
+}
+
 const FormatNumber = {
   rightToLeftFormatter,
   convertNumberToString,
-  convertStringToNumber
+  convertStringToNumber,
+  convertNumberToDecimal
 }
 
 export default FormatNumber
