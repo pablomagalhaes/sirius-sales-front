@@ -105,8 +105,8 @@ const AirTariffModal = ({
   const rgxFloat = /^[0-9]*,?[0-9]*$/
   const rgxInt = /^[0-9]*$/
 
-  const MaxLenth = {
-    maxLength: 12
+  const MaxLength = {
+    maxLength: 13
   }
 
   useEffect(() => {
@@ -316,7 +316,7 @@ const AirTariffModal = ({
                 size="small"
                 modal
                 style={{ marginRight: '3px' }}
-                inputProps={MaxLenth}
+                inputProps={MaxLength}
               />
             </Grid>
             <Grid item xs={12} container={true} spacing={1} direction="row" justify="center">
@@ -338,7 +338,7 @@ const AirTariffModal = ({
                   variant="outlined"
                   size="small"
                   modal
-                  inputProps={MaxLenth}
+                  inputProps={MaxLength}
                 />
                 </Grid>
                 <Grid item xs={12} md>
@@ -359,7 +359,7 @@ const AirTariffModal = ({
                   variant="outlined"
                   size="small"
                   modal
-                  inputProps={MaxLenth}
+                  inputProps={MaxLength}
                 />
                 </Grid>
                 <Grid item xs={12} md>
@@ -380,7 +380,7 @@ const AirTariffModal = ({
                   variant="outlined"
                   size="small"
                   modal
-                  inputProps={MaxLenth}
+                  inputProps={MaxLength}
                 />
                 </Grid>
                 <Grid item xs={12} md>
@@ -401,7 +401,7 @@ const AirTariffModal = ({
                   variant="outlined"
                   size="small"
                   modal
-                  inputProps={MaxLenth}
+                  inputProps={MaxLength}
                 />
                 </Grid>
                 <Grid item xs={12} md>
@@ -423,7 +423,7 @@ const AirTariffModal = ({
                   size="small"
                   modal
                   style={{ marginRight: '3px' }}
-                  inputProps={MaxLenth}
+                  inputProps={MaxLength}
                 />
                 </Grid>
             </Grid>
@@ -446,7 +446,7 @@ const AirTariffModal = ({
                 variant="outlined"
                 size="small"
                 modal
-                inputProps={MaxLenth}
+                inputProps={MaxLength}
               />
             </Grid>
             <Grid item xs={3}>

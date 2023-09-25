@@ -103,6 +103,10 @@ const LandTariffModal = ({
   const rgxFloat = /^[0-9]*,?[0-9]*$/
   const rgxInt = /^[0-9]*$/
 
+  const MaxLength = {
+    maxLength: 13
+  }
+
   useEffect(() => {
     if (dataProp !== initialState) {
       const getTariffValue = (type: string): any => {
@@ -305,6 +309,7 @@ const LandTariffModal = ({
                   variant="outlined"
                   size="small"
                   modal
+                  inputProps={MaxLength}
                   style={{ marginRight: '3px' }}
                 />
             </Grid>
@@ -326,6 +331,7 @@ const LandTariffModal = ({
                   variant="outlined"
                   size="small"
                   modal
+                  inputProps={MaxLength}
                   style={{ marginRight: '3px' }}
                 />
             </Grid>
@@ -347,6 +353,7 @@ const LandTariffModal = ({
                   variant="outlined"
                   size="small"
                   modal
+                  inputProps={MaxLength}
                   style={{ marginRight: '3px' }}
                 />
             </Grid>
@@ -368,6 +375,7 @@ const LandTariffModal = ({
                   variant="outlined"
                   size="small"
                   modal
+                  inputProps={MaxLength}
                   style={{ marginRight: '3px' }}
                 />
             </Grid>
