@@ -1217,7 +1217,7 @@ const Step6 = ({
             idOrigin: proposal.originDestiny[0]?.idOrigin,
             idDestination: proposal.originDestiny[0]?.idDestination,
             idBusinessPartnerAgent: selectedAgent.idBusinessPartnerAgent,
-            idBusinessPartnerTransportCompany: selectedAgent.idBusinessPartnerTransportCompany
+            idBusinessPartnerTransporter: selectedAgent.idBusinessPartnerTransportCompany
           }}
           calculationData={calculationData}
           getPurchase={getPurchase}
@@ -1235,7 +1235,7 @@ const Step6 = ({
             originCity: proposal.originDestiny[0]?.originCityId,
             destinationCity: proposal.originDestiny[0]?.destinationCityId,
             idBusinessPartnerAgent: selectedAgent.idBusinessPartnerAgent,
-            idBusinessPartnerTransportCompany: selectedAgent.idBusinessPartnerTransportCompany
+            idBusinessPartnerTransporter: selectedAgent.idBusinessPartnerTransportCompany
           }}
           isDangerous={proposal?.cargo[0]?.isDangerous}
           getPurchase={getPurchase}
@@ -1253,7 +1253,7 @@ const Step6 = ({
             idOrigin: proposal.originDestiny[0]?.idOrigin,
             idDestination: proposal.originDestiny[0]?.idDestination,
             idBusinessPartnerAgent: selectedAgent.idBusinessPartnerAgent,
-            idBusinessPartnerTransportCompany: selectedAgent.idBusinessPartnerTransportCompany
+            idBusinessPartnerTransporter: selectedAgent.idBusinessPartnerTransportCompany
           }}
           calculationData={calculationData}
           getPurchase={getPurchase}
@@ -1655,7 +1655,7 @@ const Step6 = ({
                               idOrigin: proposal.originDestiny[0]?.idOrigin,
                               idDestination: proposal.originDestiny[0]?.idDestination,
                               idBusinessPartnerAgent: proposal?.agents[0]?.idBusinessPartnerAgent,
-                              idBusinessPartnerTransportCompany: proposal?.agents[0]?.idBusinessPartnerTransportCompany
+                              idBusinessPartnerTransporter: proposal?.agents[0]?.idBusinessPartnerTransportCompany
                             }}
                             containerType={cargoVolume.idContainerType}
                             getPurchase={getPurchase}

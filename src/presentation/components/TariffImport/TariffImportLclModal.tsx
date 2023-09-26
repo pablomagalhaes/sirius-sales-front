@@ -182,7 +182,7 @@ const TariffImportLclModal = ({
               </FormLabel>
               <FormLabel component="legend">
                 <strong>
-                  {seaPartners.find((item: any) => item.businessPartner.id === importFilter?.idBusinessPartnerTransportCompany)?.businessPartner.simpleName}
+                  {seaPartners.find((item: any) => item.businessPartner.id === importFilter?.idBusinessPartnerTransporter)?.businessPartner.simpleName}
                 </strong>
               </FormLabel>
             </Grid>
