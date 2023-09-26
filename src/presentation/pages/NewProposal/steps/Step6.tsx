@@ -568,8 +568,10 @@ const Step6 = ({
             loadedTotalCosts.push(totalCost.id)
           }
         })
+
         setLoadedTotalCostsIds(loadedTotalCosts)
         setTableData(loadedData)
+        setDisable([true])
       })
     }
   }, [])
@@ -1376,7 +1378,7 @@ const Step6 = ({
                                       handleValuePurchase(newData[index].agent.idBusinessPartnerAgent, newData, e.target.value)
                                     }} toolTipTitle={I18n.t('components.itemModal.requiredField')}
                                     invalid={invalidInput && inputValidation(data[index]?.valuePurchase)} value={data[index]?.valuePurchase} variant='outlined' size='small' />
-                                  {disable[index] && <div style={{ marginLeft: '10px', cursor: 'pointer' }}>
+                                    {disable[index] && <div style={{ marginLeft: '10px', cursor: 'pointer' }}>
                                     <RemoveIcon onClick={() => cleanPurchase(index)} />
                                   </div>}
                                 </div>
@@ -1569,7 +1571,6 @@ const Step6 = ({
                                 {disable[index] && <div style={{ marginLeft: '10px', cursor: 'pointer' }}>
                                   <RemoveIcon onClick={() => cleanPurchase(index)} />
                                 </div>}
-
                               </div>
                             </Grid>
 

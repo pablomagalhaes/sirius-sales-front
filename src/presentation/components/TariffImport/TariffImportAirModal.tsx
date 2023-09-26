@@ -33,7 +33,8 @@ import { TariffContext } from '../../pages/Tariff/context/TariffContext'
 import useTariffsByCountry from '../../hooks/tariff/useTariffsByCountry'
 import {
   TariffItemsTypes,
-  ValidityTypes
+  ValidityTypes,
+  TariffLabel
 } from '../../../application/enum/tariffEnum'
 import FormatNumber from '../../../application/utils/formatNumber'
 import {
@@ -60,7 +61,13 @@ interface TariffUploadProps {
   cwSale: number
 }
 
-const initialValues = [45, 100, 300, 500, 1000]
+const initialValues = [
+  TariffLabel.Until45,
+  TariffLabel.Until100,
+  TariffLabel.Until300,
+  TariffLabel.Until500,
+  TariffLabel.Until1000
+]
 
 const TariffImportAirModal = ({
   theme,
