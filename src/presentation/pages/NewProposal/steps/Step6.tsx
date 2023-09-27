@@ -1342,7 +1342,8 @@ const Step6 = ({
                             </Grid>
                             <Grid container spacing={5} style={{ marginTop: '-35px' }}>
                               <Grid item xs={2}>
-                                <Autocomplete freeSolo value={data[index]?.currencyPurchase} disabled={disable[index]} onChange={(e, newValue) => {
+                                <Autocomplete value={data[index]?.currencyPurchase} disabled={disable[index]}
+                                onChange={(e, newValue) => {
                                   const newData = [...data]
                                   newData[index].currencyPurchase = String(newValue ?? '')
                                   handleCurrencyPurchase(newData[index].agent.idBusinessPartnerAgent, newData, newValue)
@@ -1383,7 +1384,6 @@ const Step6 = ({
                               </Grid>
                               <Grid item xs={2}>
                                 <Autocomplete
-                                  freeSolo
                                   value={dataSales.currencySale}
                                   onChange={(e, newValue) => handleCurrencySale(newValue)}
                                   options={currencyList.map((item) => item.id)} renderInput={(params) => (
@@ -1512,7 +1512,6 @@ const Step6 = ({
                             <Grid item xs={2}>
                               <Autocomplete
                                 disabled={disable[index]}
-                                freeSolo
                                 value={dataContainer[index]?.currencyPurchase}
                                 onChange={(e, newValue) => {
                                   const newData = [...dataContainer]
@@ -1576,7 +1575,6 @@ const Step6 = ({
                             <Grid item xs={2}>
                               <>
                                 <Autocomplete
-                                  freeSolo
                                   value={dataContainer[index].currencySale}
                                   onChange={(e, newValue) => {
                                     const newData = dataContainer.map((data) => {
