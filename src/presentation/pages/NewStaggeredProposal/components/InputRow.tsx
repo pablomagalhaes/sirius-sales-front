@@ -99,7 +99,7 @@ const InputRow = ({
   ]
 
   const MaxLenth = {
-    maxLength: 12
+    maxLength: 13
   }
 
   const [state, setState] = useState({ anchorEl: null, currentKey: null })

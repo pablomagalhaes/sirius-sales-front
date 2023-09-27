@@ -118,7 +118,7 @@ const TariffImportHandsOnModal = ({
   }
 
   const MaxLenth = {
-    maxLength: 12
+    maxLength: 13
   }
 
   const validateData = (): boolean => {
