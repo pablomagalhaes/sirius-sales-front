@@ -88,7 +88,7 @@ const TariffImportAirModal = ({
   const { airPartners = [] } = useBusinessPartnerByType()
   const [value, setValue] = useState('')
   const [labelValues] = useState(initialValues)
- 
+
   const handleOnClose = (): void => {
     setClose()
     setValue('')
