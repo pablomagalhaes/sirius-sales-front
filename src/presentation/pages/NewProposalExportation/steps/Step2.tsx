@@ -582,7 +582,7 @@ const Step2 = ({
       'DPU',
       'DDP'
     ]
-    const landList = ['EXW', 'DAP', 'DPU', 'DDP']
+    const landList = ['EXW', 'DAP', 'DPU', 'DDP', 'FCA']
     if (incotermList.length > 0) {
       let airObject: any[] = []
       let seaObject: any[] = []
