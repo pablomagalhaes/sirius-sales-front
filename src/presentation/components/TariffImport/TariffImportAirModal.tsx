@@ -33,7 +33,8 @@ import { TariffContext } from '../../pages/Tariff/context/TariffContext'
 import useTariffsByCountry from '../../hooks/tariff/useTariffsByCountry'
 import {
   TariffItemsTypes,
-  ValidityTypes
+  ValidityTypes,
+  TariffLabel
 } from '../../../application/enum/tariffEnum'
 import FormatNumber from '../../../application/utils/formatNumber'
 import {
@@ -60,6 +61,14 @@ interface TariffUploadProps {
   cwSale: number
 }
 
+const initialValues = [
+  TariffLabel.Until45,
+  TariffLabel.Until100,
+  TariffLabel.Until300,
+  TariffLabel.Until500,
+  TariffLabel.Until1000
+]
+
 const TariffImportAirModal = ({
   theme,
   open,
@@ -78,6 +87,8 @@ const TariffImportAirModal = ({
   const { data: originDestinationList = [] } = useOriginDestination()
   const { airPartners = [] } = useBusinessPartnerByType()
   const [value, setValue] = useState('')
+  const [labelValues] = useState(initialValues)
+ 
   const handleOnClose = (): void => {
     setClose()
     setValue('')
@@ -93,15 +104,17 @@ const TariffImportAirModal = ({
   }, [importFilter, filter])
 
   const calculateValue = (): void => {
-    const counts = tariffData[0].tariffTypeValues?.map((item) => {
+    const tariffValues = tariffData[0].tariffTypeValues?.map((item) => {
       return item.value
     })
 
-    const closest = counts.reduce(function (prev, curr) {
+    const closest = labelValues.reduce(function (prev, curr) {
       return Math.abs(curr - cwSale) < Math.abs(prev - cwSale) ? curr : prev
     })
 
-    setValue(FormatNumber.convertNumberToString(closest))
+    const getIndex = labelValues.indexOf(closest)
+    const getCloset = tariffValues[getIndex]
+    setValue(FormatNumber.convertNumberToString(getCloset))
   }
 
   useEffect(() => {
@@ -154,7 +167,7 @@ const TariffImportAirModal = ({
             </CloseIconContainer>
           </RowReverseDiv>
         </HeaderDiv>
-        <MainDiv>
+         <MainDiv>
           <Grid container spacing={1}>
             <Grid item xs={6}>
               <FormLabel component="legend">
@@ -285,6 +298,7 @@ const TariffImportAirModal = ({
                                     control={<StyledRadio />}
                                     label={checkIsNumber(each)}
                                     id={''}
+                                    disabled={each !== value}
                                   />
                                 </RadioGroup>
                               </TableBodyCell>
