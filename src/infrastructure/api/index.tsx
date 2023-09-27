@@ -191,6 +191,7 @@ const postProposal = async (params): Promise<any> => {
     return res.data
   } catch (error) {
     toastErrorMessage(error, url)
+    throw (error)
   }
 }
 
@@ -221,6 +222,7 @@ const putProposal = async (id, params): Promise<any> => {
     return res.data
   } catch (error) {
     toastErrorMessage(error, url)
+    throw (error)
   }
 }
 
