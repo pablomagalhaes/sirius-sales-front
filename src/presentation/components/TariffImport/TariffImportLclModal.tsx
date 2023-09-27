@@ -61,7 +61,7 @@ const TariffImportLclModal = ({
   type
 }: TariffUploadProps): JSX.Element => {
   const { filter }: any = useContext(TariffContext)
-  const { content: tariffData, setParams } = useTariffsByCountry()
+  const { content: tariffData, setParams, refetch } = useTariffsByCountry()
   const { partnerList: agentsList } = usePartnerList()
   const { data: originDestinationList = [] } = useOriginDestination()
   const { seaPartners = [] } = useBusinessPartnerByType()
@@ -79,7 +79,8 @@ const TariffImportLclModal = ({
       tariffType: type,
       txChargeType: TxChargeTypes.Lcl
     })
-  }, [importFilter, filter])
+    refetch()
+  }, [importFilter, filter, open])
 
   const calculateValue = (): void => {
     const comparisonValue: number = (calculationData?.weight / 1000) > calculationData?.cubage ? calculationData?.weight / 1000 : calculationData?.cubage

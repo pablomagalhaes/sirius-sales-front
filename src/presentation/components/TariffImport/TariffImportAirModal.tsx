@@ -82,7 +82,7 @@ const TariffImportAirModal = ({
   cwSale
 }: TariffUploadProps): JSX.Element => {
   const { filter }: any = useContext(TariffContext)
-  const { content: tariffData, setParams } = useTariffsByCountry()
+  const { content: tariffData, setParams, refetch } = useTariffsByCountry()
   const { partnerList: agentsList } = usePartnerList()
   const { data: originDestinationList = [] } = useOriginDestination()
   const { airPartners = [] } = useBusinessPartnerByType()
@@ -101,7 +101,8 @@ const TariffImportAirModal = ({
       validityTariff: ValidityTypes.Valid,
       tariffType: type
     })
-  }, [importFilter, filter])
+    refetch()
+  }, [importFilter, filter, open])
 
   const calculateValue = (): void => {
     const tariffValues = tariffData[0].tariffTypeValues?.map((item) => {
