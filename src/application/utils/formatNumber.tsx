@@ -21,6 +21,10 @@ const convertStringToNumber = (value: string | undefined | null): number | null 
   return null
 }
 
+const convertNumberWithInterCoin = (locale: string, currencyType: string, value: number): string | null => {
+  return new Intl.NumberFormat(locale, { currency: currencyType, minimumFractionDigits: 2 }).format(value)
+}
+
 const convertNumberToDecimal = (value: number): number => {
   return Number(value.toFixed(2))
 }
@@ -29,6 +33,7 @@ const FormatNumber = {
   rightToLeftFormatter,
   convertNumberToString,
   convertStringToNumber,
+  convertNumberWithInterCoin,
   convertNumberToDecimal
 }
 
