@@ -219,7 +219,7 @@ const TariffImportAirModal = ({
                     airPartners.find(
                       (item: any) =>
                         item.businessPartner.id ===
-                        importFilter?.idBusinessPartnerTransportCompany
+                        importFilter?.idBusinessPartnerTransporter
                     )?.businessPartner.simpleName
                   }
                 </strong>

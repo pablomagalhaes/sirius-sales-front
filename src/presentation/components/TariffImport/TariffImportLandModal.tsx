@@ -172,7 +172,7 @@ const TariffImportLandModa = ({
               </FormLabel>
               <FormLabel component="legend">
                 <strong>
-                  {landPartners.find((item: any) => item.businessPartner.id === importFilter?.idBusinessPartnerTransportCompany)?.businessPartner.simpleName}
+                  {landPartners.find((item: any) => item.businessPartner.id === importFilter?.idBusinessPartnerTransporter)?.businessPartner.simpleName}
                 </strong>
               </FormLabel>
             </Grid>
