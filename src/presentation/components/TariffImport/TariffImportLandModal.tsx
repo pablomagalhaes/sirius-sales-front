@@ -61,7 +61,7 @@ const TariffImportLandModa = ({
   type
 }: TariffUploadProps): JSX.Element => {
   const { filter }: any = useContext(TariffContext)
-  const { content: tariffData, setParams } = useTariffsByCountry()
+  const { content: tariffData, setParams, refetch } = useTariffsByCountry()
   const { partnerList: agentsList } = usePartnerList()
   const { data: cities = [] } = useMercosulCities()
   const { landPartners = [] } = useBusinessPartnerByType()
@@ -79,7 +79,8 @@ const TariffImportLandModa = ({
       validityTariff: ValidityTypes.Valid,
       tariffType: type
     })
-  }, [importFilter, filter])
+    refetch()
+  }, [importFilter, filter, open])
 
   const calculateValue = (): void => {
     const imoDedValue = tariffData[0]?.tariffTypeValues.find(each => each.tariffType.description === TariffItemsTypes.Vlimoded)
