@@ -207,18 +207,18 @@ const TariffImportModal = ({
           vlFrequency: 3,
           freightValues: [
             {
-              vlMinimum: String(obj.tariffTypeValues.filter(item => item.tariffType.description === 'MINIMUN').map(filteredValue =>
-                filteredValue.value)[0]),
-              until45kg: String(obj.tariffTypeValues.filter(item => item.tariffType.description === 'UNTIL45KG').map(filteredValue =>
-                filteredValue.value)[0]),
-              until100kg: String(obj.tariffTypeValues.filter(item => item.tariffType.description === 'UNTIL100KG').map(filteredValue =>
-                filteredValue.value)[0]),
-              until300kg: String(obj.tariffTypeValues.filter(item => item.tariffType.description === 'UNTIL300KG').map(filteredValue =>
-                filteredValue.value)[0]),
-              until500kg: String(obj.tariffTypeValues.filter(item => item.tariffType.description === 'UNTIL500KG').map(filteredValue =>
-                filteredValue.value)[0]),
-              until1000kg: String(obj.tariffTypeValues.filter(item => item.tariffType.description === 'UNTIL1000KG').map(filteredValue =>
-                filteredValue.value)[0]),
+              vlMinimum: obj.tariffTypeValues.filter(item => item.tariffType.description === 'MINIMUN').map(filteredValue =>
+                filteredValue.value)[0],
+              until45kg: obj.tariffTypeValues.filter(item => item.tariffType.description === 'UNTIL45KG').map(filteredValue =>
+                filteredValue.value)[0],
+              until100kg: obj.tariffTypeValues.filter(item => item.tariffType.description === 'UNTIL100KG').map(filteredValue =>
+                filteredValue.value)[0],
+              until300kg: obj.tariffTypeValues.filter(item => item.tariffType.description === 'UNTIL300KG').map(filteredValue =>
+                filteredValue.value)[0],
+              until500kg: obj.tariffTypeValues.filter(item => item.tariffType.description === 'UNTIL500KG').map(filteredValue =>
+                filteredValue.value)[0],
+              until1000kg: obj.tariffTypeValues.filter(item => item.tariffType.description === 'UNTIL1000KG').map(filteredValue =>
+                filteredValue.value)[0],
               buyOrSell: obj.tariffTypeValues[index].buyOrSell
             }
           ]
