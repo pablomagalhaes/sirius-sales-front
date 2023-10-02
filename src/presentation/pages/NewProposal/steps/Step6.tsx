@@ -1356,7 +1356,7 @@ const Step6 = ({
                                         variant="outlined" size="small" placeholder={I18n.t('components.itemModal.choose')}
                                         InputProps={{
                                           endAdornment: (
-                                            <InputAdornment position='end'>
+                                            <InputAdornment position='end' disablePointerEvents={disable[index]}>
                                               <Box style={{ position: 'absolute', top: '7px', right: '0' }} {...params.inputProps} >
                                                 <ArrowDropDownIcon />
                                               </Box>
