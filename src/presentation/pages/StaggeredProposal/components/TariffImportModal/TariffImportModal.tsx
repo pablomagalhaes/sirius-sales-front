@@ -192,6 +192,11 @@ const TariffImportModal = ({
     }
   }
 
+  const getTariffTypeValue = (obj: any, tariff: string): number => {
+    return obj?.tariffTypeValues.filter(item => item.tariffType.description === tariff).map(filteredValue =>
+      filteredValue.value)[0]
+  }
+
   const handleImports = (): void => {
     if (tariffData.length > 0) {
       const filterObject = tariffData.filter((item) => selecteds.includes(item.idTariff))
@@ -207,18 +212,12 @@ const TariffImportModal = ({
           vlFrequency: 3,
           freightValues: [
             {
-              vlMinimum: obj.tariffTypeValues.filter(item => item.tariffType.description === 'MINIMUN').map(filteredValue =>
-                filteredValue.value)[0],
-              until45kg: obj.tariffTypeValues.filter(item => item.tariffType.description === 'UNTIL45KG').map(filteredValue =>
-                filteredValue.value)[0],
-              until100kg: obj.tariffTypeValues.filter(item => item.tariffType.description === 'UNTIL100KG').map(filteredValue =>
-                filteredValue.value)[0],
-              until300kg: obj.tariffTypeValues.filter(item => item.tariffType.description === 'UNTIL300KG').map(filteredValue =>
-                filteredValue.value)[0],
-              until500kg: obj.tariffTypeValues.filter(item => item.tariffType.description === 'UNTIL500KG').map(filteredValue =>
-                filteredValue.value)[0],
-              until1000kg: obj.tariffTypeValues.filter(item => item.tariffType.description === 'UNTIL1000KG').map(filteredValue =>
-                filteredValue.value)[0],
+              vlMinimum: getTariffTypeValue(obj, TariffItemsTypes.Minimun),
+              until45kg: getTariffTypeValue(obj, TariffItemsTypes.Until45),
+              until100kg: getTariffTypeValue(obj, TariffItemsTypes.Until100),
+              until300kg: getTariffTypeValue(obj, TariffItemsTypes.Until300),
+              until500kg: getTariffTypeValue(obj, TariffItemsTypes.Until500),
+              until1000kg: getTariffTypeValue(obj, TariffItemsTypes.Until1000),
               buyOrSell: obj.tariffTypeValues[index].buyOrSell
             }
           ]
