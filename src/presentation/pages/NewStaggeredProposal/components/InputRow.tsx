@@ -252,11 +252,11 @@ const InputRow = ({
     return simpleName || ''
   }
 
-  const checkNumber = (x): any => {
-    if (typeof x === 'number' && !isNaN(x)) {
-      return FormatNumber.convertNumberWithInterCoin(LocaleTypes.PT_BR, CurrencytemsTypes.BRL, x)
+  const checkNumber = (value): any => {
+    if (typeof value === 'number' && !isNaN(value)) {
+      return FormatNumber.convertNumberWithInterCoin(LocaleTypes.PT_BR, CurrencytemsTypes.BRL, Number(value))
     } else {
-      return x
+      return value
     }
   }
 
