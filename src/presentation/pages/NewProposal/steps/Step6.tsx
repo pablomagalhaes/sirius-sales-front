@@ -188,7 +188,8 @@ const Step6 = ({
     currencyPurchase: proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.idCurrencyPurchase ?? '',
     valueSale: decimalToString(proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.valueSale),
     valuePurchase: decimalToString(proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.valuePurchase),
-    valueQuantity: item.valueQuantity
+    valueQuantity: item.valueQuantity,
+    idTariff: null
   })))
 
   const getValueSale = (): string[] => {
@@ -241,7 +242,8 @@ const Step6 = ({
       currencyPurchase: '',
       valueSale: '',
       valuePurchase: '',
-      valueQuantity: newCargo.valueQuantity
+      valueQuantity: newCargo.valueQuantity,
+      idTariff: null
     }))
     const unionCargos = [...dataContainer, ...newDataWithNewCargos]
     const getAllCargos = unionCargos.map(unionAgent => unionAgent.idContainerType)
@@ -339,7 +341,8 @@ const Step6 = ({
           isPurchase: false,
           isSale: true,
           valueSaleTotal: null,
-          valuePurchaseTotal: null
+          valuePurchaseTotal: null,
+          idTariff: null
         }
         const freightCostSale = {
           id: dataSales.idCost,
@@ -366,7 +369,8 @@ const Step6 = ({
           isPurchase: false,
           isSale: true,
           valueSaleTotal: null,
-          valuePurchaseTotal: null
+          valuePurchaseTotal: null,
+          idTariff: null
         }
         freightCostArrayNew.push(freightCostNew)
         freightCostArrayNew.push(freightCostSale)
@@ -400,7 +404,8 @@ const Step6 = ({
           isPurchase: false,
           isSale: true,
           valueSaleTotal: null,
-          valuePurchaseTotal: null
+          valuePurchaseTotal: null,
+          idTariff: null
         }
         freightCostArrayNew.push(freightCostNew)
       })
@@ -618,7 +623,8 @@ const Step6 = ({
         valueSaleTotal: row.type === FareItemsTypes.Fixed || row.type === FareItemsTypes.Bl
           ? FormatNumber.convertStringToNumber(row.saleValue)
           : FormatNumber.convertStringToNumber(row.totalItem),
-        valuePurchaseTotal: null
+        valuePurchaseTotal: null,
+        idTariff: null
       })
     })
 
@@ -1032,7 +1038,8 @@ const Step6 = ({
         valuePurchasePercent: null,
         valueSalePercent: 0,
         valueSaleTotal: null,
-        valuePurchaseTotal: null
+        valuePurchaseTotal: null,
+        idTariff: null
       }
       setProposal({
         ...proposal,
@@ -1089,7 +1096,8 @@ const Step6 = ({
         valueSale: 0,
         valueSalePercent: 0,
         valueSaleTotal: null,
-        valuePurchaseTotal: null
+        valuePurchaseTotal: null,
+        idTariff: null
       }
       setProposal({
         ...proposal,
@@ -1164,11 +1172,12 @@ const Step6 = ({
     return field === '' || field === '0' || field === null
   }
 
-  const getPurchase = (value: string, currency: string, index: number): void => {
+  const getPurchase = (value: string, currency: string, index: number, idTariff: number): void => {
     if ((proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
       const newData = [...dataContainer]
       newData[index].currencyPurchase = currency
       newData[index].valuePurchase = value
+      newData[index].idTariff = idTariff
       handleContainerChange(newData, 'currencyPurchase', currency, index, false)
       handleContainerChange(newData, 'valuePurchase', value, index, true)
       const newArr = [...disable]
@@ -1178,6 +1187,7 @@ const Step6 = ({
       const newData = [...data]
       newData[index].valuePurchase = value
       newData[index].currencyPurchase = currency
+      newData[index].idTariff = idTariff
       handleValuePurchase(newData[index].agent.idBusinessPartnerAgent, newData, value)
       handleCurrencyPurchase(newData[index].agent.idBusinessPartnerAgent, newData, currency)
       const newArr = [...disable]
@@ -1261,6 +1271,7 @@ const Step6 = ({
           getPurchase={getPurchase}
           index={index}
           type={AcitivityTypes.Import}
+          cw={cw}
           cwSale={cwSale}
         />
       )

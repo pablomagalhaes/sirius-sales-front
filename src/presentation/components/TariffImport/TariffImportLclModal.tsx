@@ -44,7 +44,7 @@ interface TariffUploadProps {
   importFilter: any
   typeModal: string
   calculationData: any
-  getPurchase: (value: string, currency: string, index: number) => void
+  getPurchase: (value: string, currency: string, index: number, idTariff: number) => void
   index: number
   type: string
 }
@@ -255,7 +255,7 @@ const TariffImportLclModal = ({
                     tooltip={I18n.t('pages.newProposal.step6.tariffImport.importButton')}
                     backgroundGreen={true}
                     icon=""
-                    onAction={() => { getPurchase(value, tariffData[0].currency, index); handleOnClose() }}
+                    onAction={() => { getPurchase(value, tariffData[0].currency, index, tariffData[0].idTariff); handleOnClose() }}
                   />
                 </div>
               </Grid>

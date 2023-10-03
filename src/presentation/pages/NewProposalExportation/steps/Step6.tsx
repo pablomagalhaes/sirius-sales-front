@@ -1030,7 +1030,8 @@ const Step6 = ({
         valuePurchasePercent: null,
         valueSalePercent: 0,
         valueSaleTotal: null,
-        valuePurchaseTotal: null
+        valuePurchaseTotal: null,
+        idTariff: null
       }
       setProposal({
         ...proposal,
@@ -1087,7 +1088,8 @@ const Step6 = ({
         valueSale: 0,
         valueSalePercent: 0,
         valueSaleTotal: null,
-        valuePurchaseTotal: null
+        valuePurchaseTotal: null,
+        idTariff: null
       }
       setProposal({
         ...proposal,
