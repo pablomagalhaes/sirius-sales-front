@@ -3,8 +3,8 @@
     "agentDeleteModal": {
       "cancelMessage": "Cancelar",
       "confirmMessage": "Confirmar",
-      "message": "Ao selecionar outro modal, algumas informações já preenchidas relacionadas ao modal atual serão descartadas. Confirmar a alteração?",
-      "title": "Tem certeza que quer alterar o modal?"
+      "message": "Ao excluir o agente, algumas informações já preenchidas relacionadas ao Agente atual serão descartadas. Confirmar a exclusão?",
+      "title": "Tem certeza que quer excluir o Agente?"
     },
     "costModal": {
       "agent": "Agente:",

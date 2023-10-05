@@ -37,7 +37,7 @@ import {
 } from './StepsStyles'
 import { ProposalContext, ProposalProps } from '../../NewProposal/context/ProposalContext'
 import { Button } from 'fiorde-fe-components'
-import RemoveIcon from '../../../../application/icons/RemoveIcon'
+import AgentDeleteModal from '../../../components/AgentDeleteModal'
 
 interface Step2Props {
   invalidInput: boolean
@@ -1420,6 +1420,9 @@ const Step2 = ({
                       />
                     </div>
                     {index !== 0 && (
+                      <AgentDeleteModal handleConfirm={() => removeAgent(index)} />
+                    )}
+                    {/* {index !== 0 && (
                       <div
                         style={{
                           display: 'flex',
@@ -1434,7 +1437,7 @@ const Step2 = ({
                           }}
                         />
                       </div>
-                    )}
+                    )} */}
                   </div>
                   {invalidAgent &&
                     validateShippingCompany(
