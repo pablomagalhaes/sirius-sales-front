@@ -13,14 +13,14 @@ const useTariffs = (): any => {
     setParams(filter)
   }
 
-  const { data = [] } = useQuery(
+  const { data = [], refetch } = useQuery(
     [QueryKeys.tariffs, params],
     async () => await API.getTariffs(params),
     {
       enabled: tariffType.length > 0
     }
   )
-  return { data, changeFilterList }
+  return { data, changeFilterList, refetch }
 }
 
 export default useTariffs

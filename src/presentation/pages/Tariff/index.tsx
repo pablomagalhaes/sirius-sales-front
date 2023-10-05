@@ -53,7 +53,7 @@ import {
 } from '../../../ids'
 
 const Tariff = (): JSX.Element => {
-  const { data: tariffList = [], changeFilterList } = useTariffs()
+  const { data: tariffList = [], changeFilterList, refetch } = useTariffs()
   const { filter, setFilter }: any = useContext(TariffContext)
 
   const [orderAsc, setOrderAsc] = useState(true)
@@ -97,7 +97,8 @@ const Tariff = (): JSX.Element => {
     if (tariffList.length > 0) setTabSelection(tariffList[0].region)
   }, [tariffList])
 
-  const createTabs = (): void => {
+  const createTabs = async (): Promise<void> => {
+    await refetch()
     const regionsTabs: any[] = []
     const validity = getValidityFilter(quickFilterList)
     if (tariffList?.length > 0) {
@@ -109,6 +110,7 @@ const Tariff = (): JSX.Element => {
             region={item.region}
             expanded={countryExpanded === country}
             country={country}
+            countriesRefetch={refetch}
           />,
           disable: false,
           onChange: (country: string, expanded: boolean): void => { setCountryExpanded(country) },
