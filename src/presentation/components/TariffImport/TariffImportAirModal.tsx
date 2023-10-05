@@ -19,7 +19,6 @@ import {
   ModalDiv,
   MainDiv,
   TableBodyCell,
-  StyledRadio,
   NoTariffs
 } from './TariffImportModalStyles'
 import { I18n } from 'react-redux-i18n'
@@ -92,7 +91,6 @@ const TariffImportAirModal = ({
   const [value, setValue] = useState('0')
   const [labelValues] = useState(initialValues)
   const [valuePosition, setValuePosition] = useState(0)
- 
   const handleOnClose = (): void => {
     setClose()
     setValue('')
@@ -109,17 +107,11 @@ const TariffImportAirModal = ({
   }, [importFilter, filter, open])
 
   const calculateValue = (): void => {
-    console.log('tariffData', tariffData)
-
     const tariffValues = tariffData[0].tariffTypeValues?.map((item) => {
       return item.value
     })
-    console.log('tariffValues', tariffValues)
 
-    console.log('cwSale', cwSale)
-    console.log('calculationData.weight', calculationData.weight)
-
-    let Cw;
+    let Cw
 
     if (calculationData.weight > calculationData.cubageWeight) {
       Cw = calculationData.weight
@@ -127,35 +119,19 @@ const TariffImportAirModal = ({
       Cw = calculationData.cubageWeight
     }
 
-    console.log('Cw', Cw)
-
     const closest = labelValues.reduce(function (prev, curr) {
       return Math.abs(curr - Cw) < Math.abs(prev - Cw) ? curr : prev
     })
-    console.log('closest', closest)
-
 
     const getIndex = labelValues.indexOf(closest)
-    console.log('getIndex', getIndex)
-
-
-
     const getCloset = tariffValues[getIndex + 1]
-    console.log('getCloset',getCloset)
-
     const getIndexValue = 4 + (getIndex + 1)
 
-    console.log('getIndexValue', getIndexValue)
-
     setValuePosition(getIndexValue)
-
     setValue(FormatNumber.convertNumberToString(getCloset))
   }
 
   useEffect(() => {
-    console.log('calculationData', calculationData)
-    console.log('cw', cw)
-    console.log('cwSale', cwSale)
     if (tariffData.length > 0) calculateValue()
   }, [calculationData, tariffData])
 
@@ -331,26 +307,6 @@ const TariffImportAirModal = ({
                                     marginLeft: '10px'
                                   }}
                                 >
-                                  {/* <FormControlLabel
-                                    value={checkIsNumber(each)}
-                                    control={<StyledRadio />}
-                                    label={checkIsNumber(each)}
-                                    id={''}
-                                    disabled={each !== value}
-                                  /> */}
-                                   {/* <Radio
-                                    value={checkIsNumber(each)}
-                                    checked={valuePosition === index}
-                                    inputProps={{ 'aria-label': 'A' }}
-                                  />
-                                  <FormControlLabel
-                                    value={checkIsNumber(each)}
-                                    control={<StyledRadio />}
-                                    label={checkIsNumber(each)}
-                                    id={''}
-                                    disabled={each !== value}
-                                  /> */}
-
                                   <FormControlLabel
                                   value={checkIsNumber(each)}
                                   id={''}
@@ -358,11 +314,10 @@ const TariffImportAirModal = ({
                                   <Radio
                                     value={checkIsNumber(each)}
                                     checked={valuePosition === index}
+                                    disabled={valuePosition !== index}
                                   />}
                                   label={checkIsNumber(each)}
-                                  
                                   />
-
                                 </RadioGroup>
                               </TableBodyCell>
                                 )
