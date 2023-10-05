@@ -178,7 +178,15 @@ const Step6 = ({
         }
         return false
       })?.valuePurchase),
-      tableData: []
+      tableData: [],
+      idTariff: proposal.costs.find((cost): any => {
+        if (cost.costType === CostTypes.Freight) {
+          if (cost?.agent?.idBusinessPartnerAgent === newAgent?.idBusinessPartnerAgent) {
+            return true
+          }
+        }
+        return false
+      })?.idTariff
     }))
   )
   const [dataContainer, setDataContainer] = useState(proposal.cargo[0].cargoVolumes.map((item, index) => ({
@@ -188,7 +196,8 @@ const Step6 = ({
     currencyPurchase: proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.idCurrencyPurchase ?? '',
     valueSale: decimalToString(proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.valueSale),
     valuePurchase: decimalToString(proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.valuePurchase),
-    valueQuantity: item.valueQuantity
+    valueQuantity: item.valueQuantity,
+    idTariff: null
   })))
 
   const getValueSale = (): string[] => {
@@ -241,7 +250,8 @@ const Step6 = ({
       currencyPurchase: '',
       valueSale: '',
       valuePurchase: '',
-      valueQuantity: newCargo.valueQuantity
+      valueQuantity: newCargo.valueQuantity,
+      idTariff: null
     }))
     const unionCargos = [...dataContainer, ...newDataWithNewCargos]
     const getAllCargos = unionCargos.map(unionAgent => unionAgent.idContainerType)
@@ -339,7 +349,8 @@ const Step6 = ({
           isPurchase: false,
           isSale: true,
           valueSaleTotal: null,
-          valuePurchaseTotal: null
+          valuePurchaseTotal: null,
+          idTariff: item.idTariff
         }
         const freightCostSale = {
           id: dataSales.idCost,
@@ -366,7 +377,8 @@ const Step6 = ({
           isPurchase: false,
           isSale: true,
           valueSaleTotal: null,
-          valuePurchaseTotal: null
+          valuePurchaseTotal: null,
+          idTariff: null
         }
         freightCostArrayNew.push(freightCostNew)
         freightCostArrayNew.push(freightCostSale)
@@ -400,7 +412,8 @@ const Step6 = ({
           isPurchase: false,
           isSale: true,
           valueSaleTotal: null,
-          valuePurchaseTotal: null
+          valuePurchaseTotal: null,
+          idTariff: item.idTariff
         }
         freightCostArrayNew.push(freightCostNew)
       })
@@ -616,7 +629,8 @@ const Step6 = ({
         valueSaleTotal: row.type === FareItemsTypes.Fixed || row.type === FareItemsTypes.Bl
           ? FormatNumber.convertStringToNumber(row.saleValue)
           : FormatNumber.convertStringToNumber(row.totalItem),
-        valuePurchaseTotal: null
+        valuePurchaseTotal: null,
+        idTariff: null
       })
     })
 
@@ -1136,6 +1150,24 @@ const Step6 = ({
     setData(newData)
   }
 
+  function handleTariffid (idBusinessPartnerAgent, newData: any, idTariff: number): void {
+    const getCosts = proposal.costs
+    const handleCosts = getCosts.map(cost => {
+      if (cost.costType === CostTypes.Tariff && cost.agent.idBusinessPartnerAgent === idBusinessPartnerAgent) {
+        return {
+          ...cost,
+          idTariff: idTariff
+        }
+      }
+      return cost
+    })
+    setProposal({
+      ...proposal,
+      costs: handleCosts
+    })
+    setData(newData)
+  }
+
   function handleContainerChange (newData, field, newValue, index, hasNumber: boolean): void {
     const getCostsCostTypeFrete = proposal.costs.filter(cost => cost.costType === CostTypes.Freight)
     const getCostsAnotherCostType = proposal.costs.filter(cost => cost.costType !== CostTypes.Freight)
@@ -1164,13 +1196,15 @@ const Step6 = ({
     return field === '' || field === '0' || field === null
   }
 
-  const getPurchase = (value: string, currency: string, index: number): void => {
+  const getPurchase = (value: string, currency: string, index: number, idTariff: number): void => {
     if ((proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
       const newData = [...dataContainer]
       newData[index].currencyPurchase = currency
       newData[index].valuePurchase = value
+      newData[index].idTariff = idTariff
       handleContainerChange(newData, 'currencyPurchase', currency, index, false)
       handleContainerChange(newData, 'valuePurchase', value, index, true)
+      handleContainerChange(newData, 'idTariff', idTariff, index, false)
       const newArr = [...disable]
       newArr[index] = true
       setDisable(newArr)
@@ -1178,8 +1212,10 @@ const Step6 = ({
       const newData = [...data]
       newData[index].valuePurchase = value
       newData[index].currencyPurchase = currency
+      newData[index].idTariff = idTariff
       handleValuePurchase(newData[index].agent.idBusinessPartnerAgent, newData, value)
       handleCurrencyPurchase(newData[index].agent.idBusinessPartnerAgent, newData, currency)
+      handleTariffid(newData[index].agent.idBusinessPartnerAgent, newData, idTariff)
       const newArr = [...disable]
       newArr[index] = true
       setDisable(newArr)
@@ -1219,7 +1255,7 @@ const Step6 = ({
             idOrigin: proposal.originDestiny[0]?.idOrigin,
             idDestination: proposal.originDestiny[0]?.idDestination,
             idBusinessPartnerAgent: selectedAgent.idBusinessPartnerAgent,
-            idBusinessPartnerTransportCompany: selectedAgent.idBusinessPartnerTransportCompany
+            idBusinessPartnerTransporter: selectedAgent.idBusinessPartnerTransportCompany
           }}
           calculationData={calculationData}
           getPurchase={getPurchase}
@@ -1237,7 +1273,7 @@ const Step6 = ({
             originCity: proposal.originDestiny[0]?.originCityId,
             destinationCity: proposal.originDestiny[0]?.destinationCityId,
             idBusinessPartnerAgent: selectedAgent.idBusinessPartnerAgent,
-            idBusinessPartnerTransportCompany: selectedAgent.idBusinessPartnerTransportCompany
+            idBusinessPartnerTransporter: selectedAgent.idBusinessPartnerTransportCompany
           }}
           isDangerous={proposal?.cargo[0]?.isDangerous}
           getPurchase={getPurchase}
@@ -1255,12 +1291,13 @@ const Step6 = ({
             idOrigin: proposal.originDestiny[0]?.idOrigin,
             idDestination: proposal.originDestiny[0]?.idDestination,
             idBusinessPartnerAgent: selectedAgent.idBusinessPartnerAgent,
-            idBusinessPartnerTransportCompany: selectedAgent.idBusinessPartnerTransportCompany
+            idBusinessPartnerTransporter: selectedAgent.idBusinessPartnerTransportCompany
           }}
           calculationData={calculationData}
           getPurchase={getPurchase}
           index={index}
-          type={AcitivityTypes.Import}
+          type={AcitivityTypes.Export}
+          cw={cw}
           cwSale={cwSale}
         />
       )
@@ -1344,7 +1381,7 @@ const Step6 = ({
                             </Grid>
                             <Grid container spacing={5} style={{ marginTop: '-35px' }}>
                               <Grid item xs={2}>
-                                <Autocomplete freeSolo value={data[index]?.currencyPurchase} disabled={disable[index]} onChange={(e, newValue) => {
+                                <Autocomplete value={data[index]?.currencyPurchase} disabled={data[index].idTariff} onChange={(e, newValue) => {
                                   const newData = [...data]
                                   newData[index].currencyPurchase = String(newValue ?? '')
                                   handleCurrencyPurchase(newData[index].agent.idBusinessPartnerAgent, newData, newValue)
@@ -1355,7 +1392,7 @@ const Step6 = ({
                                         variant="outlined" size="small" placeholder={I18n.t('components.itemModal.choose')}
                                         InputProps={{
                                           endAdornment: (
-                                            <InputAdornment position='end'>
+                                            <InputAdornment position='end' disablePointerEvents={data[index].idTariff}>
                                               <Box style={{ position: 'absolute', top: '7px', right: '0' }} {...params.inputProps} >
                                                 <ArrowDropDownIcon />
                                               </Box>
@@ -1371,21 +1408,20 @@ const Step6 = ({
                               <Grid item xs={2}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                   <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
-                                    disabled={disable[index]}
+                                    disabled={data[index].idTariff}
                                     customInput={ControlledInput} onChange={(e) => {
                                       const newData = [...data]
                                       newData[index].valuePurchase = e.target.value
                                       handleValuePurchase(newData[index].agent.idBusinessPartnerAgent, newData, e.target.value)
                                     }} toolTipTitle={I18n.t('components.itemModal.requiredField')}
                                     invalid={invalidInput && inputValidation(data[index]?.valuePurchase)} value={data[index]?.valuePurchase} variant='outlined' size='small' />
-                                  {disable[index] && <div style={{ marginLeft: '10px', cursor: 'pointer' }}>
+                                  {data[index].idTariff && <div style={{ marginLeft: '10px', cursor: 'pointer' }}>
                                     <RemoveIcon onClick={() => cleanPurchase(index)} />
                                   </div>}
                                 </div>
                               </Grid>
                               <Grid item xs={2}>
                                 <Autocomplete
-                                  freeSolo
                                   value={dataSales.currencySale}
                                   onChange={(e, newValue) => handleCurrencySale(newValue)}
                                   options={currencyList.map((item) => item.id)} renderInput={(params) => (
@@ -1654,7 +1690,7 @@ const Step6 = ({
                               idOrigin: proposal.originDestiny[0]?.idOrigin,
                               idDestination: proposal.originDestiny[0]?.idDestination,
                               idBusinessPartnerAgent: proposal?.agents[0]?.idBusinessPartnerAgent,
-                              idBusinessPartnerTransportCompany: proposal?.agents[0]?.idBusinessPartnerTransportCompany
+                              idBusinessPartnerTransporter: proposal?.agents[0]?.idBusinessPartnerTransportCompany
                             }}
                             containerType={cargoVolume.idContainerType}
                             getPurchase={getPurchase}
