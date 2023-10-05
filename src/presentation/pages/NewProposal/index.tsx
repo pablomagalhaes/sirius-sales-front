@@ -21,8 +21,8 @@ import Step1 from './steps/Step1'
 import Step2, { Agents } from './steps/Step2'
 import Step3 from './steps/Step3'
 import Step4 from './steps/Step4'
-import Step5 from './steps/Step5'
-import Step6 from './steps/Step6'
+import Step5 from './steps/Step6'
+import Step6 from './steps/Step5'
 import { useHistory, useLocation } from 'react-router-dom'
 import { ItemModalData } from '../../components/ItemModal/ItemModal'
 import { ProposalContext, ProposalProps, emptyProposalValue } from './context/ProposalContext'
@@ -579,25 +579,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                 specifications={specifications}
               />
             </div>
-            {stepLoaded.step3 && <> <div id="step5">
-              <Step5
-                agentList={agentList}
-                calculationData={calculationData}
-                containerItems={step3TableItems}
-                containerTypeList={containerTypeList}
-                costData={costData}
-                invalidInput={invalidInput}
-                modal={modal}
-                serviceList={serviceList}
-                setCompleted={setCompleted}
-                setFilled={setFilled}
-                setTotalCosts={setTotalCosts}
-                setUndoMessage={setUndoMessage}
-                specifications={specifications}
-                undoMessage={undoMessage}
-                updateTableIdsRef={updateTable5IdsRef}
-              />
-            </div>
+            {stepLoaded.step3 && <> 
               <div id="step6">
                 <Step6
                   calculationData={calculationData}
@@ -616,6 +598,25 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                   totalCosts={totalCosts}
                   undoMessage={undoMessage}
                   updateTableIdsRef={updateTable6IdsRef}
+                />
+              </div>
+              <div id="step5">
+                <Step5
+                  agentList={agentList}
+                  calculationData={calculationData}
+                  containerItems={step3TableItems}
+                  containerTypeList={containerTypeList}
+                  costData={costData}
+                  invalidInput={invalidInput}
+                  modal={modal}
+                  serviceList={serviceList}
+                  setCompleted={setCompleted}
+                  setFilled={setFilled}
+                  setTotalCosts={setTotalCosts}
+                  setUndoMessage={setUndoMessage}
+                  specifications={specifications}
+                  undoMessage={undoMessage}
+                  updateTableIdsRef={updateTable5IdsRef}
                 />
               </div>
             </>}
