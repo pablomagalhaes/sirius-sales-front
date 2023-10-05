@@ -133,7 +133,8 @@
       "generalCargoCons": "Carga Geral cons.: ",
       "ImoCargoDed": "Carga IMO ded.: ",
       "ImoCargoCons": "Carga IMO cons.: ",
-      "agentLandCompany": "Agente / Transportadora: "
+      "agentLandCompany": "Agente / Transportadora: ",
+      "dateInvalid": "Insira uma data válida, igual ou maior que a data atual."
     },
     "ProposalDisplayModal": {
       "title": "Fazer download de proposta",

@@ -132,7 +132,8 @@
       "generalCargoCons": "General Cargo cons.: ",
       "ImoCargoDed": "IMO Cargo ded.: ",
       "ImoCargoCons": "IMO Cargo cons.: ",
-      "agentLandCompany": "Agent / Land Carrier: "
+      "agentLandCompany": "Agent / Land Carrier: ",
+      "dateInvalid": "Enter a valid date, equal to or greater than the current date."
     },
     "ProposalDisplayModal": {
       "title": "Download the proposal",
