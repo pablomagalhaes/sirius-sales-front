@@ -24,9 +24,9 @@ interface Step5Props {
     step3: boolean
     step5origin: boolean
     step5destiny: boolean
-    step6: boolean
+    step5: boolean
   }>>
-  undoMessage: { step3: boolean, step5origin: boolean, step5destiny: boolean, step6: boolean }
+  undoMessage: { step3: boolean, step5origin: boolean, step5destiny: boolean, step5: boolean }
   serviceList: any[]
   containerTypeList: any[]
   calculationData: CalculationDataProps
@@ -270,17 +270,17 @@ const Step6 = ({
   useEffect(() => {
     if (dataOrigin.length > 0 && dataDestiny.length > 0) {
       setCompleted((currentState) => {
-        return { ...currentState, step5: true }
+        return { ...currentState, step6: true }
       })
       setFilled((currentState) => {
-        return { ...currentState, step5: true }
+        return { ...currentState, step6: true }
       })
     } else {
       setCompleted((currentState) => {
-        return { ...currentState, step5: false }
+        return { ...currentState, step6: false }
       })
       setFilled((currentState) => {
-        return { ...currentState, step5: false }
+        return { ...currentState, step6: false }
       })
     }
   }, [dataDestiny, dataOrigin])
@@ -297,14 +297,14 @@ const Step6 = ({
   return (
     <Separator>
       <Title>
-        6. {I18n.t('pages.newProposal.step5.title')}
-        <Subtitle>{I18n.t('pages.newProposal.step5.subtitle')}</Subtitle>
+        6. {I18n.t('pages.newProposal.step6.title')}
+        <Subtitle>{I18n.t('pages.newProposal.step6.subtitle')}</Subtitle>
       </Title>
       {loadedTable && <CostTable
         agentList={agentList}
-        modalTitle={I18n.t('pages.newProposal.step5.originCost')}
-        title={I18n.t('pages.newProposal.step5.origin')}
-        totalCostLabel={I18n.t('pages.newProposal.step5.totalOrigin')}
+        modalTitle={I18n.t('pages.newProposal.step6.originCost')}
+        title={I18n.t('pages.newProposal.step6.origin')}
+        totalCostLabel={I18n.t('pages.newProposal.step6.totalOrigin')}
         costData={costData}
         modal={modal}
         specifications={specifications}
@@ -316,14 +316,14 @@ const Step6 = ({
         setUndoMessage={setUndoMessage}
         serviceList={serviceList}
         calculationData={calculationData}
-        errorMessage={invalidInput ? I18n.t('pages.newProposal.step5.errorOrigin') : ''}
+        errorMessage={invalidInput ? I18n.t('pages.newProposal.step6.errorOrigin') : ''}
       />
       }
       {loadedTable && <CostTable
         agentList={agentList}
-        modalTitle={I18n.t('pages.newProposal.step5.destinationCost')}
-        title={I18n.t('pages.newProposal.step5.destiny')}
-        totalCostLabel={I18n.t('pages.newProposal.step5.totalDestiny')}
+        modalTitle={I18n.t('pages.newProposal.step6.destinationCost')}
+        title={I18n.t('pages.newProposal.step6.destiny')}
+        totalCostLabel={I18n.t('pages.newProposal.step6.totalDestiny')}
         costData={costData}
         modal={modal}
         specifications={specifications}
@@ -335,7 +335,7 @@ const Step6 = ({
         setUndoMessage={setUndoMessage}
         serviceList={serviceList}
         calculationData={calculationData}
-        errorMessage={invalidInput ? I18n.t('pages.newProposal.step5.errorDestiny') : ''}
+        errorMessage={invalidInput ? I18n.t('pages.newProposal.step6.errorDestiny') : ''}
       />
       }
     </Separator>

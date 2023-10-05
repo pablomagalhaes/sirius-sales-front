@@ -49,14 +49,14 @@ interface Step6Props {
     step3: boolean
     step5origin: boolean
     step5destiny: boolean
-    step6: boolean
+    step5: boolean
   }>
   >
   undoMessage: {
     step3: boolean
     step5origin: boolean
     step5destiny: boolean
-    step6: boolean
+    step5: boolean
   }
   serviceList: any[]
   containerTypeList: any[]
@@ -439,7 +439,7 @@ const Step5 = ({
       step3: false,
       step5origin: false,
       step5destiny: false,
-      step6: false
+      step5: false
     })
   }, [modal])
 
@@ -656,17 +656,17 @@ const Step5 = ({
       (dataSales.valueSale.every(value => value !== '' && value !== '0')) &&
       (dataSales.currencySale !== '' && dataSales.currencySale !== '0' && dataSales.currencySale !== null)) {
         setCompleted((currentState) => {
-          return { ...currentState, step6: true }
+          return { ...currentState, step5: true }
         })
         setFilled((currentState) => {
-          return { ...currentState, step6: true }
+          return { ...currentState, step5: true }
         })
       } else {
         setFilled((currentState) => {
-          return { ...currentState, step6: false }
+          return { ...currentState, step5: false }
         })
         setCompleted((currentState) => {
-          return { ...currentState, step6: false }
+          return { ...currentState, step5: false }
         })
       }
     }
@@ -674,17 +674,17 @@ const Step5 = ({
     if (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType) {
       if (dataContainer.every(d => d.currencyPurchase !== '') && dataContainer.every(d => d.valuePurchase !== '')) {
         setCompleted((currentState) => {
-          return { ...currentState, step6: true }
+          return { ...currentState, step5: true }
         })
         setFilled((currentState) => {
-          return { ...currentState, step6: true }
+          return { ...currentState, step5: true }
         })
       } else {
         setFilled((currentState) => {
-          return { ...currentState, step6: false }
+          return { ...currentState, step5: false }
         })
         setCompleted((currentState) => {
-          return { ...currentState, step6: false }
+          return { ...currentState, step5: false }
         })
       }
     }
@@ -794,7 +794,7 @@ const Step5 = ({
       step3: false,
       step5origin: false,
       step5destiny: false,
-      step6: false
+      step5: false
     })
 
     const totalCostCalculationData = getTotalCalculationData(item)
@@ -834,7 +834,7 @@ const Step5 = ({
       step3: false,
       step5origin: false,
       step5destiny: false,
-      step6: true
+      step5: true
     })
   }
 
@@ -846,13 +846,13 @@ const Step5 = ({
   const selectTypeModal = (): string => {
     switch (modal) {
       case 'AIR':
-        return String(I18n.t('pages.newProposal.step6.companyAir'))
+        return String(I18n.t('pages.newProposal.step5.companyAir'))
       case 'SEA':
-        return String(I18n.t('pages.newProposal.step6.companySea'))
+        return String(I18n.t('pages.newProposal.step5.companySea'))
       case 'LAND':
-        return String(I18n.t('pages.newProposal.step6.companyLand'))
+        return String(I18n.t('pages.newProposal.step5.companyLand'))
     }
-    return String(I18n.t('pages.newProposal.step6.companySea'))
+    return String(I18n.t('pages.newProposal.step5.companySea'))
   }
 
   const completeDecimalPlaces = (num: number | null): string => {
@@ -1274,8 +1274,8 @@ const Step5 = ({
     <Separator>
       <HeightDiv>
         <Title>
-          5. {I18n.t('pages.newProposal.step6.title')}
-          <Subtitle>{I18n.t('pages.newProposal.step6.subtitle')}</Subtitle>
+          5. {I18n.t('pages.newProposal.step5.title')}
+          <Subtitle>{I18n.t('pages.newProposal.step5.subtitle')}</Subtitle>
         </Title>
         <FormControl variant='outlined' size='small' className='form-size'>
           <>
@@ -1284,7 +1284,7 @@ const Step5 = ({
                 return (
                   <>
                     <Grid item xs={6}>
-                      <FormLabel component="legend"><strong>{I18n.t('pages.newProposal.step6.freightByAgent')}</strong></FormLabel>
+                      <FormLabel component="legend"><strong>{I18n.t('pages.newProposal.step5.freightByAgent')}</strong></FormLabel>
                     </Grid>
                     {proposal.agents.map((selectedAgent, index) => {
                       return ((selectedAgent.idBusinessPartnerAgent !== null) && (selectedAgent.idBusinessPartnerTransportCompany !== null)) && (
@@ -1293,7 +1293,7 @@ const Step5 = ({
                             <Grid container spacing={0}>
                               <Grid item xs={1}>
                                 <FormLabel component='legend'>
-                                  {I18n.t('pages.newProposal.step6.agent')}:
+                                  {I18n.t('pages.newProposal.step5.agent')}:
                                 </FormLabel>
                               </Grid>
                               <Grid item xs={11}>
@@ -1319,25 +1319,25 @@ const Step5 = ({
                             <Grid container spacing={5}>
                               <Grid item xs={2}>
                                 <FormLabel component='legend' error={invalidInput && data.some((each) => inputValidation(each.currencyPurchase))}>
-                                  {I18n.t('pages.newProposal.step6.currencyPurchase')}
+                                  {I18n.t('pages.newProposal.step5.currencyPurchase')}
                                   <RedColorSpan> *</RedColorSpan>
                                 </FormLabel>
                               </Grid>
                               <Grid item xs={2}>
                                 <FormLabel component='legend' error={invalidInput && data.some((each) => inputValidation(each.valuePurchase))}>
-                                  {I18n.t('pages.newProposal.step6.valuePurchase')}
+                                  {I18n.t('pages.newProposal.step5.valuePurchase')}
                                   <RedColorSpan> *</RedColorSpan>
                                 </FormLabel>
                               </Grid>
                               <Grid item xs={2}>
                                 <FormLabel component='legend' error={invalidInput && inputValidation(dataSales.currencySale)}>
-                                  {I18n.t('pages.newProposal.step6.currencySale')}
+                                  {I18n.t('pages.newProposal.step5.currencySale')}
                                   <RedColorSpan> *</RedColorSpan>
                                 </FormLabel>
                               </Grid>
                               <Grid item xs={2}>
                                 <FormLabel component='legend' error={invalidInput && (dataSales.valueSale?.length === 0 || inputValidation(dataSales.valueSale[index]))}>
-                                  {I18n.t('pages.newProposal.step6.valueSale')}
+                                  {I18n.t('pages.newProposal.step5.valueSale')}
                                   <RedColorSpan> *</RedColorSpan>
                                 </FormLabel>
                               </Grid>
@@ -1419,10 +1419,10 @@ const Step5 = ({
                                 onAction={() => {
                                   setOpenImport(true)
                                 }}
-                                text={I18n.t('pages.newProposal.step6.importButton')}
+                                text={I18n.t('pages.newProposal.step5.importButton')}
                                 icon="tariff"
                                 backgroundGreen={true}
-                                tooltip={I18n.t('pages.newProposal.step6.importButton')}
+                                tooltip={I18n.t('pages.newProposal.step5.importButton')}
                                 disabled={false}
                               />
                             </ButtonWrapper>
@@ -1443,7 +1443,7 @@ const Step5 = ({
                   <>
 
                   <Grid item xs={6}>
-                    <FormLabel component="legend"><strong>{I18n.t('pages.newProposal.step6.freightByAgent')}</strong></FormLabel>
+                    <FormLabel component="legend"><strong>{I18n.t('pages.newProposal.step5.freightByAgent')}</strong></FormLabel>
                   </Grid>
 
                   <LineSeparator />
@@ -1452,7 +1452,7 @@ const Step5 = ({
                     <Grid container spacing={0}>
                       <Grid item xs={1}>
                         <FormLabel component="legend">
-                        {I18n.t('pages.newProposal.step6.agent')}:
+                        {I18n.t('pages.newProposal.step5.agent')}:
                         </FormLabel>
                       </Grid>
                       <Grid item xs={11}>
@@ -1483,25 +1483,25 @@ const Step5 = ({
                             </Grid>
                             <Grid item xs={2}>
                               <FormLabel component='legend'>
-                                {I18n.t('pages.newProposal.step6.currencyPurchase')}
+                                {I18n.t('pages.newProposal.step5.currencyPurchase')}
                                 <RedColorSpan> *</RedColorSpan>
                               </FormLabel>
                             </Grid>
                             <Grid item xs={2}>
                               <FormLabel component='legend'>
-                                {I18n.t('pages.newProposal.step6.valuePurchase')}
+                                {I18n.t('pages.newProposal.step5.valuePurchase')}
                                 <RedColorSpan> *</RedColorSpan>
                               </FormLabel>
                             </Grid>
                             <Grid item xs={2}>
                               <FormLabel component='legend'>
-                                {I18n.t('pages.newProposal.step6.currencySale')}
+                                {I18n.t('pages.newProposal.step5.currencySale')}
                                 <RedColorSpan> *</RedColorSpan>
                               </FormLabel>
                             </Grid>
                             <Grid item xs={2}>
                               <FormLabel component='legend'>
-                                {I18n.t('pages.newProposal.step6.valueSale')}
+                                {I18n.t('pages.newProposal.step5.valueSale')}
                                 <RedColorSpan> *</RedColorSpan>
                               </FormLabel>
                             </Grid>
@@ -1639,10 +1639,10 @@ const Step5 = ({
                           <ButtonWrapper>
                             <Button
                               onAction={() => { setOpenImport(true); setModalIndex(index) }}
-                              text={I18n.t('pages.newProposal.step6.importButton')}
+                              text={I18n.t('pages.newProposal.step5.importButton')}
                               icon="tariff"
                               backgroundGreen={true}
-                              tooltip={I18n.t('pages.newProposal.step6.importButton')}
+                              tooltip={I18n.t('pages.newProposal.step5.importButton')}
                               disabled={false}
                             />
                           </ButtonWrapper>
@@ -1683,13 +1683,13 @@ const Step5 = ({
         <ButtonWrapper>
           <Button
             onAction={handleOpen}
-            text={I18n.t('pages.newProposal.step6.addFare')}
+            text={I18n.t('pages.newProposal.step5.addFare')}
             icon="add"
             backgroundGreen={false}
             tooltip={
               costData === 0
-                ? I18n.t('pages.newProposal.step6.addFareTooltip')
-                : I18n.t('pages.newProposal.step6.addFare')
+                ? I18n.t('pages.newProposal.step5.addFareTooltip')
+                : I18n.t('pages.newProposal.step5.addFare')
             }
             disabled={costData === 0 || disabledAddFareButton()}
           />
@@ -1708,7 +1708,7 @@ const Step5 = ({
         />
         {renderTotalSurchage()}
       </HeightDiv>
-      {undoMessage.step6 && (
+      {undoMessage.step5 && (
         <MessageContainer>
           <Messages
             closable={true}
@@ -1719,7 +1719,7 @@ const Step5 = ({
                 step3: false,
                 step5origin: false,
                 step5destiny: false,
-                step6: false
+                step5: false
               })
             }}
             closeMessage=""
@@ -1729,7 +1729,7 @@ const Step5 = ({
                 step3: false,
                 step5origin: false,
                 step5destiny: false,
-                step6: false
+                step5: false
               })
             }}
             message={I18n.t('pages.newProposal.step3.messageDeleteItem')}
@@ -1743,12 +1743,12 @@ const Step5 = ({
       <Separator>
         <div>
           <Title>
-            5. {I18n.t('pages.newProposal.step6.title')}
-            <Subtitle>{I18n.t('pages.newProposal.step6.subtitle')}</Subtitle>
+            5. {I18n.t('pages.newProposal.step5.title')}
+            <Subtitle>{I18n.t('pages.newProposal.step5.subtitle')}</Subtitle>
           </Title>
           <TotalContainer>
             <FreightContainer>
-              {I18n.t('pages.newProposal.step6.addFareTooltip')}
+              {I18n.t('pages.newProposal.step5.addFareTooltip')}
             </FreightContainer>
           </TotalContainer>
         </div>

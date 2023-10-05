@@ -381,7 +381,7 @@ const CostModal = ({
     }
   }, [flag])
 
-  const isOriginCost = title === I18n.t('pages.newProposal.step5.originCost')
+  const isOriginCost = title === I18n.t('pages.newProposal.step6.originCost')
   useEffect(() => {
     if (open) {
       state.agent.idBusinessPartnerAgent === undefined && agentList.length === 1 && dispatch({ type: 'agent', value: agentList[0].agent })

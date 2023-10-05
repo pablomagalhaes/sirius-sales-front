@@ -302,18 +302,6 @@
         "wednesday": "W"
       },
       "step5": {
-        "destinationCost": "New destiny cost",
-        "destiny": "Destiny",
-        "errorDestiny": "It is mandatory to inform some destiny cost",
-        "errorOrigin": "It is mandatory to inform some origin cost.",
-        "origin": "Origin",
-        "originCost": "New origin cost",
-        "subtitle": "Compose the origin and destination costs.",
-        "title": "Costs",
-        "totalDestiny": "Total destiny costs:",
-        "totalOrigin": "Total origin costs:"
-      },
-      "step6": {
         "addFare": "Add surcharge",
         "addFareTooltip": "To add, select agents in the \"Service\" step and include at least one item in the \"Cargo\" step",
         "agent": "Agent",
@@ -371,6 +359,18 @@
           "importButton": "Importar",
           "noTariffs": "Não foram encontradas tarifas para serem importadas"
         }
+      },
+      "step6": {
+        "destinationCost": "New destiny cost",
+        "destiny": "Destiny",
+        "errorDestiny": "It is mandatory to inform some destiny cost",
+        "errorOrigin": "It is mandatory to inform some origin cost.",
+        "origin": "Origin",
+        "originCost": "New origin cost",
+        "subtitle": "Compose the origin and destination costs.",
+        "title": "Costs",
+        "totalDestiny": "Total destiny costs:",
+        "totalOrigin": "Total origin costs:"
       },
       "unsavedChanges": {
         "cancelMessage": "Cancel",

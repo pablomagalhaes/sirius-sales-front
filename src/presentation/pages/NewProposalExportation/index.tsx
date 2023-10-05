@@ -23,8 +23,8 @@ import Step1 from './steps/Step1'
 import Step2, { Agents } from './steps/Step2'
 import Step3 from './steps/Step3'
 import Step4 from './steps/Step4'
-import Step5 from './steps/Step6'
-import Step6 from './steps/Step5'
+import Step5 from './steps/Step5'
+import Step6 from './steps/Step6'
 import { useHistory, useLocation } from 'react-router-dom'
 import { ItemModalData } from '../../components/ItemModal/ItemModal'
 import { ProposalContext, ProposalProps, emptyProposalValue } from '../NewProposal/context/ProposalContext'
@@ -142,7 +142,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
     step3: false,
     step5origin: false,
     step5destiny: false,
-    step6: false
+    step5: false
   })
 
   const [completed, setCompleted] = useState({
@@ -150,8 +150,8 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
     step2: false,
     step3: false,
     step4: false,
-    step5: false,
-    step6: false
+    step6: false,
+    step5: false
   })
 
   const [filled, setFilled] = useState({
@@ -159,8 +159,8 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
     step2: false,
     step3: false,
     step4: false,
-    step5: false,
-    step6: false
+    step6: false,
+    step5: false
   })
 
   const [stepLoaded, setStepLoaded] = useState({
@@ -168,7 +168,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
     step2: false,
     step3: false,
     step4: false,
-    step5: false
+    step6: false
   })
 
   const steps = [
@@ -193,14 +193,14 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
       completed: completed.step4
     },
     {
-      id: 'step5',
-      label: I18n.t('pages.newProposal.step5.title'),
-      completed: completed.step5
-    },
-    {
       id: 'step6',
       label: I18n.t('pages.newProposal.step6.title'),
       completed: completed.step6
+    },
+    {
+      id: 'step5',
+      label: I18n.t('pages.newProposal.step5.title'),
+      completed: completed.step5
     }
   ]
 
@@ -226,9 +226,9 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
       completed: completed.step4
     },
     {
-      id: 'step6',
-      label: I18n.t('pages.newProposal.step6.title'),
-      completed: completed.step6
+      id: 'step5',
+      label: I18n.t('pages.newProposal.step5.title'),
+      completed: completed.step5
     }
   ]
 
@@ -246,8 +246,8 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
       completed.step2 &&
       completed.step3 &&
       completed.step4 &&
-      (modal === 'LAND' || completed.step5) &&
-      completed.step6
+      (modal === 'LAND' || completed.step6) &&
+      completed.step5
     ) {
       if (proposal.idProposal === undefined || proposal.idProposal === null || location.state?.eventType === 'duplicate') {
         proposal.idProposal = null
@@ -333,8 +333,8 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
         filled.step2 ||
         filled.step3 ||
         filled.step4 ||
-        filled.step5 ||
-        filled.step6) {
+        filled.step6 ||
+        filled.step5) {
         setLeavingPage(true)
       } else {
         setLeavingPage(false)
@@ -589,8 +589,8 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
             </div>
             {stepLoaded.step3 &&
               <>
-              <div id="step6">
-                <Step6
+              <div id="step5">
+                <Step5
                   calculationData={calculationData}
                   containerItems={step3TableItems}
                   containerTypeList={containerTypeList}
@@ -609,8 +609,8 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
                   updateTableIdsRef={updateTable6IdsRef}
                 />
               </div>
-              <div id="step5">
-                <Step5
+              <div id="step6">
+                <Step6
                   agentList={agentList}
                   calculationData={calculationData}
                   containerItems={step3TableItems}

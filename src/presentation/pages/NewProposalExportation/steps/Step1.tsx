@@ -39,8 +39,8 @@ export interface Filled {
   step2: boolean
   step3: boolean
   step4: boolean
-  step5: boolean
   step6: boolean
+  step5: boolean
 }
 export interface Step1Props {
   theme?: any
@@ -309,8 +309,8 @@ const Step1 = ({
       filled.step2 ||
       filled.step3 ||
       filled.step4 ||
-      filled.step5 ||
-      filled.step6
+      filled.step6 ||
+      filled.step5
     ) {
       setModalCopy(modal)
       if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
