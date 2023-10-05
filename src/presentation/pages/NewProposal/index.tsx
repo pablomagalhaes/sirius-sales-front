@@ -231,7 +231,6 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   }
 
   const handleSave = (): void => {
-    console.log('caiu aqui handleSave')
     if (
       completed.step1 &&
       completed.step2 &&
@@ -243,7 +242,6 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       if (proposal.idProposal === undefined || proposal.idProposal === null || location.state?.eventType === 'duplicate') {
         proposal.idProposal = null
         const newProposal = removeNullProperties()
-        console.log('newProposal if', newProposal)
         API.postProposal(JSON.stringify(newProposal)).then((response) => {
           setProposal(response)
           // @ts-expect-error
@@ -263,7 +261,6 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         })
       } else {
         const newProposal = removeNullProperties()
-        console.log('newProposal else', newProposal)
         API.putProposal(proposal.idProposal, JSON.stringify(newProposal)).then((response) => {
           setProposal(response)
           // @ts-expect-error
@@ -448,10 +445,6 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
 
   const handler = useCallback(() => { setLeavingPage(true) }, [])
   useOnClickOutside(handler)
-
-  console.log('index cwSale', cwSale)
-  console.log('index costData', costData)
-  console.log('index calculationData', calculationData)
 
   return (
     <RootContainer>
