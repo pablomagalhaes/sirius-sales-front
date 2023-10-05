@@ -49,6 +49,10 @@ import { usePartnerList, useBusinessPartnerByType } from '../../../hooks'
 
 import { StaggeredProposalContext, StaggeredProposalProps } from '../../StaggeredProposal/context/StaggeredProposalContext'
 
+import { CurrencytemsTypes } from '../../../../application/enum/currencyEnum'
+
+import { LocaleTypes } from '../../../../application/enum/enum'
+
 interface InputRowProps {
   invalidInput?: boolean
   setCompleted?: (completed: any) => void
@@ -95,7 +99,7 @@ const InputRow = ({
   ]
 
   const MaxLenth = {
-    maxLength: 12
+    maxLength: 13
   }
 
   const [state, setState] = useState({ anchorEl: null, currentKey: null })
@@ -248,6 +252,14 @@ const InputRow = ({
     return simpleName || ''
   }
 
+  const checkNumber = (value): any => {
+    if (typeof value === 'number' && !isNaN(value)) {
+      return FormatNumber.convertNumberWithInterCoin(LocaleTypes.PT_BR, CurrencytemsTypes.BRL, Number(value))
+    } else {
+      return value
+    }
+  }
+
   return (
     <>
       <Grid
@@ -276,39 +288,39 @@ const InputRow = ({
               <Fragment key={index}>
                   <Grid key={index} item xs={1}>
                     <FormLabelInner component="legend" id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_VMINIMUM}>
-                   {line.vlMinimum}
+                      {checkNumber(line.vlMinimum)}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
                     <FormLabelInner component="legend" center id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL45KG}>
-                      {line.until45kg}
+                      {checkNumber(line.until45kg)}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
                     <FormLabelInner component="legend" center
                     id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL100KG}>
-                    {line.until100kg}
+                    {checkNumber(line.until100kg)}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
                     <FormLabelInner component="legend" center
                     id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL300KG}
                     >
-                     {line.until300kg}
+                     {checkNumber(line.until300kg)}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
                     <FormLabelInner component="legend" center
                     id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL500KG}
                     >
-                     {line.until500kg}
+                     {checkNumber(line.until500kg)}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>
                     <FormLabelInner component="legend" center
                     id={STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_STEP2_LABEL_UNTIL1000KG}
                     >
-                    {line.until1000kg}
+                    {checkNumber(line.until1000kg)}
                     </FormLabelInner>
                   </Grid>
                   <Grid item xs={1}>

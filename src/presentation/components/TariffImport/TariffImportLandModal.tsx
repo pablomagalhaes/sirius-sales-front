@@ -61,7 +61,7 @@ const TariffImportLandModa = ({
   type
 }: TariffUploadProps): JSX.Element => {
   const { filter }: any = useContext(TariffContext)
-  const { content: tariffData, setParams } = useTariffsByCountry()
+  const { content: tariffData, setParams, refetch } = useTariffsByCountry()
   const { partnerList: agentsList } = usePartnerList()
   const { data: cities = [] } = useMercosulCities()
   const { landPartners = [] } = useBusinessPartnerByType()
@@ -79,13 +79,14 @@ const TariffImportLandModa = ({
       validityTariff: ValidityTypes.Valid,
       tariffType: type
     })
-  }, [importFilter, filter])
+    refetch()
+  }, [importFilter, filter, open])
 
   const calculateValue = (): void => {
     const imoDedValue = tariffData[0]?.tariffTypeValues.find(each => each.tariffType.description === TariffItemsTypes.Vlimoded)
     const genralDedValue = tariffData[0]?.tariffTypeValues.find(each => each.tariffType.description === TariffItemsTypes.Vlgeneralded)
-    if (isDangerous) setValue(FormatNumber.convertNumberToString(imoDedValue))
-    else setValue(FormatNumber.convertNumberToString(genralDedValue))
+    if (isDangerous) setValue(FormatNumber.convertNumberToString(Number(imoDedValue.value)))
+    else setValue(FormatNumber.convertNumberToString(Number(genralDedValue.value)))
   }
 
   useEffect(() => {
@@ -172,7 +173,7 @@ const TariffImportLandModa = ({
               </FormLabel>
               <FormLabel component="legend">
                 <strong>
-                  {landPartners.find((item: any) => item.businessPartner.id === importFilter?.idBusinessPartnerTransportCompany)?.businessPartner.simpleName}
+                  {landPartners.find((item: any) => item.businessPartner.id === importFilter?.idBusinessPartnerTransporter)?.businessPartner.simpleName}
                 </strong>
               </FormLabel>
             </Grid>

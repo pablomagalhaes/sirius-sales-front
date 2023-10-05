@@ -61,7 +61,7 @@ const TariffImportFclModal = ({
   type
 }: TariffUploadProps): JSX.Element => {
   const { filter }: any = useContext(TariffContext)
-  const { content: tariffData, setParams } = useTariffsByCountry()
+  const { content: tariffData, setParams, refetch } = useTariffsByCountry()
   const { partnerList: agentsList } = usePartnerList()
   const { data: originDestinationList = [] } = useOriginDestination()
   const { seaPartners = [] } = useBusinessPartnerByType()
@@ -79,7 +79,8 @@ const TariffImportFclModal = ({
       tariffType: type,
       txChargeType: TxChargeTypes.Fcl
     })
-  }, [importFilter, filter])
+    refetch()
+  }, [importFilter, filter, open])
 
   const calculateValue = (): void => {
     const container20 = tariffData[0]?.tariffTypeValues.find(each => each.tariffType.description === TariffItemsTypes.Vlcontainer20)
@@ -170,7 +171,7 @@ const TariffImportFclModal = ({
               </FormLabel>
               <FormLabel component="legend">
                 <strong>
-                  {seaPartners.find((item: any) => item.businessPartner.id === importFilter?.idBusinessPartnerTransportCompany)?.businessPartner.simpleName}
+                  {seaPartners.find((item: any) => item.businessPartner.id === importFilter?.idBusinessPartnerTransporter)?.businessPartner.simpleName}
                 </strong>
               </FormLabel>
             </Grid>

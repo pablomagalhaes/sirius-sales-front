@@ -30,6 +30,7 @@ import { ItemModalData } from '../../components/ItemModal/ItemModal'
 import { ProposalContext, ProposalProps, emptyProposalValue } from '../NewProposal/context/ProposalContext'
 import API from '../../../infrastructure/api'
 import { CalculationDataProps } from '../../components/ChargeTable'
+import moment from 'moment'
 
 export interface NewProposalProps {
   theme: any
@@ -103,7 +104,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
       })()
     } else {
       setLoadExistingProposal(true)
-      setProposal({ ...emptyProposalValue, openingDate: formatDate(), operationType: 'EXPORT FREIGHT' })
+      setProposal({ ...emptyProposalValue, openingDate: moment().toISOString(), operationType: 'EXPORT FREIGHT' })
     }
   }, [])
 
@@ -115,7 +116,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
         ...proposal,
         validityDate: '',
         idProposalStatus: 1,
-        openingDate: formatDate(),
+        openingDate: moment().toISOString(),
         cargo: proposal.cargo.map((cargo) => {
           cargo.id = null
           cargo.cargoVolumes = cargo.cargoVolumes.map(cargoVolume => {
@@ -135,19 +136,6 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
       }
       setProposal(proposalObject)
     }
-  }
-
-  const formatDate = (): string => {
-    const year = new Date().getFullYear()
-    const month = new Date().getMonth()
-    const date = new Date().getDate()
-    const hour = new Date().getHours()
-    const minute = new Date().getMinutes()
-    const second = new Date().getSeconds()
-    const yearMonth = `${year}-${('0' + String(month + 1).slice(-2))}`
-    const dateHour = `-${('0' + String(date)).slice(-2)}T${('0' + String(hour)).slice(-2)}`
-    const minuteSecond = `:${('0' + String(minute)).slice(-2)}:${('0' + String(second)).slice(-2)}.000Z`
-    return yearMonth + dateHour + minuteSecond
   }
 
   const [undoMessage, setUndoMessage] = useState({

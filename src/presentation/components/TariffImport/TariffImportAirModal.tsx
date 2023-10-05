@@ -85,13 +85,12 @@ const TariffImportAirModal = ({
   cwSale
 }: TariffUploadProps): JSX.Element => {
   const { filter }: any = useContext(TariffContext)
-  const { content: tariffData, setParams } = useTariffsByCountry()
+  const { content: tariffData, setParams, refetch } = useTariffsByCountry()
   const { partnerList: agentsList } = usePartnerList()
   const { data: originDestinationList = [] } = useOriginDestination()
   const { airPartners = [] } = useBusinessPartnerByType()
   const [value, setValue] = useState('0')
   const [labelValues] = useState(initialValues)
-
   const [valuePosition, setValuePosition] = useState(0)
  
   const handleOnClose = (): void => {
@@ -106,7 +105,8 @@ const TariffImportAirModal = ({
       validityTariff: ValidityTypes.Valid,
       tariffType: type
     })
-  }, [importFilter, filter])
+    refetch()
+  }, [importFilter, filter, open])
 
   const calculateValue = (): void => {
     console.log('tariffData', tariffData)
@@ -270,7 +270,7 @@ const TariffImportAirModal = ({
                     airPartners.find(
                       (item: any) =>
                         item.businessPartner.id ===
-                        importFilter?.idBusinessPartnerTransportCompany
+                        importFilter?.idBusinessPartnerTransporter
                     )?.businessPartner.simpleName
                   }
                 </strong>
@@ -301,11 +301,7 @@ const TariffImportAirModal = ({
                         {Object.values(tariff)
                           .filter((_e, index) => index !== 0)
                           .map((each: any, index) =>
-                         
-                          
                             index < 4
-
-                           
                               ? (
                               <TableBodyCell
                                 key={`${String(each)}-${String(index)}`}
@@ -357,6 +353,7 @@ const TariffImportAirModal = ({
 
                                   <FormControlLabel
                                   value={checkIsNumber(each)}
+                                  id={''}
                                   control={
                                   <Radio
                                     value={checkIsNumber(each)}

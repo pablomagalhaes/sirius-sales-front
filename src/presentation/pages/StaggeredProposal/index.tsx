@@ -64,7 +64,7 @@ const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposa
   const [openDisplay, setOpenDisplay] = useState(false)
   const [reference, setReference] = useState('')
   const [proposalId, setProposalId] = useState('')
-  const [orderAsc, setOrderAsc] = useState(true)
+  const [orderAsc, setOrderAsc] = useState(false)
   const [orderBy, setOrderBy] = useState<string>(SelectorsValuesTypes.DateCreated)
 
   const history = useHistory()

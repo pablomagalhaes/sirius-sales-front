@@ -11,6 +11,7 @@ import { CalculationDataProps } from '../../../components/ChargeTable'
 import API from '../../../../infrastructure/api'
 import { Agents } from './Step2'
 import { CostTypes } from '../../../../application/enum/costEnum'
+import FormatNumber from '../../../../application/utils/formatNumber'
 
 interface Step5Props {
   costData: any
@@ -204,8 +205,8 @@ const Step5 = ({
         idCurrencySale: row.saleCurrency, // tipo moeda
         isPurchase: row.buyValue !== null, // checkbox compra
         isSale: row.saleValue !== null, // checkbox venda
-        valueSaleTotal: Number(row.saleValueCalculated),
-        valuePurchaseTotal: Number(row.buyValueCalculated)
+        valueSaleTotal: FormatNumber.convertNumberToDecimal(Number(row.saleValueCalculated)),
+        valuePurchaseTotal: FormatNumber.convertNumberToDecimal(Number(row.buyValueCalculated))
       })
     })
     const newDestinyTableData: Cost[] = []
@@ -229,8 +230,8 @@ const Step5 = ({
         idCurrencySale: row.saleCurrency, // tipo moeda
         isPurchase: Number(row.buyValue) !== 0, // checkbox compra
         isSale: Number(row.saleValue) !== 0, // checkbox venda
-        valueSaleTotal: Number(row.saleValueCalculated),
-        valuePurchaseTotal: Number(row.buyValueCalculated)
+        valueSaleTotal: FormatNumber.convertNumberToDecimal(Number(row.saleValueCalculated)),
+        valuePurchaseTotal: FormatNumber.convertNumberToDecimal(Number(row.buyValueCalculated))
       })
     })
 
@@ -244,8 +245,8 @@ const Step5 = ({
           idProposal: loadedTotalCostsOrigIds[index] === undefined ? null : proposal?.idProposal,
           costType: CostTypes.Origin, // 'Origem''Destino''Tarifa'
           idCurrency: currency.name, // id moeda
-          valueTotalSale: currency.value.sale, // total sale da moeda
-          valueTotalPurchase: currency.value.buy // total compra da moeda
+          valueTotalSale: FormatNumber.convertNumberToDecimal(currency.value.sale), // total sale da moeda
+          valueTotalPurchase: FormatNumber.convertNumberToDecimal(currency.value.buy) // total compra da moeda
         })
       }
     })
@@ -257,8 +258,8 @@ const Step5 = ({
           idProposal: loadedTotalCostsDestIds[index] === undefined ? null : proposal?.idProposal,
           costType: CostTypes.Destiny, // 'Origem''Destino''Tarifa'
           idCurrency: currency.name, // id moeda
-          valueTotalSale: currency.value.sale, // total sale da moeda
-          valueTotalPurchase: currency.value.buy // total compra da moeda
+          valueTotalSale: FormatNumber.convertNumberToDecimal(currency.value.sale), // total sale da moeda
+          valueTotalPurchase: FormatNumber.convertNumberToDecimal(currency.value.buy) // total compra da moeda
         })
       }
     })
