@@ -98,7 +98,6 @@ const Tariff = (): JSX.Element => {
   }, [tariffList])
 
   const createTabs = async (): Promise<void> => {
-    await refetch()
     const regionsTabs: any[] = []
     const validity = getValidityFilter(quickFilterList)
     if (tariffList?.length > 0) {
@@ -144,6 +143,7 @@ const Tariff = (): JSX.Element => {
   }, [tariffList, countryExpanded, filter, open])
 
   useEffect(() => {
+    refetch()
     cleanFilter()
     setCountryExpanded('')
   }, [quickFilterList])
