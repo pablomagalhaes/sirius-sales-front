@@ -133,6 +133,9 @@ const Step6 = ({
   const [disable, setDisable] = useState<any[]>([])
   const [modalIndex, setModalIndex] = useState<number>()
 
+  const [positionIndex, setPositionIndex] = useState<number>()
+  const [selectAgent, setSelectAgent] = useState<any>()
+
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => {
     setOpen(false)
@@ -1231,8 +1234,10 @@ const Step6 = ({
       const newData = [...dataContainer]
       newData[index].currencyPurchase = ''
       newData[index].valuePurchase = ''
+      newData[index].idTariff = ''
       handleContainerChange(newData, 'currencyPurchase', '', index, false)
       handleContainerChange(newData, 'valuePurchase', '', index, true)
+      handleContainerChange(newData, 'idTariff', '', index, false)
       const newArr = [...disable]
       newArr[index] = false
       setDisable(newArr)
@@ -1240,8 +1245,10 @@ const Step6 = ({
       const newData = [...data]
       newData[index].valuePurchase = ''
       newData[index].currencyPurchase = ''
+      newData[index].idTariff = ''
       handleValuePurchase(newData[index].agent.idBusinessPartnerAgent, newData, '')
       handleCurrencyPurchase(newData[index].agent.idBusinessPartnerAgent, newData, '')
+      handleTariffid(newData[index].agent.idBusinessPartnerAgent, newData, null)
       const newArr = [...disable]
       newArr[index] = false
       setDisable(newArr)
@@ -1294,8 +1301,8 @@ const Step6 = ({
           importFilter={{
             idOrigin: proposal.originDestiny[0]?.idOrigin,
             idDestination: proposal.originDestiny[0]?.idDestination,
-            idBusinessPartnerAgent: selectedAgent.idBusinessPartnerAgent,
-            idBusinessPartnerTransporter: selectedAgent.idBusinessPartnerTransportCompany
+            idBusinessPartnerAgent: proposal.agents[index].idBusinessPartnerAgent,
+            idBusinessPartnerTransporter: proposal.agents[index].idBusinessPartnerTransportCompany
           }}
           calculationData={calculationData}
           getPurchase={getPurchase}
@@ -1308,6 +1315,18 @@ const Step6 = ({
     } else {
       return <></>
     }
+  }
+
+  const sleep = function (ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+  }
+
+  const OpenTariffImportModal = async function (selectedAgent: any, index: number) {
+    setPositionIndex(index)
+    setSelectAgent(selectedAgent)
+    createTariffImportModal(selectedAgent, index)
+    await sleep(500)
+    setOpenImport(true)
   }
 
   if (proposal.agents.length > 0 && costData !== 0) {
@@ -1385,7 +1404,8 @@ const Step6 = ({
                             </Grid>
                             <Grid container spacing={5} style={{ marginTop: '-35px' }}>
                               <Grid item xs={2}>
-                                <Autocomplete value={data[index]?.currencyPurchase} disabled={data[index].idTariff}
+                                <Autocomplete value={data[index]?.currencyPurchase}
+                                disabled={data[index]?.idTariff}
                                 onChange={(e, newValue) => {
                                   const newData = [...data]
                                   newData[index].currencyPurchase = String(newValue ?? '')
@@ -1397,7 +1417,9 @@ const Step6 = ({
                                         variant="outlined" size="small" placeholder={I18n.t('components.itemModal.choose')}
                                         InputProps={{
                                           endAdornment: (
-                                            <InputAdornment position='end' disablePointerEvents={data[index].idTariff}>
+                                            <InputAdornment position='end'
+                                            disablePointerEvents={data[index]?.idTariff}
+                                            >
                                               <Box style={{ position: 'absolute', top: '7px', right: '0' }} {...params.inputProps} >
                                                 <ArrowDropDownIcon />
                                               </Box>
@@ -1413,14 +1435,14 @@ const Step6 = ({
                               <Grid item xs={2}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                   <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
-                                    disabled={data[index].idTariff}
+                                    disabled={data[index]?.idTariff}
                                     customInput={ControlledInput} onChange={(e) => {
                                       const newData = [...data]
                                       newData[index].valuePurchase = e.target.value
                                       handleValuePurchase(newData[index].agent.idBusinessPartnerAgent, newData, e.target.value)
                                     }} toolTipTitle={I18n.t('components.itemModal.requiredField')}
                                     invalid={invalidInput && inputValidation(data[index]?.valuePurchase)} value={data[index]?.valuePurchase} variant='outlined' size='small' />
-                                    {data[index].idTariff &&
+                                    {data[index]?.idTariff &&
                                       <div style={{ marginLeft: '10px', cursor: 'pointer' }}>
                                         <RemoveIcon onClick={() => cleanPurchase(index)} />
                                       </div>
@@ -1459,22 +1481,26 @@ const Step6 = ({
                             </Grid>
                             <ButtonWrapper>
                               <Button
-                                onAction={() => {
-                                  setOpenImport(true)
-                                }}
+                                // onAction={() => {
+                                //   setOpenImport(true)
+                                // }}
                                 text={I18n.t('pages.newProposal.step6.importButton')}
                                 icon="tariff"
                                 backgroundGreen={true}
                                 tooltip={I18n.t('pages.newProposal.step6.importButton')}
                                 disabled={false}
+                                onAction={ () => { OpenTariffImportModal(selectedAgent, index) }}
+                                // onChange={OpenTariffImportModal(selectedAgent, index)}
                               />
                             </ButtonWrapper>
                             {/* Modal de Importação */}
-                            {createTariffImportModal(selectedAgent, index)}
+                            {/* {createTariffImportModal(selectedAgent, index)} */}
+
                           </LowerContainer>
                         </TotalContainer>
                       )
                     })}
+                    {openImport && createTariffImportModal(selectAgent, positionIndex)}
                   </>
                 )
               }

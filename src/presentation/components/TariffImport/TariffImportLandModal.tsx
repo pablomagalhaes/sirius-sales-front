@@ -73,6 +73,7 @@ const TariffImportLandModa = ({
   }
 
   useEffect(() => {
+    console.log('importFilter', importFilter)
     setParams({
       ...importFilter,
       tariffModalType: ModalTypes.Land,

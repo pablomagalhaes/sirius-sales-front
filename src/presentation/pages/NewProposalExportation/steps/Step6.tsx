@@ -1227,8 +1227,10 @@ const Step6 = ({
       const newData = [...dataContainer]
       newData[index].currencyPurchase = ''
       newData[index].valuePurchase = ''
+      newData[index].idTariff = ''
       handleContainerChange(newData, 'currencyPurchase', '', index, false)
       handleContainerChange(newData, 'valuePurchase', '', index, true)
+      handleContainerChange(newData, 'idTariff', '', index, false)
       const newArr = [...disable]
       newArr[index] = false
       setDisable(newArr)
@@ -1236,8 +1238,10 @@ const Step6 = ({
       const newData = [...data]
       newData[index].valuePurchase = ''
       newData[index].currencyPurchase = ''
+      newData[index].idTariff = ''
       handleValuePurchase(newData[index].agent.idBusinessPartnerAgent, newData, '')
       handleCurrencyPurchase(newData[index].agent.idBusinessPartnerAgent, newData, '')
+      handleTariffid(newData[index].agent.idBusinessPartnerAgent, newData, null)
       const newArr = [...disable]
       newArr[index] = false
       setDisable(newArr)
