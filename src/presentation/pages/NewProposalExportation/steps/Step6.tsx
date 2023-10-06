@@ -133,6 +133,9 @@ const Step6 = ({
   const [disable, setDisable] = useState<any[]>([])
   const [modalIndex, setModalIndex] = useState<number>()
 
+  const [positionIndex, setPositionIndex] = useState<number>()
+  const [selectAgent, setSelectAgent] = useState<any>()
+
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => {
     setOpen(false)
@@ -1310,6 +1313,18 @@ const Step6 = ({
     }
   }
 
+  const sleep = function (ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+  }
+
+  const OpenTariffImportModal = async function (selectedAgent: any, index: number) {
+    setPositionIndex(index)
+    setSelectAgent(selectedAgent)
+    createTariffImportModal(selectedAgent, index)
+    await sleep(500)
+    setOpenImport(true)
+  }
+
   if (proposal.agents.length > 0 && costData !== 0) {
     return (
     <Separator>
@@ -1456,19 +1471,19 @@ const Step6 = ({
                             </Grid>
                             <ButtonWrapper>
                               <Button
-                                onAction={() => setOpenImport(true)}
                                 text={I18n.t('pages.newProposal.step6.importButton')}
                                 icon="tariff"
                                 backgroundGreen={true}
                                 tooltip={I18n.t('pages.newProposal.step6.importButton')}
                                 disabled={false}
+                                onAction={ () => { OpenTariffImportModal(selectedAgent, index) }}
                               />
                             </ButtonWrapper>
-                            {createTariffImportModal(selectedAgent, index)}
                           </LowerContainer>
                         </TotalContainer>
                       )
                     })}
+                    {createTariffImportModal(selectedAgent, index)}
                   </>
                 )
               }

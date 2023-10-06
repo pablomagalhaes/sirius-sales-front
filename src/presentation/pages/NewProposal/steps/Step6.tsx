@@ -1481,25 +1481,19 @@ const Step6 = ({
                             </Grid>
                             <ButtonWrapper>
                               <Button
-                                // onAction={() => {
-                                //   setOpenImport(true)
-                                // }}
                                 text={I18n.t('pages.newProposal.step6.importButton')}
                                 icon="tariff"
                                 backgroundGreen={true}
                                 tooltip={I18n.t('pages.newProposal.step6.importButton')}
                                 disabled={false}
                                 onAction={ () => { OpenTariffImportModal(selectedAgent, index) }}
-                                // onChange={OpenTariffImportModal(selectedAgent, index)}
                               />
                             </ButtonWrapper>
-                            {/* Modal de Importação */}
-                            {/* {createTariffImportModal(selectedAgent, index)} */}
-
                           </LowerContainer>
                         </TotalContainer>
                       )
                     })}
+                     {/* Modal de Importação */}
                     {openImport && createTariffImportModal(selectAgent, positionIndex)}
                   </>
                 )
