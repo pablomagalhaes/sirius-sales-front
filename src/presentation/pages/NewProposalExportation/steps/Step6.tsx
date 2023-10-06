@@ -276,7 +276,7 @@ const Step6 = ({
       })
     } else {
       setCompleted((currentState) => {
-        return { ...currentState, step6: modal === 'LAND' ? true : false }
+        return { ...currentState, step6: modal === 'LAND' }
       })
       setFilled((currentState) => {
         return { ...currentState, step6: false }
@@ -315,7 +315,7 @@ const Step6 = ({
         setUndoMessage={setUndoMessage}
         serviceList={serviceList}
         calculationData={calculationData}
-        errorMessage={invalidInput && modal !=='LAND' ? I18n.t('pages.newProposal.step6.errorOrigin') : ''}
+        errorMessage={invalidInput && modal !== 'LAND' ? I18n.t('pages.newProposal.step6.errorOrigin') : ''}
       />
       }
       {loadedTable && <CostTable

@@ -579,7 +579,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                 specifications={specifications}
               />
             </div>
-            {stepLoaded.step3 && <> 
+            {stepLoaded.step3 && <>
               <div id="step5">
                 <Step5
                   calculationData={calculationData}
