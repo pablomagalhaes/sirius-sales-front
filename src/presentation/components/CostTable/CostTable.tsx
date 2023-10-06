@@ -47,11 +47,11 @@ interface CostTableProps {
   containerItems: ItemModalData[]
   setUndoMessage: React.Dispatch<React.SetStateAction<{
     step3: boolean
-    step5origin: boolean
-    step5destiny: boolean
+    step6origin: boolean
+    step6destiny: boolean
     step5: boolean
   }>>
-  undoMessage: { step3: boolean, step5origin: boolean, step5destiny: boolean, step5: boolean }
+  undoMessage: { step3: boolean, step6origin: boolean, step6destiny: boolean, step5: boolean }
   tableData: CostTableItem[]
   setTableData: React.Dispatch<React.SetStateAction<CostTableItem[]>>
   setTotalCostData: React.Dispatch<React.SetStateAction<TotalCostTable[]>>
@@ -96,15 +96,15 @@ const CostTable = ({
     const newTableData = [...data]
     setData(newTableData.filter((data) => data.id !== id))
     if (title === I18n.t('pages.newProposal.step6.origin')) {
-      setUndoMessage({ step3: false, step5origin: true, step5destiny: false, step5: false })
+      setUndoMessage({ step3: false, step6origin: true, step6destiny: false, step5: false })
     } else {
-      setUndoMessage({ step3: false, step5origin: false, step5destiny: true, step5: false })
+      setUndoMessage({ step3: false, step6origin: false, step6destiny: true, step5: false })
     }
   }
 
   const addClickHandler = (): void => {
     setChargeData(initialState)
-    setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step5: false })
+    setUndoMessage({ step3: false, step6origin: false, step6destiny: false, step5: false })
     handleOpen()
   }
 
@@ -166,7 +166,7 @@ const CostTable = ({
     setCopyTable([])
     setChargeData(initialState)
     setData([])
-    setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step5: false })
+    setUndoMessage({ step3: false, step6origin: false, step6destiny: false, step5: false })
   }, [modal])
 
   useEffect(() => {
@@ -281,7 +281,7 @@ const CostTable = ({
       <Header>
         <Title>
           {title}
-          {(modal === 'LAND' && proposal.operationType === 'EXPORT FREIGHT') || <RedColorSpan> *</RedColorSpan> }
+          {modal === 'LAND' || <RedColorSpan> *</RedColorSpan> }
         </Title>
       </Header>
       {data?.length > 0 && (
@@ -471,16 +471,16 @@ const CostTable = ({
           </StyledTable>
         }
       </Footer>
-      {(((title === I18n.t('pages.newProposal.step6.origin')) && undoMessage.step5origin) ||
-        ((title === I18n.t('pages.newProposal.step6.destiny')) && undoMessage.step5destiny)) &&
+      {(((title === I18n.t('pages.newProposal.step6.origin')) && undoMessage.step6origin) ||
+        ((title === I18n.t('pages.newProposal.step6.destiny')) && undoMessage.step6destiny)) &&
         <MessageContainer>
           <Messages
             closable={true}
             severity='success'
             buttonText={I18n.t('pages.newProposal.step3.messageUndoDelete')}
-            closeAlert={() => { setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step5: false }) }}
+            closeAlert={() => { setUndoMessage({ step3: false, step6origin: false, step6destiny: false, step5: false }) }}
             closeMessage=''
-            goBack={() => { setData(copyTable); setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step5: false }) }}
+            goBack={() => { setData(copyTable); setUndoMessage({ step3: false, step6origin: false, step6destiny: false, step5: false }) }}
             message={I18n.t('pages.newProposal.step3.messageDeleteItem')}
           />
         </MessageContainer>}

@@ -496,6 +496,7 @@ const Step2 = ({
   }
 
   const validateFilled = (): void => {
+    const step6 = modal === 'LAND'
     if (
       data.origin !== '' ||
       data.destiny !== '' ||
@@ -509,11 +510,11 @@ const Step2 = ({
       validateClient()
     ) {
       setFilled((currentState) => {
-        return { ...currentState, step2: true }
+        return { ...currentState, step2: true, step6 }
       })
     } else {
       setFilled((currentState) => {
-        return { ...currentState, step2: false }
+        return { ...currentState, step2: false, step6 }
       })
     }
   }

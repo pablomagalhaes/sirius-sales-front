@@ -197,13 +197,14 @@ const Step4 = ({
   }
 
   const validateFormComplete = (): void => {
+    const step6 = modal === 'LAND'
     if (validateFreeTime() && validateCompleteInputs()) {
       setCompleted((currentState) => {
-        return { ...currentState, step4: true }
+        return { ...currentState, step4: true, step6 }
       })
     } else {
       setCompleted((currentState) => {
-        return { ...currentState, step4: false }
+        return { ...currentState, step4: false, step6 }
       })
     }
   }

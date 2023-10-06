@@ -22,11 +22,11 @@ interface Step5Props {
   containerItems: ItemModalData[]
   setUndoMessage: React.Dispatch<React.SetStateAction<{
     step3: boolean
-    step5origin: boolean
-    step5destiny: boolean
+    step6origin: boolean
+    step6destiny: boolean
     step5: boolean
   }>>
-  undoMessage: { step3: boolean, step5origin: boolean, step5destiny: boolean, step5: boolean }
+  undoMessage: { step3: boolean, step6origin: boolean, step6destiny: boolean, step5: boolean }
   serviceList: any[]
   containerTypeList: any[]
   calculationData: CalculationDataProps
@@ -277,7 +277,7 @@ const Step6 = ({
       })
     } else {
       setCompleted((currentState) => {
-        return { ...currentState, step6: false }
+        return { ...currentState, step6: modal === 'LAND' ? true : false }
       })
       setFilled((currentState) => {
         return { ...currentState, step6: false }
@@ -316,7 +316,7 @@ const Step6 = ({
         setUndoMessage={setUndoMessage}
         serviceList={serviceList}
         calculationData={calculationData}
-        errorMessage={invalidInput ? I18n.t('pages.newProposal.step6.errorOrigin') : ''}
+        errorMessage={invalidInput && modal !=='LAND' ? I18n.t('pages.newProposal.step6.errorOrigin') : ''}
       />
       }
       {loadedTable && <CostTable
@@ -335,7 +335,7 @@ const Step6 = ({
         setUndoMessage={setUndoMessage}
         serviceList={serviceList}
         calculationData={calculationData}
-        errorMessage={invalidInput ? I18n.t('pages.newProposal.step6.errorDestiny') : ''}
+        errorMessage={invalidInput && modal !=='LAND' ? I18n.t('pages.newProposal.step6.errorDestiny') : ''}
       />
       }
     </Separator>

@@ -483,6 +483,7 @@ const Step2 = ({
   }
 
   const validateFormComplete = (): void => {
+    const step6 = modal === 'LAND'
     if (proposalType !== 'CLIENT') {
       if (
         !invalidAgent &&
@@ -493,16 +494,16 @@ const Step2 = ({
         validateIncoterm()
       ) {
         setCompleted((currentState) => {
-          return { ...currentState, step2: true }
+          return { ...currentState, step2: true, step6 }
         })
       } else {
         setCompleted((currentState) => {
-          return { ...currentState, step2: false }
+          return { ...currentState, step2: false, step6 }
         })
       }
     } else {
       setCompleted((currentState) => {
-        return { ...currentState, step2: true }
+        return { ...currentState, step2: true, step6 }
       })
     }
   }

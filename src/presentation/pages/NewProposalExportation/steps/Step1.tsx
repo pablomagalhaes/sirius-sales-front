@@ -275,14 +275,15 @@ const Step1 = ({
   }, [data.modal])
 
   useEffect(() => {
+    const step6 = data.modal === 'LAND'
     if (
       data.proposal !== '' &&
       data.modal !== '' &&
       data.requester !== ''
     ) {
-      setCompleted((currentState) => ({ ...currentState, step1: true }))
+      setCompleted((currentState) => ({ ...currentState, step1: true, step6 }))
     } else {
-      setCompleted((currentState) => ({ ...currentState, step1: false }))
+      setCompleted((currentState) => ({ ...currentState, step1: false, step6 }))
     }
     if (
       data.proposal !== '' ||

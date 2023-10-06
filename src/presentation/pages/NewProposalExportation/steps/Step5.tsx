@@ -47,15 +47,15 @@ interface Step6Props {
   setUndoMessage: React.Dispatch<
   React.SetStateAction<{
     step3: boolean
-    step5origin: boolean
-    step5destiny: boolean
+    step6origin: boolean
+    step6destiny: boolean
     step5: boolean
   }>
   >
   undoMessage: {
     step3: boolean
-    step5origin: boolean
-    step5destiny: boolean
+    step6origin: boolean
+    step6destiny: boolean
     step5: boolean
   }
   serviceList: any[]
@@ -437,8 +437,8 @@ const Step5 = ({
     setChargeData(initialState)
     setUndoMessage({
       step3: false,
-      step5origin: false,
-      step5destiny: false,
+      step6origin: false,
+      step6destiny: false,
       step5: false
     })
   }, [modal])
@@ -790,8 +790,8 @@ const Step5 = ({
   const handleAdd = (item: FareModalData): void => {
     setUndoMessage({
       step3: false,
-      step5origin: false,
-      step5destiny: false,
+      step6origin: false,
+      step6destiny: false,
       step5: false
     })
 
@@ -830,8 +830,8 @@ const Step5 = ({
     })
     setUndoMessage({
       step3: false,
-      step5origin: false,
-      step5destiny: false,
+      step6origin: false,
+      step6destiny: false,
       step5: true
     })
   }
@@ -1716,8 +1716,8 @@ const Step5 = ({
             closeAlert={() => {
               setUndoMessage({
                 step3: false,
-                step5origin: false,
-                step5destiny: false,
+                step6origin: false,
+                step6destiny: false,
                 step5: false
               })
             }}
@@ -1726,8 +1726,8 @@ const Step5 = ({
               setTableData(copyTable)
               setUndoMessage({
                 step3: false,
-                step5origin: false,
-                step5destiny: false,
+                step6origin: false,
+                step6destiny: false,
                 step5: false
               })
             }}
