@@ -1483,7 +1483,7 @@ const Step6 = ({
                         </TotalContainer>
                       )
                     })}
-                    {createTariffImportModal(selectedAgent, index)}
+                    {openImport && createTariffImportModal(selectAgent, positionIndex)}
                   </>
                 )
               }
