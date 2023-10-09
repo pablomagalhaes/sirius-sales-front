@@ -305,18 +305,6 @@
         "wednesday": "Q"
       },
       "step5": {
-        "destinationCost": "Novo custo de destino",
-        "destiny": "Destino",
-        "errorDestiny": "É obrigatório informar algum custo de destino.",
-        "errorOrigin": "É obrigatório informar algum custo de origem.",
-        "origin": "Origem",
-        "originCost": "Novo custo de origem",
-        "subtitle": "Faça a composição dos custos de origem e destino.",
-        "title": "Custos",
-        "totalDestiny": "Total custos destino:",
-        "totalOrigin": "Total custos origem:"
-      },
-      "step6": {
         "addFare": "Adicionar tarifa",
         "addFareTooltip": "Para adicionar frete, selecione os agentes na etapa \"Serviço\" e inclua pelo menos um item na etapa \"Carga\"",
         "agent": "Agente",
@@ -376,6 +364,18 @@
           "importButton": "Importar",
           "noTariffs": "Não foram encontradas tarifas para serem importadas"
         }
+      },
+      "step6": {
+        "destinationCost": "Novo custo de destino",
+        "destiny": "Destino",
+        "errorDestiny": "É obrigatório informar algum custo de destino.",
+        "errorOrigin": "É obrigatório informar algum custo de origem.",
+        "origin": "Origem",
+        "originCost": "Novo custo de origem",
+        "subtitle": "Faça a composição dos custos de origem e destino.",
+        "title": "Custos",
+        "totalDestiny": "Total custos destino:",
+        "totalOrigin": "Total custos origem:"
       },
       "unsavedChanges": {
         "cancelMessage": "Cancelar",

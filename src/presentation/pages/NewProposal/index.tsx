@@ -139,7 +139,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     step3: false,
     step5origin: false,
     step5destiny: false,
-    step6: false
+    step5: false
   })
 
   const [completed, setCompleted] = useState({
@@ -147,8 +147,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     step2: false,
     step3: false,
     step4: false,
-    step5: false,
-    step6: false
+    step6: false,
+    step5: false
   })
 
   const [filled, setFilled] = useState({
@@ -156,8 +156,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     step2: false,
     step3: false,
     step4: false,
-    step5: false,
-    step6: false
+    step6: false,
+    step5: false
   })
 
   const [stepLoaded, setStepLoaded] = useState({
@@ -165,7 +165,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     step2: false,
     step3: false,
     step4: false,
-    step5: false
+    step6: false
   })
 
   const steps = [
@@ -190,14 +190,14 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       completed: completed.step4
     },
     {
-      id: 'step5',
-      label: I18n.t('pages.newProposal.step5.title'),
-      completed: completed.step5
-    },
-    {
       id: 'step6',
       label: I18n.t('pages.newProposal.step6.title'),
       completed: completed.step6
+    },
+    {
+      id: 'step5',
+      label: I18n.t('pages.newProposal.step5.title'),
+      completed: completed.step5
     }
   ]
 
@@ -236,8 +236,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       completed.step2 &&
       completed.step3 &&
       completed.step4 &&
-      completed.step5 &&
-      completed.step6
+      completed.step6 &&
+      completed.step5
     ) {
       if (proposal.idProposal === undefined || proposal.idProposal === null || location.state?.eventType === 'duplicate') {
         proposal.idProposal = null
@@ -325,8 +325,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         filled.step2 ||
         filled.step3 ||
         filled.step4 ||
-        filled.step5 ||
-        filled.step6) {
+        filled.step6 ||
+        filled.step5) {
         setLeavingPage(true)
       } else {
         setLeavingPage(false)
@@ -579,27 +579,9 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                 specifications={specifications}
               />
             </div>
-            {stepLoaded.step3 && <> <div id="step5">
-              <Step5
-                agentList={agentList}
-                calculationData={calculationData}
-                containerItems={step3TableItems}
-                containerTypeList={containerTypeList}
-                costData={costData}
-                invalidInput={invalidInput}
-                modal={modal}
-                serviceList={serviceList}
-                setCompleted={setCompleted}
-                setFilled={setFilled}
-                setTotalCosts={setTotalCosts}
-                setUndoMessage={setUndoMessage}
-                specifications={specifications}
-                undoMessage={undoMessage}
-                updateTableIdsRef={updateTable5IdsRef}
-              />
-            </div>
-              <div id="step6">
-                <Step6
+            {stepLoaded.step3 && <> 
+              <div id="step5">
+                <Step5
                   calculationData={calculationData}
                   containerItems={step3TableItems}
                   containerTypeList={containerTypeList}
@@ -616,6 +598,25 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                   totalCosts={totalCosts}
                   undoMessage={undoMessage}
                   updateTableIdsRef={updateTable6IdsRef}
+                />
+              </div>
+              <div id="step6">
+                <Step6
+                  agentList={agentList}
+                  calculationData={calculationData}
+                  containerItems={step3TableItems}
+                  containerTypeList={containerTypeList}
+                  costData={costData}
+                  invalidInput={invalidInput}
+                  modal={modal}
+                  serviceList={serviceList}
+                  setCompleted={setCompleted}
+                  setFilled={setFilled}
+                  setTotalCosts={setTotalCosts}
+                  setUndoMessage={setUndoMessage}
+                  specifications={specifications}
+                  undoMessage={undoMessage}
+                  updateTableIdsRef={updateTable5IdsRef}
                 />
               </div>
             </>}
