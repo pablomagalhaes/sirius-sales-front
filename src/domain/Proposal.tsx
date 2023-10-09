@@ -12,7 +12,7 @@ export interface Proposal {
   operationType: string // IMPORT FREIGHT
   idProposalStatus: number // sempre passar 1
   codeUserCreation: number // codigo do usuario
-  openingDate: string // 2022-03-17T13:03:46.340Z//DiaDeHoje
+  openingDate?: string // 2022-03-17T13:03:46.340Z//DiaDeHoje
   validityDate: string // 2022-03-17T13:03:46.340Z//Step4Validade
   referenceClientProposal: string // step4 referencia
   generalObservations: string // Step4ObservacoesGerais

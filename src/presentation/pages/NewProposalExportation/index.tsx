@@ -104,7 +104,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
       })()
     } else {
       setLoadExistingProposal(true)
-      setProposal({ ...emptyProposalValue, openingDate: moment().toISOString(), operationType: 'EXPORT FREIGHT' })
+      setProposal({ ...emptyProposalValue, operationType: 'EXPORT FREIGHT' })
     }
   }, [])
 
@@ -116,7 +116,6 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
         ...proposal,
         validityDate: '',
         idProposalStatus: 1,
-        openingDate: moment().toISOString(),
         cargo: proposal.cargo.map((cargo) => {
           cargo.id = null
           cargo.cargoVolumes = cargo.cargoVolumes.map(cargoVolume => {
