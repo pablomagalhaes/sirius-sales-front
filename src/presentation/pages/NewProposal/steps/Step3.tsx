@@ -45,6 +45,7 @@ import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import { CargoVolume } from '../../../../domain/CargoVolume'
 import CwModal from '../../../components/CwModal/CwModal'
 import FormatNumber from '../../../../application/utils/formatNumber'
+import { ModalTypes } from '../../../../application/enum/enum'
 
 interface Step3Props {
   theme?: any
@@ -437,7 +438,7 @@ const Step3 = ({
   }
 
   const validateFormComplete = (): void => {
-    const step6 = modal === 'LAND'
+    const step6 = modal === ModalTypes.Land
     if (
       validateDangerous() &&
       validateEspecification() &&

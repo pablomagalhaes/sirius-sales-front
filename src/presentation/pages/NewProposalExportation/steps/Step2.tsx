@@ -38,6 +38,7 @@ import {
 import { ProposalContext, ProposalProps } from '../../NewProposal/context/ProposalContext'
 import { Button } from 'fiorde-fe-components'
 import RemoveIcon from '../../../../application/icons/RemoveIcon'
+import { ModalTypes } from '../../../../application/enum/enum'
 
 interface Step2Props {
   invalidInput: boolean
@@ -483,7 +484,7 @@ const Step2 = ({
   }
 
   const validateFormComplete = (): void => {
-    const step6 = modal === 'LAND'
+    const step6 = modal === ModalTypes.Land
     if (proposalType !== 'CLIENT') {
       if (
         !invalidAgent &&

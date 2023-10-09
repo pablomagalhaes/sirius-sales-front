@@ -35,6 +35,7 @@ import API from '../../../infrastructure/api'
 import { ProposalProps, ProposalContext } from '../../pages/NewProposal/context/ProposalContext'
 import { Agents } from '../../pages/NewProposal/steps/Step2'
 import { FareItemsTypes } from '../../../application/enum/costEnum'
+import { ModalTypes } from '../../../application/enum/enum'
 
 interface CostTableProps {
   agentList: Agents[]
@@ -281,7 +282,7 @@ const CostTable = ({
       <Header>
         <Title>
           {title}
-          {modal === 'LAND' || <RedColorSpan> *</RedColorSpan> }
+          {modal === ModalTypes.Land || <RedColorSpan> *</RedColorSpan> }
         </Title>
       </Header>
       {data?.length > 0 && (

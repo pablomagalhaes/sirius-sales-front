@@ -12,6 +12,7 @@ import API from '../../../../infrastructure/api'
 import { Agents } from './Step2'
 import { CostTypes } from '../../../../application/enum/costEnum'
 import FormatNumber from '../../../../application/utils/formatNumber'
+import { ModalTypes } from '../../../../application/enum/enum'
 
 interface Step5Props {
   costData: any
@@ -276,7 +277,7 @@ const Step6 = ({
       })
     } else {
       setCompleted((currentState) => {
-        return { ...currentState, step6: modal === 'LAND' }
+        return { ...currentState, step6: modal === ModalTypes.Land }
       })
       setFilled((currentState) => {
         return { ...currentState, step6: false }

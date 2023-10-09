@@ -31,6 +31,7 @@ import { ProposalContext, ProposalProps, emptyProposalValue } from '../NewPropos
 import API from '../../../infrastructure/api'
 import { CalculationDataProps } from '../../components/ChargeTable'
 import moment from 'moment'
+import { ModalTypes } from '../../../application/enum/enum'
 
 export interface NewProposalProps {
   theme: any
@@ -218,7 +219,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
       completed.step2 &&
       completed.step3 &&
       completed.step4 &&
-      (modal === 'LAND' || completed.step6) &&
+      (modal === ModalTypes.Land || completed.step6) &&
       completed.step5
     ) {
       if (proposal.idProposal === undefined || proposal.idProposal === null || location.state?.eventType === 'duplicate') {
