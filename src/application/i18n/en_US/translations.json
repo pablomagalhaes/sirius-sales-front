@@ -3,8 +3,8 @@
     "agentDeleteModal": {
       "cancelMessage": "Cancel",
       "confirmMessage": "Confirm",
-      "message": "When selecting another modal, some information already filled in related to the current modal will be discarded. Confirm the change?",
-      "title": "Are you sure you want to change the modal?"
+      "message": "When deleting the Agent, some information already filled in related to the current Agent will be discarded. Confirm the exclusion?",
+      "title": "Are you sure you want to delete the agent?"
     },
     "costModal": {
       "agent": "Agent:",
@@ -132,7 +132,8 @@
       "generalCargoCons": "General Cargo cons.: ",
       "ImoCargoDed": "IMO Cargo ded.: ",
       "ImoCargoCons": "IMO Cargo cons.: ",
-      "agentLandCompany": "Agent / Land Carrier: "
+      "agentLandCompany": "Agent / Land Carrier: ",
+      "dateInvalid": "Enter a valid date, equal to or greater than the current date."
     },
     "ProposalDisplayModal": {
       "title": "Download the proposal",

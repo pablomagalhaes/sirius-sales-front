@@ -9,7 +9,6 @@ export const emptyProposalValue: Proposal = {
   operationType: 'IMPORT FREIGHT', // FRETE IMPORTACAO
   idProposalStatus: 1, // sempre passar 1
   codeUserCreation: 0, // codigo do usuario
-  openingDate: '2022-04-12T13:03:46.340Z', // 2022-03-17T13:03:46.340Z//DiaDeHoje
   validityDate: '2022-05-12T13:03:46.340Z', // 2022-03-17T13:03:46.340Z//Step4Validade
   referenceClientProposal: '', // step1 cliente
   generalObservations: '', // Step4ObservacoesGerais

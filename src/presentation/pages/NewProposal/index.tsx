@@ -28,7 +28,6 @@ import { ItemModalData } from '../../components/ItemModal/ItemModal'
 import { ProposalContext, ProposalProps, emptyProposalValue } from './context/ProposalContext'
 import API from '../../../infrastructure/api'
 import { CalculationDataProps } from '../../components/ChargeTable'
-import moment from 'moment'
 
 export interface NewProposalProps {
   theme: any
@@ -101,7 +100,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       })()
     } else {
       setLoadExistingProposal(true)
-      setProposal({ ...emptyProposalValue, openingDate: moment().toISOString() })
+      setProposal({ ...emptyProposalValue })
     }
   }, [])
 
@@ -113,7 +112,6 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         ...proposal,
         validityDate: '',
         idProposalStatus: 1,
-        openingDate: moment().toISOString(),
         cargo: proposal.cargo.map((cargo) => {
           cargo.id = null
           cargo.cargoVolumes = cargo.cargoVolumes.map(cargoVolume => {

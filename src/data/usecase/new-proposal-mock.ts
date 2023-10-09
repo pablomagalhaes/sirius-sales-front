@@ -8,7 +8,6 @@ export const NewProposalMock = {
   operationType: 'IMPORT FREIGHT',
   idProposalStatus: 1,
   codeUserCreation: 0,
-  openingDate: '2022-04-12T13:03:46.340Z',
   validityDate: '2022-05-12T13:03:46.340Z',
   referenceClientProposal: '',
   generalObservations: '',
