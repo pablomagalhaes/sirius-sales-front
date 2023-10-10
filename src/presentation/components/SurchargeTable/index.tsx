@@ -56,22 +56,22 @@ const SurchargeTable = ({ data, dataFields, remove, edit, agentList }: TableData
         <TableHead>
           <StyledTableRow noBorder>
             <TableCell>
-              <TableHeader>{I18n.t('pages.newProposal.step6.expense')}</TableHeader>
+              <TableHeader>{I18n.t('pages.newProposal.step5.expense')}</TableHeader>
             </TableCell>
             <TableCell>
-              <TableHeader>{I18n.t('pages.newProposal.step6.agent')}</TableHeader>
+              <TableHeader>{I18n.t('pages.newProposal.step5.agent')}</TableHeader>
             </TableCell>
             <TableCell>
-              <TableHeader>{I18n.t('pages.newProposal.step6.type')}</TableHeader>
+              <TableHeader>{I18n.t('pages.newProposal.step5.type')}</TableHeader>
             </TableCell>
             <TableCell>
-              <TableHeader>{I18n.t('pages.newProposal.step6.minValue')}</TableHeader>
+              <TableHeader>{I18n.t('pages.newProposal.step5.minValue')}</TableHeader>
             </TableCell>
             <TableCell>
-              <TableHeader>{I18n.t('pages.newProposal.step6.colValue')}</TableHeader>
+              <TableHeader>{I18n.t('pages.newProposal.step5.colValue')}</TableHeader>
             </TableCell>
             <TableCell>
-              <TableHeader>{I18n.t('pages.newProposal.step6.totalItem')}</TableHeader>
+              <TableHeader>{I18n.t('pages.newProposal.step5.totalItem')}</TableHeader>
             </TableCell>
             <TableCell>
               <TableHeader></TableHeader>

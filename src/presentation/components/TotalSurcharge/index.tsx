@@ -166,13 +166,13 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
       <UpperContainer>
         {isAir()
           ? <>
-            <CwLabel>{I18n.t('pages.newProposal.step6.cwBuySell')}</CwLabel>
+            <CwLabel>{I18n.t('pages.newProposal.step5.cwBuySell')}</CwLabel>
             <div>{cw?.toFixed(2).replace('.', ',')} / {cwSale?.toFixed(2).replace('.', ',')}</div>
           </>
           : null
         }
         <TotalCargoContainer>
-            <div>{I18n.t('pages.newProposal.step6.totalLoad')}</div>
+            <div>{I18n.t('pages.newProposal.step5.totalLoad')}</div>
             {isAir()
               ? <div>{(value !== '0,00' && value !== '') ? `${currency} ${totalValue().toFixed(2).replace('.', ',')}` : '-'}</div>
               : <div>{(value !== '0,00' && value !== '') ? `${currency} ${value}` : '-'}</div>
@@ -182,11 +182,11 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
       <LowerContainer>
         <ProfitContainer>
           <ProfitLabel>
-            {I18n.t('pages.newProposal.step6.profit')}
+            {I18n.t('pages.newProposal.step5.profit')}
             <ProfitValue>{profit.replace('.', ',')}</ProfitValue>
           </ProfitLabel>
           {/* <ProfitLabel>
-            {I18n.t('pages.newProposal.step6.percentageProfit')}
+            {I18n.t('pages.newProposal.step5.percentageProfit')}
             {profitPercentage.map((profitArray) => (
               <PercentageCard color={profitArray[1] <= 0 ? 'red' : 'normal'}>
                 {profitArray[1] <= 0 ? <NegativeProfitIcon /> : <PositiveProfitIcon />}
@@ -197,7 +197,7 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
           </ProfitLabel> */}
         </ProfitContainer>
         <TotalCargoContainer>
-          <div>{I18n.t('pages.newProposal.step6.totalOtherFees')}</div>
+          <div>{I18n.t('pages.newProposal.step5.totalOtherFees')}</div>
           <div>{(totalOtherFare !== '0,00' && totalOtherFare !== '') ? `${currency} ${totalOtherFare}` : '-'}</div>
         </TotalCargoContainer>
       </LowerContainer>

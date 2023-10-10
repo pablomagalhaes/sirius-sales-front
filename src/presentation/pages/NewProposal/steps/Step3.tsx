@@ -60,14 +60,14 @@ interface Step3Props {
     step3: boolean
     step5origin: boolean
     step5destiny: boolean
-    step6: boolean
+    step5: boolean
   }>
   >
   undoMessage: {
     step3: boolean
     step5origin: boolean
     step5destiny: boolean
-    step6: boolean
+    step5: boolean
   }
   containerTypeList: any[]
   setCalculationData: (items: CalculationDataProps) => void
@@ -193,7 +193,7 @@ const Step3 = ({
       step3: false,
       step5origin: false,
       step5destiny: false,
-      step6: false
+      step5: false
     })
     setData(initialData)
     setTableId(0)
@@ -360,7 +360,7 @@ const Step3 = ({
       step3: false,
       step5origin: false,
       step5destiny: false,
-      step6: false
+      step5: false
     })
   }
 
@@ -407,7 +407,7 @@ const Step3 = ({
       step3: true,
       step5origin: false,
       step5destiny: false,
-      step6: false
+      step5: false
     })
   }
 
@@ -772,7 +772,7 @@ const Step3 = ({
                 step3: false,
                 step5origin: false,
                 step5destiny: false,
-                step6: false
+                step5: false
               })
             }}
             closeMessage=""
@@ -782,7 +782,7 @@ const Step3 = ({
                 step3: false,
                 step5origin: false,
                 step5destiny: false,
-                step6: false
+                step5: false
               })
             }}
             message={I18n.t('pages.newProposal.step3.messageDeleteItem')}

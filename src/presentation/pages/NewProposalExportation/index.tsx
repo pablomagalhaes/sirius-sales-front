@@ -30,7 +30,6 @@ import { ItemModalData } from '../../components/ItemModal/ItemModal'
 import { ProposalContext, ProposalProps, emptyProposalValue } from '../NewProposal/context/ProposalContext'
 import API from '../../../infrastructure/api'
 import { CalculationDataProps } from '../../components/ChargeTable'
-import moment from 'moment'
 
 export interface NewProposalProps {
   theme: any
@@ -104,7 +103,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
       })()
     } else {
       setLoadExistingProposal(true)
-      setProposal({ ...emptyProposalValue, openingDate: moment().toISOString(), operationType: 'EXPORT FREIGHT' })
+      setProposal({ ...emptyProposalValue, operationType: 'EXPORT FREIGHT' })
     }
   }, [])
 
@@ -116,7 +115,6 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
         ...proposal,
         validityDate: '',
         idProposalStatus: 1,
-        openingDate: moment().toISOString(),
         cargo: proposal.cargo.map((cargo) => {
           cargo.id = null
           cargo.cargoVolumes = cargo.cargoVolumes.map(cargoVolume => {
@@ -142,7 +140,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
     step3: false,
     step5origin: false,
     step5destiny: false,
-    step6: false
+    step5: false
   })
 
   const [completed, setCompleted] = useState({
@@ -150,8 +148,8 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
     step2: false,
     step3: false,
     step4: false,
-    step5: false,
-    step6: false
+    step6: false,
+    step5: false
   })
 
   const [filled, setFilled] = useState({
@@ -159,8 +157,8 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
     step2: false,
     step3: false,
     step4: false,
-    step5: false,
-    step6: false
+    step6: false,
+    step5: false
   })
 
   const [stepLoaded, setStepLoaded] = useState({
@@ -168,7 +166,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
     step2: false,
     step3: false,
     step4: false,
-    step5: false
+    step6: false
   })
 
   const steps = [
@@ -193,14 +191,14 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
       completed: completed.step4
     },
     {
-      id: 'step5',
-      label: I18n.t('pages.newProposal.step5.title'),
-      completed: completed.step5
-    },
-    {
       id: 'step6',
       label: I18n.t('pages.newProposal.step6.title'),
       completed: completed.step6
+    },
+    {
+      id: 'step5',
+      label: I18n.t('pages.newProposal.step5.title'),
+      completed: completed.step5
     }
   ]
 
@@ -226,9 +224,9 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
       completed: completed.step4
     },
     {
-      id: 'step6',
-      label: I18n.t('pages.newProposal.step6.title'),
-      completed: completed.step6
+      id: 'step5',
+      label: I18n.t('pages.newProposal.step5.title'),
+      completed: completed.step5
     }
   ]
 
@@ -246,8 +244,8 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
       completed.step2 &&
       completed.step3 &&
       completed.step4 &&
-      (modal === 'LAND' || completed.step5) &&
-      completed.step6
+      (modal === 'LAND' || completed.step6) &&
+      completed.step5
     ) {
       if (proposal.idProposal === undefined || proposal.idProposal === null || location.state?.eventType === 'duplicate') {
         proposal.idProposal = null
@@ -333,8 +331,8 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
         filled.step2 ||
         filled.step3 ||
         filled.step4 ||
-        filled.step5 ||
-        filled.step6) {
+        filled.step6 ||
+        filled.step5) {
         setLeavingPage(true)
       } else {
         setLeavingPage(false)
@@ -589,27 +587,8 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
             </div>
             {stepLoaded.step3 &&
               <>
-                <div id="step5">
-                  <Step5
-                    agentList={agentList}
-                    calculationData={calculationData}
-                    containerItems={step3TableItems}
-                    containerTypeList={containerTypeList}
-                    costData={costData}
-                    invalidInput={invalidInput}
-                    modal={modal}
-                    serviceList={serviceList}
-                    setCompleted={setCompleted}
-                    setFilled={setFilled}
-                    setUndoMessage={setUndoMessage}
-                    specifications={specifications}
-                    setTotalCosts={setTotalCosts}
-                    undoMessage={undoMessage}
-                    updateTableIdsRef={updateTable5IdsRef}
-                  />
-                </div>
-              <div id="step6">
-                <Step6
+              <div id="step5">
+                <Step5
                   calculationData={calculationData}
                   containerItems={step3TableItems}
                   containerTypeList={containerTypeList}
@@ -626,6 +605,25 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
                   totalCosts={totalCosts}
                   undoMessage={undoMessage}
                   updateTableIdsRef={updateTable6IdsRef}
+                />
+              </div>
+              <div id="step6">
+                <Step6
+                  agentList={agentList}
+                  calculationData={calculationData}
+                  containerItems={step3TableItems}
+                  containerTypeList={containerTypeList}
+                  costData={costData}
+                  invalidInput={invalidInput}
+                  modal={modal}
+                  serviceList={serviceList}
+                  setCompleted={setCompleted}
+                  setFilled={setFilled}
+                  setUndoMessage={setUndoMessage}
+                  specifications={specifications}
+                  setTotalCosts={setTotalCosts}
+                  undoMessage={undoMessage}
+                  updateTableIdsRef={updateTable5IdsRef}
                 />
               </div>
             </>}

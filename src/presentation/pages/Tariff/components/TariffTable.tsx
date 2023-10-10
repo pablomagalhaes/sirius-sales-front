@@ -20,12 +20,14 @@ export interface TariffTableProps {
   expanded: boolean
   country: string
   region: string
+  countriesRefetch: Function
 }
 
 const TariffTable = ({
   expanded,
   country,
-  region
+  region,
+  countriesRefetch
 }: TariffTableProps): JSX.Element => {
   const { content: tariffData, totalElements: totalTariffList, setParams, refetch, params } = useTariffsByCountry()
   const { filter, setFilter }: any = useContext(TariffContext)
@@ -143,6 +145,7 @@ const TariffTable = ({
   useEffect(() => {
     if (params !== undefined) {
       refetch()
+      countriesRefetch()
     }
   }, [params])
 

@@ -174,7 +174,7 @@ const TariffImportAirModal = ({
     <Modal open={open} onClose={handleOnClose}>
       <ModalDiv>
         <HeaderDiv>
-          <Title>{I18n.t('pages.newProposal.step6.tariffImport.title')}</Title>
+          <Title>{I18n.t('pages.newProposal.step5.tariffImport.title')}</Title>
           <RowReverseDiv>
             <CloseIconContainer>
               <CloseIcon onClick={handleOnClose} />
@@ -358,10 +358,10 @@ const TariffImportAirModal = ({
                       id={TARIFF_IMPORT_AIR_MODAL_BUTTON_IMPORT}
                       disabled={false}
                       text={I18n.t(
-                        'pages.newProposal.step6.tariffImport.importButton'
+                        'pages.newProposal.step5.tariffImport.importButton'
                       )}
                       tooltip={I18n.t(
-                        'pages.newProposal.step6.tariffImport.importButton'
+                        'pages.newProposal.step5.tariffImport.importButton'
                       )}
                       backgroundGreen={true}
                       icon=""
@@ -378,7 +378,7 @@ const TariffImportAirModal = ({
             : (
             <>
               <NoTariffs>
-                {I18n.t('pages.newProposal.step6.tariffImport.noTariffs')}
+                {I18n.t('pages.newProposal.step5.tariffImport.noTariffs')}
               </NoTariffs>
               <Grid
                 item

@@ -126,7 +126,7 @@ const TariffImportFclModal = ({
     <Modal open={open} onClose={handleOnClose}>
       <ModalDiv>
         <HeaderDiv>
-          <Title>{I18n.t('pages.newProposal.step6.tariffImport.title')}</Title>
+          <Title>{I18n.t('pages.newProposal.step5.tariffImport.title')}</Title>
           <RowReverseDiv>
             <CloseIconContainer>
               <CloseIcon onClick={handleOnClose} />
@@ -239,8 +239,8 @@ const TariffImportFclModal = ({
                   <Button
                     id={TARIFF_IMPORT_LCL_MODAL_BUTTON_IMPORT}
                     disabled={false}
-                    text={I18n.t('pages.newProposal.step6.tariffImport.importButton')}
-                    tooltip={I18n.t('pages.newProposal.step6.tariffImport.importButton')}
+                    text={I18n.t('pages.newProposal.step5.tariffImport.importButton')}
+                    tooltip={I18n.t('pages.newProposal.step5.tariffImport.importButton')}
                     backgroundGreen={true}
                     icon=""
                     onAction={() => { getPurchase(value, tariffData[0].currency, index, tariffData[0].idTariff); handleOnClose() }}
@@ -251,7 +251,7 @@ const TariffImportFclModal = ({
           </>
             : <>
             <NoTariffs>
-              {I18n.t('pages.newProposal.step6.tariffImport.noTariffs')}
+              {I18n.t('pages.newProposal.step5.tariffImport.noTariffs')}
             </NoTariffs>
             <Grid item xs={12} container={true} direction="row" justify="flex-end" alignItems="center">
               <Grid item>

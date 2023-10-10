@@ -335,7 +335,7 @@ const SeaFclTariffModal = ({
                 mask={['D', 'D', 'M', 'M', 'Y', 'Y', 'Y', 'Y']}
                 placeholder="DD/MM/YYYY"
                 customInput={ControlledInput}
-                toolTipTitle={I18n.t('components.tariffModal.requiredField')}
+                toolTipTitle={I18n.t('components.tariffModal.dateInvalid')}
                 invalid={invalidInput && (data.dtValidity?.length === 0 || !validateDate())}
                 value={data.dtValidity}
                 onChange={(e) =>

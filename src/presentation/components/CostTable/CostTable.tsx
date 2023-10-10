@@ -30,7 +30,7 @@ import CostModal, { CostTableItem, initialState } from '../CostModal/CostModal'
 import { ItemModalData } from '../ItemModal/ItemModal'
 import { CalculationDataProps } from '../ChargeTable'
 import { MessageContainer } from '../../pages/NewProposal/style'
-import { TotalCostTable } from '../../pages/NewProposal/steps/Step5'
+import { TotalCostTable } from '../../pages/NewProposal/steps/Step6'
 import API from '../../../infrastructure/api'
 import { ProposalProps, ProposalContext } from '../../pages/NewProposal/context/ProposalContext'
 import { Agents } from '../../pages/NewProposal/steps/Step2'
@@ -49,9 +49,9 @@ interface CostTableProps {
     step3: boolean
     step5origin: boolean
     step5destiny: boolean
-    step6: boolean
+    step5: boolean
   }>>
-  undoMessage: { step3: boolean, step5origin: boolean, step5destiny: boolean, step6: boolean }
+  undoMessage: { step3: boolean, step5origin: boolean, step5destiny: boolean, step5: boolean }
   tableData: CostTableItem[]
   setTableData: React.Dispatch<React.SetStateAction<CostTableItem[]>>
   setTotalCostData: React.Dispatch<React.SetStateAction<TotalCostTable[]>>
@@ -95,16 +95,16 @@ const CostTable = ({
     setCopyTable(data)
     const newTableData = [...data]
     setData(newTableData.filter((data) => data.id !== id))
-    if (title === I18n.t('pages.newProposal.step5.origin')) {
-      setUndoMessage({ step3: false, step5origin: true, step5destiny: false, step6: false })
+    if (title === I18n.t('pages.newProposal.step6.origin')) {
+      setUndoMessage({ step3: false, step5origin: true, step5destiny: false, step5: false })
     } else {
-      setUndoMessage({ step3: false, step5origin: false, step5destiny: true, step6: false })
+      setUndoMessage({ step3: false, step5origin: false, step5destiny: true, step5: false })
     }
   }
 
   const addClickHandler = (): void => {
     setChargeData(initialState)
-    setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false })
+    setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step5: false })
     handleOpen()
   }
 
@@ -166,7 +166,7 @@ const CostTable = ({
     setCopyTable([])
     setChargeData(initialState)
     setData([])
-    setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false })
+    setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step5: false })
   }, [modal])
 
   useEffect(() => {
@@ -295,7 +295,7 @@ const CostTable = ({
                 {I18n.t('components.costTable.type')}
               </StyledTableCell>
               {
-                title === I18n.t('pages.newProposal.step5.destiny')
+                title === I18n.t('pages.newProposal.step6.destiny')
                   ? null
                   : <StyledTableCell width="11%" align="left">
                     {I18n.t('components.costTable.agent')}
@@ -327,7 +327,7 @@ const CostTable = ({
                     <Type>{dataMap.type}</Type>
                   </StyledTableCell>
                   {
-                    title === I18n.t('pages.newProposal.step5.destiny')
+                    title === I18n.t('pages.newProposal.step6.destiny')
                       ? null
                       : <StyledTableCell width="12%" align="left">
 
@@ -471,16 +471,16 @@ const CostTable = ({
           </StyledTable>
         }
       </Footer>
-      {(((title === I18n.t('pages.newProposal.step5.origin')) && undoMessage.step5origin) ||
-        ((title === I18n.t('pages.newProposal.step5.destiny')) && undoMessage.step5destiny)) &&
+      {(((title === I18n.t('pages.newProposal.step6.origin')) && undoMessage.step5origin) ||
+        ((title === I18n.t('pages.newProposal.step6.destiny')) && undoMessage.step5destiny)) &&
         <MessageContainer>
           <Messages
             closable={true}
             severity='success'
             buttonText={I18n.t('pages.newProposal.step3.messageUndoDelete')}
-            closeAlert={() => { setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false }) }}
+            closeAlert={() => { setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step5: false }) }}
             closeMessage=''
-            goBack={() => { setData(copyTable); setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step6: false }) }}
+            goBack={() => { setData(copyTable); setUndoMessage({ step3: false, step5origin: false, step5destiny: false, step5: false }) }}
             message={I18n.t('pages.newProposal.step3.messageDeleteItem')}
           />
         </MessageContainer>}
