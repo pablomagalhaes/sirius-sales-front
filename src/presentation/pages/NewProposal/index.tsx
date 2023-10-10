@@ -28,7 +28,6 @@ import { ItemModalData } from '../../components/ItemModal/ItemModal'
 import { ProposalContext, ProposalProps, emptyProposalValue } from './context/ProposalContext'
 import API from '../../../infrastructure/api'
 import { CalculationDataProps } from '../../components/ChargeTable'
-import moment from 'moment'
 
 export interface NewProposalProps {
   theme: any
@@ -578,7 +577,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                 specifications={specifications}
               />
             </div>
-            {stepLoaded.step3 && <> 
+            {stepLoaded.step3 && <>
               <div id="step5">
                 <Step5
                   calculationData={calculationData}

@@ -143,7 +143,6 @@ const Tariff = (): JSX.Element => {
   }, [tariffList, countryExpanded, filter, open])
 
   useEffect(() => {
-    refetch()
     cleanFilter()
     setCountryExpanded('')
   }, [quickFilterList])

@@ -30,7 +30,6 @@ import { ItemModalData } from '../../components/ItemModal/ItemModal'
 import { ProposalContext, ProposalProps, emptyProposalValue } from '../NewProposal/context/ProposalContext'
 import API from '../../../infrastructure/api'
 import { CalculationDataProps } from '../../components/ChargeTable'
-import moment from 'moment'
 
 export interface NewProposalProps {
   theme: any

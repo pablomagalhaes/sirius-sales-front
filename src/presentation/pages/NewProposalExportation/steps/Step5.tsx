@@ -133,6 +133,9 @@ const Step5 = ({
   const [disable, setDisable] = useState<any[]>([])
   const [modalIndex, setModalIndex] = useState<number>()
 
+  const [positionIndex, setPositionIndex] = useState<number>()
+  const [selectAgent, setSelectAgent] = useState<any>()
+
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => {
     setOpen(false)
@@ -178,7 +181,15 @@ const Step5 = ({
         }
         return false
       })?.valuePurchase),
-      tableData: []
+      tableData: [],
+      idTariff: proposal.costs.find((cost): any => {
+        if (cost.costType === CostTypes.Freight) {
+          if (cost?.agent?.idBusinessPartnerAgent === newAgent?.idBusinessPartnerAgent) {
+            return true
+          }
+        }
+        return false
+      })?.idTariff
     }))
   )
   const [dataContainer, setDataContainer] = useState(proposal.cargo[0].cargoVolumes.map((item, index) => ({
@@ -188,7 +199,8 @@ const Step5 = ({
     currencyPurchase: proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.idCurrencyPurchase ?? '',
     valueSale: decimalToString(proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.valueSale),
     valuePurchase: decimalToString(proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.valuePurchase),
-    valueQuantity: item.valueQuantity
+    valueQuantity: item.valueQuantity,
+    idTariff: null
   })))
 
   const getValueSale = (): string[] => {
@@ -241,7 +253,8 @@ const Step5 = ({
       currencyPurchase: '',
       valueSale: '',
       valuePurchase: '',
-      valueQuantity: newCargo.valueQuantity
+      valueQuantity: newCargo.valueQuantity,
+      idTariff: null
     }))
     const unionCargos = [...dataContainer, ...newDataWithNewCargos]
     const getAllCargos = unionCargos.map(unionAgent => unionAgent.idContainerType)
@@ -339,7 +352,8 @@ const Step5 = ({
           isPurchase: false,
           isSale: true,
           valueSaleTotal: null,
-          valuePurchaseTotal: null
+          valuePurchaseTotal: null,
+          idTariff: item.idTariff
         }
         const freightCostSale = {
           id: dataSales.idCost,
@@ -366,7 +380,8 @@ const Step5 = ({
           isPurchase: false,
           isSale: true,
           valueSaleTotal: null,
-          valuePurchaseTotal: null
+          valuePurchaseTotal: null,
+          idTariff: null
         }
         freightCostArrayNew.push(freightCostNew)
         freightCostArrayNew.push(freightCostSale)
@@ -400,7 +415,8 @@ const Step5 = ({
           isPurchase: false,
           isSale: true,
           valueSaleTotal: null,
-          valuePurchaseTotal: null
+          valuePurchaseTotal: null,
+          idTariff: item.idTariff
         }
         freightCostArrayNew.push(freightCostNew)
       })
@@ -616,7 +632,8 @@ const Step5 = ({
         valueSaleTotal: row.type === FareItemsTypes.Fixed || row.type === FareItemsTypes.Bl
           ? FormatNumber.convertStringToNumber(row.saleValue)
           : FormatNumber.convertStringToNumber(row.totalItem),
-        valuePurchaseTotal: null
+        valuePurchaseTotal: null,
+        idTariff: null
       })
     })
 
@@ -1030,7 +1047,8 @@ const Step5 = ({
         valuePurchasePercent: null,
         valueSalePercent: 0,
         valueSaleTotal: null,
-        valuePurchaseTotal: null
+        valuePurchaseTotal: null,
+        idTariff: null
       }
       setProposal({
         ...proposal,
@@ -1087,7 +1105,8 @@ const Step5 = ({
         valueSale: 0,
         valueSalePercent: 0,
         valueSaleTotal: null,
-        valuePurchaseTotal: null
+        valuePurchaseTotal: null,
+        idTariff: null
       }
       setProposal({
         ...proposal,
@@ -1134,6 +1153,24 @@ const Step5 = ({
     setData(newData)
   }
 
+  function handleTariffid (idBusinessPartnerAgent, newData: any, idTariff: number): void {
+    const getCosts = proposal.costs
+    const handleCosts = getCosts.map(cost => {
+      if (cost.costType === CostTypes.Tariff && cost.agent.idBusinessPartnerAgent === idBusinessPartnerAgent) {
+        return {
+          ...cost,
+          idTariff: idTariff
+        }
+      }
+      return cost
+    })
+    setProposal({
+      ...proposal,
+      costs: handleCosts
+    })
+    setData(newData)
+  }
+
   function handleContainerChange (newData, field, newValue, index, hasNumber: boolean): void {
     const getCostsCostTypeFrete = proposal.costs.filter(cost => cost.costType === CostTypes.Freight)
     const getCostsAnotherCostType = proposal.costs.filter(cost => cost.costType !== CostTypes.Freight)
@@ -1162,13 +1199,15 @@ const Step5 = ({
     return field === '' || field === '0' || field === null
   }
 
-  const getPurchase = (value: string, currency: string, index: number): void => {
+  const getPurchase = (value: string, currency: string, index: number, idTariff: number): void => {
     if ((proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
       const newData = [...dataContainer]
       newData[index].currencyPurchase = currency
       newData[index].valuePurchase = value
+      newData[index].idTariff = idTariff
       handleContainerChange(newData, 'currencyPurchase', currency, index, false)
       handleContainerChange(newData, 'valuePurchase', value, index, true)
+      handleContainerChange(newData, 'idTariff', idTariff, index, false)
       const newArr = [...disable]
       newArr[index] = true
       setDisable(newArr)
@@ -1176,8 +1215,10 @@ const Step5 = ({
       const newData = [...data]
       newData[index].valuePurchase = value
       newData[index].currencyPurchase = currency
+      newData[index].idTariff = idTariff
       handleValuePurchase(newData[index].agent.idBusinessPartnerAgent, newData, value)
       handleCurrencyPurchase(newData[index].agent.idBusinessPartnerAgent, newData, currency)
+      handleTariffid(newData[index].agent.idBusinessPartnerAgent, newData, idTariff)
       const newArr = [...disable]
       newArr[index] = true
       setDisable(newArr)
@@ -1189,8 +1230,10 @@ const Step5 = ({
       const newData = [...dataContainer]
       newData[index].currencyPurchase = ''
       newData[index].valuePurchase = ''
+      newData[index].idTariff = ''
       handleContainerChange(newData, 'currencyPurchase', '', index, false)
       handleContainerChange(newData, 'valuePurchase', '', index, true)
+      handleContainerChange(newData, 'idTariff', '', index, false)
       const newArr = [...disable]
       newArr[index] = false
       setDisable(newArr)
@@ -1198,8 +1241,10 @@ const Step5 = ({
       const newData = [...data]
       newData[index].valuePurchase = ''
       newData[index].currencyPurchase = ''
+      newData[index].idTariff = ''
       handleValuePurchase(newData[index].agent.idBusinessPartnerAgent, newData, '')
       handleCurrencyPurchase(newData[index].agent.idBusinessPartnerAgent, newData, '')
+      handleTariffid(newData[index].agent.idBusinessPartnerAgent, newData, null)
       const newArr = [...disable]
       newArr[index] = false
       setDisable(newArr)
@@ -1258,13 +1303,25 @@ const Step5 = ({
           calculationData={calculationData}
           getPurchase={getPurchase}
           index={index}
-          type={AcitivityTypes.Import}
+          type={AcitivityTypes.Export}
+          cw={cw}
           cwSale={cwSale}
         />
       )
     } else {
       return <></>
     }
+  }
+
+  const sleep = async (ms: number): Promise<void> => {
+    return new Promise(resolve => setTimeout(resolve, ms))
+  }
+  const OpenTariffImportModal = async function (selectedAgent: any, index: number): Promise<void> {
+    setPositionIndex(index)
+    setSelectAgent(selectedAgent)
+    createTariffImportModal(selectedAgent, index)
+    await sleep(500)
+    setOpenImport(true)
   }
 
   if (proposal.agents.length > 0 && costData !== 0) {
@@ -1342,18 +1399,18 @@ const Step5 = ({
                             </Grid>
                             <Grid container spacing={5} style={{ marginTop: '-35px' }}>
                               <Grid item xs={2}>
-                                <Autocomplete value={data[index]?.currencyPurchase} disabled={disable[index]} onChange={(e, newValue) => {
-                                  const newData = [...data]
-                                  newData[index].currencyPurchase = String(newValue ?? '')
-                                  handleCurrencyPurchase(newData[index].agent.idBusinessPartnerAgent, newData, newValue)
-                                }}
+                              <Autocomplete value={data[index]?.currencyPurchase} disabled={data[index].idTariff} onChange={(e, newValue) => {
+                                const newData = [...data]
+                                newData[index].currencyPurchase = String(newValue ?? '')
+                                handleCurrencyPurchase(newData[index].agent.idBusinessPartnerAgent, newData, newValue)
+                              }}
                                   options={currencyList.map((item) => item.id)} renderInput={(params) => (
                                     <div ref={params.InputProps.ref}>
                                       <ControlledInput {...params} id="currencies" toolTipTitle={I18n.t('components.itemModal.requiredField')} invalid={invalidInput && data[index].currencyPurchase === ''}
                                         variant="outlined" size="small" placeholder={I18n.t('components.itemModal.choose')}
                                         InputProps={{
                                           endAdornment: (
-                                            <InputAdornment position='end' disablePointerEvents={disable[index]}>
+                                            <InputAdornment position='end' disablePointerEvents={data[index].idTariff}>
                                               <Box style={{ position: 'absolute', top: '7px', right: '0' }} {...params.inputProps} >
                                                 <ArrowDropDownIcon />
                                               </Box>
@@ -1369,14 +1426,14 @@ const Step5 = ({
                               <Grid item xs={2}>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                   <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
-                                    disabled={disable[index]}
+                                    disabled={data[index].idTariff}
                                     customInput={ControlledInput} onChange={(e) => {
                                       const newData = [...data]
                                       newData[index].valuePurchase = e.target.value
                                       handleValuePurchase(newData[index].agent.idBusinessPartnerAgent, newData, e.target.value)
                                     }} toolTipTitle={I18n.t('components.itemModal.requiredField')}
                                     invalid={invalidInput && inputValidation(data[index]?.valuePurchase)} value={data[index]?.valuePurchase} variant='outlined' size='small' />
-                                  {disable[index] && <div style={{ marginLeft: '10px', cursor: 'pointer' }}>
+                                  {data[index].idTariff && <div style={{ marginLeft: '10px', cursor: 'pointer' }}>
                                     <RemoveIcon onClick={() => cleanPurchase(index)} />
                                   </div>}
                                 </div>
@@ -1413,7 +1470,7 @@ const Step5 = ({
                             </Grid>
                             <ButtonWrapper>
                               <Button
-                                onAction={() => setOpenImport(true)}
+                                onAction={ () => { OpenTariffImportModal(selectedAgent, index) }}
                                 text={I18n.t('pages.newProposal.step5.importButton')}
                                 icon="tariff"
                                 backgroundGreen={true}
@@ -1421,11 +1478,11 @@ const Step5 = ({
                                 disabled={false}
                               />
                             </ButtonWrapper>
-                            {createTariffImportModal(selectedAgent, index)}
                           </LowerContainer>
                         </TotalContainer>
                       )
                     })}
+                    {openImport && createTariffImportModal(selectAgent, positionIndex)}
                   </>
                 )
               }
