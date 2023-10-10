@@ -25,4 +25,5 @@ export interface Cost {
   isSale: boolean // checkbox venda
   valueSaleTotal: number | null
   valuePurchaseTotal: number | null
+  idTariff?: number | null
 }

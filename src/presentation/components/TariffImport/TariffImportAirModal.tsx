@@ -9,7 +9,8 @@ import {
   TableRow,
   TableCell,
   RadioGroup,
-  FormControlLabel
+  FormControlLabel,
+  Radio
 } from '@material-ui/core'
 import React, { useState, useContext, useEffect } from 'react'
 import CloseIcon from '../../../application/icons/CloseIcon'
@@ -18,7 +19,6 @@ import {
   ModalDiv,
   MainDiv,
   TableBodyCell,
-  StyledRadio,
   NoTariffs
 } from './TariffImportModalStyles'
 import { I18n } from 'react-redux-i18n'
@@ -55,9 +55,10 @@ interface TariffUploadProps {
   importFilter: any
   typeModal: string
   calculationData: any
-  getPurchase: (value: string, currency: string, index: number) => void
+  getPurchase: (value: string, currency: string, index: number, idTariff: number) => void
   index: number
   type: string
+  cw?: number
   cwSale: number
 }
 
@@ -79,6 +80,7 @@ const TariffImportAirModal = ({
   getPurchase,
   index,
   type,
+  cw,
   cwSale
 }: TariffUploadProps): JSX.Element => {
   const { filter }: any = useContext(TariffContext)
@@ -86,9 +88,9 @@ const TariffImportAirModal = ({
   const { partnerList: agentsList } = usePartnerList()
   const { data: originDestinationList = [] } = useOriginDestination()
   const { airPartners = [] } = useBusinessPartnerByType()
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState('0')
   const [labelValues] = useState(initialValues)
-
+  const [valuePosition, setValuePosition] = useState(0)
   const handleOnClose = (): void => {
     setClose()
     setValue('')
@@ -109,12 +111,23 @@ const TariffImportAirModal = ({
       return item.value
     })
 
+    let Cw
+
+    if (calculationData.weight > calculationData.cubageWeight) {
+      Cw = calculationData.weight
+    } else {
+      Cw = calculationData.cubageWeight
+    }
+
     const closest = labelValues.reduce(function (prev, curr) {
-      return Math.abs(curr - cwSale) < Math.abs(prev - cwSale) ? curr : prev
+      return Math.abs(curr - Cw) < Math.abs(prev - Cw) ? curr : prev
     })
 
     const getIndex = labelValues.indexOf(closest)
-    const getCloset = tariffValues[getIndex]
+    const getCloset = tariffValues[getIndex + 1]
+    const getIndexValue = 4 + (getIndex + 1)
+
+    setValuePosition(getIndexValue)
     setValue(FormatNumber.convertNumberToString(getCloset))
   }
 
@@ -295,11 +308,15 @@ const TariffImportAirModal = ({
                                   }}
                                 >
                                   <FormControlLabel
+                                  value={checkIsNumber(each)}
+                                  id={''}
+                                  control={
+                                  <Radio
                                     value={checkIsNumber(each)}
-                                    control={<StyledRadio />}
-                                    label={checkIsNumber(each)}
-                                    id={''}
-                                    disabled={each !== value}
+                                    checked={valuePosition === index}
+                                    disabled={valuePosition !== index}
+                                  />}
+                                  label={checkIsNumber(each)}
                                   />
                                 </RadioGroup>
                               </TableBodyCell>
@@ -349,7 +366,7 @@ const TariffImportAirModal = ({
                       backgroundGreen={true}
                       icon=""
                       onAction={() => {
-                        getPurchase(value, tariffData[0].currency, index)
+                        getPurchase(value, tariffData[0].currency, index, tariffData[0].idTariff)
                         handleOnClose()
                       }}
                     />
