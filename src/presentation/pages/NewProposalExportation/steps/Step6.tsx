@@ -316,7 +316,7 @@ const Step6 = ({
         setUndoMessage={setUndoMessage}
         serviceList={serviceList}
         calculationData={calculationData}
-        errorMessage={invalidInput && modal !== 'LAND' ? I18n.t('pages.newProposal.step6.errorOrigin') : ''}
+        errorMessage={invalidInput && modal !== ModalTypes.Land ? I18n.t('pages.newProposal.step6.errorOrigin') : ''}
       />
       }
       {loadedTable && <CostTable
@@ -335,7 +335,7 @@ const Step6 = ({
         setUndoMessage={setUndoMessage}
         serviceList={serviceList}
         calculationData={calculationData}
-        errorMessage={invalidInput && modal !== 'LAND' ? I18n.t('pages.newProposal.step6.errorDestiny') : ''}
+        errorMessage={invalidInput && modal !== ModalTypes.Land ? I18n.t('pages.newProposal.step6.errorDestiny') : ''}
       />
       }
     </Separator>
