@@ -38,6 +38,7 @@ import {
 import { ProposalContext, ProposalProps } from '../../NewProposal/context/ProposalContext'
 import { Button } from 'fiorde-fe-components'
 import AgentDeleteModal from '../../../components/AgentDeleteModal'
+import { ModalTypes } from '../../../../application/enum/enum'
 
 interface Step2Props {
   invalidInput: boolean
@@ -483,6 +484,7 @@ const Step2 = ({
   }
 
   const validateFormComplete = (): void => {
+    const step6 = modal === ModalTypes.Land
     if (proposalType !== 'CLIENT') {
       if (
         !invalidAgent &&
@@ -493,16 +495,16 @@ const Step2 = ({
         validateIncoterm()
       ) {
         setCompleted((currentState) => {
-          return { ...currentState, step2: true }
+          return { ...currentState, step2: true, step6 }
         })
       } else {
         setCompleted((currentState) => {
-          return { ...currentState, step2: false }
+          return { ...currentState, step2: false, step6 }
         })
       }
     } else {
       setCompleted((currentState) => {
-        return { ...currentState, step2: true }
+        return { ...currentState, step2: true, step6 }
       })
     }
   }

@@ -135,8 +135,8 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
 
   const [undoMessage, setUndoMessage] = useState({
     step3: false,
-    step5origin: false,
-    step5destiny: false,
+    step6origin: false,
+    step6destiny: false,
     step5: false
   })
 
@@ -188,14 +188,14 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
       completed: completed.step4
     },
     {
-      id: 'step6',
-      label: I18n.t('pages.newProposal.step6.title'),
-      completed: completed.step6
-    },
-    {
       id: 'step5',
       label: I18n.t('pages.newProposal.step5.title'),
       completed: completed.step5
+    },
+    {
+      id: 'step6',
+      label: I18n.t('pages.newProposal.step6.title'),
+      completed: completed.step6
     }
   ]
 

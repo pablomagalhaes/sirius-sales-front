@@ -38,6 +38,7 @@ import {
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import { Button } from 'fiorde-fe-components'
 import AgentDeleteModal from '../../../components/AgentDeleteModal'
+import { ModalTypes } from '../../../../application/enum/enum'
 
 interface Step2Props {
   invalidInput: boolean
@@ -496,6 +497,7 @@ const Step2 = ({
   }
 
   const validateFilled = (): void => {
+    const step6 = modal === ModalTypes.Land
     if (
       data.origin !== '' ||
       data.destiny !== '' ||
@@ -509,11 +511,11 @@ const Step2 = ({
       validateClient()
     ) {
       setFilled((currentState) => {
-        return { ...currentState, step2: true }
+        return { ...currentState, step2: true, step6 }
       })
     } else {
       setFilled((currentState) => {
-        return { ...currentState, step2: false }
+        return { ...currentState, step2: false, step6 }
       })
     }
   }

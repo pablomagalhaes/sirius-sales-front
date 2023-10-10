@@ -26,6 +26,7 @@ import { Transport, TransportList } from '../../../../domain/Transport'
 import { StyledPaper } from './StepsStyles'
 import { ExitDialog } from 'fiorde-fe-components'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
+import { ModalTypes } from '../../../../application/enum/enum'
 
 export interface Agents {
   id?: number | null
@@ -281,14 +282,15 @@ const Step1 = ({
   }, [data.modal])
 
   useEffect(() => {
+    const step6 = data.modal === ModalTypes.Land
     if (
       data.proposal !== '' &&
       data.modal !== '' &&
       data.requester !== ''
     ) {
-      setCompleted((currentState) => ({ ...currentState, step1: true }))
+      setCompleted((currentState) => ({ ...currentState, step1: true, step6 }))
     } else {
-      setCompleted((currentState) => ({ ...currentState, step1: false }))
+      setCompleted((currentState) => ({ ...currentState, step1: false, step6 }))
     }
     if (
       data.proposal !== '' ||

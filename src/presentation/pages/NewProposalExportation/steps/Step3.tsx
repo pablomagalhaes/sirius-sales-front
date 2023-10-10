@@ -45,6 +45,7 @@ import { ProposalContext, ProposalProps } from '../../NewProposal/context/Propos
 import { CargoVolume } from '../../../../domain/CargoVolume'
 import CwModal from '../../../components/CwModal/CwModal'
 import FormatNumber from '../../../../application/utils/formatNumber'
+import { ModalTypes } from '../../../../application/enum/enum'
 
 interface Step3Props {
   theme?: any
@@ -58,15 +59,15 @@ interface Step3Props {
   setUndoMessage: React.Dispatch<
   React.SetStateAction<{
     step3: boolean
-    step5origin: boolean
-    step5destiny: boolean
+    step6origin: boolean
+    step6destiny: boolean
     step5: boolean
   }>
   >
   undoMessage: {
     step3: boolean
-    step5origin: boolean
-    step5destiny: boolean
+    step6origin: boolean
+    step6destiny: boolean
     step5: boolean
   }
   containerTypeList: any[]
@@ -191,8 +192,8 @@ const Step3 = ({
     setCopyTable([])
     setUndoMessage({
       step3: false,
-      step5origin: false,
-      step5destiny: false,
+      step6origin: false,
+      step6destiny: false,
       step5: false
     })
     setData(initialData)
@@ -356,8 +357,8 @@ const Step3 = ({
     setOpen(true)
     setUndoMessage({
       step3: false,
-      step5origin: false,
-      step5destiny: false,
+      step6origin: false,
+      step6destiny: false,
       step5: false
     })
   }
@@ -403,8 +404,8 @@ const Step3 = ({
     setTableRows(newTable)
     setUndoMessage({
       step3: true,
-      step5origin: false,
-      step5destiny: false,
+      step6origin: false,
+      step6destiny: false,
       step5: false
     })
   }
@@ -435,6 +436,7 @@ const Step3 = ({
   }
 
   const validateFormComplete = (): void => {
+    const step6 = modal === ModalTypes.Land
     if (
       validateDangerous() &&
       validateEspecification() &&
@@ -442,11 +444,11 @@ const Step3 = ({
       data.temperature.length !== 0
     ) {
       setCompleted((currentState) => {
-        return { ...currentState, step3: true }
+        return { ...currentState, step3: true, step6 }
       })
     } else {
       setCompleted((currentState) => {
-        return { ...currentState, step3: false }
+        return { ...currentState, step3: false, step6 }
       })
     }
   }
@@ -761,8 +763,8 @@ const Step3 = ({
             closeAlert={() => {
               setUndoMessage({
                 step3: false,
-                step5origin: false,
-                step5destiny: false,
+                step6origin: false,
+                step6destiny: false,
                 step5: false
               })
             }}
@@ -771,8 +773,8 @@ const Step3 = ({
               setTableRows(copyTable)
               setUndoMessage({
                 step3: false,
-                step5origin: false,
-                step5destiny: false,
+                step6origin: false,
+                step6destiny: false,
                 step5: false
               })
             }}

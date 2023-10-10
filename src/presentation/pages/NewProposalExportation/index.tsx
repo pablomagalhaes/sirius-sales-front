@@ -30,6 +30,7 @@ import { ItemModalData } from '../../components/ItemModal/ItemModal'
 import { ProposalContext, ProposalProps, emptyProposalValue } from '../NewProposal/context/ProposalContext'
 import API from '../../../infrastructure/api'
 import { CalculationDataProps } from '../../components/ChargeTable'
+import { ModalTypes } from '../../../application/enum/enum'
 
 export interface NewProposalProps {
   theme: any
@@ -138,8 +139,8 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
 
   const [undoMessage, setUndoMessage] = useState({
     step3: false,
-    step5origin: false,
-    step5destiny: false,
+    step6origin: false,
+    step6destiny: false,
     step5: false
   })
 
@@ -191,42 +192,14 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
       completed: completed.step4
     },
     {
+      id: 'step5',
+      label: I18n.t('pages.newProposal.step5.title'),
+      completed: completed.step5
+    },
+    {
       id: 'step6',
       label: I18n.t('pages.newProposal.step6.title'),
       completed: completed.step6
-    },
-    {
-      id: 'step5',
-      label: I18n.t('pages.newProposal.step5.title'),
-      completed: completed.step5
-    }
-  ]
-
-  const stepsModalLand = [
-    {
-      id: 'step1',
-      label: I18n.t('pages.newProposal.step1.title'),
-      completed: completed.step1
-    },
-    {
-      id: 'step2',
-      label: I18n.t('pages.newProposal.step2.title'),
-      completed: completed.step2
-    },
-    {
-      id: 'step3',
-      label: I18n.t('pages.newProposal.step3.title'),
-      completed: completed.step3
-    },
-    {
-      id: 'step4',
-      label: I18n.t('pages.newProposal.step4.title'),
-      completed: completed.step4
-    },
-    {
-      id: 'step5',
-      label: I18n.t('pages.newProposal.step5.title'),
-      completed: completed.step5
     }
   ]
 
@@ -244,7 +217,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
       completed.step2 &&
       completed.step3 &&
       completed.step4 &&
-      (modal === 'LAND' || completed.step6) &&
+      (modal === ModalTypes.Land || completed.step6) &&
       completed.step5
     ) {
       if (proposal.idProposal === undefined || proposal.idProposal === null || location.state?.eventType === 'duplicate') {
@@ -506,7 +479,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
           handleHover={handleHover}
           hover={hover}
           offset={-270}
-          steps={proposal?.idTransport === 'LAND' ? stepsModalLand : steps}
+          steps={steps}
         />
         <ButtonContainer>
           <Button

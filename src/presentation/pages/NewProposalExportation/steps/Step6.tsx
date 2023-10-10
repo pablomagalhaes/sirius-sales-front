@@ -12,6 +12,7 @@ import API from '../../../../infrastructure/api'
 import { Agents } from './Step2'
 import { CostTypes } from '../../../../application/enum/costEnum'
 import FormatNumber from '../../../../application/utils/formatNumber'
+import { ModalTypes } from '../../../../application/enum/enum'
 
 interface Step5Props {
   costData: any
@@ -22,11 +23,11 @@ interface Step5Props {
   containerItems: ItemModalData[]
   setUndoMessage: React.Dispatch<React.SetStateAction<{
     step3: boolean
-    step5origin: boolean
-    step5destiny: boolean
+    step6origin: boolean
+    step6destiny: boolean
     step5: boolean
   }>>
-  undoMessage: { step3: boolean, step5origin: boolean, step5destiny: boolean, step5: boolean }
+  undoMessage: { step3: boolean, step6origin: boolean, step6destiny: boolean, step5: boolean }
   serviceList: any[]
   containerTypeList: any[]
   calculationData: CalculationDataProps
@@ -276,13 +277,13 @@ const Step6 = ({
       })
     } else {
       setCompleted((currentState) => {
-        return { ...currentState, step6: false }
+        return { ...currentState, step6: modal === ModalTypes.Land }
       })
       setFilled((currentState) => {
         return { ...currentState, step6: false }
       })
     }
-  }, [dataDestiny, dataOrigin])
+  }, [dataDestiny, dataOrigin, modal])
 
   useEffect(() => {
     setTotalCosts([...dataTotalCostDestiny, ...dataTotalCostOrigin])
@@ -315,7 +316,7 @@ const Step6 = ({
         setUndoMessage={setUndoMessage}
         serviceList={serviceList}
         calculationData={calculationData}
-        errorMessage={invalidInput ? I18n.t('pages.newProposal.step6.errorOrigin') : ''}
+        errorMessage={invalidInput && modal !== ModalTypes.Land ? I18n.t('pages.newProposal.step6.errorOrigin') : ''}
       />
       }
       {loadedTable && <CostTable
@@ -334,7 +335,7 @@ const Step6 = ({
         setUndoMessage={setUndoMessage}
         serviceList={serviceList}
         calculationData={calculationData}
-        errorMessage={invalidInput ? I18n.t('pages.newProposal.step6.errorDestiny') : ''}
+        errorMessage={invalidInput && modal !== ModalTypes.Land ? I18n.t('pages.newProposal.step6.errorDestiny') : ''}
       />
       }
     </Separator>

@@ -27,6 +27,7 @@ import { NumberInput } from './StepsStyles'
 import { withTheme } from 'styled-components'
 import { ProposalContext, ProposalProps } from '../../NewProposal/context/ProposalContext'
 import FormatNumber from '../../../../application/utils/formatNumber'
+import { ModalTypes } from '../../../../application/enum/enum'
 
 interface Step4Props {
   invalidInput: boolean
@@ -197,13 +198,14 @@ const Step4 = ({
   }
 
   const validateFormComplete = (): void => {
+    const step6 = modal === ModalTypes.Land
     if (validateFreeTime() && validateCompleteInputs()) {
       setCompleted((currentState) => {
-        return { ...currentState, step4: true }
+        return { ...currentState, step4: true, step6 }
       })
     } else {
       setCompleted((currentState) => {
-        return { ...currentState, step4: false }
+        return { ...currentState, step4: false, step6 }
       })
     }
   }
