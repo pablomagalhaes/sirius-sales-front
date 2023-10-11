@@ -350,7 +350,7 @@ const SeaFclTariffModal = ({
 
             </Grid>
             <Grid item xs={2}>
-              <FormLabel component="legend">
+              <FormLabel component="legend" error={invalidInput && (data.frequency === null || data.frequency?.length === 0)}>
                 {I18n.t('components.tariffModal.frequency')}
                 <RedColorSpan> *</RedColorSpan>
               </FormLabel>
@@ -361,7 +361,7 @@ const SeaFclTariffModal = ({
                 onChange={(e) => setData({ ...data, frequency: e.target.value })}
                 displayEmpty
                 disableUnderline
-                invalid={invalidInput && data.frequency?.length === 0}
+                invalid={invalidInput && (data.frequency === null || data.frequency?.length === 0)}
                 toolTipTitle={I18n.t('components.tariffModal.requiredField')}
               >
                 <MenuItem disabled value={data.frequency}>
