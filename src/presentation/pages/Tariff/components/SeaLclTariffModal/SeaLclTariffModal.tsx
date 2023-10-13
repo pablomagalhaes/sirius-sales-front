@@ -118,7 +118,7 @@ const SeaLclTariffModal = ({
       const tariff = {
         agent: dataProp.nmAgent,
         seaCompany: dataProp.dsBusinessPartnerTransporter,
-        transitTime: dataProp.transitTime,
+        transitTime: String(dataProp.transitTime),
         currency: dataProp.currency,
         dtValidity: new Date(dataProp.validityDate).toLocaleDateString('pt-BR'),
         minValue: getTariffValue(TariffItemsTypes.Minimun),

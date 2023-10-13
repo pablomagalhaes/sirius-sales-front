@@ -122,7 +122,7 @@ const AirTariffModal = ({
       const tariff = {
         agent: dataProp.nmAgent,
         airCompany: dataProp.dsBusinessPartnerTransporter,
-        transitTime: dataProp.transitTime,
+        transitTime: String(dataProp.transitTime),
         currency: dataProp.currency,
         dtValidity: new Date(dataProp.validityDate).toLocaleDateString('pt-BR'),
         minValue: getTariffValue(TariffItemsTypes.Minimun),
@@ -297,28 +297,6 @@ const AirTariffModal = ({
                 </StyledTable>
               </SubDiv>
             </Grid>
-            <Grid item xs={4}>
-              <FormLabel component="legend" error={invalidInput && data.minValue?.value.length === 0}>
-                {I18n.t('components.tariffModal.minValue')}<RedColorSpan> *</RedColorSpan>
-              </FormLabel>
-              <NumberInput
-                id={TARIFF_AIR_TARIFF_MODAL_INPUT_MINVALUE}
-                decimalSeparator={','}
-                thousandSeparator={'.'}
-                decimalScale={2}
-                format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
-                customInput={ControlledInput}
-                toolTipTitle={I18n.t('components.tariffModal.requiredField')}
-                invalid={invalidInput && data.minValue?.value.length === 0}
-                value={data.minValue != null ? data.minValue.value : ''}
-                onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'minValue') }}
-                variant="outlined"
-                size="small"
-                modal
-                style={{ marginRight: '3px' }}
-                inputProps={MaxLength}
-              />
-            </Grid>
             <Grid item xs={12} container={true} spacing={1} direction="row" justify="center">
                 <Grid item xs={12} md>
                 <FormLabel component="legend" error={invalidInput && data.weight1?.value.length === 0} >
@@ -427,7 +405,30 @@ const AirTariffModal = ({
                 />
                 </Grid>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={12} container={true} spacing={1} direction="row" justify="center">
+            <Grid item xs={12} md>
+              <FormLabel component="legend" error={invalidInput && data.minValue?.value.length === 0}>
+                {I18n.t('components.tariffModal.minValue')}<RedColorSpan> *</RedColorSpan>
+              </FormLabel>
+              <NumberInput
+                id={TARIFF_AIR_TARIFF_MODAL_INPUT_MINVALUE}
+                decimalSeparator={','}
+                thousandSeparator={'.'}
+                decimalScale={2}
+                format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                customInput={ControlledInput}
+                toolTipTitle={I18n.t('components.tariffModal.requiredField')}
+                invalid={invalidInput && data.minValue?.value.length === 0}
+                value={data.minValue != null ? data.minValue.value : ''}
+                onChange={e => { validateFloatInput(e.target.value) !== null && handleValues(e, 'minValue') }}
+                variant="outlined"
+                size="small"
+                modal
+                style={{ marginRight: '3px' }}
+                inputProps={MaxLength}
+              />
+            </Grid>
+            <Grid item xs={12} md>
               <FormLabel component="legend" error={invalidInput && (data.dtValidity?.length === 0 || !validateDate())}>
                 {I18n.t('components.tariffModal.validity')}<RedColorSpan> *</RedColorSpan>
               </FormLabel>
@@ -449,7 +450,7 @@ const AirTariffModal = ({
                 inputProps={MaxLength}
               />
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={12} md>
               <FormLabel component="legend" error={invalidInput && (data.frequency === null || data.frequency?.length === 0)}>
                 {I18n.t('components.tariffModal.frequency')}
                 <RedColorSpan> *</RedColorSpan>
@@ -476,7 +477,7 @@ const AirTariffModal = ({
                 ))}
               </ControlledSelect>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={12} md>
               <FormLabel
                 component="legend"
                 error={
@@ -500,7 +501,7 @@ const AirTariffModal = ({
                 modal
               />
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={12} md>
               <FormLabel
                 component="legend"
                 error={
@@ -523,6 +524,7 @@ const AirTariffModal = ({
                 size="small"
                 modal
               />
+            </Grid>
             </Grid>
             </Grid>
             <Grid item xs={12} container={true} direction="row" justify="flex-end">
