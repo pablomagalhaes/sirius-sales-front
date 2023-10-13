@@ -1031,9 +1031,9 @@ const Step2 = ({
                         }
                         variant="outlined"
                         size="small"
-                        placeholder={I18n.t(
-                          'pages.newProposal.step2.searchPlaceholder'
-                        )}
+                        placeholder={modal === ModalTypes.Air
+                          ? I18n.t('pages.newProposal.step2.searchPlaceholderAir')
+                          : I18n.t('pages.newProposal.step2.searchPlaceholderSea')}
                         $space
                         InputProps={{
                           endAdornment: (
@@ -1231,9 +1231,9 @@ const Step2 = ({
                         }
                         variant="outlined"
                         size="small"
-                        placeholder={I18n.t(
-                          'pages.newProposal.step2.searchPlaceholder'
-                        )}
+                        placeholder={modal === ModalTypes.Air
+                          ? I18n.t('pages.newProposal.step2.searchPlaceholderAir')
+                          : I18n.t('pages.newProposal.step2.searchPlaceholderSea')}
                         $space
                         InputProps={{
                           endAdornment: (
