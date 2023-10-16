@@ -345,9 +345,9 @@ const Step5 = ({
             proposalId: null
           },
           costType: CostTypes.Freight,
-          idCurrencySale: item.currencySale,
+          idCurrencySale: dataSales.currencySale,
           idCurrencyPurchase: item.currencyPurchase,
-          valueSale: FormatNumber.convertStringToNumber(String(item.valueSale)),
+          valueSale: FormatNumber.convertStringToNumber(dataSales.valueSale[index]),
           valuePurchase: FormatNumber.convertStringToNumber(String(item.valuePurchase)),
           isPurchase: false,
           isSale: true,
@@ -355,36 +355,8 @@ const Step5 = ({
           valuePurchaseTotal: null,
           idTariff: item.idTariff
         }
-        const freightCostSale = {
-          id: dataSales.idCost,
-          idCost: dataSales.idCost,
-          idProposal: proposal.idProposal,
-          idService: getServiceType(),
-          billingType: '',
-          idContainerType: null,
-          valuePurchasePercent: null,
-          valueMinimumPurchase: null,
-          valueSalePercent: 0,
-          valueMinimumSale: null,
-          agent: {
-            id: agent.id,
-            idBusinessPartnerAgent: agent.idBusinessPartnerAgent,
-            idBusinessPartnerTransportCompany: agent.idBusinessPartnerTransportCompany,
-            proposalId: null
-          },
-          costType: CostTypes.Freight,
-          idCurrencySale: dataSales.currencySale,
-          idCurrencyPurchase: dataSales.currencySale,
-          valueSale: FormatNumber.convertStringToNumber(dataSales.valueSale[index]),
-          valuePurchase: null,
-          isPurchase: false,
-          isSale: true,
-          valueSaleTotal: null,
-          valuePurchaseTotal: null,
-          idTariff: null
-        }
+
         freightCostArrayNew.push(freightCostNew)
-        freightCostArrayNew.push(freightCostSale)
       })
     }
 
@@ -1005,120 +977,6 @@ const Step5 = ({
     }
   }
 
-  function handleValueSale (newValue: string, agent: any, index: number): void {
-    const getCosts = [...proposal.costs]
-    const verifyIfCostsHasNullPurchase = getCosts.some(cost => cost.costType === CostTypes.Freight && cost.valuePurchase === null)
-    if (verifyIfCostsHasNullPurchase) {
-      const handleCosts = getCosts.map(cost => {
-        if (cost.costType === CostTypes.Freight && cost.agent.idBusinessPartnerAgent === agent.idBusinessPartnerAgent) {
-          return {
-            ...cost,
-            valueSale: Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, ''))
-          }
-        }
-        return cost
-      })
-      setProposal({
-        ...proposal,
-        costs: handleCosts
-      })
-      const newDataSales = [...dataSales.valueSale]
-      newDataSales[index] = newValue
-      setDataSales({ ...dataSales, valueSale: [...newDataSales] })
-    } else {
-      const newCost = {
-        valueSale: Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, '')),
-        idCurrencySale: null,
-        agent: {
-          idBusinessPartnerAgent: null,
-          idBusinessPartnerTransportCompany: null
-        },
-        billingType: '',
-        idContainerType: null,
-        costType: CostTypes.Freight,
-        id: null,
-        idCost: null,
-        idCurrencyPurchase: '',
-        idProposal: null,
-        idService: getCosts[0].idService,
-        isPurchase: false,
-        isSale: true,
-        valueMinimumPurchase: null,
-        valueMinimumSale: null,
-        valuePurchase: null,
-        valuePurchasePercent: null,
-        valueSalePercent: 0,
-        valueSaleTotal: null,
-        valuePurchaseTotal: null,
-        idTariff: null
-      }
-      setProposal({
-        ...proposal,
-        costs: [...proposal.costs, newCost]
-      })
-      const newDataSales = [...dataSales.valueSale]
-      newDataSales[index] = Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, ''))
-      setDataSales({ ...dataSales, valueSale: [...newDataSales] })
-    }
-  }
-
-  function handleCurrencySale (newValue: string): void {
-    const getCosts = [...proposal.costs]
-    const verifyIfCostsHasNullPurchase = getCosts.some(cost => cost.costType === CostTypes.Freight && cost.valuePurchase === null)
-    if (verifyIfCostsHasNullPurchase) {
-      const handleCosts = getCosts.map(cost => {
-        if (cost.costType === CostTypes.Freight && cost.valuePurchase === null) {
-          return {
-            ...cost,
-            idCurrencySale: newValue
-          }
-        }
-        return cost
-      })
-      setProposal({
-        ...proposal,
-        costs: handleCosts
-      })
-      setDataSales({ ...dataSales, currencySale: newValue })
-      setTableData(tableData.map(row => ({ ...row, saleCurrency: newValue })))
-    } else {
-      const newCost = {
-        idCurrencySale: newValue,
-        agent: {
-          id: null,
-          idBusinessPartnerAgent: null,
-          idBusinessPartnerTransportCompany: null,
-          proposalId: null
-        },
-        billingType: '',
-        idContainerType: null,
-        costType: CostTypes.Freight,
-        id: null,
-        idCost: null,
-        idCurrencyPurchase: '',
-        idProposal: null,
-        idService: getCosts[0].idService,
-        isPurchase: false,
-        isSale: true,
-        valueMinimumPurchase: null,
-        valueMinimumSale: null,
-        valuePurchase: null,
-        valuePurchasePercent: null,
-        valueSale: 0,
-        valueSalePercent: 0,
-        valueSaleTotal: null,
-        valuePurchaseTotal: null,
-        idTariff: null
-      }
-      setProposal({
-        ...proposal,
-        costs: [...proposal.costs, newCost]
-      })
-      setDataSales({ ...dataSales, currencySale: newValue })
-      setTableData(tableData.map(row => ({ ...row, saleCurrency: newValue })))
-    }
-  }
-
   function handleCurrencyPurchase (idBusinessPartnerAgent, newData: any, newValue: string): void {
     const getCosts = proposal.costs
     const handleCosts = getCosts.map(cost => {
@@ -1136,6 +994,7 @@ const Step5 = ({
     })
     setData(newData)
   }
+
 
   function handleValuePurchase (idBusinessPartnerAgent, newData: any, newValue: string): void {
     const getCosts = proposal.costs
@@ -1155,6 +1014,53 @@ const Step5 = ({
     setData(newData)
   }
 
+  function handleCurrencySale (newValue: string, agent: any): void {
+      const getCosts = [...proposal.costs]
+      const handleCosts = getCosts.map(cost => {
+        if (cost.costType === CostTypes.Freight && cost.agent.idBusinessPartnerAgent === agent.idBusinessPartnerAgent) {
+          return {
+            ...cost,
+            idCurrencySale: newValue
+          }
+        }
+        return cost
+      })
+      setProposal({
+        ...proposal,
+        costs: handleCosts
+      })
+
+      setDataSales({ ...dataSales, currencySale: newValue })
+      setTableData(tableData.map(row => ({ ...row, saleCurrency: newValue })))
+
+    
+  }
+
+  function handleValueSale (newValue: string, agent: any, index: number): void {
+    const getCosts = [...proposal.costs]
+    const verifyIfCostsHasNullPurchase = getCosts.some(cost => cost.costType === CostTypes.Freight)
+    if (verifyIfCostsHasNullPurchase) {
+      const handleCosts = getCosts.map(cost => {
+        if (cost.costType === CostTypes.Freight && cost.agent.idBusinessPartnerAgent === agent.idBusinessPartnerAgent) {
+          return {
+            ...cost,
+            valueSale: Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, ''))
+          }
+        }
+        return cost
+      })
+
+      setProposal({
+        ...proposal,
+        costs: handleCosts
+      })
+
+      const newDataSales = [...dataSales.valueSale]
+      newDataSales[index] = newValue
+      setDataSales({ ...dataSales, valueSale: [...newDataSales] })
+    }
+
+  }
   function handleTariffid (idBusinessPartnerAgent, newData: any, idTariff: number): void {
     const getCosts = proposal.costs
     const handleCosts = getCosts.map(cost => {
@@ -1449,7 +1355,7 @@ const Step5 = ({
                               <Grid item xs={2}>
                                 <Autocomplete
                                   value={dataSales.currencySale}
-                                  onChange={(e, newValue) => handleCurrencySale(newValue)}
+                                  onChange={(e, newValue) => handleCurrencySale(newValue, selectedAgent)}
                                   options={currencyList.map((item) => item.id)} renderInput={(params) => (
                                     <div ref={params.InputProps.ref}>
                                       <ControlledInput {...params} id="currencies" toolTipTitle={I18n.t('components.itemModal.requiredField')}
