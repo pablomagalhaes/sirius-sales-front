@@ -120,7 +120,7 @@ const LandTariffModal = ({
       const tariff = {
         agent: dataProp.nmAgent,
         landCompany: dataProp.dsBusinessPartnerTransporter,
-        transitTime: dataProp.transitTime,
+        transitTime: String(dataProp.transitTime),
         currency: dataProp.currency,
         dtValidity: new Date(dataProp.validityDate).toLocaleDateString('pt-BR'),
         generalCargoDed: getTariffValue(TariffItemsTypes.Vlgeneralded),
