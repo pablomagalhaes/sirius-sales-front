@@ -63,6 +63,7 @@ interface TariffUploadProps {
 }
 
 const initialValues = [
+  TariffLabel.UntilMinimun,
   TariffLabel.Until45,
   TariffLabel.Until100,
   TariffLabel.Until300,
@@ -111,21 +112,21 @@ const TariffImportAirModal = ({
       return item.value
     })
 
-    let Cw
+    let Cv
 
     if (calculationData.weight > calculationData.cubageWeight) {
-      Cw = calculationData.weight
+      Cv = calculationData.weight
     } else {
-      Cw = calculationData.cubageWeight
+      Cv = calculationData.cubageWeight
     }
 
     const closest = labelValues.reduce(function (prev, curr) {
-      return Math.abs(curr - Cw) < Math.abs(prev - Cw) ? curr : prev
+      return Math.abs(curr - Cv) < Math.abs(prev - Cv) ? curr : prev
     })
 
     const getIndex = labelValues.indexOf(closest)
-    const getCloset = tariffValues[getIndex + 1]
-    const getIndexValue = 4 + (getIndex + 1)
+    const getCloset = tariffValues[getIndex]
+    const getIndexValue = 4 + (getIndex)
 
     setValuePosition(getIndexValue)
     setValue(FormatNumber.convertNumberToString(getCloset))
