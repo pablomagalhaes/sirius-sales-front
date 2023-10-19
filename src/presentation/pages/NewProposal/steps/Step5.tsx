@@ -217,9 +217,10 @@ const Step5 = ({
   })
 
   useEffect(() => {
+
     const currentAgentsId = data.map(currentAgent => currentAgent.agent.idBusinessPartnerAgent)
-    const currentAgentsTransportCompanyId = data.map(currentAgent => currentAgent.agent.idBusinessPartnerTransportCompany)
-    const getNewAgents = proposal.agents.filter(agent => !currentAgentsId.includes(agent.idBusinessPartnerAgent) && !currentAgentsTransportCompanyId.includes(agent.idBusinessPartnerTransportCompany))
+ 
+    const getNewAgents = proposal.agents.filter(agent => !currentAgentsId.includes(agent.idBusinessPartnerAgent))
     const newDataWithNewAgents = getNewAgents.map(newAgent => ({
       company: '',
       agent: {
@@ -1133,7 +1134,7 @@ const Step5 = ({
     }
   }
 
-  const cleanPurchase = (index: number): void => {
+  const cleanPurchase = (index?: number): void => {
     if ((proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
       const newData = [...dataContainer]
       newData[index].currencyPurchase = ''
