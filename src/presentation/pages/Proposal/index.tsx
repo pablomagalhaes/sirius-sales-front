@@ -73,11 +73,11 @@ const Proposal = (): JSX.Element => {
   const [partnerSimpleNameList, setPartnerSimpleNameList] = useState<any[]>([])
   const [radioValue, setRadioValue] = useState('')
 
-  const { data: {content: proposalList, totalElements: totalProposalList} = {content: [], totalElements: 0}, refetch } = 
-    useQuery([QueryKeys.proposalList, filter], () => API.getProposals(filter))
-  
-  const { data: totalWarnings = 0, refetch: refetchCount } = 
-    useQuery([QueryKeys.countProposal, filter], () => API.getCountProposal(filter))
+  const { data: { content: proposalList, totalElements: totalProposalList } = { content: [], totalElements: 0 }, refetch } =
+    useQuery([QueryKeys.proposalList, filter], async () => API.getProposals(filter))
+
+  const { data: totalWarnings = 0, refetch: refetchCount } =
+    useQuery([QueryKeys.countProposal, filter], async () => API.getCountProposal(filter))
 
   const history = useHistory()
 
@@ -957,9 +957,9 @@ const Proposal = (): JSX.Element => {
       Boolean(direction) &&
       Boolean(orderByList)
     ) {
-      return `Propostas (${totalProposalList}) - Últimos 30 dias`
+      return `Propostas (${String(totalProposalList)}) - Últimos 30 dias`
     }
-    return `Resultado do filtro (${totalProposalList})`
+    return `Resultado do filtro (${String(totalProposalList)})`
   }
   const handleCloseReject = (): void => {
     setOpenReject(false)

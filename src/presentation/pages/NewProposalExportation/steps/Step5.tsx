@@ -974,7 +974,6 @@ const Step5 = ({
     }
   }
 
-
   function handleCurrencyPurchase (idBusinessPartnerAgent, newData: any, newValue: string): void {
     const getCosts = proposal.costs
     const handleCosts = getCosts.map(cost => {
@@ -992,7 +991,6 @@ const Step5 = ({
     })
     setData(newData)
   }
-
 
   function handleValuePurchase (idBusinessPartnerAgent, newData: any, newValue: string): void {
     const getCosts = proposal.costs
@@ -1013,25 +1011,23 @@ const Step5 = ({
   }
 
   function handleCurrencySale (newValue: string, agent: any): void {
-      const getCosts = [...proposal.costs]
-      const handleCosts = getCosts.map(cost => {
-        if (cost.costType === CostTypes.Freight && cost.agent.idBusinessPartnerAgent === agent.idBusinessPartnerAgent) {
-          return {
-            ...cost,
-            idCurrencySale: newValue
-          }
+    const getCosts = [...proposal.costs]
+    const handleCosts = getCosts.map(cost => {
+      if (cost.costType === CostTypes.Freight && cost.agent.idBusinessPartnerAgent === agent.idBusinessPartnerAgent) {
+        return {
+          ...cost,
+          idCurrencySale: newValue
         }
-        return cost
-      })
-      setProposal({
-        ...proposal,
-        costs: handleCosts
-      })
+      }
+      return cost
+    })
+    setProposal({
+      ...proposal,
+      costs: handleCosts
+    })
 
-      setDataSales({ ...dataSales, currencySale: newValue })
-      setTableData(tableData.map(row => ({ ...row, saleCurrency: newValue })))
-
-    
+    setDataSales({ ...dataSales, currencySale: newValue })
+    setTableData(tableData.map(row => ({ ...row, saleCurrency: newValue })))
   }
 
   function handleValueSale (newValue: string, agent: any, index: number): void {
@@ -1057,7 +1053,6 @@ const Step5 = ({
       newDataSales[index] = newValue
       setDataSales({ ...dataSales, valueSale: [...newDataSales] })
     }
-
   }
 
   function handleTariffid (idBusinessPartnerAgent, newData: any, idTariff: number): void {
