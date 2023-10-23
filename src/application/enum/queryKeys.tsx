@@ -12,7 +12,9 @@ enum QueryKeys {
   tariffs = 'tariffs',
   tariffsByCountry = 'tariffsByCountry',
   frequency = 'frequency',
-  tariffProposal = 'tariffProposal'
+  tariffProposal = 'tariffProposal',
+  proposalList = 'proposalList',
+  countProposal = 'countProposal'
 }
 
 export { QueryKeys }
