@@ -38,7 +38,7 @@ enum ValidityTypes {
 }
 
 enum TariffLabel {
-  UntilMinimun = 30,
+  UntilMinimun = 44,
   Until45 = 45,
   Until100 = 100,
   Until300 = 300,
