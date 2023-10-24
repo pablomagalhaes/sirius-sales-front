@@ -183,6 +183,21 @@ const Step6 = ({
   }, [])
 
   useEffect(() => {
+    const newAgent = dataOrigin.map((obj, index) => {
+      return {
+        ...obj,
+        agent: {
+          idBusinessPartnerAgent: proposal.agents[index]?.idBusinessPartnerAgent,
+          idBusinessPartnerTransportCompany: proposal.agents[index]?.idBusinessPartnerTransportCompany
+        }
+      }
+    })
+
+    setDataOrigin(newAgent)
+    setDataDestiny(newAgent)
+  }, [proposal.agents])
+
+  useEffect(() => {
     let actualCostArray = proposal.costs
     actualCostArray = actualCostArray.filter((cost) => (cost.costType === CostTypes.Tariff || cost.costType === CostTypes.Freight) && cost)
     const newOriginTableData: Cost[] = []
