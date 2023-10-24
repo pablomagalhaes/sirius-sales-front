@@ -44,6 +44,8 @@ import {
 } from '../../../application/enum/statusProposalEnum'
 import RejectModal from '../../components/RejectModal/RejectModal'
 import CancelModal from '../../components/CancelModal/CancelModal'
+import { useQuery } from '@tanstack/react-query'
+import { QueryKeys } from '../../../application/enum/queryKeys'
 
 const defaultFilter = {
   direction: 'DESC',
@@ -69,10 +71,13 @@ const Proposal = (): JSX.Element => {
   const [originDestinationCities, setoriginDestinationCities] = useState<any[]>([])
   const [partnerList, setPartnerList] = useState<any[]>([])
   const [partnerSimpleNameList, setPartnerSimpleNameList] = useState<any[]>([])
-  const [proposalList, setProposalList] = useState<any[]>([])
   const [radioValue, setRadioValue] = useState('')
-  const [totalProposalList, setTotalProposalList] = useState<number>(0)
-  const [totalWarnings, setTotalWarnings] = useState<number>(0)
+
+  const { data: { content: proposalList, totalElements: totalProposalList } = { content: [], totalElements: 0 }, refetch } =
+    useQuery([QueryKeys.proposalList, filter], async () => API.getProposals(filter))
+
+  const { data: totalWarnings = 0, refetch: refetchCount } =
+    useQuery([QueryKeys.countProposal, filter], async () => API.getCountProposal(filter))
 
   const history = useHistory()
 
@@ -225,35 +230,6 @@ const Proposal = (): JSX.Element => {
     return landLabels
   }
 
-  const getProposalByFilter = (): void => {
-    void (async function () {
-      await API.getProposals(filter)
-        .then((response) => {
-          setProposalList(response.content)
-          setTotalProposalList(response.totalElements)
-        })
-        .catch((err) => console.log(err))
-    })()
-  }
-
-  const getCountProposalByFilter = (): void => {
-    void (async function () {
-      await API.getCountProposal(filter)
-        .then((response) => {
-          setTotalWarnings(response)
-        })
-        .catch((err) => console.log(err))
-    })()
-  }
-
-  useEffect(() => {
-    getProposalByFilter()
-  }, [filter])
-
-  useEffect(() => {
-    getCountProposalByFilter()
-  }, [proposalList])
-
   const verifyStatus = (status): any => {
     switch (status) {
       case 'Open':
@@ -365,7 +341,8 @@ const Proposal = (): JSX.Element => {
     void (async function () {
       await API.putStatus(id, status, reason, detail)
         .then(() => {
-          getProposalByFilter()
+          refetch()
+          refetchCount()
         })
         .catch((err) => console.log(err))
     })()
@@ -980,9 +957,9 @@ const Proposal = (): JSX.Element => {
       Boolean(direction) &&
       Boolean(orderByList)
     ) {
-      return `Propostas (${totalProposalList}) - Últimos 30 dias`
+      return `Propostas (${String(totalProposalList)}) - Últimos 30 dias`
     }
-    return `Resultado do filtro (${totalProposalList})`
+    return `Resultado do filtro (${String(totalProposalList)})`
   }
   const handleCloseReject = (): void => {
     setOpenReject(false)
