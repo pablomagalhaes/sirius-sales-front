@@ -37,19 +37,9 @@ enum ValidityTypes {
   Valid = 'VALID'
 }
 
-enum TariffLabel {
-  UntilMinimun = 44,
-  Until45 = 45,
-  Until100 = 100,
-  Until300 = 300,
-  Until500 = 500,
-  Until1000 = 1000
-}
-
 export {
   SelectorsValuesTypes,
   TariffItemsTypes,
   QuickFilterTypes,
-  ValidityTypes,
-  TariffLabel
+  ValidityTypes
 }
