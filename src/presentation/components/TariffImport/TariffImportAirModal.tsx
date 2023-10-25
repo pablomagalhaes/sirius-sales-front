@@ -33,8 +33,7 @@ import { TariffContext } from '../../pages/Tariff/context/TariffContext'
 import useTariffsByCountry from '../../hooks/tariff/useTariffsByCountry'
 import {
   TariffItemsTypes,
-  ValidityTypes,
-  TariffLabel
+  ValidityTypes
 } from '../../../application/enum/tariffEnum'
 import FormatNumber from '../../../application/utils/formatNumber'
 import {
@@ -62,15 +61,6 @@ interface TariffUploadProps {
   cwSale: number
 }
 
-const initialValues = [
-  TariffLabel.UntilMinimun,
-  TariffLabel.Until45,
-  TariffLabel.Until100,
-  TariffLabel.Until300,
-  TariffLabel.Until500,
-  TariffLabel.Until1000
-]
-
 const TariffImportAirModal = ({
   theme,
   open,
@@ -90,7 +80,6 @@ const TariffImportAirModal = ({
   const { data: originDestinationList = [] } = useOriginDestination()
   const { airPartners = [] } = useBusinessPartnerByType()
   const [value, setValue] = useState('0')
-  const [labelValues] = useState(initialValues)
   const [valuePosition, setValuePosition] = useState(0)
   const handleOnClose = (): void => {
     setClose()
@@ -112,21 +101,39 @@ const TariffImportAirModal = ({
       return item.value
     })
 
-    let Cv
+    let valueToCheck
 
     if (calculationData.weight > calculationData.cubageWeight) {
-      Cv = calculationData.weight
+      valueToCheck = calculationData.weight
     } else {
-      Cv = calculationData.cubageWeight
+      valueToCheck = calculationData.cubageWeight
     }
 
-    const closest = labelValues.reduce(function (prev, curr) {
-      return Math.abs(curr - Cv) < Math.abs(prev - Cv) ? curr : prev
-    })
+    const isBetweenMapValue = (value: number, valueMap: any): number => {
+      for (const key in valueMap) {
+        if (valueMap.hasOwnProperty(key)) {
+          const range = valueMap[key]
+          if (value >= range.min && value <= range.max) {
+            return range.position
+          }
+          if (value >= 1000) {
+            return 5
+          }
+        }
+      }
+    }
 
-    const getIndex = labelValues.indexOf(closest)
-    const getCloset = tariffValues[getIndex]
-    const getIndexValue = 4 + (getIndex)
+    const rangeMap = {
+      range1: { label: TariffItemsTypes.Minimun, position: 0, min: 0, max: 45 },
+      range2: { label: TariffItemsTypes.Until45, position: 1, min: 46, max: 100 },
+      range3: { label: TariffItemsTypes.Until100, position: 2, min: 101, max: 300 },
+      range4: { label: TariffItemsTypes.Until300, position: 3, min: 301, max: 500 },
+      range5: { label: TariffItemsTypes.Until500, position: 4, min: 501, max: 1000 }
+    }
+
+    const isBetweenValue = isBetweenMapValue(valueToCheck, rangeMap)
+    const getCloset = tariffValues[isBetweenValue]
+    const getIndexValue = 4 + (isBetweenValue)
 
     setValuePosition(getIndexValue)
     setValue(FormatNumber.convertNumberToString(getCloset))
