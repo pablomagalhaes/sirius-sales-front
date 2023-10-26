@@ -116,7 +116,7 @@ const TariffImportAirModal = ({
           if (value >= range.min && value <= range.max) {
             return range.position
           }
-          if (value >= 1000) {
+          if (value >= 1001) {
             return 5
           }
         }
