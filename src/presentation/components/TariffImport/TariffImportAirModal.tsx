@@ -132,7 +132,6 @@ const TariffImportAirModal = ({
     }
 
     const isBetweenValue = isBetweenMapValue(valueToCheck, rangeMap)
-
     const getCloset = tariffValues[isBetweenValue]
     const getIndexValue = 4 + (isBetweenValue)
 
