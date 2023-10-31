@@ -69,6 +69,8 @@ interface DataProps {
   destinationCityId: string
   idOrigin: string
   idDestination: string
+  postalCodeDap: string
+  postalCode: string
 }
 
 export interface Agents {
@@ -112,7 +114,9 @@ const Step2 = ({
     destinationCityName: '',
     destinationCityId: '',
     idOrigin: '',
-    idDestination: ''
+    idDestination: '',
+    postalCodeDap: '',
+    postalCode: ''
   })
   const [incotermFilteredList, setIncotermFilteredList] = useState<any[]>([])
   const [incotermList, setIncotermList] = useState<any[]>([])
@@ -314,7 +318,9 @@ const Step2 = ({
           destinationCityName: modal === 'LAND' ? String(values[1]?.name) : '',
           destinationCityId: modal === 'LAND' ? values[1]?.state?.id : null,
           idOrigin: modal !== 'LAND' ? String(values[1]?.state?.id) : '',
-          idDestination: modal !== 'LAND' ? String(values[1]?.state?.id) : ''
+          idDestination: modal !== 'LAND' ? String(values[1]?.state?.id) : '',
+          postalCodeDap: '',
+          postalCode: ''
         })
         loadStatesList('origin', String(values[0]?.state?.country?.id))
         loadStatesList('destiny', String(values[1]?.state?.country?.id))
@@ -415,11 +421,13 @@ const Step2 = ({
       (data.incoterm.length !== 0 &&
         data.incoterm !== '' &&
         data.incoterm === 'EXW' &&
-        data.collection !== '') ||
+        data.collection !== '' &&
+        data.postalCode !== '') ||
       (data.incoterm.length !== 0 &&
         data.incoterm !== '' &&
         data.incoterm === 'DAP' &&
-        data.collectionDap !== '')
+        data.collectionDap !== '' &&
+        data.postalCodeDap !== '')
     )
   }
 
@@ -1357,7 +1365,7 @@ const Step2 = ({
                     {<RedColorSpan> *</RedColorSpan>}
                   </FormLabel>
                   <div style={{ display: 'flex' }}>
-                    <div style={{ width: '95%' }}>
+                    <div style={ index !== 0 ? { width: '95%' } : { width: '100%' }}>
                       <Autocomplete
                         disabled={modal === ''}
                         size="small"
@@ -1473,61 +1481,110 @@ const Step2 = ({
               ))}
             </ControlledSelect>
           </Grid>
-          <Grid item xs={4}>
-            {(data.incoterm === 'EXW' ||
+          <Grid item xs={4} />
+          {(data.incoterm === 'EXW' ||
               data.incoterm === 'FCA') && (
-              <>
-                <FormLabel component="legend" error={
-                    invalidInput &&
-                    data.incoterm !== 'FCA' &&
-                    data.collection.length === 0
-                  }>
-                  {I18n.t('pages.newProposal.step2.collectionAddress')}
-                  {data.incoterm !== 'FCA' && <RedColorSpan> *</RedColorSpan>}
-                </FormLabel>
-                <ControlledInput
-                  id="description"
-                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                  onChange={(e) =>
-                    setData({ ...data, collection: e.target.value })
-                  }
-                  invalid={
-                    invalidInput &&
-                    data.incoterm !== 'FCA' &&
-                    data.collection.length === 0
-                  }
-                  value={data.collection.length !== 0 ? data.collection : ''}
-                  variant="outlined"
-                  size="small"
-                />
-              </>
-            )}
-            {(data.incoterm === 'DAP' && (
-              <>
-                <FormLabel component="legend" error={
-                    invalidInput &&
-                    data.collectionDap.length === 0
-                  }>
-                  {I18n.t('pages.newProposal.step2.collectionAddressDap')}
-                  {<RedColorSpan> *</RedColorSpan>}
-                </FormLabel>
-                <ControlledInput
-                  id="description"
-                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                  onChange={(e) =>
-                    setData({ ...data, collectionDap: e.target.value })
-                  }
-                  invalid={
-                    invalidInput &&
-                    data.collectionDap.length === 0
-                  }
-                  value={data.collectionDap.length !== 0 ? data.collectionDap : ''}
-                  variant="outlined"
-                  size="small"
-                />
-              </>
-            ))}
-          </Grid>
+            <>
+            <Grid item xs={2}>
+              <FormLabel component="legend" error={
+                  invalidInput &&
+                  data.postalCode.length === 0
+                }>
+                {I18n.t('pages.newProposal.step2.postalCode')}
+                {data.incoterm !== 'FCA' && <RedColorSpan> *</RedColorSpan>}
+              </FormLabel>
+              <ControlledInput
+                id="description"
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                onChange={(e) =>
+                  setData({ ...data, postalCode: e.target.value })
+                }
+                invalid={
+                  invalidInput &&
+                  data.postalCode.length === 0
+                }
+                value={data.postalCode.length !== 0 ? data.postalCode : ''}
+                variant="outlined"
+                size="small"
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <FormLabel component="legend" error={
+                  invalidInput &&
+                  data.incoterm !== 'FCA' &&
+                  data.collection.length === 0
+                }>
+                {I18n.t('pages.newProposal.step2.collectionAddress')}
+                {data.incoterm !== 'FCA' && <RedColorSpan> *</RedColorSpan>}
+              </FormLabel>
+              <ControlledInput
+                id="description"
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                onChange={(e) =>
+                  setData({ ...data, collection: e.target.value })
+                }
+                invalid={
+                  invalidInput &&
+                  data.incoterm !== 'FCA' &&
+                  data.collection.length === 0
+                }
+                value={data.collection.length !== 0 ? data.collection : ''}
+                variant="outlined"
+                size="small"
+              />
+            </Grid>
+            </>
+          )}
+          {(data.incoterm === 'DAP' && (
+            <>
+            <Grid item xs={2}>
+              <FormLabel component="legend" error={
+                  invalidInput &&
+                  data.postalCodeDap.length === 0
+                }>
+                {I18n.t('pages.newProposal.step2.postalCodeDap')}
+                {<RedColorSpan> *</RedColorSpan>}
+              </FormLabel>
+              <ControlledInput
+                id="description"
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                onChange={(e) =>
+                  setData({ ...data, postalCodeDap: e.target.value })
+                }
+                invalid={
+                  invalidInput &&
+                  data.postalCodeDap.length === 0
+                }
+                value={data.postalCodeDap.length !== 0 ? data.postalCodeDap : ''}
+                variant="outlined"
+                size="small"
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <FormLabel component="legend" error={
+                  invalidInput &&
+                  data.collectionDap.length === 0
+                }>
+                {I18n.t('pages.newProposal.step2.collectionAddressDap')}
+                {<RedColorSpan> *</RedColorSpan>}
+              </FormLabel>
+              <ControlledInput
+                id="description"
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                onChange={(e) =>
+                  setData({ ...data, collectionDap: e.target.value })
+                }
+                invalid={
+                  invalidInput &&
+                  data.collectionDap.length === 0
+                }
+                value={data.collectionDap.length !== 0 ? data.collectionDap : ''}
+                variant="outlined"
+                size="small"
+              />
+            </Grid>
+            </>
+          ))}
         </Grid>
       </FormControl>
     </Separator>

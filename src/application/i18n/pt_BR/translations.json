@@ -258,7 +258,10 @@
         "subtitle": "Defina origem, destino e especificidades do trecho.",
         "title": "Trecho",
         "transporter": "Transportadora",
-        "collectionAddressDap": "Endereço de entrega:"
+        "collectionAddressDap": "Endereço de entrega:",
+        "postalCode": "CEP de coleta:",
+        "postalCodeDap": "CEP de entrega:"
+
       },
       "step3": {
         "buttonAdd": "Adicionar item à carga",
