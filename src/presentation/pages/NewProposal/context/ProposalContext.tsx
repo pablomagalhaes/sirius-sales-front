@@ -50,7 +50,9 @@ export const emptyProposalValue: Proposal = {
   transportIncluded: false,
   clearenceIncluded: false,
   agents: [],
-  profits: []
+  profits: [],
+  cepCargoCollectionAddress: '',
+  cepCargoDeliveryAddress: ''
 }
 
 interface ProposalContextProviderProps {

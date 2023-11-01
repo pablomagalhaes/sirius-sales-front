@@ -45,6 +45,8 @@ export interface Proposal {
   clearenceIncluded: boolean
   agents: Agent[]
   profits: ProfitsProps[]
+  cepCargoCollectionAddress: string
+  cepCargoDeliveryAddress: string
 }
 
 interface Cargo {

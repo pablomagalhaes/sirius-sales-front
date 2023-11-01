@@ -322,8 +322,8 @@ const Step2 = ({
           destinationCityId: modal === 'LAND' ? values[1]?.state?.id : null,
           idOrigin: modal !== 'LAND' ? String(values[1]?.state?.id) : '',
           idDestination: modal !== 'LAND' ? String(values[1]?.state?.id) : '',
-          postalCodeDap: '',
-          postalCode: ''
+          postalCodeDap: proposal.cepCargoDeliveryAddress,
+          postalCode: proposal.cepCargoCollectionAddress
         })
         loadStatesList('origin', String(values[0]?.state?.country?.id))
         loadStatesList('destiny', String(values[1]?.state?.country?.id))
@@ -387,7 +387,9 @@ const Step2 = ({
           ],
         idIncoterm: data.incoterm,
         cargoCollectionAddress: data.collection,
-        cargoDeliveryAddress: data.collectionDap
+        cargoDeliveryAddress: data.collectionDap,
+        cepCargoCollectionAddress: data.postalCode,
+        cepCargoDeliveryAddress: data.postalCodeDap
       })
     } else {
       setProposal({
@@ -401,7 +403,9 @@ const Step2 = ({
         ],
         idIncoterm: data.incoterm,
         cargoCollectionAddress: data.collection,
-        cargoDeliveryAddress: data.collectionDap
+        cargoDeliveryAddress: data.collectionDap,
+        cepCargoCollectionAddress: data.postalCode,
+        cepCargoDeliveryAddress: data.postalCodeDap
       })
     }
   }, [data, oriCitiesList, destCitiesList])
