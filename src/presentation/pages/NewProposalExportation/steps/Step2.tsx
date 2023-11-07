@@ -1385,7 +1385,7 @@ const Step2 = ({
                         value={selectedAgent.profitPercentageAgent}
                         renderValue={value => {
                           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                          return value !== null ? `${value}%` : 'Escolha'
+                          return value !== null ? `${value}%` : I18n.t('pages.newProposal.step2.choose')
                         }}
                         onChange={(e, newValue) => {
                           setSelectedAgents(
