@@ -62,6 +62,15 @@ enum LocaleTypes {
   EN_US = 'en-US'
 }
 
+enum ProfitsPercentsTypes {
+  Zero = 0,
+  Ten = 10,
+  Twenty = 20,
+  Thirty = 30,
+  Forty = 40,
+  Fifty = 50,
+}
+
 export {
   ModalTypes,
   OrderTypes,
@@ -72,5 +81,6 @@ export {
   IconTypes,
   AcitivityTypes,
   OperationTypes,
-  LocaleTypes
+  LocaleTypes,
+  ProfitsPercentsTypes
 }

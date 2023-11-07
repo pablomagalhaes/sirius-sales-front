@@ -38,7 +38,7 @@ import {
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import { Button } from 'fiorde-fe-components'
 import AgentDeleteModal from '../../../components/AgentDeleteModal'
-import { ModalTypes } from '../../../../application/enum/enum'
+import { ModalTypes, ProfitsPercentsTypes } from '../../../../application/enum/enum'
 
 interface Step2Props {
   invalidInput: boolean
@@ -78,7 +78,17 @@ export interface Agents {
   idBusinessPartnerAgent?: number | null
   shippingCompany: string
   idBusinessPartnerTransportCompany?: number | null
+  profitPercentageAgent?: number | null
 }
+
+const initialProfitValues = [
+  ProfitsPercentsTypes.Zero,
+  ProfitsPercentsTypes.Ten,
+  ProfitsPercentsTypes.Twenty,
+  ProfitsPercentsTypes.Thirty,
+  ProfitsPercentsTypes.Forty,
+  ProfitsPercentsTypes.Fifty
+]
 
 const Step2 = ({
   invalidInput,
@@ -130,10 +140,11 @@ const Step2 = ({
       agent: '',
       idBusinessPartnerAgent: null,
       shippingCompany: '',
-      idBusinessPartnerTransportCompany: null
+      idBusinessPartnerTransportCompany: null,
+      profitPercentageAgent: null
     }
   ])
-
+  const [profitsList] = useState(initialProfitValues)
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
 
   useImperativeHandle(updateAgentsIdsRef, () => ({
@@ -203,7 +214,8 @@ const Step2 = ({
         agent: '',
         idBusinessPartnerAgent: null,
         shippingCompany: '',
-        idBusinessPartnerTransportCompany: null
+        idBusinessPartnerTransportCompany: null,
+        profitPercentageAgent: null
       }
     ])
     if (modal !== '') {
@@ -358,7 +370,8 @@ const Step2 = ({
             idBusinessPartnerAgent: agent.idBusinessPartnerAgent,
             shippingCompany: getBusinessPartnerById(agent.idBusinessPartnerTransportCompany),
             agent: getAgentById(agent.idBusinessPartnerAgent),
-            idBusinessPartnerTransportCompany: agent.idBusinessPartnerTransportCompany
+            idBusinessPartnerTransportCompany: agent.idBusinessPartnerTransportCompany,
+            profitPercentageAgent: agent.profitPercentageAgent
           }
         })
       )
@@ -430,6 +443,12 @@ const Step2 = ({
     )
   }
 
+  const validateProfitPercent = (): boolean => {
+    return (
+      (proposalType === 'CLIENT' && selectedAgents[0].profitPercentageAgent !== null)
+    )
+  }
+
   const validateOriginDestination = (): boolean => {
     return (
       modal === 'LAND' ||
@@ -484,7 +503,8 @@ const Step2 = ({
       originDestinyFullfilled() &&
       validateClient() &&
       validateIncoterm() &&
-      validateOriginDestination()
+      validateOriginDestination() &&
+      validateProfitPercent()
     ) {
       setCompleted((currentState) => {
         return { ...currentState, step2: true }
@@ -508,7 +528,8 @@ const Step2 = ({
       data.destState !== '' ||
       data.destCountry !== '' ||
       data.incoterm !== '' ||
-      validateClient()
+      validateClient() ||
+      validateProfitPercent()
     ) {
       setFilled((currentState) => {
         return { ...currentState, step2: true, step6 }
@@ -721,7 +742,8 @@ const Step2 = ({
         agent: '',
         idBusinessPartnerAgent: null,
         shippingCompany: '',
-        idBusinessPartnerTransportCompany: null
+        idBusinessPartnerTransportCompany: null,
+        profitPercentageAgent: null
       }
     ])
   }, [proposalType])
@@ -919,6 +941,7 @@ const Step2 = ({
                   />
                   <LineSeparator />
                 </Grid>
+
                 <Grid item xs={4}>
                   <FormLabel component="legend" error={data.oriState.length === 0 && invalidInput}>
                     {I18n.t('pages.newProposal.step2.state')}
@@ -956,6 +979,7 @@ const Step2 = ({
                     )}
                   />
                 </Grid>
+
                 <Grid item xs={4}>
                   <FormLabel component="legend" error={(invalidInput && data.destCity.length === 0) || invalidOriDest === 'oriCity'}>
                     {I18n.t('pages.newProposal.step2.city')}
@@ -1065,6 +1089,7 @@ const Step2 = ({
               </Grid>
                 )}
           </Grid>
+
           <Grid item xs={modal === 'LAND' ? 12 : 6}>
           <FormLabel component="legend" error={
               ((invalidInput && data.destiny.length === 0) ||
@@ -1271,85 +1296,138 @@ const Step2 = ({
             return (
               <Fragment key={index}>
                 {proposalType === 'CLIENT' && loadedAgentsData && (
-                  <Grid item xs={6}>
+                  <>
+                    <Grid item xs={4}>
+                      <FormLabel component="legend" error={proposalType === 'CLIENT' && invalidInput && selectedAgent.agent.length === 0}>
+                        {I18n.t('pages.newProposal.step2.agents')}
+                        {getAgentCounter(index)}
+                        {proposalType === 'CLIENT' && (
+                          <RedColorSpan> *</RedColorSpan>
+                        )}
+                      </FormLabel>
 
-                    <FormLabel component="legend" error={proposalType === 'CLIENT' && invalidInput && selectedAgent.agent.length === 0}>
-                      {I18n.t('pages.newProposal.step2.agents')}
-                      {getAgentCounter(index)}
-                      {proposalType === 'CLIENT' && (
-                        <RedColorSpan> *</RedColorSpan>
-                      )}
-                    </FormLabel>
-
-                    <Autocomplete
-                      disabled={modal === ''}
-                      size="small"
-                      closeIcon={null}
-                      options={agentsList.map(
-                        (item) => item.businessPartner.simpleName
-                      )}
-                      onChange={(e, newValue) => {
-                        setSelectedAgents(
-                          selectedAgents.map((value, currentIndex) =>
-                            currentIndex === index
-                              ? {
-                                  ...value,
-                                  agent: newValue ?? '',
-                                  idBusinessPartnerAgent: getidBusinessPartnerAgent(newValue)
-                                }
-                              : value
+                      <Autocomplete
+                        disabled={modal === ''}
+                        size="small"
+                        closeIcon={null}
+                        options={agentsList.map(
+                          (item) => item.businessPartner.simpleName
+                        )}
+                        onChange={(e, newValue) => {
+                          setSelectedAgents(
+                            selectedAgents.map((value, currentIndex) =>
+                              currentIndex === index
+                                ? {
+                                    ...value,
+                                    agent: newValue ?? '',
+                                    idBusinessPartnerAgent: getidBusinessPartnerAgent(newValue)
+                                  }
+                                : value
+                            )
                           )
-                        )
-                      }}
-                      value={selectedAgent.agent}
-                      renderInput={(params: any) => (
-                        <div ref={params.InputProps.ref}>
-                          <ControlledInput
-                            {...params}
-                            id="search-name"
-                            toolTipTitle={I18n.t(
-                              'components.itemModal.requiredField'
-                            )}
-                            value={selectedAgent.agent}
-                            invalid={
-                              proposalType === 'CLIENT' &&
-                              invalidInput &&
-                              selectedAgent.agent.length === 0
-                            }
-                            variant="outlined"
-                            placeholder={
-                              selectedAgent.agent.length === 0 &&
-                              I18n.t('pages.newProposal.step2.searchAgents')
-                            }
-                            $space
-                            InputProps={{
-                              endAdornment: (
-                                <InputAdornment position="end">
-                                  <IconComponent
-                                    name="search"
-                                    defaultColor={
-                                      theme?.commercial?.pages?.newProposal
-                                        ?.subtitle
-                                    }
-                                  />
-                                </InputAdornment>
-                              )
-                            }}
-                          />
-                        </div>
+                        }}
+                        value={selectedAgent.agent}
+                        renderInput={(params: any) => (
+                          <div ref={params.InputProps.ref}>
+                            <ControlledInput
+                              {...params}
+                              id="search-name"
+                              toolTipTitle={I18n.t(
+                                'components.itemModal.requiredField'
+                              )}
+                              value={selectedAgent.agent}
+                              invalid={
+                                proposalType === 'CLIENT' &&
+                                invalidInput &&
+                                selectedAgent.agent.length === 0
+                              }
+                              variant="outlined"
+                              placeholder={
+                                selectedAgent.agent.length === 0 &&
+                                I18n.t('pages.newProposal.step2.searchAgents')
+                              }
+                              $space
+                              InputProps={{
+                                endAdornment: (
+                                  <InputAdornment position="end">
+                                    <IconComponent
+                                      name="search"
+                                      defaultColor={
+                                        theme?.commercial?.pages?.newProposal
+                                          ?.subtitle
+                                      }
+                                    />
+                                  </InputAdornment>
+                                )
+                              }}
+                            />
+                          </div>
+                        )}
+                        PaperComponent={(params: any) => (
+                          <StyledPaper {...params} />
+                        )}
+                      />
+
+                      {invalidAgent &&
+                        validateAgent(selectedAgent.agent, index) && (
+                          <ErrorText>
+                            {I18n.t('pages.newProposal.step2.differentAgent')}
+                          </ErrorText>
                       )}
-                      PaperComponent={(params: any) => (
-                        <StyledPaper {...params} />
-                      )}
-                    />
-                    {invalidAgent &&
-                      validateAgent(selectedAgent.agent, index) && (
-                        <ErrorText>
-                          {I18n.t('pages.newProposal.step2.differentAgent')}
-                        </ErrorText>
-                    )}
-                  </Grid>
+                    </Grid>
+
+                    <Grid item xs={2}>
+                      <FormLabel component="legend" error={ invalidInput && selectedAgent.shippingCompany.length === 0}>
+                        {I18n.t('pages.newProposal.step2.profitPercentageAgent')}
+                        {<RedColorSpan> *</RedColorSpan>}
+                      </FormLabel>
+
+                      <ControlledSelect
+                        labelId="select-label-profitPercentageAgent"
+                        id="profitPercentageAgent"
+                        value={selectedAgent.profitPercentageAgent}
+                        renderValue={value => {
+                          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                          return value !== null ? `${value}%` : I18n.t('pages.newProposal.step2.choose')
+                        }}
+                        onChange={(e, newValue) => {
+                          setSelectedAgents(
+                            selectedAgents.map((value, currentIndex) =>
+                              currentIndex === index
+                                ? {
+                                    ...value,
+                                    profitPercentageAgent: e.target.value
+                                  }
+                                : value
+                            )
+                          )
+                        }}
+                        displayEmpty
+                        disableUnderline
+                        invalid={
+                          proposalType === 'CLIENT' &&
+                          invalidInput &&
+                          selectedAgent.profitPercentageAgent === null
+                        }
+                        toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                        disabled={modal === '' || modal === null}
+                        style={{ paddingLeft: '5px' }}
+                      >
+                        <MenuItem disabled value={selectedAgent.profitPercentageAgent}>
+                          <SelectSpan placeholder={1}>
+                            {I18n.t('pages.newProposal.step2.choose')}
+                          </SelectSpan>
+                        </MenuItem>
+                        {profitsList.map((item, index) => (
+                          <MenuItem key={index} value={item}>
+                            <SelectSpan>{item}</SelectSpan>
+                          </MenuItem>
+                        ))}
+                      </ControlledSelect>
+                    </Grid>
+                  </>
                 )}
+
                 <Grid item xs={6}>
                   <FormLabel component="legend" error={ invalidInput && selectedAgent.shippingCompany.length === 0}>
                     {setshippingCompanyLabel()}
@@ -1413,8 +1491,10 @@ const Step2 = ({
                     )}
                   </div>
                 </Grid>
+
                 <LineSeparator />
               </Fragment>
+
             )
           })}
 
@@ -1431,7 +1511,8 @@ const Step2 = ({
                         agent: '',
                         idBusinessPartnerAgent: null,
                         shippingCompany: '',
-                        idBusinessPartnerTransportCompany: null
+                        idBusinessPartnerTransportCompany: null,
+                        profitPercentageAgent: null
                       }
                     ])
                   }}
@@ -1445,7 +1526,8 @@ const Step2 = ({
               <LineSeparator />
             </>
           )}
-          <Grid item xs={2}>
+
+          <Grid item xs={3}>
             <FormLabel component="legend" error={invalidInput && data.incoterm.length === 0}>
               {I18n.t('pages.newProposal.step2.incoterm')}
               <RedColorSpan> *</RedColorSpan>
