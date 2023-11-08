@@ -71,6 +71,11 @@ enum ProfitsPercentsTypes {
   Fifty = 50,
 }
 
+enum ProposalTypes {
+  Client = 'CLIENT',
+  RoutingOrder = 'ROUTING ORDER'
+}
+
 export {
   ModalTypes,
   OrderTypes,
@@ -82,5 +87,6 @@ export {
   AcitivityTypes,
   OperationTypes,
   LocaleTypes,
-  ProfitsPercentsTypes
+  ProfitsPercentsTypes,
+  ProposalTypes
 }
