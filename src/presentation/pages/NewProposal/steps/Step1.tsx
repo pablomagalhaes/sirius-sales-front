@@ -34,6 +34,7 @@ export interface Agents {
   idBusinessPartnerAgent?: number | null
   shippingCompany: string
   idBusinessPartnerTransportCompany?: number | null
+  profitPercentageAgent: number | null
 }
 
 export interface Filled {
@@ -89,7 +90,8 @@ const Step1 = ({
       agent: '',
       idBusinessPartnerAgent: null,
       shippingCompany: '',
-      idBusinessPartnerTransportCompany: null
+      idBusinessPartnerTransportCompany: null,
+      profitPercentageAgent: null
     }
   ])
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
@@ -161,7 +163,8 @@ const Step1 = ({
             idBusinessPartnerAgent: agent.idBusinessPartnerAgent,
             shippingCompany: getBusinessPartnerById(agent.idBusinessPartnerTransportCompany),
             agent: getAgentById(agent.idBusinessPartnerAgent),
-            idBusinessPartnerTransportCompany: agent.idBusinessPartnerTransportCompany
+            idBusinessPartnerTransportCompany: agent.idBusinessPartnerTransportCompany,
+            profitPercentageAgent: agent.profitPercentageAgent
           }
         })
       )
