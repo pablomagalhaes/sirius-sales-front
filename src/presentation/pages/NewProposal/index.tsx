@@ -69,9 +69,19 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const updateTable6IdsRef = useRef()
   const updateAgentsIdsRef = useRef()
 
+  // const [containerList, setContainerList] = useState<any[]>([])
+
+  // useEffect(() => {
+  //   void (async function () {
+  //     await API.getContainerType()
+  //       .then((response) => { setContainerTypeList(response) })
+  //       .catch((err) => console.log(err))
+  //   })()
+  // }, [])
+
   useEffect(() => {
     void (async function () {
-      await API.getContainerType()
+      await API.getContainer()
         .then((response) => { setContainerTypeList(response) })
         .catch((err) => console.log(err))
     })()
@@ -443,6 +453,9 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
 
   const handler = useCallback(() => { setLeavingPage(true) }, [])
   useOnClickOutside(handler)
+
+  console.log('containerTypeList', containerTypeList)
+  console.log('containerList', containerList)
 
   return (
     <RootContainer>
