@@ -73,14 +73,6 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
   const updateTable6IdsRef = useRef()
   const updateAgentsIdsRef = useRef()
 
-  // useEffect(() => {
-  //   void (async function () {
-  //     await API.getContainerType()
-  //       .then((response) => setContainerTypeList(response))
-  //       .catch((err) => console.log(err))
-  //   })()
-  // }, [])
-
   useEffect(() => {
     void (async function () {
       await API.getContainer()
