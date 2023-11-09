@@ -430,7 +430,7 @@ const Step3 = ({
   const validateDangerous = (): boolean => {
     return (
       !data.dangerous ||
-      (data.dangerous && data.imo.length !== 0 && data.codUn.length !== 0)
+      (data.dangerous && data.imo.length !== 0 && data.codUn?.length !== 0)
     )
   }
 
