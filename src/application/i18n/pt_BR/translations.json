@@ -258,7 +258,8 @@
         "subtitle": "Defina origem, destino e especificidades do trecho.",
         "title": "Trecho",
         "transporter": "Transportadora",
-        "collectionAddressDap": "Endereço de entrega:"
+        "collectionAddressDap": "Endereço de entrega:",
+        "profitPercentageAgent": "% Profit"
       },
       "step3": {
         "buttonAdd": "Adicionar item à carga",

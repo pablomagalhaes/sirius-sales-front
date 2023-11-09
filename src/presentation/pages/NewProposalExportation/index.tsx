@@ -75,8 +75,8 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
 
   useEffect(() => {
     void (async function () {
-      await API.getContainerType()
-        .then((response) => setContainerTypeList(response))
+      await API.getContainer()
+        .then((response) => { setContainerTypeList(response) })
         .catch((err) => console.log(err))
     })()
   }, [])

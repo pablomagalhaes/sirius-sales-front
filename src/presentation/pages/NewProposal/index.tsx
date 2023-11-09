@@ -71,7 +71,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
 
   useEffect(() => {
     void (async function () {
-      await API.getContainerType()
+      await API.getContainer()
         .then((response) => { setContainerTypeList(response) })
         .catch((err) => console.log(err))
     })()

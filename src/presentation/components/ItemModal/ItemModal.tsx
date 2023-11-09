@@ -139,8 +139,8 @@ const ItemModal = ({
     const finalList: string[] = []
 
     containerTypeList?.forEach((item): void => {
-      if (item.description !== null) {
-        finalList.push(String(item.description))
+      if (item.container !== null) {
+        finalList.push(String(item.container))
       }
     })
 
