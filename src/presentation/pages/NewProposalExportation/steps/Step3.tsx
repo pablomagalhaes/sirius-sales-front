@@ -238,7 +238,7 @@ const Step3 = ({
       API.getDangerousCode()
         .then((response) => {
           setDangerousCodes(response)
-          resolve()
+          resolve(response)
         })
         .catch((err) => console.log(err))
     })
@@ -246,7 +246,7 @@ const Step3 = ({
     void Promise.all([getPackagingList, getImoList, getTemperatureList, getDangerousCodesList]).then(
       (response: any) => {
         if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
-          const dangerCode = dangerousCodes.find((code) => code.id === proposal.cargo[0].idCargoDangerous)
+          const dangerCode = response[3].find((code) => code.id === proposal.cargo[0].idCargoDangerous)
           setCopyCwSale(proposal.cargo[0].vlCwSale)
           setCwSaleEditMode(true)
           setData({
@@ -428,7 +428,7 @@ const Step3 = ({
   const validateDangerous = (): boolean => {
     return (
       !data.dangerous ||
-      (data.dangerous && data.imo.length !== 0 && data.codUn?.length !== 0)
+      (data.dangerous && data.imo.length !== 0 && data.codUn && data.codUn?.length !== 0)
     )
   }
 
