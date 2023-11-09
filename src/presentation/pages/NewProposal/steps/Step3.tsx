@@ -46,6 +46,10 @@ import { CargoVolume } from '../../../../domain/CargoVolume'
 import CwModal from '../../../components/CwModal/CwModal'
 import FormatNumber from '../../../../application/utils/formatNumber'
 import { ModalTypes } from '../../../../application/enum/enum'
+import Autocomplete, {
+  createFilterOptions
+} from '@material-ui/lab/Autocomplete'
+import { StyledPaper } from './StepsStyles'
 
 interface Step3Props {
   theme?: any
@@ -126,6 +130,7 @@ const Step3 = ({
   number | null
   >(null)
   const [cwSaleEditMode, setCwSaleEditMode] = useState(false)
+  const [dangerousCodes, setDangerousCodes] = useState<any[]>([])
   const [copyCwSale, setCopyCwSale] = useState<number | null>(null)
   let packagingListVar
 
@@ -229,9 +234,19 @@ const Step3 = ({
         .catch((err) => console.log(err))
     })
 
-    void Promise.all([getPackagingList, getImoList, getTemperatureList]).then(
+    const getDangerousCodesList = new Promise<void>((resolve) => {
+      API.getDangerousCode()
+        .then((response) => {
+          setDangerousCodes(response)
+          resolve()
+        })
+        .catch((err) => console.log(err))
+    })
+
+    void Promise.all([getPackagingList, getImoList, getTemperatureList, getDangerousCodesList]).then(
       (response: any) => {
         if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
+          const dangerCode = dangerousCodes.find((code) => code.id === proposal.cargo[0].idCargoDangerous)
           setCopyCwSale(proposal.cargo[0].vlCwSale)
           setCwSaleEditMode(true)
           setData({
@@ -245,7 +260,7 @@ const Step3 = ({
             temperature: String(proposal.cargo[0].idTemperature),
             dangerous: proposal.cargo[0].isDangerous,
             imo: String(proposal.cargo[0].idImoType),
-            codUn: String(proposal.cargo[0].codeUnDangerous !== null ? proposal.cargo[0].codeUnDangerous : '')
+            codUn: String(proposal.cargo[0].idCargoDangerous !== null && dangerCode ? `${String(dangerCode.codDangerousCode)} - ${String(dangerCode.txDangerousCode)}` : '')
           })
 
           if (isAir()) {
@@ -298,11 +313,11 @@ const Step3 = ({
             : null,
         isDangerous: data.dangerous,
         idImoType: Number(data.imo),
-        codeUnDangerous: Number(data.codUn),
         idTemperature: Number(data.temperature),
         cargoVolumes: cargoVolume,
         vlCwPurchase: isAir() ? chargeableWeight : null,
-        vlCwSale: isAir() ? chargeableWeightSale : null
+        vlCwSale: isAir() ? chargeableWeightSale : null,
+        idCargoDangerous: dangerousCodes.find((code) => code.codDangerousCode === data.codUn?.split(' - ')[0])?.id ?? null
       }]
     })
   }, [data, cargoVolume, chargeableWeight, chargeableWeightSale])
@@ -432,7 +447,7 @@ const Step3 = ({
       data.specifications.length > 0 ||
       data.temperature !== '' ||
       data.imo.length > 0 ||
-      data.codUn.length > 0 ||
+      data.codUn?.length > 0 ||
       data.dangerous
     )
   }
@@ -510,6 +525,11 @@ const Step3 = ({
       setData({ ...data, imo: '', codUn: '' })
     }
   }, [data.dangerous])
+
+  const filterOptions = createFilterOptions({
+    matchFrom: 'any',
+    limit: 500
+  })
 
   return (
     <Separator>
@@ -654,24 +674,45 @@ const Step3 = ({
             </Grid>
           )}
           {data.dangerous && (
-            <Grid item xs={2}>
+            <Grid item xs={4}>
+
               <FormLabel component="legend" error={
                   invalidInput &&
-                  (data.codUn === null || data.codUn.length === 0)
+                  (data.codUn === null || data.codUn?.length === 0)
                 }>
                 {I18n.t('components.itemModal.codUn')}
                 <RedColorSpan> *</RedColorSpan>
               </FormLabel>
-              <ControlledInput
-                toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                invalid={
-                  invalidInput &&
-                  (data.codUn === null || data.codUn.length === 0)
-                }
-                value={data.codUn}
-                onChange={(e) => setData({ ...data, codUn: e.target.value })}
-                variant="outlined"
-                size="small"
+              <Autocomplete
+                onChange={(e, newValue) => {
+                  setData({ ...data, codUn: newValue })
+                }}
+                options={[
+                  '',
+                  ...dangerousCodes.map((code) => `${String(code.codDangerousCode)} - ${String(code.txDangerousCode)}`)
+                ]}
+                value={data.codUn != null ? data.codUn : ''}
+                filterOptions={filterOptions}
+                filterSelectedOptions
+                renderInput={(params) => (
+                  <div ref={params.InputProps.ref}>
+                    <ControlledInput
+                      {...params}
+                      id="search-cod-un"
+                      toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                      invalid={
+                        invalidInput &&
+                        (data.codUn === null || data.codUn?.length === 0)
+                      }
+                      variant="outlined"
+                      size="small"
+                      placeholder={I18n.t('pages.newProposal.step2.choose')}
+                    />
+                  </div>
+                )}
+                PaperComponent={(params: any) => (
+                  <StyledPaper {...params} />
+                )}
               />
             </Grid>
           )}

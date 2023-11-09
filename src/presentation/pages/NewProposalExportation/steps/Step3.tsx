@@ -245,7 +245,7 @@ const Step3 = ({
             temperature: String(proposal.cargo[0].idTemperature),
             dangerous: proposal.cargo[0].isDangerous,
             imo: String(proposal.cargo[0].idImoType),
-            codUn: String(proposal.cargo[0].codeUnDangerous !== null ? proposal.cargo[0].codeUnDangerous : '')
+            codUn: String(proposal.cargo[0].idCargoDangerous !== null ? proposal.cargo[0].idCargoDangerous : '')
           })
 
           if (isAir()) {
@@ -298,7 +298,7 @@ const Step3 = ({
             : null,
         isDangerous: data.dangerous,
         idImoType: Number(data.imo),
-        codeUnDangerous: Number(data.codUn),
+        idCargoDangerous: Number(data.codUn),
         idTemperature: Number(data.temperature),
         cargoVolumes: cargoVolume,
         vlCwPurchase: isAir() ? chargeableWeight : null,

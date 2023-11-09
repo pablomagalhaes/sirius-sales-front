@@ -34,10 +34,10 @@ export const emptyProposalValue: Proposal = {
     idImoType: 0, // id IMO
     idTemperature: 0, // step 3 id temperatura
     idCargoContractingType: 1, // id especificacoes step3 (null observar comportamento)
-    codeUnDangerous: 0, // step 3 codigo
     cargoVolumes: [],
     vlCwPurchase: null, // chargeable weight compra
-    vlCwSale: null // chargeable weight venda
+    vlCwSale: null, // chargeable weight venda
+    idCargoDangerous: null
   }],
   transitTime: 0, // step4 transit time
   idFrequency: 0, // step 4 id frequency
