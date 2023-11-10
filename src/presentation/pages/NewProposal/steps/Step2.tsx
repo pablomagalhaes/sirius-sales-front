@@ -1539,7 +1539,7 @@ const Step2 = ({
             </>
           )}
 
-          <Grid item xs={3}>
+          <Grid item xs={2}>
             <FormLabel component="legend" error={invalidInput && data.incoterm.length === 0}>
               {I18n.t('pages.newProposal.step2.incoterm')}
               <RedColorSpan> *</RedColorSpan>
