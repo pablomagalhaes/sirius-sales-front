@@ -56,8 +56,8 @@ interface Cargo {
   idImoType: number
   idTemperature: number
   idCargoContractingType: number | null
-  codeUnDangerous: number
   cargoVolumes: CargoVolume[]
   vlCwPurchase: number | null
   vlCwSale: number | null
+  idCargoDangerous: number
 }

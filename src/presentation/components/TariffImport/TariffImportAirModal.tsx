@@ -111,6 +111,7 @@ const TariffImportAirModal = ({
 
     const isBetweenMapValue = (value: number, valueMap: any): number => {
       for (const key in valueMap) {
+        // eslint-disable-next-line no-prototype-builtins
         if (valueMap.hasOwnProperty(key)) {
           const range = valueMap[key]
           if (value >= range.min && value <= range.max) {

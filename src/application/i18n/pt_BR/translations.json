@@ -260,8 +260,8 @@
         "transporter": "Transportadora",
         "collectionAddressDap": "Endereço de entrega:",
         "postalCode": "CEP de coleta:",
-        "postalCodeDap": "CEP de entrega:"
-
+        "postalCodeDap": "CEP de entrega:",
+        "profitPercentageAgent": "% Profit"
       },
       "step3": {
         "buttonAdd": "Adicionar item à carga",
