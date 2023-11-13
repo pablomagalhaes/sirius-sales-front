@@ -111,6 +111,10 @@ const Proposal = (): JSX.Element => {
   ]
 
   useEffect(() => {
+    refetch()
+  }, [])
+
+  useEffect(() => {
     const newIncotermList: any[] = []
     void (async function () {
       await API.getIncoterms()
