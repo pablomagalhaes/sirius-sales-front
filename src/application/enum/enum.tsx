@@ -76,6 +76,13 @@ enum ProposalTypes {
   RoutingOrder = 'ROUTING ORDER'
 }
 
+enum IncotermTypes {
+  Fca = 'FCA',
+  Exw =  'EXW',
+  Dap = 'DAP',
+  Ddp = 'DDP'
+}
+
 export {
   ModalTypes,
   OrderTypes,
@@ -88,5 +95,6 @@ export {
   OperationTypes,
   LocaleTypes,
   ProfitsPercentsTypes,
-  ProposalTypes
+  ProposalTypes,
+  IncotermTypes
 }
