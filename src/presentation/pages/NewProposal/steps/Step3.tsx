@@ -243,7 +243,6 @@ const Step3 = ({
         .catch((err) => console.log(err))
     })
 
-
     void Promise.all([getPackagingList, getImoList, getTemperatureList, getDangerousCodesList]).then(
       (response: any) => {
         if (proposal.idProposal !== undefined && proposal.idProposal !== null) {

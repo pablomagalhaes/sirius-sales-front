@@ -78,7 +78,7 @@ enum ProposalTypes {
 
 enum IncotermTypes {
   Fca = 'FCA',
-  Exw =  'EXW',
+  Exw = 'EXW',
   Dap = 'DAP',
   Ddp = 'DDP'
 }
