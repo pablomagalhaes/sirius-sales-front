@@ -206,13 +206,13 @@ const Step5 = ({
   const getValueSale = (): string[] => {
     return proposal.agents.map((agent) => {
       return proposal.costs
-        .find(cost => cost.costType === CostTypes.Freight && cost.valuePurchase === null && cost.agent?.idBusinessPartnerAgent === agent.idBusinessPartnerAgent)?.valueSale?.toFixed(2) ?? ''
+        .find(cost => cost.costType === CostTypes.Freight && cost.agent?.idBusinessPartnerAgent === agent.idBusinessPartnerAgent)?.valueSale?.toFixed(2) ?? ''
     })
   }
 
   const [dataSales, setDataSales] = useState<any>({
     idCost: proposal.costs.find(cost => cost.costType === CostTypes.Freight && (cost.agent === null || cost.agent.idBusinessPartnerAgent === null))?.idCost ?? null,
-    currencySale: String(proposal.costs.find(cost => cost.costType === CostTypes.Freight && (cost.valuePurchase === null))?.idCurrencySale ?? ''),
+    currencySale: String(proposal.costs.find(cost => cost.costType === CostTypes.Freight)?.idCurrencySale ?? ''),
     valueSale: getValueSale()
   })
 
