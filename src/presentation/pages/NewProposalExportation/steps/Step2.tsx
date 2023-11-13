@@ -38,7 +38,7 @@ import {
 import { ProposalContext, ProposalProps } from '../../NewProposal/context/ProposalContext'
 import { Button } from 'fiorde-fe-components'
 import AgentDeleteModal from '../../../components/AgentDeleteModal'
-import { ModalTypes, ProfitsPercentsTypes } from '../../../../application/enum/enum'
+import { ModalTypes, ProfitsPercentsTypes, IncotermTypes } from '../../../../application/enum/enum'
 
 interface Step2Props {
   invalidInput: boolean
@@ -69,6 +69,8 @@ interface DataProps {
   destinationCityId: string
   idOrigin: string
   idDestination: string
+  postalCodeDap: string
+  postalCode: string
 }
 
 export interface Agents {
@@ -122,7 +124,9 @@ const Step2 = ({
     destinationCityName: '',
     destinationCityId: '',
     idOrigin: '',
-    idDestination: ''
+    idDestination: '',
+    postalCodeDap: '',
+    postalCode: ''
   })
   const [incotermFilteredList, setIncotermFilteredList] = useState<any[]>([])
   const [incotermList, setIncotermList] = useState<any[]>([])
@@ -207,7 +211,9 @@ const Step2 = ({
       origin: '',
       incoterm: '',
       collection: '',
-      collectionDap: ''
+      collectionDap: '',
+      postalCodeDap: '',
+      postalCode: ''
     })
     setSelectedAgents([
       {
@@ -312,23 +318,25 @@ const Step2 = ({
         setData({
           collection: proposal.cargoCollectionAddress,
           collectionDap: proposal.cargoDeliveryAddress,
-          destCity: modal === 'LAND' ? String(values[1]?.name) : '',
+          destCity: modal === ModalTypes.Land ? String(values[1]?.name) : '',
           destCountry:
-            modal === 'LAND' ? String(values[1]?.state?.country?.name) : '',
-          destState: modal === 'LAND' ? String(values[1]?.state?.name) : '',
-          destiny: modal !== 'LAND' ? String(values[1]) : '',
+            modal === ModalTypes.Land ? String(values[1]?.state?.country?.name) : '',
+          destState: modal === ModalTypes.Land ? String(values[1]?.state?.name) : '',
+          destiny: modal !== ModalTypes.Land ? String(values[1]) : '',
           incoterm: proposal.idIncoterm,
-          oriCity: modal === 'LAND' ? String(values[0]?.name) : '',
+          oriCity: modal === ModalTypes.Land ? String(values[0]?.name) : '',
           oriCountry:
-            modal === 'LAND' ? String(values[0]?.state?.country?.name) : '',
-          oriState: modal === 'LAND' ? String(values[0]?.state?.name) : '',
-          origin: modal !== 'LAND' ? String(values[0]) : '',
-          originCityName: modal === 'LAND' ? String(values[0]?.name) : '',
-          originCityId: modal === 'LAND' ? values[0]?.state?.id : null,
-          destinationCityName: modal === 'LAND' ? String(values[1]?.name) : '',
-          destinationCityId: modal === 'LAND' ? values[1]?.state?.id : null,
-          idOrigin: modal !== 'LAND' ? String(values[1]?.state?.id) : '',
-          idDestination: modal !== 'LAND' ? String(values[1]?.state?.id) : ''
+            modal === ModalTypes.Land ? String(values[0]?.state?.country?.name) : '',
+          oriState: modal === ModalTypes.Land ? String(values[0]?.state?.name) : '',
+          origin: modal !== ModalTypes.Land ? String(values[0]) : '',
+          originCityName: modal === ModalTypes.Land ? String(values[0]?.name) : '',
+          originCityId: modal === ModalTypes.Land ? values[0]?.state?.id : null,
+          destinationCityName: modal === ModalTypes.Land ? String(values[1]?.name) : '',
+          destinationCityId: modal === ModalTypes.Land ? values[1]?.state?.id : null,
+          idOrigin: modal !== ModalTypes.Land ? String(values[1]?.state?.id) : '',
+          idDestination: modal !== ModalTypes.Land ? String(values[1]?.state?.id) : '',
+          postalCodeDap: proposal.cepCargoDeliveryAddress,
+          postalCode: proposal.cepCargoCollectionAddress
         })
         loadStatesList('origin', String(values[0]?.state?.country?.id))
         loadStatesList('destiny', String(values[1]?.state?.country?.id))
@@ -393,7 +401,9 @@ const Step2 = ({
           ],
         idIncoterm: data.incoterm,
         cargoCollectionAddress: data.collection,
-        cargoDeliveryAddress: data.collectionDap
+        cargoDeliveryAddress: data.collectionDap,
+        cepCargoCollectionAddress: data.postalCode,
+        cepCargoDeliveryAddress: data.postalCodeDap
       })
     } else {
       setProposal({
@@ -407,7 +417,9 @@ const Step2 = ({
         ],
         idIncoterm: data.incoterm,
         cargoCollectionAddress: data.collection,
-        cargoDeliveryAddress: data.collectionDap
+        cargoDeliveryAddress: data.collectionDap,
+        cepCargoCollectionAddress: data.postalCode,
+        cepCargoDeliveryAddress: data.postalCodeDap
       })
     }
   }, [data, oriCitiesList, destCitiesList])
@@ -430,15 +442,18 @@ const Step2 = ({
       (data.incoterm.length !== 0 &&
         data.incoterm !== '' &&
         data.incoterm === 'EXW' &&
-        data.collection !== '') ||
+        data.collection !== '' &&
+        data.postalCode !== '') ||
       (data.incoterm.length !== 0 &&
         data.incoterm !== '' &&
         data.incoterm === 'DAP' &&
-        data.collectionDap !== '') ||
+        data.collectionDap !== '' &&
+        data.postalCodeDap !== '') ||
       (data.incoterm.length !== 0 &&
         data.incoterm !== '' &&
         data.incoterm === 'DDP' &&
-        data.collectionDap !== '')
+        data.collectionDap !== '' &&
+        data.postalCodeDap !== '')
 
     )
   }
@@ -1431,7 +1446,7 @@ const Step2 = ({
                     {<RedColorSpan> *</RedColorSpan>}
                   </FormLabel>
                   <div style={{ display: 'flex' }}>
-                    <div style={{ width: '95%' }}>
+                    <div style={ index !== 0 ? { width: '95%' } : { width: '100%' }}>
                       <Autocomplete
                         disabled={modal === ''}
                         size="small"
@@ -1583,37 +1598,136 @@ const Step2 = ({
               ))}
             </ControlledSelect>
           </Grid>
-          <Grid item xs={4}>
-            {(data.incoterm === 'EXW' ||
-              data.incoterm === 'FCA') && (
-              <>
+          <Grid item xs={4} />
+          {(data.incoterm === IncotermTypes.Exw ||
+              data.incoterm === IncotermTypes.Fca) && (
+            <>
+            <Grid item xs={2}>
+              <FormLabel component="legend" error={
+                  invalidInput &&
+                  data.postalCode.length === 0
+                }>
+                {I18n.t('pages.newProposal.step2.postalCode')}
+                {data.incoterm !== IncotermTypes.Fca && <RedColorSpan> *</RedColorSpan>}
+              </FormLabel>
+              <ControlledInput
+                id="description"
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                onChange={(e) =>
+                  setData({ ...data, postalCode: e.target.value })
+                }
+                invalid={
+                  invalidInput &&
+                  data.postalCode.length === 0
+                }
+                value={data.postalCode.length !== 0 ? data.postalCode : ''}
+                variant="outlined"
+                size="small"
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <FormLabel component="legend" error={
+                  invalidInput &&
+                  data.incoterm !== IncotermTypes.Fca &&
+                  data.collection.length === 0
+                }>
+                {I18n.t('pages.newProposal.step2.collectionAddress')}
+                {data.incoterm !== IncotermTypes.Fca && <RedColorSpan> *</RedColorSpan>}
+              </FormLabel>
+              <ControlledInput
+                id="description"
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                onChange={(e) =>
+                  setData({ ...data, collection: e.target.value })
+                }
+                invalid={
+                  invalidInput &&
+                  data.incoterm !== IncotermTypes.Fca &&
+                  data.collection.length === 0
+                }
+                value={data.collection.length !== 0 ? data.collection : ''}
+                variant="outlined"
+                size="small"
+              />
+            </Grid>
+            </>
+          )}
+          {(data.incoterm === IncotermTypes.Dap && (
+            <>
+            <Grid item xs={2}>
+              <FormLabel component="legend" error={
+                  invalidInput &&
+                  data.postalCodeDap.length === 0
+                }>
+                {I18n.t('pages.newProposal.step2.postalCodeDap')}
+                {<RedColorSpan> *</RedColorSpan>}
+              </FormLabel>
+              <ControlledInput
+                id="description"
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                onChange={(e) =>
+                  setData({ ...data, postalCodeDap: e.target.value })
+                }
+                invalid={
+                  invalidInput &&
+                  data.postalCodeDap.length === 0
+                }
+                value={data.postalCodeDap.length !== 0 ? data.postalCodeDap : ''}
+                variant="outlined"
+                size="small"
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <FormLabel component="legend" error={
+                  invalidInput &&
+                  data.collectionDap.length === 0
+                }>
+                {I18n.t('pages.newProposal.step2.collectionAddressDap')}
+                {<RedColorSpan> *</RedColorSpan>}
+              </FormLabel>
+              <ControlledInput
+                id="description"
+                toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                onChange={(e) =>
+                  setData({ ...data, collectionDap: e.target.value })
+                }
+                invalid={
+                  invalidInput &&
+                  data.collectionDap.length === 0
+                }
+                value={data.collectionDap.length !== 0 ? data.collectionDap : ''}
+                variant="outlined"
+                size="small"
+              />
+            </Grid>
+            </>
+          ))}
+          {(data.incoterm === IncotermTypes.Ddp && (
+            <>
+              <Grid item xs={2}>
                 <FormLabel component="legend" error={
                     invalidInput &&
-                    data.incoterm !== 'FCA' &&
-                    data.collection.length === 0
+                    data.postalCodeDap.length === 0
                   }>
-                  {I18n.t('pages.newProposal.step2.collectionAddress')}
-                  {data.incoterm !== 'FCA' && <RedColorSpan> *</RedColorSpan>}
+                  {I18n.t('pages.newProposal.step2.postalCodeDap')}
+                  {<RedColorSpan> *</RedColorSpan>}
                 </FormLabel>
                 <ControlledInput
                   id="description"
                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
                   onChange={(e) =>
-                    setData({ ...data, collection: e.target.value })
+                    setData({ ...data, postalCodeDap: e.target.value })
                   }
                   invalid={
                     invalidInput &&
-                    data.incoterm !== 'FCA' &&
-                    data.collection.length === 0
+                    data.postalCodeDap.length === 0
                   }
-                  value={data.collection.length !== 0 ? data.collection : ''}
+                  value={data.postalCodeDap.length !== 0 ? data.postalCodeDap : ''}
                   variant="outlined"
                   size="small"
                 />
-              </>
-            )}
-            {(data.incoterm === 'DAP' && (
-              <>
+              </Grid>
+              <Grid item xs={4}>
                 <FormLabel component="legend" error={
                     invalidInput &&
                     data.collectionDap.length === 0
@@ -1635,35 +1749,10 @@ const Step2 = ({
                   variant="outlined"
                   size="small"
                 />
-              </>
-            ))}
-            {(data.incoterm === 'DDP' && (
-              <>
-                <FormLabel component="legend" error={
-                    invalidInput &&
-                    data.collectionDap.length === 0
-                  }>
-                  {I18n.t('pages.newProposal.step2.collectionAddressDap')}
-                  {<RedColorSpan> *</RedColorSpan>}
-                </FormLabel>
-                <ControlledInput
-                  id="description"
-                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                  onChange={(e) =>
-                    setData({ ...data, collectionDap: e.target.value })
-                  }
-                  invalid={
-                    invalidInput &&
-                    data.collectionDap.length === 0
-                  }
-                  value={data.collectionDap.length !== 0 ? data.collectionDap : ''}
-                  variant="outlined"
-                  size="small"
-                />
-              </>
-            ))}
+              </Grid>
+            </>
+          ))}
           </Grid>
-        </Grid>
       </FormControl>
     </Separator>
   )

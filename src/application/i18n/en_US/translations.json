@@ -257,6 +257,8 @@
         "title": "Section",
         "transporter": "Transporter",
         "collectionAddressDap": "Delivery address:",
+        "postalCode": "CEP de coleta:",
+        "postalCodeDap": "CEP de entrega:",
         "profitPercentageAgent": "% Profit"
       },
       "step3": {
