@@ -205,8 +205,7 @@ const Step5 = ({
 
   const getValueSale = (): string[] => {
     return proposal.agents.map((agent) => {
-      return proposal.costs
-        .find(cost => cost.costType === CostTypes.Freight && cost.agent?.idBusinessPartnerAgent === agent.idBusinessPartnerAgent)?.valueSale?.toFixed(2) ?? ''
+      return proposal.costs.find(cost => cost.costType === CostTypes.Freight && cost.agent?.idBusinessPartnerAgent === agent.idBusinessPartnerAgent)?.valueSale?.toFixed(2) ?? ''
     })
   }
 
@@ -346,7 +345,7 @@ const Step5 = ({
           costType: CostTypes.Freight,
           idCurrencySale: dataSales.currencySale,
           idCurrencyPurchase: item.currencyPurchase,
-          valueSale: FormatNumber.convertStringToNumber(dataSales.valueSale[index]),
+          valueSale: FormatNumber.convertStringToNumber(dataSales?.valueSale[index]),
           valuePurchase: FormatNumber.convertStringToNumber(String(item.valuePurchase)),
           isPurchase: false,
           isSale: true,
@@ -379,15 +378,15 @@ const Step5 = ({
             proposalId: null
           },
           costType: CostTypes.Freight,
-          idCurrencySale: item.currencySale,
-          idCurrencyPurchase: item.currencyPurchase,
+          idCurrencySale: item?.currencySale,
+          idCurrencyPurchase: item?.currencyPurchase,
           valueSale: FormatNumber.convertStringToNumber(String(item.valueSale)),
           valuePurchase: FormatNumber.convertStringToNumber(String(item.valuePurchase)),
           isPurchase: false,
           isSale: true,
           valueSaleTotal: null,
           valuePurchaseTotal: null,
-          idTariff: item.idTariff
+          idTariff: item?.idTariff
         }
         freightCostArrayNew.push(freightCostNew)
       })
@@ -1367,7 +1366,8 @@ const Step5 = ({
                               <Grid item xs={2}>
                                 <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                                   customInput={ControlledInput} onChange={(e, newValue) => handleValueSale(e.target.value, selectedAgent, index)} toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                  invalid={invalidInput && (dataSales.valueSale?.length === 0 || inputValidation(dataSales.valueSale[index]))} value={dataSales.valueSale[index]} variant='outlined' size='small' />
+                                  invalid={invalidInput && (dataSales.valueSale?.length === 0 || inputValidation(dataSales.valueSale[index]))} 
+                                  value={dataSales.valueSale[index]} variant='outlined' size='small' />
                               </Grid>
                             </Grid>
                             <ButtonWrapper>
@@ -1578,14 +1578,14 @@ const Step5 = ({
                                 format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                                 customInput={ControlledInput}
                                 onChange={(e) => {
-                                  const newData = [...dataContainer]
+                                  const newData = [...dataSales]
                                   newData[index].valueSale = e.target.value
                                   setDataContainer(newData)
                                   handleContainerChange(newData, 'valueSale', e.target.value, index, true)
                                 }}
                                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                invalid={invalidInput && inputValidation(dataContainer[index].valueSale)}
-                                value={dataContainer[index].valueSale}
+                                invalid={invalidInput && inputValidation(dataSales.valueSale[index])}
+                                value={dataSales.valueSale[index]}
                                 variant='outlined'
                                 size='small'
                               />
