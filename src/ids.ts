@@ -96,6 +96,9 @@ export const TARIFF_CANCEL_MODAL_INPUT_DETAIL = `${PREFIX_IDS}_tariff-reject-mod
 export const TARIFF_CANCEL_MODAL_BUTTON_CANCEL = `${PREFIX_IDS}_tariff-reject-modal_button_cancel`
 export const TARIFF_CANCEL_MODAL_BUTTON_CONFIRM = `${PREFIX_IDS}_tariff-reject-modal_button_confirm`
 
+// Cost Modal
+export const TARIFF_COST_MODAL_SELECT_TYPE = `${PREFIX_IDS}_tariff-cost-modal_select_type`
+
 // STAGGEREDPROPOSAL NEWSTAGGEREDPROPOSAL
 export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_LINK_HOME = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal_link_home`
 export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_BUTTON_SAVE = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal_button_save`
