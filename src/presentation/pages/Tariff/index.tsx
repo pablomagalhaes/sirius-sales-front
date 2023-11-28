@@ -139,7 +139,15 @@ const Tariff = (): JSX.Element => {
   }
 
   useEffect(() => {
-    if (!open) createTabs()
+    if (!open) {
+      refetch()
+    }
+  }, [open])
+
+  useEffect(() => {
+    if (!open) {
+      createTabs()
+    }
   }, [tariffList, countryExpanded, filter, open])
 
   useEffect(() => {
