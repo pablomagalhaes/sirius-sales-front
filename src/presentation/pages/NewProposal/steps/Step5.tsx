@@ -259,7 +259,7 @@ const Step5 = ({
     const getOnlyCargosExists = proposal.cargo[0].cargoVolumes.filter(currentProsalCargoVolumes => getAllCargos.includes(currentProsalCargoVolumes.idContainerType)).map(cargo => cargo.idContainerType)
     const getOnlyDataExists = unionCargos.filter(unionAgent => getOnlyCargosExists.includes(unionAgent.idContainerType))
     setDataContainer(getOnlyDataExists)
-  }, [proposal.cargo[0]])
+  }, [proposal.cargo[0], ...proposal.cargo[0]?.cargoVolumes])
 
   useEffect(() => {
     loadAgentsList()
@@ -1076,11 +1076,14 @@ const Step5 = ({
   function handleContainerChange (newData, field, newValue, index, hasNumber: boolean): void {
     const getCostsCostTypeFrete = proposal.costs.filter(cost => cost.costType === CostTypes.Freight)
     const getCostsAnotherCostType = proposal.costs.filter(cost => cost.costType !== CostTypes.Freight)
-    if (hasNumber) {
-      getCostsCostTypeFrete[index][field] = Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, ''))
-    } else {
-      getCostsCostTypeFrete[index][field] = newValue
+    if(getCostsCostTypeFrete.length > 0) {
+      if (hasNumber) {
+        getCostsCostTypeFrete[index][field] = Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, ''))
+      } else {
+        getCostsCostTypeFrete[index][field] = newValue
+      }
     }
+
     const handleCosts = [...getCostsAnotherCostType, ...getCostsCostTypeFrete]
     setProposal({
       ...proposal,
@@ -1441,7 +1444,7 @@ const Step5 = ({
                     </Grid>
                     </CargoContainer>
                     {proposal.cargo[0].cargoVolumes.map((cargoVolume, index, array) => {
-                      return (dataContainer.length === array.length) && (
+                      return (
                         <CargoContainer className="line-bottom" key={index}>
                           <Grid container spacing={5}>
                             <Grid item xs={3}>
@@ -1531,7 +1534,7 @@ const Step5 = ({
                                   }}
                                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
                                   invalid={invalidInput && inputValidation(dataContainer[index].valuePurchase)}
-                                  value={dataContainer[index].valuePurchase}
+                                  value={dataContainer[index]?.valuePurchase}
                                   variant='outlined'
                                   size='small'
                                 />
@@ -1544,7 +1547,7 @@ const Step5 = ({
                             <Grid item xs={2}>
                               <>
                                 <Autocomplete
-                                  value={dataContainer[index].currencySale}
+                                  value={dataContainer[index]?.currencySale}
                                   onChange={(e, newValue) => {
                                     const newData = dataContainer.map((data) => {
                                       data.currencySale = String(newValue ?? '')
@@ -1590,14 +1593,13 @@ const Step5 = ({
                                 format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                                 customInput={ControlledInput}
                                 onChange={(e) => {
-                                  const newData = [...dataSales]
+                                  const newData = [...dataContainer]
                                   newData[index].valueSale = e.target.value
-                                  setDataContainer(newData)
                                   handleContainerChange(newData, 'valueSale', e.target.value, index, true)
                                 }}
                                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                invalid={invalidInput && inputValidation(dataSales.valueSale[index])}
-                                value={dataSales.valueSale[index]}
+                                invalid={invalidInput && inputValidation(dataContainer[index].valueSale)}
+                                value={dataContainer[index]?.valueSale}
                                 variant='outlined'
                                 size='small'
                               />
