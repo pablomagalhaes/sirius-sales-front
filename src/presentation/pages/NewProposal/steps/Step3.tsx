@@ -486,8 +486,8 @@ const Step3 = ({
     let id: string = ''
     for (let index = 0; index < containerTypeList.length; index++) {
       const element = containerTypeList[index]
-      if (container === element.description) {
-        id = element.id
+      if (container === element.container) {
+        id = element.idContainer
       }
     }
     return id
