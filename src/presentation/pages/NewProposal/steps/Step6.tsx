@@ -121,14 +121,14 @@ const Step6 = ({
             const getContainer = new Promise((resolve) => {
               if (specifications === 'fcl') {
                 API.getContainer()
-                .then((response) => {
-                  const getContainer = response.find((container) => container.idContainer === cost.idContainer)
-                  if(getContainer) {
-                    resolve(String(getContainer.container))
-                  } else {
-                    resolve("")
-                  }
-                })
+                  .then((response) => {
+                    const getContainer = response.find((container) => container.idContainer === cost.idContainer)
+                    if (getContainer) {
+                      resolve(String(getContainer.container))
+                    } else {
+                      resolve('')
+                    }
+                  })
               } else {
                 (resolve(null))
               }

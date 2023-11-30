@@ -442,14 +442,14 @@ const Step5 = ({
             const getContainer: any = new Promise((resolve) => {
               if (specifications === 'fcl' && cost.idContainer !== null) {
                 API.getContainer()
-                .then((response) => {
-                  const getContainer = response.find((container) => container.idContainer === cost.idContainer)
-                  if(getContainer) {
-                    resolve(String(getContainer.container))
-                  } else {
-                    resolve("")
-                  }
-                })
+                  .then((response) => {
+                    const getContainer = response.find((container) => container.idContainer === cost.idContainer)
+                    if (getContainer) {
+                      resolve(String(getContainer.container))
+                    } else {
+                      resolve('')
+                    }
+                  })
               } else {
                 resolve(null)
               }
@@ -1081,7 +1081,7 @@ const Step5 = ({
   function handleContainerChange (newData, field, newValue, index, hasNumber: boolean): void {
     const getCostsCostTypeFrete = proposal.costs.filter(cost => cost.costType === CostTypes.Freight)
     const getCostsAnotherCostType = proposal.costs.filter(cost => cost.costType !== CostTypes.Freight)
-    if(getCostsCostTypeFrete.length > 0) {
+    if (getCostsCostTypeFrete.length > 0) {
       if (hasNumber) {
         getCostsCostTypeFrete[index][field] = Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, ''))
       } else {
@@ -1374,7 +1374,7 @@ const Step5 = ({
                               <Grid item xs={2}>
                                 <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                                   customInput={ControlledInput} onChange={(e, newValue) => handleValueSale(e.target.value, selectedAgent, index)} toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                  invalid={invalidInput && (dataSales.valueSale?.length === 0 || inputValidation(dataSales.valueSale[index]))} 
+                                  invalid={invalidInput && (dataSales.valueSale?.length === 0 || inputValidation(dataSales.valueSale[index]))}
                                   value={dataSales.valueSale[index]} variant='outlined' size='small' />
                               </Grid>
                             </Grid>
