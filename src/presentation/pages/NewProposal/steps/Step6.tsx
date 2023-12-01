@@ -120,9 +120,15 @@ const Step6 = ({
           for (const cost of proposal.costs) {
             const getContainer = new Promise((resolve) => {
               if (specifications === 'fcl') {
-                API.getContainerType(cost.idContainerType)
-                  .then((response) => resolve(String(response?.description)))
-                  .catch((err) => console.log(err))
+                API.getContainer()
+                  .then((response) => {
+                    const getContainer = response.find((container) => container.idContainer === cost.idContainer)
+                    if (getContainer) {
+                      resolve(String(getContainer.container))
+                    } else {
+                      resolve('')
+                    }
+                  })
               } else {
                 (resolve(null))
               }
@@ -207,7 +213,7 @@ const Step6 = ({
         idCost: row.idCost === undefined ? null : row.idCost,
         idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
         idService: serviceList.filter((serv) => serv.service === row.description)[0]?.idService, // id Descricao
-        idContainerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : null, // containerMODAL
+        idContainer: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.container === row.selectedContainer)[0]?.idContainer : null, // containerMODAL
         agent: row.agent,
         costType: CostTypes.Origin, // 'Origem''Destino''Tarifa'
         billingType: row.type, // Tipo -MODAL
@@ -232,7 +238,7 @@ const Step6 = ({
         idCost: row.idCost === undefined ? null : row.idCost,
         idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
         idService: serviceList.filter((serv) => serv.service === row.description)[0]?.idService, // id Descricao
-        idContainerType: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.description === row.selectedContainer)[0]?.id : null, // containerMODAL
+        idContainer: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.container === row.selectedContainer)[0]?.idContainer : null, // containerMODAL
         agent: row.agent,
         costType: CostTypes.Destiny, // 'Origem''Destino''Tarifa'
         billingType: row.type, // Tipo -MODAL

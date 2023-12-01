@@ -281,7 +281,7 @@ const Step3 = ({
               length: FormatNumber.convertNumberToString(cargo?.valueLength),
               rawWeight: FormatNumber.convertNumberToString(cargo?.valueGrossWeight),
               type: marineFCL()
-                ? verifyContainerById(cargo.idContainerType as string)
+                ? verifyContainerById(cargo.idContainer as string)
                 : verifyPackagingById(cargo.idPackaging as number),
               width: FormatNumber.convertNumberToString(cargo?.valueWidth),
               id: id++,
@@ -335,7 +335,7 @@ const Step3 = ({
               .map((spe) => spe.toLowerCase())
               .indexOf(data.specifications) + 1
             : 1,
-        idContainerType: modal !== 'SEA' || !marineFCL() ? null : verifyContainerByType(row.type), // !marineFCL() ? null : containerTypeList.filter((cont) => cont.type === row.type)[0]?.id,
+        idContainer: modal !== 'SEA' || !marineFCL() ? null : verifyContainerByType(row.type), // !marineFCL() ? null : containerTypeList.filter((cont) => cont.type === row.type)[0]?.id,
         idPackaging: marineFCL() ? null : packagingList.filter((pack) => pack.packaging === row.type)[0]?.id,
         valueQuantity: Number(row.amount),
         valueGrossWeight: Number(row.rawWeight?.replace(',', '.')),
@@ -345,7 +345,7 @@ const Step3 = ({
         valueWidth: Number(row.width?.replace(',', '.')),
         valueDiameter: Number(row.diameter?.replace(',', '.')),
         isStacked: row.stack,
-        type: row.type
+        container: row.type
       })
     })
     setCargoVolume(newCargoVolumes)
@@ -497,8 +497,8 @@ const Step3 = ({
     let name: string = ''
     for (let index = 0; index < containerTypeList.length; index++) {
       const element = containerTypeList[index]
-      if (containerId === element.id) {
-        name = element.description
+      if (containerId === element.idContainer) {
+        name = element.container
       }
     }
     return name
