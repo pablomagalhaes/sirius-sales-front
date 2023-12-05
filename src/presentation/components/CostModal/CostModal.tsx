@@ -674,11 +674,11 @@ const CostModal = ({
                   <label>
                     {(state.buyValue === null || state.buyValue.length === 0) && (
                       <PlaceholderSpan>
-                        {state.type === 'FDESP' ? I18n.t('components.costModal.percentage') : I18n.t('components.costModal.value')}
+                        {state.type === FareItemsTypes.Fdesp ? I18n.t('components.costModal.percentage') : I18n.t('components.costModal.value')}
                         {buyCheckbox && <RedColorSpan> *</RedColorSpan>}
                       </PlaceholderSpan>
                     )}
-                    {state.type === 'FDESP'
+                    {state.type === FareItemsTypes.Fdesp
                       ? <NumberInput
                         decimalSeparator={','}
                         thousandSeparator={'.'}
@@ -792,11 +792,11 @@ const CostModal = ({
                     {(state.saleValue === null ||
                       state.saleValue.length === 0) && (
                         <PlaceholderSpan>
-                          {state.type === 'FDESP' ? I18n.t('components.costModal.percentage') : I18n.t('components.costModal.value')}
+                          {state.type === FareItemsTypes.Fdesp ? I18n.t('components.costModal.percentage') : I18n.t('components.costModal.value')}
                           {saleCheckbox && <RedColorSpan> *</RedColorSpan>}
                         </PlaceholderSpan>
                     )}
-                    {state.type === 'FDESP'
+                    {state.type === FareItemsTypes.Fdesp
                       ? <NumberInput
                         decimalSeparator={','}
                         thousandSeparator={'.'}

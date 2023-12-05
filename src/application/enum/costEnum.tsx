@@ -10,7 +10,7 @@ enum FareItemsTypes {
   Bl = 'BL',
   Cw = 'CW',
   Container = 'CONTAINER',
-  Fdesp = 'FDESP',
+  Fdesp = '% F.+ DESP.O',
   Ton = 'TON',
   Kilo = 'KG'
 }
