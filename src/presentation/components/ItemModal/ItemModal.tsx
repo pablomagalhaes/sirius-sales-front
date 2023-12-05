@@ -20,6 +20,7 @@ import { Autocomplete } from '@material-ui/lab'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import { NumberInput, StyledPaper } from '../../pages/NewProposal/steps/StepsStyles'
 import FormatNumber from '../../../application/utils/formatNumber'
+import { PROPOSAL_ITEM_MODAL_INPUT_SIZE, PROPOSAL_ITEM_MODAL_INPUT_TYPE } from '../../../ids'
 
 export interface ItemModalData {
   amount: string
@@ -274,6 +275,7 @@ const ItemModal = ({
                     {I18n.t('components.itemModal.containerType')}
                 </FormLabel>
                 <ControlledInput
+                  id={PROPOSAL_ITEM_MODAL_INPUT_TYPE}
                   toolTipTitle={''}
                   invalid={false}
                   value={data.type ? containerTypeList.find((each) => each.container === data.type)?.type : ''}
@@ -289,6 +291,7 @@ const ItemModal = ({
                     {I18n.t('components.itemModal.size')}
                 </FormLabel>
                 <ControlledInput
+                  id={PROPOSAL_ITEM_MODAL_INPUT_SIZE}
                   toolTipTitle={''}
                   invalid={false}
                   value={data.type ? String(containerTypeList.find((each) => each.container === data.type)?.size) : ''}

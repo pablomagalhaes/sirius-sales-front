@@ -164,3 +164,7 @@ export const TARIFF_IMPORT_LCL_MODAL_BUTTON_CANCEL = `${PREFIX_IDS}_tariff-impor
 // Tariff Import AIR Modal
 export const TARIFF_IMPORT_AIR_MODAL_BUTTON_IMPORT = `${PREFIX_IDS}_tariff-import-air-modal_button_import`
 export const TARIFF_IMPORT_AIR_MODAL_BUTTON_CANCEL = `${PREFIX_IDS}_tariff-import-air-modal_button_cancel`
+
+// Proposal Item Modal
+export const PROPOSAL_ITEM_MODAL_INPUT_SIZE = `${PREFIX_IDS}_proposal-item-modal_input_size`
+export const PROPOSAL_ITEM_MODAL_INPUT_TYPE = `${PREFIX_IDS}_proposal-item-modal_input_type`
