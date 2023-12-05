@@ -100,7 +100,9 @@
       "requiredField": "Campo obrigatório",
       "save": "Salvar",
       "stack": "Permite empilhar",
-      "type": "Tipo: "
+      "type": "Tipo: ",
+      "containerType": "Tipo do container:",
+      "size": "Tamanho:"
     },
     "tariffModal": {
       "minValue": "Valor Mínimo: ",
