@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext, Fragment } from 'react'
 import moment from 'moment'
 import {
   FormControl,
@@ -45,6 +45,20 @@ interface Frequency {
   description: string
 }
 
+interface ContainerTypes {
+  idContainerType: number
+  containerType: string
+}
+
+export interface FreeTimeDemurrage {
+  idFreeTimeDemurrage: number
+  idContainerType: string
+  freeTime: boolean
+  nrFreeTimeDaysDeadline: number
+  nrFreeTimeDaysDeadlineSale: number
+  vlFreeTime: number
+}
+
 const Step4 = ({
   invalidInput,
   setCompleted,
@@ -85,9 +99,9 @@ const Step4 = ({
     frequency: '',
     route: '',
     client: '',
-    freeTime: '',
-    deadline: '',
-    value: '',
+    // freeTime: '',
+    // deadline: '',
+    // value: '',
     generalObs: '',
     internalObs: '',
     recurrency: '1',
@@ -99,6 +113,21 @@ const Step4 = ({
   const [frequencyList, setFrequencyList] = useState<Frequency[]>([])
   const [disabledValidateDate, setDisabledValidateDate] = useState(true)
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
+
+  const [containerTypeList, setContainerTypeList] = useState<ContainerTypes[]>([])
+
+
+  const [selectfreeTimeDemurrages, setSelectfreeTimeDemurrages] = useState<FreeTimeDemurrage[]>([
+    {
+      idFreeTimeDemurrage: null,
+      idContainerType: '',
+      freeTime: false,
+      nrFreeTimeDaysDeadline: null,
+      nrFreeTimeDaysDeadlineSale: null,
+      vlFreeTime: null
+    }
+  ])
+
 
   const validateFloatInput = (value: string): RegExpMatchArray | null => {
     return value.match(/^[0-9]*,?[0-9]*$/)
@@ -123,9 +152,9 @@ const Step4 = ({
           frequency: String(proposal.idFrequency),
           route: proposal.route,
           client: proposal.referenceClientProposal,
-          freeTime: proposal.freeTime ? 'hired' : 'notHired',
-          deadline: String(proposal.nrFreeTimeDaysDeadline),
-          value: String(proposal.vlFreeTime),
+          // freeTime: proposal.freeTime ? 'hired' : 'notHired',
+          // deadline: String(proposal.nrFreeTimeDaysDeadline),
+          // value: String(proposal.vlFreeTime),
           generalObs: proposal.generalObservations,
           internalObs: proposal.internalObservations,
           recurrency: String(proposal.recurrency),
@@ -143,9 +172,11 @@ const Step4 = ({
       validityDate: `${splitedValidityDate[2]}-${splitedValidityDate[1]}-${splitedValidityDate[0]}T00:00-03:00`,
       transitTime: Number(data.transitTime),
       route: data.route,
-      freeTime: data.freeTime === 'hired',
-      nrFreeTimeDaysDeadline: Number(data.deadline),
-      vlFreeTime: Number(data.value.replace(',', '.')),
+
+      // freeTime: data.freeTime === 'hired',
+      // nrFreeTimeDaysDeadline: Number(data.deadline),
+      // vlFreeTime: Number(data.value.replace(',', '.')),
+
       idFrequency: Number(data.frequency),
       recurrency: Number(data.recurrency),
       weeklyRecurrency: data.weeklyRecurrency,
@@ -161,22 +192,22 @@ const Step4 = ({
     return validityDate.isValid() && validityDate.isSameOrAfter(today)
   }
 
-  const validateFreeTime = (): boolean => {
-    data.value = data.value !== '0' ? data.value : ''
-    return (
-      modal !== 'SEA' ||
-      (modal === 'SEA' && data.freeTime === 'notHired') ||
-      (modal === 'SEA' &&
-        specifications === 'fcl' &&
-        data.freeTime === 'hired' &&
-        data.deadline.length !== 0) ||
-      (modal === 'SEA' &&
-        specifications !== 'fcl' &&
-        data.freeTime === 'hired' &&
-        data.deadline.length !== 0 &&
-        data.value.length !== 0)
-    )
-  }
+  // const validateFreeTime = (): boolean => {
+  //   data.value = data.value !== '0' ? data.value : ''
+  //   return (
+  //     modal !== 'SEA' ||
+  //     (modal === 'SEA' && data.freeTime === 'notHired') ||
+  //     (modal === 'SEA' &&
+  //       specifications === 'fcl' &&
+  //       data.freeTime === 'hired' &&
+  //       data.deadline.length !== 0) ||
+  //     (modal === 'SEA' &&
+  //       specifications !== 'fcl' &&
+  //       data.freeTime === 'hired' &&
+  //       data.deadline.length !== 0 &&
+  //       data.value.length !== 0)
+  //   )
+  // }
 
   const validateCompleteInputs = (): boolean => {
     return (
@@ -196,9 +227,9 @@ const Step4 = ({
       data.frequency !== '' ||
       data.route.length > 0 ||
       data.client.length > 0 ||
-      data.freeTime.length > 0 ||
-      data.deadline.length > 0 ||
-      data.value.length > 0 ||
+      // data.freeTime.length > 0 ||
+      // data.deadline.length > 0 ||
+      // data.value.length > 0 ||
       data.generalObs.length > 0 ||
       data.internalObs.length > 0
     )
@@ -206,7 +237,7 @@ const Step4 = ({
 
   const validateFormComplete = (): void => {
     const step6 = modal === ModalTypes.Land
-    if (validateFreeTime() && validateCompleteInputs() && validateDate()) {
+    if (validateCompleteInputs() && validateDate()) {
       setCompleted((currentState) => {
         return { ...currentState, step4: true, step6 }
       })
@@ -247,11 +278,20 @@ const Step4 = ({
     })()
   }, [])
 
+
   useEffect(() => {
-    if (data.freeTime === 'notHired') {
-      setData({ ...data, deadline: '', value: '' })
-    }
-  }, [data.freeTime])
+    void (async function () {
+      await API.getContainerTypes()
+        .then((response) => setContainerTypeList(response))
+        .catch((err) => console.log(err))
+    })()
+  }, [])
+
+  // useEffect(() => {
+  //   if (data.freeTime === 'notHired') {
+  //     setData({ ...data, deadline: '', value: '' })
+  //   }
+  // }, [data.freeTime])
 
   const calculateValidityDate = (value): void => {
     if (value !== 0) {
@@ -377,6 +417,8 @@ const Step4 = ({
     setData({ ...data, recurrency: String(value) })
   }
 
+  console.log('selectfreeTimeDemurrages', selectfreeTimeDemurrages)
+
   return (
     <Separator>
       <Title>
@@ -445,7 +487,8 @@ const Step4 = ({
               size="small"
             />
           </Grid>
-          <Grid item xs={6} />
+          
+
           <Grid item xs={2}>
             <FormLabel component="legend" error={invalidInput && data.transitTime.length === 0}>
               {I18n.t('pages.newProposal.step4.time')}
@@ -478,111 +521,82 @@ const Step4 = ({
               size="small"
             />
           </Grid>
-          {modal === 'SEA' && (
-            <Grid item xs={8} container spacing={2}>
-              <Grid item xs style={{ maxWidth: '330px' }}>
-                {specifications === 'fcl'
-                  ? (
-                    <FormLabel component="legend">
-                      {I18n.t('pages.newProposal.step4.freeTimeDemurrage')}
-                      <RedColorSpan> *</RedColorSpan>
-                    </FormLabel>
-                    )
-                  : (
-                    <FormLabel component="legend">
-                      {I18n.t('pages.newProposal.step4.freeTimeStorage')}
-                      <RedColorSpan> *</RedColorSpan>
-                    </FormLabel>
-                    )}
-                <RadioGroup
-                  row
-                  aria-label="proposal type"
-                  name="row-radio-buttons-group"
-                  value={data.freeTime}
-                  onChange={(e) =>
-                    setData({ ...data, freeTime: e.target.value })
-                  }
-                >
-                  <ControlledToolTip
-                    open={invalidInput && data.freeTime.length === 0}
-                    title={I18n.t('components.itemModal.requiredField')}
-                  >
-                    <FormControlLabel
-                      value="notHired"
-                      control={<StyledRadio color={getColor(data.freeTime)} />}
-                      label={I18n.t('pages.newProposal.step4.notHired')}
-                      style={{ marginRight: '30px' }}
-                    />
-                  </ControlledToolTip>
-                  <ControlledToolTip
-                    open={invalidInput && data.freeTime.length === 0}
-                    title={I18n.t('components.itemModal.requiredField')}
-                  >
-                    <FormControlLabel
-                      value="hired"
-                      control={<StyledRadio color={getColor(data.freeTime)} />}
-                      label={I18n.t('pages.newProposal.step4.hired')}
-                    />
-                  </ControlledToolTip>
-                </RadioGroup>
-              </Grid>
-              {data.freeTime === 'hired' && (
-                <>
-                  <Grid item xs={2}>
-                    <FormLabel component="legend">
-                      {I18n.t('pages.newProposal.step4.deadline')}
-                      <RedColorSpan> *</RedColorSpan>
-                    </FormLabel>
-                    <ControlledInput
-                      id="deadline"
-                      toolTipTitle={I18n.t(
-                        'components.itemModal.requiredField'
-                      )}
-                      invalid={invalidInput && data.deadline.length === 0}
-                      variant="outlined"
-                      onChange={(e) =>
-                        validateIntInput(e.target.value) !== null &&
-                        setData({ ...data, deadline: e.target.value })
-                      }
-                      value={data.deadline}
-                      size="small"
-                    />
-                  </Grid>
-                  <Grid item xs={2}>
-                    {specifications !== 'fcl' && (
-                      <>
-                        <FormLabel component="legend">
-                          {I18n.t('pages.newProposal.step4.value')}
-                          <RedColorSpan> *</RedColorSpan>
-                        </FormLabel>
-                        <NumberInput
-                          decimalSeparator={','}
-                          thousandSeparator={'.'}
-                          decimalScale={2}
-                          format={(value: string) =>
-                            FormatNumber.rightToLeftFormatter(value, 2)
-                          }
-                          customInput={ControlledInput}
-                          toolTipTitle={I18n.t(
-                            'components.itemModal.requiredField'
-                          )}
-                          invalid={invalidInput && data.value === ''}
-                          value={data.value}
-                          onChange={(e) => {
-                            validateFloatInput(e.target.value) !== null &&
-                              setData({ ...data, value: e.target.value })
-                          }}
-                          variant="outlined"
-                          size="small"
-                        />
-                      </>
-                    )}
-                  </Grid>
-                </>
-              )}
-            </Grid>
-          )}
-          {modal !== 'SEA' && <Grid item xs={8} />}
+
+          <Grid item xs={6} />
+
+            {modal === 'SEA' && (
+              <>
+                {selectfreeTimeDemurrages.map((freeTimeDemurrages, index) => {
+                  return (
+                    <Fragment key={index}>
+                      <Grid item xs={8} container spacing={2}>
+                        <Grid item xs style={{ maxWidth: '330px' }}>
+                          {specifications === 'fcl'
+                            ? (
+                              <FormLabel component="legend">
+                                {I18n.t('pages.newProposal.step4.freeTimeDemurrage')}
+                                <RedColorSpan> *</RedColorSpan>
+                              </FormLabel>
+                              )
+                            : (
+                              <FormLabel component="legend">
+                                {I18n.t('pages.newProposal.step4.freeTimeStorage')}
+                                <RedColorSpan> *</RedColorSpan>
+                              </FormLabel>
+                              )}
+                          <RadioGroup
+                            row
+                            aria-label="proposal type"
+                            name="row-radio-buttons-group"
+                            value={freeTimeDemurrages.freeTime}
+                            onChange={(e, newValue) => {
+                              setSelectfreeTimeDemurrages(
+                                selectfreeTimeDemurrages.map((value, currentIndex) =>
+                                  currentIndex === index
+                                    ? {
+                                        ...value,
+                                        freeTime: Boolean(newValue)
+                                      }
+                                    : value
+                                )
+                              )
+                            }}
+                          >
+                            <ControlledToolTip
+                              open={invalidInput && freeTimeDemurrages.freeTime === null}
+                              title={I18n.t('components.itemModal.requiredField')}
+                            >
+                              <FormControlLabel
+                                value="notHired"
+                                control={<StyledRadio color={getColor(freeTimeDemurrages.freeTime)} />}
+                                label={I18n.t('pages.newProposal.step4.notHired')}
+                                style={{ marginRight: '30px' }}
+                              />
+                            </ControlledToolTip>
+                            <ControlledToolTip
+                              open={invalidInput && freeTimeDemurrages.freeTime === null}
+                              title={I18n.t('components.itemModal.requiredField')}
+                            >
+                              <FormControlLabel
+                                value="hired"
+                                control={<StyledRadio color={getColor(freeTimeDemurrages.freeTime)} />}
+                                label={I18n.t('pages.newProposal.step4.hired')}
+                              />
+                            </ControlledToolTip>
+                          </RadioGroup>
+                        </Grid>
+                        
+                        
+                      </Grid>
+                      </Fragment>
+                )})}    
+              </>  
+            )}
+
+         <Grid item xs={4} />
+
+          {/* {modal !== 'SEA' && <Grid item xs={8} />} */}
+          {/* NUMERO FREQUENCIA */}
           <Grid item xs={2}>
             <FormLabel component="legend">
               {I18n.t('pages.newProposal.step4.frequency')}
@@ -612,6 +626,7 @@ const Step4 = ({
               </FormLabel>
             </InputContainer>
           </Grid>
+
           <Grid item xs={2}>
             <FormLabel component="legend">&nbsp;</FormLabel>
             <ControlledSelect
@@ -636,6 +651,7 @@ const Step4 = ({
               ))}
             </ControlledSelect>
           </Grid>
+          
           {Number(data.frequency) === 2 || Number(data.frequency) === 3
             ? (
               <Grid item xs={8}>

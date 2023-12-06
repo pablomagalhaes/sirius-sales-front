@@ -47,9 +47,14 @@ export interface Proposal {
   transitTime: number // step4 transit time
   idFrequency: number // step 4 id frequency
   route: string // step4 rota
-  freeTime: boolean // true step4
-  vlFreeTime: number | null
-  nrFreeTimeDaysDeadline: number | null
+  freeTimeDemurrages: Array<{
+    idFreeTimeDemurrage: null
+    idContainerType: string
+    freeTime: boolean
+    nrFreeTimeDaysDeadline: null
+    nrFreeTimeDaysDeadlineSale: null
+    vlFreeTime: null
+  }>
   recurrency: number// 1
   weeklyRecurrency: string // "0101100" segunda quarta e quinta
   transportIncluded: boolean
