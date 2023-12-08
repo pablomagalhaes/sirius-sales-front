@@ -43,7 +43,8 @@ import { ProposalContext, ProposalProps } from '../../pages/NewProposal/context/
 import { CostAgent } from '../../../domain/Cost'
 import { Agents } from '../../pages/NewProposal/steps/Step2'
 import { TARIFF_COST_MODAL_SELECT_TYPE } from '../../../ids'
-import { CostNameTypes, TooltipTypes, FareItemsTypes } from '../../../application/enum/costEnum'
+import { CostNameTypes, TooltipTypes, FareItemsTypes, SpecificationsType,FreightTypes } from '../../../application/enum/costEnum'
+import { ModalTypes } from '../../../application/enum/enum'
 export interface CostTableItem {
   idCost?: number | null
   idProposal?: number | null
@@ -191,21 +192,21 @@ const CostModal = ({
 
   useEffect(() => {
     switch (true) {
-      case modal === 'SEA' && specifications === 'fcl' && proposal?.operationType === 'IMPORT FREIGHT':
+      case modal === ModalTypes.Sea && specifications === SpecificationsType.Fcl && proposal?.operationType === FreightTypes.Import:
         setTypeList([
           { name: CostNameTypes.Container, value: FareItemsTypes.Container },
           { name: CostNameTypes.Bl, value: FareItemsTypes.Bl },
           { name: CostNameTypes.Fdesp, value: FareItemsTypes.Fdesp, tooltip: TooltipTypes.Fdesp }
         ])
         break
-      case ((modal === 'SEA' && specifications === 'lcl') || (modal === 'SEA' && specifications === 'break bulk') || (modal === 'SEA' && specifications === 'ro-ro')) && proposal?.operationType === 'IMPORT FREIGHT':
+      case ((modal === ModalTypes.Sea && specifications === SpecificationsType.Lcl) || (modal === ModalTypes.Sea && specifications === SpecificationsType.BreakBulk) || (modal === ModalTypes.Sea && specifications === SpecificationsType.Roro)) && proposal?.operationType === FreightTypes.Import:
         setTypeList([
           { name: CostNameTypes.Ton, value: FareItemsTypes.Ton },
           { name: CostNameTypes.Bl, value: FareItemsTypes.Bl },
           { name: CostNameTypes.Fdesp, value: FareItemsTypes.Fdesp, tooltip: TooltipTypes.Fdesp }
         ])
         break
-      case modal === 'AIR' && proposal?.operationType === 'IMPORT FREIGHT':
+      case modal === ModalTypes.Air && proposal?.operationType === FreightTypes.Import:
         setTypeList([
           { name: CostNameTypes.Kilo, value: FareItemsTypes.Kilo },
           { name: CostNameTypes.Fixed, value: FareItemsTypes.Fixed },
@@ -213,32 +214,32 @@ const CostModal = ({
           { name: CostNameTypes.Fdesp, value: FareItemsTypes.Fdesp, tooltip: TooltipTypes.Fdesp }
         ])
         break
-      case modal === 'LAND' && proposal?.operationType === 'IMPORT FREIGHT':
+      case modal === ModalTypes.Land && proposal?.operationType === FreightTypes.Import:
         setTypeList([
           { name: CostNameTypes.Fixed, value: FareItemsTypes.Fixed },
           { name: CostNameTypes.Fdesp, value: FareItemsTypes.Fdesp, tooltip: TooltipTypes.Fdesp }
         ])
         break
-      case modal === 'SEA' && specifications === 'fcl':
+      case modal === ModalTypes.Sea && specifications === SpecificationsType.Fcl:
         setTypeList([
           { name: CostNameTypes.Container, value: FareItemsTypes.Container },
           { name: CostNameTypes.Bl, value: FareItemsTypes.Bl }
         ])
         break
-      case (modal === 'SEA' && specifications === 'lcl') || (modal === 'SEA' && specifications === 'break bulk') || (modal === 'SEA' && specifications === 'ro-ro'):
+      case (modal === ModalTypes.Sea && specifications === SpecificationsType.Lcl) || (modal === ModalTypes.Sea && specifications === SpecificationsType.BreakBulk) || (modal === ModalTypes.Sea && specifications === SpecificationsType.Roro):
         setTypeList([
           { name: CostNameTypes.Ton, value: FareItemsTypes.Ton },
           { name: CostNameTypes.Bl, value: FareItemsTypes.Bl }
         ])
         break
-      case modal === 'AIR':
+      case modal === ModalTypes.Air:
         setTypeList([
           { name: CostNameTypes.Kilo, value: FareItemsTypes.Kilo },
           { name: CostNameTypes.Fixed, value: FareItemsTypes.Fixed },
           { name: CostNameTypes.Cw, value: FareItemsTypes.Cw }
         ])
         break
-      case modal === 'LAND':
+      case modal === ModalTypes.Land:
         setTypeList([
           { name: CostNameTypes.Fixed, value: FareItemsTypes.Fixed }
         ])

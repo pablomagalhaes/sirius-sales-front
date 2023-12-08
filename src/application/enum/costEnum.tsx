@@ -29,4 +29,16 @@ enum TooltipTypes {
   Fdesp = '% de frete + Despesa Origem'
 }
 
-export { CostTypes, FareItemsTypes, CostNameTypes, TooltipTypes }
+enum SpecificationsType {
+  Fcl = 'fcl',
+  Lcl = 'lcl',
+  BreakBulk = 'break bulk',
+  Roro = 'ro-ro'
+}
+
+enum FreightTypes {
+  Import = 'IMPORT FREIGHT',
+  Export = 'EXPORT FREIGHT'
+}
+
+export { CostTypes, FareItemsTypes, CostNameTypes, TooltipTypes, SpecificationsType, FreightTypes }
