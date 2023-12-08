@@ -83,6 +83,18 @@ enum IncotermTypes {
   Ddp = 'DDP'
 }
 
+enum SpecificationsType {
+  Fcl = 'fcl',
+  Lcl = 'lcl',
+  BreakBulk = 'break bulk',
+  Roro = 'ro-ro'
+}
+
+enum FreightTypes {
+  Import = 'IMPORT FREIGHT',
+  Export = 'EXPORT FREIGHT'
+}
+
 export {
   ModalTypes,
   OrderTypes,
@@ -96,5 +108,7 @@ export {
   LocaleTypes,
   ProfitsPercentsTypes,
   ProposalTypes,
-  IncotermTypes
+  IncotermTypes,
+  SpecificationsType, 
+  FreightTypes
 }

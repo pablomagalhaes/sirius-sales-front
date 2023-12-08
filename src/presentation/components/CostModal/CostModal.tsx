@@ -43,8 +43,8 @@ import { ProposalContext, ProposalProps } from '../../pages/NewProposal/context/
 import { CostAgent } from '../../../domain/Cost'
 import { Agents } from '../../pages/NewProposal/steps/Step2'
 import { TARIFF_COST_MODAL_SELECT_TYPE } from '../../../ids'
-import { CostNameTypes, TooltipTypes, FareItemsTypes, SpecificationsType,FreightTypes } from '../../../application/enum/costEnum'
-import { ModalTypes } from '../../../application/enum/enum'
+import { CostNameTypes, TooltipTypes, FareItemsTypes } from '../../../application/enum/costEnum'
+import { ModalTypes, SpecificationsType,FreightTypes } from '../../../application/enum/enum'
 export interface CostTableItem {
   idCost?: number | null
   idProposal?: number | null
