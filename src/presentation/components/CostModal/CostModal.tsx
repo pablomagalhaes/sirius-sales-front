@@ -1,9 +1,9 @@
 import React, { useReducer, useState, useEffect, useContext } from 'react'
-import { MenuItem, Modal, Box, Container } from '@material-ui/core'
+import { Modal, Box, Container } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import CloseIcon from '../../../application/icons/CloseIcon'
-import { Button } from 'fiorde-fe-components'
+import { Button, Select } from 'fiorde-fe-components'
 import {
   CheckBox,
   CheckBoxLabel,
@@ -37,13 +37,14 @@ import API from '../../../infrastructure/api'
 import { CheckBoxArea } from '../ItemModal/ItemModalStyles'
 import { ItemModalData } from '../ItemModal/ItemModal'
 import { StyledPaper, NumberInput } from '../../pages/NewProposal/steps/StepsStyles'
-import ControlledSelect from '../ControlledSelect'
-import { MenuItemContent } from '../FareModal/FareModalStyles'
 import { CalculationDataProps } from '../ChargeTable'
 import FormatNumber from '../../../application/utils/formatNumber'
 import { ProposalContext, ProposalProps } from '../../pages/NewProposal/context/ProposalContext'
 import { CostAgent } from '../../../domain/Cost'
 import { Agents } from '../../pages/NewProposal/steps/Step2'
+import { TARIFF_COST_MODAL_SELECT_TYPE } from '../../../ids'
+import { CostNameTypes, TooltipTypes, FareItemsTypes } from '../../../application/enum/costEnum'
+import { ModalTypes, SpecificationsType,FreightTypes } from '../../../application/enum/enum'
 export interface CostTableItem {
   idCost?: number | null
   idProposal?: number | null
@@ -74,6 +75,12 @@ interface CostModalProps {
   containerItems: ItemModalData[]
   serviceList: any[]
   calculationData?: CalculationDataProps
+}
+
+interface Item {
+  name: string
+  value: string
+  tooltip?: string
 }
 
 export const initialState = {
@@ -159,7 +166,7 @@ const CostModal = ({
     reducer,
     dataProp !== null && dataProp !== undefined ? dataProp : initialState
   )
-  const [typeList, setTypeList] = useState<object[]>([])
+  const [typeList, setTypeList] = useState<Item[]>([])
 
   const [buyCheckbox, setBuyCheckBox] = useState(state.buyValue != null)
   const [saleCheckbox, setSaleCheckBox] = useState(state.saleValue != null)
@@ -185,17 +192,57 @@ const CostModal = ({
 
   useEffect(() => {
     switch (true) {
-      case modal === 'SEA' && specifications === 'fcl':
-        setTypeList([{ name: 'Container', value: 'CONTAINER' }, { name: 'BL', value: 'BL' }])
+      case modal === ModalTypes.Sea && specifications === SpecificationsType.Fcl && proposal?.operationType === FreightTypes.Import:
+        setTypeList([
+          { name: CostNameTypes.Container, value: FareItemsTypes.Container },
+          { name: CostNameTypes.Bl, value: FareItemsTypes.Bl },
+          { name: CostNameTypes.Fdesp, value: FareItemsTypes.Fdesp, tooltip: TooltipTypes.Fdesp }
+        ])
         break
-      case (modal === 'SEA' && specifications === 'lcl') || (modal === 'SEA' && specifications === 'break bulk') || (modal === 'SEA' && specifications === 'ro-ro'):
-        setTypeList([{ name: 'Ton³', value: 'TON' }, { name: 'BL', value: 'BL' }])
+      case ((modal === ModalTypes.Sea && specifications === SpecificationsType.Lcl) || (modal === ModalTypes.Sea && specifications === SpecificationsType.BreakBulk) || (modal === ModalTypes.Sea && specifications === SpecificationsType.Roro)) && proposal?.operationType === FreightTypes.Import:
+        setTypeList([
+          { name: CostNameTypes.Ton, value: FareItemsTypes.Ton },
+          { name: CostNameTypes.Bl, value: FareItemsTypes.Bl },
+          { name: CostNameTypes.Fdesp, value: FareItemsTypes.Fdesp, tooltip: TooltipTypes.Fdesp }
+        ])
         break
-      case modal === 'AIR':
-        setTypeList([{ name: 'KG', value: 'KG' }, { name: 'Fixo', value: 'FIXO' }, { name: 'CW', value: 'CW' }])
+      case modal === ModalTypes.Air && proposal?.operationType === FreightTypes.Import:
+        setTypeList([
+          { name: CostNameTypes.Kilo, value: FareItemsTypes.Kilo },
+          { name: CostNameTypes.Fixed, value: FareItemsTypes.Fixed },
+          { name: CostNameTypes.Cw, value: FareItemsTypes.Cw },
+          { name: CostNameTypes.Fdesp, value: FareItemsTypes.Fdesp, tooltip: TooltipTypes.Fdesp }
+        ])
         break
-      case modal === 'LAND':
-        setTypeList([{ name: 'Fixo', value: 'FIXO' }])
+      case modal === ModalTypes.Land && proposal?.operationType === FreightTypes.Import:
+        setTypeList([
+          { name: CostNameTypes.Fixed, value: FareItemsTypes.Fixed },
+          { name: CostNameTypes.Fdesp, value: FareItemsTypes.Fdesp, tooltip: TooltipTypes.Fdesp }
+        ])
+        break
+      case modal === ModalTypes.Sea && specifications === SpecificationsType.Fcl:
+        setTypeList([
+          { name: CostNameTypes.Container, value: FareItemsTypes.Container },
+          { name: CostNameTypes.Bl, value: FareItemsTypes.Bl }
+        ])
+        break
+      case (modal === ModalTypes.Sea && specifications === SpecificationsType.Lcl) || (modal === ModalTypes.Sea && specifications === SpecificationsType.BreakBulk) || (modal === ModalTypes.Sea && specifications === SpecificationsType.Roro):
+        setTypeList([
+          { name: CostNameTypes.Ton, value: FareItemsTypes.Ton },
+          { name: CostNameTypes.Bl, value: FareItemsTypes.Bl }
+        ])
+        break
+      case modal === ModalTypes.Air:
+        setTypeList([
+          { name: CostNameTypes.Kilo, value: FareItemsTypes.Kilo },
+          { name: CostNameTypes.Fixed, value: FareItemsTypes.Fixed },
+          { name: CostNameTypes.Cw, value: FareItemsTypes.Cw }
+        ])
+        break
+      case modal === ModalTypes.Land:
+        setTypeList([
+          { name: CostNameTypes.Fixed, value: FareItemsTypes.Fixed }
+        ])
         break
       default:
         setTypeList([])
@@ -260,6 +307,24 @@ const CostModal = ({
 
   const saleValueHandler = (e): void => {
     const validatedInput = validateFloatInput(e.target.value)
+    if (validatedInput !== null) {
+      dispatch({ type: 'saleValue', value: validatedInput[0] })
+    }
+  }
+
+  const buyValueHandlerPercentage = (e): void => {
+    const valuePercentage = e.target.value
+    const value = valuePercentage.replace('%', '')
+    const validatedInput = validateFloatInput(value)
+    if (validatedInput !== null) {
+      dispatch({ type: 'buyValue', value: validatedInput[0] })
+    }
+  }
+
+  const saleValueHandlerPercentage = (e): void => {
+    const valuePercentage = e.target.value
+    const value = valuePercentage.replace('%', '')
+    const validatedInput = validateFloatInput(value)
     if (validatedInput !== null) {
       dispatch({ type: 'saleValue', value: validatedInput[0] })
     }
@@ -416,31 +481,20 @@ const CostModal = ({
                 <RedColorSpan> *</RedColorSpan>
               </Label>
             </RowDiv>
-            <RowDiv margin={true}>
-              <ControlledSelect
-                onChange={(e) => dispatch({ type: 'type', value: e.target.value })}
-                displayEmpty
-                style={{ width: '122px', marginTop: '12px' }}
-                value={state.type}
-                disableUnderline
-                placeholder={state.type}
+            <RowDiv
+              margin={true}
+              invalid={invalidInput && (state.type === null || state.type.length === 0)}
+              value={{ type: typeList.find((type) => type.value === state.type)?.name ?? '' }}
+            >
+              <Select
+                list={typeList}
+                id={TARIFF_COST_MODAL_SELECT_TYPE}
+                dispatch={dispatch}
+                state={{ type: typeList.find((type) => type.value === state.type)?.name ?? '' }}
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                invalid={invalidInput && (state.type === null || state.type.length === 0)}
-                costModal={true}
-              >
-                <MenuItem disabled value="">
-                  <MenuItemContent>
-                    {I18n.t('components.costModal.choose')}
-                  </MenuItemContent>
-                </MenuItem>
-                {typeList.map((item: any) => {
-                  return (
-                    <MenuItem key={item.value} value={item.value}>
-                      <MenuItemContent>{item.name}</MenuItemContent>
-                    </MenuItem>
-                  )
-                })}
-              </ControlledSelect>
+                invalidInput={invalidInput && (state.type === null || state.type.length === 0)}
+                placeholder={state.type === '' ? I18n.t('components.costModal.choose') : typeList.find((type) => type.value === state.type)?.name }
+              />
               <Container style={{ position: 'relative', marginRight: '368px' }}>
                 <ControlledToolTip
                   title={I18n.t('components.itemModal.requiredField')}
@@ -621,26 +675,44 @@ const CostModal = ({
                   <label>
                     {(state.buyValue === null || state.buyValue.length === 0) && (
                       <PlaceholderSpan>
-                        {I18n.t('components.costModal.value')}
+                        {state.type === FareItemsTypes.Fdesp ? I18n.t('components.costModal.percentage') : I18n.t('components.costModal.value')}
                         {buyCheckbox && <RedColorSpan> *</RedColorSpan>}
                       </PlaceholderSpan>
                     )}
-                    <NumberInput
-                      decimalSeparator={','}
-                      thousandSeparator={'.'}
-                      decimalScale={2}
-                      customInput={Input}
-                      format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
-                      onChange={buyValueHandler}
-                      value={state.buyValue != null ? state.buyValue : ''}
-                      disabled={!buyCheckbox}
-                      filled={buyCheckbox ? state.buyValue : null}
-                      invalid={
-                        buyCheckbox &&
-                        invalidInput &&
-                        (state.buyValue === null || state.buyValue.length === 0)
-                      }
-                    />
+                    {state.type === FareItemsTypes.Fdesp
+                      ? <NumberInput
+                        decimalSeparator={','}
+                        thousandSeparator={'.'}
+                        decimalScale={2}
+                        customInput={Input}
+                        format={(value: string) => FormatNumber.rightToLeftFormatterPercentage(value, 2)}
+                        onChange={buyValueHandlerPercentage}
+                        value={state.buyValue != null ? state.buyValue : ''}
+                        disabled={!buyCheckbox}
+                        filled={buyCheckbox ? state.buyValue : null}
+                        invalid={
+                          buyCheckbox &&
+                          invalidInput &&
+                          (state.buyValue === null || state.buyValue.length === 0)
+                        }
+                      />
+                      : <NumberInput
+                        decimalSeparator={','}
+                        thousandSeparator={'.'}
+                        decimalScale={2}
+                        customInput={Input}
+                        format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                        onChange={buyValueHandler}
+                        value={state.buyValue != null ? state.buyValue : ''}
+                        disabled={!buyCheckbox}
+                        filled={buyCheckbox ? state.buyValue : null}
+                        invalid={
+                          buyCheckbox &&
+                          invalidInput &&
+                          (state.buyValue === null || state.buyValue.length === 0)
+                        }
+                      />
+                    }
                   </label>
                 </PlaceholderDiv>
               </ControlledToolTip>
@@ -721,26 +793,44 @@ const CostModal = ({
                     {(state.saleValue === null ||
                       state.saleValue.length === 0) && (
                         <PlaceholderSpan>
-                          {I18n.t('components.costModal.value')}
+                          {state.type === FareItemsTypes.Fdesp ? I18n.t('components.costModal.percentage') : I18n.t('components.costModal.value')}
                           {saleCheckbox && <RedColorSpan> *</RedColorSpan>}
                         </PlaceholderSpan>
                     )}
-                    <NumberInput
-                      decimalSeparator={','}
-                      thousandSeparator={'.'}
-                      decimalScale={2}
-                      customInput={Input}
-                      format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
-                      onChange={saleValueHandler}
-                      value={state.saleValue != null ? state.saleValue : ''}
-                      disabled={!saleCheckbox}
-                      filled={saleCheckbox ? state.saleValue : null}
-                      invalid={
-                        saleCheckbox &&
-                        invalidInput &&
-                        (state.saleValue === null || state.saleValue.length === 0)
-                      }
-                    />
+                    {state.type === FareItemsTypes.Fdesp
+                      ? <NumberInput
+                        decimalSeparator={','}
+                        thousandSeparator={'.'}
+                        decimalScale={2}
+                        customInput={Input}
+                        format={(value: string) => FormatNumber.rightToLeftFormatterPercentage(value, 2)}
+                        onChange={saleValueHandlerPercentage}
+                        value={state.saleValue != null ? state.saleValue : ''}
+                        disabled={!saleCheckbox}
+                        filled={saleCheckbox ? state.saleValue : null}
+                        invalid={
+                          saleCheckbox &&
+                          invalidInput &&
+                          (state.saleValue === null || state.saleValue.length === 0)
+                        }
+                      />
+                      : <NumberInput
+                        decimalSeparator={','}
+                        thousandSeparator={'.'}
+                        decimalScale={2}
+                        customInput={Input}
+                        format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
+                        onChange={saleValueHandler}
+                        value={state.saleValue != null ? state.saleValue : ''}
+                        disabled={!saleCheckbox}
+                        filled={saleCheckbox ? state.saleValue : null}
+                        invalid={
+                          saleCheckbox &&
+                          invalidInput &&
+                          (state.saleValue === null || state.saleValue.length === 0)
+                        }
+                      />
+                    }
                   </label>
                 </PlaceholderDiv>
               </ControlledToolTip>

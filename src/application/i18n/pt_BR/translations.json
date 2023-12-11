@@ -21,7 +21,8 @@
       "saleValue": "Valor Venda",
       "save": "Salvar",
       "type": "Tipo:",
-      "value": "Valor"
+      "value": "Valor",
+      "percentage": "Percentual"
     },
     "costTable": {
       "addCost": "Adicionar custo",
