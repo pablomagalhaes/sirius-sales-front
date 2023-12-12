@@ -1057,7 +1057,6 @@ const Step2 = ({
               : (
               <Grid item xs={12}>
                 <Autocomplete
-                  freeSolo
                   onChange={(e, newValue) =>
                     setData({ ...data, origin: String(newValue ?? '') })
                   }
@@ -1254,7 +1253,6 @@ const Step2 = ({
               : (
               <Grid item xs={12}>
                 <Autocomplete
-                  freeSolo
                   onChange={(e, newValue) =>
                     setData({ ...data, destiny: String(newValue ?? '') })
                   }

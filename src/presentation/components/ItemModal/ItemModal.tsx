@@ -186,7 +186,6 @@ const ItemModal = ({
                 }>
                 {marineFCL() ? I18n.t('components.itemModal.container') : I18n.t('components.itemModal.packaging')}<RedColorSpan> *</RedColorSpan></FormLabel>
               <Autocomplete
-                freeSolo
                 value={data.type}
                 onChange={(e, newValue) => setData({ ...data, type: newValue })}
                 options={marineFCL() ? getContainerTypeList() : packagingList.map((item) => String(item.packaging))}

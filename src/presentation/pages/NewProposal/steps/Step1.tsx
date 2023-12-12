@@ -430,7 +430,6 @@ const Step1 = ({
                   return (
                       <Fragment key={index}>
                         <Autocomplete
-                          freeSolo
                           options={
                             data.proposal === 'ROUTING ORDER'
                               ? agentsList.map((item) => item.businessPartner.simpleName)
@@ -482,7 +481,6 @@ const Step1 = ({
                   )
                 })
                 : <Autocomplete
-                    freeSolo
                     onChange={(e, newValue) =>
                       setData({ ...data, proposalValue: String(newValue) })
                     }
