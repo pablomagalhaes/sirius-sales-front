@@ -43,8 +43,9 @@ import { ProposalContext, ProposalProps } from '../../pages/NewProposal/context/
 import { CostAgent } from '../../../domain/Cost'
 import { Agents } from '../../pages/NewProposal/steps/Step2'
 import { TARIFF_COST_MODAL_SELECT_TYPE } from '../../../ids'
-import { CostNameTypes, TooltipTypes, FareItemsTypes } from '../../../application/enum/costEnum'
+import { CostNameTypes, TooltipTypes, FareItemsTypes, CostTypes } from '../../../application/enum/costEnum'
 import { ModalTypes, SpecificationsType,FreightTypes } from '../../../application/enum/enum'
+import { TotalCostTable } from '../../pages/NewProposal/steps/Step6'
 export interface CostTableItem {
   idCost?: number | null
   idProposal?: number | null
@@ -75,6 +76,7 @@ interface CostModalProps {
   containerItems: ItemModalData[]
   serviceList: any[]
   calculationData?: CalculationDataProps
+  dataTotalCostOrigin: TotalCostTable[]
 }
 
 interface Item {
@@ -113,7 +115,8 @@ const CostModal = ({
   specifications,
   containerItems,
   serviceList,
-  calculationData
+  calculationData,
+  dataTotalCostOrigin
 }: CostModalProps): JSX.Element => {
   const getAgentByName = (name: string): CostAgent => {
     const agent = agentList.find(agent => agent.agent === name)
@@ -192,21 +195,21 @@ const CostModal = ({
 
   useEffect(() => {
     switch (true) {
-      case modal === ModalTypes.Sea && specifications === SpecificationsType.Fcl && proposal?.operationType === FreightTypes.Import:
+      case modal === ModalTypes.Sea && specifications === SpecificationsType.Fcl && proposal?.operationType === FreightTypes.Import && title === I18n.t('pages.newProposal.step6.destinationCost'):
         setTypeList([
           { name: CostNameTypes.Container, value: FareItemsTypes.Container },
           { name: CostNameTypes.Bl, value: FareItemsTypes.Bl },
           { name: CostNameTypes.Fdesp, value: FareItemsTypes.Fdesp, tooltip: TooltipTypes.Fdesp }
         ])
         break
-      case ((modal === ModalTypes.Sea && specifications === SpecificationsType.Lcl) || (modal === ModalTypes.Sea && specifications === SpecificationsType.BreakBulk) || (modal === ModalTypes.Sea && specifications === SpecificationsType.Roro)) && proposal?.operationType === FreightTypes.Import:
+      case ((modal === ModalTypes.Sea && specifications === SpecificationsType.Lcl) || (modal === ModalTypes.Sea && specifications === SpecificationsType.BreakBulk) || (modal === ModalTypes.Sea && specifications === SpecificationsType.Roro)) && proposal?.operationType === FreightTypes.Import && title === I18n.t('pages.newProposal.step6.destinationCost'):
         setTypeList([
           { name: CostNameTypes.Ton, value: FareItemsTypes.Ton },
           { name: CostNameTypes.Bl, value: FareItemsTypes.Bl },
           { name: CostNameTypes.Fdesp, value: FareItemsTypes.Fdesp, tooltip: TooltipTypes.Fdesp }
         ])
         break
-      case modal === ModalTypes.Air && proposal?.operationType === FreightTypes.Import:
+      case modal === ModalTypes.Air && proposal?.operationType === FreightTypes.Import && title === I18n.t('pages.newProposal.step6.destinationCost'):
         setTypeList([
           { name: CostNameTypes.Kilo, value: FareItemsTypes.Kilo },
           { name: CostNameTypes.Fixed, value: FareItemsTypes.Fixed },
@@ -214,7 +217,7 @@ const CostModal = ({
           { name: CostNameTypes.Fdesp, value: FareItemsTypes.Fdesp, tooltip: TooltipTypes.Fdesp }
         ])
         break
-      case modal === ModalTypes.Land && proposal?.operationType === FreightTypes.Import:
+      case modal === ModalTypes.Land && proposal?.operationType === FreightTypes.Import && title === I18n.t('pages.newProposal.step6.destinationCost'):
         setTypeList([
           { name: CostNameTypes.Fixed, value: FareItemsTypes.Fixed },
           { name: CostNameTypes.Fdesp, value: FareItemsTypes.Fdesp, tooltip: TooltipTypes.Fdesp }
@@ -413,13 +416,22 @@ const CostModal = ({
       }
 
       void (async function () {
+        const totalFreight = proposal.totalCosts.find((total) => total.costType === CostTypes.Freight)
+        const totalTariff = proposal.totalCosts.find((total) => total.costType === CostTypes.Tariff)
         const totalCalculationData =
-          data.costType === 'CW'
+          data.costType === CostNameTypes.Cw
             ? {
                 ...data,
                 valuePurchaseCW: proposal.cargo[0].vlCwPurchase,
                 valueSaleCW: proposal.cargo[0].vlCwSale
               }
+            :  data.costType === FareItemsTypes.Fdesp ? {
+              ...data,
+              valueTotalOriginPurchase: dataTotalCostOrigin.length > 0 ? dataTotalCostOrigin[0].value?.buy : 0,
+              valueTotalOriginSale: dataTotalCostOrigin.length > 0 ? dataTotalCostOrigin[0].value?.sale : 0,
+              valueTotalFreight: totalFreight ? totalFreight.valueTotalSale : 0,
+              valueTotalTariff: totalTariff ? totalTariff.valueTotalSale : 0
+            }
             : { ...data, valuePurchaseCW: null, valueSaleCW: null }
         await API.postTotalCalculation(totalCalculationData)
           .then((response) => {
