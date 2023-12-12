@@ -205,7 +205,6 @@ const Step1 = ({
             <RedColorSpan> *</RedColorSpan>
           </FormLabel>
           <Autocomplete
-            freeSolo
             onChange={(e, newValue) => { handleClient(newValue) }}
             options={partnerList.map((item) => item.businessPartner.simpleName)}
             value={partner}

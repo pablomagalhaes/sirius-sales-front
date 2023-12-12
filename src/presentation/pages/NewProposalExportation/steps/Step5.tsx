@@ -1475,7 +1475,6 @@ const Step5 = ({
                             <Grid item xs={2}>
                               <Autocomplete
                                 disabled={data[index]?.idTariff}
-                                freeSolo
                                 value={dataContainer[index]?.currencyPurchase}
                                 onChange={(e, newValue) => {
                                   const newData = [...dataContainer]
@@ -1539,7 +1538,6 @@ const Step5 = ({
                             <Grid item xs={2}>
                               <>
                                 <Autocomplete
-                                  freeSolo
                                   value={dataContainer[index]?.currencySale}
                                   onChange={(e, newValue) => {
                                     const newData = dataContainer.map((data) => {
