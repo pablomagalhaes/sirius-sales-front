@@ -340,7 +340,7 @@ const Step6 = ({
         calculationData={calculationData}
         errorMessage={invalidInput && modal !== ModalTypes.Land ? I18n.t('pages.newProposal.step6.errorOrigin') : ''}
         dataTotalCostOrigin={dataTotalCostOrigin}
-        
+
       />
       }
       {loadedTable && <CostTable
