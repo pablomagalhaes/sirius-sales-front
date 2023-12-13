@@ -109,6 +109,6 @@ export {
   ProfitsPercentsTypes,
   ProposalTypes,
   IncotermTypes,
-  SpecificationsType, 
+  SpecificationsType,
   FreightTypes
 }

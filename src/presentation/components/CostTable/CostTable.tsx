@@ -59,6 +59,7 @@ interface CostTableProps {
   serviceList: any[]
   calculationData: CalculationDataProps
   errorMessage: string
+  dataTotalCostOrigin: TotalCostTable[]
 }
 
 const CostTable = ({
@@ -76,7 +77,8 @@ const CostTable = ({
   setTotalCostData,
   serviceList,
   calculationData,
-  errorMessage
+  errorMessage,
+  dataTotalCostOrigin
 }: CostTableProps): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [data, setData] = useState<CostTableItem[]>([])
@@ -278,6 +280,7 @@ const CostTable = ({
         containerItems={containerItems}
         serviceList={serviceList}
         calculationData={calculationData}
+        dataTotalCostOrigin={dataTotalCostOrigin}
       />
       <Header>
         <Title>

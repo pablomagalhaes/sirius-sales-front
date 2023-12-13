@@ -338,6 +338,7 @@ const Step6 = ({
         serviceList={serviceList}
         calculationData={calculationData}
         errorMessage={invalidInput && modal !== ModalTypes.Land ? I18n.t('pages.newProposal.step6.errorOrigin') : ''}
+        dataTotalCostOrigin={dataTotalCostOrigin}
       />
       }
       {loadedTable && <CostTable
@@ -357,6 +358,7 @@ const Step6 = ({
         serviceList={serviceList}
         calculationData={calculationData}
         errorMessage={invalidInput && modal !== ModalTypes.Land ? I18n.t('pages.newProposal.step6.errorDestiny') : ''}
+        dataTotalCostOrigin={dataTotalCostOrigin}
       />
       }
     </Separator>
