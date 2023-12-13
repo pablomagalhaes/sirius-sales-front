@@ -15,7 +15,7 @@ const HeightDiv = styled.div`
 `
 const NumberInput = styled(NumberFormat)`
   & .MuiOutlinedInput-marginDense input {
-    height: 12px;
+    height: ${(props: { handsOn: boolean }) => props.handsOn ? '19px' : '12px'};
   }
 `
 const StyledPaper = styled(Paper)`
