@@ -96,6 +96,9 @@ export const TARIFF_CANCEL_MODAL_INPUT_DETAIL = `${PREFIX_IDS}_tariff-reject-mod
 export const TARIFF_CANCEL_MODAL_BUTTON_CANCEL = `${PREFIX_IDS}_tariff-reject-modal_button_cancel`
 export const TARIFF_CANCEL_MODAL_BUTTON_CONFIRM = `${PREFIX_IDS}_tariff-reject-modal_button_confirm`
 
+// Cost Modal
+export const TARIFF_COST_MODAL_SELECT_TYPE = `${PREFIX_IDS}_tariff-cost-modal_select_type`
+
 // STAGGEREDPROPOSAL NEWSTAGGEREDPROPOSAL
 export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_LINK_HOME = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal_link_home`
 export const STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_BUTTON_SAVE = `${PREFIX_IDS}staggeredproposal-newstaggeredproposal_button_save`
@@ -164,6 +167,10 @@ export const TARIFF_IMPORT_LCL_MODAL_BUTTON_CANCEL = `${PREFIX_IDS}_tariff-impor
 // Tariff Import AIR Modal
 export const TARIFF_IMPORT_AIR_MODAL_BUTTON_IMPORT = `${PREFIX_IDS}_tariff-import-air-modal_button_import`
 export const TARIFF_IMPORT_AIR_MODAL_BUTTON_CANCEL = `${PREFIX_IDS}_tariff-import-air-modal_button_cancel`
+
+// Proposal Item Modal
+export const PROPOSAL_ITEM_MODAL_INPUT_SIZE = `${PREFIX_IDS}_proposal-item-modal_input_size`
+export const PROPOSAL_ITEM_MODAL_INPUT_TYPE = `${PREFIX_IDS}_proposal-item-modal_input_type`
 
 // Proposal Step4
 export const PROPOSAL_IMPORT_STEP4_FREETIME = `${PREFIX_IDS}_proposal_import_step4_freetime`
