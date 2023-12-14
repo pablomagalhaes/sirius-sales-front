@@ -6,6 +6,12 @@
       "message": "Ao excluir o agente, algumas informações já preenchidas relacionadas ao Agente atual serão descartadas. Confirmar a exclusão?",
       "title": "Tem certeza que quer excluir o Agente?"
     },
+    "freeTimeDeleteModal": {
+      "cancelMessage": "Cancelar",
+      "confirmMessage": "Confirmar",
+      "message": "Ao excluir as opções, algumas informações serão descartadas. Confirmar a exclusão?",
+      "title": "Tem certeza Tem certeza que deseja excluir o tipo de container?"
+    },
     "costModal": {
       "agent": "Agente:",
       "buyValue": "Valor Compra",
@@ -306,7 +312,11 @@
         "tuesday": "T",
         "validity": "Validade:",
         "value": "Valor (BRL):",
-        "wednesday": "Q"
+        "wednesday": "Q",
+        "addFreeTime": "Adicionar Tipo Container",
+        "containerType": "Tipo de container",
+        "purchaseDeadline": "Prazo compra (dias)",
+        "salesDeadline": "Prazo venda (dias)"
       },
       "step5": {
         "addFare": "Adicionar tarifa",

@@ -3,6 +3,7 @@ import { CargoVolume } from '../CargoVolume'
 import { Cost } from '../Cost'
 import { TotalCost } from '../TotalCost'
 import { ProfitsProps } from '../ProfitsProps'
+import { FreeTimeDemurrage } from '../FreeTimeDemurrage'
 
 export interface Proposal {
   idProposal?: number | null
@@ -47,14 +48,7 @@ export interface Proposal {
   transitTime: number // step4 transit time
   idFrequency: number // step 4 id frequency
   route: string // step4 rota
-  freeTimeDemurrages: Array<{
-    idFreeTimeDemurrage: null
-    idContainerType: string
-    freeTime: boolean
-    nrFreeTimeDaysDeadline: null
-    nrFreeTimeDaysDeadlineSale: null
-    vlFreeTime: null
-  }>
+  freeTimeDemurrages: FreeTimeDemurrage[]
   recurrency: number// 1
   weeklyRecurrency: string // "0101100" segunda quarta e quinta
   transportIncluded: boolean

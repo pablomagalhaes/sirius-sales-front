@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react'
+import moment from 'moment'
+
 import {
   FormControl,
   FormControlLabel,
@@ -156,22 +158,22 @@ const Step4 = ({
     })
   }, [data])
 
-  const validateFreeTime = (): boolean => {
-    data.value = data.value !== '0' ? data.value : ''
-    return (
-      modal !== 'SEA' ||
-      (modal === 'SEA' && data.freeTime === 'notHired') ||
-      (modal === 'SEA' &&
-        specifications === 'fcl' &&
-        data.freeTime === 'hired' &&
-        data.deadline.length !== 0) ||
-      (modal === 'SEA' &&
-        specifications !== 'fcl' &&
-        data.freeTime === 'hired' &&
-        data.deadline.length !== 0 &&
-        data.value.length !== 0)
-    )
-  }
+  // const validateFreeTime = (): boolean => {
+  //   data.value = data.value !== '0' ? data.value : ''
+  //   return (
+  //     modal !== 'SEA' ||
+  //     // (modal === 'SEA' && data.freeTime === 'notHired') ||
+  //     (modal === 'SEA' &&
+  //       specifications === 'fcl' &&
+  //       // data.freeTime === 'hired' &&
+  //       // data.deadline.length !== 0) ||
+  //     (modal === 'SEA' &&
+  //       specifications !== 'fcl' &&
+  //       // data.freeTime === 'hired' &&
+  //       data.deadline.length !== 0 &&
+  //       data.value.length !== 0)
+  //   )
+  // }
 
   const validateCompleteInputs = (): boolean => {
     return (
@@ -191,17 +193,23 @@ const Step4 = ({
       data.frequency !== '' ||
       data.route.length > 0 ||
       data.client.length > 0 ||
-      data.freeTime.length > 0 ||
-      data.deadline.length > 0 ||
-      data.value.length > 0 ||
+      // data.freeTime.length > 0 ||
+      // data.deadline.length > 0 ||
+      // data.value.length > 0 ||
       data.generalObs.length > 0 ||
       data.internalObs.length > 0
     )
   }
 
+  const validateDate = (): boolean => {
+    const validityDate = moment(data.validityDate, 'DD/MM/YYYY', true)
+    const today = moment().startOf('day')
+    return validityDate.isValid() && validityDate.isSameOrAfter(today)
+  }
+
   const validateFormComplete = (): void => {
     const step6 = modal === ModalTypes.Land
-    if (validateFreeTime() && validateCompleteInputs()) {
+    if (validateCompleteInputs() && validateDate()) {
       setCompleted((currentState) => {
         return { ...currentState, step4: true, step6 }
       })
@@ -242,9 +250,9 @@ const Step4 = ({
     })()
   }, [])
 
-  useEffect(() => {
-    setData({ ...data, deadline: '', value: '' })
-  }, [data.freeTime])
+  // useEffect(() => {
+  //   setData({ ...data, deadline: '', value: '' })
+  // }, [data.freeTime])
 
   const calculateValidityDate = (value): void => {
     if (value !== 0) {
@@ -281,7 +289,10 @@ const Step4 = ({
       element.classList.add('activeDay')
       element.value = '1'
       weeklyValue = weekValue()
-      setData({ ...data, weeklyRecurrency: weeklyValue })
+      setData({
+        ...data,
+        weeklyRecurrency: weeklyValue
+      })
     } else {
       element.classList.remove('activeDay')
       element.classList.add('disabledDay')
@@ -487,7 +498,7 @@ const Step4 = ({
                       <RedColorSpan> *</RedColorSpan>
                     </FormLabel>
                     )}
-                <RadioGroup
+                {/* <RadioGroup
                   row
                   aria-label="proposal type"
                   name="row-radio-buttons-group"
@@ -517,9 +528,10 @@ const Step4 = ({
                       label={I18n.t('pages.newProposal.step4.hired')}
                     />
                   </ControlledToolTip>
-                </RadioGroup>
+                </RadioGroup> */}
               </Grid>
-              {data.freeTime === 'hired' && (
+
+              {/* {data.freeTime === 'hired' && (
                 <>
                   <Grid item xs={2}>
                     <FormLabel component="legend">
@@ -572,7 +584,7 @@ const Step4 = ({
                     )}
                   </Grid>
                 </>
-              )}
+              )} */}
             </Grid>
           )}
           {modal !== 'SEA' && <Grid item xs={8} />}

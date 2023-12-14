@@ -164,3 +164,9 @@ export const TARIFF_IMPORT_LCL_MODAL_BUTTON_CANCEL = `${PREFIX_IDS}_tariff-impor
 // Tariff Import AIR Modal
 export const TARIFF_IMPORT_AIR_MODAL_BUTTON_IMPORT = `${PREFIX_IDS}_tariff-import-air-modal_button_import`
 export const TARIFF_IMPORT_AIR_MODAL_BUTTON_CANCEL = `${PREFIX_IDS}_tariff-import-air-modal_button_cancel`
+
+// Proposal Step4
+export const PROPOSAL_IMPORT_STEP4_FREETIME = `${PREFIX_IDS}_proposal_import_step4_freetime`
+export const PROPOSAL_IMPORT_STEP4_CONTAINER_TYPE = `${PREFIX_IDS}_proposal_import_step4_container_type`
+export const PROPOSAL_IMPORT_STEP4_PURCHASE_DEADLINE = `${PREFIX_IDS}_proposal_import_step4_purchase_deadline`
+export const PROPOSAL_IMPORT_STEP4_SALES_DEADLINE = `${PREFIX_IDS}_proposal_import_step4_sales_deadline`
