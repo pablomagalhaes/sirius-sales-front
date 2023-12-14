@@ -1076,7 +1076,7 @@ const Step5 = ({
   function handleContainerChange (newData, field, newValue, index, hasNumber: boolean): void {
     const getCostsCostTypeFrete = proposal.costs.filter(cost => cost.costType === CostTypes.Freight)
     const getCostsAnotherCostType = proposal.costs.filter(cost => cost.costType !== CostTypes.Freight)
-    if(getCostsCostTypeFrete.length > 0) {
+    if (getCostsCostTypeFrete.length > 0) {
       if (hasNumber) {
         getCostsCostTypeFrete[index][field] = Number(newValue.replace('.', '').replace(',', '.').replace(/[^\d.]/g, ''))
       } else {
@@ -1374,13 +1374,13 @@ const Step5 = ({
                                 />
                               </Grid>
                               <Grid item xs={2}>
-                                <NumberInput 
-                                decimalSeparator={','} 
-                                thousandSeparator={'.'} 
-                                decimalScale={2} 
+                                <NumberInput
+                                decimalSeparator={','}
+                                thousandSeparator={'.'}
+                                decimalScale={2}
                                 format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
-                                customInput={ControlledInput} 
-                                onChange={(e, newValue) => handleValueSale(e.target.value, selectedAgent, index)} 
+                                customInput={ControlledInput}
+                                onChange={(e, newValue) => handleValueSale(e.target.value, selectedAgent, index)}
                                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
                                   invalid={invalidInput && (dataSales.valueSale?.length === 0 || inputValidation(dataSales.valueSale[index]))} value={dataSales.valueSale[index]} variant='outlined' size='small' />
                               </Grid>

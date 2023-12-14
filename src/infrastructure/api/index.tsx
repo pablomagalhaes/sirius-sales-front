@@ -50,7 +50,7 @@ const getContainer = async (): Promise<any> => {
 }
 
 const getContainerTypes = async (params?): Promise<any> => {
-  const url: string = `/sirius-master-data-api/container/type`
+  const url: string = '/sirius-master-data-api/container/type'
   try {
     const res = await instance.get(url)
     return res.data

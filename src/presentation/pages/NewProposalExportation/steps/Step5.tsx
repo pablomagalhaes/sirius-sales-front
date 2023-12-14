@@ -1366,7 +1366,7 @@ const Step5 = ({
                               <Grid item xs={2}>
                                 <NumberInput decimalSeparator={','} thousandSeparator={'.'} decimalScale={2} format={(value: string) => FormatNumber.rightToLeftFormatter(value, 2)}
                                   customInput={ControlledInput} onChange={(e, newValue) => handleValueSale(e.target.value, selectedAgent, index)} toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                  invalid={invalidInput && (dataSales.valueSale?.length === 0 || inputValidation(dataSales.valueSale[index]))} 
+                                  invalid={invalidInput && (dataSales.valueSale?.length === 0 || inputValidation(dataSales.valueSale[index]))}
                                   value={dataSales.valueSale[index]} variant='outlined' size='small' />
                               </Grid>
                             </Grid>

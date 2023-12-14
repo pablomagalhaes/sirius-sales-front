@@ -497,7 +497,6 @@ const Step4 = ({
               size="small"
             />
           </Grid>
-
           <Grid item xs={2}>
             <FormLabel component="legend" error={invalidInput && data.transitTime.length === 0}>
               {I18n.t('pages.newProposal.step4.time')}
@@ -531,17 +530,11 @@ const Step4 = ({
             />
           </Grid>
 
-            {modal === 'SEA'
-              ? (
+             {modal !== 'SEA' && (
                 <>
-                <Grid item xs={6} />
+                  <Grid item xs={2} />
                 </>
-                )
-              : (
-                <>
-                <Grid item xs={2} />
-                </>
-                )}
+             )}
 
             {modal === 'SEA' && (
               <>
@@ -550,68 +543,71 @@ const Step4 = ({
                   return (
                     <Fragment key={index}>
                       <Grid item xs={8} container spacing={2}>
-                        <Grid item xs style={{ maxWidth: '315px' }}>
 
-                        {index === 0 && (
+                        {index === 0
+                          ? (
                           <>
-                            {specifications === 'fcl'
-                              ? (
-                                <FormLabel component="legend">
-                                  {I18n.t('pages.newProposal.step4.freeTimeDemurrage')}
-                                  <RedColorSpan> *</RedColorSpan>
-                                </FormLabel>
-                                )
-                              : (
-                                <FormLabel component="legend">
-                                  {I18n.t('pages.newProposal.step4.freeTimeStorage')}
-                                  <RedColorSpan> *</RedColorSpan>
-                                </FormLabel>
-                                )}
-                            <RadioGroup
-                              row
-                              aria-label="proposal type"
-                              id={PROPOSAL_IMPORT_STEP4_FREETIME}
-                              name="row-radio-buttons-group"
-                              value={freeTimeDemurrages.freeTime.toString()}
-                              onChange={(e, newValue) => {
-                                setSelectfreeTimeDemurrages(
-                                  selectfreeTimeDemurrages.map((value, currentIndex) =>
-                                    currentIndex === index
-                                      ? {
-                                          ...value,
-                                          freeTime: newValue === 'true'
-                                        }
-                                      : value
+                            <Grid item xs style={{ maxWidth: '330px' }}>
+                              {specifications === 'fcl'
+                                ? (
+                                  <FormLabel component="legend">
+                                    {I18n.t('pages.newProposal.step4.freeTimeDemurrage')}
+                                    <RedColorSpan> *</RedColorSpan>
+                                  </FormLabel>
                                   )
-                                )
-                              }}
-                            >
-                              <ControlledToolTip
-                                open={invalidInput && freeTimeDemurrages.freeTime === null}
-                                title={I18n.t('components.itemModal.requiredField')}
+                                : (
+                                  <FormLabel component="legend">
+                                    {I18n.t('pages.newProposal.step4.freeTimeStorage')}
+                                    <RedColorSpan> *</RedColorSpan>
+                                  </FormLabel>
+                                  )}
+                              <RadioGroup
+                                row
+                                aria-label="proposal type"
+                                id={PROPOSAL_IMPORT_STEP4_FREETIME}
+                                name="row-radio-buttons-group"
+                                value={freeTimeDemurrages.freeTime.toString()}
+                                onChange={(e, newValue) => {
+                                  setSelectfreeTimeDemurrages(
+                                    selectfreeTimeDemurrages.map((value, currentIndex) =>
+                                      currentIndex === index
+                                        ? {
+                                            ...value,
+                                            freeTime: newValue === 'true'
+                                          }
+                                        : value
+                                    )
+                                  )
+                                }}
                               >
-                                <FormControlLabel
-                                  value="false"
-                                  control={<StyledRadio color={getColor(freeTimeDemurrages.freeTime)} />}
-                                  label={I18n.t('pages.newProposal.step4.notHired')}
-                                  style={{ marginRight: '30px' }}
-                                />
-                              </ControlledToolTip>
-                              <ControlledToolTip
-                                open={invalidInput && freeTimeDemurrages.freeTime === null}
-                                title={I18n.t('components.itemModal.requiredField')}
-                              >
-                                <FormControlLabel
-                                  value="true"
-                                  control={<StyledRadio color={getColor(freeTimeDemurrages.freeTime)} />}
-                                  label={I18n.t('pages.newProposal.step4.hired')}
-                                />
-                              </ControlledToolTip>
-                            </RadioGroup>
-
+                                <ControlledToolTip
+                                  open={invalidInput && freeTimeDemurrages.freeTime === null}
+                                  title={I18n.t('components.itemModal.requiredField')}
+                                >
+                                  <FormControlLabel
+                                    value="false"
+                                    control={<StyledRadio color={getColor(freeTimeDemurrages.freeTime)} />}
+                                    label={I18n.t('pages.newProposal.step4.notHired')}
+                                    style={{ marginRight: '30px' }}
+                                  />
+                                </ControlledToolTip>
+                                <ControlledToolTip
+                                  open={invalidInput && freeTimeDemurrages.freeTime === null}
+                                  title={I18n.t('components.itemModal.requiredField')}
+                                >
+                                  <FormControlLabel
+                                    value="true"
+                                    control={<StyledRadio color={getColor(freeTimeDemurrages.freeTime)} />}
+                                    label={I18n.t('pages.newProposal.step4.hired')}
+                                  />
+                                </ControlledToolTip>
+                              </RadioGroup>
+                            </Grid>
                           </>
-                        )}
-                        </Grid>
+                            )
+                          : (
+                          <Grid item xs style={{ maxWidth: '400px' }} />
+                            )}
 
                         {specifications === 'fcl' && selectfreeTimeDemurrages[0]?.freeTime
                           ? (

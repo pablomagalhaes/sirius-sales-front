@@ -328,6 +328,14 @@ const AddAgentButtonWrapper = styled.div`
   margin-top: 20px;
 `
 
+const AddFreeTimeButtonWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-top: 20px;
+`
+
 export {
   AddAgentButtonWrapper,
   ButtonContainer,
@@ -355,5 +363,6 @@ export {
   BottomValueContainer,
   BottomContainer,
   ChargeContainer,
-  EditIconContainer
+  EditIconContainer,
+  AddFreeTimeButtonWrapper
 }
