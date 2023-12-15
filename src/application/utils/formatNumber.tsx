@@ -44,13 +44,18 @@ const convertNumberToDecimal = (value: number): number => {
   return Number(value.toFixed(2))
 }
 
+const convertNumberToStringWithReplaceComma = (value: string): string => {
+  return String(value).replace(/,/g, '.')
+}
+
 const FormatNumber = {
   rightToLeftFormatter,
   convertNumberToString,
   convertStringToNumber,
   convertNumberWithInterCoin,
   convertNumberToDecimal,
-  rightToLeftFormatterPercentage
+  rightToLeftFormatterPercentage,
+  convertNumberToStringWithReplaceComma
 }
 
 export default FormatNumber
