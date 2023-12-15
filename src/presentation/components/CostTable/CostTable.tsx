@@ -36,6 +36,7 @@ import { ProposalProps, ProposalContext } from '../../pages/NewProposal/context/
 import { Agents } from '../../pages/NewProposal/steps/Step2'
 import { FareItemsTypes } from '../../../application/enum/costEnum'
 import { ModalTypes } from '../../../application/enum/enum'
+import { TARIFF_COST_TABLE_SPAN_AGENT } from '../../../ids'
 
 interface CostTableProps {
   agentList: Agents[]
@@ -306,7 +307,7 @@ const CostTable = ({
                 </Grid>
                 <Grid item xs={11}>
                   <FormLabel component='legend'>
-                    <strong>
+                    <strong id={TARIFF_COST_TABLE_SPAN_AGENT}>
                       {getAgentName(dataByAgent[0].agent.idBusinessPartnerAgent) }
                     </strong>
                   </FormLabel>
