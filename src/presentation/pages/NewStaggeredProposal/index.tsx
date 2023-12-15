@@ -177,12 +177,12 @@ const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): 
               destination: obj.destination.split(' - ')[0],
               freightValues: obj.freightValues.map((item) => {
                 return {
-                  vlMinimum: item.vlMinimum.replace(/,/g, '.'),
-                  until45kg: item.until45kg.replace(/,/g, '.'),
-                  until100kg: item.until100kg.replace(/,/g, '.'),
-                  until300kg: item.until300kg.replace(/,/g, '.'),
-                  until500kg: item.until500kg.replace(/,/g, '.'),
-                  until1000kg: item.until1000kg.replace(/,/g, '.'),
+                  vlMinimum: String(item?.vlMinimum).replace(/,/g, '.'),
+                  until45kg: String(item?.until45kg).replace(/,/g, '.'),
+                  until100kg: String(item?.until100kg).replace(/,/g, '.'),
+                  until300kg: String(item?.until300kg).replace(/,/g, '.'),
+                  until500kg: String(item?.until500kg).replace(/,/g, '.'),
+                  until1000kg: String(item?.until1000kg).replace(/,/g, '.'),
                   buyOrSell: item.buyOrSell
                 }
               })
