@@ -76,7 +76,8 @@ interface CostModalProps {
   containerItems: ItemModalData[]
   serviceList: any[]
   calculationData?: CalculationDataProps
-  dataTotalCostOrigin: TotalCostTable[]
+  dataTotalCostOrigin: TotalCostTable[],
+  totalCostArray: any[]
 }
 
 interface Item {
@@ -116,7 +117,8 @@ const CostModal = ({
   containerItems,
   serviceList,
   calculationData,
-  dataTotalCostOrigin
+  dataTotalCostOrigin,
+  totalCostArray
 }: CostModalProps): JSX.Element => {
   const getAgentByName = (name: string): CostAgent => {
     const agent = agentList.find(agent => agent.agent === name)
@@ -416,8 +418,8 @@ const CostModal = ({
       }
 
       void (async function () {
-        const totalFreight = proposal.totalCosts.find((total) => total.costType === CostTypes.Freight)
-        const totalTariff = proposal.totalCosts.find((total) => total.costType === CostTypes.Tariff)
+        const totalFreight = totalCostArray?.find((total) => total.costType === CostTypes.Freight)
+        const totalTariff = totalCostArray?.find((total) => total.costType === CostTypes.Tariff)
         const totalCalculationData =
           data.costType === CostNameTypes.Cw
             ? {

@@ -34,7 +34,7 @@ import { TotalCostTable } from '../../pages/NewProposal/steps/Step6'
 import API from '../../../infrastructure/api'
 import { ProposalProps, ProposalContext } from '../../pages/NewProposal/context/ProposalContext'
 import { Agents } from '../../pages/NewProposal/steps/Step2'
-import { FareItemsTypes } from '../../../application/enum/costEnum'
+import { FareItemsTypes, CostTypes } from '../../../application/enum/costEnum'
 import { ModalTypes } from '../../../application/enum/enum'
 
 interface CostTableProps {
@@ -60,6 +60,7 @@ interface CostTableProps {
   calculationData: CalculationDataProps
   errorMessage: string
   dataTotalCostOrigin: TotalCostTable[]
+  totalCostArray?: any[]
 }
 
 const CostTable = ({
@@ -78,7 +79,8 @@ const CostTable = ({
   serviceList,
   calculationData,
   errorMessage,
-  dataTotalCostOrigin
+  dataTotalCostOrigin,
+  totalCostArray
 }: CostTableProps): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [data, setData] = useState<CostTableItem[]>([])
@@ -172,50 +174,67 @@ const CostTable = ({
     setUndoMessage({ step3: false, step6origin: false, step6destiny: false, step5: false })
   }, [modal])
 
+  const waitLoadAllData = async (): Promise<void> => {
+    const totalFreight = totalCostArray?.find((total) => total.costType === CostTypes.Freight)
+    const totalTariff = totalCostArray?.find((total) => total.costType === CostTypes.Tariff)
+    const allData = tableData.map(async (item): Promise<CostTableItem> => {
+      const indexContainer = containerItems.findIndex(container => item.selectedContainer === container.type)
+      const data = {
+        costType: item.type,
+        quantityContainer: specifications === 'fcl' ? Number(containerItems[indexContainer]?.amount) : 0,
+        valueGrossWeight: isNaN(Number(calculationData?.weight)) ? 0 : calculationData?.weight,
+        valueCubage: isNaN(Number(calculationData?.cubage)) ? 0 : calculationData?.cubage,
+        valueWeightCubed: isNaN(Number(calculationData?.cubageWeight)) ? 0 : calculationData?.cubageWeight,
+        valuePurchase: Number(item.buyValue),
+        valueSale: Number(item.saleValue),
+        idCurrencyPurchase: item.buyCurrency,
+        idCurrencySale: item.saleCurrency
+      }
+      const totalCalculationData =
+      data.costType === FareItemsTypes.Cw
+        ? {
+            ...data,
+            valuePurchaseCW: proposal.cargo[0].vlCwPurchase,
+            valueSaleCW: proposal.cargo[0].vlCwSale
+          }
+        : data.costType === FareItemsTypes.Fdesp
+        ? {
+            ...data,
+            valueTotalOriginPurchase: dataTotalCostOrigin.length > 0 ? dataTotalCostOrigin[0].value?.buy : 0,
+            valueTotalOriginSale: dataTotalCostOrigin.length > 0 ? dataTotalCostOrigin[0].value?.sale : 0,
+            valueTotalFreight: totalFreight ? totalFreight.valueTotalSale : 0,
+            valueTotalTariff: totalTariff ? totalTariff.valueTotalSale : 0
+          }
+        : { ...data, valuePurchaseCW: null, valueSaleCW: null }
+      return await API.postTotalCalculation(totalCalculationData)
+        .then((response): CostTableItem => {
+          return {
+            ...item,
+            buyValueCalculated: response.valuePurchase,
+            saleValueCalculated: response.valueSale
+          }
+        })
+        .catch(() => {
+          return {
+            ...item
+          }
+        })
+    })
+    const newTableData = await Promise.all(allData)
+    setData([...newTableData])
+  }
+
   useEffect(() => {
     if (tableData.length > 0) {
-      const waitLoadAllData = async (): Promise<void> => {
-        const allData = tableData.map(async (item): Promise<CostTableItem> => {
-          const indexContainer = containerItems.findIndex(container => item.selectedContainer === container.type)
-          const data = {
-            costType: item.type,
-            quantityContainer: specifications === 'fcl' ? Number(containerItems[indexContainer]?.amount) : 0,
-            valueGrossWeight: isNaN(Number(calculationData?.weight)) ? 0 : calculationData?.weight,
-            valueCubage: isNaN(Number(calculationData?.cubage)) ? 0 : calculationData?.cubage,
-            valueWeightCubed: isNaN(Number(calculationData?.cubageWeight)) ? 0 : calculationData?.cubageWeight,
-            valuePurchase: Number(item.buyValue),
-            valueSale: Number(item.saleValue),
-            idCurrencyPurchase: item.buyCurrency,
-            idCurrencySale: item.saleCurrency
-          }
-          const totalCalculationData =
-          data.costType === FareItemsTypes.Cw
-            ? {
-                ...data,
-                valuePurchaseCW: proposal.cargo[0].vlCwPurchase,
-                valueSaleCW: proposal.cargo[0].vlCwSale
-              }
-            : { ...data, valuePurchaseCW: null, valueSaleCW: null }
-          return await API.postTotalCalculation(totalCalculationData)
-            .then((response): CostTableItem => {
-              return {
-                ...item,
-                buyValueCalculated: response.valuePurchase,
-                saleValueCalculated: response.valueSale
-              }
-            })
-            .catch(() => {
-              return {
-                ...item
-              }
-            })
-        })
-        const newTableData = await Promise.all(allData)
-        setData([...newTableData])
-      }
       void waitLoadAllData()
     }
   }, [])
+
+  useEffect(() => {
+    if (tableData.length > 0 && modalTitle === I18n.t('pages.newProposal.step6.destinationCost')) {
+      void waitLoadAllData()
+    }
+  }, [dataTotalCostOrigin, totalCostArray])
 
   const calculateTotalCost = (buyCurrency, saleCurrency, buyValue, saleValue, buyMin, saleMin): void => {
     const buySum = Number(buyValue) > Number(buyMin) ? buyValue : buyMin
@@ -281,6 +300,7 @@ const CostTable = ({
         serviceList={serviceList}
         calculationData={calculationData}
         dataTotalCostOrigin={dataTotalCostOrigin}
+        totalCostArray={totalCostArray}
       />
       <Header>
         <Title>
