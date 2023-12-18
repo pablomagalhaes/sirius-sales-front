@@ -160,7 +160,7 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
       //   })
       // })
       // setProfitPercentage(calculateProfitPercentage())
-      if(setTotalCostArray) setTotalCostArray(totalCostArray)
+      if (setTotalCostArray) setTotalCostArray(totalCostArray)
       setProposal({ ...proposal, profits, totalCosts: totalCostArray })
     }
   }, [data, totalCosts, currency, totalOtherFare, value, modal])

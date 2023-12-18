@@ -198,14 +198,14 @@ const CostTable = ({
             valueSaleCW: proposal.cargo[0].vlCwSale
           }
         : data.costType === FareItemsTypes.Fdesp
-        ? {
-            ...data,
-            valueTotalOriginPurchase: dataTotalCostOrigin.length > 0 ? dataTotalCostOrigin[0].value?.buy : 0,
-            valueTotalOriginSale: dataTotalCostOrigin.length > 0 ? dataTotalCostOrigin[0].value?.sale : 0,
-            valueTotalFreight: totalFreight ? totalFreight.valueTotalSale : 0,
-            valueTotalTariff: totalTariff ? totalTariff.valueTotalSale : 0
-          }
-        : { ...data, valuePurchaseCW: null, valueSaleCW: null }
+          ? {
+              ...data,
+              valueTotalOriginPurchase: dataTotalCostOrigin.length > 0 ? dataTotalCostOrigin[0].value?.buy : 0,
+              valueTotalOriginSale: dataTotalCostOrigin.length > 0 ? dataTotalCostOrigin[0].value?.sale : 0,
+              valueTotalFreight: totalFreight ? totalFreight.valueTotalSale : 0,
+              valueTotalTariff: totalTariff ? totalTariff.valueTotalSale : 0
+            }
+          : { ...data, valuePurchaseCW: null, valueSaleCW: null }
       return await API.postTotalCalculation(totalCalculationData)
         .then((response): CostTableItem => {
           return {

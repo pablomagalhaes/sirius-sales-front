@@ -76,7 +76,7 @@ interface CostModalProps {
   containerItems: ItemModalData[]
   serviceList: any[]
   calculationData?: CalculationDataProps
-  dataTotalCostOrigin: TotalCostTable[],
+  dataTotalCostOrigin: TotalCostTable[]
   totalCostArray: any[]
 }
 
