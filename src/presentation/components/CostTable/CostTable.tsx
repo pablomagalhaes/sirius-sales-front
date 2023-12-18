@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 
-import { TableBody, TableHead, TableRow } from '@material-ui/core'
+import { TableBody, TableHead, TableRow, Grid, FormLabel } from '@material-ui/core'
 
 import {
   ButtonContainer,
@@ -36,6 +36,7 @@ import { ProposalProps, ProposalContext } from '../../pages/NewProposal/context/
 import { Agents } from '../../pages/NewProposal/steps/Step2'
 import { FareItemsTypes } from '../../../application/enum/costEnum'
 import { ModalTypes } from '../../../application/enum/enum'
+import { TARIFF_COST_TABLE_SPAN_AGENT } from '../../../ids'
 
 interface CostTableProps {
   agentList: Agents[]
@@ -266,6 +267,15 @@ const CostTable = ({
     return costData === 0 || agentList.length < 1 || agentList[0].agent === '' || proposal?.cargo[0].cargoVolumes.length < 1
   }
 
+  const groupByAgent = (): CostTableItem[][] => {
+    const result = data.reduce(function (r, a) {
+      r[a.agent.idBusinessPartnerAgent] = r[a.agent.idBusinessPartnerAgent] || []
+      r[a.agent.idBusinessPartnerAgent].push(a)
+      return r
+    }, {})
+    return Object.values(result)
+  }
+
   return (
     <MainDiv>
       <CostModal
@@ -288,41 +298,52 @@ const CostTable = ({
           {modal === ModalTypes.Land || <RedColorSpan> *</RedColorSpan> }
         </Title>
       </Header>
-      {data?.length > 0 && (
-        <StyledTable>
-          <TableHead>
-            <TableHeadRow>
-              <StyledTableCell width="14%">
-                {I18n.t('components.costTable.description')}
-              </StyledTableCell>
-              <StyledTableCell width="11%" align="left">
-                {I18n.t('components.costTable.type')}
-              </StyledTableCell>
-              {
-                title === I18n.t('pages.newProposal.step6.destiny')
-                  ? null
-                  : <StyledTableCell width="11%" align="left">
-                    {I18n.t('components.costTable.agent')}
+      {data.length > 0 && groupByAgent().map((dataByAgent: CostTableItem[], index: number) => {
+        return (
+          <div key={index}>
+            {title !== I18n.t('pages.newProposal.step6.destiny') &&
+              <Grid container spacing={0}>
+                <Grid item xs={1}>
+                  <FormLabel component='legend'>
+                    {I18n.t('pages.newProposal.step5.agent')}:
+                  </FormLabel>
+                </Grid>
+                <Grid item xs={11}>
+                  <FormLabel component='legend'>
+                    <strong id={TARIFF_COST_TABLE_SPAN_AGENT}>
+                      {getAgentName(dataByAgent[0].agent.idBusinessPartnerAgent) }
+                    </strong>
+                  </FormLabel>
+                </Grid>
+              </Grid>
+            }
+            <StyledTable>
+              <TableHead>
+                <TableHeadRow>
+                  <StyledTableCell width="14%">
+                    {I18n.t('components.costTable.description')}
                   </StyledTableCell>
-              }
-              <StyledTableCell width="12%" align="left">
-                {I18n.t('components.costTable.minBuy')}
-              </StyledTableCell>
-              <StyledTableCell width="11%" align="left">
-                {I18n.t('components.costTable.buy')}
-              </StyledTableCell>
-              <StyledTableCell width="11%" align="left">
-                {I18n.t('components.costTable.minSale')}
-              </StyledTableCell>
-              <StyledTableCell width="11%" align="left">
-                {I18n.t('components.costTable.sale')}
-              </StyledTableCell>
-            </TableHeadRow>
-          </TableHead>
-          <TableBody>
-            {data?.map((dataMap: CostTableItem) => {
-              calculateTotalCost(dataMap.buyCurrency, dataMap.saleCurrency, dataMap.buyValueCalculated, dataMap.saleValueCalculated, dataMap.buyMin, dataMap.saleMin)
-              return (
+                  <StyledTableCell width="11%" align="left">
+                    {I18n.t('components.costTable.type')}
+                  </StyledTableCell>
+                  <StyledTableCell width="12%" align="left">
+                    {I18n.t('components.costTable.minBuy')}
+                  </StyledTableCell>
+                  <StyledTableCell width="11%" align="left">
+                    {I18n.t('components.costTable.buy')}
+                  </StyledTableCell>
+                  <StyledTableCell width="11%" align="left">
+                    {I18n.t('components.costTable.minSale')}
+                  </StyledTableCell>
+                  <StyledTableCell width="11%" align="left">
+                    {I18n.t('components.costTable.sale')}
+                  </StyledTableCell>
+                </TableHeadRow>
+              </TableHead>
+              <TableBody>
+              {dataByAgent.map((dataMap: CostTableItem) => {
+                calculateTotalCost(dataMap.buyCurrency, dataMap.saleCurrency, dataMap.buyValueCalculated, dataMap.saleValueCalculated, dataMap.buyMin, dataMap.saleMin)
+                return (
                 <TableRow key={dataMap.id}>
                   <StyledTableCell width="14%" component="th" scope="row">
                     <Description>{dataMap.description}</Description>
@@ -330,18 +351,6 @@ const CostTable = ({
                   <StyledTableCell width="11%" align="left">
                     <Type>{dataMap.type}</Type>
                   </StyledTableCell>
-                  {
-                    title === I18n.t('pages.newProposal.step6.destiny')
-                      ? null
-                      : <StyledTableCell width="12%" align="left">
-
-                        {dataMap.agent !== null
-                          ? <Default>{getAgentName(dataMap.agent.idBusinessPartnerAgent) }</Default>
-                          : <Default>-</Default>
-                        }
-
-                      </StyledTableCell>
-                  }
                   <StyledTableCell width="13%" align="left">
                     {dataMap.buyMin !== null && dataMap.buyMin !== ''
                       ? <Default>
@@ -398,12 +407,13 @@ const CostTable = ({
                       </EditIconDiv>
                     </RowReverseDiv>
                   </StyledTableCell>
-                </TableRow>
-              )
-            })}
-          </TableBody>
-        </StyledTable>
-      )}
+                </TableRow>)
+              })}
+              </TableBody>
+            </StyledTable>
+          </div>
+        )
+      })}
       <Footer style={data?.length > 0 ? { borderTop: '1px solid #999DAC' } : { border: 'none' }}>
         {data?.length === 0
           ? <ButtonContainer>
