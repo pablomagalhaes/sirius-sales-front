@@ -26,6 +26,8 @@ import TariffImportModal from '../StaggeredProposal/components/TariffImportModal
 import TariffImportHandsOnModal from '../StaggeredProposal/components/TariffImportModal/TariffImportHandsOnModal'
 import ProposalDisplayModal from '../../components/ProposalDisplayModal/ProposalDisplayModal'
 
+import FormatNumber from '../../../application/utils/formatNumber'
+
 import {
   STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_LINK_HOME,
   STAGGEREDPROPOSAL_NEWSTAGGEREDPROPOSAL_BUTTON_SAVE,
@@ -177,12 +179,12 @@ const NewStaggeredProposal = ({ theme, newStaggeredProposal }: StaggeredProps): 
               destination: obj.destination.split(' - ')[0],
               freightValues: obj.freightValues.map((item) => {
                 return {
-                  vlMinimum: item.vlMinimum.replace(/,/g, '.'),
-                  until45kg: item.until45kg.replace(/,/g, '.'),
-                  until100kg: item.until100kg.replace(/,/g, '.'),
-                  until300kg: item.until300kg.replace(/,/g, '.'),
-                  until500kg: item.until500kg.replace(/,/g, '.'),
-                  until1000kg: item.until1000kg.replace(/,/g, '.'),
+                  vlMinimum: FormatNumber.convertNumberToStringWithReplaceComma(item?.vlMinimum),
+                  until45kg: FormatNumber.convertNumberToStringWithReplaceComma(item?.until45kg),
+                  until100kg: FormatNumber.convertNumberToStringWithReplaceComma(item?.until100kg),
+                  until300kg: FormatNumber.convertNumberToStringWithReplaceComma(item?.until300kg),
+                  until500kg: FormatNumber.convertNumberToStringWithReplaceComma(item?.until500kg),
+                  until1000kg: FormatNumber.convertNumberToStringWithReplaceComma(item?.until1000kg),
                   buyOrSell: item.buyOrSell
                 }
               })
