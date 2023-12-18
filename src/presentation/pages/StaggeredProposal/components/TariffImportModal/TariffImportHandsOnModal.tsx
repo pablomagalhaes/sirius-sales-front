@@ -483,6 +483,7 @@ const TariffImportHandsOnModal = ({
                 modal
                 style={{ marginRight: '3px' }}
                 inputProps={MaxLenth}
+                handsOn={true}
               />
             </Grid>
             <Grid item xs={12} md>
@@ -505,6 +506,7 @@ const TariffImportHandsOnModal = ({
                 modal
                 style={{ height: '20px' }}
                 inputProps={MaxLenth}
+                handsOn={true}
               />
               </Grid>
               <Grid item xs={12} md>
@@ -527,6 +529,7 @@ const TariffImportHandsOnModal = ({
                 modal
                 style={{ height: '20px' }}
                 inputProps={MaxLenth}
+                handsOn={true}
               />
               </Grid>
               <Grid item xs={12} md>
@@ -549,6 +552,7 @@ const TariffImportHandsOnModal = ({
                 modal
                 style={{ height: '20px' }}
                 inputProps={MaxLenth}
+                handsOn={true}
               />
               </Grid>
               <Grid item xs={12} md>
@@ -571,6 +575,7 @@ const TariffImportHandsOnModal = ({
                 modal
                 style={{ height: '20px' }}
                 inputProps={MaxLenth}
+                handsOn={true}
               />
               </Grid>
               <Grid item xs={12} md>
@@ -593,6 +598,7 @@ const TariffImportHandsOnModal = ({
                 modal
                 style={{ marginRight: '3px', height: '20px' }}
                 inputProps={MaxLenth}
+                handsOn={true}
               />
               </Grid>
               </Grid>
