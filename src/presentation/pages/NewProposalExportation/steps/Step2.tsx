@@ -38,7 +38,7 @@ import {
 import { ProposalContext, ProposalProps } from '../../NewProposal/context/ProposalContext'
 import { Button } from 'fiorde-fe-components'
 import AgentDeleteModal from '../../../components/AgentDeleteModal'
-import { ModalTypes, ProfitsPercentsTypes, IncotermTypes } from '../../../../application/enum/enum'
+import { ModalTypes, ProfitsPercentsTypes, IncotermTypes, ProposalTypes } from '../../../../application/enum/enum'
 
 interface Step2Props {
   invalidInput: boolean
@@ -264,7 +264,7 @@ const Step2 = ({
     if (loadedAgentsData) {
       setAgentList(selectedAgents)
     }
-  }, [selectedAgents, agentsList])
+  }, [selectedAgents, agentsList, loadedAgentsData])
 
   useEffect(() => {
     void (async function () {
@@ -460,14 +460,14 @@ const Step2 = ({
 
   const validateClient = (): boolean => {
     return (
-      (proposalType === 'CLIENT' && selectedAgents[0].agent.length !== 0) ||
-      proposalType !== 'CLIENT'
+      (proposalType === ProposalTypes.Client && selectedAgents[0].agent.length !== 0) ||
+      proposalType !== ProposalTypes.Client
     )
   }
 
   const validateProfitPercent = (): boolean => {
     return (
-      (proposalType === 'CLIENT' && selectedAgents[0].profitPercentageAgent !== null)
+      (proposalType === ProposalTypes.Client && selectedAgents[0].profitPercentageAgent !== null)
     )
   }
 
@@ -774,7 +774,8 @@ const Step2 = ({
         agent: '',
         idBusinessPartnerAgent: null,
         shippingCompany: '',
-        idBusinessPartnerTransportCompany: null
+        idBusinessPartnerTransportCompany: null,
+        profitPercentageAgent: null
       }
     ])
   }, [proposalType])
@@ -1415,7 +1416,7 @@ const Step2 = ({
                         displayEmpty
                         disableUnderline
                         invalid={
-                          proposalType === 'CLIENT' &&
+                          proposalType === ProposalTypes.Client &&
                           invalidInput &&
                           selectedAgent.profitPercentageAgent === null
                         }
@@ -1554,7 +1555,8 @@ const Step2 = ({
                         agent: '',
                         idBusinessPartnerAgent: null,
                         shippingCompany: '',
-                        idBusinessPartnerTransportCompany: null
+                        idBusinessPartnerTransportCompany: null,
+                        profitPercentageAgent: null
                       }
                     ])
                   }}
