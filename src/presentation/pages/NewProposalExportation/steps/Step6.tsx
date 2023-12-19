@@ -14,7 +14,7 @@ import { CostTypes } from '../../../../application/enum/costEnum'
 import FormatNumber from '../../../../application/utils/formatNumber'
 import { ModalTypes } from '../../../../application/enum/enum'
 
-interface Step5Props {
+interface Step6Props {
   costData: any
   modal: string
   setCompleted: (completed: any) => void
@@ -62,7 +62,7 @@ const Step6 = ({
   updateTableIdsRef,
   agentList,
   setTotalCosts
-}: Step5Props): JSX.Element => {
+}: Step6Props): JSX.Element => {
   const [dataOrigin, setDataOrigin] = useState<CostTableItem[]>([])
   const [dataDestiny, setDataDestiny] = useState<CostTableItem[]>([])
   const [dataTotalCostOrigin, setDataTotalCostOrigin] = useState<TotalCostTable[]>([])

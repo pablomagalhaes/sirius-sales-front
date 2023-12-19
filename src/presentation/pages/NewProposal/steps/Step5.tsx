@@ -36,7 +36,7 @@ import RemoveIcon from '../../../../application/icons/RemoveIcon'
 import TariffImportFclModal from '../../../components/TariffImport/TariffImportFclModal'
 import TariffImportAirModal from '../../../components/TariffImport/TariffImportAirModal'
 
-interface Step6Props {
+interface Step5Props {
   totalCosts: any
   containerItems: ItemModalData[]
   costData: any
@@ -66,6 +66,9 @@ interface Step6Props {
   updateTableIdsRef: any
   cw: number
   cwSale: number
+  setTotalCostArray: React.Dispatch<
+  React.SetStateAction<any[]>
+  >
 }
 
 const enum ID_CARGO_CONTRACTING_TYPE {
@@ -117,8 +120,9 @@ const Step5 = ({
   updateTableIdsRef,
   cw,
   cwSale,
-  totalCosts
-}: Step6Props): JSX.Element => {
+  totalCosts,
+  setTotalCostArray
+}: Step5Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [copyTable, setCopyTable] = useState<FareModalData[]>([])
   const [chargeData, setChargeData] = useState<FareModalData>(initialState)
@@ -898,6 +902,7 @@ const Step5 = ({
             modal={modal}
             data={data}
             totalCosts={totalCosts}
+            setTotalCostArray={setTotalCostArray}
           />
         )
       }
@@ -917,6 +922,7 @@ const Step5 = ({
             modal={modal}
             data={data}
             totalCosts={totalCosts}
+            setTotalCostArray={setTotalCostArray}
           />
         )
       }
@@ -933,6 +939,7 @@ const Step5 = ({
             modal={modal}
             data={data}
             totalCosts={totalCosts}
+            setTotalCostArray={setTotalCostArray}
           />
         )
       }

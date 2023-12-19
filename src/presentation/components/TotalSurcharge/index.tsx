@@ -17,9 +17,12 @@ interface TotalSurchargeProps {
   modal: string
   data: any
   totalCosts: any
+  setTotalCostArray?: React.Dispatch<
+  React.SetStateAction<any[]>
+  >
 }
 
-const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, data, totalCosts }: TotalSurchargeProps): JSX.Element => {
+const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, data, totalCosts, setTotalCostArray }: TotalSurchargeProps): JSX.Element => {
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
   const [profit, setProfit] = useState('')
   // const [profitPercentage, setProfitPercentage] = useState<number[][]>([])
@@ -157,6 +160,7 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
       //   })
       // })
       // setProfitPercentage(calculateProfitPercentage())
+      if (setTotalCostArray) setTotalCostArray(totalCostArray)
       setProposal({ ...proposal, profits, totalCosts: totalCostArray })
     }
   }, [data, totalCosts, currency, totalOtherFare, value, modal])

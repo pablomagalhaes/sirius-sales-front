@@ -14,7 +14,7 @@ import { CostTypes } from '../../../../application/enum/costEnum'
 import FormatNumber from '../../../../application/utils/formatNumber'
 import { ModalTypes } from '../../../../application/enum/enum'
 
-interface Step5Props {
+interface Step6Props {
   costData: any
   modal: string
   setCompleted: (completed: any) => void
@@ -35,6 +35,7 @@ interface Step5Props {
   updateTableIdsRef: any
   agentList: Agents[]
   setTotalCosts: any
+  totalCostArray: any[]
 }
 
 export interface TotalCostTable {
@@ -61,8 +62,9 @@ const Step6 = ({
   invalidInput,
   updateTableIdsRef,
   agentList,
-  setTotalCosts
-}: Step5Props): JSX.Element => {
+  setTotalCosts,
+  totalCostArray
+}: Step6Props): JSX.Element => {
   const [dataOrigin, setDataOrigin] = useState<CostTableItem[]>([])
   const [dataDestiny, setDataDestiny] = useState<CostTableItem[]>([])
   const [dataTotalCostOrigin, setDataTotalCostOrigin] = useState<TotalCostTable[]>([])
@@ -340,6 +342,7 @@ const Step6 = ({
         calculationData={calculationData}
         errorMessage={invalidInput && modal !== ModalTypes.Land ? I18n.t('pages.newProposal.step6.errorOrigin') : ''}
         dataTotalCostOrigin={dataTotalCostOrigin}
+        totalCostArray={totalCostArray}
 
       />
       }
@@ -361,6 +364,7 @@ const Step6 = ({
         calculationData={calculationData}
         errorMessage={invalidInput && modal !== ModalTypes.Land ? I18n.t('pages.newProposal.step6.errorDestiny') : ''}
         dataTotalCostOrigin={dataTotalCostOrigin}
+        totalCostArray={totalCostArray}
       />
       }
     </Separator>

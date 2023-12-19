@@ -36,7 +36,7 @@ import RemoveIcon from '../../../../application/icons/RemoveIcon'
 import TariffImportFclModal from '../../../components/TariffImport/TariffImportFclModal'
 import TariffImportAirModal from '../../../components/TariffImport/TariffImportAirModal'
 
-interface Step6Props {
+interface Step5Props {
   totalCosts: any
   containerItems: ItemModalData[]
   costData: any
@@ -118,7 +118,7 @@ const Step5 = ({
   cw,
   cwSale,
   totalCosts
-}: Step6Props): JSX.Element => {
+}: Step5Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [copyTable, setCopyTable] = useState<FareModalData[]>([])
   const [chargeData, setChargeData] = useState<FareModalData>(initialState)
