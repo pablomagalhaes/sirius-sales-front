@@ -235,7 +235,7 @@ const CostTable = ({
     if (tableData.length > 0 && modalTitle === I18n.t('pages.newProposal.step6.destinationCost')) {
       void waitLoadAllData()
     }
-  }, [dataTotalCostOrigin, totalCostArray])
+  }, [dataTotalCostOrigin])
 
   const calculateTotalCost = (buyCurrency, saleCurrency, buyValue, saleValue, buyMin, saleMin): void => {
     const buySum = Number(buyValue) > Number(buyMin) ? buyValue : buyMin
