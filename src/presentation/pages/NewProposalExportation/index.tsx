@@ -52,7 +52,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
   const [leavingPage, setLeavingPage] = useState(false)
   const [loadExistingProposal, setLoadExistingProposal] = useState(false)
   const [modal, setModal] = useState('')
-  const [proposalType, setProposalType] = useState('')
+  const [proposalType, setProposalType] = useState(0)
   const [totalCosts, setTotalCosts] = useState()
   const [serviceList, setServiceList] = useState<any[]>([])
   const [showSaveMessage, setShowSaveMessage] = useState(false)

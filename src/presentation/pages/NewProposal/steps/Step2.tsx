@@ -43,7 +43,7 @@ import { ModalTypes, ProfitsPercentsTypes, ProposalTypes, IncotermTypes } from '
 interface Step2Props {
   invalidInput: boolean
   modal: string
-  proposalType: string
+  proposalType: number
   setAgentList: (agent: Agents[]) => void
   setCompleted: (completed: any) => void
   setFilled: (filled: any) => void

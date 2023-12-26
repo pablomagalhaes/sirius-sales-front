@@ -72,8 +72,8 @@ enum ProfitsPercentsTypes {
 }
 
 enum ProposalTypes {
-  Client = 'CLIENT',
-  RoutingOrder = 'ROUTING ORDER'
+  Client = 1,
+  RoutingOrder = 2
 }
 
 enum IncotermTypes {
