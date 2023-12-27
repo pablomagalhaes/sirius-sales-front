@@ -27,7 +27,7 @@ export class NewProposalExportationService implements NewProposalExportation {
     cargoDeliveryAddress: '',
     costs: [],
     totalCosts: [],
-    proposalType: '',
+    idProposalType: 0,
     idTransport: '',
     originDestiny: [],
     idOrigin: '',

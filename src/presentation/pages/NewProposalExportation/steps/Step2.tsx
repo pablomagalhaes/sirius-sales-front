@@ -43,7 +43,7 @@ import { ModalTypes, ProfitsPercentsTypes, IncotermTypes, ProposalTypes } from '
 interface Step2Props {
   invalidInput: boolean
   modal: string
-  proposalType: string
+  proposalType: number
   setAgentList: (agent: Agents[]) => void
   setCompleted: (completed: any) => void
   setFilled: (filled: any) => void
@@ -520,7 +520,7 @@ const Step2 = ({
 
   const validateFormComplete = (): void => {
     const step6 = modal === ModalTypes.Land
-    if (proposalType !== 'CLIENT') {
+    if (proposalType !== ProposalTypes.Client) {
       if (
         !invalidAgent &&
         validateCompleteShippingCompany() &&
@@ -546,7 +546,7 @@ const Step2 = ({
   }
 
   const validateFilled = (): void => {
-    if (proposalType !== 'CLIENT') {
+    if (proposalType !== ProposalTypes.Client) {
       if (
         data.origin !== '' ||
         data.destiny !== '' ||
@@ -1316,7 +1316,7 @@ const Step2 = ({
           {selectedAgents.map((selectedAgent, index) => {
             return (
               <Fragment key={index}>
-                {proposalType === 'CLIENT' && loadedAgentsData && (
+                {proposalType === ProposalTypes.Client && loadedAgentsData && (
                   <>
                     <Grid item xs={4}>
                       <FormLabel component="legend">
@@ -1478,7 +1478,7 @@ const Step2 = ({
                               )}
                               value={selectedAgent.shippingCompany}
                               invalid={
-                                proposalType === 'CLIENT' &&
+                                proposalType === ProposalTypes.Client &&
                                 invalidInput &&
                                 selectedAgent.shippingCompany.length === 0
                               }
@@ -1542,7 +1542,7 @@ const Step2 = ({
             )
           })}
 
-          {modal === 'AIR' && proposalType === 'CLIENT' && (
+          {modal === 'AIR' && proposalType === ProposalTypes.Client && (
             <>
               <AddAgentButtonWrapper>
                 <Button

@@ -26,7 +26,8 @@ import { Transport, TransportList } from '../../../../domain/Transport'
 import { StyledPaper } from './StepsStyles'
 import { ExitDialog } from 'fiorde-fe-components'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
-import { ModalTypes } from '../../../../application/enum/enum'
+import { ModalTypes, ProposalTypes } from '../../../../application/enum/enum'
+import { useProposalType } from '../../../hooks'
 
 export interface Agents {
   id?: number | null
@@ -49,7 +50,7 @@ export interface Step1Props {
   invalidInput: boolean
   setCompleted: (completed: any) => void
   setFilled: (filled: any) => void
-  setProposalType: (proposal: string) => void
+  setProposalType: (proposal: number) => void
   setModal: (modal: string) => void
   filled: Filled
   setStepLoaded: (steps: any) => void
@@ -68,12 +69,13 @@ const Step1 = ({
   setStepLoaded,
   setAgentList
 }: Step1Props): JSX.Element => {
+  const { data: proposalTypes = [] } = useProposalType()
   const [transportList] = useState<Transport[]>(TransportList)
   const [agentsList, setAgentsList] = useState<any[]>([])
   const [businessPartnerList, setBusinessPartnerList] = useState<any[]>([])
   const [partnerList, setPartnerList] = useState<any[]>([])
   const [data, setData] = useState({
-    proposal: '',
+    proposal: 0,
     serviceDesemb: false,
     serviceTransport: false,
     proposalValue: '',
@@ -197,11 +199,11 @@ const Step1 = ({
         })
         .catch((err) => console.log(err))
     })
-    if (proposal.proposalType === 'ROUTING ORDER') {
+    if (proposal.idProposalType === ProposalTypes.RoutingOrder) {
       void Promise.all([getAgents, getPartners]).then(
         () => {
           setData({
-            proposal: proposal.proposalType,
+            proposal: proposal.idProposalType,
             serviceDesemb: proposal.clearenceIncluded,
             serviceTransport: proposal.transportIncluded,
             modal: proposal.idTransport,
@@ -223,7 +225,7 @@ const Step1 = ({
       void Promise.all([getAgents, getPartners, getPartnerCostumer]).then(
         (response) => {
           setData({
-            proposal: proposal.proposalType,
+            proposal: proposal.idProposalType,
             serviceDesemb: proposal.clearenceIncluded,
             serviceTransport: proposal.transportIncluded,
             modal: proposal.idTransport,
@@ -260,10 +262,10 @@ const Step1 = ({
 
     setProposal({
       ...proposal,
-      proposalType: data.proposal,
+      idProposalType: data.proposal,
       idTransport: data.modal,
       idBusinessPartnerCustomer:
-        data.proposal === 'ROUTING ORDER'
+        data.proposal === ProposalTypes.RoutingOrder
           ? agentsList.filter(
             (agt) => agt.businessPartner.simpleName === data.proposalValue
           )[0]?.businessPartner.id
@@ -287,7 +289,7 @@ const Step1 = ({
   useEffect(() => {
     const step6 = data.modal === ModalTypes.Land
     if (
-      data.proposal !== '' &&
+      data.proposal !== 0 &&
       data.modal !== '' &&
       data.requester !== ''
     ) {
@@ -296,7 +298,7 @@ const Step1 = ({
       setCompleted((currentState) => ({ ...currentState, step1: false, step6 }))
     }
     if (
-      data.proposal !== '' ||
+      data.proposal !== 0 ||
       data.modal !== ''
     ) {
       setFilled((currentState) => {
@@ -310,7 +312,7 @@ const Step1 = ({
   }, [data])
 
   const getColor = (value): any => {
-    if (value === '' && invalidInput) {
+    if ((value === '' || value === 0) && invalidInput) {
       return theme?.commercial?.components?.itemModal?.redAsterisk
     }
   }
@@ -337,7 +339,7 @@ const Step1 = ({
   }
 
   useEffect(() => {
-    if (data.proposal === 'ROUTING ORDER') {
+    if (data.proposal === ProposalTypes.RoutingOrder) {
       setAgentList(selectedAgents)
     }
   }, [data.proposalValue, selectedAgents, agentsList])
@@ -350,7 +352,7 @@ const Step1 = ({
       </Title>
       <Grid container spacing={5}>
         <Grid item xs={6}>
-          <FormLabel component="legend" error={data.proposal === '' && invalidInput}>
+          <FormLabel component="legend" error={data.proposal === 0 && invalidInput}>
             {I18n.t('pages.newProposal.step1.proposalType')}
             <RedColorSpan> *</RedColorSpan>
           </FormLabel>
@@ -359,21 +361,18 @@ const Step1 = ({
             aria-label="proposal type"
             name="row-radio-buttons-group"
             value={data.proposal}
-            onChange={(e) => setData({ ...data, proposal: e.target.value })}
+            onChange={(e) => setData({ ...data, proposal: Number(e.target.value) })}
           >
-            <FormControlLabel
-              checked={data.proposal === 'CLIENT'}
-              value="CLIENT"
-              control={<StyledRadio color={getColor(data.proposal)} />}
-              label={I18n.t('pages.newProposal.step1.client')}
-              style={{ marginRight: '30px' }}
-            />
-            <FormControlLabel
-              checked={data.proposal === 'ROUTING ORDER'}
-              value="ROUTING ORDER"
-              control={<StyledRadio color={getColor(data.proposal)} />}
-              label={I18n.t('pages.newProposal.step1.routingOrder')}
-            />
+            {proposalTypes.map((type: any) =>
+              <FormControlLabel
+                key={type.txProposalType}
+                checked={data.proposal === Number(type.idProposalType)}
+                value={type.idProposalType}
+                control={<StyledRadio color={getColor(data.proposal)} />}
+                label={type.idProposalType === ProposalTypes.Client ? I18n.t('pages.newProposal.step1.client') : I18n.t('pages.newProposal.step1.routingOrder')}
+                style={{ marginRight: '30px' }}
+              />
+            )}
           </RadioGroup>
         </Grid>
         {
@@ -411,7 +410,7 @@ const Step1 = ({
         }
         <Grid item xs={6}>
 
-          {data.proposal === 'ROUTING ORDER'
+          {data.proposal === ProposalTypes.RoutingOrder
             ? (
               <FormLabel component="legend" error={selectedAgents[0]?.agent === '' && invalidInput}>
                 {I18n.t('pages.newProposal.step1.agents')}
@@ -425,13 +424,13 @@ const Step1 = ({
               </FormLabel>
               )}
 
-              {data.proposal === 'ROUTING ORDER'
+              {data.proposal === ProposalTypes.RoutingOrder
                 ? selectedAgents.map((selectedAgent, index) => {
                   return (
                       <Fragment key={index}>
                         <Autocomplete
                           options={
-                            data.proposal === 'ROUTING ORDER'
+                            data.proposal === ProposalTypes.RoutingOrder
                               ? agentsList.map((item) => item.businessPartner.simpleName)
                               : partnerList.map((item) => item.businessPartner.simpleName)
                           }
@@ -485,7 +484,7 @@ const Step1 = ({
                       setData({ ...data, proposalValue: String(newValue) })
                     }
                     options={
-                      data.proposal === 'ROUTING ORDER'
+                      data.proposal === ProposalTypes.RoutingOrder
                         ? agentsList.map((item) => item.businessPartner.simpleName)
                         : partnerList.map((item) => item.businessPartner.simpleName)
                     }

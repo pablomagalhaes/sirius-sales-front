@@ -50,7 +50,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [loadExistingProposal, setLoadExistingProposal] = useState(false)
   const [modal, setModal] = useState('')
   const [totalCosts, setTotalCosts] = useState()
-  const [proposalType, setProposalType] = useState('')
+  const [proposalType, setProposalType] = useState(0)
   const [serviceList, setServiceList] = useState<any[]>([])
   const [showSaveMessage, setShowSaveMessage] = useState(false)
   const [specifications, setSpecifications] = useState('')
