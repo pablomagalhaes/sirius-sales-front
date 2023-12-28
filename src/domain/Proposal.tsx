@@ -3,7 +3,7 @@ import { CargoVolume } from './CargoVolume'
 import { Cost } from './Cost'
 import { TotalCost } from './TotalCost'
 import { ProfitsProps } from './ProfitsProps'
-import { FreeTimeDemurrage } from './FreeTimeDemurrage'
+import { FreeTimeDemurrage } from './models/FreeTimeDemurrage'
 
 export interface Proposal {
   idProposal?: number | null

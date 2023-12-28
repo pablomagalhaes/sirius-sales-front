@@ -285,20 +285,27 @@ const Step4 = ({
     setDisabledValidateDate(true)
   }, [modal])
 
-  useEffect(() => {
-    void (async function () {
-      await API.getFrequency()
-        .then((response) => setFrequencyList(response))
-        .catch((err) => console.log(err))
-    })()
-  }, [])
+  const fetchFrequencyList = async (): Promise<void> => {
+    try {
+      const response = await API.getFrequency()
+      setFrequencyList(response)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const fetchContainerTypes = async (): Promise<void> => {
+    try {
+      const response = await API.getContainerTypes()
+      setContainerTypeList(response)
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   useEffect(() => {
-    void (async function () {
-      await API.getContainerTypes()
-        .then((response) => setContainerTypeList(response))
-        .catch((err) => console.log(err))
-    })()
+    fetchFrequencyList()
+    fetchContainerTypes()
   }, [])
 
   const calculateValidityDate = (value): void => {

@@ -49,16 +49,6 @@ const getContainer = async (): Promise<any> => {
   }
 }
 
-const getContainerTypes = async (params?): Promise<any> => {
-  const url: string = '/sirius-master-data-api/container/type'
-  try {
-    const res = await instance.get(url)
-    return res.data
-  } catch (error) {
-    toastErrorMessage(error, url)
-  }
-}
-
 const getCurrencies = async (): Promise<any> => {
   const url: string = '/sirius-master-data-api/currencies/'
   try {
@@ -467,6 +457,26 @@ const getDangerousCode = async (params?): Promise<any> => {
   }
 }
 
+const getProposalType = async (params?): Promise<any> => {
+  const url: string = '/sirius-business-proposal-api/proposal/type/'
+  try {
+    const res = await instance.get(url)
+    return res.data
+  } catch (error) {
+    toastErrorMessage(error, url)
+  }
+}
+
+const getContainerTypes = async (params?): Promise<any> => {
+  const url: string = '/sirius-master-data-api/container/type'
+  try {
+    const res = await instance.get(url)
+    return res.data
+  } catch (error) {
+    toastErrorMessage(error, url)
+  }
+}
+
 const API = {
   getContainerType,
   getCurrencies,
@@ -507,6 +517,7 @@ const API = {
   downloadStaggeredProposal,
   getDangerousCode,
   getContainer,
+  getProposalType,
   getContainerTypes
 }
 
