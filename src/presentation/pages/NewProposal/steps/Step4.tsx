@@ -38,6 +38,7 @@ import {
   PROPOSAL_IMPORT_STEP4_PURCHASE_DEADLINE,
   PROPOSAL_IMPORT_STEP4_SALES_DEADLINE
 } from '../../../../ids'
+import InputNumber from '../../../components/InputNumber/InputNumber'
 
 interface Step4Props {
   invalidInput: boolean
@@ -438,500 +439,542 @@ const Step4 = ({
 
   return (
     <Separator>
-      <Title>
-        4. {I18n.t('pages.newProposal.step4.title')}
-        <Subtitle>{I18n.t('pages.newProposal.step4.subtitle')}</Subtitle>
-      </Title>
-      <FormControl variant="outlined" size="small">
-        <Grid container spacing={2}>
-          <Grid item xs={2}>
-            <FormLabel component="legend" error={invalidInput && data.validity.length === 0}>
-              {I18n.t('pages.newProposal.step4.validity')}
-              <RedColorSpan> *</RedColorSpan>
-            </FormLabel>
-            <ControlledSelect
-              labelId="validity-label"
-              id="validity"
-              value={data.validity}
-              onChange={(e) => calculateValidityDate(e.target.value)}
-              displayEmpty
-              disableUnderline
-              invalid={invalidInput && data.validity.length === 0}
-              toolTipTitle={I18n.t('components.itemModal.requiredField')}
-            >
-              <MenuItem disabled value={data.validity}>
-                <SelectSpan placeholder={1}>
-                  {I18n.t('pages.newProposal.step4.choose')}
-                </SelectSpan>
+    <Title>
+      4. {I18n.t('pages.newProposal.step4.title')}
+      <Subtitle>{I18n.t('pages.newProposal.step4.subtitle')}</Subtitle>
+    </Title>
+    <FormControl variant="outlined" size="small">
+      <Grid container spacing={2}>
+        <Grid item xs={2}>
+          <FormLabel component="legend" error={invalidInput && data.validity.length === 0}>
+            {I18n.t('pages.newProposal.step4.validity')}
+            <RedColorSpan> *</RedColorSpan>
+          </FormLabel>
+          <ControlledSelect
+            labelId="validity-label"
+            id="validity"
+            value={data.validity}
+            onChange={(e) => calculateValidityDate(e.target.value)}
+            displayEmpty
+            disableUnderline
+            invalid={invalidInput && data.validity.length === 0}
+            toolTipTitle={I18n.t('components.itemModal.requiredField')}
+          >
+            <MenuItem disabled value={data.validity}>
+              <SelectSpan placeholder={1}>
+                {I18n.t('pages.newProposal.step4.choose')}
+              </SelectSpan>
+            </MenuItem>
+            {validityList.map((item) => (
+              <MenuItem key={item.value} value={item.value}>
+                <SelectSpan>{item.name}</SelectSpan>
               </MenuItem>
-              {validityList.map((item) => (
-                <MenuItem key={item.value} value={item.value}>
-                  <SelectSpan>{item.name}</SelectSpan>
-                </MenuItem>
-              ))}
-            </ControlledSelect>
-          </Grid>
-          <Grid item xs={2}>
-            <FormLabel component="legend">&nbsp;</FormLabel>
-            <NumberInput
-              id="no-label-field"
-              disabled={disabledValidateDate}
-              format={'##/##/####'}
-              mask={['D', 'D', 'M', 'M', 'Y', 'Y', 'Y', 'Y']}
-              placeholder="DD/MM/YYYY"
-              customInput={ControlledInput}
-              toolTipTitle={I18n.t('pages.newProposal.step4.errorMessage')}
-              invalid={invalidInput && !validateDate()}
-              value={data.validityDate}
-              onChange={(e) =>
-                setData({ ...data, validityDate: e.target.value })
-              }
-              variant="outlined"
-              size="small"
-            />
-          </Grid>
-          <Grid item xs={2}>
-            <FormLabel component="legend">
-              {I18n.t('pages.newProposal.step4.client')}
-            </FormLabel>
-            <ControlledInput
-              id="client"
-              toolTipTitle={I18n.t('components.itemModal.requiredField')}
-              invalid={false}
-              variant="outlined"
-              onChange={(e) => setData({ ...data, client: e.target.value })}
-              value={data.client}
-              size="small"
-            />
-          </Grid>
-          <Grid item xs={2}>
-            <FormLabel component="legend" error={invalidInput && data.transitTime.length === 0}>
-              {I18n.t('pages.newProposal.step4.time')}
-              <RedColorSpan> *</RedColorSpan>
-            </FormLabel>
-            <ControlledInput
-              id="time"
-              toolTipTitle={I18n.t('components.itemModal.requiredField')}
-              invalid={invalidInput && data.transitTime.length === 0}
-              variant="outlined"
-              onChange={(e) =>
-                validateIntInput(e.target.value) !== null &&
-                setData({ ...data, transitTime: e.target.value })
-              }
-              value={data.transitTime}
-              size="small"
-            />
-          </Grid>
-          <Grid item xs={2}>
-            <FormLabel component="legend">
-              {I18n.t('pages.newProposal.step4.route')}
-            </FormLabel>
-            <ControlledInput
-              id="route"
-              toolTipTitle={I18n.t('components.itemModal.requiredField')}
-              invalid={false}
-              variant="outlined"
-              onChange={(e) => setData({ ...data, route: e.target.value })}
-              value={data.route}
-              size="small"
-            />
-          </Grid>
+            ))}
+          </ControlledSelect>
+        </Grid>
+        <Grid item xs={2}>
+          <FormLabel component="legend">&nbsp;</FormLabel>
+          <NumberInput
+            id="no-label-field"
+            disabled={disabledValidateDate}
+            format={'##/##/####'}
+            mask={['D', 'D', 'M', 'M', 'Y', 'Y', 'Y', 'Y']}
+            placeholder="DD/MM/YYYY"
+            customInput={ControlledInput}
+            toolTipTitle={I18n.t('pages.newProposal.step4.errorMessage')}
+            invalid={invalidInput && !validateDate()}
+            value={data.validityDate}
+            onChange={(e) =>
+              setData({ ...data, validityDate: e.target.value })
+            }
+            variant="outlined"
+            size="small"
+          />
+        </Grid>
+        <Grid item xs={2}>
+          <FormLabel component="legend">
+            {I18n.t('pages.newProposal.step4.client')}
+          </FormLabel>
+          <ControlledInput
+            id="client"
+            toolTipTitle={I18n.t('components.itemModal.requiredField')}
+            invalid={false}
+            variant="outlined"
+            onChange={(e) => setData({ ...data, client: e.target.value })}
+            value={data.client}
+            size="small"
+          />
+        </Grid>
+        <Grid item xs={6} />
+        <Grid item xs={2}>
+          <FormLabel component="legend" error={invalidInput && data.transitTime.length === 0}>
+            {I18n.t('pages.newProposal.step4.time')}
+            <RedColorSpan> *</RedColorSpan>
+          </FormLabel>
+          <ControlledInput
+            id="time"
+            toolTipTitle={I18n.t('components.itemModal.requiredField')}
+            invalid={invalidInput && data.transitTime.length === 0}
+            variant="outlined"
+            onChange={(e) =>
+              validateIntInput(e.target.value) !== null &&
+              setData({ ...data, transitTime: e.target.value })
+            }
+            value={data.transitTime}
+            size="small"
+          />
+        </Grid>
+        <Grid item xs={2}>
+          <FormLabel component="legend">
+            {I18n.t('pages.newProposal.step4.route')}
+          </FormLabel>
+          <ControlledInput
+            id="route"
+            toolTipTitle={I18n.t('components.itemModal.requiredField')}
+            invalid={false}
+            variant="outlined"
+            onChange={(e) => setData({ ...data, route: e.target.value })}
+            value={data.route}
+            size="small"
+          />
+        </Grid>
 
-             {modal !== 'SEA' && (
-                <>
-                  <Grid item xs={2} />
-                </>
-             )}
-
-            {modal === 'SEA' && (
+           {modal !== ModalTypes.Sea && (
               <>
+                <Grid item xs={2}>
+                  <FormLabel component="legend">
+                    {I18n.t('pages.newProposal.step4.deadline')}
+                    <RedColorSpan> *</RedColorSpan>
+                  </FormLabel>
+                  <ControlledInput
+                    id="deadline"
+                    toolTipTitle={I18n.t(
+                      'components.itemModal.requiredField'
+                    )}
+                    invalid={invalidInput && data.deadline.length === 0}
+                    variant="outlined"
+                    onChange={(e) =>
+                      validateIntInput(e.target.value) !== null &&
+                      setData({ ...data, deadline: e.target.value })
+                    }
+                    value={data.deadline}
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  {specifications !== 'fcl' && (
+                    <>
+                      <FormLabel component="legend">
+                        {I18n.t('pages.newProposal.step4.value')}
+                        <RedColorSpan> *</RedColorSpan>
+                      </FormLabel>
+                      <NumberInput
+                        decimalSeparator={','}
+                        thousandSeparator={'.'}
+                        decimalScale={2}
+                        format={(value: string) =>
+                          FormatNumber.rightToLeftFormatter(value, 2)
+                        }
+                        customInput={ControlledInput}
+                        toolTipTitle={I18n.t(
+                          'components.itemModal.requiredField'
+                        )}
+                        invalid={invalidInput && data.value === ''}
+                        value={data.value}
+                        onChange={(e) => {
+                          validateFloatInput(e.target.value) !== null &&
+                            setData({ ...data, value: e.target.value })
+                        }}
+                        variant="outlined"
+                        size="small"
+                      />
+                    </>
+                  )}
+                </Grid>
+              </>
+           )}
 
-                {selectfreeTimeDemurrages.map((freeTimeDemurrages, index) => {
-                  return (
-                    <Fragment key={index}>
-                      <Grid item xs={8} container spacing={2}>
+          {modal === ModalTypes.Sea && (
+            <>
 
-                        {index === 0
-                          ? (
-                          <>
-                            <Grid item xs style={{ maxWidth: '330px' }}>
-                              {specifications === 'fcl'
-                                ? (
-                                  <FormLabel component="legend">
-                                    {I18n.t('pages.newProposal.step4.freeTimeDemurrage')}
-                                    <RedColorSpan> *</RedColorSpan>
-                                  </FormLabel>
-                                  )
-                                : (
-                                  <FormLabel component="legend">
-                                    {I18n.t('pages.newProposal.step4.freeTimeStorage')}
-                                    <RedColorSpan> *</RedColorSpan>
-                                  </FormLabel>
-                                  )}
-                              <RadioGroup
-                                row
-                                aria-label="proposal type"
-                                id={PROPOSAL_IMPORT_STEP4_FREETIME}
-                                name="row-radio-buttons-group"
-                                value={freeTimeDemurrages.freeTime.toString()}
-                                onChange={(e, newValue) => {
-                                  setSelectfreeTimeDemurrages(
-                                    selectfreeTimeDemurrages.map((value, currentIndex) =>
-                                      currentIndex === index
-                                        ? {
-                                            ...value,
-                                            freeTime: newValue === 'true'
-                                          }
-                                        : value
-                                    )
-                                  )
-                                }}
-                              >
-                                <ControlledToolTip
-                                  open={invalidInput && freeTimeDemurrages.freeTime === null}
-                                  title={I18n.t('components.itemModal.requiredField')}
-                                >
-                                  <FormControlLabel
-                                    value="false"
-                                    control={<StyledRadio color={getColor(freeTimeDemurrages.freeTime)} />}
-                                    label={I18n.t('pages.newProposal.step4.notHired')}
-                                    style={{ marginRight: '30px' }}
-                                  />
-                                </ControlledToolTip>
-                                <ControlledToolTip
-                                  open={invalidInput && freeTimeDemurrages.freeTime === null}
-                                  title={I18n.t('components.itemModal.requiredField')}
-                                >
-                                  <FormControlLabel
-                                    value="true"
-                                    control={<StyledRadio color={getColor(freeTimeDemurrages.freeTime)} />}
-                                    label={I18n.t('pages.newProposal.step4.hired')}
-                                  />
-                                </ControlledToolTip>
-                              </RadioGroup>
-                            </Grid>
-                          </>
-                            )
-                          : (
-                          <Grid item xs style={{ maxWidth: '400px' }} />
-                            )}
+              {selectfreeTimeDemurrages.map((freeTimeDemurrages, index) => {
+                return (
+                  <Fragment key={index}>
+                    <Grid item xs={8} container spacing={2}>
 
-                        {specifications === 'fcl' && selectfreeTimeDemurrages[0]?.freeTime
-                          ? (
-                            <><Grid item xs={2}>
-                              <FormLabel component="legend" error={invalidInput && freeTimeDemurrages.idContainerType === ''}>
-                                {I18n.t('pages.newProposal.step4.containerType')}
-                                {modal === 'SEA' && <RedColorSpan> *</RedColorSpan>}
-                              </FormLabel>
-                              <ControlledSelect
-                                labelId="select-label-containerType"
-                                id={PROPOSAL_IMPORT_STEP4_CONTAINER_TYPE}
-                                value={freeTimeDemurrages.idContainerType}
-                                onChange={(e) => {
-                                  setSelectfreeTimeDemurrages(
-                                    selectfreeTimeDemurrages.map((value, currentIndex) => currentIndex === index
+                      {index === 0
+                        ? (
+                        <>
+                          <Grid item xs style={{ maxWidth: '330px' }}>
+                            {specifications === SpecificationsType.Fcl
+                              ? (
+                                <FormLabel component="legend">
+                                  {I18n.t('pages.newProposal.step4.freeTimeDemurrage')}
+                                  <RedColorSpan> *</RedColorSpan>
+                                </FormLabel>
+                                )
+                              : (
+                                <FormLabel component="legend">
+                                  {I18n.t('pages.newProposal.step4.freeTimeStorage')}
+                                  <RedColorSpan> *</RedColorSpan>
+                                </FormLabel>
+                                )}
+                            <RadioGroup
+                              row
+                              aria-label="proposal type"
+                              id={PROPOSAL_IMPORT_STEP4_FREETIME}
+                              name="row-radio-buttons-group"
+                              value={freeTimeDemurrages.freeTime.toString()}
+                              onChange={(e, newValue) => {
+                                setSelectfreeTimeDemurrages(
+                                  selectfreeTimeDemurrages.map((value, currentIndex) =>
+                                    currentIndex === index
                                       ? {
                                           ...value,
-                                          idContainerType: e.target.value
+                                          freeTime: newValue === 'true'
                                         }
                                       : value
-                                    )
                                   )
-                                } }
-                                displayEmpty
-                                disableUnderline
-                                invalid={selectfreeTimeDemurrages[index]?.freeTime && freeTimeDemurrages.idContainerType === ''}
-                                toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                              >
-                                <MenuItem disabled value="">
-                                  <SelectSpan placeholder={1}>
-                                    {I18n.t('pages.newProposal.step3.choose')}
-                                  </SelectSpan>
-                                </MenuItem>
-                                {containerTypeList.map((item) => {
-                                  return (
-                                    <MenuItem key={`${item.idContainerType}_key`} value={item.idContainerType}>
-                                      <SelectSpan>{item.containerType}</SelectSpan>
-                                    </MenuItem>
-                                  )
-                                })}
-                              </ControlledSelect>
-                            </Grid><Grid item xs={3}>
-                                <FormLabel component="legend">
-                                  {I18n.t('pages.newProposal.step4.purchaseDeadline')}
-                                  {modal === 'SEA' && <RedColorSpan> *</RedColorSpan>}
-                                </FormLabel>
-                                <NumberInput
-                                  id={PROPOSAL_IMPORT_STEP4_PURCHASE_DEADLINE}
-                                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                  variant="outlined"
-                                  decimalSeparator={','}
-                                  decimalScale={2}
-                                  customInput={ControlledInput}
-                                  inputProps={MaxLength}
-                                  invalid={selectfreeTimeDemurrages[index]?.freeTime && selectfreeTimeDemurrages[index]?.nrFreeTimeDaysDeadline === null}
-                                  onChange={(e) => {
-                                    setSelectfreeTimeDemurrages(
-                                      selectfreeTimeDemurrages.map((value, currentIndex) => currentIndex === index
-                                        ? {
-                                            ...value,
-                                            nrFreeTimeDaysDeadline: e.target.value
-                                          }
-                                        : value
-                                      )
-                                    )
-                                  } }
-                                  value={freeTimeDemurrages.nrFreeTimeDaysDeadline}
-                                  size="small"
-                                  style={{ height: '17px!important' }}
-                                  />
-                              </Grid><Grid item xs={2}>
-                                <FormLabel component="legend">
-                                  {I18n.t('pages.newProposal.step4.salesDeadline')}
-                                  {modal === 'SEA' && <RedColorSpan> *</RedColorSpan>}
-                                </FormLabel>
-                                <NumberInput
-                                  id={PROPOSAL_IMPORT_STEP4_SALES_DEADLINE}
-                                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                  variant="outlined"
-                                  decimalSeparator={','}
-                                  decimalScale={2}
-                                  customInput={ControlledInput}
-                                  inputProps={MaxLength}
-                                  invalid={selectfreeTimeDemurrages[index]?.freeTime && selectfreeTimeDemurrages[index]?.nrFreeTimeDaysDeadlineSale === null}
-                                  onChange={(e, newValue) => {
-                                    setSelectfreeTimeDemurrages(
-                                      selectfreeTimeDemurrages.map((value, currentIndex) => currentIndex === index
-                                        ? {
-                                            ...value,
-                                            nrFreeTimeDaysDeadlineSale: e.target.value
-                                          }
-                                        : value
-                                      )
-                                    )
-                                  } }
-                                  value={freeTimeDemurrages.nrFreeTimeDaysDeadlineSale}
-                                  size="small"
-                                  style={{ height: '17px!important' }}
-                                  />
-                              </Grid><>
-                                {index !== 0 && (
-                                  <>
-                                    {specifications === 'fcl' && (
-                                      <>
-                                        <Grid item xs={1}>
-                                          <FreeTimeDemurrageDeleteModal handleConfirm={() => removeFreeTimeDemurrage(index)} />
-                                        </Grid>
-                                      </>
-                                    )}
-                                  </>
-                                )}
-                              </></>
-                            )
-                          : (
-                              null
-                            )}
-                      </Grid>
-                      <Grid item xs={4} />
-                    </Fragment>
-                  )
-                })}
-
-                {specifications === 'fcl' && (
-                  <>
-                    <Grid item xs={12} container spacing={2}>
-                      <Grid item xs={4}>
-                        <AddFreeTimeButtonWrapper>
-                            <Button
-                              onAction={() => {
-                                setSelectfreeTimeDemurrages([
-                                  ...selectfreeTimeDemurrages,
-                                  {
-                                    idFreeTimeDemurrage: null,
-                                    idContainerType: '',
-                                    freeTime: false,
-                                    nrFreeTimeDaysDeadline: null,
-                                    nrFreeTimeDaysDeadlineSale: null,
-                                    vlFreeTime: null
-                                  }
-                                ])
+                                )
                               }}
-                              text={I18n.t('pages.newProposal.step4.addFreeTime')}
-                              icon="add"
-                              backgroundGreen={false}
-                              tooltip={I18n.t('pages.newProposal.step4.addFreeTime')}
-                              disabled={false}
-                            />
-                        </AddFreeTimeButtonWrapper>
-                      </Grid>
+                            >
+                              <ControlledToolTip
+                                open={invalidInput && freeTimeDemurrages.freeTime === null}
+                                title={I18n.t('components.itemModal.requiredField')}
+                              >
+                                <FormControlLabel
+                                  value="false"
+                                  control={<StyledRadio color={getColor(freeTimeDemurrages.freeTime)} />}
+                                  label={I18n.t('pages.newProposal.step4.notHired')}
+                                  style={{ marginRight: '30px' }}
+                                />
+                              </ControlledToolTip>
+                              <ControlledToolTip
+                                open={invalidInput && freeTimeDemurrages.freeTime === null}
+                                title={I18n.t('components.itemModal.requiredField')}
+                              >
+                                <FormControlLabel
+                                  value="true"
+                                  control={<StyledRadio color={getColor(freeTimeDemurrages.freeTime)} />}
+                                  label={I18n.t('pages.newProposal.step4.hired')}
+                                />
+                              </ControlledToolTip>
+                            </RadioGroup>
+                          </Grid>
+                        </>
+                          )
+                        : (
+                        <Grid item xs style={{ maxWidth: '400px' }} />
+                          )}
+
+                      {specifications === SpecificationsType.Fcl && selectfreeTimeDemurrages[0]?.freeTime
+                        ? (
+                          <><Grid item xs={2}>
+                            <FormLabel component="legend" error={invalidInput && freeTimeDemurrages.idContainerType === ''}>
+                              {I18n.t('pages.newProposal.step4.containerType')}
+                              {modal === ModalTypes.Sea && <RedColorSpan> *</RedColorSpan>}
+                            </FormLabel>
+                            <ControlledSelect
+                              labelId="select-label-containerType"
+                              id={PROPOSAL_IMPORT_STEP4_CONTAINER_TYPE}
+                              value={freeTimeDemurrages.idContainerType}
+                              onChange={(e) => {
+                                setSelectfreeTimeDemurrages(
+                                  selectfreeTimeDemurrages.map((value, currentIndex) => currentIndex === index
+                                    ? {
+                                        ...value,
+                                        idContainerType: e.target.value
+                                      }
+                                    : value
+                                  )
+                                )
+                              } }
+                              displayEmpty
+                              disableUnderline
+                              invalid={selectfreeTimeDemurrages[index]?.freeTime && freeTimeDemurrages.idContainerType === ''}
+                              toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                            >
+                              <MenuItem disabled value="">
+                                <SelectSpan placeholder={1}>
+                                  {I18n.t('pages.newProposal.step3.choose')}
+                                </SelectSpan>
+                              </MenuItem>
+                              {containerTypeList.map((item) => {
+                                return (
+                                  <MenuItem key={`${item.idContainerType}_key`} value={item.idContainerType}>
+                                    <SelectSpan>{item.containerType}</SelectSpan>
+                                  </MenuItem>
+                                )
+                              })}
+                            </ControlledSelect>
+                          </Grid><Grid item xs={3}>
+                              <FormLabel component="legend">
+                                {I18n.t('pages.newProposal.step4.purchaseDeadline')}
+                                {modal === ModalTypes.Sea && <RedColorSpan> *</RedColorSpan>}
+                              </FormLabel>
+                              <InputNumber
+                                 id={PROPOSAL_IMPORT_STEP4_PURCHASE_DEADLINE}
+                                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                 variant="outlined"
+                                 inputProps={MaxLength}
+                                 invalid={selectfreeTimeDemurrages[index]?.freeTime && selectfreeTimeDemurrages[index]?.nrFreeTimeDaysDeadline === null}
+                                 onChange={(e) => {
+                                   const newValue = parseFloat(e.target.value)
+                                   setSelectfreeTimeDemurrages(
+                                     selectfreeTimeDemurrages.map((value, currentIndex) => currentIndex === index
+                                       ? {
+                                           ...value,
+                                           nrFreeTimeDaysDeadline: newValue
+                                         }
+                                       : value
+                                     )
+                                   )
+                                 } }
+                                 value={freeTimeDemurrages.nrFreeTimeDaysDeadline}
+
+                                />
+                            </Grid><Grid item xs={2}>
+                              <FormLabel component="legend">
+                                {I18n.t('pages.newProposal.step4.salesDeadline')}
+                                {modal === ModalTypes.Sea && <RedColorSpan> *</RedColorSpan>}
+                              </FormLabel>
+                              <InputNumber
+                                 id={PROPOSAL_IMPORT_STEP4_SALES_DEADLINE}
+                                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                 variant="outlined"
+                                 inputProps={MaxLength}
+                                 invalid={selectfreeTimeDemurrages[index]?.freeTime && selectfreeTimeDemurrages[index]?.nrFreeTimeDaysDeadlineSale === null}
+                                 onChange={(e) => {
+                                   const newValue = parseFloat(e.target.value)
+                                   setSelectfreeTimeDemurrages(
+                                     selectfreeTimeDemurrages.map((value, currentIndex) =>
+                                       currentIndex === index
+                                         ? {
+                                             ...value,
+                                             nrFreeTimeDaysDeadlineSale: newValue
+                                           }
+                                         : value
+                                     )
+                                   )
+                                 }}
+                                 value={freeTimeDemurrages.nrFreeTimeDaysDeadlineSale}
+                                />
+                            </Grid><>
+                              {index !== 0 && (
+                                <>
+                                  {specifications === SpecificationsType.Fcl && (
+                                    <>
+                                      <Grid item xs={1}>
+                                        <FreeTimeDemurrageDeleteModal handleConfirm={() => removeFreeTimeDemurrage(index)} />
+                                      </Grid>
+                                    </>
+                                  )}
+                                </>
+                              )}
+                            </></>
+                          )
+                        : (
+                            null
+                          )}
                     </Grid>
-                  </>
-                )}
-              </>
-            )}
+                    <Grid item xs={4} />
+                  </Fragment>
+                )
+              })}
 
-          {/* NUMERO FREQUENCIA */}
-          <Grid item xs={2}>
-            <FormLabel component="legend">
-              {I18n.t('pages.newProposal.step4.frequency')}
-              <RedColorSpan> *</RedColorSpan>
-            </FormLabel>
-            <InputContainer>
-              <ControlledInput
-                id="recurrency"
-                toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                invalid={invalidInput && data.recurrency.length === 0}
-                variant="outlined"
-                value={data.recurrency}
-                size="small"
-                InputProps={{
-                  inputProps: {
-                    max: 99,
-                    min: 1
-                  }
-                }}
-                type="number"
-                onChange={(e) => {
-                  valuesRecurrency(e)
-                }}
-              />
-              <FormLabel component="span" style={{ margin: '0 0 0 10px' }}>
-                {I18n.t('pages.newProposal.step4.times')}
-              </FormLabel>
-            </InputContainer>
-          </Grid>
-
-          <Grid item xs={2}>
-            <FormLabel component="legend">&nbsp;</FormLabel>
-            <ControlledSelect
-              labelId="frequency-label"
-              id="frequency"
-              value={data.frequency}
-              onChange={(e) => setData({ ...data, frequency: e.target.value })}
-              displayEmpty
-              disableUnderline
-              invalid={invalidInput && data.frequency.length === 0}
-              toolTipTitle={I18n.t('components.itemModal.requiredField')}
-            >
-              <MenuItem disabled value={data.frequency}>
-                <SelectSpan placeholder={1}>
-                  {I18n.t('pages.newProposal.step4.choose')}
-                </SelectSpan>
-              </MenuItem>
-              {frequencyList.map((item) => (
-                <MenuItem key={item.id} value={item.id}>
-                  <SelectSpan>{item.description}</SelectSpan>
-                </MenuItem>
-              ))}
-            </ControlledSelect>
-          </Grid>
-
-          {Number(data.frequency) === 2 || Number(data.frequency) === 3
-            ? (
-              <Grid item xs={8}>
-                <FormLabel component="legend">
-                  {I18n.t('pages.newProposal.step4.customDays')}
-                </FormLabel>
-                <WeekContainer>
-                  <WeekDay
-                    id="sunday"
-                    className="disabledDay"
-                    value="0"
-                    onClick={() => weekDaysFrequency('sunday')}
-                  >
-                    {I18n.t('pages.newProposal.step4.sunday')}
-                  </WeekDay>
-                  <WeekDay
-                    id="monday"
-                    className="disabledDay"
-                    value="0"
-                    onClick={() => weekDaysFrequency('monday')}
-                  >
-                    {I18n.t('pages.newProposal.step4.monday')}
-                  </WeekDay>
-                  <WeekDay
-                    id="tuesday"
-                    className="disabledDay"
-                    value="0"
-                    onClick={() => weekDaysFrequency('tuesday')}
-                  >
-                    {I18n.t('pages.newProposal.step4.tuesday')}
-                  </WeekDay>
-                  <WeekDay
-                    id="wednesday"
-                    className="disabledDay"
-                    value="0"
-                    onClick={() => weekDaysFrequency('wednesday')}
-                  >
-                    {I18n.t('pages.newProposal.step4.wednesday')}
-                  </WeekDay>
-                  <WeekDay
-                    id="thursday"
-                    className="disabledDay"
-                    value="0"
-                    onClick={() => weekDaysFrequency('thursday')}
-                  >
-                    {I18n.t('pages.newProposal.step4.thursday')}
-                  </WeekDay>
-                  <WeekDay
-                    id="friday"
-                    className="disabledDay"
-                    value="0"
-                    onClick={() => weekDaysFrequency('friday')}
-                  >
-                    {I18n.t('pages.newProposal.step4.friday')}
-                  </WeekDay>
-                  <WeekDay
-                    id="saturday"
-                    className="disabledDay"
-                    value="0"
-                    onClick={() => weekDaysFrequency('saturday')}
-                  >
-                    {I18n.t('pages.newProposal.step4.saturday')}
-                  </WeekDay>
-                </WeekContainer>
-              </Grid>
-              )
-            : (
-              <Grid item xs={8} />
+              {specifications === SpecificationsType.Fcl && (
+                <>
+                  <Grid item xs={12} container spacing={2}>
+                    <Grid item xs={4}>
+                      <AddFreeTimeButtonWrapper>
+                          <Button
+                            onAction={() => {
+                              setSelectfreeTimeDemurrages([
+                                ...selectfreeTimeDemurrages,
+                                {
+                                  idFreeTimeDemurrage: null,
+                                  idContainerType: '',
+                                  freeTime: false,
+                                  nrFreeTimeDaysDeadline: null,
+                                  nrFreeTimeDaysDeadlineSale: null,
+                                  vlFreeTime: null
+                                }
+                              ])
+                            }}
+                            text={I18n.t('pages.newProposal.step4.addFreeTime')}
+                            icon="add"
+                            backgroundGreen={false}
+                            tooltip={I18n.t('pages.newProposal.step4.addFreeTime')}
+                            disabled={!selectfreeTimeDemurrages[0]?.freeTime}
+                          />
+                      </AddFreeTimeButtonWrapper>
+                    </Grid>
+                  </Grid>
+                </>
               )}
-          <Grid item xs={6}>
-            <FormLabel component="legend">
-              {I18n.t('pages.newProposal.step4.general')}
-            </FormLabel>
+            </>
+          )}
+
+        {/* NUMERO FREQUENCIA */}
+        <Grid item xs={2}>
+          <FormLabel component="legend">
+            {I18n.t('pages.newProposal.step4.frequency')}
+            <RedColorSpan> *</RedColorSpan>
+          </FormLabel>
+          <InputContainer>
             <ControlledInput
-              id="general"
+              id="recurrency"
               toolTipTitle={I18n.t('components.itemModal.requiredField')}
-              invalid={false}
+              invalid={invalidInput && data.recurrency.length === 0}
               variant="outlined"
-              onChange={(e) => setData({ ...data, generalObs: e.target.value })}
-              value={data.generalObs}
+              value={data.recurrency}
               size="small"
-              multiline
-              rows={4}
+              InputProps={{
+                inputProps: {
+                  max: 99,
+                  min: 1
+                }
+              }}
+              type="number"
+              onChange={(e) => {
+                valuesRecurrency(e)
+              }}
             />
-          </Grid>
-          <Grid item xs={6}>
-            <FormLabel component="legend">
-              {I18n.t('pages.newProposal.step4.internal')}
+            <FormLabel component="span" style={{ margin: '0 0 0 10px' }}>
+              {I18n.t('pages.newProposal.step4.times')}
             </FormLabel>
-            <ControlledInput
-              id="internal"
-              toolTipTitle={I18n.t('components.itemModal.requiredField')}
-              invalid={false}
-              variant="outlined"
-              onChange={(e) =>
-                setData({ ...data, internalObs: e.target.value })
-              }
-              value={data.internalObs}
-              size="small"
-              multiline
-              rows={4}
-            />
-          </Grid>
+          </InputContainer>
         </Grid>
-      </FormControl>
-    </Separator>
+        <Grid item xs={2}>
+          <FormLabel component="legend">&nbsp;</FormLabel>
+          <ControlledSelect
+            labelId="frequency-label"
+            id="frequency"
+            value={data.frequency}
+            onChange={(e) => setData({ ...data, frequency: e.target.value })}
+            displayEmpty
+            disableUnderline
+            invalid={invalidInput && data.frequency.length === 0}
+            toolTipTitle={I18n.t('components.itemModal.requiredField')}
+          >
+            <MenuItem disabled value={data.frequency}>
+              <SelectSpan placeholder={1}>
+                {I18n.t('pages.newProposal.step4.choose')}
+              </SelectSpan>
+            </MenuItem>
+            {frequencyList.map((item) => (
+              <MenuItem key={item.id} value={item.id}>
+                <SelectSpan>{item.description}</SelectSpan>
+              </MenuItem>
+            ))}
+          </ControlledSelect>
+        </Grid>
+        {Number(data.frequency) === 2 || Number(data.frequency) === 3
+          ? (
+            <Grid item xs={8}>
+              <FormLabel component="legend">
+                {I18n.t('pages.newProposal.step4.customDays')}
+              </FormLabel>
+              <WeekContainer>
+                <WeekDay
+                  id="sunday"
+                  className="disabledDay"
+                  value="0"
+                  onClick={() => weekDaysFrequency('sunday')}
+                >
+                  {I18n.t('pages.newProposal.step4.sunday')}
+                </WeekDay>
+                <WeekDay
+                  id="monday"
+                  className="disabledDay"
+                  value="0"
+                  onClick={() => weekDaysFrequency('monday')}
+                >
+                  {I18n.t('pages.newProposal.step4.monday')}
+                </WeekDay>
+                <WeekDay
+                  id="tuesday"
+                  className="disabledDay"
+                  value="0"
+                  onClick={() => weekDaysFrequency('tuesday')}
+                >
+                  {I18n.t('pages.newProposal.step4.tuesday')}
+                </WeekDay>
+                <WeekDay
+                  id="wednesday"
+                  className="disabledDay"
+                  value="0"
+                  onClick={() => weekDaysFrequency('wednesday')}
+                >
+                  {I18n.t('pages.newProposal.step4.wednesday')}
+                </WeekDay>
+                <WeekDay
+                  id="thursday"
+                  className="disabledDay"
+                  value="0"
+                  onClick={() => weekDaysFrequency('thursday')}
+                >
+                  {I18n.t('pages.newProposal.step4.thursday')}
+                </WeekDay>
+                <WeekDay
+                  id="friday"
+                  className="disabledDay"
+                  value="0"
+                  onClick={() => weekDaysFrequency('friday')}
+                >
+                  {I18n.t('pages.newProposal.step4.friday')}
+                </WeekDay>
+                <WeekDay
+                  id="saturday"
+                  className="disabledDay"
+                  value="0"
+                  onClick={() => weekDaysFrequency('saturday')}
+                >
+                  {I18n.t('pages.newProposal.step4.saturday')}
+                </WeekDay>
+              </WeekContainer>
+            </Grid>
+            )
+          : (
+            <Grid item xs={8} />
+            )}
+        <Grid item xs={6}>
+          <FormLabel component="legend">
+            {I18n.t('pages.newProposal.step4.general')}
+          </FormLabel>
+          <ControlledInput
+            id="general"
+            toolTipTitle={I18n.t('components.itemModal.requiredField')}
+            invalid={false}
+            variant="outlined"
+            onChange={(e) => setData({ ...data, generalObs: e.target.value })}
+            value={data.generalObs}
+            size="small"
+            multiline
+            rows={4}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <FormLabel component="legend">
+            {I18n.t('pages.newProposal.step4.internal')}
+          </FormLabel>
+          <ControlledInput
+            id="internal"
+            toolTipTitle={I18n.t('components.itemModal.requiredField')}
+            invalid={false}
+            variant="outlined"
+            onChange={(e) =>
+              setData({ ...data, internalObs: e.target.value })
+            }
+            value={data.internalObs}
+            size="small"
+            multiline
+            rows={4}
+          />
+        </Grid>
+      </Grid>
+    </FormControl>
+  </Separator>
   )
 }
 
