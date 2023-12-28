@@ -467,7 +467,8 @@ const Step2 = ({
 
   const validateProfitPercent = (): boolean => {
     return (
-      (proposalType === ProposalTypes.Client && selectedAgents[0].profitPercentageAgent !== null)
+      (proposalType === ProposalTypes.Client && selectedAgents[0].profitPercentageAgent !== null) ||
+      proposalType !== ProposalTypes.Client
     )
   }
 

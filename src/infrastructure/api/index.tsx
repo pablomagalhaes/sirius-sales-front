@@ -458,7 +458,7 @@ const getDangerousCode = async (params?): Promise<any> => {
 }
 
 const getProposalType = async (params?): Promise<any> => {
-  const url: string = '/sirius-business-proposal-api/proposalType/'
+  const url: string = '/sirius-business-proposal-api/proposal/type/'
   try {
     const res = await instance.get(url)
     return res.data
