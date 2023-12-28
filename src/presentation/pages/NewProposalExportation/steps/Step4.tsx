@@ -34,11 +34,12 @@ import { ModalTypes } from '../../../../application/enum/enum'
 import FreeTimeDemurrageDeleteModal from '../../../components/FreeTimeDemurrageDeleteModal'
 
 import {
-  PROPOSAL_IMPORT_STEP4_FREETIME,
-  PROPOSAL_IMPORT_STEP4_CONTAINER_TYPE,
-  PROPOSAL_IMPORT_STEP4_PURCHASE_DEADLINE,
-  PROPOSAL_IMPORT_STEP4_SALES_DEADLINE
+  PROPOSAL_EXPORT_STEP4_FREETIME,
+  PROPOSAL_EXPORT_STEP4_CONTAINER_TYPE,
+  PROPOSAL_EXPORT_STEP4_PURCHASE_DEADLINE,
+  PROPOSAL_EXPORT_STEP4_SALES_DEADLINE
 } from '../../../../ids'
+import InputNumber from '../../../components/InputNumber/InputNumber'
 
 interface Step4Props {
   invalidInput: boolean
@@ -507,6 +508,7 @@ const Step4 = ({
               size="small"
             />
           </Grid>
+          <Grid item xs={6} />
           <Grid item xs={2}>
             <FormLabel component="legend">
               {I18n.t('pages.newProposal.step4.time')}
@@ -540,13 +542,13 @@ const Step4 = ({
             />
           </Grid>
 
-          {modal !== 'SEA' && (
+          {modal !== ModalTypes.Sea && (
             <>
               <Grid item xs={2} />
             </>
           )}
 
-            {modal === 'SEA' && (
+            {modal === ModalTypes.Sea && (
               <>
 
                 {selectfreeTimeDemurrages.map((freeTimeDemurrages, index) => {
@@ -558,7 +560,7 @@ const Step4 = ({
                           ? (
                           <>
                             <Grid item xs style={{ maxWidth: '330px' }}>
-                              {specifications === 'fcl'
+                              {specifications === SpecificationsType.Fcl
                                 ? (
                                   <FormLabel component="legend">
                                     {I18n.t('pages.newProposal.step4.freeTimeDemurrage')}
@@ -574,7 +576,7 @@ const Step4 = ({
                               <RadioGroup
                                 row
                                 aria-label="proposal type"
-                                id={PROPOSAL_IMPORT_STEP4_FREETIME}
+                                id={PROPOSAL_EXPORT_STEP4_FREETIME}
                                 name="row-radio-buttons-group"
                                 value={freeTimeDemurrages.freeTime.toString()}
                                 onChange={(e, newValue) => {
@@ -619,16 +621,16 @@ const Step4 = ({
                           <Grid item xs style={{ maxWidth: '400px' }} />
                             )}
 
-                        {specifications === 'fcl' && selectfreeTimeDemurrages[0]?.freeTime
+                        {specifications === SpecificationsType.Fcl && selectfreeTimeDemurrages[0]?.freeTime
                           ? (
                             <><Grid item xs={2}>
                               <FormLabel component="legend" error={invalidInput && freeTimeDemurrages.idContainerType === ''}>
                                 {I18n.t('pages.newProposal.step4.containerType')}
-                                {modal === 'SEA' && <RedColorSpan> *</RedColorSpan>}
+                                {modal === ModalTypes.Sea && <RedColorSpan> *</RedColorSpan>}
                               </FormLabel>
                               <ControlledSelect
                                 labelId="select-label-containerType"
-                                id={PROPOSAL_IMPORT_STEP4_CONTAINER_TYPE}
+                                id={PROPOSAL_EXPORT_STEP4_CONTAINER_TYPE}
                                 value={freeTimeDemurrages.idContainerType}
                                 onChange={(e) => {
                                   setSelectfreeTimeDemurrages(
@@ -662,65 +664,59 @@ const Step4 = ({
                             </Grid><Grid item xs={3}>
                                 <FormLabel component="legend">
                                   {I18n.t('pages.newProposal.step4.purchaseDeadline')}
-                                  {modal === 'SEA' && <RedColorSpan> *</RedColorSpan>}
+                                  {modal === ModalTypes.Sea && <RedColorSpan> *</RedColorSpan>}
                                 </FormLabel>
-                                <NumberInput
-                                  id={PROPOSAL_IMPORT_STEP4_PURCHASE_DEADLINE}
-                                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                  variant="outlined"
-                                  decimalSeparator={','}
-                                  decimalScale={2}
-                                  customInput={ControlledInput}
-                                  inputProps={MaxLength}
-                                  invalid={selectfreeTimeDemurrages[index]?.freeTime && selectfreeTimeDemurrages[index]?.nrFreeTimeDaysDeadline === null}
-                                  onChange={(e) => {
-                                    setSelectfreeTimeDemurrages(
-                                      selectfreeTimeDemurrages.map((value, currentIndex) => currentIndex === index
-                                        ? {
-                                            ...value,
-                                            nrFreeTimeDaysDeadline: e.target.value
-                                          }
-                                        : value
-                                      )
-                                    )
-                                  } }
-                                  value={freeTimeDemurrages.nrFreeTimeDaysDeadline}
-                                  size="small"
-                                  style={{ height: '17px!important' }}
+                                <InputNumber
+                                   id={PROPOSAL_EXPORT_STEP4_PURCHASE_DEADLINE}
+                                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                   variant="outlined"
+                                   inputProps={MaxLength}
+                                   invalid={selectfreeTimeDemurrages[index]?.freeTime && selectfreeTimeDemurrages[index]?.nrFreeTimeDaysDeadline === null}
+                                   onChange={(e) => {
+                                     const newValue = parseFloat(e.target.value)
+                                     setSelectfreeTimeDemurrages(
+                                       selectfreeTimeDemurrages.map((value, currentIndex) => currentIndex === index
+                                         ? {
+                                             ...value,
+                                             nrFreeTimeDaysDeadline: newValue
+                                           }
+                                         : value
+                                       )
+                                     )
+                                   } }
+                                   value={freeTimeDemurrages.nrFreeTimeDaysDeadline}
+
                                   />
                               </Grid><Grid item xs={2}>
                                 <FormLabel component="legend">
                                   {I18n.t('pages.newProposal.step4.salesDeadline')}
-                                  {modal === 'SEA' && <RedColorSpan> *</RedColorSpan>}
+                                  {modal === ModalTypes.Sea && <RedColorSpan> *</RedColorSpan>}
                                 </FormLabel>
-                                <NumberInput
-                                  id={PROPOSAL_IMPORT_STEP4_SALES_DEADLINE}
-                                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                  variant="outlined"
-                                  decimalSeparator={','}
-                                  decimalScale={2}
-                                  customInput={ControlledInput}
-                                  inputProps={MaxLength}
-                                  invalid={selectfreeTimeDemurrages[index]?.freeTime && selectfreeTimeDemurrages[index]?.nrFreeTimeDaysDeadlineSale === null}
-                                  onChange={(e, newValue) => {
-                                    setSelectfreeTimeDemurrages(
-                                      selectfreeTimeDemurrages.map((value, currentIndex) => currentIndex === index
-                                        ? {
-                                            ...value,
-                                            nrFreeTimeDaysDeadlineSale: e.target.value
-                                          }
-                                        : value
-                                      )
-                                    )
-                                  } }
-                                  value={freeTimeDemurrages.nrFreeTimeDaysDeadlineSale}
-                                  size="small"
-                                  style={{ height: '17px!important' }}
+                                <InputNumber
+                                   id={PROPOSAL_EXPORT_STEP4_SALES_DEADLINE}
+                                   toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                                   variant="outlined"
+                                   inputProps={MaxLength}
+                                   invalid={selectfreeTimeDemurrages[index]?.freeTime && selectfreeTimeDemurrages[index]?.nrFreeTimeDaysDeadlineSale === null}
+                                   onChange={(e) => {
+                                     const newValue = parseFloat(e.target.value)
+                                     setSelectfreeTimeDemurrages(
+                                       selectfreeTimeDemurrages.map((value, currentIndex) =>
+                                         currentIndex === index
+                                           ? {
+                                               ...value,
+                                               nrFreeTimeDaysDeadlineSale: newValue
+                                             }
+                                           : value
+                                       )
+                                     )
+                                   }}
+                                   value={freeTimeDemurrages.nrFreeTimeDaysDeadlineSale}
                                   />
                               </Grid><>
                                 {index !== 0 && (
                                   <>
-                                    {specifications === 'fcl' && (
+                                    {specifications === SpecificationsType.Fcl && (
                                       <>
                                         <Grid item xs={1}>
                                           <FreeTimeDemurrageDeleteModal handleConfirm={() => removeFreeTimeDemurrage(index)} />
@@ -740,7 +736,7 @@ const Step4 = ({
                   )
                 })}
 
-                {specifications === 'fcl' && (
+                {specifications === SpecificationsType.Fcl && (
                   <>
                     <Grid item xs={12} container spacing={2}>
                       <Grid item xs={4}>
