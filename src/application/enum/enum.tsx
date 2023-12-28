@@ -72,8 +72,8 @@ enum ProfitsPercentsTypes {
 }
 
 enum ProposalTypes {
-  Client = 'CLIENT',
-  RoutingOrder = 'ROUTING ORDER'
+  Client = 1,
+  RoutingOrder = 2
 }
 
 enum IncotermTypes {
@@ -81,6 +81,18 @@ enum IncotermTypes {
   Exw = 'EXW',
   Dap = 'DAP',
   Ddp = 'DDP'
+}
+
+enum SpecificationsType {
+  Fcl = 'fcl',
+  Lcl = 'lcl',
+  BreakBulk = 'break bulk',
+  Roro = 'ro-ro'
+}
+
+enum FreightTypes {
+  Import = 'IMPORT FREIGHT',
+  Export = 'EXPORT FREIGHT'
 }
 
 export {
@@ -96,5 +108,7 @@ export {
   LocaleTypes,
   ProfitsPercentsTypes,
   ProposalTypes,
-  IncotermTypes
+  IncotermTypes,
+  SpecificationsType,
+  FreightTypes
 }

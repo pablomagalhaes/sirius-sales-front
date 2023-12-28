@@ -30,7 +30,7 @@ import API from '../../../../infrastructure/api'
 import { NumberInput } from './StepsStyles'
 import { withTheme } from 'styled-components'
 import { ProposalContext, ProposalProps } from '../../NewProposal/context/ProposalContext'
-import { ModalTypes } from '../../../../application/enum/enum'
+import { ModalTypes, SpecificationsType } from '../../../../application/enum/enum'
 import FreeTimeDemurrageDeleteModal from '../../../components/FreeTimeDemurrageDeleteModal'
 
 import {
