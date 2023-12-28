@@ -43,7 +43,7 @@ import { ModalTypes, ProfitsPercentsTypes, ProposalTypes, IncotermTypes } from '
 interface Step2Props {
   invalidInput: boolean
   modal: string
-  proposalType: string
+  proposalType: number
   setAgentList: (agent: Agents[]) => void
   setCompleted: (completed: any) => void
   setFilled: (filled: any) => void
@@ -457,7 +457,8 @@ const Step2 = ({
 
   const validateProfitPercent = (): boolean => {
     return (
-      (proposalType === ProposalTypes.Client && selectedAgents[0].profitPercentageAgent !== null)
+      (proposalType === ProposalTypes.Client && selectedAgents[0].profitPercentageAgent !== null) ||
+      proposalType !== ProposalTypes.Client
     )
   }
 
@@ -1043,7 +1044,6 @@ const Step2 = ({
               : (
               <Grid item xs={12}>
                 <Autocomplete
-                  freeSolo
                   onChange={(e, newValue) =>
                     setData({ ...data, origin: String(newValue ?? '') })
                   }
@@ -1244,7 +1244,6 @@ const Step2 = ({
               : (
               <Grid item xs={12}>
                 <Autocomplete
-                  freeSolo
                   onChange={(e, newValue) =>
                     setData({ ...data, destiny: String(newValue ?? '') })
                   }

@@ -23,7 +23,7 @@ export interface Proposal {
   cargoDeliveryAddress: string // endereco de entrega step2
   costs: Cost[]
   totalCosts: TotalCost[]
-  proposalType: string // step1 tipo proposta 'cliente' 'routing order'
+  idProposalType: number // step1 tipo proposta 'cliente' 'routing order'
   idTransport: string // step1 modal
   originDestiny: any
   idOrigin: string // id origem (if rod="NULL") step2

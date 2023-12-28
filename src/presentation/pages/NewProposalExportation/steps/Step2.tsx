@@ -38,12 +38,12 @@ import {
 import { ProposalContext, ProposalProps } from '../../NewProposal/context/ProposalContext'
 import { Button } from 'fiorde-fe-components'
 import AgentDeleteModal from '../../../components/AgentDeleteModal'
-import { ModalTypes, ProfitsPercentsTypes, IncotermTypes } from '../../../../application/enum/enum'
+import { ModalTypes, ProfitsPercentsTypes, IncotermTypes, ProposalTypes } from '../../../../application/enum/enum'
 
 interface Step2Props {
   invalidInput: boolean
   modal: string
-  proposalType: string
+  proposalType: number
   setAgentList: (agent: Agents[]) => void
   setCompleted: (completed: any) => void
   setFilled: (filled: any) => void
@@ -264,7 +264,7 @@ const Step2 = ({
     if (loadedAgentsData) {
       setAgentList(selectedAgents)
     }
-  }, [selectedAgents, agentsList])
+  }, [selectedAgents, agentsList, loadedAgentsData])
 
   useEffect(() => {
     void (async function () {
@@ -460,14 +460,15 @@ const Step2 = ({
 
   const validateClient = (): boolean => {
     return (
-      (proposalType === 'CLIENT' && selectedAgents[0].agent.length !== 0) ||
-      proposalType !== 'CLIENT'
+      (proposalType === ProposalTypes.Client && selectedAgents[0].agent.length !== 0) ||
+      proposalType !== ProposalTypes.Client
     )
   }
 
   const validateProfitPercent = (): boolean => {
     return (
-      (proposalType === 'CLIENT' && selectedAgents[0].profitPercentageAgent !== null)
+      (proposalType === ProposalTypes.Client && selectedAgents[0].profitPercentageAgent !== null) ||
+      proposalType !== ProposalTypes.Client
     )
   }
 
@@ -520,7 +521,7 @@ const Step2 = ({
 
   const validateFormComplete = (): void => {
     const step6 = modal === ModalTypes.Land
-    if (proposalType !== 'CLIENT') {
+    if (proposalType !== ProposalTypes.Client) {
       if (
         !invalidAgent &&
         validateCompleteShippingCompany() &&
@@ -546,7 +547,7 @@ const Step2 = ({
   }
 
   const validateFilled = (): void => {
-    if (proposalType !== 'CLIENT') {
+    if (proposalType !== ProposalTypes.Client) {
       if (
         data.origin !== '' ||
         data.destiny !== '' ||
@@ -774,7 +775,8 @@ const Step2 = ({
         agent: '',
         idBusinessPartnerAgent: null,
         shippingCompany: '',
-        idBusinessPartnerTransportCompany: null
+        idBusinessPartnerTransportCompany: null,
+        profitPercentageAgent: null
       }
     ])
   }, [proposalType])
@@ -1057,7 +1059,6 @@ const Step2 = ({
               : (
               <Grid item xs={12}>
                 <Autocomplete
-                  freeSolo
                   onChange={(e, newValue) =>
                     setData({ ...data, origin: String(newValue ?? '') })
                   }
@@ -1254,7 +1255,6 @@ const Step2 = ({
               : (
               <Grid item xs={12}>
                 <Autocomplete
-                  freeSolo
                   onChange={(e, newValue) =>
                     setData({ ...data, destiny: String(newValue ?? '') })
                   }
@@ -1317,7 +1317,7 @@ const Step2 = ({
           {selectedAgents.map((selectedAgent, index) => {
             return (
               <Fragment key={index}>
-                {proposalType === 'CLIENT' && loadedAgentsData && (
+                {proposalType === ProposalTypes.Client && loadedAgentsData && (
                   <>
                     <Grid item xs={4}>
                       <FormLabel component="legend">
@@ -1417,7 +1417,7 @@ const Step2 = ({
                         displayEmpty
                         disableUnderline
                         invalid={
-                          proposalType === 'CLIENT' &&
+                          proposalType === ProposalTypes.Client &&
                           invalidInput &&
                           selectedAgent.profitPercentageAgent === null
                         }
@@ -1479,7 +1479,7 @@ const Step2 = ({
                               )}
                               value={selectedAgent.shippingCompany}
                               invalid={
-                                proposalType === 'CLIENT' &&
+                                proposalType === ProposalTypes.Client &&
                                 invalidInput &&
                                 selectedAgent.shippingCompany.length === 0
                               }
@@ -1543,7 +1543,7 @@ const Step2 = ({
             )
           })}
 
-          {modal === 'AIR' && proposalType === 'CLIENT' && (
+          {modal === 'AIR' && proposalType === ProposalTypes.Client && (
             <>
               <AddAgentButtonWrapper>
                 <Button
@@ -1556,7 +1556,8 @@ const Step2 = ({
                         agent: '',
                         idBusinessPartnerAgent: null,
                         shippingCompany: '',
-                        idBusinessPartnerTransportCompany: null
+                        idBusinessPartnerTransportCompany: null,
+                        profitPercentageAgent: null
                       }
                     ])
                   }}

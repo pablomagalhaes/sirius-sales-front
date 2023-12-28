@@ -101,6 +101,26 @@ export const RowDiv = styled.div`
     z-index: 10;
     right: 28px;
   }
+
+  .MuiInputBase-root {
+    margin-top: 13px;
+    max-height: 40px;
+    min-width: 120px;
+   border: 1px solid ${(props: { invalid: boolean, value: any, theme: any }) =>
+    props.invalid
+      ? '#FF4D4D'
+      : props.value?.type?.length > 0
+        ? '#43BFB5'
+        : props.theme?.commercial?.components?.itemModal?.border};
+  }
+
+  .MuiInputBase-root > div > span {
+    color: ${(props) =>
+      props.value?.type?.length === 0
+        ? props.theme?.commercial?.pages?.newProposal?.placeholder
+        : props.theme?.commercial?.components?.itemModal?.inputFontColor};
+    }
+  }
 `
 export const Form = styled.div`
   margin-top: 26px;

@@ -62,6 +62,10 @@ const useBusinessPartnerByType = (): any => {
   return { seaPartners: [...shipOwner, ...coloader], airPartners, landPartners }
 }
 
+const useProposalType = (): any => {
+  return useQuery([QueryKeys.proposalType], API.getProposalType)
+}
+
 export {
   useCurrencies,
   useOriginDestination,
@@ -70,5 +74,6 @@ export {
   useMercosulCities,
   useMercosulStates,
   useBusinessPartnerByType,
-  useFrequency
+  useFrequency,
+  useProposalType
 }

@@ -50,12 +50,13 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const [loadExistingProposal, setLoadExistingProposal] = useState(false)
   const [modal, setModal] = useState('')
   const [totalCosts, setTotalCosts] = useState()
-  const [proposalType, setProposalType] = useState('')
+  const [proposalType, setProposalType] = useState(0)
   const [serviceList, setServiceList] = useState<any[]>([])
   const [showSaveMessage, setShowSaveMessage] = useState(false)
   const [specifications, setSpecifications] = useState('')
   const [step3TableItems, setStep3TableItems] = useState<ItemModalData[]>([])
   const [open, setOpen] = useState(false)
+  const [totalCostArray, setTotalCostArray] = useState([])
 
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
@@ -596,6 +597,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                   totalCosts={totalCosts}
                   undoMessage={undoMessage}
                   updateTableIdsRef={updateTable6IdsRef}
+                  setTotalCostArray={setTotalCostArray}
                 />
               </div>
               <div id="step6">
@@ -615,6 +617,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
                   specifications={specifications}
                   undoMessage={undoMessage}
                   updateTableIdsRef={updateTable5IdsRef}
+                  totalCostArray={totalCostArray}
                 />
               </div>
             </>}

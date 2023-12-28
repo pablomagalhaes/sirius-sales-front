@@ -261,7 +261,7 @@ const FareModal = ({
                 PaperComponent={(params: any) => <StyledPaper {...params} />}
               />
             </Container>
-            <Container width="150px" height="32px" margin="12px 0 5px 10px">
+            <Container width="150px" height="32px" margin="0 0 5px 10px">
               <ControlledSelect
                 onChange={(e) => setData({ ...data, type: e.target.value })}
                 displayEmpty

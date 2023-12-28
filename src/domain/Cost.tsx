@@ -9,7 +9,7 @@ export interface Cost {
   idCost: number | null
   idProposal?: number | null
   idService: number // id Descricao
-  idContainerType: string | null// containerMODAL
+  idContainer: string | null// containerMODAL
   agent: CostAgent
   costType: string // 'Origem''Destino''Tarifa'
   billingType: string // Tipo -MODAL

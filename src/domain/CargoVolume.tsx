@@ -2,7 +2,7 @@ export interface CargoVolume {
   id?: number | null
   idCargo?: number | null
   cdCargoType?: number// modal tipo
-  idContainerType?: string | null
+  idContainer?: string | null
   idPackaging?: number | null
   valueQuantity?: number // qnt
   valueGrossWeight?: number // peso bruto
@@ -12,5 +12,5 @@ export interface CargoVolume {
   valueWidth?: number // largura
   valueDiameter?: number // diametro
   isStacked?: boolean // empilhar
-  type?: string // nome do tipo
+  container?: string // nome do tipo
 }

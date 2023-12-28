@@ -17,7 +17,7 @@ export const NewProposalMock = {
   cargoDeliveryAddress: '',
   costs: [],
   totalCosts: [],
-  proposalType: '',
+  idProposalType: 1,
   idTransport: '',
   originDestiny: [],
   idOrigin: '',

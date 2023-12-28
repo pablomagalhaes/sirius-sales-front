@@ -20,6 +20,7 @@ import { Autocomplete } from '@material-ui/lab'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import { NumberInput, StyledPaper } from '../../pages/NewProposal/steps/StepsStyles'
 import FormatNumber from '../../../application/utils/formatNumber'
+import { PROPOSAL_ITEM_MODAL_INPUT_SIZE, PROPOSAL_ITEM_MODAL_INPUT_TYPE } from '../../../ids'
 
 export interface ItemModalData {
   amount: string
@@ -185,7 +186,6 @@ const ItemModal = ({
                 }>
                 {marineFCL() ? I18n.t('components.itemModal.container') : I18n.t('components.itemModal.packaging')}<RedColorSpan> *</RedColorSpan></FormLabel>
               <Autocomplete
-                freeSolo
                 value={data.type}
                 onChange={(e, newValue) => setData({ ...data, type: newValue })}
                 options={marineFCL() ? getContainerTypeList() : packagingList.map((item) => String(item.packaging))}
@@ -212,6 +212,7 @@ const ItemModal = ({
                           </InputAdornment>
                         )
                       }}
+                      value={data.type}
                     />
                   </div>
                 )}
@@ -267,6 +268,38 @@ const ItemModal = ({
                 size="small"
                 modal
               />
+            </Grid>}
+            {marineFCL() && <Grid item xs={4}>
+              <FormLabel component="legend">
+                    {I18n.t('components.itemModal.containerType')}
+                </FormLabel>
+                <ControlledInput
+                  id={PROPOSAL_ITEM_MODAL_INPUT_TYPE}
+                  toolTipTitle={''}
+                  invalid={false}
+                  value={data.type ? containerTypeList.find((each) => each.container === data.type)?.type : ''}
+                  onChange={() => {}}
+                  variant="outlined"
+                  size="small"
+                  modal
+                  disabled={true}
+                />
+            </Grid>}
+            {marineFCL() && <Grid item xs={2}>
+              <FormLabel component="legend">
+                    {I18n.t('components.itemModal.size')}
+                </FormLabel>
+                <ControlledInput
+                  id={PROPOSAL_ITEM_MODAL_INPUT_SIZE}
+                  toolTipTitle={''}
+                  invalid={false}
+                  value={data.type ? String(containerTypeList.find((each) => each.container === data.type)?.size) : ''}
+                  onChange={() => {}}
+                  variant="outlined"
+                  size="small"
+                  modal
+                  disabled={true}
+                />
             </Grid>}
             <Grid item xs={6}>
               <RadioGroup style={{ margin: '47px 10px 10px -15px' }} row aria-label="services" name="row-radio-buttons-group">

@@ -36,7 +36,7 @@ import RemoveIcon from '../../../../application/icons/RemoveIcon'
 import TariffImportFclModal from '../../../components/TariffImport/TariffImportFclModal'
 import TariffImportAirModal from '../../../components/TariffImport/TariffImportAirModal'
 
-interface Step6Props {
+interface Step5Props {
   totalCosts: any
   containerItems: ItemModalData[]
   costData: any
@@ -66,6 +66,9 @@ interface Step6Props {
   updateTableIdsRef: any
   cw: number
   cwSale: number
+  setTotalCostArray: React.Dispatch<
+  React.SetStateAction<any[]>
+  >
 }
 
 const enum ID_CARGO_CONTRACTING_TYPE {
@@ -91,7 +94,7 @@ const makeTableData = (costs): any => {
   const getTarifas = costs?.filter(cost => cost.costType === CostTypes.Tariff)
   return getTarifas.map(cost => ({
     idCost: cost.idCost,
-    selectedContainer: cost.idContainerType,
+    selectedContainer: cost.idContainer,
     agent: cost.agent,
     type: cost.billingType,
     saleCurrency: cost.idCurrencySale,
@@ -117,8 +120,9 @@ const Step5 = ({
   updateTableIdsRef,
   cw,
   cwSale,
-  totalCosts
-}: Step6Props): JSX.Element => {
+  totalCosts,
+  setTotalCostArray
+}: Step5Props): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [copyTable, setCopyTable] = useState<FareModalData[]>([])
   const [chargeData, setChargeData] = useState<FareModalData>(initialState)
@@ -194,7 +198,7 @@ const Step5 = ({
   )
   const [dataContainer, setDataContainer] = useState(proposal.cargo[0].cargoVolumes.map((item, index) => ({
     idCost: proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.idCost ?? null,
-    idContainerType: item.idContainerType,
+    idContainer: item.idContainer,
     currencySale: proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.idCurrencySale ?? '',
     currencyPurchase: proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.idCurrencyPurchase ?? '',
     valueSale: decimalToString(proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.valueSale),
@@ -242,11 +246,11 @@ const Step5 = ({
   }, [proposal.agents])
 
   useEffect(() => {
-    const currentContainer = dataContainer.map(currentContainer => currentContainer.idContainerType)
-    const getNewCargos = proposal.cargo[0].cargoVolumes.filter(cargo => !currentContainer.includes(cargo.idContainerType))
+    const currentContainer = dataContainer.map(currentContainer => currentContainer.idContainer)
+    const getNewCargos = proposal.cargo[0].cargoVolumes.filter(cargo => !currentContainer.includes(cargo.idContainer))
     const newDataWithNewCargos = getNewCargos.map(newCargo => ({
       idCost: null,
-      idContainerType: newCargo.idContainerType,
+      idContainer: newCargo.idContainer,
       currencySale: '',
       currencyPurchase: '',
       valueSale: '',
@@ -255,9 +259,9 @@ const Step5 = ({
       idTariff: null
     }))
     const unionCargos = [...dataContainer, ...newDataWithNewCargos]
-    const getAllCargos = unionCargos.map(unionAgent => unionAgent.idContainerType)
-    const getOnlyCargosExists = proposal.cargo[0].cargoVolumes.filter(currentProsalCargoVolumes => getAllCargos.includes(currentProsalCargoVolumes.idContainerType)).map(cargo => cargo.idContainerType)
-    const getOnlyDataExists = unionCargos.filter(unionAgent => getOnlyCargosExists.includes(unionAgent.idContainerType))
+    const getAllCargos = unionCargos.map(unionAgent => unionAgent.idContainer)
+    const getOnlyCargosExists = proposal.cargo[0].cargoVolumes.filter(currentProsalCargoVolumes => getAllCargos.includes(currentProsalCargoVolumes.idContainer)).map(cargo => cargo.idContainer)
+    const getOnlyDataExists = unionCargos.filter(unionAgent => getOnlyCargosExists.includes(unionAgent.idContainer))
     setDataContainer(getOnlyDataExists)
   }, [proposal.cargo[0], ...proposal.cargo[0]?.cargoVolumes])
 
@@ -331,7 +335,7 @@ const Step5 = ({
           idProposal: proposal.idProposal,
           idService: getServiceType(),
           billingType: '',
-          idContainerType: null,
+          idContainer: null,
           valuePurchasePercent: null,
           valueMinimumPurchase: null,
           valueSalePercent: 0,
@@ -366,7 +370,7 @@ const Step5 = ({
           idProposal: proposal?.idProposal === undefined ? null : proposal?.idProposal,
           idService: getServiceType(),
           billingType: '',
-          idContainerType: null,
+          idContainer: null,
           valuePurchasePercent: null,
           valueMinimumPurchase: null,
           valueSalePercent: 0,
@@ -440,9 +444,16 @@ const Step5 = ({
         const waitAllData = async (): Promise<void> => {
           for (const cost of proposal.costs) {
             const getContainer: any = new Promise((resolve) => {
-              if (specifications === 'fcl' && cost.idContainerType !== null) {
-                API.getContainerType(cost.idContainerType)
-                  .then((response) => resolve(String(response?.description)))
+              if (specifications === 'fcl' && cost.idContainer !== null) {
+                API.getContainer()
+                  .then((response) => {
+                    const getContainer = response.find((container) => container.idContainer === cost.idContainer)
+                    if (getContainer) {
+                      resolve(String(getContainer.container))
+                    } else {
+                      resolve('')
+                    }
+                  })
                   .catch((err) => console.log(err))
               } else {
                 resolve(null)
@@ -577,10 +588,10 @@ const Step5 = ({
           proposal?.idProposal === undefined ? null : proposal?.idProposal,
         idService: serviceList.filter((serv) => serv.service === row.expense)[0]
           ?.idService, // id Descricao
-        idContainerType:
+        idContainer:
           specifications === 'fcl'
             ? containerTypeList.filter(
-              (cont) => cont.description === row.selectedContainer
+              (cont) => cont.container === row.selectedContainer
             )[0]?.id
             : null, // containerMODAL
         agent: {
@@ -709,7 +720,7 @@ const Step5 = ({
       .filter(cost => cost.costType === CostTypes.Freight && cost.valueSale !== null && cost.valueSale > 0)
     const salesData = getSalesFreight.map(cost => ({
       idCost: cost.idCost,
-      selectedContainer: cost.idContainerType,
+      selectedContainer: cost.idContainer,
       agent: cost.agent,
       type: 'TON',
       saleCurrency: cost.idCurrencySale,
@@ -891,6 +902,7 @@ const Step5 = ({
             modal={modal}
             data={data}
             totalCosts={totalCosts}
+            setTotalCostArray={setTotalCostArray}
           />
         )
       }
@@ -910,6 +922,7 @@ const Step5 = ({
             modal={modal}
             data={data}
             totalCosts={totalCosts}
+            setTotalCostArray={setTotalCostArray}
           />
         )
       }
@@ -926,6 +939,7 @@ const Step5 = ({
             modal={modal}
             data={data}
             totalCosts={totalCosts}
+            setTotalCostArray={setTotalCostArray}
           />
         )
       }
@@ -1479,12 +1493,12 @@ const Step5 = ({
                           </Grid>
                           <Grid container spacing={5}>
                             <Grid item xs={3} style={{ marginTop: '-15px' }}>
-                              <FormLabel component='legend'><strong>{cargoVolume.type}</strong></FormLabel>
+                              <FormLabel component='legend'><strong>{cargoVolume.container}</strong></FormLabel>
                             </Grid>
 
                             <Grid item xs={2}>
                               <Autocomplete
-                                disabled={disable[index]}
+                                disabled={data[index]?.idTariff}
                                 value={dataContainer[index]?.currencyPurchase}
                                 onChange={(e, newValue) => {
                                   const newData = [...dataContainer]
@@ -1521,7 +1535,7 @@ const Step5 = ({
                             <Grid item xs={2}>
                               <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <NumberInput
-                                  disabled={disable[index]}
+                                  disabled={data[index]?.idTariff}
                                   decimalSeparator={','}
                                   thousandSeparator={'.'}
                                   decimalScale={2}
@@ -1538,7 +1552,7 @@ const Step5 = ({
                                   variant='outlined'
                                   size='small'
                                 />
-                                {disable[index] && <div style={{ marginLeft: '10px', cursor: 'pointer' }}>
+                                {data[index]?.idTariff && <div style={{ marginLeft: '10px', cursor: 'pointer' }}>
                                   <RemoveIcon onClick={() => cleanPurchase(index)} />
                                 </div>}
                               </div>
@@ -1626,7 +1640,7 @@ const Step5 = ({
                               idBusinessPartnerAgent: proposal?.agents[0]?.idBusinessPartnerAgent,
                               idBusinessPartnerTransporter: proposal?.agents[0]?.idBusinessPartnerTransportCompany
                             }}
-                            containerType={cargoVolume.idContainerType}
+                            containerType={cargoVolume.idContainer}
                             getPurchase={getPurchase}
                             index={index}
                             type={AcitivityTypes.Import}

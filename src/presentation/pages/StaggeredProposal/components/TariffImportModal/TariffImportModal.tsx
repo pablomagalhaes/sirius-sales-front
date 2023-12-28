@@ -267,7 +267,6 @@ const TariffImportModal = ({
             </FormLabel>
             <Autocomplete
               id={TARIFF_IMPORT_MODAL_INPUT_ORIGIN}
-              freeSolo
               onChange={(e, newValue) =>
                 setData({ ...data, origin: String(newValue ?? '') })
               }
@@ -318,7 +317,6 @@ const TariffImportModal = ({
             </FormLabel>
             <Autocomplete
               id={TARIFF_IMPORT_MODAL_INPUT_DESTINATION}
-              freeSolo
               onChange={(e, newValue) =>
                 setData({ ...data, destiny: String(newValue ?? '') })
               }
@@ -366,7 +364,6 @@ const TariffImportModal = ({
             </FormLabel>
             <Autocomplete
               id={TARIFF_IMPORT_MODAL_INPUT_AGENT}
-              freeSolo
               options={agentsList.map((item: any) => item.simpleName)}
               onChange={(_e, newValue): void => {
                 if (newValue !== null) {

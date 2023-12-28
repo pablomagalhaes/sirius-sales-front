@@ -222,7 +222,6 @@ const TariffImportHandsOnModal = ({
             </FormLabel>
             <Autocomplete
               id={TARIFF_IMPORT_HANDSON_MODAL_INPUT_ORIGIN}
-              freeSolo
               onChange={(e, newValue) =>
                 setData({ ...data, origin: String(newValue ?? '') })
               }
@@ -272,7 +271,6 @@ const TariffImportHandsOnModal = ({
             </FormLabel>
             <Autocomplete
               id={TARIFF_IMPORT_HANDSON_MODAL_INPUT_DESTINATION}
-              freeSolo
               onChange={(e, newValue) =>
                 setData({ ...data, destiny: String(newValue ?? '') })
               }
@@ -322,7 +320,6 @@ const TariffImportHandsOnModal = ({
             </FormLabel>
             <Autocomplete
               id={TARIFF_IMPORT_HANDSON_MODAL_INPUT_AGENT}
-              freeSolo
               options={agentsList.map((item: any) => item.simpleName)}
               onChange={(_e, newValue): void => {
                 const { simpleName: name, id } = agentsList.find((item: any) => item.simpleName === newValue)
@@ -486,6 +483,7 @@ const TariffImportHandsOnModal = ({
                 modal
                 style={{ marginRight: '3px' }}
                 inputProps={MaxLenth}
+                handsOn={true}
               />
             </Grid>
             <Grid item xs={12} md>
@@ -508,6 +506,7 @@ const TariffImportHandsOnModal = ({
                 modal
                 style={{ height: '20px' }}
                 inputProps={MaxLenth}
+                handsOn={true}
               />
               </Grid>
               <Grid item xs={12} md>
@@ -530,6 +529,7 @@ const TariffImportHandsOnModal = ({
                 modal
                 style={{ height: '20px' }}
                 inputProps={MaxLenth}
+                handsOn={true}
               />
               </Grid>
               <Grid item xs={12} md>
@@ -552,6 +552,7 @@ const TariffImportHandsOnModal = ({
                 modal
                 style={{ height: '20px' }}
                 inputProps={MaxLenth}
+                handsOn={true}
               />
               </Grid>
               <Grid item xs={12} md>
@@ -574,6 +575,7 @@ const TariffImportHandsOnModal = ({
                 modal
                 style={{ height: '20px' }}
                 inputProps={MaxLenth}
+                handsOn={true}
               />
               </Grid>
               <Grid item xs={12} md>
@@ -596,6 +598,7 @@ const TariffImportHandsOnModal = ({
                 modal
                 style={{ marginRight: '3px', height: '20px' }}
                 inputProps={MaxLenth}
+                handsOn={true}
               />
               </Grid>
               </Grid>

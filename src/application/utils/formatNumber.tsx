@@ -11,6 +11,21 @@ const rightToLeftFormatter = (value: string, decimal: number): string => {
   return String(amount).replace('.', ',')
 }
 
+const rightToLeftFormatterPercentage = (newValue: string, decimal: number): string => {
+  let value = newValue
+  if (Number(value) === 0) return ''
+  if (value.length > 5) value = value.slice(0, -1)
+
+  let amount = ''
+  if (amount.length > decimal) {
+    amount = parseInt(value).toFixed(decimal)
+  } else {
+    amount = (parseInt(value) / 10 ** decimal).toFixed(decimal)
+  }
+
+  return String(amount).replace('.', ',') + '%'
+}
+
 const convertNumberToString = (value: number | undefined | null): string | null => {
   if (value !== null && value !== undefined) return String(value?.toFixed(2)).replace('.', ',')
   return null
@@ -29,12 +44,18 @@ const convertNumberToDecimal = (value: number): number => {
   return Number(value.toFixed(2))
 }
 
+const convertNumberToStringWithReplaceComma = (value: string): string => {
+  return String(value).replace(/,/g, '.')
+}
+
 const FormatNumber = {
   rightToLeftFormatter,
   convertNumberToString,
   convertStringToNumber,
   convertNumberWithInterCoin,
-  convertNumberToDecimal
+  convertNumberToDecimal,
+  rightToLeftFormatterPercentage,
+  convertNumberToStringWithReplaceComma
 }
 
 export default FormatNumber

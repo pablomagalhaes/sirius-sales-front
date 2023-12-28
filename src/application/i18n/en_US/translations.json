@@ -27,7 +27,8 @@
       "saleValue": "Sale Value",
       "save": "Save",
       "type": "Type:",
-      "value": "Value"
+      "value": "Value",
+      "percentage": "Percentage"
     },
     "costTable": {
       "addCost": "Add cost",
@@ -105,7 +106,9 @@
       "requiredField": "Required field",
       "save": "Save",
       "stack": "Stack up",
-      "type": "Type: "
+      "type": "Type: ",
+      "containerType": "Tipo do container:",
+      "size": "Tamanho:"
     },
     "tariffModal": {
       "minValue": "Minimum Value: ",
