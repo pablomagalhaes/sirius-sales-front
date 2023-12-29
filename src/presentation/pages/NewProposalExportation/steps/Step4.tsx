@@ -620,7 +620,7 @@ const Step4 = ({
                             <Grid item xs={4} />
                             )}
 
-                          {specifications === 'fcl' && selectfreeTimeDemurrages[0]?.freeTime
+                          {specifications === SpecificationsType.Fcl && selectfreeTimeDemurrages[0]?.freeTime
                             ? (
                             <>
                             <Grid item xs={2}>
@@ -737,7 +737,7 @@ const Step4 = ({
                   )
                 })}
 
-                {specifications === 'fcl' && (
+                {specifications === SpecificationsType.Fcl && (
                   <>
                     <Grid item xs={12} container spacing={2}>
                       <Grid item xs={4}>

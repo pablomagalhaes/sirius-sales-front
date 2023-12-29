@@ -29,7 +29,7 @@ import API from '../../../../infrastructure/api'
 import { NumberInput } from './StepsStyles'
 import { withTheme } from 'styled-components'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
-import { ModalTypes } from '../../../../application/enum/enum'
+import { ModalTypes, SpecificationsType } from '../../../../application/enum/enum'
 import FreeTimeDemurrageDeleteModal from '../../../components/FreeTimeDemurrageDeleteModal'
 
 import {
@@ -437,8 +437,6 @@ const Step4 = ({
     maxLength: 3
   }
 
-  console.log('selectfreeTimeDemurrages', selectfreeTimeDemurrages)
-
   return (
     <Separator>
       <Title>
@@ -557,11 +555,11 @@ const Step4 = ({
                         {index === 0
                           ? (
                           <>
-                            <Grid 
-                            item 
-                            xs={4} 
+                            <Grid
+                            item
+                            xs={4}
                             >
-                              {specifications === 'fcl'
+                              {specifications === SpecificationsType.Fcl
                                 ? (
                                   <FormLabel component="legend">
                                     {I18n.t('pages.newProposal.step4.freeTimeDemurrage')}
@@ -619,13 +617,13 @@ const Step4 = ({
                           </>
                             )
                           : (
-                          <Grid 
-                          item 
+                          <Grid
+                          item
                           xs={4}
                           />
                             )}
 
-                        {specifications === 'fcl' && selectfreeTimeDemurrages[0]?.freeTime
+                        {specifications === SpecificationsType.Fcl && selectfreeTimeDemurrages[0]?.freeTime
                           ? (
                             <>
                             <Grid item xs={2}>
@@ -747,7 +745,7 @@ const Step4 = ({
                               <>
                                 {index !== 0 && (
                                   <>
-                                    {specifications === 'fcl' && (
+                                    {specifications === SpecificationsType.Fcl && (
                                       <>
                                         <Grid item xs={1}>
                                           <FreeTimeDemurrageDeleteModal handleConfirm={() => removeFreeTimeDemurrage(index)} />
@@ -766,7 +764,7 @@ const Step4 = ({
                   )
                 })}
 
-                {specifications === 'fcl' &&  (
+                {specifications === SpecificationsType.Fcl && (
                   <>
                     <Grid item xs={12} container spacing={2}>
                       <Grid item xs={4}>
@@ -789,7 +787,7 @@ const Step4 = ({
                               icon="add"
                               backgroundGreen={false}
                               tooltip={I18n.t('pages.newProposal.step4.addFreeTime')}
-                              disabled={selectfreeTimeDemurrages[0].freeTime === false ? true : false}
+                              disabled={!selectfreeTimeDemurrages[0].freeTime}
                             />
                         </AddFreeTimeButtonWrapper>
                       </Grid>
