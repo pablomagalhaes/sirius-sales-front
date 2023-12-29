@@ -11,16 +11,12 @@
     "moduleResolution": "node",
     "jsx": "react",
     "allowJs": true,
-    "resolveJsonModule": true,
-    "paths": {
-      "react": [ "./node_modules/@types/react" ]
-      }
+    "resolveJsonModule": true
   },
   "include": [
     "src",
   ],
   "exclude": [
     "src/**.js"
-  ],
-
+  ]
 }
