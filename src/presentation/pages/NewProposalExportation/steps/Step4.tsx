@@ -508,7 +508,6 @@ const Step4 = ({
               size="small"
             />
           </Grid>
-          <Grid item xs={6} />
           <Grid item xs={2}>
             <FormLabel component="legend">
               {I18n.t('pages.newProposal.step4.time')}
@@ -554,12 +553,12 @@ const Step4 = ({
                 {selectfreeTimeDemurrages.map((freeTimeDemurrages, index) => {
                   return (
                     <Fragment key={index}>
-                      <Grid item xs={8} container spacing={2}>
+                      <Grid item xs={12} container spacing={2}>
 
                         {index === 0
                           ? (
                           <>
-                            <Grid item xs style={{ maxWidth: '330px' }}>
+                            <Grid item xs={4} >
                               {specifications === SpecificationsType.Fcl
                                 ? (
                                   <FormLabel component="legend">
@@ -618,12 +617,13 @@ const Step4 = ({
                           </>
                             )
                           : (
-                          <Grid item xs style={{ maxWidth: '400px' }} />
+                            <Grid item xs={4} />
                             )}
 
-                        {specifications === SpecificationsType.Fcl && selectfreeTimeDemurrages[0]?.freeTime
-                          ? (
-                            <><Grid item xs={2}>
+                          {specifications === 'fcl' && selectfreeTimeDemurrages[0]?.freeTime
+                            ? (
+                            <>
+                            <Grid item xs={2}>
                               <FormLabel component="legend" error={invalidInput && freeTimeDemurrages.idContainerType === ''}>
                                 {I18n.t('pages.newProposal.step4.containerType')}
                                 {modal === ModalTypes.Sea && <RedColorSpan> *</RedColorSpan>}
@@ -661,7 +661,8 @@ const Step4 = ({
                                   )
                                 })}
                               </ControlledSelect>
-                            </Grid><Grid item xs={3}>
+                            </Grid>
+                            <Grid item xs={2}>
                                 <FormLabel component="legend">
                                   {I18n.t('pages.newProposal.step4.purchaseDeadline')}
                                   {modal === ModalTypes.Sea && <RedColorSpan> *</RedColorSpan>}
@@ -687,7 +688,8 @@ const Step4 = ({
                                    value={freeTimeDemurrages.nrFreeTimeDaysDeadline}
 
                                   />
-                              </Grid><Grid item xs={2}>
+                              </Grid>
+                              <Grid item xs={2}>
                                 <FormLabel component="legend">
                                   {I18n.t('pages.newProposal.step4.salesDeadline')}
                                   {modal === ModalTypes.Sea && <RedColorSpan> *</RedColorSpan>}
@@ -726,17 +728,16 @@ const Step4 = ({
                                   </>
                                 )}
                               </></>
-                            )
-                          : (
-                              null
-                            )}
+                              )
+                            : (
+                                null
+                              )}
                       </Grid>
-                      <Grid item xs={4} />
                     </Fragment>
                   )
                 })}
 
-                {specifications === SpecificationsType.Fcl && (
+                {specifications === 'fcl' && (
                   <>
                     <Grid item xs={12} container spacing={2}>
                       <Grid item xs={4}>
@@ -759,7 +760,7 @@ const Step4 = ({
                               icon="add"
                               backgroundGreen={false}
                               tooltip={I18n.t('pages.newProposal.step4.addFreeTime')}
-                              disabled={false}
+                              disabled={!selectfreeTimeDemurrages[0].freeTime}
                             />
                         </AddFreeTimeButtonWrapper>
                       </Grid>
