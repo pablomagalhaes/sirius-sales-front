@@ -6,6 +6,12 @@
       "message": "When deleting the Agent, some information already filled in related to the current Agent will be discarded. Confirm the exclusion?",
       "title": "Are you sure you want to delete the agent?"
     },
+    "freeTimeDeleteModal": {
+      "cancelMessage": "Cancel",
+      "confirmMessage": "Confirm",
+      "message": "When deleting the some information will be discarded. Confirm the exclusion?",
+      "title": "Are you sure Are you sure you want to delete the container type?"
+    },
     "costModal": {
       "agent": "Agent:",
       "buyValue": "Buy Value",
@@ -307,7 +313,11 @@
         "tuesday": "T",
         "validity": "Validity:",
         "value": "Value (BRL):",
-        "wednesday": "W"
+        "wednesday": "W",
+        "addFreeTime": "Adicionar",
+        "containerType": "Container Type",
+        "purchaseDeadline": "Purchase deadline (days)",
+        "salesDeadline": "Sale deadline (days)"
       },
       "step5": {
         "addFare": "Add surcharge",

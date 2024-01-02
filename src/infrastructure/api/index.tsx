@@ -467,6 +467,16 @@ const getProposalType = async (params?): Promise<any> => {
   }
 }
 
+const getContainerTypes = async (params?): Promise<any> => {
+  const url: string = '/sirius-master-data-api/container/type'
+  try {
+    const res = await instance.get(url)
+    return res.data
+  } catch (error) {
+    toastErrorMessage(error, url)
+  }
+}
+
 const API = {
   getContainerType,
   getCurrencies,
@@ -507,7 +517,8 @@ const API = {
   downloadStaggeredProposal,
   getDangerousCode,
   getContainer,
-  getProposalType
+  getProposalType,
+  getContainerTypes
 }
 
 export default API

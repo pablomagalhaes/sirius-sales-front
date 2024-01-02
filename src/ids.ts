@@ -174,3 +174,15 @@ export const TARIFF_IMPORT_AIR_MODAL_BUTTON_CANCEL = `${PREFIX_IDS}_tariff-impor
 // Proposal Item Modal
 export const PROPOSAL_ITEM_MODAL_INPUT_SIZE = `${PREFIX_IDS}_proposal-item-modal_input_size`
 export const PROPOSAL_ITEM_MODAL_INPUT_TYPE = `${PREFIX_IDS}_proposal-item-modal_input_type`
+
+// Proposal Import Step4
+export const PROPOSAL_IMPORT_STEP4_FREETIME = `${PREFIX_IDS}_proposal_import_step4_freetime`
+export const PROPOSAL_IMPORT_STEP4_CONTAINER_TYPE = `${PREFIX_IDS}_proposal_import_step4_container_type`
+export const PROPOSAL_IMPORT_STEP4_PURCHASE_DEADLINE = `${PREFIX_IDS}_proposal_import_step4_purchase_deadline`
+export const PROPOSAL_IMPORT_STEP4_SALES_DEADLINE = `${PREFIX_IDS}_proposal_import_step4_sales_deadline`
+
+// Proposal Export Step4
+export const PROPOSAL_EXPORT_STEP4_FREETIME = `${PREFIX_IDS}_proposal_export_step4_freetime`
+export const PROPOSAL_EXPORT_STEP4_CONTAINER_TYPE = `${PREFIX_IDS}_proposal_export_step4_container_type`
+export const PROPOSAL_EXPORT_STEP4_PURCHASE_DEADLINE = `${PREFIX_IDS}_proposal_exportt_step4_purchase_deadline`
+export const PROPOSAL_EXPORT_STEP4_SALES_DEADLINE = `${PREFIX_IDS}_proposal_export_step4_sales_deadline`

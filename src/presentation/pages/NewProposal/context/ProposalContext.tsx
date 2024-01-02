@@ -42,9 +42,7 @@ export const emptyProposalValue: Proposal = {
   transitTime: 0, // step4 transit time
   idFrequency: 0, // step 4 id frequency
   route: '', // step4 rota
-  freeTime: false, // step4 freetime
-  vlFreeTime: null,
-  nrFreeTimeDaysDeadline: null,
+  freeTimeDemurrages: [],
   recurrency: 1, // 1
   weeklyRecurrency: '', // "0101100" segunda quarta e quinta
   transportIncluded: false,
