@@ -24,7 +24,7 @@ interface TotalSurchargeProps {
 
 const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, data, totalCosts, setTotalCostArray }: TotalSurchargeProps): JSX.Element => {
   const { proposal, setProposal }: ProposalProps = useContext(ProposalContext)
-  const [profit, setProfit] = useState('')
+  // const [profit, setProfit] = useState('')
   // const [profitPercentage, setProfitPercentage] = useState<number[][]>([])
 
   const removeDuplicates = (arr): any => {
@@ -119,13 +119,13 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
 
   useEffect(() => {
     if (data !== undefined && totalCosts !== undefined && totalCosts.length > 0) {
-      let finalProfit: string = ''
-      const profits: ProfitsProps[] = []
-      calculateProfit().forEach(profitValue => {
-        finalProfit += `${profitValue[0]} ${profitValue[1].toFixed(2)} + `
-        profits.push({ idCurrency: profitValue[0], valueTotalProfit: Number(profitValue[1].toFixed(2)), percentageProfit: null })
-      })
-      setProfit(finalProfit.slice(0, -3))
+      // let finalProfit: string = ''
+      // const profits: ProfitsProps[] = []
+      // calculateProfit().forEach(profitValue => {
+      //   finalProfit += `${profitValue[0]} ${profitValue[1].toFixed(2)} + `
+      //   profits.push({ idCurrency: profitValue[0], valueTotalProfit: Number(profitValue[1].toFixed(2)), percentageProfit: null })
+      // })
+      //  setProfit(finalProfit.slice(0, -3))
       const totalCostArray = [...proposal?.totalCosts.filter(e => e.costType === CostTypes.Origin || e.costType === CostTypes.Destiny)]
 
       if (totalOtherFare !== '0,00' && totalOtherFare !== '') {
@@ -161,7 +161,7 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
       // })
       // setProfitPercentage(calculateProfitPercentage())
       if (setTotalCostArray) setTotalCostArray(totalCostArray)
-      setProposal({ ...proposal, profits, totalCosts: totalCostArray })
+      setProposal({ ...proposal, totalCosts: totalCostArray })
     }
   }, [data, totalCosts, currency, totalOtherFare, value, modal])
 
@@ -185,10 +185,12 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
       </UpperContainer>
       <LowerContainer>
         <ProfitContainer>
+
+          {/* Profit comentado que sera implementado posteriormente no header
           <ProfitLabel>
             {I18n.t('pages.newProposal.step5.profit')}
             <ProfitValue>{profit.replace('.', ',')}</ProfitValue>
-          </ProfitLabel>
+          </ProfitLabel> */}
           {/* <ProfitLabel>
             {I18n.t('pages.newProposal.step5.percentageProfit')}
             {profitPercentage.map((profitArray) => (
