@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 // import PositiveProfitIcon from '../../../application/icons/PositiveProfitIcon'
 // import NegativeProfitIcon from '../../../application/icons/NegativeProfitIcon'
 import { ProposalContext, ProposalProps } from '../../pages/NewProposal/context/ProposalContext'
-import { ProfitsProps } from '../../../domain/ProfitsProps'
-import { CwLabel, ProfitContainer, ProfitLabel, ProfitValue, TotalCargoContainer, TotalContainer, UpperContainer, LowerContainer } from './style'
+import { CwLabel, ProfitContainer, TotalCargoContainer, TotalContainer, UpperContainer, LowerContainer } from './style'
 import { I18n } from 'react-redux-i18n'
 import FormatNumber from '../../../application/utils/formatNumber'
 import { CostTypes } from '../../../application/enum/costEnum'
@@ -27,10 +26,10 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
   // const [profit, setProfit] = useState('')
   // const [profitPercentage, setProfitPercentage] = useState<number[][]>([])
 
-  const removeDuplicates = (arr): any => {
-    return arr.filter((item: string,
-      index: number) => arr.indexOf(item) === index)
-  }
+  // const removeDuplicates = (arr): any => {
+  //   return arr.filter((item: string,
+  //     index: number) => arr.indexOf(item) === index)
+  // }
 
   const isAir = (): boolean => {
     return modal === 'AIR'
@@ -40,68 +39,68 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
     return FormatNumber.convertNumberToDecimal(FormatNumber.convertStringToNumber(value) * cwSale)
   }
 
-  const totalPurchase = (): number[][] => {
-    let currencyList = []
-    if (data.length > 0 && data[0].currencyPurchase !== '') {
-      currencyList = removeDuplicates([...totalCosts.map((total) => total.name), ...data.map(each => each.currencyPurchase)])
-    } else {
-      currencyList = removeDuplicates([...totalCosts.map((total) => total.name)])
-    }
+  // const totalPurchase = (): number[][] => {
+  //   let currencyList = []
+  //   if (data.length > 0 && data[0].currencyPurchase !== '') {
+  //     currencyList = removeDuplicates([...totalCosts.map((total) => total.name), ...data.map(each => each.currencyPurchase)])
+  //   } else {
+  //     currencyList = removeDuplicates([...totalCosts.map((total) => total.name)])
+  //   }
 
-    const result = currencyList.map((each) => {
-      const currencySelect = totalCosts.filter(total => total.name === each)
-      let total: number = 0
-      if (currencySelect.length > 0) {
-        total += Number(currencySelect.map(cost => cost.value.buy).reduce((acc, curr) => Number(acc) + Number(curr)))
-      }
-      if (data.length > 0 && data[0].currencyPurchase !== '') {
-        const purchaseCurrency = data.filter(purchase => purchase.currencyPurchase === each)
-        purchaseCurrency.forEach(currency => {
-          if (currency.valuePurchase !== '') total += FormatNumber.convertStringToNumber(currency.valuePurchase)
-        })
-      }
+  //   const result = currencyList.map((each) => {
+  //     const currencySelect = totalCosts.filter(total => total.name === each)
+  //     let total: number = 0
+  //     if (currencySelect.length > 0) {
+  //       total += Number(currencySelect.map(cost => cost.value.buy).reduce((acc, curr) => Number(acc) + Number(curr)))
+  //     }
+  //     if (data.length > 0 && data[0].currencyPurchase !== '') {
+  //       const purchaseCurrency = data.filter(purchase => purchase.currencyPurchase === each)
+  //       purchaseCurrency.forEach(currency => {
+  //         if (currency.valuePurchase !== '') total += FormatNumber.convertStringToNumber(currency.valuePurchase)
+  //       })
+  //     }
 
-      return [each, total]
-    })
+  //     return [each, total]
+  //   })
 
-    return result
-  }
+  //   return result
+  // }
 
-  const totalSale = (): number[][] => {
-    const currencyList = removeDuplicates([...totalCosts.map((total) => total.name), currency])
+  // const totalSale = (): number[][] => {
+  //   const currencyList = removeDuplicates([...totalCosts.map((total) => total.name), currency])
 
-    const result = currencyList.map((each) => {
-      const currencySelect = totalCosts.filter(total => total.name === each)
-      let total: number = 0
-      if (currencySelect.length > 0) {
-        total += Number(currencySelect.map(cost => cost.value.sale).reduce((acc, curr) => Number(acc) + Number(curr)))
-      }
-      if (currency === each && value !== '0,00' && value !== '') {
-        if (isAir()) total += totalValue()
-        else total += FormatNumber.convertStringToNumber(value)
-      }
-      if (currency === each && totalOtherFare !== '0,00' && totalOtherFare !== '') {
-        total += FormatNumber.convertStringToNumber(totalOtherFare)
-      }
-      return [each, total]
-    })
+  //   const result = currencyList.map((each) => {
+  //     const currencySelect = totalCosts.filter(total => total.name === each)
+  //     let total: number = 0
+  //     if (currencySelect.length > 0) {
+  //       total += Number(currencySelect.map(cost => cost.value.sale).reduce((acc, curr) => Number(acc) + Number(curr)))
+  //     }
+  //     if (currency === each && value !== '0,00' && value !== '') {
+  //       if (isAir()) total += totalValue()
+  //       else total += FormatNumber.convertStringToNumber(value)
+  //     }
+  //     if (currency === each && totalOtherFare !== '0,00' && totalOtherFare !== '') {
+  //       total += FormatNumber.convertStringToNumber(totalOtherFare)
+  //     }
+  //     return [each, total]
+  //   })
 
-    return result
-  }
+  //   return result
+  // }
 
-  const calculateProfit = (): number[][] => {
-    const finalResult: number[][] = []
+  // const calculateProfit = (): number[][] => {
+  //   const finalResult: number[][] = []
 
-    totalSale().forEach(sale => {
-      const purchaseTotal = totalPurchase().find(purchase => sale[0] === purchase[0])
-      if (purchaseTotal != null) finalResult.push([sale[0], sale[1] - purchaseTotal[1]])
-      else finalResult.push(sale)
-    })
-    totalPurchase().forEach(purchase => {
-      if (!finalResult.some(result => result[0] === purchase[0])) finalResult.push([purchase[0], -purchase[1]])
-    })
-    return finalResult
-  }
+  //   totalSale().forEach(sale => {
+  //     const purchaseTotal = totalPurchase().find(purchase => sale[0] === purchase[0])
+  //     if (purchaseTotal != null) finalResult.push([sale[0], sale[1] - purchaseTotal[1]])
+  //     else finalResult.push(sale)
+  //   })
+  //   totalPurchase().forEach(purchase => {
+  //     if (!finalResult.some(result => result[0] === purchase[0])) finalResult.push([purchase[0], -purchase[1]])
+  //   })
+  //   return finalResult
+  // }
 
   // const calculateProfitPercentage = (): number[][] => {
   //   const finalResult: number[][] = []

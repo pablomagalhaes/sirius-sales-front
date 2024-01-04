@@ -213,6 +213,9 @@
         "closeMessage": "Continue editing",
         "message": "Proposal saved successfully, Ref. "
       },
+      "profit": "Profit:",
+      "percentageProfit": "Percentage Profit:",
+      "totalProposal": "Total dessa proposta:",
       "send": "Send by email",
       "step1": {
         "agents": "Agents:",
@@ -338,8 +341,6 @@
         "minValue": "Min. Value",
         "origin": "Origin",
         "originCost": "New origin cost",
-        "profit": "Profit:",
-        "percentageProfit": "Percentage Profit:",
         "subtitle": "Inform the rates for the freight service.",
         "title": "Freight",
         "totalDestiny": "Total destiny costs:",
