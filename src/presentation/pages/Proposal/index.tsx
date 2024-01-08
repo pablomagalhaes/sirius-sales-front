@@ -590,16 +590,16 @@ const Proposal = (): JSX.Element => {
     )
     if (selectedOriginsDestinations !== undefined) {
       const modal: string = selectedOriginsDestinations.radioButtonSelected
-      const getModalName = (): string => {
+      const getModalName = (): Number => {
         switch (modal) {
           case 'Aéreo':
-            return 'AIR'
+            return 1
           case 'Marítimo':
-            return 'SEA'
+            return 2
           case 'Rodoviário':
-            return 'LAND'
+            return 3
           default:
-            return ''
+            return 0
         }
       }
 

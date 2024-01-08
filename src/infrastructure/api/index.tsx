@@ -467,8 +467,18 @@ const getProposalType = async (params?): Promise<any> => {
   }
 }
 
-const getContainerTypes = async (params?): Promise<any> => {
+const getContainerTypes = async (): Promise<any> => {
   const url: string = '/sirius-master-data-api/container/type'
+  try {
+    const res = await instance.get(url)
+    return res.data
+  } catch (error) {
+    toastErrorMessage(error, url)
+  }
+}
+
+const getProposalModal = async (): Promise<any> => {
+  const url: string = '/sirius-business-proposal-api/transport'
   try {
     const res = await instance.get(url)
     return res.data
@@ -518,7 +528,8 @@ const API = {
   getDangerousCode,
   getContainer,
   getProposalType,
-  getContainerTypes
+  getContainerTypes,
+  getProposalModal
 }
 
 export default API

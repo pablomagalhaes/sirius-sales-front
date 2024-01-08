@@ -27,3 +27,8 @@ interface FreightValues {
   until1000kg: string
   buyOrSell: string
 }
+
+export interface Modals {
+  idTransport: number
+  txTransport: string
+}
