@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, Fragment, ChangeEvent } from 'react'
+import React, { useEffect, useState, useContext, Fragment } from 'react'
 import {
   Checkbox,
   FormControlLabel,
@@ -28,7 +28,6 @@ import { ExitDialog } from 'fiorde-fe-components'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
 import { ModalTypes, ProposalTypes } from '../../../../application/enum/enum'
 import { useProposalType } from '../../../hooks'
-import InputRadio from '../../../components/InputRadio/InputRadio'
 
 export interface Agents {
   id?: number | null
@@ -345,44 +344,6 @@ const Step1 = ({
     }
   }, [data.proposalValue, selectedAgents, agentsList])
 
-  const dataTeste = { modal: 'valorInicial' }
-  const transportListTeste = [
-    { id: '1', description: 'Opção 1' },
-    { id: '2', description: 'Opção 2' }
-    // ... outros transportes
-  ]
-  // const handleModalChangeTeste = (value: string) => {
-
-  // }
-
-  // const handleModalChangeTeste = (modal): void => {
-  //   console.log('handleModalChangeTeste modal', modal)
-  //   if (
-  //     filled.step2 ||
-  //     filled.step3 ||
-  //     filled.step4 ||
-  //     filled.step6 ||
-  //     filled.step5
-  //   ) {
-  //     setModalCopy(modal)
-
-  //     if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
-  //       setShowPopUp(true)
-  //     } else {
-  //       setData({ ...data, modal: modal })
-  //       setShowPopUp(false)
-  //     }
-  //   } else {
-  //     setData({ ...data, modal: modal })
-  //   }
-  // }
-
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const handleModalChangeTeste = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log('handleModalChangeTeste', event.target.value) // Deve mostrar o valor do radio selecionado
-    // setSelectedValue(event.target.value);
-  }
-
   return (
     <Separator>
       <Title>
@@ -583,19 +544,33 @@ const Step1 = ({
         <RedColorSpan> *</RedColorSpan>
       </FormLabel>
 
-      {/* Importando Componente de InputRadio */}
-
-       <InputRadio
-        row={true}
-        ariaLabel="modal"
+      <RadioGroup
+        row
+        aria-label="modal"
         name="row-radio-buttons-group"
-        handleChange={handleModalChange}
-        items={transportList}
-        theme={theme}
         value={data.modal}
-        invalidInput={invalidInput}
-        hasIcon={true}
-       />
+        onChange={(e) => handleModalChange(e.target.value)}
+      >
+        {transportList.map((transport, i) => (
+          <div key={`div-${i}`} style={{ display: 'flex' }}>
+            <FormControlLabel
+              value={transport.id}
+              control={
+                <StyledRadio color={getColor(data?.modal)} key={`radio-${i}`} />
+              }
+              label={transport.description}
+              key={`label-${i}`}
+            />
+            <IconContainer key={`container-${i}`}>
+              <IconComponent
+                name={transport.id}
+                defaultColor={theme?.commercial?.pages?.newProposal?.subtitle}
+                key={`icon-${i}`}
+              />
+            </IconContainer>
+          </div>
+        ))}
+      </RadioGroup>
 
       {showPopUp && (
         <ExitDialog

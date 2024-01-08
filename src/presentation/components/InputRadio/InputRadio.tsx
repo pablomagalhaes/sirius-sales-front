@@ -43,7 +43,7 @@ const InputRadio: React.FC<RadioGroupProps> = ({
     <RadioGroup
       row={row}
       aria-label={ariaLabel}
-      name="row-radio-buttons-group"
+      data-testid={name}
       value={value}
       onChange={(e) => handleOnChange(e.target.value)}
     >
