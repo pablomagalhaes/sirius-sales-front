@@ -543,7 +543,6 @@ const Step1 = ({
         {I18n.t('pages.newProposal.step1.modal')}
         <RedColorSpan> *</RedColorSpan>
       </FormLabel>
-
       <RadioGroup
         row
         aria-label="modal"
@@ -571,7 +570,6 @@ const Step1 = ({
           </div>
         ))}
       </RadioGroup>
-
       {showPopUp && (
         <ExitDialog
           cancelButtonText={I18n.t(
