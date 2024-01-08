@@ -73,9 +73,50 @@ const RootContainer = styled.div`
   }
 `
 
+const TotalContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: auto;
+  border-radius: 8px;
+  background: ${(props: any) => props.theme?.commercial?.components?.totalSurchage?.backgroundColor};
+  margin-top: 15px;
+  margin-left: 15px;
+  padding: 0 10px;
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 150%;
+  color: ${(props: any) => props.theme?.commercial?.components?.totalSurchage?.fontColor};
+  letter-spacing: 0.02em;
+`
+
+const ProfitValue = styled.span`
+  margin-left: 15px;
+  font-weight: 400;
+`
+
+const UpperContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 20px 5px 10px;
+  width: 98%;
+  padding-bottom: 15px;
+`
+
+const LowerContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 20px;
+  margin-left: 5px;
+  margin-right: 1%;
+  width: 98%;
+`
+
 const TopContainer = styled.div`
   background: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.background};
-  display: flex;
   justify-content: space-between;
   align-items: center;
   margin: 3px 20px;
@@ -335,6 +376,16 @@ const AddFreeTimeButtonWrapper = styled.div`
   margin-top: 20px;
 `
 
+const PercentageCard = styled.div`
+  background: ${(props: any) => props.color === 'red' ? 'red' : '#6CD99A'};
+  border-radius: 4px;
+  font-weight: 400;
+  padding: 2px 9px;
+  color: #222222;
+  margin-left: 10px;
+  margin-right: 10px;
+`
+
 export {
   AddAgentButtonWrapper,
   ButtonContainer,
@@ -363,5 +414,10 @@ export {
   BottomContainer,
   ChargeContainer,
   EditIconContainer,
-  AddFreeTimeButtonWrapper
+  AddFreeTimeButtonWrapper,
+  TotalContainer,
+  UpperContainer,
+  LowerContainer,
+  ProfitValue,
+  PercentageCard
 }

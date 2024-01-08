@@ -14,7 +14,12 @@ import {
   UserContainer,
   Username,
   MessageContainer,
-  Status
+  Status,
+  TotalContainer,
+  UpperContainer,
+  LowerContainer,
+  ProfitValue,
+  PercentageCard
 } from './style'
 import { withTheme } from 'styled-components'
 import { I18n } from 'react-redux-i18n'
@@ -31,6 +36,8 @@ import { ProposalContext, ProposalProps, emptyProposalValue } from '../NewPropos
 import API from '../../../infrastructure/api'
 import { CalculationDataProps } from '../../components/ChargeTable'
 import { ModalTypes } from '../../../application/enum/enum'
+import PositiveProfitIcon from '../../../application/icons/PositiveProfitIcon'
+import { convertToDecimal } from '../Tariff/helpers'
 
 export interface NewProposalProps {
   theme: any
@@ -425,6 +432,22 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
   const handler = useCallback(() => { setLeavingPage(true) }, [])
   useOnClickOutside(handler)
 
+  const proposalTotal = (): string => {
+    const total = proposal?.totalCosts as any[]
+    const output = total.reduce((acc, { idCurrency, valueTotalSale }) => {
+      const index = acc.findIndex(item => item.idCurrency === idCurrency)
+      index === -1 ? acc.push({ idCurrency, valueTotalSale: valueTotalSale }) : acc[index].valueTotalSale = Number(acc[index].valueTotalSale) + Number(valueTotalSale)
+      return acc
+    }, [])
+    let result = ''
+    if (total) {
+      output.forEach((value, index) => {
+        result += ` ${String(value.idCurrency)} ${convertToDecimal(value.valueTotalSale)} ${output.length - 1 === index ? '' : '|'}`
+      })
+    }
+    return result
+  }
+
   return (
     <RootContainer>
       <Header>
@@ -473,6 +496,7 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
         </UserContainer>
       </Header>
       <TopContainer>
+        <div style={{ display: 'flex' }}>
         <Steps
           clicked={clicked}
           handleClick={handleClick}
@@ -495,6 +519,28 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
             <FloatingMenu menuItems={proposal?.idProposal != null ? floatingButtonMenuItemsAfterSaved : floatingButtonMenuItems} />
           </Button>
         </ButtonContainer>
+        </div>
+        <TotalContainer>
+          <UpperContainer>
+            <div>
+              {I18n.t('pages.newProposal.profit')}
+              <ProfitValue>R$ 50,00 + $ 500,00</ProfitValue>
+            </div>
+            <div>
+              {I18n.t('pages.newProposal.totalProposal')}
+              <span style={{ marginLeft: '20px' }}>{proposalTotal()}</span>
+            </div>
+          </UpperContainer>
+          <LowerContainer>
+            {I18n.t('pages.newProposal.percentageProfit')}
+            <PercentageCard>
+              <PositiveProfitIcon /> 5,74%
+            </PercentageCard> +
+            <PercentageCard>
+              <PositiveProfitIcon /> 12,91%
+            </PercentageCard>
+          </LowerContainer>
+        </TotalContainer>
       </TopContainer>
       <ProposalDisplayModal
         open={open}

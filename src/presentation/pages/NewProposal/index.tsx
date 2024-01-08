@@ -12,7 +12,12 @@ import {
   UserContainer,
   Username,
   MessageContainer,
-  Status
+  Status,
+  TotalContainer,
+  UpperContainer,
+  LowerContainer,
+  ProfitValue,
+  PercentageCard
 } from './style'
 import { withTheme } from 'styled-components'
 import { I18n } from 'react-redux-i18n'
@@ -28,6 +33,8 @@ import { ItemModalData } from '../../components/ItemModal/ItemModal'
 import { ProposalContext, ProposalProps, emptyProposalValue } from './context/ProposalContext'
 import API from '../../../infrastructure/api'
 import { CalculationDataProps } from '../../components/ChargeTable'
+import PositiveProfitIcon from '../../../application/icons/PositiveProfitIcon'
+import { convertToDecimal } from '../Tariff/helpers'
 
 export interface NewProposalProps {
   theme: any
@@ -445,6 +452,22 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
   const handler = useCallback(() => { setLeavingPage(true) }, [])
   useOnClickOutside(handler)
 
+  const proposalTotal = (): string => {
+    const total = proposal?.totalCosts as any[]
+    const output = total.reduce((acc, { idCurrency, valueTotalSale }) => {
+      const index = acc.findIndex(item => item.idCurrency === idCurrency)
+      index === -1 ? acc.push({ idCurrency, valueTotalSale: valueTotalSale }) : acc[index].valueTotalSale = Number(acc[index].valueTotalSale) + Number(valueTotalSale)
+      return acc
+    }, [])
+    let result = ''
+    if (total) {
+      output.forEach((value, index) => {
+        result += ` ${String(value.idCurrency)} ${convertToDecimal(value.valueTotalSale)} ${output.length - 1 === index ? '' : '|'}`
+      })
+    }
+    return result
+  }
+
   return (
     <RootContainer>
       <Header>
@@ -493,28 +516,51 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
         </UserContainer>
       </Header>
       <TopContainer>
-        <Steps
-          clicked={clicked}
-          handleClick={handleClick}
-          handleHover={handleHover}
-          hover={hover}
-          offset={-270}
-          steps={steps}
-        />
-        <ButtonContainer>
-          <Button
-            backgroundGreen
-            disabled={false}
-            icon="arrow"
-            onAction={() => { }}
-            popover
-            position="right"
-            text={I18n.t('pages.newProposal.buttonFinish')}
-            tooltip={I18n.t('pages.newProposal.buttonFinish')}
-          >
-            <FloatingMenu menuItems={proposal?.idProposal != null ? floatingButtonMenuItemsAfterSaved : floatingButtonMenuItems} />
-          </Button>
-        </ButtonContainer>
+        <div style={{ display: 'flex' }}>
+          <Steps
+            clicked={clicked}
+            handleClick={handleClick}
+            handleHover={handleHover}
+            hover={hover}
+            offset={-270}
+            steps={steps}
+          />
+          <ButtonContainer>
+            <Button
+              backgroundGreen
+              disabled={false}
+              icon="arrow"
+              onAction={() => { }}
+              popover
+              position="right"
+              text={I18n.t('pages.newProposal.buttonFinish')}
+              tooltip={I18n.t('pages.newProposal.buttonFinish')}
+            >
+              <FloatingMenu menuItems={proposal?.idProposal != null ? floatingButtonMenuItemsAfterSaved : floatingButtonMenuItems} />
+            </Button>
+          </ButtonContainer>
+        </div>
+        <TotalContainer>
+          <UpperContainer>
+            <div>
+              {I18n.t('pages.newProposal.profit')}
+              <ProfitValue>R$ 50,00 + $ 500,00</ProfitValue>
+            </div>
+            <div>
+              {I18n.t('pages.newProposal.totalProposal')}
+              <span style={{ marginLeft: '20px' }}>{proposalTotal()}</span>
+            </div>
+          </UpperContainer>
+          <LowerContainer>
+            {I18n.t('pages.newProposal.percentageProfit')}
+            <PercentageCard>
+              <PositiveProfitIcon /> 5,74%
+            </PercentageCard> +
+            <PercentageCard>
+              <PositiveProfitIcon /> 12,91%
+            </PercentageCard>
+          </LowerContainer>
+        </TotalContainer>
       </TopContainer>
       <ProposalDisplayModal
           open={open}
