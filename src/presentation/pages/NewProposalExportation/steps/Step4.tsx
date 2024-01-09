@@ -680,17 +680,16 @@ const Step4 = ({
                                       invalid={selectfreeTimeDemurrages[index]?.freeTime && selectfreeTimeDemurrages[index]?.vlFreeTime === null}
                                       value={freeTimeDemurrages.vlFreeTime}
                                       onChange={(e) => {
-                                        validateFloatInput(e.target.value) !== null &&
-                                          setSelectfreeTimeDemurrages(
-                                            selectfreeTimeDemurrages.map((value, currentIndex) =>
-                                              currentIndex === index
-                                                ? {
-                                                    ...value,
-                                                    vlFreeTime: e.target.value
-                                                  }
-                                                : value
-                                            )
+                                        setSelectfreeTimeDemurrages(
+                                          selectfreeTimeDemurrages.map((value, currentIndex) =>
+                                            currentIndex === index
+                                              ? {
+                                                  ...value,
+                                                  vlFreeTime: e.target.value
+                                                }
+                                              : value
                                           )
+                                        )
                                       }}
                                       variant="outlined"
                                       size="small"
