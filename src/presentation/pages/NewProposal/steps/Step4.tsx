@@ -220,11 +220,15 @@ const Step4 = ({
             // Modify the freeTime property for all objects except the first
             return {
               ...otherProperties,
+              vlFreeTime: FormatNumber.convertStringToParseFloat(String(otherProperties.vlFreeTime)),
               freeTime: true // Set the new value for the freeTime property
             }
           }
           // Return the object without modifications if it's the first one
-          return otherProperties
+          return {
+            ...otherProperties,
+            vlFreeTime: FormatNumber.convertStringToParseFloat(String(otherProperties.vlFreeTime))
+          }
         }
       )
     })
@@ -437,10 +441,6 @@ const Step4 = ({
 
   const MaxLength = {
     maxLength: 3
-  }
-
-  const validateFloatInput = (value: string): RegExpMatchArray | null => {
-    return value.match(/^[0-9]*,?[0-9]*$/)
   }
 
   return (
@@ -679,17 +679,16 @@ const Step4 = ({
                                       invalid={selectfreeTimeDemurrages[index]?.freeTime && selectfreeTimeDemurrages[index]?.vlFreeTime === null}
                                       value={freeTimeDemurrages.vlFreeTime}
                                       onChange={(e) => {
-                                        validateFloatInput(e.target.value) !== null &&
-                                          setSelectfreeTimeDemurrages(
-                                            selectfreeTimeDemurrages.map((value, currentIndex) =>
-                                              currentIndex === index
-                                                ? {
-                                                    ...value,
-                                                    vlFreeTime: e.target.value
-                                                  }
-                                                : value
-                                            )
+                                        setSelectfreeTimeDemurrages(
+                                          selectfreeTimeDemurrages.map((value, currentIndex) =>
+                                            currentIndex === index
+                                              ? {
+                                                  ...value,
+                                                  vlFreeTime: e.target.value
+                                                }
+                                              : value
                                           )
+                                        )
                                       }}
                                       variant="outlined"
                                       size="small"

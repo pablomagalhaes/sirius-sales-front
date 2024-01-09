@@ -48,6 +48,10 @@ const convertNumberToStringWithReplaceComma = (value: string): string => {
   return String(value).replace(/,/g, '.')
 }
 
+const convertStringToParseFloat = (value: string | undefined | null): any => {
+  return parseFloat(value.replace(',', '.')).toFixed(2)
+}
+
 const FormatNumber = {
   rightToLeftFormatter,
   convertNumberToString,
@@ -55,7 +59,8 @@ const FormatNumber = {
   convertNumberWithInterCoin,
   convertNumberToDecimal,
   rightToLeftFormatterPercentage,
-  convertNumberToStringWithReplaceComma
+  convertNumberToStringWithReplaceComma,
+  convertStringToParseFloat
 }
 
 export default FormatNumber
