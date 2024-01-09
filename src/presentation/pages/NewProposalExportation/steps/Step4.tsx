@@ -214,11 +214,15 @@ const Step4 = ({
             // Modify the freeTime property for all objects except the first
             return {
               ...otherProperties,
+              vlFreeTime: FormatNumber.convertStringToParseFloat(String(otherProperties.vlFreeTime)),
               freeTime: true // Set the new value for the freeTime property
             }
           }
           // Return the object without modifications if it's the first one
-          return otherProperties
+          return {
+            ...otherProperties,
+            vlFreeTime: FormatNumber.convertStringToParseFloat(String(otherProperties.vlFreeTime))
+          }
         }
       )
     })
