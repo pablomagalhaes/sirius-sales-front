@@ -23,7 +23,7 @@ const CheckBox: React.FC<CheckBoxProps> = ({
 }) => {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const handleOnChange = (item): void => {
-    handleChange(item) 
+    handleChange(item)
   }
   return (
     <FormControlLabel
