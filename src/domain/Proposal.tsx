@@ -24,7 +24,7 @@ export interface Proposal {
   costs: Cost[]
   totalCosts: TotalCost[]
   idProposalType: number // step1 tipo proposta 'cliente' 'routing order'
-  idTransport: string // step1 modal
+  idTransport: number // step1 modal
   originDestiny: any
   idOrigin: string // id origem (if rod="NULL") step2
   idDestination: string // id destino (if rod="NULL") step2

@@ -26,8 +26,9 @@ import { Transport, TransportList } from '../../../../domain/Transport'
 import { StyledPaper } from './StepsStyles'
 import { ExitDialog } from 'fiorde-fe-components'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
-import { ModalTypes, ProposalTypes } from '../../../../application/enum/enum'
-import { useProposalType } from '../../../hooks'
+import { ModalTypes, ProposalTypes, BusinessPartnerTypes, IdProposalTypes } from '../../../../application/enum/enum'
+import { useProposalType,useProposalModal } from '../../../hooks'
+import { Modals } from '../../../../data/models/new-staggered-proposal-model'
 
 export interface Agents {
   id?: number | null
@@ -70,6 +71,7 @@ const Step1 = ({
   setAgentList
 }: Step1Props): JSX.Element => {
   const { data: proposalTypes = [] } = useProposalType()
+  const { data: proposalModals = [] } = useProposalModal()
   const [transportList] = useState<Transport[]>(TransportList)
   const [agentsList, setAgentsList] = useState<any[]>([])
   const [businessPartnerList, setBusinessPartnerList] = useState<any[]>([])
@@ -110,8 +112,8 @@ const Step1 = ({
     return id
   }
   useEffect(() => {
-    if (proposal.idTransport !== '') {
-      if (proposal.idTransport === 'SEA') {
+    if (proposal.idTransport !== 0) {
+      if (proposal.idTransport === IdProposalTypes.Sea) {
         void getBusinessPartner('ARMADOR')
         void getBusinessPartner('COLOADER')
       } else {
@@ -128,10 +130,10 @@ const Step1 = ({
   }
   const getBusinessPartnerType = (): string => {
     switch (proposal.idTransport) {
-      case 'AIR':
-        return 'CIA. AEREA'
-      case 'LAND':
-        return 'TRANS. INTERNACIONAL'
+      case IdProposalTypes.Air:
+        return BusinessPartnerTypes.Air
+      case IdProposalTypes.Land:
+        return BusinessPartnerTypes.Land
     }
     return ''
   }
@@ -206,7 +208,7 @@ const Step1 = ({
             proposal: proposal.idProposalType,
             serviceDesemb: proposal.clearenceIncluded,
             serviceTransport: proposal.transportIncluded,
-            modal: proposal.idTransport,
+            modal: proposalModals.find((modal: Modals) => modal.idTransport === proposal.idTransport)?.txTransport,
             proposalValue: '',
             requester: proposal.requester
           })
@@ -228,7 +230,7 @@ const Step1 = ({
             proposal: proposal.idProposalType,
             serviceDesemb: proposal.clearenceIncluded,
             serviceTransport: proposal.transportIncluded,
-            modal: proposal.idTransport,
+            modal: proposalModals.find((modal: Modals) => modal.idTransport === proposal.idTransport)?.txTransport,
             proposalValue: String(response[2]),
             requester: proposal.requester
           })
@@ -244,9 +246,9 @@ const Step1 = ({
     let firstAgent!: any[]
     let listCostsWithoutAgents!: any[]
 
-    if (data.modal === 'LAND' || data.modal === 'SEA') {
-      if (proposal.idTransport !== '') {
-        if (proposal.idTransport === 'AIR') {
+    if (data.modal === ModalTypes.Land || data.modal === ModalTypes.Sea) {
+      if (proposal.idTransport !== 0) {
+        if (proposal.idTransport === IdProposalTypes.Air) {
           if (proposal.agents.length > 0 && proposal.agents[0].idBusinessPartnerAgent !== null) {
             firstAgent = proposal.agents
             proposal.agents = []
@@ -263,7 +265,7 @@ const Step1 = ({
     setProposal({
       ...proposal,
       idProposalType: data.proposal,
-      idTransport: data.modal,
+      idTransport: proposalModals.find((modal: Modals) => modal.txTransport === data.modal)?.idTransport,
       idBusinessPartnerCustomer:
         data.proposal === ProposalTypes.RoutingOrder
           ? agentsList.filter(

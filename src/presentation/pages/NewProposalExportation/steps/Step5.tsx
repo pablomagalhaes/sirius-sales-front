@@ -31,7 +31,7 @@ import { CalculationDataProps } from '../../../components/ChargeTable'
 import { CostTypes, FareItemsTypes } from '../../../../application/enum/costEnum'
 import TariffImportLclModal from '../../../components/TariffImport/TariffImportLclModal'
 import TariffImportLandModal from '../../../components/TariffImport/TariffImportLandModal'
-import { ModalTypes, AcitivityTypes } from '../../../../application/enum/enum'
+import { ModalTypes, AcitivityTypes, IdProposalTypes } from '../../../../application/enum/enum'
 import RemoveIcon from '../../../../application/icons/RemoveIcon'
 import TariffImportFclModal from '../../../components/TariffImport/TariffImportFclModal'
 import TariffImportAirModal from '../../../components/TariffImport/TariffImportAirModal'
@@ -263,7 +263,7 @@ const Step5 = ({
 
   useEffect(() => {
     loadAgentsList()
-    if (proposal.idTransport !== '') void loadBusinessPartner()
+    if (proposal.idTransport !== 0) void loadBusinessPartner()
   }, [proposal.idTransport])
 
   const loadAgentsList = (): void => {
@@ -273,7 +273,7 @@ const Step5 = ({
   }
 
   const loadBusinessPartner = async (): Promise<void> => {
-    if (proposal.idTransport === 'SEA') {
+    if (proposal.idTransport === IdProposalTypes.Sea) {
       await getBusinessPartnerSea()
     } else {
       const response = await API.getBusinessPartnerByType(getBusinessPartnerType())
@@ -291,9 +291,9 @@ const Step5 = ({
 
   const getBusinessPartnerType = (): string => {
     switch (proposal.idTransport) {
-      case 'AIR':
+      case 1:
         return 'CIA. AEREA'
-      case 'LAND':
+      case 3:
         return 'TRANS. INTERNACIONAL'
     }
     return ''
@@ -303,13 +303,13 @@ const Step5 = ({
     let service
 
     switch (proposal.idTransport) {
-      case 'AIR':
+      case 1:
         service = 'FRETE AÉREO'
         break
-      case 'LAND':
+      case 3:
         service = 'FRETE RODOVIÁRIO INTERNACIONAL'
         break
-      case 'SEA':
+      case 2:
         service = 'FRETE MARITIMO'
         break
     }
@@ -322,7 +322,7 @@ const Step5 = ({
     const resultado = proposal.costs.filter(cost => cost.costType !== CostTypes.Freight)
     proposal.costs = resultado
 
-    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
+    if (proposal.idTransport === IdProposalTypes.Air || proposal.idTransport === IdProposalTypes.Land || (proposal.idTransport === IdProposalTypes.Sea && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
       data.forEach((item, index): void => {
         const agent = proposal.agents[index]
         const freightCostNew = {
@@ -358,7 +358,7 @@ const Step5 = ({
       })
     }
 
-    if ((proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
+    if ((proposal.idTransport === IdProposalTypes.Sea && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
       dataContainer.forEach((item, index): void => {
         const freightCostNew = {
           id: item?.idCost,
@@ -539,7 +539,7 @@ const Step5 = ({
                     ? ''
                     : FormatNumber.convertNumberToString(Number(response[2]))
               }
-              if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
+              if (proposal.idTransport === IdProposalTypes.Air || proposal.idTransport === IdProposalTypes.Land || (proposal.idTransport === IdProposalTypes.Sea && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
                 if (cost.costType === CostTypes.Tariff) {
                   const getAgentByTarifaAgent = proposal.agents.find(agent => agent.idBusinessPartnerAgent === cost.agent.idBusinessPartnerAgent)
                   loadedItem.agent = getAgentByTarifaAgent // novo agente vinculado ao custo
@@ -640,7 +640,7 @@ const Step5 = ({
   }, [data, dataTotalCost, dataContainer])
 
   useEffect(() => {
-    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
+    if (proposal.idTransport === IdProposalTypes.Air || proposal.idTransport === IdProposalTypes.Land || (proposal.idTransport === IdProposalTypes.Sea && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
       if (data.every(d => d.currencyPurchase !== '') &&
       data.every(d => d.valuePurchase !== '') &&
       dataSales.valueSale?.length !== 0 &&
@@ -662,7 +662,7 @@ const Step5 = ({
       }
     }
 
-    if (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType) {
+    if (proposal.idTransport === IdProposalTypes.Sea && proposal.cargo[0].idCargoContractingType === FclCargoContractingType) {
       if (dataContainer.every(d => d.currencyPurchase !== '') && dataContainer.every(d => d.valuePurchase !== '')) {
         setCompleted((currentState) => {
           return { ...currentState, step5: true }
@@ -869,12 +869,12 @@ const Step5 = ({
   }
 
   function disabledAddFareButton (): boolean {
-    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
+    if (proposal.idTransport === IdProposalTypes.Air || proposal.idTransport === IdProposalTypes.Land || (proposal.idTransport === IdProposalTypes.Sea && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
       if (dataSales.currencySale !== null) {
         return false
       }
     }
-    if (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType) {
+    if (proposal.idTransport === IdProposalTypes.Sea && proposal.cargo[0].idCargoContractingType === FclCargoContractingType) {
       if (dataContainer[0]?.currencySale !== '' && dataContainer.every(row => row.currencySale === dataContainer[0].currencySale)) {
         return false
       }
@@ -883,7 +883,7 @@ const Step5 = ({
   }
 
   function renderTotalSurchage (): JSX.Element | undefined {
-    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND') {
+    if (proposal.idTransport === IdProposalTypes.Air || proposal.idTransport === IdProposalTypes.Land) {
       if (dataSales.valueSale?.length > 0 && dataSales.currencySale !== null) {
         return (
           <TotalSurcharge
@@ -899,7 +899,7 @@ const Step5 = ({
         )
       }
     }
-    if ((proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
+    if ((proposal.idTransport === IdProposalTypes.Sea && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
       if (dataContainer.every(row => row.valueSale !== '') && // algum campo de venda nao preenchido
         dataContainer.every(row => row.currencySale !== '' && row.currencySale !== null) && // algum campo de moeda nao preenchido
         dataContainer.every(row => row.currencySale === dataContainer[0].currencySale) // todos os campos de moeda precisam ter o mesmo valor
@@ -918,7 +918,7 @@ const Step5 = ({
         )
       }
     }
-    if (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType)) {
+    if (proposal.idTransport === IdProposalTypes.Sea && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType)) {
       if (dataSales.valueSale?.length > 0 && dataSales.currencySale !== null) {
         return (
           <TotalSurcharge
@@ -937,10 +937,10 @@ const Step5 = ({
   }
 
   function makeCurrencyOnFareModal (): string {
-    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
+    if (proposal.idTransport === IdProposalTypes.Air || proposal.idTransport === IdProposalTypes.Land || (proposal.idTransport === IdProposalTypes.Sea && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
       return dataSales.currencySale
     }
-    if ((proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
+    if ((proposal.idTransport === IdProposalTypes.Sea && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
       if (dataContainer.length > 0) {
         return dataContainer[0]?.currencySale
       }
@@ -949,7 +949,7 @@ const Step5 = ({
   }
 
   function makeSurchargeTable (agentList: any[]): JSX.Element | undefined {
-    if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
+    if (proposal.idTransport === IdProposalTypes.Air || proposal.idTransport === IdProposalTypes.Land || (proposal.idTransport === IdProposalTypes.Sea && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
       return (
         <SurchargeTable
           data={tableData}
@@ -963,7 +963,7 @@ const Step5 = ({
         />
       )
     }
-    if ((proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
+    if ((proposal.idTransport === IdProposalTypes.Sea && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
       return (
         <SurchargeTable
           data={tableData}
@@ -1109,7 +1109,7 @@ const Step5 = ({
   }
 
   const getPurchase = (value: string, currency: string, index: number, idTariff: number): void => {
-    if ((proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
+    if ((proposal.idTransport === IdProposalTypes.Sea && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
       const newData = [...dataContainer]
       newData[index].currencyPurchase = currency
       newData[index].valuePurchase = value
@@ -1135,7 +1135,7 @@ const Step5 = ({
   }
 
   const cleanPurchase = (index: number): void => {
-    if ((proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
+    if ((proposal.idTransport === IdProposalTypes.Sea && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
       const newData = [...dataContainer]
       newData[index].currencyPurchase = ''
       newData[index].valuePurchase = ''
@@ -1244,7 +1244,7 @@ const Step5 = ({
         <FormControl variant='outlined' size='small' className='form-size'>
           <>
             {(() => {
-              if (proposal.idTransport === 'AIR' || proposal.idTransport === 'LAND' || (proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
+              if (proposal.idTransport === IdProposalTypes.Air || proposal.idTransport === IdProposalTypes.Land || (proposal.idTransport === IdProposalTypes.Sea && proposal.cargo[0].idCargoContractingType !== null && ContractingTypeWithoutFcl.includes(proposal.cargo[0].idCargoContractingType))) {
                 return (
                   <>
                     <Grid item xs={6}>
@@ -1399,7 +1399,7 @@ const Step5 = ({
             })()}
 
             {(() => {
-              if ((proposal.idTransport === 'SEA' && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
+              if ((proposal.idTransport === IdProposalTypes.Sea && proposal.cargo[0].idCargoContractingType === FclCargoContractingType)) {
                 return (
                   <>
 

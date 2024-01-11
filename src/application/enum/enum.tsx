@@ -16,6 +16,18 @@ enum BusinessPartnerTypes {
   Air = 'CIA. AEREA'
 }
 
+enum ServiceTypes {
+  Sea = 'FRETE MARITIMO',
+  Land = 'FRETE RODOVIÁRIO INTERNACIONAL',
+  Air = 'FRETE AÉREO'
+}
+
+enum IdProposalTypes {
+  Sea = 2,
+  Land = 3,
+  Air = 1
+}
+
 enum TariffTypes {
   Import = 'import',
   Export = 'export'
@@ -110,5 +122,7 @@ export {
   ProposalTypes,
   IncotermTypes,
   SpecificationsType,
-  FreightTypes
+  FreightTypes,
+  ServiceTypes,
+  IdProposalTypes
 }
