@@ -29,6 +29,6 @@ interface FreightValues {
 }
 
 export interface Modals {
-  idTransport: number
-  txTransport: string
+  idTransportMode: number
+  txTransportMode: string
 }

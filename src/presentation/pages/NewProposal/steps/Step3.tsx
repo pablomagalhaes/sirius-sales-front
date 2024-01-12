@@ -252,7 +252,7 @@ const Step3 = ({
           setData({
             description: proposal.cargo[0].txCargo,
             specifications:
-              proposal.idTransport === 2
+              proposal.idTransportMode === 2
                 ? specificationsList[
                   Number(proposal.cargo[0].idCargoContractingType) - 1
                 ].toLowerCase()

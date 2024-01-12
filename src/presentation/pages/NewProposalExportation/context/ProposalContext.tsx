@@ -19,7 +19,7 @@ export const emptyProposalValue: Proposal = {
   costs: [],
   totalCosts: [],
   idProposalType: 0, // step1 tipo proposta 'cliente' 'routing order'
-  idTransport: 0, // step1 modal
+  idTransportMode: 0, // step1 modal
   idOrigin: '', // id origem (if rod="NULL")
   idDestination: '', // id destino (if rod="NULL")
   originDestiny: [],

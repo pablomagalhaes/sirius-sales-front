@@ -104,15 +104,15 @@ const Step1 = ({
     }
   }, [data.proposalValue, selectedAgents, agentsList])
   useEffect(() => {
-    if (proposal.idTransport !== 0) {
-      if (proposal.idTransport === IdProposalTypes.Sea) {
+    if (proposal.idTransportMode !== 0) {
+      if (proposal.idTransportMode === IdProposalTypes.Sea) {
         void getBusinessPartner('ARMADOR')
         void getBusinessPartner('COLOADER')
       } else {
         void getBusinessPartner(getBusinessPartnerType())
       }
     }
-  }, [proposal.idTransport])
+  }, [proposal.idTransportMode])
 
   const getBusinessPartner = async (type: string): Promise<any> => {
     const response = await API.getBusinessPartnerByType(type)
@@ -121,7 +121,7 @@ const Step1 = ({
     }
   }
   const getBusinessPartnerType = (): string => {
-    switch (proposal.idTransport) {
+    switch (proposal.idTransportMode) {
       case IdProposalTypes.Air:
         return BusinessPartnerTypes.Air
       case IdProposalTypes.Land:
@@ -156,7 +156,7 @@ const Step1 = ({
             proposal: proposal.idProposalType,
             serviceDesemb: proposal.clearenceIncluded,
             serviceTransport: proposal.transportIncluded,
-            modal: proposalModals.find((modal: Modals) => modal.idTransport === proposal.idTransport)?.txTransport,
+            modal: proposalModals.find((modal: Modals) => modal.idTransportMode === proposal.idTransportMode)?.txTransportMode,
             proposalValue: '',
             requester: proposal.requester
           })
@@ -178,7 +178,7 @@ const Step1 = ({
             proposal: proposal.idProposalType,
             serviceDesemb: proposal.clearenceIncluded,
             serviceTransport: proposal.transportIncluded,
-            modal: proposalModals.find((modal: Modals) => modal.idTransport === proposal.idTransport)?.txTransport,
+            modal: proposalModals.find((modal: Modals) => modal.idTransportMode === proposal.idTransportMode)?.txTransportMode,
             proposalValue: String(response[2]),
             requester: proposal.requester
           })
@@ -238,8 +238,8 @@ const Step1 = ({
     let listCostsWithoutAgents!: any[]
 
     if (data.modal === 'LAND' || data.modal === 'SEA') {
-      if (proposal.idTransport !== 0) {
-        if (proposal.idTransport === IdProposalTypes.Air) {
+      if (proposal.idTransportMode !== 0) {
+        if (proposal.idTransportMode === IdProposalTypes.Air) {
           if (proposal.agents.length > 0 && proposal.agents[0].idBusinessPartnerAgent !== null) {
             firstAgent = proposal.agents
             proposal.agents = []
@@ -256,7 +256,7 @@ const Step1 = ({
     setProposal({
       ...proposal,
       idProposalType: data.proposal,
-      idTransport: proposalModals.find((modal: Modals) => modal.txTransport === data.modal)?.idTransport,
+      idTransportMode: proposalModals.find((modal: Modals) => modal.txTransportMode === data.modal)?.idTransportMode,
       idBusinessPartnerCustomer:
         data.proposal === ProposalTypes.RoutingOrder
           ? agentsList.filter(
