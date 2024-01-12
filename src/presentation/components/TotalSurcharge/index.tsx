@@ -117,7 +117,7 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
   // }
 
   useEffect(() => {
-    if (data !== undefined && totalCosts !== undefined && totalCosts.length > 0) {
+    if (data !== undefined) {
       // let finalProfit: string = ''
       // const profits: ProfitsProps[] = []
       // calculateProfit().forEach(profitValue => {
