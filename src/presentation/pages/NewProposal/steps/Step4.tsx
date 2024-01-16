@@ -139,9 +139,6 @@ const Step4 = ({
     }
   ])
 
-  // Estado para rastrear as mudanças de freeTime em cada item
-  const [freeTimeChanges, setFreeTimeChanges] = useState({})
-
   const removeFreeTimeDemurrage = (indexRemove: number): void => {
     setSelectfreeTimeDemurrages(
       selectfreeTimeDemurrages.filter((_value, index) => index !== indexRemove)
