@@ -139,6 +139,9 @@ const Step4 = ({
     }
   ])
 
+  // Estado para rastrear as mudanças de freeTime em cada item
+  const [freeTimeChanges, setFreeTimeChanges] = useState({})
+
   const removeFreeTimeDemurrage = (indexRemove: number): void => {
     setSelectfreeTimeDemurrages(
       selectfreeTimeDemurrages.filter((_value, index) => index !== indexRemove)
@@ -586,19 +589,31 @@ const Step4 = ({
                                 aria-label="proposal type"
                                 id={PROPOSAL_IMPORT_STEP4_FREETIME}
                                 name="row-radio-buttons-group"
-                                value={freeTimeDemurrages.freeTime.toString()}
                                 onChange={(e, newValue) => {
-                                  setSelectfreeTimeDemurrages(
-                                    selectfreeTimeDemurrages.map((value, currentIndex) =>
-                                      currentIndex === index
-                                        ? {
-                                            ...value,
-                                            freeTime: newValue === 'true'
-                                          }
-                                        : value
-                                    )
+                                  const isFreeTimeFalse = newValue === 'false'
+                                  setSelectfreeTimeDemurrages(currentDemurrages =>
+                                    currentDemurrages.map((demurrage, currentIndex) => {
+                                      if (currentIndex === index) {
+                                        return isFreeTimeFalse
+                                          ? {
+                                              ...demurrage,
+                                              freeTime: false,
+                                              idFreeTimeDemurrage: null,
+                                              idContainerType: '',
+                                              nrFreeTimeDaysDeadline: null,
+                                              nrFreeTimeDaysDeadlineSale: null,
+                                              vlFreeTime: ''
+                                            }
+                                          : {
+                                              ...demurrage,
+                                              freeTime: true
+                                            }
+                                      }
+                                      return demurrage
+                                    })
                                   )
                                 }}
+                                value={freeTimeDemurrages.freeTime.toString()}
                               >
                                 <ControlledToolTip
                                   open={invalidInput && freeTimeDemurrages.freeTime === null}
