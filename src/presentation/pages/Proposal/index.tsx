@@ -623,7 +623,7 @@ const Proposal = (): JSX.Element => {
         }
         setFilter((filter: any) => ({
           ...filter,
-          idTransport: getModalName()
+          idTransportMode: getModalName()
         }))
       }
 
@@ -690,7 +690,7 @@ const Proposal = (): JSX.Element => {
         }
         setFilter((filter: any) => ({
           ...filter,
-          idTransport: getModalName()
+          idTransportMode: getModalName()
         }))
       }
     }
@@ -842,7 +842,7 @@ const Proposal = (): JSX.Element => {
     delete filter.idOrigin
     delete filter.idDestination
     delete filter.idIncoterm
-    delete filter.idTransport
+    delete filter.idTransportMode
     delete filter.status
     delete filter['openingDate.dtBegin']
     delete filter['openingDate.dtEnd']

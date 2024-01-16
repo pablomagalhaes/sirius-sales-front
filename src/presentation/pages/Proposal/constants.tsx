@@ -12,7 +12,7 @@ const orderButtonMenuItems = [
     description: 'Responsável'
   },
   {
-    value: 'idTransport',
+    value: 'idTransportMode',
     description: 'Modal'
   },
   {
