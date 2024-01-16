@@ -48,6 +48,14 @@ const convertNumberToStringWithReplaceComma = (value: string): string => {
   return String(value).replace(/,/g, '.')
 }
 
+function currencyToNumber (value: string | null): number {
+  if (value === null) {
+    return 0
+  }
+
+  return parseFloat(value.replace(/\D/g, '').replace(',','').replace('.','').replace(/(\d)(\d{2})$/, '$1.$2'))
+}
+
 const FormatNumber = {
   rightToLeftFormatter,
   convertNumberToString,
@@ -55,7 +63,8 @@ const FormatNumber = {
   convertNumberWithInterCoin,
   convertNumberToDecimal,
   rightToLeftFormatterPercentage,
-  convertNumberToStringWithReplaceComma
+  convertNumberToStringWithReplaceComma,
+  currencyToNumber
 }
 
 export default FormatNumber

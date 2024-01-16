@@ -38,6 +38,7 @@ import { CalculationDataProps } from '../../components/ChargeTable'
 import { ModalTypes } from '../../../application/enum/enum'
 import PositiveProfitIcon from '../../../application/icons/PositiveProfitIcon'
 import { convertToDecimal } from '../Tariff/helpers'
+import FormatNumber from '../../../application/utils/formatNumber'
 
 export interface NewProposalProps {
   theme: any
@@ -218,6 +219,58 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
     setHover(hoverState)
   }
 
+  const processProposal = (): any => {
+    const newProposal = { ...proposal }
+
+    // Function to delete null properties
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const deleteNullProperties = (obj, properties) => {
+      properties.forEach(prop => {
+        if (obj[prop] !== undefined && obj[prop] === null) {
+          delete obj[prop]
+        }
+      })
+    }
+
+    // Properties to remove if they are null
+    const propertiesToRemove = ['id', 'idProposal', 'idCargo', 'proposalId', 'idProposalImportFreight']
+
+    // Remove null properties from newProposal and its nested objects
+    deleteNullProperties(newProposal, propertiesToRemove)
+    newProposal.costs.forEach(cost => deleteNullProperties(cost, propertiesToRemove))
+    newProposal.totalCosts.forEach(total => deleteNullProperties(total, propertiesToRemove))
+    newProposal.agents.forEach(agent => deleteNullProperties(agent, propertiesToRemove))
+    newProposal.cargo[0].cargoVolumes.forEach(volume => deleteNullProperties(volume, propertiesToRemove))
+    newProposal.costs.forEach(cost => {
+      if (cost.agent) {
+        deleteNullProperties(cost.agent, propertiesToRemove)
+      }
+    });
+
+    // Additional properties to delete
+    ['originCityName', 'originCityId', 'destinationCityName', 'destinationCityId'].forEach(prop => {
+      if (newProposal[prop] !== undefined) {
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        delete newProposal[prop]
+      }
+    })
+
+    // Criando o novo objeto para freeTimeDemurrages
+    let newObject
+    if (newProposal.freeTimeDemurrages) {
+      newObject = newProposal.freeTimeDemurrages.map(demurrage => ({
+        ...demurrage,
+        vlFreeTime: FormatNumber.currencyToNumber(demurrage.vlFreeTime)
+      }))
+
+      // Substituindo o freeTimeDemurrages em newProposal pelo newObject
+      newProposal.freeTimeDemurrages = newObject
+    }
+
+    // Retornando newProposal com o freeTimeDemurrages atualizado
+    return newProposal
+  }
+
   const handleSave = (): void => {
     if (
       completed.step1 &&
@@ -229,7 +282,8 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
     ) {
       if (proposal.idProposal === undefined || proposal.idProposal === null || location.state?.eventType === 'duplicate') {
         proposal.idProposal = null
-        API.postProposal(JSON.stringify(proposal)).then((response) => {
+        const buildProposal = processProposal()
+        API.postProposal(JSON.stringify(buildProposal)).then((response) => {
           setProposal(response)
           // @ts-expect-error
           updateAgentsIdsRef?.current?.updateAgentsIdsRef()
@@ -247,7 +301,8 @@ const NewProposalExportation = ({ theme }: NewProposalProps): JSX.Element => {
           console.trace(error)
         })
       } else {
-        API.putProposal(proposal.idProposal, JSON.stringify(proposal)).then((response) => {
+        const buildProposal = processProposal()
+        API.putProposal(proposal.idProposal, JSON.stringify(buildProposal)).then((response) => {
           setProposal(response)
           // @ts-expect-error
           updateAgentsIdsRef?.current?.updateAgentsIdsRef()

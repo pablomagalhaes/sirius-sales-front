@@ -180,9 +180,11 @@ export const PROPOSAL_IMPORT_STEP4_FREETIME = `${PREFIX_IDS}_proposal_import_ste
 export const PROPOSAL_IMPORT_STEP4_CONTAINER_TYPE = `${PREFIX_IDS}_proposal_import_step4_container_type`
 export const PROPOSAL_IMPORT_STEP4_PURCHASE_DEADLINE = `${PREFIX_IDS}_proposal_import_step4_purchase_deadline`
 export const PROPOSAL_IMPORT_STEP4_SALES_DEADLINE = `${PREFIX_IDS}_proposal_import_step4_sales_deadline`
+export const PROPOSAL_IMPORT_STEP4_SALES_VALUE = `${PREFIX_IDS}_proposal_import_step4_sales_value`
 
 // Proposal Export Step4
 export const PROPOSAL_EXPORT_STEP4_FREETIME = `${PREFIX_IDS}_proposal_export_step4_freetime`
 export const PROPOSAL_EXPORT_STEP4_CONTAINER_TYPE = `${PREFIX_IDS}_proposal_export_step4_container_type`
 export const PROPOSAL_EXPORT_STEP4_PURCHASE_DEADLINE = `${PREFIX_IDS}_proposal_exportt_step4_purchase_deadline`
 export const PROPOSAL_EXPORT_STEP4_SALES_DEADLINE = `${PREFIX_IDS}_proposal_export_step4_sales_deadline`
+export const PROPOSAL_EXPORT_STEP4_SALES_VALUE = `${PREFIX_IDS}_proposal_import_step4_sales_value`
