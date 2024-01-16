@@ -587,11 +587,10 @@ const Step4 = ({
                                 id={PROPOSAL_IMPORT_STEP4_FREETIME}
                                 name="row-radio-buttons-group"
                                 onChange={(e, newValue) => {
-                                  const isFreeTimeFalse = newValue === 'false'
                                   setSelectfreeTimeDemurrages(currentDemurrages =>
                                     currentDemurrages.map((demurrage, currentIndex) => {
                                       if (currentIndex === index) {
-                                        return isFreeTimeFalse
+                                        return newValue === 'false'
                                           ? {
                                               ...demurrage,
                                               freeTime: false,
