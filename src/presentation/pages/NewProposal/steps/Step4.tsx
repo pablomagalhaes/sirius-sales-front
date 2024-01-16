@@ -29,7 +29,8 @@ import API from '../../../../infrastructure/api'
 import { NumberInput } from './StepsStyles'
 import { withTheme } from 'styled-components'
 import { ProposalContext, ProposalProps } from '../context/ProposalContext'
-import { ModalTypes, SpecificationsType } from '../../../../application/enum/enum'
+import { ModalTypes, SpecificationsType, LocaleTypes } from '../../../../application/enum/enum'
+import { CurrencytemsTypes } from '../../../../application/enum/currencyEnum'
 import FreeTimeDemurrageDeleteModal from '../../../components/FreeTimeDemurrageDeleteModal'
 
 import {
@@ -68,7 +69,7 @@ export interface FreeTimeDemurrage {
   freeTime: boolean
   nrFreeTimeDaysDeadline: number
   nrFreeTimeDaysDeadlineSale: number
-  vlFreeTime: number
+  vlFreeTime: string
 }
 
 const Step4 = ({
@@ -117,6 +118,8 @@ const Step4 = ({
     weeklyRecurrency: ''
   }
 
+  const DECIMAL_PLACES: number = 2
+
   const [data, setData] = useState(initialState)
 
   const [frequencyList, setFrequencyList] = useState<Frequency[]>([])
@@ -132,7 +135,7 @@ const Step4 = ({
       freeTime: false,
       nrFreeTimeDaysDeadline: null,
       nrFreeTimeDaysDeadlineSale: null,
-      vlFreeTime: null
+      vlFreeTime: ''
     }
   ])
 
@@ -203,7 +206,7 @@ const Step4 = ({
             freeTime: item.freeTime,
             nrFreeTimeDaysDeadline: item.nrFreeTimeDaysDeadline,
             nrFreeTimeDaysDeadlineSale: item.nrFreeTimeDaysDeadlineSale,
-            vlFreeTime: item.vlFreeTime
+            vlFreeTime: FormatNumber.convertNumberWithInterCoin(LocaleTypes.PT_BR, CurrencytemsTypes.BRL, Number(item.vlFreeTime))
           }
         })
       )
@@ -220,14 +223,14 @@ const Step4 = ({
             // Modify the freeTime property for all objects except the first
             return {
               ...otherProperties,
-              vlFreeTime: FormatNumber.convertStringToParseFloat(String(otherProperties.vlFreeTime)),
+              vlFreeTime: otherProperties.vlFreeTime,
               freeTime: true // Set the new value for the freeTime property
             }
           }
           // Return the object without modifications if it's the first one
           return {
             ...otherProperties,
-            vlFreeTime: FormatNumber.convertStringToParseFloat(String(otherProperties.vlFreeTime))
+            vlFreeTime: otherProperties.vlFreeTime
           }
         }
       )
@@ -642,7 +645,6 @@ const Step4 = ({
                                     toolTipTitle={I18n.t('components.itemModal.requiredField')}
                                     variant="outlined"
                                     inputProps={MaxLength}
-                                    invalid={selectfreeTimeDemurrages[index]?.freeTime && selectfreeTimeDemurrages[index]?.nrFreeTimeDaysDeadlineSale === null}
                                     onChange={(e) => {
                                       const newValue = parseFloat(e.target.value)
                                       setSelectfreeTimeDemurrages(
@@ -656,6 +658,9 @@ const Step4 = ({
                                         )
                                       )
                                     }}
+                                    invalid={
+                                      invalidInput && selectfreeTimeDemurrages[index].nrFreeTimeDaysDeadlineSale === null
+                                    }
                                     value={freeTimeDemurrages.nrFreeTimeDaysDeadlineSale}
                                   />
                                 </Grid>
@@ -670,14 +675,12 @@ const Step4 = ({
                                       thousandSeparator={'.'}
                                       decimalScale={2}
                                       format={(value: string) =>
-                                        FormatNumber.rightToLeftFormatter(value, 2)
+                                        FormatNumber.rightToLeftFormatter(value, DECIMAL_PLACES)
                                       }
                                       customInput={ControlledInput}
                                       toolTipTitle={I18n.t(
                                         'components.itemModal.requiredField'
                                       )}
-                                      invalid={selectfreeTimeDemurrages[index]?.freeTime && selectfreeTimeDemurrages[index]?.vlFreeTime === null}
-                                      value={freeTimeDemurrages.vlFreeTime}
                                       onChange={(e) => {
                                         setSelectfreeTimeDemurrages(
                                           selectfreeTimeDemurrages.map((value, currentIndex) =>
@@ -690,6 +693,10 @@ const Step4 = ({
                                           )
                                         )
                                       }}
+                                      invalid={
+                                        invalidInput && selectfreeTimeDemurrages[index].vlFreeTime === ''
+                                      }
+                                      value={freeTimeDemurrages.vlFreeTime}
                                       variant="outlined"
                                       size="small"
                                     />
@@ -704,7 +711,7 @@ const Step4 = ({
                           ? (
                             <>
                             <Grid item xs={2}>
-                              <FormLabel component="legend" error={invalidInput && freeTimeDemurrages.idContainerType === ''}>
+                              <FormLabel component="legend" error={invalidInput && selectfreeTimeDemurrages[0]?.idContainerType === ''}>
                                 {I18n.t('pages.newProposal.step4.containerType')}
                                 {modal === 'SEA' && <RedColorSpan> *</RedColorSpan>}
                               </FormLabel>
@@ -725,7 +732,6 @@ const Step4 = ({
                                 } }
                                 displayEmpty
                                 disableUnderline
-                                invalid={selectfreeTimeDemurrages[index]?.freeTime && freeTimeDemurrages.idContainerType === ''}
                                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
                               >
                                 <MenuItem disabled value="">
@@ -752,20 +758,22 @@ const Step4 = ({
                                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
                                  variant="outlined"
                                  inputProps={MaxLength}
-                                 invalid={selectfreeTimeDemurrages[index]?.freeTime && selectfreeTimeDemurrages[index]?.nrFreeTimeDaysDeadline === null}
-                                 onChange={(e) => {
-                                   const newValue = parseFloat(e.target.value)
-                                   setSelectfreeTimeDemurrages(
-                                     selectfreeTimeDemurrages.map((value, currentIndex) => currentIndex === index
-                                       ? {
-                                           ...value,
-                                           nrFreeTimeDaysDeadline: newValue
-                                         }
-                                       : value
-                                     )
-                                   )
-                                 } }
-                                 value={freeTimeDemurrages.nrFreeTimeDaysDeadline}
+                                onChange={(e) => {
+                                  const newValue = parseFloat(e.target.value)
+                                  setSelectfreeTimeDemurrages(
+                                    selectfreeTimeDemurrages.map((value, currentIndex) => currentIndex === index
+                                      ? {
+                                          ...value,
+                                          nrFreeTimeDaysDeadline: newValue
+                                        }
+                                      : value
+                                    )
+                                  )
+                                } }
+                                invalid={
+                                  invalidInput && selectfreeTimeDemurrages[index].nrFreeTimeDaysDeadline === null
+                                }
+                                value={freeTimeDemurrages.nrFreeTimeDaysDeadline}
                                 />
                               </Grid>
                               <Grid item xs={2}>
@@ -778,7 +786,6 @@ const Step4 = ({
                                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
                                  variant="outlined"
                                  inputProps={MaxLength}
-                                 invalid={selectfreeTimeDemurrages[index]?.freeTime && selectfreeTimeDemurrages[index]?.nrFreeTimeDaysDeadlineSale === null}
                                  onChange={(e) => {
                                    const newValue = parseFloat(e.target.value)
                                    setSelectfreeTimeDemurrages(
@@ -792,32 +799,11 @@ const Step4 = ({
                                      )
                                    )
                                  }}
+                                 invalid={
+                                  invalidInput && selectfreeTimeDemurrages[index].nrFreeTimeDaysDeadlineSale === null
+                                }
                                  value={freeTimeDemurrages.nrFreeTimeDaysDeadlineSale}
                                 />
-                                {/* <NumberInput
-                                  id={PROPOSAL_IMPORT_STEP4_SALES_DEADLINE}
-                                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                                  variant="outlined"
-                                  decimalSeparator={','}
-                                  decimalScale={2}
-                                  customInput={ControlledInput}
-                                  inputProps={MaxLength}
-                                  invalid={selectfreeTimeDemurrages[index]?.freeTime && selectfreeTimeDemurrages[index]?.nrFreeTimeDaysDeadlineSale === null}
-                                  onChange={(e, newValue) => {
-                                    setSelectfreeTimeDemurrages(
-                                      selectfreeTimeDemurrages.map((value, currentIndex) => currentIndex === index
-                                        ? {
-                                            ...value,
-                                            nrFreeTimeDaysDeadlineSale: e.target.value
-                                          }
-                                        : value
-                                      )
-                                    )
-                                  } }
-                                  value={freeTimeDemurrages.nrFreeTimeDaysDeadlineSale}
-                                  size="small"
-                                  style={{ height: '17px!important' }}
-                                  /> */}
                               </Grid>
                               <>
                                 {index !== 0 && (

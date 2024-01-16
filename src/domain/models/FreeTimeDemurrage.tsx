@@ -4,5 +4,5 @@ export interface FreeTimeDemurrage {
   freeTime?: boolean
   nrFreeTimeDaysDeadline?: number | null
   nrFreeTimeDaysDeadlineSale?: number | null
-  vlFreeTime?: number | null
+  vlFreeTime?: string | null
 }
