@@ -201,7 +201,7 @@ const Step1 = ({
         })
         .catch((err) => console.log(err))
     })
-    if(proposalModals.length > 0) {
+    if (proposalModals.length > 0) {
       if (proposal.idProposalType === ProposalTypes.RoutingOrder) {
         void Promise.all([getAgents, getPartners]).then(
           () => {
@@ -263,7 +263,7 @@ const Step1 = ({
         }
       }
     }
-    if(proposalModals.length > 0) {
+    if (proposalModals.length > 0) {
       setProposal({
         ...proposal,
         idProposalType: data.proposal,
@@ -279,7 +279,8 @@ const Step1 = ({
         requester: data.requester,
         transportIncluded: data.serviceTransport,
         clearenceIncluded: data.serviceDesemb
-    })}
+      })
+    }
   }, [data, proposalModals])
 
   useEffect(() => {
