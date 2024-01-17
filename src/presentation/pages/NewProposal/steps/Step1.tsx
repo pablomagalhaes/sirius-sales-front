@@ -208,7 +208,7 @@ const Step1 = ({
             proposal: proposal.idProposalType,
             serviceDesemb: proposal.clearenceIncluded,
             serviceTransport: proposal.transportIncluded,
-            modal: proposalModals.find((modal: Modals) => modal.idTransportMode === proposal.idTransportMode)?.txTransportMode,
+            modal: proposalModals.find((modal: Modals) => modal.idTransportMode === proposal.idTransportMode)?.txTransportMode || 0,
             proposalValue: '',
             requester: proposal.requester
           })
@@ -230,7 +230,7 @@ const Step1 = ({
             proposal: proposal.idProposalType,
             serviceDesemb: proposal.clearenceIncluded,
             serviceTransport: proposal.transportIncluded,
-            modal: proposalModals.find((modal: Modals) => modal.idTransportMode === proposal.idTransportMode)?.txTransportMode,
+            modal: proposalModals.find((modal: Modals) => modal.idTransportMode === proposal.idTransportMode)?.txTransportMode || 0,
             proposalValue: String(response[2]),
             requester: proposal.requester
           })
@@ -265,7 +265,7 @@ const Step1 = ({
     setProposal({
       ...proposal,
       idProposalType: data.proposal,
-      idTransportMode: proposalModals.find((modal: Modals) => modal.txTransportMode === data.modal)?.idTransportMode,
+      idTransportMode: proposalModals.find((modal: Modals) => modal.txTransportMode === data.modal)?.idTransportMode || 0,
       idBusinessPartnerCustomer:
         data.proposal === ProposalTypes.RoutingOrder
           ? agentsList.filter(
