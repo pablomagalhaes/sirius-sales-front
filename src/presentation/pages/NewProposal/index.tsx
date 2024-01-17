@@ -224,6 +224,7 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     const deleteNullProperties = (obj, properties) => {
       properties.forEach(prop => {
         if (obj[prop] !== undefined && obj[prop] === null) {
+          // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
           delete obj[prop]
         }
       })

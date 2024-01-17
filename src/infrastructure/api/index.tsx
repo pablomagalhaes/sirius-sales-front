@@ -478,7 +478,7 @@ const getContainerTypes = async (): Promise<any> => {
 }
 
 const getProposalModal = async (): Promise<any> => {
-  const url: string = '/sirius-business-proposal-api/transport'
+  const url: string = '/sirius-business-proposal-api/transport/mode'
   try {
     const res = await instance.get(url)
     return res.data
