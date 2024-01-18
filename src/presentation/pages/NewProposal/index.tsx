@@ -220,14 +220,13 @@ const NewProposal = ({ theme }: NewProposalProps): JSX.Element => {
     const newProposal = { ...proposal }
 
     // Function to delete null properties
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const deleteNullProperties = (obj, properties) => {
-      properties.forEach(prop => {
-        if (obj[prop] !== undefined && obj[prop] === null) {
-          // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-          delete obj[prop]
-        }
-      })
+    function deleteNullProperties<T extends object> (obj: T, propertiesToRemove: any[]): T {
+      const filteredEntries = Object.entries(obj)
+        .filter(([key, value]) => {
+          return !propertiesToRemove.includes(key as keyof T) || value !== null
+        })
+
+      return Object.fromEntries(filteredEntries) as T
     }
 
     // Properties to remove if they are null
