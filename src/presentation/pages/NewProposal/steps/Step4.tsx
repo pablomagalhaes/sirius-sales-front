@@ -118,6 +118,15 @@ const Step4 = ({
     weeklyRecurrency: ''
   }
 
+  const initialFreeTimeDemurrage = {
+    idFreeTimeDemurrage: null,
+    idContainerType: '',
+    freeTime: false,
+    nrFreeTimeDaysDeadline: null,
+    nrFreeTimeDaysDeadlineSale: null,
+    vlFreeTime: ''
+  }
+
   const DECIMAL_PLACES: number = 2
 
   const [data, setData] = useState(initialState)
@@ -128,16 +137,7 @@ const Step4 = ({
 
   const [containerTypeList, setContainerTypeList] = useState<ContainerTypes[]>([])
 
-  const [selectfreeTimeDemurrages, setSelectfreeTimeDemurrages] = useState<FreeTimeDemurrage[]>([
-    {
-      idFreeTimeDemurrage: null,
-      idContainerType: '',
-      freeTime: false,
-      nrFreeTimeDaysDeadline: null,
-      nrFreeTimeDaysDeadlineSale: null,
-      vlFreeTime: ''
-    }
-  ])
+  const [selectfreeTimeDemurrages, setSelectfreeTimeDemurrages] = useState<FreeTimeDemurrage[]>([{ ...initialFreeTimeDemurrage }])
 
   const removeFreeTimeDemurrage = (indexRemove: number): void => {
     setSelectfreeTimeDemurrages(
@@ -587,27 +587,9 @@ const Step4 = ({
                                 id={PROPOSAL_IMPORT_STEP4_FREETIME}
                                 name="row-radio-buttons-group"
                                 onChange={(e, newValue) => {
-                                  setSelectfreeTimeDemurrages(currentDemurrages =>
-                                    currentDemurrages.map((demurrage, currentIndex) => {
-                                      if (currentIndex === index) {
-                                        return newValue === 'false'
-                                          ? {
-                                              ...demurrage,
-                                              freeTime: false,
-                                              idFreeTimeDemurrage: null,
-                                              idContainerType: '',
-                                              nrFreeTimeDaysDeadline: null,
-                                              nrFreeTimeDaysDeadlineSale: null,
-                                              vlFreeTime: ''
-                                            }
-                                          : {
-                                              ...demurrage,
-                                              freeTime: true
-                                            }
-                                      }
-                                      return demurrage
-                                    })
-                                  )
+                                  newValue === 'false'
+                                    ? setSelectfreeTimeDemurrages([{ ...initialFreeTimeDemurrage }])
+                                    : setSelectfreeTimeDemurrages([{ ...initialFreeTimeDemurrage, freeTime: true }])
                                 }}
                                 value={freeTimeDemurrages.freeTime.toString()}
                               >
