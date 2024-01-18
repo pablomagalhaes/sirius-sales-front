@@ -116,7 +116,7 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
   //   return finalResult
   // }
 
-  useEffect(() => {
+  const changeTotalCosts = (): void => {
     if (data !== undefined) {
       // let finalProfit: string = ''
       // const profits: ProfitsProps[] = []
@@ -162,7 +162,21 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
       if (setTotalCostArray) setTotalCostArray(totalCostArray)
       setProposal({ ...proposal, totalCosts: totalCostArray })
     }
-  }, [data, totalCosts, currency, totalOtherFare, value, modal])
+  }
+
+  useEffect(() => {
+    changeTotalCosts()
+  }, [data, totalCosts, currency, modal, totalOtherFare, value])
+
+  useEffect(() => {
+    const cost = proposal?.totalCosts.find((cost) => cost.costType === CostTypes.Freight)
+    if(proposal?.totalCosts && proposal?.totalCosts.length === 0 && value !== '0,00' && value !== '') {
+      changeTotalCosts()
+    }
+    if(cost && cost.valueTotalSale !== FormatNumber.convertStringToNumber(value)) {
+      changeTotalCosts()
+    }
+  }, [proposal.totalCosts])
 
   return (
     <TotalContainer>
