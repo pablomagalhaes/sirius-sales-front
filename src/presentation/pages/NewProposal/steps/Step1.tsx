@@ -201,46 +201,48 @@ const Step1 = ({
         })
         .catch((err) => console.log(err))
     })
-    if (proposal.idProposalType === ProposalTypes.RoutingOrder) {
-      void Promise.all([getAgents, getPartners]).then(
-        () => {
-          setData({
-            proposal: proposal.idProposalType,
-            serviceDesemb: proposal.clearenceIncluded,
-            serviceTransport: proposal.transportIncluded,
-            modal: proposalModals.find((modal: Modals) => modal.idTransportMode === proposal.idTransportMode)?.txTransportMode || 0,
-            proposalValue: '',
-            requester: proposal.requester
-          })
-          setStepLoaded((currentState) => ({ ...currentState, step1: true }))
-        }
-      )
-    } else if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
-      const getPartnerCostumer = new Promise<void>((resolve) => {
-        API.getBusinessPartnerCostumer(proposal.idBusinessPartnerCustomer)
-          .then((response) => {
-            resolve(response?.simpleName)
-          })
-          .catch((err) => console.log(err))
-      })
+    if (proposalModals.length > 0) {
+      if (proposal.idProposalType === ProposalTypes.RoutingOrder) {
+        void Promise.all([getAgents, getPartners]).then(
+          () => {
+            setData({
+              proposal: proposal.idProposalType,
+              serviceDesemb: proposal.clearenceIncluded,
+              serviceTransport: proposal.transportIncluded,
+              modal: proposalModals.find((modal: Modals) => modal.idTransportMode === proposal.idTransportMode)?.txTransportMode || '',
+              proposalValue: '',
+              requester: proposal.requester
+            })
+            setStepLoaded((currentState) => ({ ...currentState, step1: true }))
+          }
+        )
+      } else if (proposal.idProposal !== undefined && proposal.idProposal !== null) {
+        const getPartnerCostumer = new Promise<void>((resolve) => {
+          API.getBusinessPartnerCostumer(proposal.idBusinessPartnerCustomer)
+            .then((response) => {
+              resolve(response?.simpleName)
+            })
+            .catch((err) => console.log(err))
+        })
 
-      void Promise.all([getAgents, getPartners, getPartnerCostumer]).then(
-        (response) => {
-          setData({
-            proposal: proposal.idProposalType,
-            serviceDesemb: proposal.clearenceIncluded,
-            serviceTransport: proposal.transportIncluded,
-            modal: proposalModals.find((modal: Modals) => modal.idTransportMode === proposal.idTransportMode)?.txTransportMode || 0,
-            proposalValue: String(response[2]),
-            requester: proposal.requester
-          })
-          setStepLoaded((currentState) => ({ ...currentState, step1: true }))
-        }
-      )
-    } else {
-      setStepLoaded((currentState) => ({ ...currentState, step1: true }))
+        void Promise.all([getAgents, getPartners, getPartnerCostumer]).then(
+          (response) => {
+            setData({
+              proposal: proposal.idProposalType,
+              serviceDesemb: proposal.clearenceIncluded,
+              serviceTransport: proposal.transportIncluded,
+              modal: proposalModals.find((modal: Modals) => modal.idTransportMode === proposal.idTransportMode)?.txTransportMode || '',
+              proposalValue: String(response[2]),
+              requester: proposal.requester
+            })
+            setStepLoaded((currentState) => ({ ...currentState, step1: true }))
+          }
+        )
+      } else {
+        setStepLoaded((currentState) => ({ ...currentState, step1: true }))
+      }
     }
-  }, [])
+  }, [proposalModals])
 
   useEffect(() => {
     let firstAgent!: any[]
@@ -261,24 +263,25 @@ const Step1 = ({
         }
       }
     }
-
-    setProposal({
-      ...proposal,
-      idProposalType: data.proposal,
-      idTransportMode: proposalModals.find((modal: Modals) => modal.txTransportMode === data.modal)?.idTransportMode || 0,
-      idBusinessPartnerCustomer:
-        data.proposal === ProposalTypes.RoutingOrder
-          ? agentsList.filter(
-            (agt) => agt.businessPartner.simpleName === data.proposalValue
-          )[0]?.businessPartner.id
-          : partnerList.filter(
-            (ptn) => ptn.businessPartner.simpleName === data.proposalValue
-          )[0]?.businessPartner.id,
-      requester: data.requester,
-      transportIncluded: data.serviceTransport,
-      clearenceIncluded: data.serviceDesemb
-    })
-  }, [data])
+    if (proposalModals.length > 0) {
+      setProposal({
+        ...proposal,
+        idProposalType: data.proposal,
+        idTransportMode: proposalModals.find((modal: Modals) => modal.txTransportMode === data.modal)?.idTransportMode || 0,
+        idBusinessPartnerCustomer:
+          data.proposal === ProposalTypes.RoutingOrder
+            ? agentsList.filter(
+              (agt) => agt.businessPartner.simpleName === data.proposalValue
+            )[0]?.businessPartner.id
+            : partnerList.filter(
+              (ptn) => ptn.businessPartner.simpleName === data.proposalValue
+            )[0]?.businessPartner.id,
+        requester: data.requester,
+        transportIncluded: data.serviceTransport,
+        clearenceIncluded: data.serviceDesemb
+      })
+    }
+  }, [data, proposalModals])
 
   useEffect(() => {
     setProposalType(data.proposal)
