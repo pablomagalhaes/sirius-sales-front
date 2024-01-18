@@ -182,11 +182,23 @@ const CostModal = ({
   const [flag, setFlag] = useState(false)
   const { proposal }: ProposalProps = useContext(ProposalContext)
 
+  const [calculationType, setCalculationType] = useState<any[]>([])
+
   const verifyContainerItems = (): void => {
     if (containerItems.length === 1) {
       dispatch({ type: 'selectedContainer', value: containerItems[0].type })
     }
   }
+
+  const loadCalculationList = (): void => {
+    API.getCalculationTypes()
+      .then((response) => setCalculationType(response))
+      .catch((err) => console.log(err))
+  }
+
+  useEffect(() => {
+    loadCalculationList()
+  }, [])
 
   useEffect(() => {
     dispatch({ type: 'dataProp' })
@@ -196,6 +208,7 @@ const CostModal = ({
   }, [open])
 
   useEffect(() => {
+    let newTypeList = []
     switch (true) {
       case modal === ModalTypes.Sea && specifications === SpecificationsType.Fcl && proposal?.operationType === FreightTypes.Import && title === I18n.t('pages.newProposal.step6.destinationCost'):
         setTypeList([
@@ -203,6 +216,12 @@ const CostModal = ({
           { name: CostNameTypes.Bl, value: FareItemsTypes.Bl },
           { name: CostNameTypes.Fdesp, value: FareItemsTypes.Fdesp, tooltip: TooltipTypes.Fdesp }
         ])
+        newTypeList = calculationType.filter(item => item.txCalculationType === FareItemsTypes.Container || item.txCalculationType === FareItemsTypes.Bl)
+          .map(item => ({
+            name: item.txCalculationType,
+            value: item.idCalculationType,
+            tooltip: item.txCalculationType === '% F.+ DESP.O' ? TooltipTypes.Fdesp : undefined // Conditionally add tooltip
+          }))
         break
       case ((modal === ModalTypes.Sea && specifications === SpecificationsType.Lcl) || (modal === ModalTypes.Sea && specifications === SpecificationsType.BreakBulk) || (modal === ModalTypes.Sea && specifications === SpecificationsType.Roro)) && proposal?.operationType === FreightTypes.Import && title === I18n.t('pages.newProposal.step6.destinationCost'):
         setTypeList([
@@ -252,7 +271,77 @@ const CostModal = ({
       default:
         setTypeList([])
     }
-  }, [modal, specifications])
+
+    setTypeList(newTypeList)
+  }, [modal, specifications, calculationType])
+
+  // useEffect(() => {
+  //   let newTypeList = []
+
+  //   switch (true) {
+  //     case modal === ModalTypes.Sea && specifications === SpecificationsType.Fcl && proposal?.operationType === FreightTypes.Import && title === I18n.t('pages.newProposal.step6.destinationCost'):
+  //       newTypeList = calculationType.filter(item => item.txCalculationType === FareItemsTypes.Container || item.txCalculationType === FareItemsTypes.Bl || item.txCalculationType === FareItemsTypes.Fdesp)
+  //         .map(item => ({
+  //           name: item.txCalculationType,
+  //           value: item.idCalculationType,
+  //           tooltip: item.txCalculationType === FareItemsTypes.Fdesp ? TooltipTypes.Fdesp : undefined // Conditionally add tooltip
+  //         }))
+  //       break
+  //     case ((modal === ModalTypes.Sea && specifications === SpecificationsType.Lcl) || (modal === ModalTypes.Sea && specifications === SpecificationsType.BreakBulk) || (modal === ModalTypes.Sea && specifications === SpecificationsType.Roro)) && proposal?.operationType === FreightTypes.Import && title === I18n.t('pages.newProposal.step6.destinationCost'):
+  //       newTypeList = calculationType.filter(item => item.txCalculationType === FareItemsTypes.Ton || item.txCalculationType === FareItemsTypes.Bl || item.txCalculationType === FareItemsTypes.Fdesp)
+  //         .map(item => ({
+  //           name: item.txCalculationType,
+  //           value: item.idCalculationType,
+  //           tooltip: item.txCalculationType === FareItemsTypes.Fdesp ? TooltipTypes.Fdesp : undefined // Conditionally add tooltip
+  //         }))
+  //       break
+  //     case modal === ModalTypes.Air && proposal?.operationType === FreightTypes.Import && title === I18n.t('pages.newProposal.step6.destinationCost'):
+  //       newTypeList = calculationType
+  //         .filter(item => item.txCalculationType === FareItemsTypes.Kilo || item.txCalculationType === FareItemsTypes.Fixed || item.txCalculationType === FareItemsTypes.Cw || item.txCalculationType === FareItemsTypes.Fdesp)
+  //         .map(item => ({
+  //           name: item.txCalculationType,
+  //           value: item.idCalculationType,
+  //           tooltip: item.txCalculationType === FareItemsTypes.Fdesp ? TooltipTypes.Fdesp : undefined // Conditionally add tooltip
+  //         }))
+
+  //       break
+  //     case modal === ModalTypes.Land && proposal?.operationType === FreightTypes.Import && title === I18n.t('pages.newProposal.step6.destinationCost'):
+  //       newTypeList = calculationType
+  //         .filter(item => item.txCalculationType === FareItemsTypes.Fixed)
+  //         .map(item => ({
+  //           name: item.txCalculationType,
+  //           value: item.idCalculationType,
+  //           tooltip: item.txCalculationType === FareItemsTypes.Fdesp ? TooltipTypes.Fdesp : undefined // Conditionally add tooltip
+  //         }))
+  //       break
+  //     case modal === ModalTypes.Sea && specifications === SpecificationsType.Fcl:
+  //       newTypeList = calculationType.filter(item => item.txCalculationType === FareItemsTypes.Container || item.txCalculationType === FareItemsTypes.Bl)
+  //         .map(item => ({ name: item.txCalculationType, value: item.idCalculationType }))
+  //       break
+  //     case (modal === ModalTypes.Sea && specifications === SpecificationsType.Lcl) || (modal === ModalTypes.Sea && specifications === SpecificationsType.BreakBulk) || (modal === ModalTypes.Sea && specifications === SpecificationsType.Roro):
+  //       newTypeList = calculationType.filter(item => item.txCalculationType === FareItemsTypes.Ton || item.txCalculationType === FareItemsTypes.Bl)
+  //         .map(item => ({ name: item.txCalculationType, value: item.idCalculationType }))
+  //       break
+  //     case modal === ModalTypes.Air:
+  //       setTypeList([
+  //         { name: CostNameTypes.Kilo, value: FareItemsTypes.Kilo },
+  //         { name: CostNameTypes.Fixed, value: FareItemsTypes.Fixed },
+  //         { name: CostNameTypes.Cw, value: FareItemsTypes.Cw }
+  //       ])
+  //       newTypeList = calculationType
+  //         .filter(item => item.txCalculationType === FareItemsTypes.Kilo || item.txCalculationType === FareItemsTypes.Fixed || item.txCalculationType === FareItemsTypes.Cw)
+  //         .map(item => ({ name: item.txCalculationType, value: item.idCalculationType }))
+  //       break
+  //     case modal === ModalTypes.Land:
+  //       newTypeList = calculationType
+  //         .filter(item => item.txCalculationType === FareItemsTypes.Fixed)
+  //         .map(item => ({ name: item.txCalculationType, value: item.idCalculationType }))
+  //       break
+  //     default:
+  //       newTypeList = []
+  //   }
+  //   setTypeList(newTypeList)
+  // }, [modal, specifications, calculationType])
 
   useEffect(() => {
     void (async function () {
