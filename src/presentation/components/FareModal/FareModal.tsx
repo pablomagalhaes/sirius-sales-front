@@ -29,7 +29,7 @@ import { NumberInput, StyledPaper } from '../../pages/NewProposal/steps/StepsSty
 import FormatNumber from '../../../application/utils/formatNumber'
 import { ProposalContext, ProposalProps } from '../../../presentation/pages/NewProposal/context/ProposalContext'
 import { ModalTypes, SpecificationsType } from '../../../application/enum/enum'
-import { CostTypes, FareItemsTypes } from '../../../application/enum/costEnum'
+import { FareItemsTypes } from '../../../application/enum/costEnum'
 
 export interface FareModalData {
   idCost?: number | null
