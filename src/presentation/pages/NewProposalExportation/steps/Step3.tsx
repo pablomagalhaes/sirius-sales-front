@@ -299,6 +299,29 @@ const Step3 = ({
     )
   }, [])
 
+  const cargoVolumeProposalChange = (value: CargoVolume[]): void => {
+    setProposal({
+      ...proposal,
+      cargo: [{
+        ...proposal.cargo[0],
+        txCargo: data.description,
+        idCargoContractingType:
+          modal === 'SEA'
+            ? specificationsList
+              .map((spe) => spe.toLowerCase())
+              .indexOf(data.specifications) + 1
+            : null,
+        isDangerous: data.dangerous,
+        idImoType: Number(data.imo),
+        idTemperature: Number(data.temperature),
+        cargoVolumes: value,
+        vlCwPurchase: isAir() ? chargeableWeight : null,
+        vlCwSale: isAir() ? chargeableWeightSale : null,
+        idCargoDangerous: dangerousCodes.find((code) => code.codDangerousCode === data.codUn?.split(' - ')[0])?.id ?? null
+      }]
+    })
+  }
+
   useEffect(() => {
     setProposal({
       ...proposal,
@@ -320,7 +343,7 @@ const Step3 = ({
         vlCwSale: isAir() ? chargeableWeightSale : null
       }]
     })
-  }, [data, cargoVolume, chargeableWeight, chargeableWeightSale])
+  }, [data, chargeableWeight, chargeableWeightSale])
 
   useEffect(() => {
     setCostData(tableRows.length)
@@ -346,6 +369,7 @@ const Step3 = ({
         container: row.type
       })
     })
+    cargoVolumeProposalChange(newCargoVolumes)
     setCargoVolume(newCargoVolumes)
   }, [tableRows])
 
