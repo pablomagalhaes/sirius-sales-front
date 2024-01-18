@@ -35,6 +35,7 @@ import { ModalTypes, AcitivityTypes, IdProposalTypes } from '../../../../applica
 import RemoveIcon from '../../../../application/icons/RemoveIcon'
 import TariffImportFclModal from '../../../components/TariffImport/TariffImportFclModal'
 import TariffImportAirModal from '../../../components/TariffImport/TariffImportAirModal'
+import { useCalculationTypes } from '../../../hooks/index'
 
 interface Step5Props {
   totalCosts: any
@@ -135,6 +136,8 @@ const Step5 = ({
 
   const [positionIndex, setPositionIndex] = useState<number>()
   const [selectAgent, setSelectAgent] = useState<any>()
+
+  const { data: calculationTypes = [] } = useCalculationTypes()
 
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => {
@@ -517,6 +520,7 @@ const Step5 = ({
               const loadedItem: FareModalData = {
                 idCost: cost.idCost,
                 idProposal: proposal.idProposal,
+                idCalculationType: cost.idCalculationType,
                 id: id++,
                 saleCurrency:
                   cost.idCurrencySale === ''
@@ -594,6 +598,7 @@ const Step5 = ({
           proposalId: row.agent?.proposalId ?? null
         },
         costType: CostTypes.Tariff,
+        idCalculationType: row.idCalculationType,
         billingType: row.type, // Tipo -MODAL
         valuePurchase: null, // valor compra
         valuePurchasePercent: 0, // 0 por enquanto
@@ -960,6 +965,7 @@ const Step5 = ({
           edit={editClickHandler}
           dataFields={dataSales}
           agentList={agentList}
+          calculationTypes={calculationTypes}
         />
       )
     }
@@ -974,6 +980,7 @@ const Step5 = ({
           edit={editClickHandler}
           dataFields={data[0]}
           agentList={agentList}
+          calculationTypes={calculationTypes}
         />
       )
     }
