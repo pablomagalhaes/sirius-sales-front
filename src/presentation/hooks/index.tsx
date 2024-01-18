@@ -70,6 +70,10 @@ const useProposalModal = (): any => {
   return useQuery([QueryKeys.proposalModal], API.getProposalModal)
 }
 
+const useCalculationTypes = (): any => {
+  return useQuery([QueryKeys.calculationTypes], API.getCalculationTypes)
+}
+
 export {
   useCurrencies,
   useOriginDestination,
@@ -80,5 +84,6 @@ export {
   useBusinessPartnerByType,
   useFrequency,
   useProposalType,
-  useProposalModal
+  useProposalModal,
+  useCalculationTypes
 }

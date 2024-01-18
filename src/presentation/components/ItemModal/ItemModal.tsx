@@ -35,6 +35,7 @@ export interface ItemModalData {
   stack: boolean
   type: any | null
   width: string | null
+  idCalculationType?: number | null
 }
 
 interface ItemModalProps {
@@ -113,7 +114,7 @@ const ItemModal = ({
       )
     } else {
       return !(
-        (data.type === null || data.type?.length === 0) ||
+        (data.idCalculationType === null) ||
         data.amount.length === 0 ||
         (data.rawWeight === null || data.rawWeight?.length === 0) ||
         (data.height === null || data.height?.length === 0) ||

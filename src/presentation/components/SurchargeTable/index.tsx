@@ -18,6 +18,8 @@ import {
   TableHeader
 } from './style'
 
+import GetNamesByID from '../../../application/utils/getNamesByID'
+
 interface TableData {
   costData: any
   data?: FareModalData[]
@@ -27,9 +29,10 @@ interface TableData {
   remove?: (id: number | null) => void
   specifications: string
   agentList: any[]
+  calculationTypes?: any[]
 }
 
-const SurchargeTable = ({ data, dataFields, remove, edit, agentList }: TableData): JSX.Element => {
+const SurchargeTable = ({ data, dataFields, remove, edit, agentList, calculationTypes }: TableData): JSX.Element => {
   const verifyType = (item): JSX.Element => {
     if (item.type === 'FIXO' || item.type === 'BL') {
       return (
@@ -92,7 +95,7 @@ const SurchargeTable = ({ data, dataFields, remove, edit, agentList }: TableData
                   {getAgentNameByidBusinessPartnerAgent(item?.agent?.idBusinessPartnerAgent)}
                 </StyledTableCell>
                 <StyledTableCell width="30%" align="left">
-                  {item.type}
+                  {GetNamesByID.getTxCalculationTypeById(calculationTypes, item.idCalculationType)}
                 </StyledTableCell>
                 <StyledTableCell width="100%" align="left">
                   <FormatValue>

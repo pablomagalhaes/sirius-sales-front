@@ -670,7 +670,7 @@ const Step4 = ({
                                       )
                                     }}
                                     invalid={
-                                      invalidInput && selectfreeTimeDemurrages[index].nrFreeTimeDaysDeadlineSale === null
+                                      invalidInput && freeTimeDemurrages.freeTime && selectfreeTimeDemurrages[index].nrFreeTimeDaysDeadlineSale === null
                                     }
                                     value={freeTimeDemurrages.nrFreeTimeDaysDeadlineSale}
                                   />

@@ -16,7 +16,8 @@ enum QueryKeys {
   proposalList = 'proposalList',
   countProposal = 'countProposal',
   proposalType = 'proposalType',
-  proposalModal = 'proposalModal'
+  proposalModal = 'proposalModal',
+  calculationTypes = 'calculationTypes'
 }
 
 export { QueryKeys }

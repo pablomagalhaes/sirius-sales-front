@@ -26,4 +26,5 @@ export interface Cost {
   valueSaleTotal: number | null
   valuePurchaseTotal: number | null
   idTariff?: number | null
+  idCalculationType?: number | null
 }

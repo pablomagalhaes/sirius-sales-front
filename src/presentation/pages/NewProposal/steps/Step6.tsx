@@ -158,7 +158,8 @@ const Step6 = ({
                 selectedContainer: response[0] === null ? null : String(response[0]),
                 type: String(cost.billingType),
                 buyValueCalculated: null,
-                saleValueCalculated: null
+                saleValueCalculated: null,
+                idCalculationType: cost.idCalculationType
               }
               if (cost.costType === CostTypes.Origin) {
                 loadedDataOrigin.push(loadedItem)
@@ -218,6 +219,7 @@ const Step6 = ({
         idContainer: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.container === row.selectedContainer)[0]?.idContainer : null, // containerMODAL
         agent: row.agent,
         costType: CostTypes.Origin, // 'Origem''Destino''Tarifa'
+        idCalculationType: row.idCalculationType,
         billingType: row.type, // Tipo -MODAL
         valuePurchase: Number(row.buyValue), // valor compra
         valuePurchasePercent: 0, // 0 por enquanto
@@ -243,6 +245,7 @@ const Step6 = ({
         idContainer: specifications === 'fcl' ? containerTypeList.filter((cont) => cont.container === row.selectedContainer)[0]?.idContainer : null, // containerMODAL
         agent: row.agent,
         costType: CostTypes.Destiny, // 'Origem''Destino''Tarifa'
+        idCalculationType: row.idCalculationType,
         billingType: row.type, // Tipo -MODAL
         valuePurchase: Number(row.buyValue), // valor compra
         valuePurchasePercent: 0, // 0 por enquanto
