@@ -168,15 +168,6 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
     changeTotalCosts()
   }, [data, totalCosts, currency, modal, totalOtherFare, value])
 
-  useEffect(() => {
-    const cost = proposal?.totalCosts.find((cost) => cost.costType === CostTypes.Freight)
-    if (proposal?.totalCosts && proposal?.totalCosts.length === 0 && value !== '0,00' && value !== '') {
-      changeTotalCosts()
-    }
-    if (cost && cost.valueTotalSale !== FormatNumber.convertStringToNumber(value)) {
-      changeTotalCosts()
-    }
-  }, [proposal.totalCosts])
 
   return (
     <TotalContainer>
