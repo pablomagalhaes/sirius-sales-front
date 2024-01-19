@@ -42,7 +42,7 @@ import {
   StatusProposalEnum,
   StatusProposalStringEnum
 } from '../../../application/enum/statusProposalEnum'
-import { ModalTypes } from '../../../application/enum/enum'
+import { ModalTypes, IdProposalTypes } from '../../../application/enum/enum'
 import RejectModal from '../../components/RejectModal/RejectModal'
 import CancelModal from '../../components/CancelModal/CancelModal'
 import { useQuery } from '@tanstack/react-query'
@@ -289,9 +289,9 @@ const Proposal = (): JSX.Element => {
   }
 
   const verifyModal = (modal: number): string => {
-    if (modal === 1) {
+    if (modal === IdProposalTypes.Air) {
       return ModalTypes.Air
-    } else if (modal === 2) {
+    } else if (modal === IdProposalTypes.Sea) {
       return ModalTypes.Sea
     } else {
       return ModalTypes.Land
