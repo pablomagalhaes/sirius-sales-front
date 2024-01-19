@@ -1,9 +1,9 @@
 import React, { useReducer, useState, useEffect, useContext } from 'react'
-import { Modal, Box, Container } from '@material-ui/core'
+import { Modal, Box, Container, MenuItem } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import CloseIcon from '../../../application/icons/CloseIcon'
-import { Button, Select } from 'fiorde-fe-components'
+import { Button } from 'fiorde-fe-components'
 import {
   CheckBox,
   CheckBoxLabel,
@@ -13,7 +13,9 @@ import {
   WarningPopUp,
   WarningPopUpMessage,
   WarningPopUpButtonDiv,
-  MainDiv
+  MainDiv,
+  CostModalContainer,
+  MenuItemContent
 } from './CostModalStyles'
 import { I18n } from 'react-redux-i18n'
 import CheckIcon from '../../../application/icons/CheckItem'
@@ -46,6 +48,10 @@ import { TARIFF_COST_MODAL_SELECT_TYPE } from '../../../ids'
 import { CostNameTypes, TooltipTypes, FareItemsTypes, CostTypes } from '../../../application/enum/costEnum'
 import { ModalTypes, SpecificationsType,FreightTypes } from '../../../application/enum/enum'
 import { TotalCostTable } from '../../pages/NewProposal/steps/Step6'
+import { useCalculationTypes } from '../../hooks/index'
+import GetNamesByID from '../../../application/utils/getNamesByID'
+import ControlledSelect from '../ControlledSelect'
+
 export interface CostTableItem {
   idCost?: number | null
   idProposal?: number | null
@@ -62,6 +68,7 @@ export interface CostTableItem {
   type: string
   buyValueCalculated: string | null
   saleValueCalculated: string | null
+  idCalculationType?: number | null
 }
 
 interface CostModalProps {
@@ -102,7 +109,8 @@ export const initialState = {
   saleMin: null,
   id: null,
   buyValueCalculated: null,
-  saleValueCalculated: null
+  saleValueCalculated: null,
+  idCalculationType: null
 }
 
 const CostModal = ({
@@ -161,6 +169,8 @@ const CostModal = ({
         return initialState
       case 'dataProp':
         return dataProp !== null && dataProp !== undefined ? dataProp : initialState
+      case 'idCalculationType':
+        return { ...state, idCalculationType: action.value }
       default:
         return state
     }
@@ -171,6 +181,7 @@ const CostModal = ({
     reducer,
     dataProp !== null && dataProp !== undefined ? dataProp : initialState
   )
+
   const [typeList, setTypeList] = useState<Item[]>([])
 
   const [buyCheckbox, setBuyCheckBox] = useState(state.buyValue != null)
@@ -181,6 +192,8 @@ const CostModal = ({
   const [currencyList, setCurrencyList] = useState<any[]>([])
   const [flag, setFlag] = useState(false)
   const { proposal }: ProposalProps = useContext(ProposalContext)
+
+  const { data: calculationTypes = [] } = useCalculationTypes()
 
   const verifyContainerItems = (): void => {
     if (containerItems.length === 1) {
@@ -196,63 +209,66 @@ const CostModal = ({
   }, [open])
 
   useEffect(() => {
+    let newTypeList: Item[] = []
+
     switch (true) {
       case modal === ModalTypes.Sea && specifications === SpecificationsType.Fcl && proposal?.operationType === FreightTypes.Import && title === I18n.t('pages.newProposal.step6.destinationCost'):
-        setTypeList([
-          { name: CostNameTypes.Container, value: FareItemsTypes.Container },
-          { name: CostNameTypes.Bl, value: FareItemsTypes.Bl },
-          { name: CostNameTypes.Fdesp, value: FareItemsTypes.Fdesp, tooltip: TooltipTypes.Fdesp }
-        ])
+        newTypeList = calculationTypes.filter(item => item.txCalculationType === FareItemsTypes.Container || item.txCalculationType === FareItemsTypes.Bl || item.txCalculationType === FareItemsTypes.Fdesp)
+          .map(item => ({
+            name: item.txCalculationType,
+            value: item.idCalculationType,
+            tooltip: item.txCalculationType === FareItemsTypes.Fdesp ? TooltipTypes.Fdesp : undefined // Conditionally add tooltip
+          }))
         break
       case ((modal === ModalTypes.Sea && specifications === SpecificationsType.Lcl) || (modal === ModalTypes.Sea && specifications === SpecificationsType.BreakBulk) || (modal === ModalTypes.Sea && specifications === SpecificationsType.Roro)) && proposal?.operationType === FreightTypes.Import && title === I18n.t('pages.newProposal.step6.destinationCost'):
-        setTypeList([
-          { name: CostNameTypes.Ton, value: FareItemsTypes.Ton },
-          { name: CostNameTypes.Bl, value: FareItemsTypes.Bl },
-          { name: CostNameTypes.Fdesp, value: FareItemsTypes.Fdesp, tooltip: TooltipTypes.Fdesp }
-        ])
+        newTypeList = calculationTypes.filter(item => item.txCalculationType === FareItemsTypes.Ton || item.txCalculationType === FareItemsTypes.Bl || item.txCalculationType === FareItemsTypes.Fdesp)
+          .map(item => ({
+            name: item.txCalculationType,
+            value: item.idCalculationType,
+            tooltip: item.txCalculationType === FareItemsTypes.Fdesp ? TooltipTypes.Fdesp : undefined // Conditionally add tooltip
+          }))
         break
       case modal === ModalTypes.Air && proposal?.operationType === FreightTypes.Import && title === I18n.t('pages.newProposal.step6.destinationCost'):
-        setTypeList([
-          { name: CostNameTypes.Kilo, value: FareItemsTypes.Kilo },
-          { name: CostNameTypes.Fixed, value: FareItemsTypes.Fixed },
-          { name: CostNameTypes.Cw, value: FareItemsTypes.Cw },
-          { name: CostNameTypes.Fdesp, value: FareItemsTypes.Fdesp, tooltip: TooltipTypes.Fdesp }
-        ])
+        newTypeList = calculationTypes
+          .filter(item => item.txCalculationType === FareItemsTypes.Kilo || item.txCalculationType === FareItemsTypes.Fixed || item.txCalculationType === FareItemsTypes.Cw || item.txCalculationType === FareItemsTypes.Fdesp)
+          .map(item => ({
+            name: item.txCalculationType,
+            value: item.idCalculationType,
+            tooltip: item.txCalculationType === FareItemsTypes.Fdesp ? TooltipTypes.Fdesp : undefined // Conditionally add tooltip
+          }))
         break
       case modal === ModalTypes.Land && proposal?.operationType === FreightTypes.Import && title === I18n.t('pages.newProposal.step6.destinationCost'):
-        setTypeList([
-          { name: CostNameTypes.Fixed, value: FareItemsTypes.Fixed },
-          { name: CostNameTypes.Fdesp, value: FareItemsTypes.Fdesp, tooltip: TooltipTypes.Fdesp }
-        ])
+        newTypeList = calculationTypes
+          .filter(item => item.txCalculationType === FareItemsTypes.Fixed)
+          .map(item => ({
+            name: item.txCalculationType,
+            value: item.idCalculationType,
+            tooltip: item.txCalculationType === FareItemsTypes.Fdesp ? TooltipTypes.Fdesp : undefined // Conditionally add tooltip
+          }))
         break
       case modal === ModalTypes.Sea && specifications === SpecificationsType.Fcl:
-        setTypeList([
-          { name: CostNameTypes.Container, value: FareItemsTypes.Container },
-          { name: CostNameTypes.Bl, value: FareItemsTypes.Bl }
-        ])
+        newTypeList = calculationTypes.filter(item => item.txCalculationType === FareItemsTypes.Container || item.txCalculationType === FareItemsTypes.Bl)
+          .map(item => ({ name: item.txCalculationType, value: item.idCalculationType }))
         break
       case (modal === ModalTypes.Sea && specifications === SpecificationsType.Lcl) || (modal === ModalTypes.Sea && specifications === SpecificationsType.BreakBulk) || (modal === ModalTypes.Sea && specifications === SpecificationsType.Roro):
-        setTypeList([
-          { name: CostNameTypes.Ton, value: FareItemsTypes.Ton },
-          { name: CostNameTypes.Bl, value: FareItemsTypes.Bl }
-        ])
+        newTypeList = calculationTypes.filter(item => item.txCalculationType === FareItemsTypes.Ton || item.txCalculationType === FareItemsTypes.Bl)
+          .map(item => ({ name: item.txCalculationType, value: item.idCalculationType }))
         break
       case modal === ModalTypes.Air:
-        setTypeList([
-          { name: CostNameTypes.Kilo, value: FareItemsTypes.Kilo },
-          { name: CostNameTypes.Fixed, value: FareItemsTypes.Fixed },
-          { name: CostNameTypes.Cw, value: FareItemsTypes.Cw }
-        ])
+        newTypeList = calculationTypes
+          .filter(item => item.txCalculationType === FareItemsTypes.Kilo || item.txCalculationType === FareItemsTypes.Fixed || item.txCalculationType === FareItemsTypes.Cw)
+          .map(item => ({ name: item.txCalculationType, value: item.idCalculationType }))
         break
       case modal === ModalTypes.Land:
-        setTypeList([
-          { name: CostNameTypes.Fixed, value: FareItemsTypes.Fixed }
-        ])
+        newTypeList = calculationTypes
+          .filter(item => item.txCalculationType === FareItemsTypes.Fixed)
+          .map(item => ({ name: item.txCalculationType, value: item.idCalculationType }))
         break
       default:
-        setTypeList([])
+        newTypeList = []
     }
-  }, [modal, specifications])
+    setTypeList(newTypeList)
+  }, [modal, specifications, calculationTypes])
 
   useEffect(() => {
     void (async function () {
@@ -369,7 +385,7 @@ const CostModal = ({
       dispatch({ type: 'saleCurrency', value: '' })
     }
     if (
-      item.type.length === 0 ||
+      item.idCalculationType === null ||
       (item.description === null || item.description?.length === 0)
     ) {
       invalid = true
@@ -406,7 +422,7 @@ const CostModal = ({
       const indexContainer = containerItems.findIndex(container => state.selectedContainer === container.type)
 
       const data = {
-        costType: item.type,
+        costType: GetNamesByID.getTxCalculationTypeById(calculationTypes, item.idCalculationType),
         quantityContainer: specifications === 'fcl' ? Number(containerItems[indexContainer]?.amount) : 0,
         valueGrossWeight: isNaN(Number(calculationData?.weight)) ? 0 : calculationData?.weight,
         valueCubage: isNaN(Number(calculationData?.cubage)) ? 0 : calculationData?.cubage,
@@ -496,20 +512,32 @@ const CostModal = ({
                 <RedColorSpan> *</RedColorSpan>
               </Label>
             </RowDiv>
-            <RowDiv
-              margin={true}
-              invalid={invalidInput && (state.type === null || state.type.length === 0)}
-              value={{ type: typeList.find((type) => type.value === state.type)?.name ?? '' }}
-            >
-              <Select
-                list={typeList}
-                id={TARIFF_COST_MODAL_SELECT_TYPE}
-                dispatch={dispatch}
-                state={{ type: typeList.find((type) => type.value === state.type)?.name ?? '' }}
-                toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                invalidInput={invalidInput && (state.type === null || state.type.length === 0)}
-                placeholder={state.type === '' ? I18n.t('components.costModal.choose') : typeList.find((type) => type.value === state.type)?.name }
-              />
+            <RowDiv>
+            <CostModalContainer>
+              <ControlledSelect
+                  id={TARIFF_COST_MODAL_SELECT_TYPE}
+                  onChange={(event: any) => {
+                    dispatch({ type: 'idCalculationType', value: Number(event.target.value) })
+                  }}
+                  displayEmpty
+                  value={state.idCalculationType}
+                  disableUnderline
+                  placeholder={state.idCalculationType !== null ? GetNamesByID.getTxCalculationTypeById(calculationTypes, state.idCalculationType) : ''}
+                  toolTipTitle={I18n.t('components.itemModal.requiredField')}
+                  invalid={invalidInput && (state.idCalculationType === null)}
+                >
+                  <MenuItem value="">
+                    <MenuItemContent>
+                      {I18n.t('components.fareModal.choose')}
+                    </MenuItemContent>
+                  </MenuItem>
+                  {typeList.map((item) => (
+                    <MenuItem key={item.value} value={item.value}>
+                      <MenuItemContent>{item.name}</MenuItemContent>
+                    </MenuItem>
+                  ))}
+                </ControlledSelect>
+            </CostModalContainer>
               <Container style={{ position: 'relative', marginRight: '368px' }}>
                 <ControlledToolTip
                   title={I18n.t('components.itemModal.requiredField')}
@@ -690,11 +718,11 @@ const CostModal = ({
                   <label>
                     {(state.buyValue === null || state.buyValue.length === 0) && (
                       <PlaceholderSpan>
-                        {state.type === FareItemsTypes.Fdesp ? I18n.t('components.costModal.percentage') : I18n.t('components.costModal.value')}
+                        {GetNamesByID.getTxCalculationTypeById(calculationTypes,state.idCalculationType) === FareItemsTypes.Fdesp ? I18n.t('components.costModal.percentage') : I18n.t('components.costModal.value')}
                         {buyCheckbox && <RedColorSpan> *</RedColorSpan>}
                       </PlaceholderSpan>
                     )}
-                    {state.type === FareItemsTypes.Fdesp
+                    {GetNamesByID.getTxCalculationTypeById(calculationTypes,state.idCalculationType) === FareItemsTypes.Fdesp
                       ? <NumberInput
                         decimalSeparator={','}
                         thousandSeparator={'.'}

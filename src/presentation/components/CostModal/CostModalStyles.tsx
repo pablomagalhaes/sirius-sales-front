@@ -216,3 +216,16 @@ export const MainDiv = styled.div`
     color: ${(props: any) => props.theme?.commercial?.pages?.newProposal?.font};
   }
 `
+
+export const CostModalContainer = styled.div`
+  width: ${(props: {width: string}) => props.width};
+  height: ${(props: {height: string}) => props.height};
+  margin: ${(props: {margin: string}) => props.margin};
+  svg {
+    fill: ${(props: any) =>
+    props.theme?.commercial?.components?.itemModal?.iconColor};
+  }
+`
+export const MenuItemContent = styled.span`
+margin-left: 10px;
+`

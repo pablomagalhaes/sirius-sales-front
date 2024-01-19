@@ -28,6 +28,9 @@ import { ItemModalData } from '../ItemModal/ItemModal'
 import { NumberInput, StyledPaper } from '../../pages/NewProposal/steps/StepsStyles'
 import FormatNumber from '../../../application/utils/formatNumber'
 import { ProposalContext, ProposalProps } from '../../../presentation/pages/NewProposal/context/ProposalContext'
+import { ModalTypes, SpecificationsType } from '../../../application/enum/enum'
+import { FareItemsTypes } from '../../../application/enum/costEnum'
+import { useCalculationTypes } from '../../hooks/index'
 
 export interface FareModalData {
   idCost?: number | null
@@ -42,6 +45,7 @@ export interface FareModalData {
   type: string
   totalItem?: string
   agent?: any
+  idCalculationType?: number | null
 }
 
 interface FareModalProps {
@@ -72,7 +76,8 @@ export const initialState = {
   minimumValue: '',
   saleCurrency: 'BRL',
   selectedContainer: null,
-  id: null
+  id: null,
+  idCalculationType: null
 }
 
 const FareModal = ({
@@ -95,6 +100,8 @@ const FareModal = ({
   const [agentList, setAgentList] = useState<any[]>([])
   const { proposal }: ProposalProps = useContext(ProposalContext)
 
+  const { data: calculationTypes = [] } = useCalculationTypes()
+
   const verifyContainerItems = (): void => {
     if (containerItems.length === 1) {
       setData({ ...data, selectedContainer: containerItems[0].type })
@@ -115,7 +122,7 @@ const FareModal = ({
 
   const isValid = (): boolean => {
     return !(
-      data.type.length === 0 ||
+      data.idCalculationType === null ||
       data.saleValue.length === 0 ||
       data.saleCurrency.length === 0 ||
       (data.expense === null || data.expense?.length === 0)
@@ -196,23 +203,37 @@ const FareModal = ({
   }, [proposal, AllAgents])
 
   useEffect(() => {
-    switch (true) {
-      case modal === 'SEA' && specifications === 'fcl':
-        setTypeList([{ name: 'Container', value: 'CONTAINER' }, { name: 'BL', value: 'BL' }])
-        break
-      case (modal === 'SEA' && specifications === 'lcl') || (modal === 'SEA' && specifications === 'break bulk') || (modal === 'SEA' && specifications === 'ro-ro'):
-        setTypeList([{ name: 'Ton³', value: 'TON' }, { name: 'BL', value: 'BL' }])
-        break
-      case modal === 'AIR':
-        setTypeList([{ name: 'KG', value: 'KG' }, { name: 'Fixo', value: 'FIXO' }, { name: 'CW', value: 'CW' }])
-        break
-      case modal === 'LAND':
-        setTypeList([{ name: 'Fixo', value: 'FIXO' }])
-        break
-      default:
-        setTypeList([])
+    let newTypeList = []
+
+    if (calculationTypes?.length > 0) {
+      switch (true) {
+        case modal === ModalTypes.Sea && specifications === SpecificationsType.Fcl:
+          newTypeList = calculationTypes.filter(item => item.txCalculationType === FareItemsTypes.Container || item.txCalculationType === FareItemsTypes.Bl)
+            .map(item => ({ name: item.txCalculationType, value: item.idCalculationType }))
+          break
+        case (modal === ModalTypes.Sea && specifications === SpecificationsType.Lcl) ||
+             (modal === ModalTypes.Sea && specifications === SpecificationsType.BreakBulk) ||
+             (modal === ModalTypes.Sea && specifications === SpecificationsType.Roro):
+          newTypeList = calculationTypes.filter(item => item.txCalculationType === FareItemsTypes.Ton || item.txCalculationType === FareItemsTypes.Bl)
+            .map(item => ({ name: item.txCalculationType, value: item.idCalculationType }))
+          break
+        case modal === ModalTypes.Air:
+          newTypeList = calculationTypes
+            .filter(item => item.txCalculationType === FareItemsTypes.Kilo || item.txCalculationType === FareItemsTypes.Fixed || item.txCalculationType === FareItemsTypes.Cw)
+            .map(item => ({ name: item.txCalculationType, value: item.idCalculationType }))
+          break
+        case modal === ModalTypes.Land:
+          newTypeList = calculationTypes
+            .filter(item => item.txCalculationType === FareItemsTypes.Fixed)
+            .map(item => ({ name: item.txCalculationType, value: item.idCalculationType }))
+          break
+        default:
+          newTypeList = []
+      }
+
+      setTypeList(newTypeList)
     }
-  }, [modal, specifications])
+  }, [modal, specifications, calculationTypes])
 
   return (
     <Modal open={open} onClose={handleOnClose}>
@@ -263,13 +284,13 @@ const FareModal = ({
             </Container>
             <Container width="150px" height="32px" margin="0 0 5px 10px">
               <ControlledSelect
-                onChange={(e) => setData({ ...data, type: e.target.value })}
+                onChange={(e) => setData({ ...data, idCalculationType: e.target.value })}
                 displayEmpty
-                value={data.type}
+                value={data.idCalculationType}
                 disableUnderline
-                placeholder={data.type}
+                placeholder={data.idCalculationType}
                 toolTipTitle={I18n.t('components.itemModal.requiredField')}
-                invalid={invalidInput && (data.type === null || data.type.length === 0)}
+                invalid={invalidInput && (data.idCalculationType === null)}
               >
                 <MenuItem disabled value="">
                   <MenuItemContent>

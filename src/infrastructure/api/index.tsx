@@ -487,6 +487,16 @@ const getProposalModal = async (): Promise<any> => {
   }
 }
 
+const getCalculationTypes = async (): Promise<any> => {
+  const url: string = '/sirius-business-proposal-api/calculation/type'
+  try {
+    const res = await instance.get(url)
+    return res.data
+  } catch (error) {
+    toastErrorMessage(error, url)
+  }
+}
+
 const API = {
   getContainerType,
   getCurrencies,
@@ -529,7 +539,8 @@ const API = {
   getContainer,
   getProposalType,
   getContainerTypes,
-  getProposalModal
+  getProposalModal,
+  getCalculationTypes
 }
 
 export default API

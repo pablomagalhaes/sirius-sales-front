@@ -37,6 +37,8 @@ import { Agents } from '../../pages/NewProposal/steps/Step2'
 import { FareItemsTypes, CostTypes } from '../../../application/enum/costEnum'
 import { ModalTypes } from '../../../application/enum/enum'
 import { TARIFF_COST_TABLE_SPAN_AGENT } from '../../../ids'
+import GetNamesByID from '../../../application/utils/getNamesByID'
+import { useCalculationTypes } from '../../hooks/index'
 
 interface CostTableProps {
   agentList: Agents[]
@@ -92,6 +94,8 @@ const CostTable = ({
   const handleClose = (): void => setOpen(false)
   const { proposal }: ProposalProps = useContext(ProposalContext)
 
+  const { data: calculationTypes = [] } = useCalculationTypes()
+
   const editClickHandler = (tableData: CostTableItem): void => {
     setChargeData({ ...tableData, buyValueCalculated: null, saleValueCalculated: null })
     handleOpen()
@@ -138,7 +142,7 @@ const CostTable = ({
         const indexContainer = containerItems.findIndex(container => item.selectedContainer === container.type)
 
         const newData = {
-          costType: item.type,
+          costType: GetNamesByID.getTxCalculationTypeById(calculationTypes, item.idCalculationType),
           quantityContainer: specifications === 'fcl' ? Number(containerItems[indexContainer].amount) : 0,
           valueGrossWeight: isNaN(Number(calculationData?.weight)) ? 0 : calculationData?.weight,
           valueCubage: isNaN(Number(calculationData?.cubage)) ? 0 : calculationData?.cubage,
@@ -181,7 +185,7 @@ const CostTable = ({
     const allData = tableData.map(async (item): Promise<CostTableItem> => {
       const indexContainer = containerItems.findIndex(container => item.selectedContainer === container.type)
       const data = {
-        costType: item.type,
+        costType: item.idCalculationType,
         quantityContainer: specifications === 'fcl' ? Number(containerItems[indexContainer]?.amount) : 0,
         valueGrossWeight: isNaN(Number(calculationData?.weight)) ? 0 : calculationData?.weight,
         valueCubage: isNaN(Number(calculationData?.cubage)) ? 0 : calculationData?.cubage,
@@ -192,13 +196,13 @@ const CostTable = ({
         idCurrencySale: item.saleCurrency
       }
       const totalCalculationData =
-      data.costType === FareItemsTypes.Cw
+      GetNamesByID.getTxCalculationTypeById(calculationTypes, data.costType) === FareItemsTypes.Cw
         ? {
             ...data,
             valuePurchaseCW: proposal.cargo[0].vlCwPurchase,
             valueSaleCW: proposal.cargo[0].vlCwSale
           }
-        : data.costType === FareItemsTypes.Fdesp
+        : GetNamesByID.getTxCalculationTypeById(calculationTypes, data.costType) === FareItemsTypes.Fdesp
           ? {
               ...data,
               valueTotalOriginPurchase: dataTotalCostOrigin.length > 0 ? dataTotalCostOrigin[0].value?.buy : 0,
@@ -369,7 +373,7 @@ const CostTable = ({
                     <Description>{dataMap.description}</Description>
                   </StyledTableCell>
                   <StyledTableCell width="11%" align="left">
-                    <Type>{dataMap.type}</Type>
+                    <Type>{GetNamesByID.getTxCalculationTypeById(calculationTypes, dataMap.idCalculationType)}</Type>
                   </StyledTableCell>
                   <StyledTableCell width="13%" align="left">
                     {dataMap.buyMin !== null && dataMap.buyMin !== ''
