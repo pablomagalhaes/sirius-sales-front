@@ -15,6 +15,7 @@ import {
   Table, FloatingMenu, AlertIconCircle, ControlledToolTip
 } from 'fiorde-fe-components'
 import API from '../../../infrastructure/api'
+import { ModalTypes } from '../../../application/enum/enum'
 
 export interface TableImplProps {
   rows: any[]
@@ -106,11 +107,11 @@ const TableImpl = ({
       key: 'modal',
       render: ({ modal }: any) => {
         switch (modal) {
-          case 'aereo':
+          case ModalTypes.Air:
             return <AirplaneCell />
-          case 'rodoviario':
+          case ModalTypes.Land:
             return <HighwayCell />
-          case 'maritimo':
+          case ModalTypes.Sea:
             return <MaritimeCell />
           default:
             return <AirplaneCell />

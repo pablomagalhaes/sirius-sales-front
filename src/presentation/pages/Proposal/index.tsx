@@ -42,6 +42,7 @@ import {
   StatusProposalEnum,
   StatusProposalStringEnum
 } from '../../../application/enum/statusProposalEnum'
+import { ModalTypes } from '../../../application/enum/enum'
 import RejectModal from '../../components/RejectModal/RejectModal'
 import CancelModal from '../../components/CancelModal/CancelModal'
 import { useQuery } from '@tanstack/react-query'
@@ -287,13 +288,13 @@ const Proposal = (): JSX.Element => {
     return showWarning
   }
 
-  const verifyModal = (modal: string): string => {
-    if (modal === 'AIR') {
-      return 'aereo'
-    } else if (modal === 'SEA') {
-      return 'maritimo'
+  const verifyModal = (modal: number): string => {
+    if (modal === 1) {
+      return ModalTypes.Air
+    } else if (modal === 2) {
+      return ModalTypes.Sea
     } else {
-      return 'rodoviario'
+      return ModalTypes.Land
     }
   }
 
