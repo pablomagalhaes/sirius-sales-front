@@ -859,16 +859,6 @@ const Proposal = (): JSX.Element => {
     setOrderBy(value)
   }
 
-  // const handleOrderDirection = (): void => {
-  //   if (orderAsc) {
-  //     setFilter((filter: any) => ({ ...filter, direction: 'DESC' }))
-  //     setOrderAsc(false)
-  //   } else {
-  //     setFilter((filter: any) => ({ ...filter, direction: 'ASC' }))
-  //     setOrderAsc(true)
-  //   }
-  // }
-
   const handleOrderDirection = (): string => {
     if (orderAsc) {
       return OrderTypes.Ascendent
