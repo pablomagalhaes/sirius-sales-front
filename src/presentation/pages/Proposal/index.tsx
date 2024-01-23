@@ -46,10 +46,10 @@ import RejectModal from '../../components/RejectModal/RejectModal'
 import CancelModal from '../../components/CancelModal/CancelModal'
 import { useQuery } from '@tanstack/react-query'
 import { QueryKeys } from '../../../application/enum/queryKeys'
+import { OrderTypes } from '../../../application/enum/enum'
 
 const defaultFilter = {
-  direction: 'DESC',
-  orderByList: 'openingDate',
+  orderByList: `openingDate,${OrderTypes.Descendent}`,
   page: 0,
   size: 10
 }
@@ -850,10 +850,7 @@ const Proposal = (): JSX.Element => {
     delete filter['validityDate.dtEnd']
 
     setFilter(() => ({
-      direction: 'DESC',
-      orderByList: 'openingDate',
-      page: 0,
-      size: 10
+      ...defaultFilter
     }))
   }
 
@@ -862,15 +859,26 @@ const Proposal = (): JSX.Element => {
     setOrderBy(value)
   }
 
-  const handleOrderDirection = (): void => {
+  // const handleOrderDirection = (): void => {
+  //   if (orderAsc) {
+  //     setFilter((filter: any) => ({ ...filter, direction: 'DESC' }))
+  //     setOrderAsc(false)
+  //   } else {
+  //     setFilter((filter: any) => ({ ...filter, direction: 'ASC' }))
+  //     setOrderAsc(true)
+  //   }
+  // }
+
+  const handleOrderDirection = (): string => {
     if (orderAsc) {
-      setFilter((filter: any) => ({ ...filter, direction: 'DESC' }))
-      setOrderAsc(false)
-    } else {
-      setFilter((filter: any) => ({ ...filter, direction: 'ASC' }))
-      setOrderAsc(true)
+      return OrderTypes.Ascendent
     }
+    return OrderTypes.Descendent
   }
+
+  useEffect(() => {
+    setFilter((filter: any) => ({ ...filter, orderByList: `${orderBy},${handleOrderDirection()}` }))
+  }, [orderAsc, orderBy])
 
   const menuItemsSelector = [
     {
@@ -949,16 +957,14 @@ const Proposal = (): JSX.Element => {
     const keys = Object.keys(filter)
 
     /* eslint-disable no-prototype-builtins */
-    const direction = filter.hasOwnProperty('direction')
     const orderByList = filter.hasOwnProperty('orderByList')
     const page = filter.hasOwnProperty('page')
     const size = filter.hasOwnProperty('size')
 
     if (
-      keys.length === 4 &&
+      keys.length === 3 &&
       Boolean(page) &&
       Boolean(size) &&
-      Boolean(direction) &&
       Boolean(orderByList)
     ) {
       return `Propostas (${String(totalProposalList)}) - Últimos 30 dias`
@@ -1070,7 +1076,7 @@ const Proposal = (): JSX.Element => {
               </Select>
             </DropdownMenuContainer>
             <ArrowIconContainer
-              onClick={handleOrderDirection}
+              onClick={() => setOrderAsc((order) => !order)}
               $rotate={orderAsc}
             >
               {orderAsc ? <ArrowDown /> : <UpArrow />}
