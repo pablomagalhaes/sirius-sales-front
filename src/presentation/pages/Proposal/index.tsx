@@ -50,7 +50,7 @@ import { QueryKeys } from '../../../application/enum/queryKeys'
 import { OrderTypes } from '../../../application/enum/enum'
 
 const defaultFilter = {
-  orderByList: `openingDate,${OrderTypes.Descendent}`,
+  sort: `openingDate,${OrderTypes.Descendent}`,
   page: 0,
   size: 10
 }
@@ -867,7 +867,7 @@ const Proposal = (): JSX.Element => {
   }
 
   useEffect(() => {
-    setFilter((filter: any) => ({ ...filter, orderByList: `${orderBy},${handleOrderDirection()}` }))
+    setFilter((filter: any) => ({ ...filter, sort: `${orderBy},${handleOrderDirection()}` }))
   }, [orderAsc, orderBy])
 
   const menuItemsSelector = [
@@ -947,7 +947,7 @@ const Proposal = (): JSX.Element => {
     const keys = Object.keys(filter)
 
     /* eslint-disable no-prototype-builtins */
-    const orderByList = filter.hasOwnProperty('orderByList')
+    const sort = filter.hasOwnProperty('sort')
     const page = filter.hasOwnProperty('page')
     const size = filter.hasOwnProperty('size')
 
@@ -955,7 +955,7 @@ const Proposal = (): JSX.Element => {
       keys.length === 3 &&
       Boolean(page) &&
       Boolean(size) &&
-      Boolean(orderByList)
+      Boolean(sort)
     ) {
       return `Propostas (${String(totalProposalList)}) - Últimos 30 dias`
     }
