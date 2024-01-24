@@ -112,7 +112,7 @@ const Proposal = (): JSX.Element => {
 
   useEffect(() => {
     refetch()
-  }, [])
+  }, [filter])
 
   useEffect(() => {
     const newIncotermList: any[] = []
@@ -855,7 +855,6 @@ const Proposal = (): JSX.Element => {
   }
 
   const handleOrderSelect = (value: React.SetStateAction<string>): void => {
-    setFilter((filter: any) => ({ ...filter, orderByList: value }))
     setOrderBy(value)
   }
 

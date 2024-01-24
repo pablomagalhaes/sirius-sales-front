@@ -168,7 +168,6 @@ const TotalSurcharge = ({ value, currency, totalOtherFare, cw, cwSale, modal, da
     changeTotalCosts()
   }, [data, totalCosts, currency, modal, totalOtherFare, value])
 
-
   return (
     <TotalContainer>
       <UpperContainer>
