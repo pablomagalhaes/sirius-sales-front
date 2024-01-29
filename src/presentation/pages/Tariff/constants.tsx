@@ -1,8 +1,9 @@
 import { SelectorsValuesTypes } from '../../../application/enum/tariffEnum'
 import { ModalTypes } from '../../../application/enum/enum'
 import { I18n } from 'react-redux-i18n'
+import { OrderButtonMenuItems } from '../../components/OrderComponent/OrderBy'
 
-const orderButtonMenuItems = (modal: string): any => {
+const orderButtonMenuItems = (modal: string): OrderButtonMenuItems[] => {
   const getBusinessPartnerType = (): string => {
     switch (modal) {
       case ModalTypes.Sea:

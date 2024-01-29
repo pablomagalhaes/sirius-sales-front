@@ -1,15 +1,15 @@
 import React, { createContext, useState, useMemo } from 'react'
 
 import { SelectorsValuesTypes } from '../../../../application/enum/tariffEnum'
-import { OrderTypes } from '../../../../application/enum/enum'
+import { OrderTypes , PaginationTypes } from '../../../../application/enum/enum'
 
 export const filterDefault = {
   tariffModalType: '',
   validityTariff: '',
   tariffType: '',
-  orderByList: `${SelectorsValuesTypes.Validity},${OrderTypes.Ascendent}`,
-  page: 0,
-  size: 10
+  sort: `${SelectorsValuesTypes.Validity},${OrderTypes.Ascendent}`,
+  page: PaginationTypes.Page,
+  size: PaginationTypes.Size
 }
 
 interface TariffContextProviderProps {

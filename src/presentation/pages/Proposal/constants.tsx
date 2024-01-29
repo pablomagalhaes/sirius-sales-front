@@ -4,7 +4,7 @@ const orderButtonMenuItems = [
     description: 'Ref. proposta'
   },
   {
-    value: 'customerName',
+    value: 'customer.customerName',
     description: 'Nome do cliente'
   },
   {
@@ -12,15 +12,15 @@ const orderButtonMenuItems = [
     description: 'Responsável'
   },
   {
-    value: 'idTransportMode',
+    value: 'transportMode',
     description: 'Modal'
   },
   {
-    value: 'idOrigin',
+    value: 'originDestiny.idOrigin',
     description: 'Origem'
   },
   {
-    value: 'idDestination',
+    value: 'originDestiny.idDestination',
     description: 'Destino'
   },
   {

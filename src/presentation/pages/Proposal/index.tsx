@@ -928,7 +928,7 @@ const Proposal = (): JSX.Element => {
     const keys = Object.keys(filter)
 
     /* eslint-disable no-prototype-builtins */
-    const orderByList = filter.hasOwnProperty('orderByList')
+    const orderByList = filter.hasOwnProperty('sort')
     const page = filter.hasOwnProperty('page')
     const size = filter.hasOwnProperty('size')
 

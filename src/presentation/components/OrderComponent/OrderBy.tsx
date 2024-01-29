@@ -12,7 +12,7 @@ import ArrowDown from '../../../application/icons/ArrowDown'
 import UpArrow from '../../../application/icons/UpArrow'
 import { OrderTypes } from '../../../application/enum/enum'
 
-interface OrderButtonMenuItems {
+export interface OrderButtonMenuItems {
   value: string
   description: string
 }
@@ -23,6 +23,7 @@ interface OrderByProps {
   initialOrder: string
   isOrderAsc: boolean
   handleChange: Function
+  tariffModalChange?: string
 }
 
 const OrderBy: React.FC<OrderByProps> = ({
@@ -30,7 +31,8 @@ const OrderBy: React.FC<OrderByProps> = ({
   orderButtonMenuItems,
   initialOrder,
   isOrderAsc,
-  handleChange
+  handleChange,
+  tariffModalChange
 }) => {
   const [openedOrderSelect, setOpenedOrderSelect] = useState(false)
   const [orderAsc, setOrderAsc] = useState(isOrderAsc)
@@ -47,6 +49,10 @@ const OrderBy: React.FC<OrderByProps> = ({
     handleChange((filter: any) => ({ ...filter, sort: `${orderBy},${handleOrderDirection()}` }))
   }, [orderAsc, orderBy])
 
+  useEffect(() => {
+    setOrderBy(initialOrder)
+  }, [tariffModalChange])
+
   return (
     <OrderByContainer>
       <ListTextSpan>{I18n.t('components.OrderBy.order')}</ListTextSpan>
@@ -59,6 +65,7 @@ const OrderBy: React.FC<OrderByProps> = ({
           placeholder={orderBy}
           value={orderBy}
           id={id}
+          data-testid={'order-by-test'}
         >
           {orderButtonMenuItems.map((item) => (
             <MenuItem
@@ -74,7 +81,7 @@ const OrderBy: React.FC<OrderByProps> = ({
         onClick={() => setOrderAsc((order) => !order)}
         $rotate={orderAsc}
       >
-        {orderAsc ? <ArrowDown /> : <UpArrow />}
+        {orderAsc ? <ArrowDown data-testid={'arrow-down'}/> : <UpArrow data-testid={'arrow-up'}/>}
       </ArrowIconContainer>
     </OrderByContainer>
   )

@@ -1,8 +1,9 @@
 
 import { SelectorsValuesTypes } from '../../../application/enum/staggeredProposalEnum'
 import { I18n } from 'react-redux-i18n'
+import { OrderButtonMenuItems } from '../../components/OrderComponent/OrderBy'
 
-const orderButtonMenuItems = (): any => {
+const orderButtonMenuItems = (): OrderButtonMenuItems[] => {
   return [
     {
       value: SelectorsValuesTypes.Reference,

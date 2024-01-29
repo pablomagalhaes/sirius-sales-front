@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, FloatingMenu, Pagination } from 'fiorde-fe-components'
-import { Breadcrumbs, Link, Typography, Select, MenuItem } from '@material-ui/core/'
+import { Breadcrumbs, Link, Typography } from '@material-ui/core/'
 import {
   TableContainer,
   PaginationContainer,
@@ -17,11 +17,7 @@ import {
   ButtonContainer,
   GridButton,
   RowButton,
-  ColButton,
-  OrderByContainer,
-  ListTextSpan,
-  DropdownMenuContainer,
-  ArrowIconContainer
+  ColButton
 } from './style'
 import { useHistory } from 'react-router-dom'
 import { I18n } from 'react-redux-i18n'
@@ -35,21 +31,23 @@ import useTariffs from '../../hooks/tariff/useTariffs'
 import Filter from './components/filter'
 
 import { orderButtonMenuItemsTable } from './constants'
-import UpArrow from '../../../application/icons/UpArrow'
-import ArrowDown from '../../../application/icons/ArrowDown'
 import { OrderTypes } from '../../../application/enum/enum'
+import OrderBy from '../../components/OrderComponent/OrderBy'
+import { SelectorsValuesTypes } from '../../../application/enum/staggeredProposalEnum'
 
 import {
   TARIFF_PROCESSING_LINK_HOME,
   TARIFF_PROCESSING_LINK_TARIFF,
   TARIFF_PROCESSING_BUTTON_BACK,
   TARIFF_PROCESSING_BUTTON_UPLOAD,
-  TARIFF_PROCESSING_SPAN_TITLE
+  TARIFF_PROCESSING_SPAN_TITLE,
+  TARIFF_PROCESSING_ORDER_SELECT
 } from '../../../ids'
 
+const initialOrder = SelectorsValuesTypes.ProcessingDate
 const defaultFilter = {
   direction: OrderTypes.Descendent,
-  orderByList: 'dtProcess',
+  sort: initialOrder,
   page: 0,
   size: 10,
   tariffModalType: '',
@@ -58,41 +56,19 @@ const defaultFilter = {
 }
 
 const TariffProcessing = (): JSX.Element => {
-  // const { data: tariffList = [], changeFilterList } = useTariffs()
-  // const { filter, setFilter }: any = useContext(TariffContext)
   const [filter, setFilter] = useState<any>(defaultFilter)
   const [openErrorModal, setOpenErrorModal] = useState(false)
   const [tariffList, setTariffList] = useState<any[]>([])
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [totalFilesList, setTotalFilesList] = useState<number>(0)
   const [itemId, setItemId] = useState('')
   const history = useHistory()
   const [open, setOpen] = useState(false)
   const [uploadType, setUploadType] = useState('')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [quickFilterList, setQuickFilterList] = useState<any[]>([
+  const [quickFilterList] = useState<any[]>([
     { type: 'activity', status: I18n.t('pages.tariff.upload.import') },
     { type: 'modal', status: I18n.t('pages.tariff.modals.air') }
   ])
-
-  const [openedOrderSelect, setOpenedOrderSelect] = useState(false)
-  const [orderAsc, setOrderAsc] = useState(false)
-  const [orderBy, setOrderBy] = useState<string>('dtProcess')
-
-  const handleOrderSelect = (value: React.SetStateAction<string>): void => {
-    setFilter((filter: any) => ({ ...filter, orderByList: value }))
-    setOrderBy(value)
-  }
-
-  const handleOrderDirection = (): void => {
-    if (orderAsc) {
-      setFilter((filter: any) => ({ ...filter, direction: OrderTypes.Descendent }))
-      setOrderAsc(false)
-    } else {
-      setFilter((filter: any) => ({ ...filter, direction: OrderTypes.Ascendent }))
-      setOrderAsc(true)
-    }
-  }
 
   const floatingButtonMenuItems = [
     {
@@ -214,34 +190,13 @@ const TariffProcessing = (): JSX.Element => {
             />
         </LeftSideListHeaderContainer>
         <RightSideListHeaderContainer>
-          <OrderByContainer>
-            <ListTextSpan>Ordenar:</ListTextSpan>
-            <DropdownMenuContainer showArrow={openedOrderSelect}>
-              <Select
-                className="select-style"
-                disableUnderline
-                onChange={(e) => handleOrderSelect(String(e.target.value))}
-                onOpen={() => setOpenedOrderSelect(!openedOrderSelect)}
-                placeholder={orderBy}
-                value={orderBy}
-              >
-                {orderButtonMenuItemsTable(filter.tariffModalType).map((item) => (
-                  <MenuItem
-                    key={`${String(item.value)}_key`}
-                    value={item.value}
-                  >
-                    <span>{item.description}</span>
-                  </MenuItem>
-                ))}
-              </Select>
-            </DropdownMenuContainer>
-            <ArrowIconContainer
-              onClick={handleOrderDirection}
-              $rotate={orderAsc}
-            >
-              {orderAsc ? <ArrowDown /> : <UpArrow />}
-            </ArrowIconContainer>
-          </OrderByContainer>
+        <OrderBy
+          id={TARIFF_PROCESSING_ORDER_SELECT}
+          orderButtonMenuItems={orderButtonMenuItemsTable(filter.tariffModalType)}
+          initialOrder={initialOrder}
+          isOrderAsc={false}
+          handleChange={setFilter}
+        />
         </RightSideListHeaderContainer>
       </ListHeaderContainer>
       <BottomSideContainer>

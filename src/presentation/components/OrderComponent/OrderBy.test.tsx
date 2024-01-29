@@ -1,29 +1,68 @@
-// import React from 'react'
-// import { render, screen, fireEvent } from '@testing-library/react'
-// import CheckBox from './CheckBox'
-// import '@testing-library/jest-dom'
-// const props = {
-//   checked: true,
-//   label: 'Testando',
-//   handleChange: () => {},
-//   value: 'Teste',
-//   id: 'teste-id'
-// }
+import React from 'react'
+import { render, screen, fireEvent } from '@testing-library/react'
+import OrderBy from './OrderBy'
+import '@testing-library/jest-dom'
 
-// test('should show text label', () => {
-//   render(<CheckBox {...props} />)
-//   expect(screen.getByTestId('checkbox-label-test').textContent).toBe(props.label)
-// })
+const orderButtonMenuItems = [
+  {
+    value: 'referenceProposal',
+    description: 'Ref. proposta'
+  },
+  {
+    value: 'customerName',
+    description: 'Nome do cliente'
+  },
+  {
+    value: 'userCreationName',
+    description: 'Responsável'
+  },
+  {
+    value: 'idTransportMode',
+    description: 'Modal'
+  },
+  {
+    value: 'idOrigin',
+    description: 'Origem'
+  },
+  {
+    value: 'idDestination',
+    description: 'Destino'
+  },
+  {
+    value: 'openingDate',
+    description: 'Dt. abertura'
+  },
+  {
+    value: 'validityDate',
+    description: 'Dt. validade'
+  }
+]
 
-// test('should click on the checkbox and should trigger handlechange', () => {
-//   const handleChange = jest.fn()
-//   render(<CheckBox {...props} handleChange={handleChange}/>)
-//   fireEvent.click(screen.getByTestId('checkbox-test'))
-//   expect(handleChange).toBeCalledTimes(1)
-// })
+const props = {
+  id: 'test-id',
+  orderButtonMenuItems: orderButtonMenuItems,
+  initialOrder: 'validityDate',
+  isOrderAsc: false,
+  handleChange: () => {}
+}
 
-// test('should be checked when props checked is true', () => {
-//   render(<CheckBox {...props} />)
-//   const checkbox = screen.getByTestId('checkbox-test')
-//   expect(Object.values(checkbox.classList).includes('Mui-checked')).toEqual(true)
-// })
+test('should show initial order label', () => {
+  render(<OrderBy {...props} />)
+  expect(screen.getByTestId('order-by-test').textContent).toBe('Dt. validade')
+})
+
+test('should click on the select menu and should trigger handlechange', () => {
+  const handleChange = jest.fn()
+  render(<OrderBy {...props} handleChange={handleChange}/>)
+
+  fireEvent.mouseDown(screen.getByText('Dt. validade'))
+  const origin = screen.getByText('Origem')
+  fireEvent.click(origin)
+  expect(handleChange).toBeCalledTimes(2)
+})
+
+test('should be not ascendent sort in initial state', () => {
+  render(<OrderBy {...props} />)
+  const arrowUp = screen.queryByTestId('arrow-up')
+  expect(arrowUp).toBeNull()
+})
