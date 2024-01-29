@@ -198,6 +198,9 @@
         "container20": "Container 20",
         "container40": "Container 40"
       }
+    },
+    "OrderBy": {
+      "order": "Ordenar:"
     }
   },
   "pages": {

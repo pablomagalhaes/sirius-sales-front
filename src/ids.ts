@@ -188,3 +188,6 @@ export const PROPOSAL_EXPORT_STEP4_CONTAINER_TYPE = `${PREFIX_IDS}_proposal_expo
 export const PROPOSAL_EXPORT_STEP4_PURCHASE_DEADLINE = `${PREFIX_IDS}_proposal_exportt_step4_purchase_deadline`
 export const PROPOSAL_EXPORT_STEP4_SALES_DEADLINE = `${PREFIX_IDS}_proposal_export_step4_sales_deadline`
 export const PROPOSAL_EXPORT_STEP4_SALES_VALUE = `${PREFIX_IDS}_proposal_import_step4_sales_value`
+
+// Proposal
+export const PROPOSAL_ORDER_SELECT = `${PREFIX_IDS}_proposal_order_select`

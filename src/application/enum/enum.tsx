@@ -107,6 +107,10 @@ enum FreightTypes {
   Export = 'EXPORT FREIGHT'
 }
 
+enum PaginationTypes {
+  Page = 0,
+  Size = 10
+}
 export {
   ModalTypes,
   OrderTypes,
@@ -124,5 +128,6 @@ export {
   SpecificationsType,
   FreightTypes,
   ServiceTypes,
-  IdProposalTypes
+  IdProposalTypes,
+  PaginationTypes
 }
