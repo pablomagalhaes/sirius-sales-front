@@ -29,9 +29,9 @@ import { RedColorSpan } from '../../../components/StyledComponents/modalStyles'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import { CalculationDataProps } from '../../../components/ChargeTable'
 import { CostTypes, FareItemsTypes } from '../../../../application/enum/costEnum'
+import { ModalTypes, AcitivityTypes, BusinessPartnerTypes, ServiceTypes, IdProposalTypes } from '../../../../application/enum/enum'
 import TariffImportLclModal from '../../../components/TariffImport/TariffImportLclModal'
 import TariffImportLandModal from '../../../components/TariffImport/TariffImportLandModal'
-import { ModalTypes, AcitivityTypes, BusinessPartnerTypes, ServiceTypes, IdProposalTypes } from '../../../../application/enum/enum'
 import RemoveIcon from '../../../../application/icons/RemoveIcon'
 import TariffImportFclModal from '../../../components/TariffImport/TariffImportFclModal'
 import TariffImportAirModal from '../../../components/TariffImport/TariffImportAirModal'
@@ -199,16 +199,31 @@ const Step5 = ({
       })?.idTariff
     }))
   )
-  const [dataContainer, setDataContainer] = useState(proposal.cargo[0].cargoVolumes.map((item, index) => ({
-    idCost: proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.idCost ?? null,
-    idContainer: item.idContainer,
-    currencySale: proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.idCurrencySale ?? '',
-    currencyPurchase: proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.idCurrencyPurchase ?? '',
-    valueSale: decimalToString(proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.valueSale),
-    valuePurchase: decimalToString(proposal.costs.filter(cost => cost.costType === CostTypes.Freight)[index]?.valuePurchase),
-    valueQuantity: item.valueQuantity,
-    idTariff: null
-  })))
+
+  const [dataContainer, setDataContainer] = useState([])
+  const processDataContainer = (cargo, setData): any => {
+    if (!cargo || cargo.length === 0 || !cargo[0].cargoVolumes) {
+      setData([])
+      return
+    }
+    const containerData = cargo[0].cargoVolumes.map((item, index) => {
+      const freightCost = cargo.costs?.find(cost => cost.costType === CostTypes.Freight && cost.idContainer === item.idContainer)
+      return {
+        idCost: freightCost?.idCost ?? null,
+        idContainer: item.idContainer,
+        currencySale: freightCost?.idCurrencySale ?? '',
+        currencyPurchase: freightCost?.idCurrencyPurchase ?? '',
+        valueSale: decimalToString(freightCost?.valueSale),
+        valuePurchase: decimalToString(freightCost?.valuePurchase),
+        valueQuantity: item.valueQuantity,
+        idTariff: null
+      }
+    })
+    setData(containerData)
+  }
+  useEffect(() => {
+    processDataContainer(proposal.cargo, setDataContainer)
+  }, [proposal.cargo])
 
   const getValueSale = (): string[] => {
     return proposal.agents.map((agent) => {
@@ -248,25 +263,22 @@ const Step5 = ({
     setTableData(newTableData)
   }, [proposal.agents])
 
+  // useEffect modificado para ajuste do LCL
   useEffect(() => {
-    const currentContainer = dataContainer.map(currentContainer => currentContainer.idContainer)
-    const getNewCargos = proposal.cargo[0].cargoVolumes.filter(cargo => !currentContainer.includes(cargo.idContainer))
-    const newDataWithNewCargos = getNewCargos.map(newCargo => ({
-      idCost: null,
-      idContainer: newCargo.idContainer,
-      currencySale: '',
-      currencyPurchase: '',
-      valueSale: '',
-      valuePurchase: '',
-      valueQuantity: newCargo.valueQuantity,
-      idTariff: null
+    const newDataContainer = proposal.cargo[0].cargoVolumes.map(cargoVolume => ({
+      ...dataContainer.find(dc => dc.idContainer === cargoVolume.idContainer) || {
+        idCost: null,
+        idContainer: cargoVolume.idContainer,
+        currencySale: '',
+        currencyPurchase: '',
+        valueSale: '',
+        valuePurchase: '',
+        valueQuantity: cargoVolume.valueQuantity,
+        idTariff: null
+      }
     }))
-    const unionCargos = [...dataContainer, ...newDataWithNewCargos]
-    const getAllCargos = unionCargos.map(unionAgent => unionAgent.idContainer)
-    const getOnlyCargosExists = proposal.cargo[0].cargoVolumes.filter(currentProsalCargoVolumes => getAllCargos.includes(currentProsalCargoVolumes.idContainer)).map(cargo => cargo.idContainer)
-    const getOnlyDataExists = unionCargos.filter(unionAgent => getOnlyCargosExists.includes(unionAgent.idContainer))
-    setDataContainer(getOnlyDataExists)
-  }, [proposal.cargo[0], ...proposal.cargo[0]?.cargoVolumes])
+    setDataContainer(newDataContainer)
+  }, [proposal.cargo[0].cargoVolumes])
 
   useEffect(() => {
     loadAgentsList()
@@ -697,26 +709,23 @@ const Step5 = ({
     )
   }, [tableData, data, dataContainer, tableData.length, dataSales])
 
+  // useEffect modificado para ajuste do LCL
   useEffect(() => {
-    const newTableData: FareModalData[] = []
-    const waitAllData = async (): Promise<void> => {
-      for (const item of tableData) {
-        void (await new Promise((resolve) => {
-          const totalCostCalculationData = getTotalCalculationData(item)
-          API.postTotalCalculation(totalCostCalculationData)
-            .then((response) => {
-              item.totalItem = FormatNumber.convertNumberToString(Number(response?.valueSale))
-              resolve(newTableData.push(item))
-            })
-            .catch((err) => {
-              resolve('')
-              console.log(err)
-            })
-        }))
-      }
-      setTableData(newTableData)
+    const updateTableData = async (): Promise<void> => {
+      const updatedTableData = await Promise.all(tableData.map(async item => {
+        const totalCostCalculationData = getTotalCalculationData(item)
+        try {
+          const response = await API.postTotalCalculation(totalCostCalculationData)
+          return { ...item, totalItem: FormatNumber.convertNumberToString(Number(response?.valueSale)) }
+        } catch (err) {
+          console.error(err)
+          return item
+        }
+      }))
+      setTableData(updatedTableData)
     }
-    void waitAllData()
+
+    updateTableData()
   }, [containerItems, calculationData, proposal.cargo[0]])
 
   useEffect(() => {
@@ -920,7 +929,7 @@ const Step5 = ({
         return (
           <TotalSurcharge
             currency={dataContainer[0]?.currencySale}
-            value={FormatNumber.convertNumberToString(dataContainer.reduce((total, item) => FormatNumber.convertStringToNumber(item.valueSale) * Number(item.valueQuantity) + total, 0))}
+            value={FormatNumber.convertNumberToString(dataContainer.reduce((total, item) => FormatNumber.convertStringToNumber(item.valueSale) * Number(item.valueQuantity) + Number(total), 0))}
             totalOtherFare={getSumTotalItem()}
             cw={cw}
             cwSale={cwSale}
