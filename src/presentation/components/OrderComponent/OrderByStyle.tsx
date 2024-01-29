@@ -54,8 +54,8 @@ const ArrowIconContainer = styled.div`
 `
 
 export {
-    OrderByContainer,
-    ListTextSpan,
-    DropdownMenuContainer,
-    ArrowIconContainer
-  }
+  OrderByContainer,
+  ListTextSpan,
+  DropdownMenuContainer,
+  ArrowIconContainer
+}

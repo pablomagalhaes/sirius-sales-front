@@ -37,12 +37,12 @@ import {
   StatusProposalEnum,
   StatusProposalStringEnum
 } from '../../../application/enum/statusProposalEnum'
-import { ModalTypes, IdProposalTypes } from '../../../application/enum/enum'
+import { ModalTypes, IdProposalTypes , OrderTypes, PaginationTypes } from '../../../application/enum/enum'
 import RejectModal from '../../components/RejectModal/RejectModal'
 import CancelModal from '../../components/CancelModal/CancelModal'
 import { useQuery } from '@tanstack/react-query'
 import { QueryKeys } from '../../../application/enum/queryKeys'
-import { OrderTypes, PaginationTypes } from '../../../application/enum/enum'
+
 import OrderBy from '../../components/OrderComponent/OrderBy'
 import { PROPOSAL_ORDER_SELECT } from '../../../ids'
 
