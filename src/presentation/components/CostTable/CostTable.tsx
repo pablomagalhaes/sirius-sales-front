@@ -185,7 +185,7 @@ const CostTable = ({
     const allData = tableData.map(async (item): Promise<CostTableItem> => {
       const indexContainer = containerItems.findIndex(container => item.selectedContainer === container.type)
       const data = {
-        costType: item.idCalculationType,
+        costType: GetNamesByID.getTxCalculationTypeById(calculationTypes, item.idCalculationType),
         quantityContainer: specifications === 'fcl' ? Number(containerItems[indexContainer]?.amount) : 0,
         valueGrossWeight: isNaN(Number(calculationData?.weight)) ? 0 : calculationData?.weight,
         valueCubage: isNaN(Number(calculationData?.cubage)) ? 0 : calculationData?.cubage,
@@ -196,23 +196,21 @@ const CostTable = ({
         idCurrencySale: item.saleCurrency
       }
       const totalCalculationData =
-      GetNamesByID.getTxCalculationTypeById(calculationTypes, data.costType) === FareItemsTypes.Cw
+       data.costType === FareItemsTypes.Cw
         ? {
             ...data,
-            costType: GetNamesByID.getTxCalculationTypeById(calculationTypes, data.costType),
             valuePurchaseCW: proposal.cargo[0].vlCwPurchase,
             valueSaleCW: proposal.cargo[0].vlCwSale
           }
-        : GetNamesByID.getTxCalculationTypeById(calculationTypes, data.costType) === FareItemsTypes.Fdesp
+        : data.costType === FareItemsTypes.Fdesp
           ? {
               ...data,
-              costType: GetNamesByID.getTxCalculationTypeById(calculationTypes, data.costType),
               valueTotalOriginPurchase: dataTotalCostOrigin.length > 0 ? dataTotalCostOrigin[0].value?.buy : 0,
               valueTotalOriginSale: dataTotalCostOrigin.length > 0 ? dataTotalCostOrigin[0].value?.sale : 0,
               valueTotalFreight: totalFreight ? totalFreight.valueTotalSale : 0,
               valueTotalTariff: totalTariff ? totalTariff.valueTotalSale : 0
             }
-          : { ...data, valuePurchaseCW: null, valueSaleCW: null, costType: GetNamesByID.getTxCalculationTypeById(calculationTypes, data.costType) }
+          : { ...data, valuePurchaseCW: null, valueSaleCW: null }
       return await API.postTotalCalculation(totalCalculationData)
         .then((response): CostTableItem => {
           return {
