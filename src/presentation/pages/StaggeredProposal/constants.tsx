@@ -18,14 +18,6 @@ const orderButtonMenuItems = (): OrderButtonMenuItems[] => {
       description: I18n.t('pages.staggeredProposal.filter.responsible')
     },
     {
-      value: SelectorsValuesTypes.Origin,
-      description: I18n.t('pages.staggeredProposal.filter.origin')
-    },
-    {
-      value: SelectorsValuesTypes.Destination,
-      description: I18n.t('pages.staggeredProposal.filter.destination')
-    },
-    {
       value: SelectorsValuesTypes.Validity,
       description: I18n.t('pages.staggeredProposal.filter.startDate')
     },

@@ -16,14 +16,6 @@ const orderButtonMenuItems = [
     description: 'Modal'
   },
   {
-    value: 'originDestiny.idOrigin',
-    description: 'Origem'
-  },
-  {
-    value: 'originDestiny.idDestination',
-    description: 'Destino'
-  },
-  {
     value: 'openingDate',
     description: 'Dt. abertura'
   },
