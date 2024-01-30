@@ -928,7 +928,7 @@ const Proposal = (): JSX.Element => {
     const keys = Object.keys(filter)
 
     /* eslint-disable no-prototype-builtins */
-    const orderByList = filter.hasOwnProperty('sort')
+    const sort = filter.hasOwnProperty('sort')
     const page = filter.hasOwnProperty('page')
     const size = filter.hasOwnProperty('size')
 
@@ -936,7 +936,7 @@ const Proposal = (): JSX.Element => {
       keys.length === 3 &&
       Boolean(page) &&
       Boolean(size) &&
-      Boolean(orderByList)
+      Boolean(sort)
     ) {
       return `Propostas (${String(totalProposalList)}) - Últimos 30 dias`
     }
