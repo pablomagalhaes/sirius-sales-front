@@ -42,12 +42,11 @@ import {
   StatusProposalEnum,
   StatusProposalStringEnum
 } from '../../../application/enum/statusProposalEnum'
-import { ModalTypes, IdProposalTypes } from '../../../application/enum/enum'
+import { ModalTypes, IdProposalTypes , OrderTypes } from '../../../application/enum/enum'
 import RejectModal from '../../components/RejectModal/RejectModal'
 import CancelModal from '../../components/CancelModal/CancelModal'
 import { useQuery } from '@tanstack/react-query'
 import { QueryKeys } from '../../../application/enum/queryKeys'
-import { OrderTypes } from '../../../application/enum/enum'
 
 const defaultFilter = {
   sort: `openingDate,${OrderTypes.Descendent}`,
