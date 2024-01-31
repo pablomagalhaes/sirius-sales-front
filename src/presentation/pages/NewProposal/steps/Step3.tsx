@@ -370,7 +370,7 @@ const Step3 = ({
         idCargoDangerous: dangerousCodes.find((code) => code.codDangerousCode === data.codUn?.split(' - ')[0])?.id ?? null
       }]
     })
-  }, [data, chargeableWeight, chargeableWeightSale])
+  }, [data, chargeableWeight, chargeableWeightSale, cargoVolume])
 
   useEffect(() => {
     setCostData(tableRows.length)

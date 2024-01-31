@@ -394,7 +394,7 @@ const Step3 = ({
         vlCwSale: isAir() ? chargeableWeightSale : null
       }]
     })
-  }, [data, chargeableWeight, chargeableWeightSale])
+  }, [data, chargeableWeight, chargeableWeightSale, cargoVolume])
 
   useEffect(() => {
     setCostData(tableRows.length)
