@@ -23,10 +23,19 @@ const validateOriginDestination = (modal: string, data: DataProps): boolean => {
   return modal === ModalTypes.Land || (modal !== ModalTypes.Land && data.origin !== data.destiny)
 }
 
+const validateShippingCompany = (value: string, index: number, selectedAgents: any[]): boolean => {
+  return selectedAgents.some((agent, currentIndex) =>
+    agent.shippingCompany === value &&
+    currentIndex !== index &&
+    value.length !== 0
+  )
+}
+
 const Validations = {
   validateIncoterm,
   validateClient,
-  validateOriginDestination
+  validateOriginDestination,
+  validateShippingCompany
 }
 
 export default Validations
