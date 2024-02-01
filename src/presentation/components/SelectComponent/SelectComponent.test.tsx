@@ -10,7 +10,7 @@ const baseProps = {
   id: 'test',
   initialLabel: 'initialLabel',
   toolTipTitle: 'tooltip',
-  renderValue: (value) => {return value}
+  renderValue: (value) => { return value }
 }
 
 test('renders Select Component with initial value', () => {
@@ -20,12 +20,12 @@ test('renders Select Component with initial value', () => {
 })
 
 test('when clicked open the select menu and show the items', () => {
-    render(<SelectComponent {...baseProps}/>)
-    fireEvent.mouseDown(screen.getByText('initialValue'))
-    const test = screen.getByText('test')
-    const test2 = screen.getByText('test2')
-    expect(test).toBeInTheDocument()
-    expect(test2).toBeInTheDocument()
+  render(<SelectComponent {...baseProps}/>)
+  fireEvent.mouseDown(screen.getByText('initialValue'))
+  const test = screen.getByText('test')
+  const test2 = screen.getByText('test2')
+  expect(test).toBeInTheDocument()
+  expect(test2).toBeInTheDocument()
 })
 
 test('should trigger the handle change function when select an item', () => {
@@ -36,4 +36,3 @@ test('should trigger the handle change function when select an item', () => {
   fireEvent.click(test)
   expect(handleChange).toBeCalledTimes(1)
 })
-
