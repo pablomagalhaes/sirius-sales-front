@@ -107,6 +107,13 @@ enum FreightTypes {
   Export = 'EXPORT FREIGHT'
 }
 
+const enum ID_CARGO_CONTRACTING_TYPE {
+  FCL = 1,
+  LCL = 2,
+  BREAK_BULK = 3,
+  RO_RO = 4
+}
+
 export {
   ModalTypes,
   OrderTypes,
@@ -124,5 +131,6 @@ export {
   SpecificationsType,
   FreightTypes,
   ServiceTypes,
-  IdProposalTypes
+  IdProposalTypes,
+  ID_CARGO_CONTRACTING_TYPE
 }
