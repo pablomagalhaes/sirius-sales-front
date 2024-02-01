@@ -43,7 +43,7 @@ const validateCompleteShippingCompany = (selectedAgents: any[]): boolean => {
   return selectedAgents.every(selectedAgent => selectedAgent.shippingCompany.length > 0)
 }
 
-const validateFilledStep2Import = (modal, data, setFilled, proposalType, selectedAgents): void => {
+const validateFilledStep2Import = (modal: string, data: DataProps, setFilled: Function, proposalType: number, selectedAgents: any[]): void => {
   const step6 = modal === ModalTypes.Land
   if (
     data.origin !== '' ||
@@ -56,7 +56,7 @@ const validateFilledStep2Import = (modal, data, setFilled, proposalType, selecte
     data.destCountry !== '' ||
     data.incoterm !== '' ||
     (proposalType === ProposalTypes.Client && selectedAgents[0].agent.length !== 0) ||
-    proposalType !== ProposalTypes.Client  ||
+    proposalType !== ProposalTypes.Client ||
     (proposalType === ProposalTypes.Client && selectedAgents[0].profitPercentageAgent !== null) ||
     proposalType !== ProposalTypes.Client
   ) {
@@ -70,7 +70,7 @@ const validateFilledStep2Import = (modal, data, setFilled, proposalType, selecte
   }
 }
 
-const validateFilledStep1ImportExport = (data, setFilled): void => {
+const validateFilledStep1ImportExport = (data: any, setFilled: Function): void => {
   if (
     data.proposal !== 0 ||
     data.modal !== ''
@@ -85,7 +85,7 @@ const validateFilledStep1ImportExport = (data, setFilled): void => {
   }
 }
 
-const validateFilledStep2Export = ( data, setFilled, proposalType, selectedAgents): void => {
+const validateFilledStep2Export = (data: DataProps, setFilled: Function, proposalType: number, selectedAgents: any[]): void => {
   if (proposalType !== ProposalTypes.Client) {
     if (
       data.origin !== '' ||
@@ -98,7 +98,7 @@ const validateFilledStep2Export = ( data, setFilled, proposalType, selectedAgent
       data.destCountry !== '' ||
       data.incoterm !== '' ||
       (proposalType === ProposalTypes.Client && selectedAgents[0].agent.length !== 0) ||
-      proposalType !== ProposalTypes.Client  ||
+      proposalType !== ProposalTypes.Client ||
       (proposalType === ProposalTypes.Client && selectedAgents[0].profitPercentageAgent !== null) ||
       proposalType !== ProposalTypes.Client
     ) {
@@ -117,7 +117,7 @@ const validateFilledStep2Export = ( data, setFilled, proposalType, selectedAgent
   }
 }
 
-const validateFilledStep3ImportExport = (tableRows, data, setFilled): void => {
+const validateFilledStep3ImportExport = (tableRows: any[], data: any, setFilled: Function): void => {
   if (tableRows.length > 0 ||
     data.description.length > 0 ||
     data.specifications.length > 0 ||
@@ -135,7 +135,7 @@ const validateFilledStep3ImportExport = (tableRows, data, setFilled): void => {
   }
 }
 
-const validateFilledStep4ImportExport = (data, setFilled): void => {
+const validateFilledStep4ImportExport = (data: any, setFilled: Function): void => {
   if (
     data.validity.length > 0 ||
     data.validityDate.length > 0 ||
@@ -156,7 +156,7 @@ const validateFilledStep4ImportExport = (data, setFilled): void => {
   }
 }
 
-const validadeFilledStep5ImportExport = (proposal, data, dataSales, dataContainer, setFilled): void => {
+const validadeFilledStep5ImportExport = (proposal: any, data: any[], dataSales: any, dataContainer: any, setFilled: Function): void => {
   const FclCargoContractingType = ID_CARGO_CONTRACTING_TYPE.FCL
   const ContractingTypeWithoutFcl = [
     ID_CARGO_CONTRACTING_TYPE.LCL,
@@ -192,7 +192,7 @@ const validadeFilledStep5ImportExport = (proposal, data, dataSales, dataContaine
   }
 }
 
-const validadeFilledStep6ImportExport = (dataOrigin, dataDestiny, setFilled): void => {
+const validadeFilledStep6ImportExport = (dataOrigin: string, dataDestiny: string, setFilled: Function): void => {
   if (dataOrigin.length > 0 && dataDestiny.length > 0) {
     setFilled((currentState) => {
       return { ...currentState, step6: true }
