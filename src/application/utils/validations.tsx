@@ -31,11 +31,20 @@ const validateShippingCompany = (value: string, index: number, selectedAgents: a
   )
 }
 
+const validateAgent = (value: string, index: number, selectedAgents: any[]): boolean => {
+  return selectedAgents.some((agent, currentIndex) =>
+    agent.agent === value &&
+    currentIndex !== index &&
+    value.length > 0
+  )
+}
+
 const Validations = {
   validateIncoterm,
   validateClient,
   validateOriginDestination,
-  validateShippingCompany
+  validateShippingCompany,
+  validateAgent
 }
 
 export default Validations
