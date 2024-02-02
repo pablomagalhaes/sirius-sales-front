@@ -12,6 +12,7 @@ interface InputControlledComponentProps {
   [key: string]: any
   InputProps?: Partial<React.ComponentProps<typeof TextField>>['InputProps']
   name?: string
+  id: string
 }
 
 const InputControlledComponent = ({
@@ -21,6 +22,7 @@ const InputControlledComponent = ({
   invalid,
   InputProps,
   name,
+  id,
   ...props
 }: InputControlledComponentProps): JSX.Element => {
   return (
@@ -29,6 +31,7 @@ const InputControlledComponent = ({
         <InnerConteiner invalid={invalid}>
           <Autocomplete
             disablePortal
+            id={id}
             data-testid={name}
             options={data}
             renderInput={(params) => (
