@@ -14,7 +14,8 @@ const baseProps = {
   data: mockData,
   toolTipTitle: 'Test Tooltip',
   invalid: false,
-  name: 'autocomplete'
+  name: 'autocomplete',
+  id: 'controlled-input'
 };
 
 test('renders Autocomplete component', () => {
