@@ -1,6 +1,29 @@
 
+import moment from 'moment'
 import { DataProps } from '../../domain/models/DataProps'
 import { IncotermTypes, ProposalTypes, ModalTypes,IdProposalTypes,ID_CARGO_CONTRACTING_TYPE } from '../../application/enum/enum'
+
+interface Step3Data {
+  description: string
+  specifications: string
+  temperature: string
+  dangerous: boolean
+  imo: string
+  codUn: string
+}
+
+interface Step4Data {
+  validity: string
+  validityDate: string
+  transitTime: string
+  frequency: string
+  route: string
+  client: string
+  generalObs: string
+  internalObs: string
+  recurrency: '1'
+  weeklyRecurrency: string
+}
 
 const validateIncoterm = (data: DataProps | null): boolean => {
   if (!data.incoterm || data.incoterm.length === 0) {
@@ -204,6 +227,44 @@ const validadeFilledStep6ImportExport = (dataOrigin: string, dataDestiny: string
   }
 }
 
+const validateDate = (data: Step4Data): boolean => {
+  const validityDate = moment(data.validityDate, 'DD/MM/YYYY', true)
+  const today = moment().startOf('day')
+  return validityDate.isValid() && validityDate.isSameOrAfter(today)
+}
+
+const validateFormCompleteStep2ImportExport = (invalidAgent: boolean, validateCompleteShippingCompany: Function, originDestinyFullfilled: Function, validateClient: Function, validateIncoterm: Function, validateOriginDestination: Function, validateProfitPercent: Function, setCompleted: Function): void => {
+  const isFormValid = !invalidAgent &&
+                      validateCompleteShippingCompany() &&
+                      originDestinyFullfilled() &&
+                      validateClient() &&
+                      validateIncoterm() &&
+                      validateOriginDestination() &&
+                      validateProfitPercent()
+  setCompleted(currentState => ({ ...currentState, step2: isFormValid }))
+}
+
+const validateFormCompleteStep3ImportExport = (modal: string, validateDangerous: Function,validateEspecification: Function, data: Step3Data, setCompleted: Function): void => {
+  const isFormValid = validateDangerous() &&
+                      validateEspecification() &&
+                      data.description.length !== 0 &&
+                      data.temperature.length !== 0
+
+  const step6 = modal === ModalTypes.Land
+  setCompleted(currentState => ({ ...currentState, step3: isFormValid, step6 }))
+}
+
+const validateFormCompleteStep4ImportExport = (modal: string, validateCompleteInputs: Function, validateDate: Function, setCompleted: Function): void => {
+  const isFormValid = validateCompleteInputs() && validateDate()
+  const step6 = modal === ModalTypes.Land
+
+  setCompleted(currentState => ({
+    ...currentState,
+    step4: isFormValid,
+    step6
+  }))
+}
+
 const Validations = {
   validateIncoterm,
   validateClient,
@@ -217,7 +278,11 @@ const Validations = {
   validateFilledStep3ImportExport,
   validateFilledStep4ImportExport,
   validadeFilledStep5ImportExport,
-  validadeFilledStep6ImportExport
+  validadeFilledStep6ImportExport,
+  validateDate,
+  validateFormCompleteStep2ImportExport,
+  validateFormCompleteStep3ImportExport,
+  validateFormCompleteStep4ImportExport
 }
 
 export default Validations
