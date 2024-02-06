@@ -585,8 +585,6 @@ const Step3 = ({
     limit: 500
   })
 
-  console.log('calculation', calculation)
-
   return (
     <Separator>
       <Title>
