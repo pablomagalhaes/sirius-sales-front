@@ -4,18 +4,14 @@ import {
   Pagination
 } from 'fiorde-fe-components'
 import TableImpl from './TableImpl'
-import { Breadcrumbs, Link, Select, MenuItem } from '@material-ui/core/'
+import { Breadcrumbs, Link } from '@material-ui/core/'
 import {
-  ArrowIconContainer,
   BottomSideContainer,
-  DropdownMenuContainer,
   ExportListContainer,
   ExportListSpan,
   LeftSideListHeaderContainer,
   ListHeaderContainer,
   ListMainTitleSpan,
-  ListTextSpan,
-  OrderByContainer,
   PaginationContainer,
   PaginationMainContainer,
   RightSideListHeaderContainer,
@@ -29,9 +25,6 @@ import {
 import ProposalDisplayModal from '../../components/ProposalDisplayModal/ProposalDisplayModal'
 import { ExitToApp } from '@material-ui/icons/'
 import { useHistory } from 'react-router-dom'
-import UpArrow from '../../../application/icons/UpArrow'
-import ArrowDown from '../../../application/icons/ArrowDown'
-import { orderButtonMenuItems } from './constants'
 import { I18n } from 'react-redux-i18n'
 import {
   StatusProposalEnum,
@@ -42,11 +35,13 @@ import Filter from './components/filter'
 import { SelectorsValuesTypes } from '../../../application/enum/staggeredProposalEnum'
 import { StaggeredProposalContext, filterDefault } from './context/StaggeredProposalContext'
 import useTariffProposal from '../../hooks/tariff/useTariffProposal'
-import { OrderTypes } from '../../../application/enum/enum'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { UpdateStatusStaggeredProposal , LoadStaggeredProposal } from '../../../domain/usecase'
 import CancelModal from '../../components/CancelModal/CancelModal'
 import API from '../../../infrastructure/api'
+import OrderBy from '../../components/OrderComponent/OrderBy'
+import { STAGGEREDPROPOSAL_ORDER_SELECT } from '../../../ids'
+import { orderButtonMenuItems } from './constants'
 
 interface StaggeredProposalProps {
   loadStaggeredProposal: LoadStaggeredProposal
@@ -64,15 +59,12 @@ const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposa
   const [openDisplay, setOpenDisplay] = useState(false)
   const [reference, setReference] = useState('')
   const [proposalId, setProposalId] = useState('')
-  const [orderAsc, setOrderAsc] = useState(false)
-  const [orderBy, setOrderBy] = useState<string>(SelectorsValuesTypes.DateCreated)
 
   const history = useHistory()
   const queryClient = useQueryClient()
 
   useEffect(() => {
     setParams(filter)
-    refetch()
   }, [filter])
 
   const verifyStatus = (status): any => {
@@ -293,7 +285,7 @@ const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposa
     const keys = Object.keys(filter)
 
     /* eslint-disable no-prototype-builtins */
-    const orderByList = filter.hasOwnProperty('orderByList')
+    const orderByList = filter.hasOwnProperty('sort')
     const page = filter.hasOwnProperty('page')
     const size = filter.hasOwnProperty('size')
 
@@ -323,17 +315,6 @@ const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposa
     setOpenDisplay(false)
     setProposalId('')
   }
-
-  const handleOrderDirection = (): string => {
-    if (orderAsc) {
-      return OrderTypes.Ascendent
-    }
-    return OrderTypes.Descendent
-  }
-
-  useEffect(() => {
-    setFilter((filter: any) => ({ ...filter, orderByList: `${orderBy},${handleOrderDirection()}` }))
-  }, [orderAsc, orderBy])
 
   return (
     <RootContainer>
@@ -383,33 +364,13 @@ const StaggeredProposal = ({ loadStaggeredProposal, updateStatusStaggeredProposa
           </ExportListContainer>
         </LeftSideListHeaderContainer>
         <RightSideListHeaderContainer>
-          <OrderByContainer>
-            <ListTextSpan>{I18n.t('pages.tariff.mainPage.orderBy')}:</ListTextSpan>
-            <DropdownMenuContainer>
-              <Select
-                className="select-style"
-                disableUnderline
-                onChange={(e) => setOrderBy(String(e.target.value))}
-                placeholder={orderBy}
-                value={orderBy}
-              >
-                {orderButtonMenuItems().map((item) => (
-                  <MenuItem
-                    key={`${String(item.value)}_key`}
-                    value={item.value}
-                  >
-                    <span>{item.description}</span>
-                  </MenuItem>
-                ))}
-              </Select>
-            </DropdownMenuContainer>
-            <ArrowIconContainer
-              onClick={() => setOrderAsc((order) => !order)}
-              $rotate={orderAsc}
-            >
-              {orderAsc ? <ArrowDown /> : <UpArrow />}
-            </ArrowIconContainer>
-          </OrderByContainer>
+        <OrderBy
+          id={STAGGEREDPROPOSAL_ORDER_SELECT}
+          orderButtonMenuItems={orderButtonMenuItems()}
+          initialOrder={SelectorsValuesTypes.DateCreated}
+          isOrderAsc={false}
+          handleChange={setFilter}
+        />
         </RightSideListHeaderContainer>
       </ListHeaderContainer>
       <BottomSideContainer>

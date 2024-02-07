@@ -351,8 +351,8 @@ const getTariffs = async (params): Promise<any> => {
   }
 }
 
-const getTariffsByFilter = async (direction: string, orderByList: string, page: number, size: number): Promise<any> => {
-  const url: string = `/sirius-tariff-api/upload/file/filter?direction=${String(direction)}&orderByList=${String(orderByList)}&page=${Number(page)}&size=${Number(size)}`
+const getTariffsByFilter = async (orderByList: string, page: number, size: number): Promise<any> => {
+  const url: string = `/sirius-tariff-api/upload/file/filter?sort=${String(orderByList)}&page=${Number(page)}&size=${Number(size)}`
   try {
     const res = await instance.get(url)
     return res.data

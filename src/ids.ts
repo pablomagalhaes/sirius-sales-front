@@ -5,6 +5,7 @@ export const TARIFF_MAINPAGE_SPAN_TARIFF = `${PREFIX_IDS}tariff-mainpage_span_ta
 export const TARIFF_MAINPAGE_LINK_HOME = `${PREFIX_IDS}tariff-mainpage_link_home`
 export const TARIFF_MAINPAGE_LINK_TARIFFPROCESSING = `${PREFIX_IDS}tariff-mainpage_link_tariffprocessing`
 export const TARIFF_BUTTON_UPLOAD = `${PREFIX_IDS}tariff_button_upload`
+export const TARIFF_ORDER_SELECT = `${PREFIX_IDS}_tariff_order_select`
 
 // Modal Air Tariff
 export const TARIFF_AIR_TARIFF_MODAL_SPAN_AGENT = `${PREFIX_IDS}tariff-air-tariff-modal_span_agente`
@@ -83,6 +84,7 @@ export const TARIFF_PROCESSING_LINK_TARIFF = `${PREFIX_IDS}tariff-processing_lin
 export const TARIFF_PROCESSING_BUTTON_BACK = `${PREFIX_IDS}tariff-processing_button_back`
 export const TARIFF_PROCESSING_BUTTON_UPLOAD = `${PREFIX_IDS}tariff-processing_button_upload`
 export const TARIFF_PROCESSING_SPAN_TITLE = `${PREFIX_IDS}tariff-processing_span_title`
+export const TARIFF_PROCESSING_ORDER_SELECT = `${PREFIX_IDS}_tariff-processing_order_select`
 
 // Reject Modal
 export const TARIFF_REJECT_MODAL_INPUT_DETAIL = `${PREFIX_IDS}_tariff-reject-modal_input_detail`
@@ -188,3 +190,9 @@ export const PROPOSAL_EXPORT_STEP4_CONTAINER_TYPE = `${PREFIX_IDS}_proposal_expo
 export const PROPOSAL_EXPORT_STEP4_PURCHASE_DEADLINE = `${PREFIX_IDS}_proposal_exportt_step4_purchase_deadline`
 export const PROPOSAL_EXPORT_STEP4_SALES_DEADLINE = `${PREFIX_IDS}_proposal_export_step4_sales_deadline`
 export const PROPOSAL_EXPORT_STEP4_SALES_VALUE = `${PREFIX_IDS}_proposal_import_step4_sales_value`
+
+// Proposal
+export const PROPOSAL_ORDER_SELECT = `${PREFIX_IDS}_proposal_order_select`
+
+// Staggered Proposal
+export const STAGGEREDPROPOSAL_ORDER_SELECT = `${PREFIX_IDS}_staggeredproposal_order_select`

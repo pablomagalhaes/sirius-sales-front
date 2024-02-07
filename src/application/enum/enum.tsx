@@ -107,6 +107,10 @@ enum FreightTypes {
   Export = 'EXPORT FREIGHT'
 }
 
+enum PaginationTypes {
+  Page = 0,
+  Size = 10
+}
 const enum ID_CARGO_CONTRACTING_TYPE {
   FCL = 1,
   LCL = 2,
@@ -132,5 +136,6 @@ export {
   FreightTypes,
   ServiceTypes,
   IdProposalTypes,
+  PaginationTypes,
   ID_CARGO_CONTRACTING_TYPE
 }

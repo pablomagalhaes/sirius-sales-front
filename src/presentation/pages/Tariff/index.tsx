@@ -6,18 +6,14 @@ import {
   Tabs,
   QuickFilters
 } from 'fiorde-fe-components'
-import { Breadcrumbs, Link, Select, MenuItem } from '@material-ui/core/'
+import { Breadcrumbs, Link } from '@material-ui/core/'
 import {
-  ArrowIconContainer,
   BottomSideContainer,
-  DropdownMenuContainer,
   ExportTariffContainer,
   ExportListSpan,
   LeftSideListHeaderContainer,
   ListHeaderContainer,
-  ListTextSpan,
   MidleContainer,
-  OrderByContainer,
   RightSideListHeaderContainer,
   RootContainer,
   TopButtonContainer,
@@ -30,8 +26,6 @@ import {
 } from './style'
 import { ExitToApp } from '@material-ui/icons/'
 import { useHistory } from 'react-router-dom'
-import UpArrow from '../../../application/icons/UpArrow'
-import ArrowDown from '../../../application/icons/ArrowDown'
 import { orderButtonMenuItems } from './constants'
 import { I18n } from 'react-redux-i18n'
 import TariffTable from './components/TariffTable'
@@ -39,25 +33,25 @@ import { getModalFilter, getActivityFilter, getValidityFilter , orderCsv } from 
 import TariffUploadModal from './components/TariffUploadModal/TariffUploadModal'
 import TariffExportModal from './components/TariffExportModal/TariffExportModal'
 import { SelectorsValuesTypes, QuickFilterTypes, ValidityTypes } from '../../../application/enum/tariffEnum'
-import { OrderTypes, IconTypes } from '../../../application/enum/enum'
+import { IconTypes } from '../../../application/enum/enum'
 import useTariffs from '../../hooks/tariff/useTariffs'
 import Filter from './components/filter'
 import { TariffContext, filterDefault } from './context/TariffContext'
 import API from '../../../infrastructure/api'
+import OrderBy from '../../components/OrderComponent/OrderBy'
 
 import {
   TARIFF_MAINPAGE_SPAN_TARIFF,
   TARIFF_MAINPAGE_LINK_HOME,
   TARIFF_MAINPAGE_LINK_TARIFFPROCESSING,
-  TARIFF_BUTTON_UPLOAD
+  TARIFF_BUTTON_UPLOAD,
+  TARIFF_ORDER_SELECT
 } from '../../../ids'
 
 const Tariff = (): JSX.Element => {
   const { data: tariffList = [], changeFilterList, refetch } = useTariffs()
   const { filter, setFilter }: any = useContext(TariffContext)
 
-  const [orderAsc, setOrderAsc] = useState(true)
-  const [orderBy, setOrderBy] = useState<string>(SelectorsValuesTypes.Validity)
   const [quickFilterList, setQuickFilterList] = useState<any[]>([
     { type: QuickFilterTypes.Activity, status: I18n.t('pages.tariff.upload.import') },
     { type: QuickFilterTypes.Modal, status: I18n.t('pages.tariff.modals.air') }
@@ -154,21 +148,6 @@ const Tariff = (): JSX.Element => {
     cleanFilter()
     setCountryExpanded('')
   }, [quickFilterList])
-
-  const handleOrderDirection = (): string => {
-    if (orderAsc) {
-      return OrderTypes.Ascendent
-    }
-    return OrderTypes.Descendent
-  }
-
-  useEffect(() => {
-    setFilter((filter: any) => ({ ...filter, orderByList: `${orderBy},${handleOrderDirection()}` }))
-  }, [orderAsc, orderBy])
-
-  useEffect(() => {
-    setOrderBy(SelectorsValuesTypes.Validity)
-  }, [filter.tariffModalType])
 
   useEffect(() => {
     const newFilter = { ...filter, page: 0 }
@@ -310,33 +289,14 @@ const Tariff = (): JSX.Element => {
             <ExportListSpan>{I18n.t('pages.tariff.mainPage.export')}</ExportListSpan>
           </ExportTariffContainer>
           <TariffExportModal setClose={() => setOpenExport(false)} open={openExport} createExportPath={createExportPath} exportData={exportData}/>
-          <OrderByContainer>
-            <ListTextSpan>{I18n.t('pages.tariff.mainPage.orderBy')}:</ListTextSpan>
-            <DropdownMenuContainer>
-              <Select
-                className="select-style"
-                disableUnderline
-                onChange={(e) => setOrderBy(String(e.target.value))}
-                placeholder={orderBy}
-                value={orderBy}
-              >
-                {orderButtonMenuItems(filter.tariffModalType).map((item) => (
-                  <MenuItem
-                    key={`${String(item.value)}_key`}
-                    value={item.value}
-                  >
-                    <span>{item.description}</span>
-                  </MenuItem>
-                ))}
-              </Select>
-            </DropdownMenuContainer>
-            <ArrowIconContainer
-              onClick={() => setOrderAsc((order) => !order)}
-              $rotate={orderAsc}
-            >
-              {orderAsc ? <ArrowDown /> : <UpArrow />}
-            </ArrowIconContainer>
-          </OrderByContainer>
+          <OrderBy
+            id={TARIFF_ORDER_SELECT}
+            orderButtonMenuItems={orderButtonMenuItems(filter.tariffModalType)}
+            initialOrder={SelectorsValuesTypes.Validity}
+            isOrderAsc={true}
+            handleChange={setFilter}
+            tariffModalChange={filter.tariffModalType}
+          />
         </RightSideListHeaderContainer>
       </ListHeaderContainer>
       <BottomSideContainer>

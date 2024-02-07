@@ -11,7 +11,7 @@ export namespace LoadStaggeredProposal {
   export type Params = {
     page: number
     size: number
-    orderByList: string
+    sort: string
   }
 
   export type Model = StaggeredProposalModel

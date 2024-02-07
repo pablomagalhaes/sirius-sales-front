@@ -6,19 +6,16 @@ import {
   FloatingMenu
 } from 'fiorde-fe-components'
 import TableImpl from './TableImpl'
-import { Breadcrumbs, Link, Select, MenuItem } from '@material-ui/core/'
+import { Breadcrumbs, Link } from '@material-ui/core/'
 import {
-  ArrowIconContainer,
   BottomSideContainer,
   CloseExpirationContainer,
-  DropdownMenuContainer,
   ExportListContainer,
   ExportListSpan,
   LeftSideListHeaderContainer,
   ListHeaderContainer,
   ListMainTitleSpan,
   ListTextSpan,
-  OrderByContainer,
   PaginationContainer,
   PaginationMainContainer,
   RightSideListHeaderContainer,
@@ -33,25 +30,28 @@ import ProposalDisplayModal from '../../components/ProposalDisplayModal/Proposal
 import { ExitToApp } from '@material-ui/icons/'
 import Warning from '../../../application/icons/WarningIcon'
 import { useHistory } from 'react-router-dom'
-import UpArrow from '../../../application/icons/UpArrow'
 import API from '../../../infrastructure/api'
-import ArrowDown from '../../../application/icons/ArrowDown'
 import { orderButtonMenuItems, menuItems } from './constants'
 import { I18n } from 'react-redux-i18n'
 import {
   StatusProposalEnum,
   StatusProposalStringEnum
 } from '../../../application/enum/statusProposalEnum'
-import { ModalTypes, IdProposalTypes , OrderTypes } from '../../../application/enum/enum'
+import { ModalTypes, IdProposalTypes , OrderTypes, PaginationTypes } from '../../../application/enum/enum'
 import RejectModal from '../../components/RejectModal/RejectModal'
 import CancelModal from '../../components/CancelModal/CancelModal'
 import { useQuery } from '@tanstack/react-query'
 import { QueryKeys } from '../../../application/enum/queryKeys'
 
+import OrderBy from '../../components/OrderComponent/OrderBy'
+import { PROPOSAL_ORDER_SELECT } from '../../../ids'
+
+const initialOrder = 'openingDate'
+
 const defaultFilter = {
-  sort: `openingDate,${OrderTypes.Descendent}`,
-  page: 0,
-  size: 10
+  sort: `${initialOrder},${OrderTypes.Descendent}`,
+  page: PaginationTypes.Page,
+  size: PaginationTypes.Size
 }
 
 const Proposal = (): JSX.Element => {
@@ -62,9 +62,6 @@ const Proposal = (): JSX.Element => {
   const [reference, setReference] = useState('')
   const [proposalId, setProposalId] = useState('')
   const [incotermList, setIncotermList] = useState<any[]>([])
-  const [openedOrderSelect, setOpenedOrderSelect] = useState(false)
-  const [orderAsc, setOrderAsc] = useState(false)
-  const [orderBy, setOrderBy] = useState<string>('openingDate')
   const [originDestinationList, setOriginDestinationList] = useState<any[]>([])
   const [originDestinationCountries, setoriginDestinationCountries] = useState<any[]>([])
   const [originDestinationStates, setoriginDestinationStates] = useState<any[]>([])
@@ -854,21 +851,6 @@ const Proposal = (): JSX.Element => {
     }))
   }
 
-  const handleOrderSelect = (value: React.SetStateAction<string>): void => {
-    setOrderBy(value)
-  }
-
-  const handleOrderDirection = (): string => {
-    if (orderAsc) {
-      return OrderTypes.Ascendent
-    }
-    return OrderTypes.Descendent
-  }
-
-  useEffect(() => {
-    setFilter((filter: any) => ({ ...filter, sort: `${orderBy},${handleOrderDirection()}` }))
-  }, [orderAsc, orderBy])
-
   const menuItemsSelector = [
     {
       label: 'Ref. proposta',
@@ -1043,34 +1025,13 @@ const Proposal = (): JSX.Element => {
             <Warning />
             <ListTextSpan>{totalWarnings} com vencimento proximo</ListTextSpan>
           </CloseExpirationContainer>
-          <OrderByContainer>
-            <ListTextSpan>Ordenar:</ListTextSpan>
-            <DropdownMenuContainer showArrow={openedOrderSelect}>
-              <Select
-                className="select-style"
-                disableUnderline
-                onChange={(e) => handleOrderSelect(String(e.target.value))}
-                onOpen={() => setOpenedOrderSelect(!openedOrderSelect)}
-                placeholder={orderBy}
-                value={orderBy}
-              >
-                {orderButtonMenuItems.map((item) => (
-                  <MenuItem
-                    key={`${String(item.value)}_key`}
-                    value={item.value}
-                  >
-                    <span>{item.description}</span>
-                  </MenuItem>
-                ))}
-              </Select>
-            </DropdownMenuContainer>
-            <ArrowIconContainer
-              onClick={() => setOrderAsc((order) => !order)}
-              $rotate={orderAsc}
-            >
-              {orderAsc ? <ArrowDown /> : <UpArrow />}
-            </ArrowIconContainer>
-          </OrderByContainer>
+          <OrderBy
+              id={PROPOSAL_ORDER_SELECT}
+              orderButtonMenuItems={orderButtonMenuItems}
+              initialOrder={initialOrder}
+              isOrderAsc={false}
+              handleChange={setFilter}
+          />
         </RightSideListHeaderContainer>
       </ListHeaderContainer>
       <BottomSideContainer>

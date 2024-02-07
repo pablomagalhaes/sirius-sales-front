@@ -63,10 +63,10 @@ const getValidityFilter = (quickFilterList): string => {
 
 const getTariffByFilter = async (filter?: any): Promise<any> => {
   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-  const Orderby = `${filter.orderByList},${filter.direction}`
+  const Orderby = `${filter.sort}`
 
   try {
-    const res = await API.getTariffsByFilter(filter.direction, Orderby, filter.page, filter.size)
+    const res = await API.getTariffsByFilter(Orderby, filter.page, filter.size)
     return res
   } catch (error) {
     console.log(error)

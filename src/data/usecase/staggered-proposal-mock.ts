@@ -10,5 +10,5 @@ export const updateStatusMock = {
 export const loadProposalMock = {
   page: 0,
   size: 10,
-  orderByList: `${SelectorsValuesTypes.Reference},${OrderTypes.Descendent}`
+  sort: `${SelectorsValuesTypes.Reference},${OrderTypes.Descendent}`
 }

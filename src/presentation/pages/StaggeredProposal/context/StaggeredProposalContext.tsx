@@ -1,13 +1,13 @@
 import React, { createContext, useState, useMemo } from 'react'
 
 import { SelectorsValuesTypes } from '../../../../application/enum/staggeredProposalEnum'
-import { OrderTypes } from '../../../../application/enum/enum'
+import { OrderTypes , PaginationTypes } from '../../../../application/enum/enum'
 import { StaggeredProposalModel } from '../../../../domain/models'
 
 export const filterDefault = {
-  page: 0,
-  size: 10,
-  orderByList: `${SelectorsValuesTypes.DateCreated},${OrderTypes.Descendent}`
+  page: PaginationTypes.Page,
+  size: PaginationTypes.Size,
+  sort: `${SelectorsValuesTypes.DateCreated},${OrderTypes.Descendent}`
 }
 
 export const emptyStaggeredProposalValue: StaggeredProposalModel = {
