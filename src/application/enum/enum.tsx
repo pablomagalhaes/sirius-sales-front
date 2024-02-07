@@ -111,6 +111,13 @@ enum PaginationTypes {
   Page = 0,
   Size = 10
 }
+const enum ID_CARGO_CONTRACTING_TYPE {
+  FCL = 1,
+  LCL = 2,
+  BREAK_BULK = 3,
+  RO_RO = 4
+}
+
 export {
   ModalTypes,
   OrderTypes,
@@ -129,5 +136,6 @@ export {
   FreightTypes,
   ServiceTypes,
   IdProposalTypes,
-  PaginationTypes
+  PaginationTypes,
+  ID_CARGO_CONTRACTING_TYPE
 }

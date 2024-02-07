@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, {
   useEffect,
   useState,
@@ -82,6 +83,17 @@ interface Step3Props {
   setCwSale: (item: any) => void
 }
 
+interface CalculationData {
+  weight: number | null
+  cubageWeight: number | null
+  cubage: number | null
+}
+
+interface ChargeableWeightResult {
+  chargeableWeight: number | null
+  chargeableWeightSale: number | null
+}
+
 const Step3 = ({
   modal,
   invalidInput,
@@ -148,6 +160,10 @@ const Step3 = ({
     }
   }))
 
+  const isAir = (): boolean => {
+    return modal === 'AIR'
+  }
+
   useEffect(() => {
     setTableItems([...tableRows])
   }, [tableRows, setTableRows])
@@ -156,6 +172,60 @@ const Step3 = ({
     setSpecifications(data.specifications)
     setTableRows([])
   }, [data.specifications])
+
+  useEffect(() => {
+    setCalculationData(calculation)
+  }, [calculation])
+
+  // Function to update other cargo related information
+  const updateOtherCargoInformationInProposal = (chargeableWeight: number | null, chargeableWeightSale: number | null): void => {
+    setProposal((currentProposal) => ({
+      ...currentProposal,
+      cargo: currentProposal.cargo.map((cargo, index) =>
+        index === 0
+          ? {
+              ...cargo,
+              txCargo: data.description,
+              idCargoContractingType: modal === 'SEA'
+                ? specificationsList.map((spe) => spe.toLowerCase()).indexOf(data.specifications) + 1
+                : null,
+              isDangerous: data.dangerous,
+              idImoType: Number(data.imo),
+              idTemperature: Number(data.temperature),
+              vlCwPurchase: isAir() ? chargeableWeight : null,
+              vlCwSale: isAir() ? chargeableWeightSale : null,
+              idCargoDangerous: dangerousCodes.find((code) => code.codDangerousCode === data.codUn?.split(' - ')[0])?.id ?? null
+            }
+          : cargo
+      )
+    }))
+  }
+
+  function calculateChargeableWeights (calculation: CalculationData): ChargeableWeightResult {
+    let chargeableWeight = null
+    let chargeableWeightSale = null
+
+    if (
+      calculation.weight !== null &&
+      calculation.cubageWeight !== null &&
+      calculation.weight !== 0 &&
+      calculation.cubageWeight !== 0
+    ) {
+      if (calculation.weight > calculation.cubageWeight) {
+        chargeableWeight = calculation.weight
+        chargeableWeightSale = calculation.weight
+      } else {
+        chargeableWeight = calculation.cubageWeight
+        chargeableWeightSale = calculation.cubageWeight
+      }
+    }
+
+    setChargeableWeight(chargeableWeight)
+    setChargeableWeightSale(chargeableWeightSale)
+    updateOtherCargoInformationInProposal(chargeableWeight, chargeableWeightSale)
+    setCalculationData(calculation)
+    return { chargeableWeight, chargeableWeightSale }
+  }
 
   useEffect(() => {
     setCalculationData(calculation)
@@ -299,27 +369,14 @@ const Step3 = ({
     )
   }, [])
 
-  const cargoVolumeProposalChange = (value: CargoVolume[]): void => {
-    setProposal({
-      ...proposal,
-      cargo: [{
-        ...proposal.cargo[0],
-        txCargo: data.description,
-        idCargoContractingType:
-          modal === 'SEA'
-            ? specificationsList
-              .map((spe) => spe.toLowerCase())
-              .indexOf(data.specifications) + 1
-            : null,
-        isDangerous: data.dangerous,
-        idImoType: Number(data.imo),
-        idTemperature: Number(data.temperature),
-        cargoVolumes: value,
-        vlCwPurchase: isAir() ? chargeableWeight : null,
-        vlCwSale: isAir() ? chargeableWeightSale : null,
-        idCargoDangerous: dangerousCodes.find((code) => code.codDangerousCode === data.codUn?.split(' - ')[0])?.id ?? null
-      }]
-    })
+  // Function to update only cargoVolumes
+  const updateCargoVolumesInProposal = (value: CargoVolume[]): void => {
+    setProposal((currentProposal) => ({
+      ...currentProposal,
+      cargo: currentProposal.cargo.map((cargo, index) =>
+        index === 0 ? { ...cargo, cargoVolumes: value } : cargo
+      )
+    }))
   }
 
   useEffect(() => {
@@ -343,7 +400,7 @@ const Step3 = ({
         vlCwSale: isAir() ? chargeableWeightSale : null
       }]
     })
-  }, [data, chargeableWeight, chargeableWeightSale])
+  }, [data, chargeableWeight, chargeableWeightSale, cargoVolume])
 
   useEffect(() => {
     setCostData(tableRows.length)
@@ -369,7 +426,7 @@ const Step3 = ({
         container: row.type
       })
     })
-    cargoVolumeProposalChange(newCargoVolumes)
+    updateCargoVolumesInProposal(newCargoVolumes)
     setCargoVolume(newCargoVolumes)
   }, [tableRows])
 
@@ -382,10 +439,6 @@ const Step3 = ({
       ].toLowerCase()
     }
     return modal === 'SEA' && specification === 'fcl'
-  }
-
-  const isAir = (): boolean => {
-    return modal === 'AIR'
   }
 
   const handleCwClose = (): void => {
@@ -741,7 +794,7 @@ const Step3 = ({
                 onDelete={handleDelete}
                 modal={modal}
                 specification={data.specifications}
-                setCalculation={setCalculation}
+                setCalculation={calculateChargeableWeights}
               />
             </Grid>
           )}
