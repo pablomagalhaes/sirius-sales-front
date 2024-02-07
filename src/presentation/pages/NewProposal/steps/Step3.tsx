@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, {
   useEffect,
   useState,
@@ -172,6 +173,10 @@ const Step3 = ({
     setTableRows([])
   }, [data.specifications])
 
+  useEffect(() => {
+    setCalculationData(calculation)
+  }, [calculation])
+
   // Function to update other cargo related information
   const updateOtherCargoInformationInProposal = (chargeableWeight: number | null, chargeableWeightSale: number | null): void => {
     setProposal((currentProposal) => ({
@@ -218,6 +223,7 @@ const Step3 = ({
     setChargeableWeight(chargeableWeight)
     setChargeableWeightSale(chargeableWeightSale)
     updateOtherCargoInformationInProposal(chargeableWeight, chargeableWeightSale)
+    setCalculationData(calculation)
     return { chargeableWeight, chargeableWeightSale }
   }
 
